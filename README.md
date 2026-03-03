@@ -1,5 +1,9 @@
 # CodeGraph
 
+<p align="center">
+  <img src="screenshots/codegraph-cli.png" width="100%" alt="CodeGraph"/>
+</p>
+
 **Codebase intelligence as an MCP server. Native Rust. Sub-second indexing. Zero runtime dependencies.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
