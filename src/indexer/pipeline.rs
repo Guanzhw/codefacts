@@ -25,6 +25,7 @@ use sha2::{Digest, Sha256};
 
 use crate::error::Result;
 use crate::graph::store::GraphStore;
+use crate::indexer::endpoints::{extract_endpoint_edges, extract_endpoints, EndpointBinding};
 use crate::indexer::extractor::Extractor;
 use crate::indexer::markdown::extract_headings;
 use crate::indexer::parser::CodeParser;
@@ -79,6 +80,7 @@ struct FileParseState {
     content_hash: String,
     source_text: String,
     nodes: Vec<CodeNode>,
+    endpoints: Vec<EndpointBinding>,
 }
 
 // ---------------------------------------------------------------------------
@@ -182,8 +184,8 @@ impl<'a> IndexingPipeline<'a> {
                     }
                 };
 
-                let nodes = if language == Language::Markdown {
-                    extract_headings(&rel_path, &source_text)
+                let (mut nodes, endpoints) = if language == Language::Markdown {
+                    (extract_headings(&rel_path, &source_text), Vec::new())
                 } else {
                     // Parse with a thread-local Parser (Parser is NOT Send/Sync)
                     let parser = CodeParser::new();
@@ -194,14 +196,20 @@ impl<'a> IndexingPipeline<'a> {
                             return None;
                         }
                     };
-                    match Extractor::extract_nodes(&tree, &rel_path, language, &source_text) {
-                        Ok(n) => n,
-                        Err(_) => {
-                            files_skipped.fetch_add(1, Ordering::Relaxed);
-                            return None;
-                        }
-                    }
+                    let nodes =
+                        match Extractor::extract_nodes(&tree, &rel_path, language, &source_text) {
+                            Ok(n) => n,
+                            Err(_) => {
+                                files_skipped.fetch_add(1, Ordering::Relaxed);
+                                return None;
+                            }
+                        };
+                    (
+                        nodes,
+                        extract_endpoints(&rel_path, language, &source_text, &tree),
+                    )
                 };
+                nodes.extend(endpoints.iter().map(|binding| binding.endpoint.clone()));
 
                 Some(FileParseState {
                     relative_path: rel_path,
@@ -209,6 +217,7 @@ impl<'a> IndexingPipeline<'a> {
                     content_hash,
                     source_text,
                     nodes,
+                    endpoints,
                 })
             })
             .collect();
@@ -254,7 +263,7 @@ impl<'a> IndexingPipeline<'a> {
         > = parsed
             .par_iter()
             .map(|state| {
-                let edges = if state.language == Language::Markdown {
+                let mut edges = if state.language == Language::Markdown {
                     Vec::new()
                 } else {
                     // Each thread creates its own Parser (not Send/Sync)
@@ -269,6 +278,7 @@ impl<'a> IndexingPipeline<'a> {
                         &node_index,
                     )?
                 };
+                edges.extend(extract_endpoint_edges(&state.endpoints, &node_index));
 
                 Ok((
                     state.relative_path.clone(),

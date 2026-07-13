@@ -279,6 +279,7 @@ pub enum NodeKind {
     Namespace,
     Constant,
     Heading,
+    Endpoint,
 }
 
 impl NodeKind {
@@ -298,6 +299,7 @@ impl NodeKind {
             Self::Namespace => "namespace",
             Self::Constant => "constant",
             Self::Heading => "heading",
+            Self::Endpoint => "endpoint",
         }
     }
 
@@ -317,6 +319,7 @@ impl NodeKind {
             "namespace" | "package" => Some(Self::Namespace),
             "constant" | "const" => Some(Self::Constant),
             "heading" => Some(Self::Heading),
+            "endpoint" => Some(Self::Endpoint),
             _ => None,
         }
     }

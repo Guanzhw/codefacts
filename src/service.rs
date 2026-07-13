@@ -44,8 +44,8 @@ pub struct Evidence {
     pub start_line: u32,
     pub end_line: u32,
     pub source_hash: Option<String>,
-    pub extractor: &'static str,
-    pub confidence: &'static str,
+    pub extractor: String,
+    pub confidence: String,
 }
 
 #[derive(Debug, Serialize)]
@@ -454,8 +454,13 @@ impl CodeFacts {
                 start_line: edge.line,
                 end_line: edge.line,
                 source_hash: self.source_hash(&edge.file_path)?,
-                extractor: "tree-sitter",
-                confidence: "static",
+                extractor: extractor_for_edge(edge),
+                confidence: edge
+                    .metadata
+                    .as_ref()
+                    .and_then(|metadata| metadata.get("confidence"))
+                    .cloned()
+                    .unwrap_or_else(|| "static".to_string()),
             },
         })
     }
@@ -472,8 +477,8 @@ impl CodeFacts {
                 start_line: node.start_line,
                 end_line: node.end_line,
                 source_hash: self.source_hash(&node.file_path)?,
-                extractor: "tree-sitter",
-                confidence: "confirmed",
+                extractor: extractor_for(node).to_string(),
+                confidence: confidence_for(node).to_string(),
             },
         })
     }
@@ -556,4 +561,27 @@ fn fts_query(query: &str) -> Option<String> {
         .map(|token| format!("\"{}\"*", token.replace('"', "")))
         .collect::<Vec<_>>();
     (!tokens.is_empty()).then(|| tokens.join(" AND "))
+}
+
+fn extractor_for(node: &CodeNode) -> &'static str {
+    match node.kind {
+        crate::types::NodeKind::Endpoint => "endpoint-pattern",
+        crate::types::NodeKind::Heading => "markdown-heading",
+        _ => "tree-sitter",
+    }
+}
+
+fn extractor_for_edge(edge: &CodeEdge) -> String {
+    edge.metadata
+        .as_ref()
+        .and_then(|metadata| metadata.get("extractor"))
+        .cloned()
+        .unwrap_or_else(|| "tree-sitter".to_string())
+}
+
+fn confidence_for(node: &CodeNode) -> &'static str {
+    match node.kind {
+        crate::types::NodeKind::Endpoint => "heuristic",
+        _ => "confirmed",
+    }
 }

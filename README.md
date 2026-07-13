@@ -42,6 +42,8 @@ Source is parsed into normalized SQLite facts: symbols, static relationships, fi
 
 An unchanged repository is hash-skipped. When a source file changes, CodeFacts rebuilds the static relationship snapshot before answering so cross-file calls and imports are not partially resolved.
 
+Endpoint facts currently recognize conservative common route literals (for example, `.get("/path", handler)` and `@GetMapping("/path")`). They are explicitly returned with `endpoint-pattern` / `heuristic` evidence; direct route handler and middleware identifiers appear as heuristic references when they match indexed functions or methods.
+
 Out of scope for v1: editing, hooks, watchers, HTTP servers, dashboards, embeddings/vector search, reranking, security scans, Git analytics, agent memory, natural-language Q&A, and automated context injection.
 
 ## Upstream provenance

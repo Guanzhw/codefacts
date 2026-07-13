@@ -75,6 +75,7 @@ fn is_more_specific_kind(new_kind: NodeKind, old_kind: NodeKind) -> bool {
             NodeKind::Property => 2,
             NodeKind::Constant => 2,
             NodeKind::Heading => 1,
+            NodeKind::Endpoint => 1,
         }
     };
     specificity(new_kind) > specificity(old_kind)

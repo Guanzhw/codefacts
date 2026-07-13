@@ -1,5 +1,6 @@
 //! Tree-sitter indexing pipeline: parse source files and build source facts.
 
+pub mod endpoints;
 pub mod extractor;
 pub mod markdown;
 pub mod parser;

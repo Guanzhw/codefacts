@@ -151,3 +151,50 @@ fn refresh_rebinds_static_calls_when_a_new_definition_appears() {
     assert_eq!(rebound["path"][0]["name"], "processInput");
     assert_eq!(rebound["path"][1]["name"], "validate");
 }
+
+#[test]
+fn search_and_expand_surface_source_backed_endpoint_facts() {
+    let repository = tempdir().expect("temporary repository");
+    fs::create_dir_all(repository.path().join("src")).expect("source directory");
+    fs::write(
+        repository.path().join("src/handlers.ts"),
+        "export function authMiddleware() { return true; }\nexport function getUser() { return 'ok'; }\n",
+    )
+    .expect("handler fixture");
+    fs::write(
+        repository.path().join("src/routes.ts"),
+        "import { authMiddleware, getUser } from './handlers';\napp.get('/users/:id', authMiddleware, getUser);\n",
+    )
+    .expect("endpoint fixture");
+    let facts = CodeFacts::open(repository.path(), repository.path().join("external.sqlite"))
+        .expect("open external index");
+
+    let search = facts.search("users", None).expect("endpoint search");
+    let endpoint = search["results"]
+        .as_array()
+        .expect("search results")
+        .iter()
+        .find(|result| result["kind"] == "endpoint")
+        .expect("endpoint result");
+    assert_eq!(endpoint["name"], "GET /users/:id");
+    assert_eq!(endpoint["evidence"]["extractor"], "endpoint-pattern");
+    assert_eq!(endpoint["evidence"]["confidence"], "heuristic");
+
+    let expand = facts
+        .expand("GET /users/:id", Some("src/routes.ts"), None)
+        .expect("endpoint expand");
+    assert_eq!(expand["status"], "ok");
+    let outbound = expand["references"]["outbound"]
+        .as_array()
+        .expect("endpoint outbound references");
+    assert_eq!(outbound.len(), 2);
+    assert!(outbound.iter().any(|reference| {
+        reference["to"]["name"] == "getUser"
+            && reference["to"]["evidence"]["file_path"] == "src/handlers.ts"
+    }));
+    assert!(outbound.iter().any(|reference| {
+        reference["to"]["name"] == "authMiddleware"
+            && reference["evidence"]["extractor"] == "endpoint-pattern"
+            && reference["evidence"]["confidence"] == "heuristic"
+    }));
+}

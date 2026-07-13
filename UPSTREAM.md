@@ -10,7 +10,7 @@ The upstream project is MIT-licensed. Its copyright notice remains in [`LICENSE`
 - Symbol and edge extractors, two-pass incremental indexing pipeline, and static import resolution.
 - SQLite graph schema, FTS triggers, row conversion, and graph store.
 
-The retained code has been renamed and modified for the CodeFacts data model, external state location, deterministic path normalization, stale-file pruning, Markdown heading facts, and the bounded five-tool MCP contract.
+The retained code has been renamed and modified for the CodeFacts data model, external state location, deterministic path normalization, stale-file pruning, Markdown heading facts, heuristic endpoint facts, and the bounded five-tool MCP contract.
 
 ## Explicitly removed
 
