@@ -146,15 +146,29 @@ impl CodeFacts {
             }));
         };
 
-        let mut statement = self.store.conn.prepare_cached(
-            "SELECT nodes.* FROM fts_nodes
-             JOIN nodes ON nodes.rowid = fts_nodes.rowid
-             WHERE fts_nodes MATCH ?1
-             ORDER BY bm25(fts_nodes), nodes.file_path, nodes.start_line, nodes.id
-             LIMIT ?2",
-        )?;
-        let rows = statement.query_and_then(params![fts_query, limit as i64], row_to_code_node)?;
-        let nodes = rows.collect::<std::result::Result<Vec<_>, _>>()?;
+        // A symbol-name lookup is stronger evidence than a full-text match.
+        // Put exact names first so a common identifier does not get pushed out
+        // of the bounded FTS result set by comments, signatures, or file paths.
+        let exact_name = query.trim();
+        let mut nodes = self.store.get_nodes_by_name(exact_name)?;
+        nodes.truncate(limit);
+
+        if nodes.len() < limit {
+            let remaining = limit - nodes.len();
+            let mut statement = self.store.conn.prepare_cached(
+                "SELECT nodes.* FROM fts_nodes
+                 JOIN nodes ON nodes.rowid = fts_nodes.rowid
+                 WHERE fts_nodes MATCH ?1
+                   AND nodes.name <> ?2
+                 ORDER BY bm25(fts_nodes), nodes.file_path, nodes.start_line, nodes.id
+                 LIMIT ?3",
+            )?;
+            let rows = statement.query_and_then(
+                params![fts_query, exact_name, remaining as i64],
+                row_to_code_node,
+            )?;
+            nodes.extend(rows.collect::<std::result::Result<Vec<_>, _>>()?);
+        }
         let results = nodes
             .iter()
             .map(|node| self.symbol_fact(node))
@@ -604,5 +618,120 @@ fn confidence_for(node: &CodeNode) -> &'static str {
     match node.kind {
         crate::types::NodeKind::Endpoint => "heuristic",
         _ => "confirmed",
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::types::{Language, NodeKind};
+    use tempfile::tempdir;
+
+    fn test_node(id: String, name: String, body: Option<String>) -> CodeNode {
+        CodeNode {
+            id,
+            name,
+            qualified_name: None,
+            kind: NodeKind::Function,
+            file_path: "lib.rs".to_string(),
+            start_line: 100,
+            end_line: 101,
+            start_column: 0,
+            end_column: 1,
+            language: Language::Rust,
+            body,
+            documentation: None,
+            exported: Some(true),
+        }
+    }
+
+    #[test]
+    fn search_prioritizes_an_exact_symbol_name_over_fts_noise() {
+        let repository = tempdir().expect("temporary repository");
+        fs::write(repository.path().join("lib.rs"), "pub fn retained() {}\n")
+            .expect("source fixture");
+        let facts = CodeFacts::open(repository.path(), repository.path().join("external.sqlite"))
+            .expect("open source-backed facts");
+        facts.map().expect("seed incremental file hashes");
+
+        let mut nodes = vec![test_node(
+            "function:lib.rs:agent_turn:100".to_string(),
+            "agent_turn".to_string(),
+            None,
+        )];
+        for index in 0..=MAX_LIMIT {
+            nodes.push(test_node(
+                format!("function:lib.rs:noise_{index}:{}", 101 + index),
+                format!("noise_{index}"),
+                Some("agent_turn ".repeat(128)),
+            ));
+        }
+        facts.store.upsert_nodes(&nodes).expect("seed FTS noise");
+
+        let result = facts
+            .search("agent_turn", Some(1))
+            .expect("search source-backed facts");
+        assert_eq!(result["results"][0]["name"], "agent_turn");
+    }
+
+    #[test]
+    fn search_fills_remaining_slots_without_repeating_an_exact_name() {
+        let repository = tempdir().expect("temporary repository");
+        fs::write(repository.path().join("lib.rs"), "pub fn retained() {}\n")
+            .expect("source fixture");
+        let facts = CodeFacts::open(repository.path(), repository.path().join("external.sqlite"))
+            .expect("open source-backed facts");
+        facts.map().expect("seed incremental file hashes");
+
+        let mut nodes = vec![test_node(
+            "function:lib.rs:agent_turn:100".to_string(),
+            "agent_turn".to_string(),
+            Some("agent_turn ".repeat(256)),
+        )];
+        for index in 0..3 {
+            nodes.push(test_node(
+                format!("function:lib.rs:noise_{index}:{}", 101 + index),
+                format!("noise_{index}"),
+                Some("agent_turn ".repeat(8)),
+            ));
+        }
+        facts.store.upsert_nodes(&nodes).expect("seed FTS matches");
+
+        let fts_first_name = facts
+            .store
+            .conn
+            .query_row(
+                "SELECT nodes.name FROM fts_nodes
+                 JOIN nodes ON nodes.rowid = fts_nodes.rowid
+                 WHERE fts_nodes MATCH ?1
+                 ORDER BY bm25(fts_nodes), nodes.file_path, nodes.start_line, nodes.id
+                 LIMIT 1",
+                [fts_query("agent_turn").expect("valid FTS query")],
+                |row| row.get::<_, String>(0),
+            )
+            .expect("rank the raw FTS result");
+        assert_eq!(fts_first_name, "agent_turn");
+
+        let result = facts
+            .search("agent_turn", Some(3))
+            .expect("search source-backed facts");
+        let names = result["results"]
+            .as_array()
+            .expect("search results")
+            .iter()
+            .map(|result| result["name"].as_str().expect("symbol name"))
+            .collect::<Vec<_>>();
+
+        assert_eq!(names.len(), 3);
+        assert_eq!(names[0], "agent_turn");
+        assert_eq!(
+            names.iter().filter(|name| **name == "agent_turn").count(),
+            1,
+            "the FTS fallback must not repeat the direct exact-name result"
+        );
+        assert!(
+            names[1..].iter().all(|name| name.starts_with("noise_")),
+            "remaining slots should come from the FTS fallback"
+        );
     }
 }

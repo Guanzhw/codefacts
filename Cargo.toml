@@ -5,7 +5,7 @@ edition = "2021"
 authors = ["CodeFacts contributors"]
 description = "Local, verifiable code facts for coding agents"
 license = "MIT"
-repository = "https://github.com/codefacts/codefacts"
+repository = "https://github.com/Guanzhw/codefacts"
 keywords = ["mcp", "code-intelligence", "tree-sitter", "sqlite"]
 categories = ["development-tools", "command-line-utilities"]
 

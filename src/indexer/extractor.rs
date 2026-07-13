@@ -1815,6 +1815,62 @@ double multiply(double a, double b) {
         assert!(multiply.is_some(), "should find multiply function");
     }
 
+    #[test]
+    fn extract_c_and_cpp_pointer_return_functions() {
+        let c_source = r#"
+struct widget;
+
+struct widget * create_widget(void) {
+    return 0;
+}
+
+struct widget * declared_widget(void);
+"#;
+        let c_nodes = parse_and_extract_nodes_file(c_source, Language::C, "widget.c");
+        assert!(
+            c_nodes
+                .iter()
+                .any(|node| node.name == "create_widget" && node.kind == NodeKind::Function),
+            "C pointer-return definitions should be indexed"
+        );
+        assert!(
+            c_nodes
+                .iter()
+                .any(|node| node.name == "declared_widget" && node.kind == NodeKind::Function),
+            "C pointer-return prototypes should be indexed"
+        );
+
+        let cpp_source = r#"
+struct Widget {};
+
+struct Factory {
+    static Widget * create();
+};
+
+Widget * Factory::create() {
+    return nullptr;
+}
+
+template <typename T>
+T * clone(T * value) {
+    return value;
+}
+"#;
+        let cpp_nodes = parse_and_extract_nodes_file(cpp_source, Language::Cpp, "factory.cpp");
+        assert!(
+            cpp_nodes
+                .iter()
+                .any(|node| node.name == "create" && node.kind == NodeKind::Method),
+            "qualified C++ pointer-return methods should be indexed"
+        );
+        assert!(
+            cpp_nodes
+                .iter()
+                .any(|node| node.name == "clone" && node.kind == NodeKind::Function),
+            "template C++ pointer-return functions should be indexed"
+        );
+    }
+
     // =====================================================================
     // C# tests
     // =====================================================================

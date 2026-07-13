@@ -13,6 +13,12 @@
   declarator: (function_declarator
     declarator: (identifier) @name)) @definition.function
 
+; Pointer return types: Widget *create() { ... }
+(function_definition
+  declarator: (pointer_declarator
+    declarator: (function_declarator
+      declarator: (identifier) @name))) @definition.function
+
 ; ---------------------------------------------------------------------------
 ; Qualified function definitions (ClassName::method)
 ; ---------------------------------------------------------------------------
@@ -20,6 +26,13 @@
   declarator: (function_declarator
     declarator: (qualified_identifier
       name: (identifier) @name))) @definition.method
+
+; Qualified methods with pointer returns: Widget *Factory::create() { ... }
+(function_definition
+  declarator: (pointer_declarator
+    declarator: (function_declarator
+      declarator: (qualified_identifier
+        name: (identifier) @name)))) @definition.method
 
 ; ---------------------------------------------------------------------------
 ; Classes
@@ -72,6 +85,12 @@
 (declaration
   declarator: (function_declarator
     declarator: (identifier) @name)) @definition.function
+
+; Pointer return type prototypes: Widget *create();
+(declaration
+  declarator: (pointer_declarator
+    declarator: (function_declarator
+      declarator: (identifier) @name))) @definition.function
 
 ; ---------------------------------------------------------------------------
 ; Template declarations

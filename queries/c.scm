@@ -12,12 +12,24 @@
   declarator: (function_declarator
     declarator: (identifier) @name)) @definition.function
 
+; Pointer return types: int *create(void) { ... }
+(function_definition
+  declarator: (pointer_declarator
+    declarator: (function_declarator
+      declarator: (identifier) @name))) @definition.function
+
 ; ---------------------------------------------------------------------------
 ; Function declarations (prototypes)
 ; ---------------------------------------------------------------------------
 (declaration
   declarator: (function_declarator
     declarator: (identifier) @name)) @definition.function
+
+; Pointer return type prototypes: int *create(void);
+(declaration
+  declarator: (pointer_declarator
+    declarator: (function_declarator
+      declarator: (identifier) @name))) @definition.function
 
 ; ---------------------------------------------------------------------------
 ; Structs -> mapped to @definition.class

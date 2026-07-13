@@ -71,3 +71,54 @@ fn public_refresh_removes_relationships_to_changed_definitions() {
             .iter()
             .all(|callee| callee["to"]["name"] != "helper")));
 }
+
+#[test]
+fn public_workflows_find_cpp_pointer_return_definitions() {
+    let repository = tempdir().expect("temporary C++ repository");
+    let source = repository.path().join("api.cpp");
+    std::fs::write(
+        &source,
+        r#"
+struct Widget {};
+
+Widget * make_widget() {
+    return nullptr;
+}
+
+Widget * load_widget() {
+    return make_widget();
+}
+"#,
+    )
+    .expect("C++ fixture");
+    let facts = CodeFacts::open(repository.path(), repository.path().join("external.sqlite"))
+        .expect("open C++ source-backed facts");
+
+    let search = facts
+        .search("load_widget", None)
+        .expect("search pointer-return definition");
+    assert!(search["results"].as_array().is_some_and(|results| {
+        results.iter().any(|result| {
+            result["name"] == "load_widget"
+                && result["evidence"]["file_path"] == "api.cpp"
+                && result["evidence"]["start_line"] == 8
+        })
+    }));
+
+    let expanded = facts
+        .expand("load_widget", Some("api.cpp"), None)
+        .expect("expand pointer-return definition");
+    assert_eq!(expanded["status"], "ok");
+    assert!(expanded["callees"].as_array().is_some_and(|callees| {
+        callees
+            .iter()
+            .any(|callee| callee["to"]["name"] == "make_widget")
+    }));
+
+    let path = facts
+        .path("load_widget", "make_widget", None)
+        .expect("path through pointer-return definitions");
+    assert_eq!(path["status"], "ok");
+    assert_eq!(path["path"][0]["name"], "load_widget");
+    assert_eq!(path["path"][1]["name"], "make_widget");
+}
