@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "queries": [
+    {
+      "name": "narrow_symbol",
+      "query": "AuthService"
+    },
+    {
+      "name": "common_identifier",
+      "query": "get"
+    },
+    {
+      "name": "missing_identifier",
+      "query": "codefacts_benchmark_missing_symbol"
+    },
+    {
+      "name": "route_like_term",
+      "query": "users"
+    }
+  ]
+}

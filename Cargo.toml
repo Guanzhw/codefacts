@@ -84,3 +84,6 @@ codegen-units = 1
 tempfile = "3"
 proptest = "1.4"
 test-case = "3.3"
+# Used only by the development benchmark example to sample the benchmark
+# process's resident memory. It is deliberately absent from release builds.
+sysinfo = { version = "0.38", default-features = false, features = ["system"] }

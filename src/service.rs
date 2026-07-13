@@ -263,12 +263,19 @@ impl CodeFacts {
             }));
         }
 
+        let known_node_ids: HashSet<String> = self
+            .store
+            .get_all_nodes()?
+            .into_iter()
+            .map(|node| node.id)
+            .collect();
         let edges = self.store.get_all_edges()?;
         let mut outgoing = HashMap::<String, Vec<CodeEdge>>::new();
-        for edge in edges
-            .into_iter()
-            .filter(|edge| edge.kind == EdgeKind::Calls)
-        {
+        for edge in edges.into_iter().filter(|edge| {
+            edge.kind == EdgeKind::Calls
+                && known_node_ids.contains(&edge.source)
+                && known_node_ids.contains(&edge.target)
+        }) {
             outgoing.entry(edge.source.clone()).or_default().push(edge);
         }
 
@@ -402,11 +409,25 @@ impl CodeFacts {
             self.store
                 .get_out_edges(&node.id, kind.map(|kind| kind.as_str()))?
         };
-        edges
-            .iter()
-            .take(limit)
-            .map(|edge| self.relationship_fact(edge))
-            .collect()
+        let mut relationships = Vec::with_capacity(limit);
+        for edge in &edges {
+            if relationships.len() == limit {
+                break;
+            }
+
+            // Extractors retain unresolved static references as edges so the
+            // fact store can represent uncertainty. MCP relationship results
+            // only expose confirmed symbol-to-symbol facts, however: a target
+            // that no longer exists after refresh must not turn `expand` into
+            // an internal error or be presented as a confirmed relationship.
+            if self.store.get_node(&edge.source)?.is_none()
+                || self.store.get_node(&edge.target)?.is_none()
+            {
+                continue;
+            }
+            relationships.push(self.relationship_fact(edge)?);
+        }
+        Ok(relationships)
     }
 
     fn related_tests(&self, node: &CodeNode, limit: usize) -> Result<Vec<SymbolFact>> {

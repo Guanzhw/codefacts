@@ -36,6 +36,8 @@ No repository hooks, watchers, background server, generated agent instructions, 
 
 For development from source, run `cargo build --release`; published builds are intended to be a single native binary for Windows, macOS, and Linux.
 
+Tagged releases build Windows, macOS, and Linux binaries in GitHub Actions after a dependency-license audit of the locked dependency graph. The release workflow does not publish automatically from ordinary commits.
+
 ## Storage model and scope
 
 Source is parsed into normalized SQLite facts: symbols, static relationships, file hashes, unresolved references, and a derived FTS index. Tree-sitter is the extractor for supported code languages; Markdown headings use a small deterministic extractor. FTS is discovery only: every returned structural claim comes from a stored fact with source evidence.
@@ -43,6 +45,8 @@ Source is parsed into normalized SQLite facts: symbols, static relationships, fi
 An unchanged repository is hash-skipped. When a source file changes, CodeFacts rebuilds the static relationship snapshot before answering so cross-file calls and imports are not partially resolved.
 
 Endpoint facts currently recognize conservative common route literals (for example, `.get("/path", handler)` and `@GetMapping("/path")`). They are explicitly returned with `endpoint-pattern` / `heuristic` evidence; direct route handler and middleware identifiers appear as heuristic references when they match indexed functions or methods.
+
+Performance measurement is documented in [docs/PERFORMANCE.md](docs/PERFORMANCE.md). Its development-only runner reports cold indexing, no-change refresh, one-file relationship rebind, SQLite disk size, benchmark-process memory, and first/P95 stdio MCP search latency without altering the repository under test.
 
 Out of scope for v1: editing, hooks, watchers, HTTP servers, dashboards, embeddings/vector search, reranking, security scans, Git analytics, agent memory, natural-language Q&A, and automated context injection.
 
