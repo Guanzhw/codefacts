@@ -1,9 +1,9 @@
-//! Unified error type for CodeGraph.
+//! Unified error type for CodeFacts.
 
 use thiserror::Error;
 
 #[derive(Error, Debug)]
-pub enum CodeGraphError {
+pub enum CodeFactsError {
     #[error("SQLite error: {0}")]
     Database(#[from] rusqlite::Error),
 
@@ -12,9 +12,6 @@ pub enum CodeGraphError {
 
     #[error("Tree-sitter error: {0}")]
     Parse(String),
-
-    #[error("Embedding error: {0}")]
-    Embedding(String),
 
     #[error("JSON error: {0}")]
     Json(#[from] serde_json::Error),
@@ -26,4 +23,4 @@ pub enum CodeGraphError {
     Other(String),
 }
 
-pub type Result<T> = std::result::Result<T, CodeGraphError>;
+pub type Result<T> = std::result::Result<T, CodeFactsError>;

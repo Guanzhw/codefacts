@@ -1,21 +1,21 @@
 [package]
-name = "codegraph"
-version = "0.3.0"
+name = "codefacts"
+version = "0.1.0"
 edition = "2021"
-authors = ["Suat Kocar"]
-description = "Codebase intelligence MCP server — 32 languages, 46 tools, semantic code graph"
+authors = ["CodeFacts contributors"]
+description = "Local, verifiable code facts for coding agents"
 license = "MIT"
-repository = "https://github.com/suatkocar/codegraph"
-keywords = ["mcp", "claude", "code-intelligence", "tree-sitter", "semantic-search"]
+repository = "https://github.com/codefacts/codefacts"
+keywords = ["mcp", "code-intelligence", "tree-sitter", "sqlite"]
 categories = ["development-tools", "command-line-utilities"]
 
 [lib]
-name = "codegraph"
+name = "codefacts"
 path = "src/lib.rs"
 crate-type = ["rlib"]
 
 [[bin]]
-name = "codegraph"
+name = "codefacts"
 path = "src/main.rs"
 
 [dependencies]
@@ -26,8 +26,6 @@ thiserror = "2"
 
 # SQLite
 rusqlite = { version = "0.32", features = ["bundled"] }
-sqlite-vec = "0.1"
-zerocopy = { version = "0.8", features = ["derive"] }
 
 # Tree-sitter (native — no WASM, 32 languages: 15 original + 17 Phase 11)
 tree-sitter = "0.25"
@@ -64,50 +62,17 @@ tree-sitter-powershell = "0.25"
 tree-sitter-nix = "0.3"
 # NOTE: tree-sitter-perl requires tree-sitter 0.26, skipped until upgrade
 
-# Embeddings (feature-gated)
-fastembed = { version = "4", optional = true }
-
-# MCP Server
-rmcp = { version = "0.14", features = ["server", "transport-io", "transport-streamable-http-server", "transport-streamable-http-server-session"] }
-tokio = { version = "1", features = ["rt", "rt-multi-thread", "macros", "io-std", "signal", "net"] }
-axum = "0.8"
-futures = "0.3"
-schemars = "1.0"
-
-# CLI
-clap = { version = "4", features = ["derive"] }
-dialoguer = "0.11"
-console = "0.15"
-indicatif = "0.17"
-
-# File watching
-notify = "8"
-notify-debouncer-full = "0.5"
-
 # Parallelism
 rayon = "1"
-
-# Security rules & config
-serde_yaml = "0.9"
-regex = "1"
-directories = "5"
-
-# Structured logging
-tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 
 # Utilities
 sha2 = "0.10"
 hex = "0.4"
-walkdir = "2"
 ignore = "0.4"
 streaming-iterator = "0.1.9"
-chrono = "0.4"
 
 [features]
-default = ["embedding"]
-embedding = ["dep:fastembed"]
-reranking = ["embedding"]
+default = []
 
 [profile.release]
 opt-level = 3
@@ -117,11 +82,5 @@ codegen-units = 1
 
 [dev-dependencies]
 tempfile = "3"
-criterion = { version = "0.5", features = ["html_reports"] }
 proptest = "1.4"
 test-case = "3.3"
-pretty_assertions = "1.4"
-
-[[bench]]
-name = "indexing_bench"
-harness = false

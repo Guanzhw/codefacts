@@ -1,8 +1,7 @@
-//! SQLite schema initialization for CodeGraph.
+//! SQLite schema initialization for CodeFacts.
 //!
-//! Faithfully ports the TypeScript `db/schema.ts` to Rust, producing an
-//! identical on-disk schema so that databases are interchangeable between
-//! the TS and Rust implementations.
+//! The schema stores normalized source facts and an FTS index. It
+//! intentionally contains no vector tables or embedding cache.
 
 use rusqlite::Connection;
 
@@ -49,14 +48,6 @@ CREATE TABLE IF NOT EXISTS file_hashes (
   content_hash TEXT NOT NULL,
   language TEXT NOT NULL,
   indexed_at INTEGER DEFAULT (strftime('%s','now'))
-)";
-
-const CREATE_EMBEDDING_CACHE: &str = "\
-CREATE TABLE IF NOT EXISTS embedding_cache (
-  node_id TEXT PRIMARY KEY,
-  embedding BLOB NOT NULL,
-  model_version TEXT NOT NULL DEFAULT 'jina-embeddings-v2-base-code',
-  FOREIGN KEY (node_id) REFERENCES nodes(id) ON DELETE CASCADE
 )";
 
 const CREATE_UNRESOLVED_REFS: &str = "\
@@ -111,50 +102,12 @@ CREATE TRIGGER IF NOT EXISTS nodes_au AFTER UPDATE ON nodes BEGIN
 END",
 ];
 
-// sqlite-vec -------------------------------------------------------------
-
-const CREATE_VEC_EMBEDDINGS: &str = "\
-CREATE VIRTUAL TABLE IF NOT EXISTS vec_embeddings USING vec0(
-  node_id TEXT PRIMARY KEY,
-  embedding float[768]
-)";
-
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
 
-/// Load the `sqlite-vec` extension via `sqlite3_auto_extension`.
-///
-/// This **must** be called before any connection is opened so that every
-/// new connection automatically has vec0 available.  The call is idempotent
-/// — calling it more than once is harmless.
-#[allow(clippy::missing_transmute_annotations)]
-fn load_sqlite_vec_extension() {
-    use rusqlite::ffi::sqlite3_auto_extension;
-    use sqlite_vec::sqlite3_vec_init;
-
-    unsafe {
-        sqlite3_auto_extension(Some(std::mem::transmute(sqlite3_vec_init as *const ())));
-    }
-}
-
-/// Create the `vec_embeddings` virtual table.
-///
-/// Separated into its own function because it depends on the `sqlite-vec`
-/// extension being loaded.  If the extension is unavailable the error is
-/// logged as a warning and execution continues — the rest of the schema is
-/// fully functional without vector search.
-pub fn create_vec_table(conn: &Connection) {
-    if let Err(e) = conn.execute_batch(CREATE_VEC_EMBEDDINGS) {
-        tracing::warn!(
-            "could not create vec_embeddings table \
-             (sqlite-vec may not be loaded): {e}"
-        );
-    }
-}
-
-/// Open (or create) the SQLite database at `db_path` and apply the full
-/// CodeGraph schema.
+/// Open (or create) the SQLite database at `db_path` and apply the CodeFacts
+/// schema.
 ///
 /// The returned connection has WAL mode, foreign keys, and synchronous
 /// NORMAL already configured.
@@ -162,11 +115,8 @@ pub fn create_vec_table(conn: &Connection) {
 /// # Errors
 ///
 /// Returns a `rusqlite::Error` if the database cannot be opened or any DDL
-/// statement fails (excluding the optional `vec_embeddings` table).
+/// statement fails.
 pub fn initialize_database(db_path: &str) -> rusqlite::Result<Connection> {
-    // Register the sqlite-vec auto-extension *before* opening the connection.
-    load_sqlite_vec_extension();
-
     let conn = Connection::open(db_path)?;
 
     // -- Pragmas ----------------------------------------------------------
@@ -181,7 +131,6 @@ pub fn initialize_database(db_path: &str) -> rusqlite::Result<Connection> {
     conn.execute_batch(CREATE_NODES)?;
     conn.execute_batch(CREATE_EDGES)?;
     conn.execute_batch(CREATE_FILE_HASHES)?;
-    conn.execute_batch(CREATE_EMBEDDING_CACHE)?;
     conn.execute_batch(CREATE_UNRESOLVED_REFS)?;
 
     // -- Indexes ----------------------------------------------------------
@@ -198,9 +147,6 @@ pub fn initialize_database(db_path: &str) -> rusqlite::Result<Connection> {
     for trigger in CREATE_FTS_TRIGGERS {
         conn.execute_batch(trigger)?;
     }
-
-    // -- sqlite-vec -------------------------------------------------------
-    create_vec_table(&conn);
 
     Ok(conn)
 }
@@ -222,7 +168,6 @@ fn migrate_add_name_tokens(conn: &Connection) -> rusqlite::Result<()> {
         conn.execute_batch("DROP TRIGGER IF EXISTS nodes_ad")?;
         conn.execute_batch("DROP TRIGGER IF EXISTS nodes_au")?;
         conn.execute_batch("DROP TABLE IF EXISTS fts_nodes")?;
-        tracing::info!("Migrated: added name_tokens column to nodes");
     }
 
     Ok(())
@@ -237,7 +182,6 @@ fn migrate_add_is_test(conn: &Connection) -> rusqlite::Result<()> {
 
     if !has_column {
         conn.execute_batch("ALTER TABLE nodes ADD COLUMN is_test INTEGER NOT NULL DEFAULT 0")?;
-        tracing::info!("Migrated: added is_test column to nodes");
     }
 
     Ok(())
@@ -277,13 +221,7 @@ mod tests {
     #[test]
     fn core_tables_exist() {
         let conn = setup();
-        for table in &[
-            "nodes",
-            "edges",
-            "file_hashes",
-            "embedding_cache",
-            "unresolved_refs",
-        ] {
+        for table in &["nodes", "edges", "file_hashes", "unresolved_refs"] {
             assert!(
                 object_exists(&conn, "table", table),
                 "table '{table}' should exist"
@@ -328,15 +266,6 @@ mod tests {
                 "trigger '{trigger}' should exist"
             );
         }
-    }
-
-    #[test]
-    fn vec_embeddings_table_exists() {
-        let conn = setup();
-        assert!(
-            object_exists(&conn, "table", "vec_embeddings"),
-            "vec_embeddings virtual table should exist"
-        );
     }
 
     #[test]
@@ -483,25 +412,6 @@ mod tests {
             assert!(
                 columns.contains(&col.to_string()),
                 "file_hashes table should have column '{col}', found: {columns:?}"
-            );
-        }
-    }
-
-    #[test]
-    fn embedding_cache_table_has_expected_columns() {
-        let conn = setup();
-        let columns: Vec<String> = conn
-            .prepare("PRAGMA table_info(embedding_cache)")
-            .unwrap()
-            .query_map([], |row| row.get::<_, String>(1))
-            .unwrap()
-            .filter_map(|r| r.ok())
-            .collect();
-
-        for col in &["node_id", "embedding", "model_version"] {
-            assert!(
-                columns.contains(&col.to_string()),
-                "embedding_cache table should have column '{col}', found: {columns:?}"
             );
         }
     }
@@ -769,36 +679,6 @@ mod tests {
     }
 
     #[test]
-    fn embedding_cache_model_version_default() {
-        let conn = setup();
-        // Need a node for the FK
-        conn.execute(
-            "INSERT INTO nodes (id, type, name, file_path, start_line, end_line, language)
-             VALUES ('n1', 'function', 'fn1', 'src/a.ts', 1, 5, 'typescript')",
-            [],
-        )
-        .unwrap();
-
-        conn.execute(
-            "INSERT INTO embedding_cache (node_id, embedding) VALUES ('n1', X'00')",
-            [],
-        )
-        .unwrap();
-
-        let version: String = conn
-            .query_row(
-                "SELECT model_version FROM embedding_cache WHERE node_id = 'n1'",
-                [],
-                |row| row.get(0),
-            )
-            .unwrap();
-        assert_eq!(
-            version, "jina-embeddings-v2-base-code",
-            "Default model version should be jina-embeddings-v2-base-code"
-        );
-    }
-
-    #[test]
     fn node_default_column_values() {
         let conn = setup();
         conn.execute(
@@ -857,17 +737,6 @@ mod tests {
     }
 
     #[test]
-    fn create_vec_table_is_idempotent() {
-        let conn = setup();
-        // Call create_vec_table again — should not error
-        create_vec_table(&conn);
-        assert!(
-            object_exists(&conn, "table", "vec_embeddings"),
-            "vec_embeddings should still exist after double create"
-        );
-    }
-
-    #[test]
     fn all_table_count() {
         let conn = setup();
         let count: i64 = conn
@@ -877,8 +746,8 @@ mod tests {
                 |row| row.get(0),
             )
             .unwrap();
-        // nodes, edges, file_hashes, embedding_cache, unresolved_refs, fts_nodes, vec_embeddings
-        assert!(count >= 7, "Should have at least 7 tables, got {}", count);
+        // nodes, edges, file_hashes, unresolved_refs, fts_nodes
+        assert!(count >= 5, "Should have at least 5 tables, got {}", count);
     }
 
     #[test]

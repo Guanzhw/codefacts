@@ -1,23 +1,13 @@
-//! CodeGraph — codebase intelligence library.
+//! CodeFacts — local, source-backed code facts for coding agents.
 //!
-//! Provides semantic code graph construction, vector search, and MCP server
-//! capabilities for AI-assisted development workflows.
+//! The runtime deliberately exposes only the indexing core and the five
+//! read-only MCP workflows. Upstream provenance is recorded in `UPSTREAM.md`.
 
-pub mod cli;
-pub mod config;
-pub mod context;
 pub mod db;
 pub mod error;
-pub mod eval;
-pub mod ffi;
-pub mod git;
 pub mod graph;
-pub mod hooks;
 pub mod indexer;
 pub mod mcp;
-pub mod observability;
 pub mod resolution;
-pub mod security;
+pub mod service;
 pub mod types;
-pub mod viz;
-pub mod workspace;

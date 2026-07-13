@@ -1,7 +1,0 @@
-//! Hooks — Claude Code hook installation and runtime handlers.
-
-pub mod claude_template;
-pub mod codex_config;
-pub mod git_hooks;
-pub mod handlers;
-pub mod install;

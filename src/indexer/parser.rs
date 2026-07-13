@@ -19,7 +19,7 @@
 //! - **Language detection by extension.** Delegates to [`Language::from_extension`],
 //!   keeping the mapping in one canonical place.
 
-use crate::error::{CodeGraphError, Result};
+use crate::error::{CodeFactsError, Result};
 use crate::types::Language;
 
 /// Thin wrapper around native tree-sitter parsing and query compilation.
@@ -47,15 +47,20 @@ impl CodeParser {
     /// underlying C object is `!Send`. This is intentional — allocation is
     /// trivially fast and it keeps the API thread-safe.
     pub fn parse(&self, content: &str, language: Language) -> Result<tree_sitter::Tree> {
+        if language == Language::Markdown {
+            return Err(CodeFactsError::Parse(
+                "Markdown uses the heading extractor, not a tree-sitter grammar".into(),
+            ));
+        }
         let ts_lang = Self::get_ts_language(language);
 
         let mut parser = tree_sitter::Parser::new();
         parser
             .set_language(&ts_lang)
-            .map_err(|e| CodeGraphError::Parse(format!("Language version mismatch: {e}")))?;
+            .map_err(|e| CodeFactsError::Parse(format!("Language version mismatch: {e}")))?;
 
         parser.parse(content, None).ok_or_else(|| {
-            CodeGraphError::Parse("tree-sitter returned None (timeout or cancellation)".into())
+            CodeFactsError::Parse("tree-sitter returned None (timeout or cancellation)".into())
         })
     }
 
@@ -65,7 +70,7 @@ impl CodeParser {
     /// goes through tree-sitter's `From<LanguageFn> for Language` impl, which
     /// invokes the C initializer exactly once.
     #[must_use]
-    pub fn get_ts_language(language: Language) -> tree_sitter::Language {
+    fn get_ts_language(language: Language) -> tree_sitter::Language {
         match language {
             Language::TypeScript => tree_sitter_typescript::LANGUAGE_TYPESCRIPT.into(),
             Language::Tsx => tree_sitter_typescript::LANGUAGE_TSX.into(),
@@ -99,6 +104,7 @@ impl CodeParser {
             Language::Elm => tree_sitter_elm::LANGUAGE.into(),
             Language::Fortran => tree_sitter_fortran::LANGUAGE.into(),
             Language::Nix => tree_sitter_nix::LANGUAGE.into(),
+            Language::Markdown => unreachable!("Markdown is extracted without tree-sitter"),
         }
     }
 
@@ -109,10 +115,15 @@ impl CodeParser {
     /// If profiling shows this is a bottleneck, wrap with a static
     /// `OnceLock<HashMap<Language, Query>>` — the public API stays the same.
     pub fn load_query(language: Language) -> Result<tree_sitter::Query> {
+        if language == Language::Markdown {
+            return Err(CodeFactsError::Parse(
+                "Markdown uses the heading extractor, not a tree-sitter query".into(),
+            ));
+        }
         let ts_lang = Self::get_ts_language(language);
         let source = language.query_source();
         tree_sitter::Query::new(&ts_lang, source).map_err(|e| {
-            CodeGraphError::Parse(format!("Query compilation error for {language}: {e}"))
+            CodeFactsError::Parse(format!("Query compilation error for {language}: {e}"))
         })
     }
 
@@ -1202,7 +1213,7 @@ in {
             ("Main.elm", Some(Language::Elm)),
             ("solver.f90", Some(Language::Fortran)),
             ("config.nix", Some(Language::Nix)),
-            ("README.md", None),
+            ("README.md", Some(Language::Markdown)),
             ("Cargo.toml", None),
             ("no-extension", None),
         ];
@@ -1254,7 +1265,7 @@ in {
         assert!(CodeParser::is_supported("solver.f90"));
         assert!(CodeParser::is_supported("config.nix"));
 
-        assert!(!CodeParser::is_supported("readme.md"));
+        assert!(CodeParser::is_supported("readme.md"));
         assert!(!CodeParser::is_supported("config.yaml"));
         assert!(!CodeParser::is_supported(""));
     }
@@ -1478,7 +1489,7 @@ in {
     #[test_case("solver.f90", Some(Language::Fortran) ; "detect_f90")]
     #[test_case("solver.f95", Some(Language::Fortran) ; "detect_f95")]
     #[test_case("config.nix", Some(Language::Nix) ; "detect_nix")]
-    #[test_case("README.md", None ; "detect_md_none")]
+    #[test_case("README.md", Some(Language::Markdown) ; "detect_markdown")]
     #[test_case("Cargo.toml", None ; "detect_toml_none")]
     #[test_case("Makefile", None ; "detect_makefile_none")]
     #[test_case("no_extension", None ; "detect_no_ext_none")]
@@ -1503,7 +1514,7 @@ in {
     #[test_case("test.nix", true ; "supported_nix")]
     #[test_case("test.f90", true ; "supported_f90")]
     #[test_case("test.elm", true ; "supported_elm")]
-    #[test_case("readme.md", false ; "unsupported_md")]
+    #[test_case("readme.md", true ; "supported_markdown")]
     #[test_case("config.yaml", false ; "unsupported_yaml")]
     #[test_case("", false ; "unsupported_empty")]
     #[test_case("Dockerfile", false ; "unsupported_dockerfile")]

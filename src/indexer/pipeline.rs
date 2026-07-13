@@ -23,9 +23,10 @@ use ignore::WalkBuilder;
 use rayon::prelude::*;
 use sha2::{Digest, Sha256};
 
-use crate::error::{CodeGraphError, Result};
+use crate::error::Result;
 use crate::graph::store::GraphStore;
 use crate::indexer::extractor::Extractor;
+use crate::indexer::markdown::extract_headings;
 use crate::indexer::parser::CodeParser;
 use crate::resolution::imports::resolve_imports;
 use crate::types::{CodeEdge, CodeNode, Language};
@@ -102,6 +103,16 @@ impl<'a> IndexingPipeline<'a> {
         // ---- Collect files ----
         let file_paths = collect_files(root);
 
+        // Remove facts for files that are deleted, renamed, newly ignored, or
+        // no longer indexable. Without this sweep an incremental index would
+        // retain symbols that are absent from the current repository view.
+        let current_paths: HashSet<String> = file_paths
+            .iter()
+            .filter_map(|path| path.strip_prefix(root).ok())
+            .map(|path| path.to_string_lossy().replace('\\', "/"))
+            .collect();
+        let removed_files = self.remove_paths_not_in(&current_paths)?;
+
         // Pre-fetch all file hashes for incremental checks (before rayon).
         // This avoids touching the non-Sync Connection from parallel threads.
         let stored_hashes: HashMap<String, String> = if options.incremental {
@@ -120,7 +131,7 @@ impl<'a> IndexingPipeline<'a> {
             .filter_map(|abs_path| {
                 // Compute relative path
                 let rel_path = match abs_path.strip_prefix(root) {
-                    Ok(r) => r.to_string_lossy().to_string(),
+                    Ok(r) => r.to_string_lossy().replace('\\', "/"),
                     Err(_) => {
                         files_skipped.fetch_add(1, Ordering::Relaxed);
                         return None;
@@ -171,23 +182,24 @@ impl<'a> IndexingPipeline<'a> {
                     }
                 };
 
-                // Parse with a thread-local Parser (Parser is NOT Send/Sync)
-                let parser = CodeParser::new();
-                let tree = match parser.parse(&source_text, language) {
-                    Ok(t) => t,
-                    Err(_) => {
-                        files_skipped.fetch_add(1, Ordering::Relaxed);
-                        return None;
-                    }
-                };
-
-                // Extract nodes
-                let nodes = match Extractor::extract_nodes(&tree, &rel_path, language, &source_text)
-                {
-                    Ok(n) => n,
-                    Err(_) => {
-                        files_skipped.fetch_add(1, Ordering::Relaxed);
-                        return None;
+                let nodes = if language == Language::Markdown {
+                    extract_headings(&rel_path, &source_text)
+                } else {
+                    // Parse with a thread-local Parser (Parser is NOT Send/Sync)
+                    let parser = CodeParser::new();
+                    let tree = match parser.parse(&source_text, language) {
+                        Ok(t) => t,
+                        Err(_) => {
+                            files_skipped.fetch_add(1, Ordering::Relaxed);
+                            return None;
+                        }
+                    };
+                    match Extractor::extract_nodes(&tree, &rel_path, language, &source_text) {
+                        Ok(n) => n,
+                        Err(_) => {
+                            files_skipped.fetch_add(1, Ordering::Relaxed);
+                            return None;
+                        }
                     }
                 };
 
@@ -200,6 +212,17 @@ impl<'a> IndexingPipeline<'a> {
                 })
             })
             .collect();
+
+        // A changed definition can alter cross-file call and import targets in
+        // otherwise unchanged files. Rebuild the graph snapshot before serving
+        // facts instead of leaving those relationships partially resolved. A
+        // no-change refresh still takes the incremental fast path above.
+        if options.incremental && (!parsed.is_empty() || removed_files > 0) {
+            return self.index_directory(&IndexOptions {
+                root_dir: root.clone(),
+                incremental: false,
+            });
+        }
 
         // ---- Build cross-file node index ----
         let mut all_nodes: Vec<&CodeNode> = Vec::new();
@@ -231,18 +254,21 @@ impl<'a> IndexingPipeline<'a> {
         > = parsed
             .par_iter()
             .map(|state| {
-                // Each thread creates its own Parser (not Send/Sync)
-                let parser = CodeParser::new();
-                let tree = parser.parse(&state.source_text, state.language)?;
-
-                let edges = Extractor::extract_edges(
-                    &tree,
-                    &state.relative_path,
-                    state.language,
-                    &state.source_text,
-                    &state.nodes,
-                    &node_index,
-                )?;
+                let edges = if state.language == Language::Markdown {
+                    Vec::new()
+                } else {
+                    // Each thread creates its own Parser (not Send/Sync)
+                    let parser = CodeParser::new();
+                    let tree = parser.parse(&state.source_text, state.language)?;
+                    Extractor::extract_edges(
+                        &tree,
+                        &state.relative_path,
+                        state.language,
+                        &state.source_text,
+                        &state.nodes,
+                        &node_index,
+                    )?
+                };
 
                 Ok((
                     state.relative_path.clone(),
@@ -339,28 +365,6 @@ impl<'a> IndexingPipeline<'a> {
             )?;
         }
 
-        // ---- Optional: generate embeddings ----
-        #[cfg(feature = "embedding")]
-        if files_indexed > 0 {
-            if let Ok(engine) = crate::indexer::embedder::EmbeddingEngine::try_new() {
-                let batch_size = 64;
-                let mut embedded = 0usize;
-                for chunk in all_nodes.chunks(batch_size) {
-                    let chunk_owned: Vec<CodeNode> = chunk.iter().map(|n| (*n).clone()).collect();
-                    match engine.embed_and_store(&self.store.conn, &chunk_owned) {
-                        Ok(n) => embedded += n,
-                        Err(e) => {
-                            eprintln!("[codegraph] WARNING: embedding batch failed: {e}");
-                            break;
-                        }
-                    }
-                }
-                if embedded > 0 {
-                    eprintln!("[codegraph] Generated embeddings for {embedded} nodes");
-                }
-            }
-        }
-
         Ok(IndexResult {
             files_indexed,
             files_skipped: files_skipped.load(Ordering::Relaxed),
@@ -370,104 +374,10 @@ impl<'a> IndexingPipeline<'a> {
         })
     }
 
-    /// Index (or re-index) a single file. Used by the file watcher.
-    pub fn index_file(&self, file_path: &Path, root_dir: &Path) -> Result<Option<IndexResult>> {
-        let start = Instant::now();
-
-        let abs_path = if file_path.is_absolute() {
-            file_path.to_path_buf()
-        } else {
-            root_dir.join(file_path)
-        };
-
-        let language = match CodeParser::detect_language(&abs_path.to_string_lossy()) {
-            Some(l) => l,
-            None => return Ok(None),
-        };
-
-        let metadata = fs::metadata(&abs_path).map_err(CodeGraphError::Io)?;
-        if metadata.len() > MAX_FILE_SIZE {
-            return Ok(None);
-        }
-
-        let source_text = fs::read_to_string(&abs_path).map_err(CodeGraphError::Io)?;
-        let content_hash = sha256_hex(&source_text);
-
-        let rel_path = abs_path
-            .strip_prefix(root_dir)
-            .unwrap_or(&abs_path)
-            .to_string_lossy()
-            .to_string();
-
-        let parser = CodeParser::new();
-        let tree = parser.parse(&source_text, language)?;
-        let nodes = Extractor::extract_nodes(&tree, &rel_path, language, &source_text)?;
-
-        // Build node index: existing DB nodes + this file's new nodes
-        let existing = self.store.get_all_nodes()?;
-        let mut all_nodes: Vec<&CodeNode> = existing
-            .iter()
-            .filter(|n| n.file_path != rel_path)
-            .collect();
-        for n in &nodes {
-            all_nodes.push(n);
-        }
-        let node_index = build_node_index(&all_nodes);
-
-        let mut edges = Extractor::extract_edges(
-            &tree,
-            &rel_path,
-            language,
-            &source_text,
-            &nodes,
-            &node_index,
-        )?;
-
-        // Cross-file import resolution for single file re-index
-        let mut indexed_files: HashSet<String> =
-            existing.iter().map(|n| n.file_path.clone()).collect();
-        indexed_files.insert(rel_path.clone());
-
-        let mut nodes_by_file: HashMap<String, Vec<CodeNode>> = HashMap::new();
-        for node in &existing {
-            nodes_by_file
-                .entry(node.file_path.clone())
-                .or_default()
-                .push(node.clone());
-        }
-        nodes_by_file.insert(rel_path.clone(), nodes.clone());
-
-        let resolution_result =
-            resolve_imports(&edges, &indexed_files, &node_index, &nodes_by_file);
-        edges.extend(resolution_result.resolved_edges);
-
-        // Clear and persist unresolved refs for this file
-        self.store.clear_unresolved_refs_for_file(&rel_path)?;
-        for uref in &resolution_result.unresolved_refs {
-            self.store.insert_unresolved_ref(
-                &uref.source_id,
-                &uref.specifier,
-                &uref.ref_type,
-                &uref.file_path,
-                uref.line,
-            )?;
-        }
-
-        self.store.replace_file_data(&rel_path, &nodes, &edges)?;
-        self.upsert_file_hash(&rel_path, &content_hash, language)?;
-
-        Ok(Some(IndexResult {
-            files_indexed: 1,
-            files_skipped: 0,
-            nodes_created: nodes.len(),
-            edges_created: edges.len(),
-            duration_ms: start.elapsed().as_millis(),
-        }))
-    }
-
     /// Remove a file from the index entirely.
     pub fn remove_file(&self, relative_path: &str) -> Result<()> {
         self.store.delete_file_nodes(relative_path)?;
+        self.store.clear_unresolved_refs_for_file(relative_path)?;
         self.delete_file_hash(relative_path)?;
         Ok(())
     }
@@ -498,6 +408,17 @@ impl<'a> IndexingPipeline<'a> {
                 });
         }
         map
+    }
+
+    fn remove_paths_not_in(&self, current_paths: &HashSet<String>) -> Result<usize> {
+        let mut removed = 0;
+        for relative_path in self.load_all_file_hashes().into_keys() {
+            if !current_paths.contains(&relative_path) {
+                self.remove_file(&relative_path)?;
+                removed += 1;
+            }
+        }
+        Ok(removed)
     }
 
     fn upsert_file_hash(
@@ -576,7 +497,9 @@ fn collect_files(root: &Path) -> Vec<PathBuf> {
             continue;
         }
         let path = entry.path();
-        if CodeParser::is_supported(&path.to_string_lossy()) {
+        if CodeParser::is_supported(&path.to_string_lossy())
+            && fs::metadata(path).is_ok_and(|metadata| metadata.len() <= MAX_FILE_SIZE)
+        {
             files.push(path.to_path_buf());
         }
     }
@@ -760,40 +683,16 @@ export function greetV2(name: string): string {
         )
         .unwrap();
 
-        // Second index — only the modified file should be re-indexed
+        // A changed file triggers a full relationship rebind so callers and
+        // imports in otherwise unchanged files remain correct.
         let r2 = pipeline
             .index_directory(&IndexOptions {
                 root_dir: tmp.path().to_path_buf(),
                 incremental: true,
             })
             .unwrap();
-        assert_eq!(r2.files_indexed, 1);
-        assert_eq!(r2.files_skipped, 1);
-    }
-
-    #[test]
-    fn index_single_file() {
-        let (tmp, store) = setup_test_project();
-        let pipeline = IndexingPipeline::new(&store);
-
-        let ts_file = tmp.path().join("hello.ts");
-        let result = pipeline
-            .index_file(&ts_file, tmp.path())
-            .unwrap()
-            .expect("should index TypeScript file");
-
-        assert_eq!(result.files_indexed, 1);
-        assert!(result.nodes_created > 0);
-    }
-
-    #[test]
-    fn index_unsupported_file_returns_none() {
-        let (tmp, store) = setup_test_project();
-        let pipeline = IndexingPipeline::new(&store);
-
-        let txt_file = tmp.path().join("readme.txt");
-        let result = pipeline.index_file(&txt_file, tmp.path()).unwrap();
-        assert!(result.is_none());
+        assert_eq!(r2.files_indexed, 2);
+        assert_eq!(r2.files_skipped, 0);
     }
 
     #[test]

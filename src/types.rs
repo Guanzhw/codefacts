@@ -47,6 +47,7 @@ pub enum Language {
     Elm,
     Fortran,
     Nix,
+    Markdown,
 }
 
 impl Language {
@@ -86,6 +87,7 @@ impl Language {
             ".elm" => Some(Self::Elm),
             ".f90" | ".f95" | ".f03" | ".f08" | ".f" | ".for" | ".fpp" => Some(Self::Fortran),
             ".nix" => Some(Self::Nix),
+            ".md" | ".mdx" => Some(Self::Markdown),
             _ => None,
         }
     }
@@ -125,6 +127,7 @@ impl Language {
             Self::Elm => "elm",
             Self::Fortran => "fortran",
             Self::Nix => "nix",
+            Self::Markdown => "markdown",
         }
     }
 
@@ -162,6 +165,7 @@ impl Language {
             Self::Elm => include_str!("../queries/elm.scm"),
             Self::Fortran => include_str!("../queries/fortran.scm"),
             Self::Nix => include_str!("../queries/nix.scm"),
+            Self::Markdown => "",
         }
     }
 
@@ -201,6 +205,7 @@ impl Language {
             Self::Elm => "elm",
             Self::Fortran => "fortran",
             Self::Nix => "nix",
+            Self::Markdown => "markdown",
         }
     }
 
@@ -240,6 +245,7 @@ impl Language {
             "elm" => Some(Self::Elm),
             "fortran" | "f90" => Some(Self::Fortran),
             "nix" => Some(Self::Nix),
+            "markdown" | "md" | "mdx" => Some(Self::Markdown),
             _ => None,
         }
     }
@@ -272,6 +278,7 @@ pub enum NodeKind {
     Property,
     Namespace,
     Constant,
+    Heading,
 }
 
 impl NodeKind {
@@ -290,6 +297,7 @@ impl NodeKind {
             Self::Property => "property",
             Self::Namespace => "namespace",
             Self::Constant => "constant",
+            Self::Heading => "heading",
         }
     }
 
@@ -308,6 +316,7 @@ impl NodeKind {
             "property" | "field" => Some(Self::Property),
             "namespace" | "package" => Some(Self::Namespace),
             "constant" | "const" => Some(Self::Constant),
+            "heading" => Some(Self::Heading),
             _ => None,
         }
     }
@@ -798,7 +807,6 @@ mod tests {
     #[test_case(".json" ; "unknown_json")]
     #[test_case(".toml" ; "unknown_toml")]
     #[test_case(".xml" ; "unknown_xml")]
-    #[test_case(".md" ; "unknown_md")]
     #[test_case(".txt" ; "unknown_txt")]
     #[test_case(".html" ; "unknown_html")]
     #[test_case(".css" ; "unknown_css")]

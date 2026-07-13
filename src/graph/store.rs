@@ -585,9 +585,10 @@ impl GraphStore {
 
     /// Get every node whose `file_path` matches.
     pub fn get_nodes_by_file(&self, file_path: &str) -> Result<Vec<CodeNode>> {
-        let mut stmt = self
-            .conn
-            .prepare_cached("SELECT * FROM nodes WHERE file_path = ?1")?;
+        let mut stmt = self.conn.prepare_cached(
+            "SELECT * FROM nodes WHERE file_path = ?1 \
+                 ORDER BY start_line, start_column, id",
+        )?;
         let rows = stmt.query_and_then(params![file_path], row_to_code_node)?;
         rows.collect::<std::result::Result<Vec<_>, _>>()
             .map_err(Into::into)
@@ -595,9 +596,10 @@ impl GraphStore {
 
     /// Get every node whose `name` matches.
     pub fn get_nodes_by_name(&self, name: &str) -> Result<Vec<CodeNode>> {
-        let mut stmt = self
-            .conn
-            .prepare_cached("SELECT * FROM nodes WHERE name = ?1")?;
+        let mut stmt = self.conn.prepare_cached(
+            "SELECT * FROM nodes WHERE name = ?1 \
+                 ORDER BY file_path, start_line, start_column, id",
+        )?;
         let rows = stmt.query_and_then(params![name], row_to_code_node)?;
         rows.collect::<std::result::Result<Vec<_>, _>>()
             .map_err(Into::into)
@@ -605,9 +607,10 @@ impl GraphStore {
 
     /// Get every node whose `type` column matches `kind`.
     pub fn get_nodes_by_type(&self, kind: &str) -> Result<Vec<CodeNode>> {
-        let mut stmt = self
-            .conn
-            .prepare_cached("SELECT * FROM nodes WHERE type = ?1")?;
+        let mut stmt = self.conn.prepare_cached(
+            "SELECT * FROM nodes WHERE type = ?1 \
+                 ORDER BY file_path, start_line, start_column, id",
+        )?;
         let rows = stmt.query_and_then(params![kind], row_to_code_node)?;
         rows.collect::<std::result::Result<Vec<_>, _>>()
             .map_err(Into::into)
@@ -621,17 +624,19 @@ impl GraphStore {
     pub fn get_out_edges(&self, node_id: &str, edge_type: Option<&str>) -> Result<Vec<CodeEdge>> {
         match edge_type {
             Some(t) => {
-                let mut stmt = self
-                    .conn
-                    .prepare_cached("SELECT * FROM edges WHERE source_id = ?1 AND type = ?2")?;
+                let mut stmt = self.conn.prepare_cached(
+                    "SELECT * FROM edges WHERE source_id = ?1 AND type = ?2 \
+                         ORDER BY target_id, type",
+                )?;
                 let rows = stmt.query_and_then(params![node_id, t], row_to_code_edge)?;
                 rows.collect::<std::result::Result<Vec<_>, _>>()
                     .map_err(Into::into)
             }
             None => {
-                let mut stmt = self
-                    .conn
-                    .prepare_cached("SELECT * FROM edges WHERE source_id = ?1")?;
+                let mut stmt = self.conn.prepare_cached(
+                    "SELECT * FROM edges WHERE source_id = ?1 \
+                         ORDER BY target_id, type",
+                )?;
                 let rows = stmt.query_and_then(params![node_id], row_to_code_edge)?;
                 rows.collect::<std::result::Result<Vec<_>, _>>()
                     .map_err(Into::into)
@@ -643,17 +648,19 @@ impl GraphStore {
     pub fn get_in_edges(&self, node_id: &str, edge_type: Option<&str>) -> Result<Vec<CodeEdge>> {
         match edge_type {
             Some(t) => {
-                let mut stmt = self
-                    .conn
-                    .prepare_cached("SELECT * FROM edges WHERE target_id = ?1 AND type = ?2")?;
+                let mut stmt = self.conn.prepare_cached(
+                    "SELECT * FROM edges WHERE target_id = ?1 AND type = ?2 \
+                         ORDER BY source_id, type",
+                )?;
                 let rows = stmt.query_and_then(params![node_id, t], row_to_code_edge)?;
                 rows.collect::<std::result::Result<Vec<_>, _>>()
                     .map_err(Into::into)
             }
             None => {
-                let mut stmt = self
-                    .conn
-                    .prepare_cached("SELECT * FROM edges WHERE target_id = ?1")?;
+                let mut stmt = self.conn.prepare_cached(
+                    "SELECT * FROM edges WHERE target_id = ?1 \
+                         ORDER BY source_id, type",
+                )?;
                 let rows = stmt.query_and_then(params![node_id], row_to_code_edge)?;
                 rows.collect::<std::result::Result<Vec<_>, _>>()
                     .map_err(Into::into)
@@ -667,7 +674,9 @@ impl GraphStore {
 
     /// Return every node in the graph.
     pub fn get_all_nodes(&self) -> Result<Vec<CodeNode>> {
-        let mut stmt = self.conn.prepare_cached("SELECT * FROM nodes")?;
+        let mut stmt = self.conn.prepare_cached(
+            "SELECT * FROM nodes ORDER BY file_path, start_line, start_column, id",
+        )?;
         let rows = stmt.query_and_then([], row_to_code_node)?;
         rows.collect::<std::result::Result<Vec<_>, _>>()
             .map_err(Into::into)
@@ -675,7 +684,9 @@ impl GraphStore {
 
     /// Return every edge in the graph.
     pub fn get_all_edges(&self) -> Result<Vec<CodeEdge>> {
-        let mut stmt = self.conn.prepare_cached("SELECT * FROM edges")?;
+        let mut stmt = self
+            .conn
+            .prepare_cached("SELECT * FROM edges ORDER BY source_id, target_id, type")?;
         let rows = stmt.query_and_then([], row_to_code_edge)?;
         rows.collect::<std::result::Result<Vec<_>, _>>()
             .map_err(Into::into)
@@ -744,7 +755,7 @@ impl GraphStore {
             Some(fp) => {
                 let mut stmt = self.conn.prepare_cached(
                     "SELECT id, source_id, specifier, ref_type, file_path, line \
-                     FROM unresolved_refs WHERE file_path = ?1",
+                     FROM unresolved_refs WHERE file_path = ?1 ORDER BY line, id",
                 )?;
                 let rows = stmt.query_map(params![fp], |row| {
                     Ok(UnresolvedRef {
@@ -762,7 +773,7 @@ impl GraphStore {
             None => {
                 let mut stmt = self.conn.prepare_cached(
                     "SELECT id, source_id, specifier, ref_type, file_path, line \
-                     FROM unresolved_refs",
+                     FROM unresolved_refs ORDER BY file_path, line, id",
                 )?;
                 let rows = stmt.query_map([], |row| {
                     Ok(UnresolvedRef {

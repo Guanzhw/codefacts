@@ -1,6 +1,3 @@
-//! Resolution module — framework detection, dead code analysis, and import resolution.
+//! Cross-file relationship resolution.
 
-pub mod dead_code;
-pub mod frameworks;
 pub mod imports;
-pub mod routes;

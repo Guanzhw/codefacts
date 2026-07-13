@@ -157,7 +157,7 @@ mod tests {
             .query_row(
                 "SELECT * FROM nodes WHERE id = ?1",
                 ["function:src/main.ts:hello:1"],
-                |row| row_to_code_node(row),
+                row_to_code_node,
             )
             .unwrap();
 
@@ -204,7 +204,7 @@ mod tests {
             .query_row(
                 "SELECT * FROM edges WHERE source_id = 'n1' AND target_id = 'n2'",
                 [],
-                |row| row_to_code_edge(row),
+                row_to_code_edge,
             )
             .unwrap();
 
