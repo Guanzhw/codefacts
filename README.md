@@ -64,7 +64,34 @@ Every result is bounded, includes file/line/hash evidence, and refreshes the inc
 
 ## Install
 
-Until a tagged release asset is available, build the native binary from source:
+CodeFacts is distributed online as a small npm launcher plus a native GitHub
+Release asset. The launcher downloads the matching release binary once,
+verifies its SHA-256 against the checksum embedded in the versioned npm package,
+and runs it locally over stdio. It does not upload the repository being indexed.
+
+### Online install (published releases)
+
+After a tagged release is published, prefetch its native binary before adding
+the MCP server. Node.js 18 or later is the only installation prerequisite; Rust
+is not required.
+
+```powershell
+npx -y codefacts@0.1.0 --install
+```
+
+The command prints the local binary path. Pin the version in a shared MCP
+configuration so a future npm release cannot silently change the executable
+that starts in a coding session. `@latest` is acceptable for an interactive
+upgrade, but not the default for a checked-in project configuration.
+
+The launcher supports Windows x64, macOS x64/arm64, and Linux x64/arm64.
+Its first download can take longer than a normal MCP startup, so prefetch it or
+use the 120-second timeout shown below. Download status goes to stderr only;
+stdio stdout remains valid JSON-RPC.
+
+### Build from source
+
+Before the first published npm release, or when a source build is preferred:
 
 ```powershell
 cargo build --release --locked
@@ -79,16 +106,23 @@ on macOS or Linux, use the equivalent absolute path such as
 
 ### Claude Code
 
-For a project-local configuration, put this `.mcp.json` in the repository that
-you want Claude Code to inspect. Replace the executable path with your own.
+For a project-local online configuration, put this `.mcp.json` in the
+repository that you want Claude Code to inspect:
 
 ```json
 {
   "mcpServers": {
     "codefacts": {
       "type": "stdio",
-      "command": "C:\\Tools\\codefacts.exe",
-      "args": ["mcp", "--root", "${CLAUDE_PROJECT_DIR:-.}"]
+      "command": "npx",
+      "args": [
+        "-y",
+        "codefacts@0.1.0",
+        "mcp",
+        "--root",
+        "${CLAUDE_PROJECT_DIR:-.}"
+      ],
+      "timeout": 120000
     }
   }
 }
@@ -99,7 +133,7 @@ follows the project root. Project-scoped MCP servers require your approval on
 first use. Alternatively, add a fixed repository root from the CLI:
 
 ```powershell
-claude mcp add --scope project --transport stdio codefacts -- C:\Tools\codefacts.exe mcp --root D:\WorkSpace\your-repository
+claude mcp add --scope project --transport stdio codefacts -- npx -y codefacts@0.1.0 mcp --root D:\WorkSpace\your-repository
 claude mcp get codefacts
 ```
 
@@ -115,10 +149,10 @@ repository rather than the CodeFacts checkout.
   "mcp": {
     "codefacts": {
       "type": "local",
-      "command": ["C:\\Tools\\codefacts.exe", "mcp", "--root", "."],
+      "command": ["npx", "-y", "codefacts@0.1.0", "mcp", "--root", "."],
       "cwd": ".",
       "enabled": true,
-      "timeout": 30000
+      "timeout": 120000
     }
   }
 }
@@ -131,6 +165,22 @@ want to index. Verify the connection with:
 ```text
 opencode mcp list
 ```
+
+### Cache, trust, and offline use
+
+The launcher verifies the cached binary against its embedded SHA-256 before
+every start. Its default cache is `%LOCALAPPDATA%\CodeFacts\bin` on Windows,
+`~/Library/Caches/codefacts/bin` on macOS, and
+`${XDG_CACHE_HOME:-~/.cache}/codefacts/bin` on Linux. Set
+`CODEFACTS_CACHE_DIR` to move that cache (for example to a pre-populated CI
+cache). `CODEFACTS_DOWNLOAD_BASE_URL` can point at a trusted internal mirror
+that serves the same versioned asset names; the embedded checksum still has to
+match.
+
+An air-gapped machine can pre-populate that cache from a verified Release asset
+or use a source-built binary directly. Details of the artifact names, checksum
+chain, npm provenance, and release setup are in
+[docs/DISTRIBUTION.md](docs/DISTRIBUTION.md).
 
 ## Run as an MCP server
 
@@ -148,9 +198,15 @@ codefacts mcp --root D:\WorkSpace\your-repository --state D:\CodeFactsState\your
 
 No repository hooks, watchers, background server, generated agent instructions, or prompt injection are installed or started.
 
-For development from source, run `cargo build --release`; published builds are intended to be a single native binary for Windows, macOS, and Linux.
+For development from source, run `cargo build --release`; published builds are
+intended to be a single native binary for Windows, macOS, and Linux.
 
-Tagged releases build Windows, macOS, and Linux binaries in GitHub Actions after a dependency-license audit of the locked dependency graph. The release workflow does not publish automatically from ordinary commits.
+Tagged releases build Windows x64, macOS x64/arm64, and Linux x64/arm64
+binaries after a dependency-license audit and publish a checksum-pinned npm
+launcher. Ordinary commits never publish a release. The optional
+`server.json` is ready for publication to the official MCP Registry after the
+npm package exists; registry metadata is discovery information, not a hosted
+CodeFacts service.
 
 ## Storage model and scope
 

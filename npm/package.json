@@ -1,0 +1,42 @@
+{
+  "name": "codefacts",
+  "version": "0.1.0",
+  "description": "Local, verifiable code facts for coding agents",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Guanzhw/codefacts"
+  },
+  "bugs": {
+    "url": "https://github.com/Guanzhw/codefacts/issues"
+  },
+  "homepage": "https://github.com/Guanzhw/codefacts#readme",
+  "bin": {
+    "codefacts": "bin/codefacts.js"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "assets.json",
+    "checksums.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "mcpName": "io.github.guanzhw/codefacts",
+  "keywords": [
+    "mcp",
+    "code-intelligence",
+    "tree-sitter",
+    "sqlite",
+    "claude-code",
+    "opencode"
+  ],
+  "scripts": {
+    "check-release-version": "node scripts/check-release-version.mjs",
+    "stage": "node scripts/stage-package.mjs",
+    "test": "node --test test/*.test.mjs"
+  }
+}

@@ -1,4 +1,6 @@
 /target
+/npm-dist
+/npm/*.tgz
 
 # OS
 .DS_Store

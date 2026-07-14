@@ -1,0 +1,22 @@
+{
+  "win32-x64": {
+    "assetName": "codefacts-windows-x86_64.exe",
+    "executableName": "codefacts.exe"
+  },
+  "darwin-x64": {
+    "assetName": "codefacts-macos-x86_64",
+    "executableName": "codefacts"
+  },
+  "darwin-arm64": {
+    "assetName": "codefacts-macos-aarch64",
+    "executableName": "codefacts"
+  },
+  "linux-x64": {
+    "assetName": "codefacts-linux-x86_64",
+    "executableName": "codefacts"
+  },
+  "linux-arm64": {
+    "assetName": "codefacts-linux-aarch64",
+    "executableName": "codefacts"
+  }
+}

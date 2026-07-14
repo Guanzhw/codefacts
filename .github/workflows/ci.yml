@@ -20,10 +20,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
       - name: Test all targets
         run: cargo test --all-targets --locked
       - name: Build deployed binary
         run: cargo build --release --locked --bin codefacts
+      - name: Verify npm launcher package and protocol
+        run: |
+          node npm/scripts/check-release-version.mjs
+          node --test npm/test/*.test.mjs
 
   quality:
     name: Formatting and lints
