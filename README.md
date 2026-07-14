@@ -76,7 +76,7 @@ the MCP server. Node.js 18 or later is the only installation prerequisite; Rust
 is not required.
 
 ```powershell
-npx -y codefacts@0.1.0 --install
+npx -y codefacts@0.1.1 --install
 ```
 
 The command prints the local binary path. Pin the version in a shared MCP
@@ -117,7 +117,7 @@ repository that you want Claude Code to inspect:
       "command": "npx",
       "args": [
         "-y",
-        "codefacts@0.1.0",
+        "codefacts@0.1.1",
         "mcp",
         "--root",
         "${CLAUDE_PROJECT_DIR:-.}"
@@ -133,7 +133,7 @@ follows the project root. Project-scoped MCP servers require your approval on
 first use. Alternatively, add a fixed repository root from the CLI:
 
 ```powershell
-claude mcp add --scope project --transport stdio codefacts -- npx -y codefacts@0.1.0 mcp --root D:\WorkSpace\your-repository
+claude mcp add --scope project --transport stdio codefacts -- npx -y codefacts@0.1.1 mcp --root D:\WorkSpace\your-repository
 claude mcp get codefacts
 ```
 
@@ -149,7 +149,7 @@ repository rather than the CodeFacts checkout.
   "mcp": {
     "codefacts": {
       "type": "local",
-      "command": ["npx", "-y", "codefacts@0.1.0", "mcp", "--root", "."],
+      "command": ["npx", "-y", "codefacts@0.1.1", "mcp", "--root", "."],
       "cwd": ".",
       "enabled": true,
       "timeout": 120000

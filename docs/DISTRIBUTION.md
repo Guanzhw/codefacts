@@ -9,7 +9,7 @@ project's contract.
 ## What users run
 
 ```text
-npx -y codefacts@0.1.0 mcp --root .
+npx -y codefacts@0.1.1 mcp --root .
 ```
 
 The `codefacts` npm package contains no runtime dependencies and no source
@@ -83,7 +83,7 @@ Before creating the first tag:
    a clean prefix without scripts, then completes a real stdio MCP handshake
    and source-backed search through the launcher.
 
-Then create and push a matching tag, for example `v0.1.0`. The workflow audits
+Then create and push a matching tag, for example `v0.1.1`. The workflow audits
 licenses, tests the Rust project, builds all assets, creates the GitHub Release
 with `SHA256SUMS`, stages a checksum-pinned npm tarball, and publishes it with
 provenance. A tag must not be considered an online-installable release until
