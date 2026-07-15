@@ -57,7 +57,7 @@ Version 1 deliberately exposes exactly five read-only tools:
 | `map` | Repository structure, language mix, and high-level symbol counts. |
 | `search` | Indexed symbols, endpoints, and Markdown documentation headings through FTS. |
 | `outline` | Symbols or headings in one file. |
-| `expand` | One definition plus static callers, callees, references, and related tests. |
+| `expand` | One definition plus static callers, callees, references, related tests, and optional semantic references. |
 | `path` | A shortest bounded static calls path between confirmed symbols. |
 
 Every result is bounded, includes file/line/hash evidence, and refreshes the incremental index before answering. A `no_static_path` result never claims that runtime execution is unreachable.
@@ -76,7 +76,7 @@ the MCP server. Node.js 18 or later is the only installation prerequisite; Rust
 is not required.
 
 ```powershell
-npx -y codefacts@0.1.1 --install
+npx -y codefacts@0.1.2 --install
 ```
 
 The command prints the local binary path. Pin the version in a shared MCP
@@ -117,7 +117,7 @@ repository that you want Claude Code to inspect:
       "command": "npx",
       "args": [
         "-y",
-        "codefacts@0.1.1",
+        "codefacts@0.1.2",
         "mcp",
         "--root",
         "${CLAUDE_PROJECT_DIR:-.}"
@@ -133,7 +133,7 @@ follows the project root. Project-scoped MCP servers require your approval on
 first use. Alternatively, add a fixed repository root from the CLI:
 
 ```powershell
-claude mcp add --scope project --transport stdio codefacts -- npx -y codefacts@0.1.1 mcp --root D:\WorkSpace\your-repository
+claude mcp add --scope project --transport stdio codefacts -- npx -y codefacts@0.1.2 mcp --root D:\WorkSpace\your-repository
 claude mcp get codefacts
 ```
 
@@ -149,7 +149,7 @@ repository rather than the CodeFacts checkout.
   "mcp": {
     "codefacts": {
       "type": "local",
-      "command": ["npx", "-y", "codefacts@0.1.1", "mcp", "--root", "."],
+      "command": ["npx", "-y", "codefacts@0.1.2", "mcp", "--root", "."],
       "cwd": ".",
       "enabled": true,
       "timeout": 120000
@@ -195,6 +195,20 @@ Use `--state` to select an explicit external database location:
 ```text
 codefacts mcp --root D:\WorkSpace\your-repository --state D:\CodeFactsState\your-repository.sqlite
 ```
+
+### Optional LSP enrichment
+
+`codefacts mcp` defaults to `--lsp auto`. It never installs or configures a
+language server; it detects a separately installed supported server on `PATH`
+and uses an isolated stdio session only while expanding a matching symbol.
+`map` reports the observed availability, and `expand.references.semantic`
+returns separately labeled semantic locations when the request succeeds.
+
+The initial providers are `rust-analyzer` for Rust and
+`typescript-language-server` for TypeScript/JavaScript. TypeScript projects
+need a compatible `typescript` installation that provides `tsserver`; a local
+workspace installation takes precedence. Use `--lsp off` to prevent all LSP
+probing and child processes while retaining the same static facts.
 
 No repository hooks, watchers, background server, generated agent instructions, or prompt injection are installed or started.
 

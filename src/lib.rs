@@ -7,6 +7,7 @@ pub mod db;
 pub mod error;
 pub mod graph;
 pub mod indexer;
+pub mod lsp;
 pub mod mcp;
 pub mod resolution;
 pub mod service;

@@ -2,6 +2,7 @@ use std::fs;
 use std::io::Write;
 use std::process::{Command, Stdio};
 
+use codefacts::lsp::LspMode;
 use codefacts::service::CodeFacts;
 use serde_json::{json, Value};
 use tempfile::tempdir;
@@ -120,6 +121,39 @@ fn refresh_prunes_facts_for_deleted_or_newly_ignored_files() {
     let refreshed = facts.map().expect("refresh after deletion");
     assert_eq!(refreshed["freshness"]["status"], "fresh");
     assert_eq!(refreshed["symbols"], 0);
+}
+
+#[test]
+fn lsp_is_optional_and_leaves_static_expand_facts_intact_when_disabled() {
+    let repository = tempdir().expect("temporary repository");
+    fs::write(
+        repository.path().join("lib.rs"),
+        "pub fn helper() {}\n\npub fn entry() {\n    helper();\n}\n",
+    )
+    .expect("rust fixture");
+    let facts = CodeFacts::open_with_lsp(
+        repository.path(),
+        repository.path().join("external.sqlite"),
+        LspMode::Off,
+    )
+    .expect("open external index with LSP disabled");
+
+    let map = facts.map().expect("map without LSP probes");
+    assert_eq!(map["lsp"]["mode"], "off");
+    assert!(map["lsp"]["servers"]
+        .as_array()
+        .expect("LSP servers")
+        .is_empty());
+
+    let expanded = facts
+        .expand("helper", Some("lib.rs"), None)
+        .expect("static expand without LSP");
+    assert_eq!(expanded["references"]["semantic"]["status"], "disabled");
+    assert!(expanded["callers"]
+        .as_array()
+        .expect("static callers")
+        .iter()
+        .any(|caller| caller["from"]["name"] == "entry"));
 }
 
 #[test]

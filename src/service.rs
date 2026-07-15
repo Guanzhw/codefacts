@@ -17,6 +17,7 @@ use crate::db::converters::row_to_code_node;
 use crate::error::{CodeFactsError, Result};
 use crate::graph::store::GraphStore;
 use crate::indexer::{IndexOptions, IndexResult, IndexingPipeline};
+use crate::lsp::{self, LspManager, LspMode, SemanticReferenceResult};
 use crate::types::{CodeEdge, CodeNode, EdgeKind};
 
 const DEFAULT_LIMIT: usize = 20;
@@ -28,6 +29,7 @@ pub struct CodeFacts {
     root: PathBuf,
     database_path: PathBuf,
     store: GraphStore,
+    lsp: LspManager,
 }
 
 #[derive(Debug, Serialize)]
@@ -66,9 +68,26 @@ pub struct RelationshipFact {
     pub evidence: Evidence,
 }
 
+#[derive(Debug, Serialize)]
+pub struct SemanticLocationFact {
+    pub evidence: Evidence,
+    pub start_column: u32,
+    pub end_column: u32,
+}
+
 impl CodeFacts {
     /// Open an external SQLite state file for `root`.
     pub fn open(root: impl AsRef<Path>, database_path: impl AsRef<Path>) -> Result<Self> {
+        Self::open_with_lsp(root, database_path, LspMode::Auto)
+    }
+
+    /// Open an external SQLite state file and choose whether optional,
+    /// user-installed LSP enrichment is permitted for this process.
+    pub fn open_with_lsp(
+        root: impl AsRef<Path>,
+        database_path: impl AsRef<Path>,
+        lsp_mode: LspMode,
+    ) -> Result<Self> {
         let root = root.as_ref().canonicalize().map_err(CodeFactsError::Io)?;
         if !root.is_dir() {
             return Err(CodeFactsError::Other(format!(
@@ -88,6 +107,7 @@ impl CodeFacts {
             root,
             database_path,
             store,
+            lsp: LspManager::new(lsp_mode),
         })
     }
 
@@ -116,11 +136,13 @@ impl CodeFacts {
         let nodes = self.store.get_all_nodes()?;
         let mut languages = BTreeMap::<String, usize>::new();
         let mut kinds = BTreeMap::<String, usize>::new();
-        for node in nodes {
+        let mut indexed_languages = Vec::with_capacity(nodes.len());
+        for node in &nodes {
             *languages
                 .entry(node.language.as_str().to_string())
                 .or_default() += 1;
             *kinds.entry(node.kind.as_str().to_string()).or_default() += 1;
+            indexed_languages.push(node.language);
         }
 
         Ok(json!({
@@ -131,6 +153,7 @@ impl CodeFacts {
             "relationships": stats.edges,
             "languages": languages,
             "symbol_kinds": kinds,
+            "lsp": self.lsp.report(indexed_languages),
         }))
     }
 
@@ -240,6 +263,7 @@ impl CodeFacts {
         let outbound_references =
             self.relationships_to(&node, false, Some(EdgeKind::References), limit)?;
         let tests = self.related_tests(&node, limit)?;
+        let semantic_references = self.semantic_references(&node, limit)?;
 
         Ok(json!({
             "freshness": freshness,
@@ -250,6 +274,7 @@ impl CodeFacts {
             "references": {
                 "inbound": references,
                 "outbound": outbound_references,
+                "semantic": semantic_references,
             },
             "tests": tests,
             "bounded_by": limit,
@@ -471,6 +496,83 @@ impl CodeFacts {
             .take(limit)
             .map(|candidate| self.symbol_fact(candidate))
             .collect()
+    }
+
+    fn semantic_references(&self, node: &CodeNode, limit: usize) -> Result<Value> {
+        match self.lsp.references(&self.root, node) {
+            SemanticReferenceResult::Disabled => Ok(json!({
+                "status": "disabled",
+                "message": "Semantic LSP references are disabled by --lsp off.",
+            })),
+            SemanticReferenceResult::Unsupported { language } => Ok(json!({
+                "status": "unsupported",
+                "language": language,
+                "message": "No optional LSP provider is supported for this symbol language.",
+            })),
+            SemanticReferenceResult::Unavailable { provider, message } => Ok(json!({
+                "status": "unavailable",
+                "provider": provider,
+                "message": message,
+            })),
+            SemanticReferenceResult::NotApplicable { provider, message } => Ok(json!({
+                "status": "not_applicable",
+                "provider": provider,
+                "message": message,
+            })),
+            SemanticReferenceResult::Failed { provider, message } => Ok(json!({
+                "status": "failed",
+                "provider": provider,
+                "message": message,
+            })),
+            SemanticReferenceResult::Success {
+                provider,
+                locations,
+            } => {
+                let mut facts = Vec::with_capacity(locations.len().min(limit));
+                let mut omitted_locations = 0usize;
+                for location in locations {
+                    if facts.len() == limit {
+                        omitted_locations += 1;
+                        continue;
+                    }
+                    let Some(path) = lsp::path_from_file_uri(&location.uri) else {
+                        omitted_locations += 1;
+                        continue;
+                    };
+                    let Ok(file_path) = self.relative_path(&path.to_string_lossy()) else {
+                        // A semantic answer can legitimately include a standard
+                        // library or dependency location. CodeFacts only returns
+                        // repository facts with an indexed source hash.
+                        omitted_locations += 1;
+                        continue;
+                    };
+                    let Some(source_hash) = self.source_hash(&file_path)? else {
+                        omitted_locations += 1;
+                        continue;
+                    };
+                    facts.push(SemanticLocationFact {
+                        evidence: Evidence {
+                            file_path,
+                            start_line: location.start_line.saturating_add(1),
+                            end_line: location.end_line.saturating_add(1),
+                            source_hash: Some(source_hash),
+                            extractor: format!("lsp:{provider}"),
+                            confidence: "semantic".to_string(),
+                        },
+                        start_column: location.start_character,
+                        end_column: location.end_character,
+                    });
+                }
+                Ok(json!({
+                    "status": "ok",
+                    "provider": provider,
+                    "position_encoding": "utf-16",
+                    "locations": facts,
+                    "truncated": omitted_locations > 0,
+                    "omitted_locations": omitted_locations,
+                }))
+            }
+        }
     }
 
     fn relationship_fact(&self, edge: &CodeEdge) -> Result<RelationshipFact> {

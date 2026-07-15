@@ -1,11 +1,12 @@
 use std::path::PathBuf;
 use std::process;
 
+use codefacts::lsp::LspMode;
 use codefacts::mcp;
 use codefacts::service::{default_database_path, CodeFacts};
 
 fn main() {
-    let (root, state) = match parse_arguments() {
+    let (root, state, lsp_mode) = match parse_arguments() {
         Ok(values) => values,
         Err(message) => {
             eprintln!("{message}");
@@ -13,7 +14,7 @@ fn main() {
         }
     };
     let database_path = state.unwrap_or_else(|| default_database_path(&root));
-    let facts = match CodeFacts::open(&root, &database_path) {
+    let facts = match CodeFacts::open_with_lsp(&root, &database_path, lsp_mode) {
         Ok(facts) => facts,
         Err(error) => {
             eprintln!("codefacts: {error}");
@@ -26,7 +27,7 @@ fn main() {
     }
 }
 
-fn parse_arguments() -> Result<(PathBuf, Option<PathBuf>), String> {
+fn parse_arguments() -> Result<(PathBuf, Option<PathBuf>, LspMode), String> {
     let mut args = std::env::args_os().skip(1);
     match args.next().as_deref() {
         Some(command) if command == "mcp" => {}
@@ -43,6 +44,7 @@ fn parse_arguments() -> Result<(PathBuf, Option<PathBuf>), String> {
 
     let mut root = std::env::current_dir().map_err(|error| error.to_string())?;
     let mut state = None;
+    let mut lsp_mode = LspMode::Auto;
     while let Some(argument) = args.next() {
         match argument.to_string_lossy().as_ref() {
             "--root" => {
@@ -51,13 +53,20 @@ fn parse_arguments() -> Result<(PathBuf, Option<PathBuf>), String> {
             "--state" => {
                 state = Some(PathBuf::from(args.next().ok_or("--state requires a path")?));
             }
+            "--lsp" => {
+                let value = args.next().ok_or("--lsp requires auto or off")?;
+                let value = value.to_string_lossy();
+                lsp_mode = LspMode::parse(&value)
+                    .ok_or_else(|| "--lsp must be 'auto' or 'off'".to_string())?;
+            }
             "--help" | "-h" => return Err(usage()),
             other => return Err(format!("unknown argument '{other}'.\n{}", usage())),
         }
     }
-    Ok((root, state))
+    Ok((root, state, lsp_mode))
 }
 
 fn usage() -> String {
-    "Usage: codefacts mcp [--root <repository>] [--state <external-sqlite-path>]".into()
+    "Usage: codefacts mcp [--root <repository>] [--state <external-sqlite-path>] [--lsp <auto|off>]"
+        .into()
 }
