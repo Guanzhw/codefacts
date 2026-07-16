@@ -19,6 +19,34 @@ All existing calls and result fields remain valid.  The changes are additive;
 clients that do not opt in receive the current behaviour plus any additive
 result fields.
 
+## Implementation status
+
+All four stages are implemented in the current source tree while preserving
+the five-tool MCP surface. The remaining delivery step is a normal release.
+The implementation also hardens the existing `path` contract: `limit` now
+bounds returned path nodes, while a discovered longer path returns
+`path_too_long` with factual endpoint evidence and its length.
+
+### Follow-on correctness and scale hardening
+
+The implemented follow-on keeps the same five tools and adds no daemon or
+agent layer:
+
+- MCP mode requires an explicit `--root`; every result carries canonical
+  `freshness.repository_root` and a monotonic fact-store `generation`.
+- `search` and `outline` now return snapshot-bound `next_cursor` values.
+  Legacy offsets remain additive, while a changed index returns
+  `stale_cursor` instead of mixing evidence from two generations.
+- Edge rows retain source location and source-spelled target names. Distinct
+  call sites no longer overwrite each other, and legacy edge databases force
+  one safe full source rebuild before serving current facts.
+- A changed source file is reparsed alone; affected static targets and all
+  derived imports are rebound from SQLite. Unchanged source files are not
+  reparsed just to repair cross-file links.
+- `path` expands SQLite-backed BFS frontiers rather than loading the full
+  graph, and related-test lookup is performed by a bounded SQL join.
+- `map` defers optional LSP probes until a relevant `expand` request.
+
 ## Explicit non-goals
 
 - No natural-language repository question answering, embeddings, reranking, or
@@ -29,7 +57,8 @@ result fields.
   LSP cache. The user controls the executable and its normal project setup.
 - No manifest-aware monorepo resolver, framework-specific endpoint expansion,
   transitive test inference, or source-body/signature API in this increment.
-- No general filtering DSL, cursor framework, or new MCP workflow.
+- No general filtering DSL or new MCP workflow. Snapshot cursors are limited
+  to `search` and `outline` continuation and are not a generic query system.
 
 ## Stage 0 — Freeze the existing contract
 
@@ -61,8 +90,9 @@ Claude Code or another coding agent's process.
 **Initial API additions:**
 
 - Add `codefacts mcp --lsp auto|off`, defaulting to `auto`.
-- Add an additive `lsp` object to `map`, reporting only the relevant supported
-  server commands and whether CodeFacts could run their version probe.
+- Add an additive `lsp` object to `map`, reporting only relevant supported
+  server commands. Availability is deferred until a matching `expand` request
+  so a structural map does not start external processes.
 - Add `references.semantic` to `expand`. It returns source-evidenced LSP
   locations only on a successful query; `disabled`, `unsupported`,
   `unavailable`, `not_applicable`, and `failed` states preserve and explain the
@@ -165,22 +195,23 @@ rejected; existing id and unique-name queries retain their responses.
 
 **API additions:**
 
-- `search`: optional `kind`, `path_prefix`, and non-negative `offset`.
-- `outline`: optional non-negative `offset`.
-- Both responses include `next_offset` when another page exists, otherwise
-  `null`.
+- `search`: optional `kind`, `path_prefix`, non-negative `offset`, and opaque
+  snapshot `cursor`.
+- `outline`: optional non-negative `offset` and opaque snapshot `cursor`.
+- Both responses include `next_cursor` when another page exists, otherwise
+  `null`; `next_offset` remains additive compatibility data.
 
 `kind` accepts the existing serialized node-kind vocabulary. `path_prefix` is
 repository-relative and applies before the limit. Ordering remains the current
 deterministic ordering, with the offset applied only after filtering.
 
 Do not add boolean feature switches, arbitrary SQL/FTS syntax, generic facet
-objects, or cursor tokens in this increment.
+objects, or a cursor framework beyond these two snapshot-bound pages.
 
 **Tests:** default calls return their current first page; filtering excludes
 other kinds and paths; two adjacent offsets do not overlap; a final page has a
-null `next_offset`; invalid kind, negative offset, and escaping path prefix
-produce MCP argument errors.
+null `next_offset`; a stale cursor is rejected after a source change; invalid
+kind, negative offset, and escaping path prefix produce MCP argument errors.
 
 ## Delivery sequence and verification
 

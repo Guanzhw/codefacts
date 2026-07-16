@@ -160,7 +160,10 @@ impl LspManager {
         }
     }
 
-    pub fn report<I>(&self, languages: I) -> LspReport
+    /// Describe optional providers without necessarily starting external
+    /// processes. `map` uses `probe = false`; the first relevant `expand`
+    /// request probes and caches availability.
+    pub fn report<I>(&self, languages: I, probe: bool) -> LspReport
     where
         I: IntoIterator<Item = Language>,
     {
@@ -182,7 +185,21 @@ impl LspManager {
             PROVIDERS
                 .iter()
                 .filter(|provider| provider_ids.contains(provider.id))
-                .map(|provider| self.server_report(provider))
+                .map(|provider| {
+                    if probe {
+                        self.server_report(provider)
+                    } else {
+                        LspServerReport {
+                            provider: provider.id,
+                            command: provider_command(provider),
+                            languages: provider.languages.iter().map(Language::as_str).collect(),
+                            status: "deferred",
+                            detail: Some(
+                                "availability is probed only by a supported expand request".into(),
+                            ),
+                        }
+                    }
+                })
                 .collect()
         };
 
@@ -190,7 +207,7 @@ impl LspManager {
             mode: self.mode.as_str(),
             behavior: match self.mode {
                 LspMode::Auto => {
-                    "CodeFacts uses a separately installed server only for a supported expand request."
+                    "CodeFacts probes a separately installed server only for a supported expand request."
                 }
                 LspMode::Off => "LSP probing and enrichment are disabled by --lsp off.",
             },

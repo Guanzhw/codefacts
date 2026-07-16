@@ -416,6 +416,12 @@ pub struct CodeEdge {
     pub kind: EdgeKind,
     pub file_path: String,
     pub line: u32,
+    /// The source spelling used to resolve this relationship.  It is kept
+    /// separately from `target` so an incremental refresh can rebind an
+    /// unchanged call/reference when a definition is added, moved, or
+    /// removed in another file.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub target_name: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub metadata: Option<HashMap<String, String>>,
 }
@@ -1208,6 +1214,7 @@ mod tests {
             kind: EdgeKind::Calls,
             file_path: "a.ts".to_string(),
             line: 3,
+            target_name: Some("bar".to_string()),
             metadata: None,
         };
 
@@ -1229,6 +1236,7 @@ mod tests {
             kind: EdgeKind::Imports,
             file_path: "a.ts".to_string(),
             line: 1,
+            target_name: None,
             metadata: Some(metadata),
         };
 
@@ -1247,6 +1255,7 @@ mod tests {
             kind: EdgeKind::References,
             file_path: "f.rs".to_string(),
             line: 1,
+            target_name: None,
             metadata: None,
         };
 

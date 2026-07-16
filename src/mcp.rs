@@ -9,6 +9,7 @@ use serde_json::{json, Map, Value};
 
 use crate::error::{CodeFactsError, Result};
 use crate::service::CodeFacts;
+use crate::types::NodeKind;
 
 const PROTOCOL_VERSION: &str = "2024-11-05";
 
@@ -74,16 +75,30 @@ fn call_tool(facts: &CodeFacts, params: Option<&Value>) -> Result<Value> {
 
     match name {
         "map" => facts.map(),
-        "search" => facts.search(required_string(&arguments, "query")?, limit),
-        "outline" => facts.outline(required_string(&arguments, "file_path")?, limit),
+        "search" => facts.search_with_page_options(
+            required_string(&arguments, "query")?,
+            optional_node_kind(&arguments)?,
+            optional_string(&arguments, "path_prefix")?,
+            optional_offset(&arguments)?.unwrap_or(0),
+            optional_string(&arguments, "cursor")?,
+            limit,
+        ),
+        "outline" => facts.outline_with_page_options(
+            required_string(&arguments, "file_path")?,
+            optional_offset(&arguments)?.unwrap_or(0),
+            optional_string(&arguments, "cursor")?,
+            limit,
+        ),
         "expand" => facts.expand(
             required_string(&arguments, "symbol")?,
             optional_string(&arguments, "file_path")?,
             limit,
         ),
-        "path" => facts.path(
+        "path" => facts.path_with_files(
             required_string(&arguments, "from")?,
+            optional_string(&arguments, "from_file_path")?,
             required_string(&arguments, "to")?,
+            optional_string(&arguments, "to_file_path")?,
             limit,
         ),
         _ => Err(CodeFactsError::Mcp(format!(
@@ -113,13 +128,47 @@ fn optional_string<'a>(arguments: &'a Map<String, Value>, key: &str) -> Result<O
 fn optional_limit(arguments: &Map<String, Value>) -> Result<Option<usize>> {
     match arguments.get("limit") {
         None => Ok(None),
-        Some(value) => value
-            .as_u64()
-            .map(|value| Some(value as usize))
-            .ok_or_else(|| {
+        Some(value) => {
+            let value = value.as_u64().filter(|value| *value > 0).ok_or_else(|| {
                 CodeFactsError::Mcp("'limit' must be a positive integer when present".into())
-            }),
+            })?;
+            usize::try_from(value)
+                .map(Some)
+                .map_err(|_| CodeFactsError::Mcp("'limit' is too large for this platform".into()))
+        }
     }
+}
+
+fn optional_offset(arguments: &Map<String, Value>) -> Result<Option<usize>> {
+    match arguments.get("offset") {
+        None => Ok(None),
+        Some(value) => {
+            let value = value.as_u64().ok_or_else(|| {
+                CodeFactsError::Mcp("'offset' must be a non-negative integer when present".into())
+            })?;
+            let offset = usize::try_from(value).map_err(|_| {
+                CodeFactsError::Mcp("'offset' is too large for this platform".into())
+            })?;
+            if i64::try_from(offset).is_err() {
+                return Err(CodeFactsError::Mcp("'offset' is too large".into()));
+            }
+            Ok(Some(offset))
+        }
+    }
+}
+
+fn optional_node_kind(arguments: &Map<String, Value>) -> Result<Option<NodeKind>> {
+    let Some(kind) = optional_string(arguments, "kind")? else {
+        return Ok(None);
+    };
+    NodeKind::from_str_loose(kind)
+        .filter(|parsed| parsed.as_str() == kind)
+        .map(Some)
+        .ok_or_else(|| {
+            CodeFactsError::Mcp(format!(
+                "'kind' must be one of the supported serialized node kinds, got '{kind}'"
+            ))
+        })
 }
 
 fn tool_result(value: Value) -> Value {
@@ -151,10 +200,10 @@ fn write_json(output: &mut impl Write, value: Value) -> Result<()> {
 fn tool_definitions() -> Vec<Value> {
     vec![
         tool("map", "Repository structure, language mix, and high-level symbol counts.", json!({ "type": "object", "additionalProperties": false })),
-        tool("search", "Search indexed symbols, endpoints, and documentation headings through source-backed FTS; this is not raw grep.", schema(json!({ "query": string_schema("Identifier or words to search"), "limit": limit_schema() }), &["query"])),
-        tool("outline", "List indexed symbols or documentation headings in one repository-relative file.", schema(json!({ "file_path": string_schema("Repository-relative file path"), "limit": limit_schema() }), &["file_path"])),
+        tool("search", "Search indexed symbols, endpoints, and documentation headings through source-backed FTS; optionally narrow by kind or path prefix. Continue with next_cursor to keep all pages on one index snapshot; offset is legacy compatibility only. This is not raw grep.", schema(json!({ "query": string_schema("Identifier or words to search"), "kind": kind_schema(), "path_prefix": string_schema("Optional repository-relative file or directory prefix"), "cursor": cursor_schema(), "offset": offset_schema(), "limit": limit_schema() }), &["query"])),
+        tool("outline", "List indexed symbols or documentation headings in one repository-relative file. Continue with next_cursor to keep all pages on one index snapshot; offset is legacy compatibility only.", schema(json!({ "file_path": string_schema("Repository-relative file path"), "cursor": cursor_schema(), "offset": offset_schema(), "limit": limit_schema() }), &["file_path"])),
         tool("expand", "Return one symbol definition plus static callers, callees, references, and related tests. When a user-installed supported LSP is available, include separately labeled semantic reference locations. Use a symbol id or add file_path to disambiguate.", schema(json!({ "symbol": string_schema("Symbol name or exact symbol id"), "file_path": string_schema("Optional repository-relative disambiguator"), "limit": limit_schema() }), &["symbol"])),
-        tool("path", "Find the shortest bounded static calls path between two confirmed symbols. A missing path never claims runtime unreachability.", schema(json!({ "from": string_schema("Source symbol name or exact id"), "to": string_schema("Target symbol name or exact id"), "limit": limit_schema() }), &["from", "to"])),
+        tool("path", "Find the shortest bounded static calls path between two confirmed symbols. Optional file paths disambiguate duplicate names. A missing path never claims runtime unreachability.", schema(json!({ "from": string_schema("Source symbol name or exact id"), "from_file_path": string_schema("Optional repository-relative source disambiguator"), "to": string_schema("Target symbol name or exact id"), "to_file_path": string_schema("Optional repository-relative target disambiguator"), "limit": limit_schema() }), &["from", "to"])),
     ]
 }
 
@@ -172,4 +221,48 @@ fn string_schema(description: &str) -> Value {
 
 fn limit_schema() -> Value {
     json!({ "type": "integer", "minimum": 1, "maximum": 50, "description": "Maximum items returned (default 20, capped at 50)" })
+}
+
+fn offset_schema() -> Value {
+    json!({ "type": "integer", "minimum": 0, "description": "Number of matching items to skip before this bounded page (default 0)" })
+}
+
+fn cursor_schema() -> Value {
+    json!({ "type": "string", "minLength": 1, "description": "Opaque next_cursor returned by the preceding page; rejects a stale or mismatched snapshot" })
+}
+
+fn kind_schema() -> Value {
+    json!({ "type": "string", "enum": ["function", "class", "method", "interface", "type_alias", "enum", "variable", "struct", "trait", "module", "property", "namespace", "constant", "heading", "endpoint"], "description": "Optional exact serialized symbol kind" })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn page_arguments_validate_without_silent_coercion() {
+        let zero_limit = json!({ "limit": 0 });
+        assert!(optional_limit(zero_limit.as_object().expect("zero limit arguments")).is_err());
+
+        let negative_offset = json!({ "offset": -1 });
+        assert!(optional_offset(
+            negative_offset
+                .as_object()
+                .expect("negative offset arguments")
+        )
+        .is_err());
+
+        let invalid_kind = json!({ "kind": "const" });
+        assert!(
+            optional_node_kind(invalid_kind.as_object().expect("invalid kind arguments")).is_err()
+        );
+
+        let valid_kind = json!({ "kind": "constant", "offset": 0 });
+        let arguments = valid_kind.as_object().expect("valid page arguments");
+        assert_eq!(
+            optional_node_kind(arguments).expect("valid kind"),
+            Some(NodeKind::Constant)
+        );
+        assert_eq!(optional_offset(arguments).expect("valid offset"), Some(0));
+    }
 }

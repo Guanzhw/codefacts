@@ -562,6 +562,7 @@ fn extract_containment_edges(file_nodes: &[CodeNode], edges: &mut Vec<CodeEdge>)
                 kind: EdgeKind::Contains,
                 file_path: member.file_path.clone(),
                 line: member.start_line,
+                target_name: None,
                 metadata: None,
             });
         }
@@ -627,6 +628,7 @@ fn extract_import_edges(
         kind: EdgeKind::Imports,
         file_path: file_path.to_string(),
         line,
+        target_name: None,
         metadata,
     });
 }
@@ -672,6 +674,7 @@ fn extract_inheritance_edges(
                 kind: EdgeKind::Extends,
                 file_path: file_path.to_string(),
                 line,
+                target_name: Some(parent_name),
                 metadata: None,
             });
         }
@@ -701,6 +704,7 @@ fn extract_inheritance_edges(
                 kind: EdgeKind::Extends,
                 file_path: file_path.to_string(),
                 line,
+                target_name: Some(parent_name),
                 metadata: None,
             });
         }
@@ -756,6 +760,7 @@ fn extract_implements_edges(
         kind: EdgeKind::Implements,
         file_path: file_path.to_string(),
         line,
+        target_name: Some(interface_name),
         metadata: None,
     });
 }
@@ -825,6 +830,7 @@ fn extract_call_edges(
         kind: EdgeKind::Calls,
         file_path: file_path.to_string(),
         line,
+        target_name: Some(callee_name),
         metadata,
     });
 }
@@ -870,6 +876,7 @@ fn extract_constructor_edges(
         kind: EdgeKind::Calls,
         file_path: file_path.to_string(),
         line,
+        target_name: Some(class_name),
         metadata: Some(metadata),
     });
 }
@@ -906,20 +913,22 @@ fn extract_type_ref_edges(
     let enclosing = find_enclosing_node(file_nodes, line);
     let target = resolve_node(&type_name, file_path, file_nodes, node_index);
 
-    if let Some(target) = target {
-        let source_id = enclosing
-            .map(|e| e.id.clone())
-            .unwrap_or_else(|| format!("file:{}", file_path));
+    let source_id = enclosing
+        .map(|e| e.id.clone())
+        .unwrap_or_else(|| format!("file:{}", file_path));
+    let target_id = target
+        .map(|target| target.id.clone())
+        .unwrap_or_else(|| format!("unresolved:{}", type_name));
 
-        edges.push(CodeEdge {
-            source: source_id,
-            target: target.id.clone(),
-            kind: EdgeKind::References,
-            file_path: file_path.to_string(),
-            line,
-            metadata: None,
-        });
-    }
+    edges.push(CodeEdge {
+        source: source_id,
+        target: target_id,
+        kind: EdgeKind::References,
+        file_path: file_path.to_string(),
+        line,
+        target_name: Some(type_name),
+        metadata: None,
+    });
 }
 
 // ---------------------------------------------------------------------------

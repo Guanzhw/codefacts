@@ -140,6 +140,7 @@ pub fn resolve_imports(
                             kind: EdgeKind::Imports,
                             file_path: edge.file_path.clone(),
                             line: edge.line,
+                            target_name: None,
                             metadata: Some(
                                 [("resolved".to_string(), resolved_path.clone())]
                                     .into_iter()
@@ -163,6 +164,7 @@ pub fn resolve_imports(
                         kind: EdgeKind::Imports,
                         file_path: edge.file_path.clone(),
                         line: edge.line,
+                        target_name: None,
                         metadata: Some(
                             [("resolved".to_string(), resolved_path.clone())]
                                 .into_iter()
@@ -185,6 +187,7 @@ pub fn resolve_imports(
                                 kind: EdgeKind::Imports,
                                 file_path: edge.file_path.clone(),
                                 line: edge.line,
+                                target_name: None,
                                 metadata: Some(
                                     [("resolved".to_string(), resolved_path.clone())]
                                         .into_iter()
@@ -344,6 +347,7 @@ pub fn resolve_barrel_exports(
                             kind: EdgeKind::Imports,
                             file_path: edge.file_path.clone(),
                             line: edge.line,
+                            target_name: None,
                             metadata: Some(
                                 [
                                     ("resolved".to_string(), resolved_path.clone()),
@@ -365,6 +369,7 @@ pub fn resolve_barrel_exports(
                             kind: EdgeKind::Imports,
                             file_path: edge.file_path.clone(),
                             line: edge.line,
+                            target_name: None,
                             metadata: Some(
                                 [
                                     ("resolved".to_string(), resolved_path.clone()),
@@ -453,6 +458,7 @@ mod tests {
             kind: EdgeKind::Imports,
             file_path: source_file.to_string(),
             line,
+            target_name: None,
             metadata,
         }
     }
@@ -785,6 +791,7 @@ mod tests {
             kind: EdgeKind::Imports,
             file_path: "src/utils/index.ts".to_string(),
             line: 1,
+            target_name: None,
             metadata: Some(
                 [("reexport".to_string(), "true".to_string())]
                     .into_iter()
@@ -956,6 +963,7 @@ mod tests {
             kind: EdgeKind::Imports,
             file_path: "a.ts".to_string(),
             line: 1,
+            target_name: None,
             metadata: None,
         }];
         let indexed_files: HashSet<String> =
@@ -1081,6 +1089,7 @@ mod tests {
             kind: EdgeKind::Imports,
             file_path: "src/lib/index.ts".to_string(),
             line: 1,
+            target_name: None,
             metadata: Some(
                 [
                     ("reexport".to_string(), "true".to_string()),

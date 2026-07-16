@@ -56,6 +56,9 @@ pub struct IndexResult {
     pub files_skipped: usize,
     pub nodes_created: usize,
     pub edges_created: usize,
+    /// Existing edge occurrences whose target bindings were recomputed during
+    /// an incremental refresh.
+    pub relationships_rebound: usize,
     pub duration_ms: u128,
 }
 
@@ -101,6 +104,10 @@ impl<'a> IndexingPipeline<'a> {
     pub fn index_directory(&self, options: &IndexOptions) -> Result<IndexResult> {
         let start = Instant::now();
         let root = &options.root_dir;
+        // Schema migrations can retain old rows only long enough to discover
+        // the repository; their relationship evidence is not trustworthy.
+        // Force one source pass, then return to the incremental path.
+        let incremental = options.incremental && !self.store.full_reindex_required()?;
 
         // ---- Collect files ----
         let file_paths = collect_files(root);
@@ -113,11 +120,11 @@ impl<'a> IndexingPipeline<'a> {
             .filter_map(|path| path.strip_prefix(root).ok())
             .map(|path| path.to_string_lossy().replace('\\', "/"))
             .collect();
-        let removed_files = self.remove_paths_not_in(&current_paths)?;
+        let removed_nodes = self.remove_paths_not_in(&current_paths)?;
 
         // Pre-fetch all file hashes for incremental checks (before rayon).
         // This avoids touching the non-Sync Connection from parallel threads.
-        let stored_hashes: HashMap<String, String> = if options.incremental {
+        let stored_hashes: HashMap<String, String> = if incremental {
             self.load_all_file_hashes()
         } else {
             HashMap::new()
@@ -127,7 +134,7 @@ impl<'a> IndexingPipeline<'a> {
 
         // ---- Pass 1: parse & extract nodes (parallel via rayon) ----
         // The closure only captures `root`, `stored_hashes`, `files_skipped`,
-        // and `options.incremental` — all are Sync. No DB access here.
+        // and `incremental` — all are Sync. No DB access here.
         let parsed: Vec<FileParseState> = file_paths
             .par_iter()
             .filter_map(|abs_path| {
@@ -166,7 +173,7 @@ impl<'a> IndexingPipeline<'a> {
                 let content_hash = sha256_hex(&source_text);
 
                 // Incremental: skip if unchanged (using pre-fetched hash map)
-                if options.incremental {
+                if incremental {
                     if let Some(stored) = stored_hashes.get(&rel_path) {
                         if stored == &content_hash {
                             files_skipped.fetch_add(1, Ordering::Relaxed);
@@ -222,18 +229,14 @@ impl<'a> IndexingPipeline<'a> {
             })
             .collect();
 
-        // A changed definition can alter cross-file call and import targets in
-        // otherwise unchanged files. Rebuild the graph snapshot before serving
-        // facts instead of leaving those relationships partially resolved. A
-        // no-change refresh still takes the incremental fast path above.
-        if options.incremental && (!parsed.is_empty() || removed_files > 0) {
-            return self.index_directory(&IndexOptions {
-                root_dir: root.clone(),
-                incremental: false,
-            });
-        }
-
         // ---- Build cross-file node index ----
+        // Keep existing nodes owned for the entire pass because `all_nodes`
+        // borrows them while extracting edges for changed files.
+        let existing_nodes = if incremental {
+            self.store.get_all_nodes()?
+        } else {
+            Vec::new()
+        };
         let mut all_nodes: Vec<&CodeNode> = Vec::new();
         for state in &parsed {
             for node in &state.nodes {
@@ -242,9 +245,7 @@ impl<'a> IndexingPipeline<'a> {
         }
 
         // In incremental mode, include existing nodes from files we didn't re-parse.
-        let existing_nodes: Vec<CodeNode>;
-        if options.incremental {
-            existing_nodes = self.store.get_all_nodes()?;
+        if incremental {
             let reindexed_paths: std::collections::HashSet<&str> =
                 parsed.iter().map(|s| s.relative_path.as_str()).collect();
             for node in &existing_nodes {
@@ -255,6 +256,25 @@ impl<'a> IndexingPipeline<'a> {
         }
 
         let node_index = build_node_index(&all_nodes);
+        let reindexed_paths: HashSet<&str> = parsed
+            .iter()
+            .map(|state| state.relative_path.as_str())
+            .collect();
+        let mut changed_target_names: HashSet<String> =
+            removed_nodes.iter().map(|node| node.name.clone()).collect();
+        if incremental {
+            changed_target_names.extend(
+                existing_nodes
+                    .iter()
+                    .filter(|node| reindexed_paths.contains(node.file_path.as_str()))
+                    .map(|node| node.name.clone()),
+            );
+        }
+        changed_target_names.extend(
+            parsed
+                .iter()
+                .flat_map(|state| state.nodes.iter().map(|node| node.name.clone())),
+        );
 
         // ---- Pass 2: extract edges & persist (parallel edge extraction) ----
         #[allow(clippy::type_complexity)]
@@ -297,65 +317,13 @@ impl<'a> IndexingPipeline<'a> {
             file_data.push(result?);
         }
 
-        // ---- Cross-file import resolution ----
-        // Build the set of indexed file paths and a nodes-by-file lookup.
-        let indexed_files: HashSet<String> = file_data
-            .iter()
-            .map(|(path, _, _, _, _)| path.clone())
-            .collect();
-        let mut nodes_by_file: HashMap<String, Vec<CodeNode>> = HashMap::new();
-        for (path, _, _, nodes, _) in &file_data {
-            nodes_by_file.insert(path.clone(), nodes.clone());
-        }
-        // Include existing nodes from incremental runs
-        if options.incremental {
-            for node in &all_nodes {
-                if !indexed_files.contains(&node.file_path) {
-                    nodes_by_file
-                        .entry(node.file_path.clone())
-                        .or_default()
-                        .push((*node).clone());
-                }
-            }
-        }
-
-        // Collect all edges across all files for resolution
-        let all_edges: Vec<&CodeEdge> = file_data
-            .iter()
-            .flat_map(|(_, _, _, _, edges)| edges.iter())
-            .collect();
-        let all_edges_owned: Vec<CodeEdge> = all_edges.iter().map(|e| (*e).clone()).collect();
-
-        let resolution_result = resolve_imports(
-            &all_edges_owned,
-            &indexed_files,
-            &node_index,
-            &nodes_by_file,
-        );
-
-        // Group resolved edges by their source file for merging
-        let mut resolved_by_file: HashMap<String, Vec<CodeEdge>> = HashMap::new();
-        for edge in resolution_result.resolved_edges {
-            resolved_by_file
-                .entry(edge.file_path.clone())
-                .or_default()
-                .push(edge);
-        }
-
         // ---- Persist to SQLite (sequential — single connection) ----
         let mut files_indexed = 0usize;
         let mut nodes_created = 0usize;
         let mut edges_created = 0usize;
+        let mut relationships_rebound = 0usize;
 
-        for (rel_path, language, content_hash, nodes, mut edges) in file_data {
-            // Merge resolved import edges into this file's edges
-            if let Some(extra_edges) = resolved_by_file.remove(&rel_path) {
-                edges.extend(extra_edges);
-            }
-
-            // Clear and persist unresolved refs for this file
-            self.store.clear_unresolved_refs_for_file(&rel_path)?;
-
+        for (rel_path, language, content_hash, nodes, edges) in file_data {
             self.store.replace_file_data(&rel_path, &nodes, &edges)?;
             self.upsert_file_hash(&rel_path, &content_hash, language)?;
 
@@ -364,15 +332,51 @@ impl<'a> IndexingPipeline<'a> {
             files_indexed += 1;
         }
 
-        // Persist unresolved refs
-        for uref in &resolution_result.unresolved_refs {
-            self.store.insert_unresolved_ref(
-                &uref.source_id,
-                &uref.specifier,
-                &uref.ref_type,
-                &uref.file_path,
-                uref.line,
-            )?;
+        let changed = files_indexed > 0 || !removed_nodes.is_empty();
+        if changed {
+            let current_nodes = self.store.get_all_nodes()?;
+            if incremental {
+                relationships_rebound =
+                    self.rebind_static_targets(&changed_target_names, &current_nodes)?;
+            }
+
+            // Import resolution depends on both source paths and target
+            // symbols. Re-evaluate its small derived relation set without
+            // parsing unchanged files.
+            self.store.delete_resolved_import_edges()?;
+            self.store.clear_all_unresolved_refs()?;
+            let current_node_refs = current_nodes.iter().collect::<Vec<_>>();
+            let current_node_index = build_node_index(&current_node_refs);
+            let mut nodes_by_file: HashMap<String, Vec<CodeNode>> = HashMap::new();
+            for node in &current_nodes {
+                nodes_by_file
+                    .entry(node.file_path.clone())
+                    .or_default()
+                    .push(node.clone());
+            }
+            let raw_import_edges = self.store.get_raw_import_edges()?;
+            let resolution_result = resolve_imports(
+                &raw_import_edges,
+                &current_paths,
+                &current_node_index,
+                &nodes_by_file,
+            );
+            self.store.upsert_edges(&resolution_result.resolved_edges)?;
+            edges_created += resolution_result.resolved_edges.len();
+            for uref in &resolution_result.unresolved_refs {
+                self.store.insert_unresolved_ref(
+                    &uref.source_id,
+                    &uref.specifier,
+                    &uref.ref_type,
+                    &uref.file_path,
+                    uref.line,
+                )?;
+            }
+
+            if !incremental {
+                self.store.mark_full_reindex_complete()?;
+            }
+            self.store.advance_generation()?;
         }
 
         Ok(IndexResult {
@@ -380,16 +384,121 @@ impl<'a> IndexingPipeline<'a> {
             files_skipped: files_skipped.load(Ordering::Relaxed),
             nodes_created,
             edges_created,
+            relationships_rebound,
             duration_ms: start.elapsed().as_millis(),
         })
     }
 
     /// Remove a file from the index entirely.
     pub fn remove_file(&self, relative_path: &str) -> Result<()> {
-        self.store.delete_file_nodes(relative_path)?;
+        self.store
+            .delete_file_nodes_preserving_incoming(relative_path)?;
         self.store.clear_unresolved_refs_for_file(relative_path)?;
         self.delete_file_hash(relative_path)?;
         Ok(())
+    }
+
+    /// Re-resolve unchanged static relationship facts whose source spelling
+    /// names a definition that was added, moved, or removed.  This is a
+    /// database relation pass, not a source reparse.
+    fn rebind_static_targets(
+        &self,
+        changed_names: &HashSet<String>,
+        current_nodes: &[CodeNode],
+    ) -> Result<usize> {
+        if changed_names.is_empty() {
+            return Ok(0);
+        }
+        let mut names = changed_names.iter().cloned().collect::<Vec<_>>();
+        names.sort();
+        let edges = self.store.get_edges_by_target_names(&names)?;
+        if edges.is_empty() {
+            return Ok(0);
+        }
+
+        let node_refs = current_nodes.iter().collect::<Vec<_>>();
+        let node_index = build_node_index(&node_refs);
+        let mut endpoint_groups: HashMap<String, Vec<CodeEdge>> = HashMap::new();
+        let mut deleted = Vec::new();
+        let mut inserted = Vec::new();
+
+        for edge in edges {
+            let Some(target_name) = edge.target_name.as_deref() else {
+                continue;
+            };
+            if is_endpoint_candidate(&edge) {
+                let key = format!(
+                    "{}\u{0}{}\u{0}{}\u{0}{}\u{0}{}",
+                    edge.source,
+                    edge.kind.as_str(),
+                    edge.file_path,
+                    edge.line,
+                    target_name
+                );
+                endpoint_groups.entry(key).or_default().push(edge);
+                continue;
+            }
+
+            let target_id = resolve_target_id(target_name, &edge.file_path, &node_index);
+            if target_id != edge.target {
+                deleted.push(edge.clone());
+                let mut rebound_edge = edge;
+                rebound_edge.target = target_id;
+                inserted.push(rebound_edge);
+            }
+        }
+
+        // Endpoint edges are intentionally heuristic and can have multiple
+        // function/method candidates. Recreate each affected source location
+        // as a set instead of silently collapsing it to one arbitrary target.
+        for group in endpoint_groups.into_values() {
+            let Some(template) = group.first() else {
+                continue;
+            };
+            let Some(target_name) = template.target_name.as_deref() else {
+                continue;
+            };
+            deleted.extend(group.iter().cloned());
+            let mut targets = node_index
+                .get(target_name)
+                .into_iter()
+                .flatten()
+                .filter(|node| {
+                    matches!(
+                        node.kind,
+                        crate::types::NodeKind::Function | crate::types::NodeKind::Method
+                    )
+                })
+                .collect::<Vec<_>>();
+            targets.sort_by(|left, right| {
+                (&left.file_path, left.start_line, &left.id).cmp(&(
+                    &right.file_path,
+                    right.start_line,
+                    &right.id,
+                ))
+            });
+            if targets.is_empty() {
+                let mut unresolved = template.clone();
+                unresolved.target = format!("unresolved:{target_name}");
+                inserted.push(unresolved);
+            } else {
+                for target in targets {
+                    let mut resolved = template.clone();
+                    resolved.target = target.id.clone();
+                    inserted.push(resolved);
+                }
+            }
+        }
+
+        // Count the persisted edge occurrences we actually replaced, rather
+        // than endpoint candidate groups. A group can represent several
+        // stored target edges after a previous heuristic resolution.
+        let rebound = deleted.len();
+        if !deleted.is_empty() {
+            self.store.replace_edge_occurrences(&deleted, &inserted)?;
+        }
+
+        Ok(rebound)
     }
 
     // -----------------------------------------------------------------------
@@ -420,15 +529,15 @@ impl<'a> IndexingPipeline<'a> {
         map
     }
 
-    fn remove_paths_not_in(&self, current_paths: &HashSet<String>) -> Result<usize> {
-        let mut removed = 0;
+    fn remove_paths_not_in(&self, current_paths: &HashSet<String>) -> Result<Vec<CodeNode>> {
+        let mut removed_nodes = Vec::new();
         for relative_path in self.load_all_file_hashes().into_keys() {
             if !current_paths.contains(&relative_path) {
+                removed_nodes.extend(self.store.get_nodes_by_file(&relative_path)?);
                 self.remove_file(&relative_path)?;
-                removed += 1;
             }
         }
-        Ok(removed)
+        Ok(removed_nodes)
     }
 
     fn upsert_file_hash(
@@ -467,6 +576,37 @@ impl<'a> IndexingPipeline<'a> {
 // ---------------------------------------------------------------------------
 // File collection (using the `ignore` crate for gitignore awareness)
 // ---------------------------------------------------------------------------
+
+fn resolve_target_id(
+    name: &str,
+    source_file: &str,
+    node_index: &HashMap<String, Vec<CodeNode>>,
+) -> String {
+    let Some(candidates) = node_index.get(name) else {
+        return format!("unresolved:{name}");
+    };
+    let target = candidates
+        .iter()
+        .find(|node| node.file_path == source_file)
+        .or_else(|| {
+            (candidates.len() == 1)
+                .then(|| candidates.first())
+                .flatten()
+        })
+        .or_else(|| candidates.iter().find(|node| node.exported == Some(true)))
+        .or_else(|| candidates.iter().find(|node| node.file_path != source_file))
+        .or_else(|| candidates.first());
+    target
+        .map(|node| node.id.clone())
+        .unwrap_or_else(|| format!("unresolved:{name}"))
+}
+
+fn is_endpoint_candidate(edge: &CodeEdge) -> bool {
+    edge.metadata
+        .as_ref()
+        .and_then(|metadata| metadata.get("relation"))
+        .is_some_and(|relation| relation == "endpoint_handler_candidate")
+}
 
 /// Directories that are always skipped, regardless of `.gitignore`.
 const ALWAYS_SKIP_DIRS: &[&str] = &[
@@ -693,16 +833,16 @@ export function greetV2(name: string): string {
         )
         .unwrap();
 
-        // A changed file triggers a full relationship rebind so callers and
-        // imports in otherwise unchanged files remain correct.
+        // Only the changed file is reparsed; affected callers and derived
+        // imports are rebound from persisted facts.
         let r2 = pipeline
             .index_directory(&IndexOptions {
                 root_dir: tmp.path().to_path_buf(),
                 incremental: true,
             })
             .unwrap();
-        assert_eq!(r2.files_indexed, 2);
-        assert_eq!(r2.files_skipped, 0);
+        assert_eq!(r2.files_indexed, 1);
+        assert_eq!(r2.files_skipped, 1);
     }
 
     #[test]

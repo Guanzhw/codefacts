@@ -75,15 +75,15 @@ pub fn row_to_code_node(row: &Row<'_>) -> rusqlite::Result<CodeNode> {
 /// Convert a `rusqlite::Row` from a `SELECT * FROM edges` query into a
 /// [`CodeEdge`].
 ///
-/// The expected column order is:
-/// `id, source_id, target_id, type, properties`
-///
-/// The `properties` column is a JSON string; `filePath` and `line` are
-/// extracted from it (matching the TypeScript converter behaviour).
+/// The edge table stores location and target spelling in first-class columns.
+/// `properties` remains a compatibility envelope for extractor metadata.
 pub fn row_to_code_edge(row: &Row<'_>) -> rusqlite::Result<CodeEdge> {
     let source: String = row.get("source_id")?;
     let target: String = row.get("target_id")?;
     let kind_str: String = row.get("type")?;
+    let file_path: String = row.get("file_path").unwrap_or_default();
+    let line: u32 = row.get("line").unwrap_or(0);
+    let target_name: Option<String> = row.get("target_name").unwrap_or(None);
     let properties_json: Option<String> = row.get("properties")?;
 
     let props: HashMap<String, String> = properties_json
@@ -91,8 +91,18 @@ pub fn row_to_code_edge(row: &Row<'_>) -> rusqlite::Result<CodeEdge> {
         .and_then(|s| serde_json::from_str(s).ok())
         .unwrap_or_default();
 
-    let file_path = props.get("filePath").cloned().unwrap_or_default();
-    let line: u32 = props.get("line").and_then(|l| l.parse().ok()).unwrap_or(0);
+    // Old rows are migrated then rebuilt, but keeping this fallback makes the
+    // converter safe for a diagnostic read during that transition.
+    let file_path = if file_path.is_empty() {
+        props.get("filePath").cloned().unwrap_or_default()
+    } else {
+        file_path
+    };
+    let line = if line == 0 {
+        props.get("line").and_then(|l| l.parse().ok()).unwrap_or(0)
+    } else {
+        line
+    };
 
     let kind = EdgeKind::from_str_loose(&kind_str).unwrap_or(EdgeKind::References);
 
@@ -104,6 +114,7 @@ pub fn row_to_code_edge(row: &Row<'_>) -> rusqlite::Result<CodeEdge> {
         kind,
         file_path,
         line,
+        target_name,
         metadata,
     })
 }

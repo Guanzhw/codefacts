@@ -42,7 +42,7 @@ The report has schema version 1 and includes:
 | --- | --- |
 | `cold_index` | New external SQLite state per sample. OS filesystem caches are not forcibly dropped. |
 | `no_change_refresh` | Incremental hash check with no source modification. |
-| `one_file_refresh` | A source edit in a temporary copy. It records copied regular files, indexable-file candidates, and indexed files after the change, then explicitly records that CodeFacts rebuilds the complete static relationship snapshot to avoid partially resolved cross-file facts. |
+| `one_file_refresh` | A source edit in a temporary copy. It records copied regular files, indexable-file candidates, and indexed files after the change. CodeFacts reparses only the changed files, rebinds affected static relationships in SQLite, and re-resolves derived imports without reparsing unchanged source. |
 | `sqlite_after_cold_index` | Size of the SQLite database and its WAL/SHM sidecars after the first cold sample. |
 | `peak_process_memory` | Sampled resident memory for the benchmark process while it indexes directly. The separate spawned MCP process is excluded. |
 | `mcp_search` | First-request latency including initial indexing, plus per-query P95 warm stdio request latency. Warm requests deliberately include CodeFacts' required no-change refresh. |

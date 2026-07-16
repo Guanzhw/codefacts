@@ -54,13 +54,27 @@ Version 1 deliberately exposes exactly five read-only tools:
 
 | Tool | Purpose |
 | --- | --- |
-| `map` | Repository structure, language mix, and high-level symbol counts. |
-| `search` | Indexed symbols, endpoints, and Markdown documentation headings through FTS. |
-| `outline` | Symbols or headings in one file. |
+| `map` | Repository structure, language mix, high-level symbol counts, deferred LSP-provider status, and bounded unresolved-reference evidence. |
+| `search` | Indexed symbols, endpoints, and Markdown documentation headings through FTS; optionally narrow by kind/path prefix and continue on one snapshot. |
+| `outline` | Symbols or headings in one file, with snapshot-bound continuation. |
 | `expand` | One definition plus static callers, callees, references, related tests, and optional semantic references. |
-| `path` | A shortest bounded static calls path between confirmed symbols. |
+| `path` | A shortest bounded static calls path between confirmed symbols, with optional endpoint file-path disambiguation. |
 
-Every result is bounded, includes file/line/hash evidence, and refreshes the incremental index before answering. A `no_static_path` result never claims that runtime execution is unreachable.
+Every result is bounded, includes file/line/hash evidence, and refreshes the incremental index before answering. Its `freshness` object includes the canonical `repository_root` and fact-store `generation`, so a caller can verify that the facts belong to the intended project. A `no_static_path` result never claims that runtime execution is unreachable.
+
+`search` accepts optional `kind`, `path_prefix`, and non-negative `offset`;
+`outline` accepts `offset`. Both return an opaque `next_cursor` when another
+bounded page exists. Supplying that cursor prevents mixed-snapshot pagination:
+if source changes between pages, the server returns `stale_cursor` and asks the
+client to restart. `next_offset` remains available for legacy clients, but it
+cannot provide that snapshot guarantee. `path` accepts `from_file_path` and `to_file_path`
+to distinguish same-named symbols. If the shortest confirmed path is longer
+than the requested response limit, it returns `path_too_long` with its length
+instead of sending an oversized path or claiming that no static path exists.
+
+`map.unresolved_references` reports the count plus at most 20 source-backed
+unresolved import/reference samples. It describes a static-analysis gap; it
+does not establish that a target is absent at runtime.
 
 ## Install
 
@@ -76,7 +90,7 @@ the MCP server. Node.js 18 or later is the only installation prerequisite; Rust
 is not required.
 
 ```powershell
-npx -y codefacts@0.1.2 --install
+npx -y codefacts@0.1.3 --install
 ```
 
 The command prints the local binary path. Pin the version in a shared MCP
@@ -117,7 +131,7 @@ repository that you want Claude Code to inspect:
       "command": "npx",
       "args": [
         "-y",
-        "codefacts@0.1.2",
+        "codefacts@0.1.3",
         "mcp",
         "--root",
         "${CLAUDE_PROJECT_DIR:-.}"
@@ -133,7 +147,7 @@ follows the project root. Project-scoped MCP servers require your approval on
 first use. Alternatively, add a fixed repository root from the CLI:
 
 ```powershell
-claude mcp add --scope project --transport stdio codefacts -- npx -y codefacts@0.1.2 mcp --root D:\WorkSpace\your-repository
+claude mcp add --scope project --transport stdio codefacts -- npx -y codefacts@0.1.3 mcp --root D:\WorkSpace\your-repository
 claude mcp get codefacts
 ```
 
@@ -149,7 +163,7 @@ repository rather than the CodeFacts checkout.
   "mcp": {
     "codefacts": {
       "type": "local",
-      "command": ["npx", "-y", "codefacts@0.1.2", "mcp", "--root", "."],
+      "command": ["npx", "-y", "codefacts@0.1.3", "mcp", "--root", "."],
       "cwd": ".",
       "enabled": true,
       "timeout": 120000
@@ -165,6 +179,32 @@ want to index. Verify the connection with:
 ```text
 opencode mcp list
 ```
+
+### Codex
+
+Do not register one enabled user-wide `codefacts` server with a hard-coded
+repository root. It remains callable in other projects and can silently return
+facts from the wrong checkout. Instead, register a clearly named entry for the
+one repository you intend to inspect, with an explicit root and a startup
+timeout that allows the first verified launcher download:
+
+```powershell
+codex mcp add codefacts-opensession -- cmd /c npx -y codefacts@0.1.3 mcp --root D:\WorkSpace\OpenSession
+```
+
+Then set `startup_timeout_sec = 120` (or higher) for that named
+`[mcp_servers.codefacts-opensession]` entry in `%USERPROFILE%\.codex\config.toml`,
+and verify it before use:
+
+```powershell
+codex mcp list
+```
+
+Use a distinct server name and explicit `--root` for every repository. The
+MCP result's `freshness.repository_root` is the final evidence of scope; if it
+does not match the repository being evaluated, discard the result. CodeFacts
+intentionally rejects `codefacts mcp` without `--root` instead of guessing from
+the process working directory.
 
 ### Cache, trust, and offline use
 
@@ -201,7 +241,9 @@ codefacts mcp --root D:\WorkSpace\your-repository --state D:\CodeFactsState\your
 `codefacts mcp` defaults to `--lsp auto`. It never installs or configures a
 language server; it detects a separately installed supported server on `PATH`
 and uses an isolated stdio session only while expanding a matching symbol.
-`map` reports the observed availability, and `expand.references.semantic`
+`map` lists relevant providers as `deferred` without launching external
+processes; `expand` performs and caches the availability probe only for a
+matching supported symbol. `expand.references.semantic`
 returns separately labeled semantic locations when the request succeeds.
 
 The initial providers are `rust-analyzer` for Rust and
@@ -226,7 +268,11 @@ CodeFacts service.
 
 Source is parsed into normalized SQLite facts: symbols, static relationships, file hashes, unresolved references, and a derived FTS index. Tree-sitter is the extractor for supported code languages; Markdown headings use a small deterministic extractor. FTS is discovery only: every returned structural claim comes from a stored fact with source evidence.
 
-An unchanged repository is hash-skipped. When a source file changes, CodeFacts rebuilds the static relationship snapshot before answering so cross-file calls and imports are not partially resolved.
+An unchanged repository is hash-skipped. When a source file changes, CodeFacts
+reparses only changed source files, then rebinds affected source-spelled static
+relationships and re-resolves derived imports against the current fact store.
+Each call site remains an independent relationship fact, so evidence does not
+overwrite an earlier call at a different line.
 
 Endpoint facts currently recognize conservative common route literals (for example, `.get("/path", handler)` and `@GetMapping("/path")`). They are explicitly returned with `endpoint-pattern` / `heuristic` evidence; direct route handler and middleware identifiers appear as heuristic references when they match indexed functions or methods.
 

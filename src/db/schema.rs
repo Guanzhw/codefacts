@@ -37,9 +37,18 @@ CREATE TABLE IF NOT EXISTS edges (
   source_id TEXT NOT NULL,
   target_id TEXT NOT NULL,
   type TEXT NOT NULL,
+  file_path TEXT NOT NULL DEFAULT '',
+  line INTEGER NOT NULL DEFAULT 0,
+  target_name TEXT,
   properties TEXT,
   FOREIGN KEY (source_id) REFERENCES nodes(id) ON DELETE CASCADE,
   FOREIGN KEY (target_id) REFERENCES nodes(id) ON DELETE CASCADE
+)";
+
+const CREATE_INDEX_METADATA: &str = "\
+CREATE TABLE IF NOT EXISTS index_metadata (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL
 )";
 
 const CREATE_FILE_HASHES: &str = "\
@@ -69,8 +78,12 @@ const CREATE_INDEXES: &[&str] = &[
     "CREATE INDEX IF NOT EXISTS idx_nodes_name ON nodes(name)",
     "CREATE INDEX IF NOT EXISTS idx_nodes_is_test ON nodes(is_test) WHERE is_test = 1",
     "CREATE INDEX IF NOT EXISTS idx_edges_source ON edges(source_id)",
+    "CREATE INDEX IF NOT EXISTS idx_edges_source_type ON edges(source_id, type)",
     "CREATE INDEX IF NOT EXISTS idx_edges_target ON edges(target_id)",
     "CREATE INDEX IF NOT EXISTS idx_edges_type ON edges(type)",
+    "CREATE INDEX IF NOT EXISTS idx_edges_file ON edges(file_path)",
+    "CREATE INDEX IF NOT EXISTS idx_edges_target_name ON edges(target_name)",
+    "CREATE UNIQUE INDEX IF NOT EXISTS idx_edges_source_target_type_location ON edges(source_id, target_id, type, file_path, line)",
     "CREATE INDEX IF NOT EXISTS idx_unresolved_file ON unresolved_refs(file_path)",
 ];
 
@@ -132,15 +145,35 @@ pub fn initialize_database(db_path: &str) -> rusqlite::Result<Connection> {
     conn.execute_batch(CREATE_EDGES)?;
     conn.execute_batch(CREATE_FILE_HASHES)?;
     conn.execute_batch(CREATE_UNRESOLVED_REFS)?;
+    conn.execute_batch(CREATE_INDEX_METADATA)?;
+
+    // -- Migrations -------------------------------------------------------
+    // Edge occurrence/evidence columns cannot be reconstructed faithfully
+    // from older rows: their unique key collapsed distinct call sites and
+    // their properties did not retain the original target spelling.  Mark
+    // such databases for one source reindex before serving facts.
+    let migrated_edge_evidence = migrate_edge_evidence(&conn)?;
+    migrate_add_name_tokens(&conn)?;
+    migrate_add_is_test(&conn)?;
+    conn.execute(
+        "INSERT OR IGNORE INTO index_metadata (key, value) VALUES ('full_reindex_required', '0')",
+        [],
+    )?;
+    conn.execute(
+        "INSERT OR IGNORE INTO index_metadata (key, value) VALUES ('generation', '0')",
+        [],
+    )?;
+    if migrated_edge_evidence {
+        conn.execute(
+            "UPDATE index_metadata SET value = '1' WHERE key = 'full_reindex_required'",
+            [],
+        )?;
+    }
 
     // -- Indexes ----------------------------------------------------------
     for ddl in CREATE_INDEXES {
         conn.execute_batch(ddl)?;
     }
-
-    // -- Migrations -------------------------------------------------------
-    migrate_add_name_tokens(&conn)?;
-    migrate_add_is_test(&conn)?;
 
     // -- FTS5 -------------------------------------------------------------
     conn.execute_batch(CREATE_FTS)?;
@@ -187,6 +220,47 @@ fn migrate_add_is_test(conn: &Connection) -> rusqlite::Result<()> {
     Ok(())
 }
 
+/// Migration for relationship occurrences and incremental re-resolution.
+///
+/// The initial edge schema used `(source_id, target_id, type)` as a unique
+/// key, which overwrote earlier call sites.  Add stable evidence columns and
+/// replace that key with a location-aware one.  The caller must rebuild facts
+/// from source afterwards because old rows lack a reliable `target_name`.
+fn migrate_edge_evidence(conn: &Connection) -> rusqlite::Result<bool> {
+    // `PRAGMA table_info` is the schema contract here. Checking a prepared
+    // `SELECT missing_column` is less explicit and ties migration behavior to
+    // SQLite's statement-validation details.
+    let columns = conn
+        .prepare("PRAGMA table_info(edges)")?
+        .query_map([], |row| row.get::<_, String>(1))?
+        .collect::<rusqlite::Result<Vec<_>>>()?;
+    let has_file_path = columns.iter().any(|column| column == "file_path");
+    let has_line = columns.iter().any(|column| column == "line");
+    let has_target_name = columns.iter().any(|column| column == "target_name");
+    let legacy_unique_index_exists: bool = conn.query_row(
+        "SELECT EXISTS(SELECT 1 FROM sqlite_master WHERE type = 'index' AND name = 'idx_edges_source_target_type')",
+        [],
+        |row| row.get(0),
+    )?;
+    let migrated = !has_file_path || !has_line || !has_target_name || legacy_unique_index_exists;
+
+    if !has_file_path {
+        conn.execute_batch("ALTER TABLE edges ADD COLUMN file_path TEXT NOT NULL DEFAULT ''")?;
+    }
+    if !has_line {
+        conn.execute_batch("ALTER TABLE edges ADD COLUMN line INTEGER NOT NULL DEFAULT 0")?;
+    }
+    if !has_target_name {
+        conn.execute_batch("ALTER TABLE edges ADD COLUMN target_name TEXT")?;
+    }
+
+    // The old index is owned by GraphStore in pre-v2 databases.  Removing it
+    // before the new location-aware index is created allows all call sites to
+    // be persisted after the mandated rebuild.
+    conn.execute_batch("DROP INDEX IF EXISTS idx_edges_source_target_type")?;
+    Ok(migrated)
+}
+
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
@@ -194,6 +268,7 @@ fn migrate_add_is_test(conn: &Connection) -> rusqlite::Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use tempfile::NamedTempFile;
 
     /// Helper: initialize an in-memory database and return the connection.
     fn setup() -> Connection {
@@ -246,6 +321,7 @@ mod tests {
             "idx_nodes_type",
             "idx_nodes_name",
             "idx_edges_source",
+            "idx_edges_source_type",
             "idx_edges_target",
             "idx_edges_type",
         ];
@@ -389,12 +465,71 @@ mod tests {
             .filter_map(|r| r.ok())
             .collect();
 
-        for col in &["id", "source_id", "target_id", "type", "properties"] {
+        for col in &[
+            "id",
+            "source_id",
+            "target_id",
+            "type",
+            "file_path",
+            "line",
+            "target_name",
+            "properties",
+        ] {
             assert!(
                 columns.contains(&col.to_string()),
                 "edges table should have column '{col}', found: {columns:?}"
             );
         }
+    }
+
+    #[test]
+    fn edge_evidence_migration_requires_one_safe_source_reindex() {
+        let file = NamedTempFile::new().expect("temporary database path");
+        let old = Connection::open(file.path()).expect("open old database");
+        old.execute_batch(
+            "CREATE TABLE edges (\
+               id INTEGER PRIMARY KEY AUTOINCREMENT,\
+               source_id TEXT NOT NULL,\
+               target_id TEXT NOT NULL,\
+               type TEXT NOT NULL,\
+               properties TEXT\
+             );\
+             CREATE UNIQUE INDEX idx_edges_source_target_type \
+             ON edges(source_id, target_id, type);",
+        )
+        .expect("old edge schema");
+        drop(old);
+
+        let conn = initialize_database(file.path().to_str().expect("UTF-8 database path"))
+            .expect("migrate old database");
+        let columns = conn
+            .prepare("PRAGMA table_info(edges)")
+            .expect("edge info")
+            .query_map([], |row| row.get::<_, String>(1))
+            .expect("edge columns")
+            .collect::<rusqlite::Result<Vec<_>>>()
+            .expect("read edge columns");
+        assert!(columns.contains(&"file_path".to_string()));
+        assert!(columns.contains(&"line".to_string()));
+        assert!(columns.contains(&"target_name".to_string()));
+        assert!(!object_exists(
+            &conn,
+            "index",
+            "idx_edges_source_target_type"
+        ));
+        assert!(object_exists(
+            &conn,
+            "index",
+            "idx_edges_source_target_type_location"
+        ));
+        let reindex_required: String = conn
+            .query_row(
+                "SELECT value FROM index_metadata WHERE key = 'full_reindex_required'",
+                [],
+                |row| row.get(0),
+            )
+            .expect("migration state");
+        assert_eq!(reindex_required, "1");
     }
 
     #[test]

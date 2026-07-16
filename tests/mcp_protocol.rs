@@ -4,6 +4,7 @@ use std::process::{Command, Stdio};
 
 use codefacts::lsp::LspMode;
 use codefacts::service::CodeFacts;
+use codefacts::types::NodeKind;
 use serde_json::{json, Value};
 use tempfile::tempdir;
 
@@ -45,6 +46,11 @@ fn stdio_server_exposes_only_the_five_source_backed_workflows() {
         json!({"jsonrpc":"2.0", "id":5, "method":"tools/call", "params":{"name":"outline", "arguments":{"file_path":"README.md"}}}),
         json!({"jsonrpc":"2.0", "id":6, "method":"tools/call", "params":{"name":"expand", "arguments":{"symbol":"helper", "file_path":"src/lib.rs"}}}),
         json!({"jsonrpc":"2.0", "id":7, "method":"tools/call", "params":{"name":"path", "arguments":{"from":"entry", "to":"helper"}}}),
+        json!({"jsonrpc":"2.0", "id":8, "method":"tools/call", "params":{"name":"path", "arguments":{"from":"entry", "from_file_path":"src/lib.rs", "to":"helper", "to_file_path":"src/lib.rs"}}}),
+        json!({"jsonrpc":"2.0", "id":9, "method":"tools/call", "params":{"name":"search", "arguments":{"query":"helper", "kind":"function", "path_prefix":"src", "offset":0, "limit":1}}}),
+        json!({"jsonrpc":"2.0", "id":10, "method":"tools/call", "params":{"name":"outline", "arguments":{"file_path":"README.md", "offset":1, "limit":1}}}),
+        json!({"jsonrpc":"2.0", "id":11, "method":"tools/call", "params":{"name":"search", "arguments":{"query":"helper", "kind":"const"}}}),
+        json!({"jsonrpc":"2.0", "id":12, "method":"tools/call", "params":{"name":"search", "arguments":{"query":"helper", "limit":0}}}),
     ];
     let mut input = child.stdin.take().expect("child stdin");
     for request in requests {
@@ -70,7 +76,7 @@ fn stdio_server_exposes_only_the_five_source_backed_workflows() {
         .lines()
         .map(|line| serde_json::from_str::<Value>(line).expect("JSON-RPC response"))
         .collect::<Vec<_>>();
-    assert_eq!(responses.len(), 7);
+    assert_eq!(responses.len(), 12);
 
     let tools = responses[1]["result"]["tools"]
         .as_array()
@@ -80,10 +86,44 @@ fn stdio_server_exposes_only_the_five_source_backed_workflows() {
         .map(|tool| tool["name"].as_str().expect("tool name"))
         .collect::<Vec<_>>();
     assert_eq!(names, ["map", "search", "outline", "expand", "path"]);
+    let search = tools
+        .iter()
+        .find(|tool| tool["name"] == "search")
+        .expect("search schema");
+    assert!(search["inputSchema"]["properties"].get("kind").is_some());
+    assert!(search["inputSchema"]["properties"]
+        .get("path_prefix")
+        .is_some());
+    assert!(search["inputSchema"]["properties"].get("offset").is_some());
+    assert!(search["inputSchema"]["properties"].get("cursor").is_some());
+    let path = tools
+        .iter()
+        .find(|tool| tool["name"] == "path")
+        .expect("path schema");
+    assert!(path["inputSchema"]["properties"]
+        .get("from_file_path")
+        .is_some());
+    assert!(path["inputSchema"]["properties"]
+        .get("to_file_path")
+        .is_some());
 
     assert_eq!(
         responses[2]["result"]["structuredContent"]["freshness"]["status"],
         "fresh"
+    );
+    let repository_root = responses[2]["result"]["structuredContent"]["freshness"]
+        ["repository_root"]
+        .as_str()
+        .expect("repository root identity");
+    assert!(!repository_root.starts_with(r"\\?\"));
+    let repository = responses[2]["result"]["structuredContent"]["repository"]
+        .as_str()
+        .expect("repository identity");
+    assert_eq!(repository, repository_root);
+    assert!(responses[2]["result"]["structuredContent"]["freshness"]["generation"].is_i64());
+    assert_eq!(
+        responses[2]["result"]["structuredContent"]["unresolved_references"]["count"],
+        0
     );
     assert_eq!(
         responses[3]["result"]["structuredContent"]["results"][0]["name"],
@@ -103,6 +143,21 @@ fn stdio_server_exposes_only_the_five_source_backed_workflows() {
         responses[6]["result"]["structuredContent"]["path"][1]["name"],
         "helper"
     );
+    assert_eq!(responses[7]["result"]["structuredContent"]["status"], "ok");
+    assert_eq!(
+        responses[8]["result"]["structuredContent"]["results"][0]["name"],
+        "helper"
+    );
+    assert_eq!(
+        responses[8]["result"]["structuredContent"]["next_offset"],
+        1
+    );
+    assert_eq!(
+        responses[9]["result"]["structuredContent"]["symbols"][0]["name"],
+        "Details"
+    );
+    assert_eq!(responses[10]["result"]["isError"], true);
+    assert_eq!(responses[11]["result"]["isError"], true);
 }
 
 #[test]
@@ -231,4 +286,365 @@ fn search_and_expand_surface_source_backed_endpoint_facts() {
             && reference["evidence"]["extractor"] == "endpoint-pattern"
             && reference["evidence"]["confidence"] == "heuristic"
     }));
+}
+
+#[test]
+fn map_surfaces_and_refreshes_bounded_unresolved_reference_evidence() {
+    let repository = tempdir().expect("temporary repository");
+    fs::create_dir_all(repository.path().join("src")).expect("source directory");
+    let mut source = String::new();
+    for index in 0..21 {
+        source.push_str(&format!(
+            "import {{ missing_{index} }} from './missing_{index}';\n"
+        ));
+    }
+    source.push_str("export function entry() { return 1; }\n");
+    fs::write(repository.path().join("src/app.ts"), source).expect("unresolved fixture");
+
+    let facts = CodeFacts::open(repository.path(), repository.path().join("external.sqlite"))
+        .expect("open source-backed facts");
+    let initial = facts.map().expect("map with unresolved references");
+    let unresolved = &initial["unresolved_references"];
+    assert_eq!(unresolved["count"], 21);
+    assert_eq!(unresolved["samples"].as_array().expect("samples").len(), 20);
+    assert_eq!(unresolved["truncated"], true);
+    assert_eq!(unresolved["samples"][0]["specifier"], "./missing_0");
+    assert_eq!(unresolved["samples"][0]["kind"], "import");
+    assert_eq!(
+        unresolved["samples"][0]["evidence"]["confidence"],
+        "unresolved"
+    );
+    assert!(unresolved["samples"][0]["evidence"]["source_hash"].is_string());
+
+    for index in 0..21 {
+        fs::write(
+            repository.path().join(format!("src/missing_{index}.ts")),
+            format!("export function missing_{index}() {{ return {index}; }}\n"),
+        )
+        .expect("resolved import fixture");
+    }
+    let refreshed = facts.map().expect("map after imports resolve");
+    assert_eq!(refreshed["unresolved_references"]["count"], 0);
+    assert!(refreshed["unresolved_references"]["samples"]
+        .as_array()
+        .expect("empty samples")
+        .is_empty());
+}
+
+#[test]
+fn path_disambiguates_file_paths_and_never_returns_an_oversized_path() {
+    let repository = tempdir().expect("temporary repository");
+    fs::create_dir_all(repository.path().join("src")).expect("source directory");
+    fs::write(
+        repository.path().join("src/api.ts"),
+        "export function handle() { return validate(); }\nexport function validate() { return true; }\n",
+    )
+    .expect("api fixture");
+    fs::write(
+        repository.path().join("src/other.ts"),
+        "export function handle() { return false; }\n",
+    )
+    .expect("duplicate fixture");
+    fs::write(
+        repository.path().join("src/chain.ts"),
+        "export function first() { return second(); }\nexport function second() { return third(); }\nexport function third() { return true; }\n",
+    )
+    .expect("path-length fixture");
+
+    let facts = CodeFacts::open(repository.path(), repository.path().join("external.sqlite"))
+        .expect("open source-backed facts");
+    let ambiguous = facts
+        .path("handle", "validate", None)
+        .expect("ambiguous path");
+    assert_eq!(ambiguous["status"], "ambiguous");
+    assert_eq!(ambiguous["parameter"], "from");
+
+    let resolved = facts
+        .path_with_files(
+            "handle",
+            Some("src/api.ts"),
+            "validate",
+            Some("src/api.ts"),
+            Some(10),
+        )
+        .expect("disambiguated path");
+    assert_eq!(resolved["status"], "ok");
+    assert_eq!(resolved["path"][0]["evidence"]["file_path"], "src/api.ts");
+    assert_eq!(resolved["path"][1]["name"], "validate");
+
+    let missing_file = facts
+        .path_with_files(
+            "handle",
+            Some("src/missing.ts"),
+            "validate",
+            Some("src/api.ts"),
+            Some(10),
+        )
+        .expect("missing disambiguator result");
+    assert_eq!(missing_file["status"], "not_found");
+    assert_eq!(missing_file["parameter"], "from");
+    assert!(facts
+        .path_with_files(
+            "handle",
+            Some("../src/api.ts"),
+            "validate",
+            Some("src/api.ts"),
+            Some(10),
+        )
+        .is_err());
+
+    let too_long = facts
+        .path("first", "third", Some(1))
+        .expect("bounded path result");
+    assert_eq!(too_long["status"], "path_too_long");
+    assert_eq!(too_long["path_length"], 3);
+    assert_eq!(too_long["maximum_path_length"], 1);
+    assert!(too_long.get("path").is_none());
+
+    let bounded = facts
+        .path("first", "third", Some(3))
+        .expect("three-node path");
+    assert_eq!(bounded["status"], "ok");
+    assert_eq!(bounded["path"].as_array().expect("path").len(), 3);
+}
+
+#[test]
+fn search_and_outline_filter_and_continue_without_overlap() {
+    let repository = tempdir().expect("temporary repository");
+    fs::create_dir_all(repository.path().join("src/api")).expect("API directory");
+    fs::write(
+        repository.path().join("src/api/functions.ts"),
+        "export function needleOne() { return 1; }\nexport function needleTwo() { return 2; }\nexport function needleThree() { return 3; }\n",
+    )
+    .expect("API functions fixture");
+    fs::write(
+        repository.path().join("src/other.ts"),
+        "export function needleOutside() { return 4; }\n",
+    )
+    .expect("outside function fixture");
+
+    let facts = CodeFacts::open(repository.path(), repository.path().join("external.sqlite"))
+        .expect("open source-backed facts");
+    let first = facts
+        .search_with_options(
+            "needle",
+            Some(NodeKind::Function),
+            Some("src/api"),
+            0,
+            Some(1),
+        )
+        .expect("first search page");
+    let second = facts
+        .search_with_options(
+            "needle",
+            Some(NodeKind::Function),
+            Some("src/api"),
+            1,
+            Some(1),
+        )
+        .expect("second search page");
+    assert_eq!(first["results"].as_array().expect("first results").len(), 1);
+    assert_eq!(first["next_offset"], 1);
+    assert_eq!(second["next_offset"], 2);
+    assert_ne!(first["results"][0]["id"], second["results"][0]["id"]);
+    assert_eq!(
+        first["results"][0]["evidence"]["file_path"],
+        "src/api/functions.ts"
+    );
+
+    let final_page = facts
+        .search_with_options(
+            "needle",
+            Some(NodeKind::Function),
+            Some("src/api"),
+            2,
+            Some(1),
+        )
+        .expect("final search page");
+    assert_eq!(final_page["next_offset"], Value::Null);
+    assert_eq!(
+        final_page["results"]
+            .as_array()
+            .expect("final results")
+            .len(),
+        1
+    );
+    assert!(facts
+        .search_with_options("needle", None, Some("../src"), 0, None)
+        .is_err());
+
+    let outline_first = facts
+        .outline_with_offset("src/api/functions.ts", 0, Some(1))
+        .expect("first outline page");
+    let outline_second = facts
+        .outline_with_offset("src/api/functions.ts", 1, Some(1))
+        .expect("second outline page");
+    let outline_final = facts
+        .outline_with_offset("src/api/functions.ts", 2, Some(1))
+        .expect("final outline page");
+    assert_eq!(outline_first["next_offset"], 1);
+    assert_eq!(outline_second["next_offset"], 2);
+    assert_eq!(outline_final["next_offset"], Value::Null);
+    assert_ne!(
+        outline_first["symbols"][0]["id"],
+        outline_second["symbols"][0]["id"]
+    );
+}
+
+#[test]
+fn snapshot_cursors_prevent_mixed_page_evidence_after_a_refresh() {
+    let repository = tempdir().expect("temporary repository");
+    fs::create_dir_all(repository.path().join("src")).expect("source directory");
+    let source = repository.path().join("src/functions.ts");
+    fs::write(
+        &source,
+        "export function needleOne() { return 1; }\nexport function needleTwo() { return 2; }\nexport function needleThree() { return 3; }\n",
+    )
+    .expect("source fixture");
+    let facts = CodeFacts::open(repository.path(), repository.path().join("external.sqlite"))
+        .expect("open source-backed facts");
+
+    let first = facts
+        .search_with_page_options(
+            "needle",
+            Some(NodeKind::Function),
+            Some("src"),
+            0,
+            None,
+            Some(1),
+        )
+        .expect("first snapshot page");
+    let cursor = first["next_cursor"]
+        .as_str()
+        .expect("opaque continuation cursor")
+        .to_string();
+    let generation = first["freshness"]["generation"]
+        .as_i64()
+        .expect("first generation");
+
+    let second = facts
+        .search_with_page_options(
+            "needle",
+            Some(NodeKind::Function),
+            Some("src"),
+            0,
+            Some(&cursor),
+            Some(1),
+        )
+        .expect("same-snapshot continuation");
+    assert_ne!(first["results"][0]["id"], second["results"][0]["id"]);
+    assert_eq!(second["freshness"]["generation"].as_i64(), Some(generation));
+
+    fs::write(
+        &source,
+        "export function needleZero() { return 0; }\nexport function needleOne() { return 1; }\nexport function needleTwo() { return 2; }\nexport function needleThree() { return 3; }\n",
+    )
+    .expect("changed source fixture");
+    let stale = facts
+        .search_with_page_options(
+            "needle",
+            Some(NodeKind::Function),
+            Some("src"),
+            0,
+            Some(&cursor),
+            Some(1),
+        )
+        .expect("stale cursor response");
+    assert_eq!(stale["status"], "stale_cursor");
+    assert!(stale["results"]
+        .as_array()
+        .expect("stale results")
+        .is_empty());
+    assert!(
+        stale["freshness"]["generation"]
+            .as_i64()
+            .expect("new generation")
+            > generation
+    );
+}
+
+#[test]
+fn incremental_refresh_rebinds_one_changed_definition_without_reparsing_callers() {
+    let repository = tempdir().expect("temporary repository");
+    fs::create_dir_all(repository.path().join("src")).expect("source directory");
+    fs::write(
+        repository.path().join("src/caller.ts"),
+        "export function entry() { return target(); }\n",
+    )
+    .expect("caller fixture");
+    fs::write(
+        repository.path().join("src/unchanged.ts"),
+        "export function unrelated() { return 1; }\n",
+    )
+    .expect("unchanged fixture");
+    let facts = CodeFacts::open(repository.path(), repository.path().join("external.sqlite"))
+        .expect("open source-backed facts");
+
+    let initial = facts.map().expect("initial map");
+    assert_eq!(initial["freshness"]["files_indexed"], 2);
+    fs::write(
+        repository.path().join("src/target.ts"),
+        "export function target() { return true; }\n",
+    )
+    .expect("new definition fixture");
+
+    let rebound = facts.path("entry", "target", None).expect("rebound path");
+    assert_eq!(rebound["status"], "ok");
+    assert_eq!(rebound["freshness"]["files_indexed"], 1);
+    assert_eq!(rebound["freshness"]["files_skipped"], 2);
+    assert_eq!(
+        rebound["freshness"]["relationships_rebound"], 1,
+        "one caller edge should be rebound to the added definition"
+    );
+
+    fs::remove_file(repository.path().join("src/target.ts")).expect("delete target fixture");
+    let removed = facts
+        .expand("entry", Some("src/caller.ts"), None)
+        .expect("refresh after target deletion");
+    assert!(removed["callees"]
+        .as_array()
+        .expect("callees after deletion")
+        .is_empty());
+    assert_eq!(removed["freshness"]["files_indexed"], 0);
+    assert_eq!(
+        removed["freshness"]["relationships_rebound"], 1,
+        "one caller edge should be invalidated when its definition is removed"
+    );
+}
+
+#[test]
+fn expand_keeps_distinct_call_site_evidence() {
+    let repository = tempdir().expect("temporary repository");
+    fs::write(
+        repository.path().join("lib.rs"),
+        "pub fn helper() {}\n\npub fn entry() {\n    helper();\n    helper();\n}\n",
+    )
+    .expect("Rust fixture");
+    let facts = CodeFacts::open(repository.path(), repository.path().join("external.sqlite"))
+        .expect("open source-backed facts");
+
+    let expanded = facts
+        .expand("helper", Some("lib.rs"), Some(10))
+        .expect("expand helper");
+    let callers = expanded["callers"].as_array().expect("caller facts");
+    assert_eq!(callers.len(), 2);
+    let lines = callers
+        .iter()
+        .map(|caller| {
+            caller["evidence"]["start_line"]
+                .as_u64()
+                .expect("call line")
+        })
+        .collect::<Vec<_>>();
+    assert_eq!(lines, vec![4, 5]);
+}
+
+#[test]
+fn mcp_mode_rejects_an_implicit_working_directory_root() {
+    let output = Command::new(env!("CARGO_BIN_EXE_codefacts"))
+        .arg("mcp")
+        .output()
+        .expect("run codefacts without root");
+    assert!(!output.status.success());
+    assert!(String::from_utf8_lossy(&output.stderr).contains("--root is required"));
 }

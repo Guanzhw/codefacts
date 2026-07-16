@@ -4,7 +4,8 @@
 //! `prepare_cached` for automatic statement caching — the Rust equivalent
 //! of the TS version's eagerly-prepared statement map.
 
-use rusqlite::{params, Connection};
+use rusqlite::types::Value as SqlValue;
+use rusqlite::{params, params_from_iter, Connection};
 
 use crate::db::converters::{row_to_code_edge, row_to_code_node};
 use crate::db::schema::initialize_database;
@@ -67,21 +68,33 @@ ON CONFLICT(id) DO UPDATE SET
   is_test = excluded.is_test";
 
 const UPSERT_EDGE_SQL: &str = "\
-INSERT INTO edges (source_id, target_id, type, properties)
-VALUES (?1, ?2, ?3, ?4)
-ON CONFLICT(source_id, target_id, type) DO UPDATE SET
+INSERT INTO edges (source_id, target_id, type, file_path, line, target_name, properties)
+VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)
+ON CONFLICT(source_id, target_id, type, file_path, line) DO UPDATE SET
+  target_name = excluded.target_name,
   properties = excluded.properties";
 
 const DELETE_EDGES_BY_FILE_SQL: &str = "\
+DELETE FROM edges WHERE file_path = ?1";
+
+const DELETE_ALL_EDGES_BY_NODE_FILE_SQL: &str = "\
 DELETE FROM edges WHERE source_id IN (SELECT id FROM nodes WHERE file_path = ?1)
    OR target_id IN (SELECT id FROM nodes WHERE file_path = ?1)";
 
 const DELETE_NODES_BY_FILE_SQL: &str = "\
 DELETE FROM nodes WHERE file_path = ?1";
 
+const DELETE_EDGE_OCCURRENCE_SQL: &str = "\
+DELETE FROM edges WHERE source_id = ?1 AND target_id = ?2 AND type = ?3 \
+  AND file_path = ?4 AND line = ?5";
+
+/// Stay below SQLite's conventional 999 bind-variable limit while looking up
+/// every source spelling affected by a large incremental refresh.
+const TARGET_NAME_QUERY_BATCH_SIZE: usize = 900;
+
 const ENSURE_EDGE_UNIQUE_INDEX_SQL: &str = "\
-CREATE UNIQUE INDEX IF NOT EXISTS idx_edges_source_target_type \
-ON edges(source_id, target_id, type)";
+CREATE UNIQUE INDEX IF NOT EXISTS idx_edges_source_target_type_location \
+ON edges(source_id, target_id, type, file_path, line)";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -386,6 +399,54 @@ impl GraphStore {
     }
 
     // -------------------------------------------------------------------
+    // Index identity and migration state
+    // -------------------------------------------------------------------
+
+    /// Return the monotonically increasing generation for this fact snapshot.
+    pub fn generation(&self) -> Result<i64> {
+        let value: String = self.conn.query_row(
+            "SELECT value FROM index_metadata WHERE key = 'generation'",
+            [],
+            |row| row.get::<_, String>(0),
+        )?;
+        value.parse().map_err(|_| {
+            crate::error::CodeFactsError::Other("stored index generation is invalid".into())
+        })
+    }
+
+    /// Advance the generation after a successful source/fact mutation.
+    pub fn advance_generation(&self) -> Result<i64> {
+        // Validate the persisted value before SQLite's permissive CAST could
+        // turn unrelated corrupt text into zero.
+        let _ = self.generation()?;
+        self.conn.execute(
+            "UPDATE index_metadata SET value = CAST(CAST(value AS INTEGER) + 1 AS TEXT) WHERE key = 'generation'",
+            [],
+        )?;
+        self.generation()
+    }
+
+    /// Whether a schema migration requires source facts to be rebuilt before
+    /// serving a complete snapshot.
+    pub fn full_reindex_required(&self) -> Result<bool> {
+        let value: String = self.conn.query_row(
+            "SELECT value FROM index_metadata WHERE key = 'full_reindex_required'",
+            [],
+            |row| row.get(0),
+        )?;
+        Ok(value == "1")
+    }
+
+    /// Clear the migration rebuild marker only after a successful full pass.
+    pub fn mark_full_reindex_complete(&self) -> Result<()> {
+        self.conn.execute(
+            "UPDATE index_metadata SET value = '0' WHERE key = 'full_reindex_required'",
+            [],
+        )?;
+        Ok(())
+    }
+
+    // -------------------------------------------------------------------
     // Single-row mutations
     // -------------------------------------------------------------------
 
@@ -425,6 +486,9 @@ impl GraphStore {
             edge.source,
             edge.target,
             edge.kind.as_str(),
+            edge.file_path,
+            edge.line,
+            edge.target_name,
             build_edge_properties(edge),
         ])?;
         Ok(())
@@ -479,6 +543,9 @@ impl GraphStore {
                     edge.source,
                     edge.target,
                     edge.kind.as_str(),
+                    edge.file_path,
+                    edge.line,
+                    edge.target_name,
                     build_edge_properties(edge),
                 ])?;
             }
@@ -540,6 +607,9 @@ impl GraphStore {
                     edge.source,
                     edge.target,
                     edge.kind.as_str(),
+                    edge.file_path,
+                    edge.line,
+                    edge.target_name,
                     build_edge_properties(edge),
                 ])?;
             }
@@ -550,6 +620,22 @@ impl GraphStore {
 
     /// Delete all nodes and edges associated with `file_path`.
     pub fn delete_file_nodes(&self, file_path: &str) -> Result<()> {
+        let tx = self.conn.unchecked_transaction()?;
+        {
+            let mut del_edges = tx.prepare_cached(DELETE_ALL_EDGES_BY_NODE_FILE_SQL)?;
+            del_edges.execute(params![file_path])?;
+
+            let mut del_nodes = tx.prepare_cached(DELETE_NODES_BY_FILE_SQL)?;
+            del_nodes.execute(params![file_path])?;
+        }
+        tx.commit()?;
+        Ok(())
+    }
+
+    /// Delete facts emitted by one file while retaining incoming source facts
+    /// from other files. The incremental pipeline uses this narrower variant
+    /// so those facts can be rebound to a moved or newly added definition.
+    pub fn delete_file_nodes_preserving_incoming(&self, file_path: &str) -> Result<()> {
         let tx = self.conn.unchecked_transaction()?;
         {
             let mut del_edges = tx.prepare_cached(DELETE_EDGES_BY_FILE_SQL)?;
@@ -666,6 +752,182 @@ impl GraphStore {
                     .map_err(Into::into)
             }
         }
+    }
+
+    /// Return confirmed outgoing edges for one BFS frontier.  The joins keep
+    /// conceptual/unresolved IDs out of traversal without materializing the
+    /// whole graph in memory.
+    pub fn get_confirmed_outgoing_edges(
+        &self,
+        source_ids: &[String],
+        edge_type: &str,
+    ) -> Result<Vec<CodeEdge>> {
+        if source_ids.is_empty() {
+            return Ok(Vec::new());
+        }
+        let placeholders = std::iter::repeat_n("?", source_ids.len())
+            .collect::<Vec<_>>()
+            .join(", ");
+        let query = format!(
+            "SELECT edges.* FROM edges \
+             INNER JOIN nodes source_nodes ON source_nodes.id = edges.source_id \
+             INNER JOIN nodes target_nodes ON target_nodes.id = edges.target_id \
+             WHERE edges.type = ? AND edges.source_id IN ({placeholders}) \
+             ORDER BY edges.source_id, edges.target_id, edges.file_path, edges.line, edges.id"
+        );
+        let mut values = Vec::with_capacity(source_ids.len() + 1);
+        values.push(SqlValue::Text(edge_type.to_string()));
+        values.extend(source_ids.iter().cloned().map(SqlValue::Text));
+        // Frontier width changes the number of placeholders. Do not put an
+        // unbounded stream of distinct SQL strings into rusqlite's statement
+        // cache; the source/target indexes still make this bounded query
+        // selective.
+        let mut stmt = self.conn.prepare(&query)?;
+        let rows = stmt.query_and_then(params_from_iter(values.iter()), row_to_code_edge)?;
+        rows.collect::<std::result::Result<Vec<_>, _>>()
+            .map_err(Into::into)
+    }
+
+    /// Find test symbols directly related to a confirmed symbol.  This keeps
+    /// `expand` bounded even in repositories with a very large symbol table.
+    pub fn get_related_test_nodes(&self, node_id: &str, limit: usize) -> Result<Vec<CodeNode>> {
+        let sql_limit = i64::try_from(limit).map_err(|_| {
+            crate::error::CodeFactsError::Other("test result limit is too large".into())
+        })?;
+        let mut stmt = self.conn.prepare_cached(
+            "SELECT DISTINCT tests.* FROM nodes tests \
+             WHERE tests.is_test = 1 AND ( \
+               EXISTS (SELECT 1 FROM edges incoming WHERE incoming.source_id = tests.id AND incoming.target_id = ?1) \
+               OR EXISTS (SELECT 1 FROM edges outgoing WHERE outgoing.target_id = tests.id AND outgoing.source_id = ?1) \
+             ) \
+             ORDER BY tests.file_path, tests.start_line, tests.start_column, tests.id \
+             LIMIT ?2",
+        )?;
+        let rows = stmt.query_and_then(params![node_id, sql_limit], row_to_code_node)?;
+        rows.collect::<std::result::Result<Vec<_>, _>>()
+            .map_err(Into::into)
+    }
+
+    /// Load source-spelled static edges whose target name may have changed
+    /// resolution after a definition edit.
+    pub fn get_edges_by_target_names(&self, target_names: &[String]) -> Result<Vec<CodeEdge>> {
+        if target_names.is_empty() {
+            return Ok(Vec::new());
+        }
+        let mut edges = Vec::new();
+        for target_name_batch in target_names.chunks(TARGET_NAME_QUERY_BATCH_SIZE) {
+            let placeholders = std::iter::repeat_n("?", target_name_batch.len())
+                .collect::<Vec<_>>()
+                .join(", ");
+            let query = format!(
+                "SELECT * FROM edges WHERE target_name IN ({placeholders}) \
+                 ORDER BY source_id, target_id, type, file_path, line, id"
+            );
+            let values = target_name_batch
+                .iter()
+                .cloned()
+                .map(SqlValue::Text)
+                .collect::<Vec<_>>();
+            let mut stmt = self.conn.prepare(&query)?;
+            let rows = stmt.query_and_then(params_from_iter(values.iter()), row_to_code_edge)?;
+            edges.extend(rows.collect::<std::result::Result<Vec<_>, _>>()?);
+        }
+
+        // Chunking makes the SQL result order batch-local. Restore the single
+        // query's deterministic occurrence order for callers and tests.
+        edges.sort_by(|left, right| {
+            (
+                &left.source,
+                &left.target,
+                left.kind.as_str(),
+                &left.file_path,
+                left.line,
+                left.target_name.as_deref(),
+            )
+                .cmp(&(
+                    &right.source,
+                    &right.target,
+                    right.kind.as_str(),
+                    &right.file_path,
+                    right.line,
+                    right.target_name.as_deref(),
+                ))
+        });
+        Ok(edges)
+    }
+
+    /// Return raw import specifier edges; resolved import facts have concrete
+    /// symbol targets and are deliberately excluded.
+    pub fn get_raw_import_edges(&self) -> Result<Vec<CodeEdge>> {
+        let mut stmt = self.conn.prepare_cached(
+            "SELECT * FROM edges WHERE type = 'imports' AND target_id LIKE 'module:%' \
+             ORDER BY file_path, line, id",
+        )?;
+        let rows = stmt.query_and_then([], row_to_code_edge)?;
+        rows.collect::<std::result::Result<Vec<_>, _>>()
+            .map_err(Into::into)
+    }
+
+    /// Remove every derived import edge before re-resolving imports against a
+    /// changed symbol/file set. Extracted raw module edges are retained.
+    pub fn delete_resolved_import_edges(&self) -> Result<()> {
+        self.conn.execute(
+            "DELETE FROM edges WHERE type = 'imports' AND target_id NOT LIKE 'module:%'",
+            [],
+        )?;
+        Ok(())
+    }
+
+    /// Delete one relationship occurrence using its evidence identity.
+    pub fn delete_edge(&self, edge: &CodeEdge) -> Result<()> {
+        self.conn.execute(
+            DELETE_EDGE_OCCURRENCE_SQL,
+            params![
+                edge.source,
+                edge.target,
+                edge.kind.as_str(),
+                edge.file_path,
+                edge.line
+            ],
+        )?;
+        Ok(())
+    }
+
+    /// Atomically replace a set of relationship occurrences. Incremental
+    /// re-resolution uses this to avoid exposing a half-rebound graph and to
+    /// avoid one SQLite transaction per affected edge.
+    pub fn replace_edge_occurrences(
+        &self,
+        deleted: &[CodeEdge],
+        inserted: &[CodeEdge],
+    ) -> Result<()> {
+        let tx = self.conn.unchecked_transaction()?;
+        {
+            let mut delete = tx.prepare_cached(DELETE_EDGE_OCCURRENCE_SQL)?;
+            for edge in deleted {
+                delete.execute(params![
+                    edge.source,
+                    edge.target,
+                    edge.kind.as_str(),
+                    edge.file_path,
+                    edge.line
+                ])?;
+            }
+            let mut insert = tx.prepare_cached(UPSERT_EDGE_SQL)?;
+            for edge in inserted {
+                insert.execute(params![
+                    edge.source,
+                    edge.target,
+                    edge.kind.as_str(),
+                    edge.file_path,
+                    edge.line,
+                    edge.target_name,
+                    build_edge_properties(edge),
+                ])?;
+            }
+        }
+        tx.commit()?;
+        Ok(())
     }
 
     // -------------------------------------------------------------------
@@ -800,6 +1062,14 @@ impl GraphStore {
         Ok(())
     }
 
+    /// Replace the global import-resolution report after a relationship
+    /// rebind. This is intentionally separate from per-file clearing so an
+    /// unchanged importer is updated when a target file appears or disappears.
+    pub fn clear_all_unresolved_refs(&self) -> Result<()> {
+        self.conn.execute("DELETE FROM unresolved_refs", [])?;
+        Ok(())
+    }
+
     /// Get the total count of unresolved references.
     pub fn get_unresolved_ref_count(&self) -> Result<usize> {
         let mut stmt = self
@@ -853,6 +1123,7 @@ mod tests {
             kind,
             file_path: file.to_string(),
             line,
+            target_name: None,
             metadata: None,
         }
     }
@@ -973,6 +1244,68 @@ mod tests {
     }
 
     #[test]
+    fn confirmed_frontier_query_excludes_unresolved_targets() {
+        let store = setup();
+        let n1 = make_node("n1", "entry", "x.ts", NodeKind::Function, 1);
+        let n2 = make_node("n2", "target", "x.ts", NodeKind::Function, 10);
+        store.upsert_nodes(&[n1, n2]).unwrap();
+        store
+            .upsert_edge(&make_edge("n1", "n2", EdgeKind::Calls, "x.ts", 3))
+            .unwrap();
+        store
+            .upsert_edge(&make_edge(
+                "n1",
+                "unresolved:missing",
+                EdgeKind::Calls,
+                "x.ts",
+                4,
+            ))
+            .unwrap();
+
+        let frontier = store
+            .get_confirmed_outgoing_edges(&["n1".to_string()], "calls")
+            .unwrap();
+        assert_eq!(frontier.len(), 1);
+        assert_eq!(frontier[0].target, "n2");
+    }
+
+    #[test]
+    fn related_test_lookup_is_bounded_and_does_not_scan_all_nodes_in_service() {
+        let store = setup();
+        let production = make_node("prod", "run", "src/run.ts", NodeKind::Function, 1);
+        let related = make_node(
+            "test-related",
+            "test_run",
+            "tests/run.test.ts",
+            NodeKind::Function,
+            1,
+        );
+        let unrelated = make_node(
+            "test-unrelated",
+            "test_other",
+            "tests/other.test.ts",
+            NodeKind::Function,
+            1,
+        );
+        store
+            .upsert_nodes(&[production, related, unrelated])
+            .unwrap();
+        store
+            .upsert_edge(&make_edge(
+                "test-related",
+                "prod",
+                EdgeKind::Calls,
+                "tests/run.test.ts",
+                2,
+            ))
+            .unwrap();
+
+        let tests = store.get_related_test_nodes("prod", 1).unwrap();
+        assert_eq!(tests.len(), 1);
+        assert_eq!(tests[0].id, "test-related");
+    }
+
+    #[test]
     fn upsert_edge_deduplicates() {
         let store = setup();
         let n1 = make_node("n1", "a", "x.ts", NodeKind::Function, 1);
@@ -984,6 +1317,27 @@ mod tests {
         store.upsert_edge(&edge).unwrap(); // second insert — should update, not duplicate
 
         assert_eq!(store.get_edge_count().unwrap(), 1);
+    }
+
+    #[test]
+    fn target_name_lookup_batches_large_refreshes() {
+        let store = setup();
+        let n1 = make_node("n1", "caller", "x.ts", NodeKind::Function, 1);
+        let n2 = make_node("n2", "target", "x.ts", NodeKind::Function, 10);
+        store.upsert_nodes(&[n1, n2]).unwrap();
+
+        let target_name = format!("target_{TARGET_NAME_QUERY_BATCH_SIZE}");
+        let mut edge = make_edge("n1", "n2", EdgeKind::Calls, "x.ts", 3);
+        edge.target_name = Some(target_name.clone());
+        store.upsert_edge(&edge).unwrap();
+
+        let target_names = (0..=TARGET_NAME_QUERY_BATCH_SIZE)
+            .map(|index| format!("target_{index}"))
+            .collect::<Vec<_>>();
+        let edges = store.get_edges_by_target_names(&target_names).unwrap();
+
+        assert_eq!(edges.len(), 1);
+        assert_eq!(edges[0].target_name.as_deref(), Some(target_name.as_str()));
     }
 
     // -- replace_file_data -------------------------------------------------
@@ -1371,7 +1725,14 @@ mod tests {
         let e1 = make_edge("n1", "n2", EdgeKind::Calls, "x.ts", 3);
         let e2 = make_edge("n1", "n2", EdgeKind::Calls, "x.ts", 5);
         store.upsert_edges(&[e1, e2]).unwrap();
-        assert_eq!(store.get_edge_count().unwrap(), 1);
+        assert_eq!(store.get_edge_count().unwrap(), 2);
+        let lines = store
+            .get_out_edges("n1", Some("calls"))
+            .unwrap()
+            .into_iter()
+            .map(|edge| edge.line)
+            .collect::<Vec<_>>();
+        assert_eq!(lines, vec![3, 5]);
     }
 
     // -- delete_file_nodes selective removal -------------------------------
@@ -1687,6 +2048,7 @@ mod tests {
             kind: EdgeKind::Calls,
             file_path: "x.ts".to_string(),
             line: 3,
+            target_name: Some("b".to_string()),
             metadata: Some(metadata),
         };
         store.upsert_edge(&edge).unwrap();

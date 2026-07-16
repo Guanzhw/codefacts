@@ -42,13 +42,17 @@ fn parse_arguments() -> Result<(PathBuf, Option<PathBuf>, LspMode), String> {
         None => return Err(usage()),
     }
 
-    let mut root = std::env::current_dir().map_err(|error| error.to_string())?;
+    // An MCP process can be launched from a client-owned or implementation
+    // working directory. Requiring an explicit root prevents a global config
+    // from silently indexing the CodeFacts checkout (or any other unrelated
+    // repository) when used from a different project.
+    let mut root = None;
     let mut state = None;
     let mut lsp_mode = LspMode::Auto;
     while let Some(argument) = args.next() {
         match argument.to_string_lossy().as_ref() {
             "--root" => {
-                root = PathBuf::from(args.next().ok_or("--root requires a path")?);
+                root = Some(PathBuf::from(args.next().ok_or("--root requires a path")?));
             }
             "--state" => {
                 state = Some(PathBuf::from(args.next().ok_or("--state requires a path")?));
@@ -63,10 +67,12 @@ fn parse_arguments() -> Result<(PathBuf, Option<PathBuf>, LspMode), String> {
             other => return Err(format!("unknown argument '{other}'.\n{}", usage())),
         }
     }
+    let root = root
+        .ok_or("--root is required for MCP mode; configure the repository to index explicitly")?;
     Ok((root, state, lsp_mode))
 }
 
 fn usage() -> String {
-    "Usage: codefacts mcp [--root <repository>] [--state <external-sqlite-path>] [--lsp <auto|off>]"
+    "Usage: codefacts mcp --root <repository> [--state <external-sqlite-path>] [--lsp <auto|off>]"
         .into()
 }

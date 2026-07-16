@@ -99,6 +99,7 @@ pub fn extract_endpoint_edges(
                     kind: EdgeKind::References,
                     file_path: binding.endpoint.file_path.clone(),
                     line: binding.endpoint.start_line,
+                    target_name: Some(handler_name.clone()),
                     metadata: Some(HashMap::from([
                         (
                             "relation".to_string(),

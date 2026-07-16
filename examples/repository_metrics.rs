@@ -198,6 +198,7 @@ fn main() -> BenchResult<()> {
         notes: vec![
             "Cold indexing uses a new external SQLite database for every sample; filesystem caches are not forcibly dropped.",
             "One-file refresh is measured in an ignored-file-respecting temporary copy and does not alter the target repository.",
+            "One-file refresh reparses changed source files, then rebinds affected relationships and imports from stored facts; unchanged source is not reparsed.",
             "Warm MCP requests include the no-change refresh required by the public CodeFacts contract.",
         ],
     };
@@ -360,7 +361,7 @@ fn measure_one_file_refresh(root: &Path, samples: usize) -> BenchResult<OneFileR
             .expect("at least one one-file sample"),
         indexed_files_after_change: indexed_files_after_change
             .expect("at least one one-file sample"),
-        note: "Any source change triggers a complete static relationship rebind; this is not a cheap per-file update.",
+        note: "Changed source is reparsed; affected static relationships and derived imports are rebound from the fact store without reparsing unchanged files.",
     })
 }
 
