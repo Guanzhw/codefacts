@@ -27,10 +27,10 @@ use crate::error::Result;
 use crate::graph::store::GraphStore;
 use crate::indexer::endpoints::{extract_endpoint_edges, extract_endpoints, EndpointBinding};
 use crate::indexer::extractor::Extractor;
-use crate::indexer::markdown::extract_headings;
+use crate::indexer::markdown::extract_markdown;
 use crate::indexer::parser::CodeParser;
 use crate::resolution::imports::resolve_imports;
-use crate::types::{CodeEdge, CodeNode, Language};
+use crate::types::{CodeEdge, CodeNode, EdgeKind, Language, NodeKind};
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -38,6 +38,10 @@ use crate::types::{CodeEdge, CodeNode, Language};
 
 /// Skip files larger than 2 MB (generated files, minified bundles, etc.)
 const MAX_FILE_SIZE: u64 = 2 * 1024 * 1024;
+/// A dynamic call can have many same-named candidates in a large repository.
+/// Preserve a bounded, deterministic candidate set rather than falsely
+/// promoting one arbitrary target to a static fact.
+const MAX_AMBIGUOUS_CALL_TARGETS: usize = 32;
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -84,6 +88,7 @@ struct FileParseState {
     source_text: String,
     nodes: Vec<CodeNode>,
     endpoints: Vec<EndpointBinding>,
+    markdown_edges: Vec<CodeEdge>,
 }
 
 // ---------------------------------------------------------------------------
@@ -191,8 +196,9 @@ impl<'a> IndexingPipeline<'a> {
                     }
                 };
 
-                let (mut nodes, endpoints) = if language == Language::Markdown {
-                    (extract_headings(&rel_path, &source_text), Vec::new())
+                let (mut nodes, endpoints, markdown_edges) = if language == Language::Markdown {
+                    let extraction = extract_markdown(&rel_path, &source_text);
+                    (extraction.nodes, Vec::new(), extraction.edges)
                 } else {
                     // Parse with a thread-local Parser (Parser is NOT Send/Sync)
                     let parser = CodeParser::new();
@@ -214,6 +220,7 @@ impl<'a> IndexingPipeline<'a> {
                     (
                         nodes,
                         extract_endpoints(&rel_path, language, &source_text, &tree),
+                        Vec::new(),
                     )
                 };
                 nodes.extend(endpoints.iter().map(|binding| binding.endpoint.clone()));
@@ -225,6 +232,7 @@ impl<'a> IndexingPipeline<'a> {
                     source_text,
                     nodes,
                     endpoints,
+                    markdown_edges,
                 })
             })
             .collect();
@@ -284,7 +292,7 @@ impl<'a> IndexingPipeline<'a> {
             .par_iter()
             .map(|state| {
                 let mut edges = if state.language == Language::Markdown {
-                    Vec::new()
+                    state.markdown_edges.clone()
                 } else {
                     // Each thread creates its own Parser (not Send/Sync)
                     let parser = CodeParser::new();
@@ -298,6 +306,12 @@ impl<'a> IndexingPipeline<'a> {
                         &node_index,
                     )?
                 };
+                // On a full pass every source file is already present in the
+                // in-memory node index. Resolve receiver dispatch here rather
+                // than doing a second SQLite-wide relationship rewrite after
+                // persistence. This keeps cold indexing proportional to the
+                // source pass while still preserving polymorphic candidates.
+                edges = resolve_initial_call_candidates(edges, &node_index);
                 edges.extend(extract_endpoint_edges(&state.endpoints, &node_index));
 
                 Ok((
@@ -335,6 +349,9 @@ impl<'a> IndexingPipeline<'a> {
         let changed = files_indexed > 0 || !removed_nodes.is_empty();
         if changed {
             let current_nodes = self.store.get_all_nodes()?;
+            // A full pass resolves call candidates before persistence. Only
+            // an incremental pass needs to revisit unchanged callers after a
+            // target definition has been added, moved, or removed.
             if incremental {
                 relationships_rebound =
                     self.rebind_static_targets(&changed_target_names, &current_nodes)?;
@@ -377,6 +394,11 @@ impl<'a> IndexingPipeline<'a> {
                 self.store.mark_full_reindex_complete()?;
             }
             self.store.advance_generation()?;
+        } else if !incremental {
+            // An empty repository is still a successful full source pass.
+            // Clear an extractor/schema migration marker so it does not force
+            // every later read to repeat the same no-op rebuild.
+            self.store.mark_full_reindex_complete()?;
         }
 
         Ok(IndexResult {
@@ -418,7 +440,7 @@ impl<'a> IndexingPipeline<'a> {
 
         let node_refs = current_nodes.iter().collect::<Vec<_>>();
         let node_index = build_node_index(&node_refs);
-        let mut endpoint_groups: HashMap<String, Vec<CodeEdge>> = HashMap::new();
+        let mut candidate_groups: HashMap<String, Vec<CodeEdge>> = HashMap::new();
         let mut deleted = Vec::new();
         let mut inserted = Vec::new();
 
@@ -426,16 +448,11 @@ impl<'a> IndexingPipeline<'a> {
             let Some(target_name) = edge.target_name.as_deref() else {
                 continue;
             };
-            if is_endpoint_candidate(&edge) {
-                let key = format!(
-                    "{}\u{0}{}\u{0}{}\u{0}{}\u{0}{}",
-                    edge.source,
-                    edge.kind.as_str(),
-                    edge.file_path,
-                    edge.line,
-                    target_name
-                );
-                endpoint_groups.entry(key).or_default().push(edge);
+            if is_endpoint_candidate(&edge) || edge.kind == EdgeKind::Calls {
+                candidate_groups
+                    .entry(candidate_group_key(&edge, target_name))
+                    .or_default()
+                    .push(edge);
                 continue;
             }
 
@@ -448,10 +465,10 @@ impl<'a> IndexingPipeline<'a> {
             }
         }
 
-        // Endpoint edges are intentionally heuristic and can have multiple
-        // function/method candidates. Recreate each affected source location
-        // as a set instead of silently collapsing it to one arbitrary target.
-        for group in endpoint_groups.into_values() {
+        // Endpoint handler references and receiver dispatch with duplicate
+        // definitions are candidate sets. Recreate each source location
+        // instead of silently calling one same-named method a static fact.
+        for group in candidate_groups.into_values() {
             let Some(template) = group.first() else {
                 continue;
             };
@@ -459,34 +476,23 @@ impl<'a> IndexingPipeline<'a> {
                 continue;
             };
             deleted.extend(group.iter().cloned());
-            let mut targets = node_index
-                .get(target_name)
-                .into_iter()
-                .flatten()
-                .filter(|node| {
-                    matches!(
-                        node.kind,
-                        crate::types::NodeKind::Function | crate::types::NodeKind::Method
-                    )
-                })
-                .collect::<Vec<_>>();
-            targets.sort_by(|left, right| {
-                (&left.file_path, left.start_line, &left.id).cmp(&(
-                    &right.file_path,
-                    right.start_line,
-                    &right.id,
-                ))
-            });
-            if targets.is_empty() {
+
+            let candidates = if is_endpoint_candidate(template) {
+                let targets = callable_candidates(template, target_name, &node_index);
+                CandidateSet {
+                    candidate_count: targets.len(),
+                    targets,
+                    resolution: Some("endpoint_handler_candidate"),
+                }
+            } else {
+                call_candidates(template, target_name, &node_index)
+            };
+            if candidates.targets.is_empty() {
                 let mut unresolved = template.clone();
                 unresolved.target = format!("unresolved:{target_name}");
                 inserted.push(unresolved);
             } else {
-                for target in targets {
-                    let mut resolved = template.clone();
-                    resolved.target = target.id.clone();
-                    inserted.push(resolved);
-                }
+                inserted.extend(materialize_candidate_edges(template, candidates));
             }
         }
 
@@ -606,6 +612,166 @@ fn is_endpoint_candidate(edge: &CodeEdge) -> bool {
         .as_ref()
         .and_then(|metadata| metadata.get("relation"))
         .is_some_and(|relation| relation == "endpoint_handler_candidate")
+}
+
+fn candidate_group_key(edge: &CodeEdge, target_name: &str) -> String {
+    format!(
+        "{}\u{0}{}\u{0}{}\u{0}{}\u{0}{}",
+        edge.source,
+        edge.kind.as_str(),
+        edge.file_path,
+        edge.line,
+        target_name
+    )
+}
+
+struct CandidateSet<'a> {
+    targets: Vec<&'a CodeNode>,
+    resolution: Option<&'static str>,
+    candidate_count: usize,
+}
+
+/// Materialize a bounded candidate set as relationship occurrences while
+/// retaining the uncertainty label on every emitted edge.
+fn materialize_candidate_edges(template: &CodeEdge, candidates: CandidateSet<'_>) -> Vec<CodeEdge> {
+    let truncated = candidates.candidate_count > MAX_AMBIGUOUS_CALL_TARGETS;
+    candidates
+        .targets
+        .into_iter()
+        .take(MAX_AMBIGUOUS_CALL_TARGETS)
+        .map(|target| {
+            let mut resolved = template.clone();
+            resolved.target = target.id.clone();
+            if let Some(resolution) = candidates.resolution {
+                let metadata = resolved.metadata.get_or_insert_with(HashMap::new);
+                metadata.insert("confidence".to_string(), "heuristic".to_string());
+                metadata.insert("resolution".to_string(), resolution.to_string());
+                metadata.insert(
+                    "candidate_count".to_string(),
+                    candidates.candidate_count.to_string(),
+                );
+                if truncated {
+                    metadata.insert("candidates_truncated".to_string(), "true".to_string());
+                }
+            }
+            resolved
+        })
+        .collect()
+}
+
+/// Resolve ambiguous calls directly against the complete in-memory node index
+/// for files being parsed in this pass. This avoids a full-database rebinding
+/// scan on cold indexes; unchanged callers are repaired by the incremental
+/// rebinding path after later source changes.
+fn resolve_initial_call_candidates(
+    edges: Vec<CodeEdge>,
+    node_index: &HashMap<String, Vec<CodeNode>>,
+) -> Vec<CodeEdge> {
+    let mut resolved = Vec::with_capacity(edges.len());
+    for edge in edges {
+        if edge.kind != EdgeKind::Calls {
+            resolved.push(edge);
+            continue;
+        }
+        let Some(target_name) = edge.target_name.as_deref() else {
+            resolved.push(edge);
+            continue;
+        };
+        let candidates = call_candidates(&edge, target_name, node_index);
+        if candidates.resolution.is_none() || candidates.targets.is_empty() {
+            resolved.push(edge);
+        } else {
+            resolved.extend(materialize_candidate_edges(&edge, candidates));
+        }
+    }
+    resolved
+}
+
+fn callable_candidates<'a>(
+    edge: &CodeEdge,
+    target_name: &str,
+    node_index: &'a HashMap<String, Vec<CodeNode>>,
+) -> Vec<&'a CodeNode> {
+    let is_constructor = edge
+        .metadata
+        .as_ref()
+        .and_then(|metadata| metadata.get("constructor"))
+        .is_some_and(|value| value == "true");
+    let mut candidates = node_index
+        .get(target_name)
+        .into_iter()
+        .flatten()
+        .filter(|node| {
+            if is_constructor {
+                matches!(node.kind, NodeKind::Class | NodeKind::Struct)
+            } else {
+                matches!(node.kind, NodeKind::Function | NodeKind::Method)
+            }
+        })
+        .collect::<Vec<_>>();
+    candidates.sort_by(|left, right| {
+        (&left.file_path, left.start_line, &left.id).cmp(&(
+            &right.file_path,
+            right.start_line,
+            &right.id,
+        ))
+    });
+    candidates
+}
+
+/// Return candidates for one call site and label ambiguity explicitly. A
+/// unique same-file callable is static. Receiver dispatch preserves all
+/// bounded targets, while a plain duplicate-name call retains one deterministic
+/// heuristic representative so a large C/C++ overload set cannot multiply the
+/// stored graph at every call site.
+fn call_candidates<'a>(
+    edge: &CodeEdge,
+    target_name: &str,
+    node_index: &'a HashMap<String, Vec<CodeNode>>,
+) -> CandidateSet<'a> {
+    let candidates = callable_candidates(edge, target_name, node_index);
+    let is_member_call = edge
+        .metadata
+        .as_ref()
+        .and_then(|metadata| metadata.get("call_form"))
+        .is_some_and(|form| form == "member");
+    // A member call has a receiver. Once multiple compatible methods exist,
+    // a same-file spelling is not enough evidence to claim that it is the
+    // runtime receiver's one static target. Preserve the candidate set.
+    if is_member_call && candidates.len() > 1 {
+        let candidate_count = candidates.len();
+        return CandidateSet {
+            targets: candidates,
+            resolution: Some("polymorphic"),
+            candidate_count,
+        };
+    }
+    let same_file = candidates
+        .iter()
+        .copied()
+        .filter(|candidate| candidate.file_path == edge.file_path)
+        .collect::<Vec<_>>();
+    if same_file.len() == 1 {
+        return CandidateSet {
+            candidate_count: same_file.len(),
+            targets: same_file,
+            resolution: None,
+        };
+    }
+    if candidates.len() <= 1 {
+        return CandidateSet {
+            candidate_count: candidates.len(),
+            targets: candidates,
+            resolution: None,
+        };
+    }
+
+    let candidate_count = candidates.len();
+    CandidateSet {
+        targets: candidates.into_iter().take(1).collect(),
+        resolution: Some("ambiguous_name"),
+        candidate_count,
+    }
 }
 
 /// Directories that are always skipped, regardless of `.gitignore`.

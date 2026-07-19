@@ -3,7 +3,7 @@ use std::io::Write;
 use std::process::{Command, Stdio};
 
 use codefacts::lsp::LspMode;
-use codefacts::service::CodeFacts;
+use codefacts::service::{CodeFacts, SymbolScope};
 use codefacts::types::NodeKind;
 use serde_json::{json, Value};
 use tempfile::tempdir;
@@ -94,6 +94,7 @@ fn stdio_server_exposes_only_the_five_source_backed_workflows() {
     assert!(search["inputSchema"]["properties"]
         .get("path_prefix")
         .is_some());
+    assert!(search["inputSchema"]["properties"].get("scope").is_some());
     assert!(search["inputSchema"]["properties"].get("offset").is_some());
     assert!(search["inputSchema"]["properties"].get("cursor").is_some());
     let path = tools
@@ -106,6 +107,12 @@ fn stdio_server_exposes_only_the_five_source_backed_workflows() {
     assert!(path["inputSchema"]["properties"]
         .get("to_file_path")
         .is_some());
+    let outline = tools
+        .iter()
+        .find(|tool| tool["name"] == "outline")
+        .expect("outline schema");
+    assert!(outline["inputSchema"]["properties"].get("kind").is_some());
+    assert!(outline["inputSchema"]["properties"].get("scope").is_some());
 
     assert_eq!(
         responses[2]["result"]["structuredContent"]["freshness"]["status"],
@@ -266,7 +273,7 @@ fn search_and_expand_surface_source_backed_endpoint_facts() {
         .find(|result| result["kind"] == "endpoint")
         .expect("endpoint result");
     assert_eq!(endpoint["name"], "GET /users/:id");
-    assert_eq!(endpoint["evidence"]["extractor"], "endpoint-pattern");
+    assert_eq!(endpoint["evidence"]["extractor"], "endpoint-ast");
     assert_eq!(endpoint["evidence"]["confidence"], "heuristic");
 
     let expand = facts
@@ -283,9 +290,53 @@ fn search_and_expand_surface_source_backed_endpoint_facts() {
     }));
     assert!(outbound.iter().any(|reference| {
         reference["to"]["name"] == "authMiddleware"
-            && reference["evidence"]["extractor"] == "endpoint-pattern"
+            && reference["evidence"]["extractor"] == "endpoint-ast"
             && reference["evidence"]["confidence"] == "heuristic"
     }));
+}
+
+#[test]
+fn endpoint_ast_extraction_ignores_query_parameters_and_keeps_route_patterns() {
+    let repository = tempdir().expect("temporary repository");
+    fs::create_dir_all(repository.path().join("src")).expect("source directory");
+    fs::write(
+        repository.path().join("src/handlers.ts"),
+        "export function getUsers() { return []; }\nexport function getItems() { return []; }\n",
+    )
+    .expect("handler fixture");
+    fs::write(
+        repository.path().join("src/routes.ts"),
+        r#"
+const page = searchParams.get("page");
+app.get(`/api/${version}/users`, getUsers);
+router.get(/^\/api\/v\d+\/items$/, getItems);
+"#,
+    )
+    .expect("route fixture");
+    let facts = CodeFacts::open(repository.path(), repository.path().join("external.sqlite"))
+        .expect("open source-backed facts");
+
+    let api_results = facts.search("api", None).expect("route search");
+    let endpoints = api_results["results"]
+        .as_array()
+        .expect("search results")
+        .iter()
+        .filter(|result| result["kind"] == "endpoint")
+        .collect::<Vec<_>>();
+    assert_eq!(endpoints.len(), 2);
+    assert!(endpoints
+        .iter()
+        .any(|endpoint| endpoint["name"] == "GET /api/${version}/users"));
+    assert!(endpoints
+        .iter()
+        .any(|endpoint| endpoint["name"] == "GET /^\\/api\\/v\\d+\\/items$/"));
+
+    let page_results = facts.search("page", None).expect("query parameter search");
+    assert!(page_results["results"]
+        .as_array()
+        .expect("query parameter results")
+        .iter()
+        .all(|result| result["kind"] != "endpoint"));
 }
 
 #[test]
@@ -637,6 +688,252 @@ fn expand_keeps_distinct_call_site_evidence() {
         })
         .collect::<Vec<_>>();
     assert_eq!(lines, vec![4, 5]);
+}
+
+#[test]
+fn nodenext_runtime_js_imports_resolve_to_typescript_sources() {
+    let repository = tempdir().expect("temporary repository");
+    fs::create_dir_all(repository.path().join("src")).expect("source directory");
+    fs::write(
+        repository.path().join("src/main.ts"),
+        "import { config } from './config.js';\nexport function boot() { return config(); }\n",
+    )
+    .expect("NodeNext importer fixture");
+    fs::write(
+        repository.path().join("src/config.ts"),
+        "export function config() { return 'ok'; }\n",
+    )
+    .expect("TypeScript target fixture");
+
+    let facts = CodeFacts::open(repository.path(), repository.path().join("external.sqlite"))
+        .expect("open source-backed facts");
+    let map = facts.map().expect("map NodeNext fixture");
+    assert_eq!(map["unresolved_references"]["count"], 0);
+}
+
+#[test]
+fn member_dispatch_keeps_polymorphic_candidates_out_of_static_paths() {
+    let repository = tempdir().expect("temporary repository");
+    fs::create_dir_all(repository.path().join("src")).expect("source directory");
+    fs::write(
+        repository.path().join("src/providers.ts"),
+        r#"
+export interface Provider { detect(): boolean; }
+export class AlphaProvider implements Provider { detect() { return true; } }
+export class BetaProvider implements Provider { detect() { return false; } }
+export function getAvailableProviders(providers: Provider[]) {
+  return providers.filter((provider) => provider.detect());
+}
+"#,
+    )
+    .expect("provider fixture");
+
+    let facts = CodeFacts::open(repository.path(), repository.path().join("external.sqlite"))
+        .expect("open source-backed facts");
+    let expanded = facts
+        .expand("getAvailableProviders", Some("src/providers.ts"), Some(20))
+        .expect("expand provider dispatch");
+    let detect_callees = expanded["callees"]
+        .as_array()
+        .expect("callee facts")
+        .iter()
+        .filter(|callee| callee["to"]["name"] == "detect")
+        .collect::<Vec<_>>();
+    assert!(
+        detect_callees.len() >= 2,
+        "expected multiple dispatch candidates, got {expanded}"
+    );
+    assert!(detect_callees.iter().all(|callee| {
+        callee["evidence"]["confidence"] == "heuristic" && callee["resolution"] == "polymorphic"
+    }));
+
+    let target_id = detect_callees[0]["to"]["id"]
+        .as_str()
+        .expect("candidate id");
+    let path = facts
+        .path("getAvailableProviders", target_id, Some(20))
+        .expect("query only confirmed static paths");
+    assert_eq!(path["status"], "no_static_path");
+}
+
+#[test]
+fn ambiguous_direct_calls_stay_heuristic_without_graph_fanout() {
+    let repository = tempdir().expect("temporary repository");
+    fs::create_dir_all(repository.path().join("src")).expect("source directory");
+    fs::write(
+        repository.path().join("src/caller.ts"),
+        "export function entry() { return target(); }\n",
+    )
+    .expect("caller fixture");
+    fs::write(
+        repository.path().join("src/one.ts"),
+        "export function target() { return 1; }\n",
+    )
+    .expect("first target fixture");
+    fs::write(
+        repository.path().join("src/two.ts"),
+        "export function target() { return 2; }\n",
+    )
+    .expect("second target fixture");
+    let facts = CodeFacts::open(repository.path(), repository.path().join("external.sqlite"))
+        .expect("open source-backed facts");
+
+    let expanded = facts
+        .expand("entry", Some("src/caller.ts"), Some(20))
+        .expect("expand direct call");
+    let targets = expanded["callees"]
+        .as_array()
+        .expect("callee facts")
+        .iter()
+        .filter(|callee| callee["to"]["name"] == "target")
+        .collect::<Vec<_>>();
+    assert_eq!(targets.len(), 1);
+    assert_eq!(targets[0]["evidence"]["confidence"], "heuristic");
+    assert_eq!(targets[0]["resolution"], "ambiguous_name");
+    let target_id = targets[0]["to"]["id"].as_str().expect("candidate id");
+    let path = facts
+        .path("entry", target_id, Some(20))
+        .expect("confirmed path query");
+    assert_eq!(path["status"], "no_static_path");
+}
+
+#[test]
+fn rust_attribute_tests_appear_in_expand_related_tests() {
+    let repository = tempdir().expect("temporary repository");
+    fs::write(
+        repository.path().join("lib.rs"),
+        r#"
+pub fn run_tool_call_loop() {}
+
+mod tests {
+    #[tokio::test]
+    async fn exercises_loop() {
+        run_tool_call_loop();
+    }
+}
+"#,
+    )
+    .expect("Rust test fixture");
+    let facts = CodeFacts::open(repository.path(), repository.path().join("external.sqlite"))
+        .expect("open source-backed facts");
+
+    let expanded = facts
+        .expand("run_tool_call_loop", Some("lib.rs"), Some(20))
+        .expect("expand production function");
+    assert!(expanded["tests"]
+        .as_array()
+        .expect("related tests")
+        .iter()
+        .any(|test| test["name"] == "exercises_loop"));
+}
+
+#[test]
+fn map_counts_and_discovery_scope_are_explicit() {
+    let repository = tempdir().expect("temporary repository");
+    fs::create_dir_all(repository.path().join("src")).expect("source directory");
+    fs::write(
+        repository.path().join("src/stats.ts"),
+        r#"
+export const sessionTop = 1;
+export function summarizeSession() {
+  const session = sessionTop;
+  return session;
+}
+"#,
+    )
+    .expect("scope fixture");
+    let facts = CodeFacts::open(repository.path(), repository.path().join("external.sqlite"))
+        .expect("open source-backed facts");
+
+    let map = facts.map().expect("map counts");
+    assert_eq!(map["files_with_facts"], 1);
+    assert_eq!(map["indexed_files"], 1);
+    assert_eq!(map["files_indexed_this_refresh"], 1);
+    assert_eq!(map["language_file_counts"]["typescript"], 1);
+    assert_eq!(map["languages"]["typescript"], 1);
+    assert!(
+        map["language_symbol_counts"]["typescript"]
+            .as_u64()
+            .unwrap_or(0)
+            >= 3
+    );
+
+    let top_level = facts
+        .outline_with_page_scope_options(
+            "src/stats.ts",
+            None,
+            SymbolScope::TopLevel,
+            0,
+            None,
+            Some(20),
+        )
+        .expect("top-level outline");
+    let all = facts
+        .outline_with_page_scope_options("src/stats.ts", None, SymbolScope::All, 0, None, Some(20))
+        .expect("complete outline");
+    assert!(top_level["symbols"]
+        .as_array()
+        .expect("top-level symbols")
+        .iter()
+        .all(|symbol| symbol["name"] != "session"));
+    assert!(all["symbols"]
+        .as_array()
+        .expect("all symbols")
+        .iter()
+        .any(|symbol| symbol["name"] == "session"));
+
+    let search = facts
+        .search_with_page_scope_options(
+            "session",
+            Some(NodeKind::Variable),
+            None,
+            SymbolScope::TopLevel,
+            0,
+            None,
+            Some(20),
+        )
+        .expect("top-level variable search");
+    assert!(search["results"]
+        .as_array()
+        .expect("top-level variable results")
+        .iter()
+        .all(|symbol| symbol["name"] != "session"));
+}
+
+#[test]
+fn markdown_sections_hierarchy_and_local_anchor_links_are_source_backed() {
+    let repository = tempdir().expect("temporary repository");
+    fs::write(
+        repository.path().join("README.md"),
+        "# Overview\nIntro text.\n## Install\nInstall text. [Back](#overview)\n```md\n[Ignored](#overview)\n```\n# Finish\nDone.\n",
+    )
+    .expect("Markdown fixture");
+    let facts = CodeFacts::open(repository.path(), repository.path().join("external.sqlite"))
+        .expect("open source-backed facts");
+
+    let outline = facts
+        .outline("README.md", Some(20))
+        .expect("Markdown outline");
+    assert!(outline["symbols"]
+        .as_array()
+        .expect("heading facts")
+        .iter()
+        .any(|heading| heading["qualified_name"] == "Overview > Install"));
+
+    let expanded = facts
+        .expand("Install", Some("README.md"), Some(20))
+        .expect("expand Markdown section");
+    assert_eq!(expanded["section"]["start_line"], 3);
+    assert_eq!(expanded["section"]["end_line"], 7);
+    assert!(expanded["section"]["content"]
+        .as_str()
+        .expect("section content")
+        .contains("Install text."));
+    assert!(expanded["references"]["outbound"]
+        .as_array()
+        .expect("local anchor references")
+        .iter()
+        .any(|reference| reference["to"]["name"] == "Overview"));
 }
 
 #[test]

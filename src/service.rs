@@ -25,6 +25,7 @@ const DEFAULT_LIMIT: usize = 20;
 const MAX_LIMIT: usize = 50;
 const UNRESOLVED_REFERENCE_SAMPLE_LIMIT: usize = 20;
 const PATH_SEARCH_VISIT_LIMIT: usize = MAX_LIMIT * 100;
+const MAX_MARKDOWN_SECTION_RESPONSE_LEN: usize = 2 * 1024;
 
 /// A CodeFacts index rooted at one repository.
 #[derive(Debug)]
@@ -45,6 +46,8 @@ pub struct Freshness {
     /// Monotonically increasing fact-store generation. Pagination cursors are
     /// tied to this value and become stale after a source refresh.
     pub generation: i64,
+    /// Supported source files parsed or re-parsed during this refresh; this
+    /// is not a total repository-file count.
     pub files_indexed: usize,
     pub files_skipped: usize,
     /// Existing edge occurrences whose target binding was recomputed during
@@ -79,6 +82,10 @@ pub struct RelationshipFact {
     pub from: SymbolFact,
     pub to: SymbolFact,
     pub evidence: Evidence,
+    /// Why this relationship resolves to a candidate set rather than a
+    /// confirmed single target. Absent for ordinary static facts.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub resolution: Option<String>,
 }
 
 #[derive(Debug, Serialize)]
@@ -103,6 +110,41 @@ struct PageCursor {
     generation: i64,
     offset: usize,
     scope: String,
+}
+
+/// Discovery scope for `search` and `outline`.
+///
+/// `TopLevel` keeps structural symbols while excluding variables declared
+/// inside a function or method. `All` retains every indexed symbol for callers
+/// that need to inspect local implementation detail.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SymbolScope {
+    TopLevel,
+    All,
+}
+
+impl SymbolScope {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::TopLevel => "top_level",
+            Self::All => "all",
+        }
+    }
+
+    pub fn parse(input: &str) -> Option<Self> {
+        match input {
+            "top_level" => Some(Self::TopLevel),
+            "all" => Some(Self::All),
+            _ => None,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+struct SearchFilters<'a> {
+    kind: Option<NodeKind>,
+    path_prefix: Option<&'a str>,
+    symbol_scope: SymbolScope,
 }
 
 impl CodeFacts {
@@ -169,24 +211,36 @@ impl CodeFacts {
         let stats = self.store.get_stats()?;
         let nodes = self.store.get_all_nodes()?;
         let unresolved_references = self.unresolved_reference_report()?;
-        let mut languages = BTreeMap::<String, usize>::new();
+        let mut language_symbol_counts = BTreeMap::<String, usize>::new();
         let mut kinds = BTreeMap::<String, usize>::new();
         let mut indexed_languages = Vec::with_capacity(nodes.len());
         for node in &nodes {
-            *languages
+            *language_symbol_counts
                 .entry(node.language.as_str().to_string())
                 .or_default() += 1;
             *kinds.entry(node.kind.as_str().to_string()).or_default() += 1;
             indexed_languages.push(node.language);
         }
+        let language_file_counts = self.store.get_language_file_counts()?;
+        let languages = language_file_counts.clone();
+        let indexed_files = language_file_counts.values().sum::<usize>();
+        let files_indexed_this_refresh = freshness.files_indexed;
 
         Ok(json!({
             "repository": repository_root_identity(&self.root),
             "freshness": freshness,
+            // `files` and `languages` are retained as compact compatibility
+            // aliases. The explicit fields below make their meanings visible
+            // without comparing an all-time fact count to one refresh pass.
             "files": stats.files,
+            "files_with_facts": stats.files,
+            "indexed_files": indexed_files,
+            "files_indexed_this_refresh": files_indexed_this_refresh,
             "symbols": stats.nodes,
             "relationships": stats.edges,
             "languages": languages,
+            "language_file_counts": language_file_counts,
+            "language_symbol_counts": language_symbol_counts,
             "symbol_kinds": kinds,
             "unresolved_references": unresolved_references,
             "lsp": self.lsp.report(indexed_languages, false),
@@ -222,17 +276,48 @@ impl CodeFacts {
         cursor: Option<&str>,
         limit: Option<usize>,
     ) -> Result<Value> {
+        self.search_with_page_scope_options(
+            query,
+            kind,
+            path_prefix,
+            SymbolScope::TopLevel,
+            offset,
+            cursor,
+            limit,
+        )
+    }
+
+    /// Search with an explicit structural/local scope. This preserves the
+    /// legacy Rust API above while exposing a narrow MCP filter for callers
+    /// that need local variables.
+    #[allow(clippy::too_many_arguments)] // Mirrors the individually optional MCP arguments.
+    pub fn search_with_page_scope_options(
+        &self,
+        query: &str,
+        kind: Option<NodeKind>,
+        path_prefix: Option<&str>,
+        symbol_scope: SymbolScope,
+        offset: usize,
+        cursor: Option<&str>,
+        limit: Option<usize>,
+    ) -> Result<Value> {
         let freshness = self.refresh()?;
         let limit = bounded_limit(limit);
         let path_prefix = path_prefix
             .map(|prefix| self.normalized_path_prefix(prefix))
             .transpose()?
             .flatten();
+        let filters = SearchFilters {
+            kind,
+            path_prefix: path_prefix.as_deref(),
+            symbol_scope,
+        };
         let scope = page_scope(&[
             "search",
             query,
             kind.map(|kind| kind.as_str()).unwrap_or(""),
             path_prefix.as_deref().unwrap_or(""),
+            symbol_scope.as_str(),
         ]);
         let offset = match page_offset(cursor, offset, freshness.generation, &scope)? {
             PageOffset::Current(offset) => offset,
@@ -241,6 +326,7 @@ impl CodeFacts {
                     "freshness": freshness,
                     "status": "stale_cursor",
                     "query": query,
+                    "scope": symbol_scope.as_str(),
                     "results": [],
                     "next_cursor": Value::Null,
                     "next_offset": Value::Null,
@@ -253,6 +339,7 @@ impl CodeFacts {
                 "freshness": freshness,
                 "status": "ok",
                 "query": query,
+                "scope": symbol_scope.as_str(),
                 "results": [],
                 "offset": offset,
                 "next_cursor": Value::Null,
@@ -267,7 +354,8 @@ impl CodeFacts {
         // Filtering and paging happen after this ordering is established.
         let exact_name = query.trim();
         let mut exact_nodes = self.store.get_nodes_by_name(exact_name)?;
-        exact_nodes.retain(|node| node_matches_filters(node, kind, path_prefix.as_deref()));
+        exact_nodes.retain(|node| node_matches_filters(node, filters.kind, filters.path_prefix));
+        self.filter_nodes_by_scope(&mut exact_nodes, filters.symbol_scope)?;
         let exact_count = exact_nodes.len();
 
         // Fetch one additional item to say whether the caller can continue.
@@ -285,14 +373,9 @@ impl CodeFacts {
         if nodes.len() < page_capacity {
             let fts_offset = offset.saturating_sub(exact_count);
             let remaining = page_capacity - nodes.len();
-            nodes.extend(self.search_fts_nodes(
-                &fts_query,
-                exact_name,
-                kind,
-                path_prefix.as_deref(),
-                fts_offset,
-                remaining,
-            )?);
+            nodes.extend(
+                self.search_fts_nodes(&fts_query, exact_name, filters, fts_offset, remaining)?,
+            );
         }
 
         let has_more = nodes.len() > limit;
@@ -305,6 +388,7 @@ impl CodeFacts {
         Ok(json!({
             "freshness": freshness,
             "query": query,
+            "scope": symbol_scope.as_str(),
             "results": results,
             "offset": offset,
             "next_cursor": has_more.then(|| encode_page_cursor(freshness.generation, offset.saturating_add(limit), &scope)).transpose()?,
@@ -335,17 +419,45 @@ impl CodeFacts {
         cursor: Option<&str>,
         limit: Option<usize>,
     ) -> Result<Value> {
+        self.outline_with_page_scope_options(
+            file_path,
+            None,
+            SymbolScope::TopLevel,
+            offset,
+            cursor,
+            limit,
+        )
+    }
+
+    /// Return a snapshot-bound source-order page with optional kind and local
+    /// implementation-detail filters.
+    pub fn outline_with_page_scope_options(
+        &self,
+        file_path: &str,
+        kind: Option<NodeKind>,
+        symbol_scope: SymbolScope,
+        offset: usize,
+        cursor: Option<&str>,
+        limit: Option<usize>,
+    ) -> Result<Value> {
         let freshness = self.refresh()?;
         let file_path = self.relative_path(file_path)?;
         let limit = bounded_limit(limit);
-        let scope = page_scope(&["outline", &file_path]);
-        let offset = match page_offset(cursor, offset, freshness.generation, &scope)? {
+        let page_scope = page_scope(&[
+            "outline",
+            &file_path,
+            kind.map(|kind| kind.as_str()).unwrap_or(""),
+            symbol_scope.as_str(),
+        ]);
+        let offset = match page_offset(cursor, offset, freshness.generation, &page_scope)? {
             PageOffset::Current(offset) => offset,
             PageOffset::Stale => {
                 return Ok(json!({
                     "freshness": freshness,
                     "status": "stale_cursor",
                     "file_path": file_path,
+                    "kind": kind.map(|kind| kind.as_str()),
+                    "scope": symbol_scope.as_str(),
                     "symbols": [],
                     "next_cursor": Value::Null,
                     "next_offset": Value::Null,
@@ -354,6 +466,10 @@ impl CodeFacts {
             }
         };
         let mut nodes = self.store.get_nodes_by_file(&file_path)?;
+        if let Some(kind) = kind {
+            nodes.retain(|node| node.kind == kind);
+        }
+        self.filter_nodes_by_scope(&mut nodes, symbol_scope)?;
         nodes.sort_by_key(|node| (node.start_line, node.start_column));
         let page_end = offset.saturating_add(limit);
         let truncated = nodes.len() > page_end;
@@ -367,9 +483,11 @@ impl CodeFacts {
         Ok(json!({
             "freshness": freshness,
             "file_path": file_path,
+            "kind": kind.map(|kind| kind.as_str()),
+            "scope": symbol_scope.as_str(),
             "symbols": symbols,
             "offset": offset,
-            "next_cursor": truncated.then(|| encode_page_cursor(freshness.generation, page_end, &scope)).transpose()?,
+            "next_cursor": truncated.then(|| encode_page_cursor(freshness.generation, page_end, &page_scope)).transpose()?,
             "next_offset": truncated.then_some(page_end),
             "truncated": truncated,
             "bounded_by": limit,
@@ -413,11 +531,13 @@ impl CodeFacts {
             self.relationships_to(&node, false, Some(EdgeKind::References), limit)?;
         let tests = self.related_tests(&node, limit)?;
         let semantic_references = self.semantic_references(&node, limit)?;
+        let section = markdown_section(&node);
 
         Ok(json!({
             "freshness": freshness,
             "status": "ok",
             "definition": self.symbol_fact(&node)?,
+            "section": section,
             "callers": callers,
             "callees": callees,
             "references": {
@@ -553,12 +673,36 @@ impl CodeFacts {
         }))
     }
 
+    fn filter_nodes_by_scope(
+        &self,
+        nodes: &mut Vec<CodeNode>,
+        symbol_scope: SymbolScope,
+    ) -> Result<()> {
+        if symbol_scope == SymbolScope::All || nodes.is_empty() {
+            return Ok(());
+        }
+        let mut nodes_by_file = HashMap::<String, Vec<CodeNode>>::new();
+        for file_path in nodes.iter().map(|node| node.file_path.as_str()) {
+            if !nodes_by_file.contains_key(file_path) {
+                nodes_by_file.insert(
+                    file_path.to_string(),
+                    self.store.get_nodes_by_file(file_path)?,
+                );
+            }
+        }
+        nodes.retain(|node| {
+            nodes_by_file
+                .get(&node.file_path)
+                .is_none_or(|file_nodes| !is_local_variable(node, file_nodes))
+        });
+        Ok(())
+    }
+
     fn search_fts_nodes(
         &self,
         fts_query: &str,
         exact_name: &str,
-        kind: Option<NodeKind>,
-        path_prefix: Option<&str>,
+        filters: SearchFilters<'_>,
         offset: usize,
         limit: usize,
     ) -> Result<Vec<CodeNode>> {
@@ -573,11 +717,11 @@ impl CodeFacts {
             SqlValue::Text(exact_name.to_string()),
         ];
 
-        if let Some(kind) = kind {
+        if let Some(kind) = filters.kind {
             query.push_str(" AND nodes.type = ?");
             values.push(SqlValue::Text(kind.as_str().to_string()));
         }
-        if let Some(prefix) = path_prefix {
+        if let Some(prefix) = filters.path_prefix {
             let prefix_with_separator = format!("{prefix}/");
             // Avoid LIKE so valid path characters such as '%' and '_' retain
             // their literal meaning. The extra separator prevents `src` from
@@ -589,6 +733,21 @@ impl CodeFacts {
             values.push(SqlValue::Text(prefix.to_string()));
             values.push(SqlValue::Text(prefix_with_separator.clone()));
             values.push(SqlValue::Text(prefix_with_separator));
+        }
+        if filters.symbol_scope == SymbolScope::TopLevel {
+            // Variables declared inside a function/method are useful only on
+            // demand. Apply this before ranking and pagination so a page of
+            // lexical noise cannot hide every structural symbol that follows.
+            query.push_str(
+                " AND (nodes.type <> 'variable' OR NOT EXISTS ( \
+                    SELECT 1 FROM nodes enclosing \
+                    WHERE enclosing.file_path = nodes.file_path \
+                      AND enclosing.type IN ('function', 'method') \
+                      AND enclosing.id <> nodes.id \
+                      AND enclosing.start_line <= nodes.start_line \
+                      AND enclosing.end_line >= nodes.end_line \
+                ))",
+            );
         }
         query.push_str(
             " ORDER BY bm25(fts_nodes), nodes.file_path, nodes.start_line, nodes.id
@@ -724,7 +883,7 @@ impl CodeFacts {
 
     fn related_tests(&self, node: &CodeNode, limit: usize) -> Result<Vec<SymbolFact>> {
         self.store
-            .get_related_test_nodes(&node.id, limit)?
+            .get_related_test_nodes(&node.id, &node.name, &node.file_path, limit)?
             .iter()
             .map(|candidate| self.symbol_fact(candidate))
             .collect()
@@ -831,6 +990,11 @@ impl CodeFacts {
                     .cloned()
                     .unwrap_or_else(|| "static".to_string()),
             },
+            resolution: edge
+                .metadata
+                .as_ref()
+                .and_then(|metadata| metadata.get("resolution"))
+                .cloned(),
         })
     }
 
@@ -1027,6 +1191,16 @@ fn node_matches_filters(
         && path_prefix.is_none_or(|prefix| path_matches_prefix(&node.file_path, prefix))
 }
 
+fn is_local_variable(node: &CodeNode, file_nodes: &[CodeNode]) -> bool {
+    node.kind == NodeKind::Variable
+        && file_nodes.iter().any(|enclosing| {
+            matches!(enclosing.kind, NodeKind::Function | NodeKind::Method)
+                && enclosing.id != node.id
+                && enclosing.start_line <= node.start_line
+                && enclosing.end_line >= node.end_line
+        })
+}
+
 fn path_matches_prefix(path: &str, prefix: &str) -> bool {
     path == prefix
         || path
@@ -1036,10 +1210,24 @@ fn path_matches_prefix(path: &str, prefix: &str) -> bool {
 
 fn extractor_for(node: &CodeNode) -> &'static str {
     match node.kind {
-        crate::types::NodeKind::Endpoint => "endpoint-pattern",
+        crate::types::NodeKind::Endpoint => "endpoint-ast",
         crate::types::NodeKind::Heading => "markdown-heading",
         _ => "tree-sitter",
     }
+}
+
+fn markdown_section(node: &CodeNode) -> Value {
+    if node.language != crate::types::Language::Markdown || node.kind != NodeKind::Heading {
+        return Value::Null;
+    }
+    let content = node.body.as_deref().unwrap_or("");
+    let end = content.floor_char_boundary(content.len().min(MAX_MARKDOWN_SECTION_RESPONSE_LEN));
+    json!({
+        "content": &content[..end],
+        "truncated": end < content.len(),
+        "start_line": node.start_line,
+        "end_line": node.end_line,
+    })
 }
 
 fn extractor_for_edge(edge: &CodeEdge) -> String {

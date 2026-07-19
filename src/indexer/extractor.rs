@@ -302,8 +302,15 @@ impl Extractor {
             // Extract documentation comment above the node.
             let documentation = extract_documentation(def_node, source_bytes);
 
-            // Body text, truncated to MAX_BODY_LEN.
-            let raw_body = node_text(def_node, source_bytes);
+            // Body text, truncated to MAX_BODY_LEN.  Rust attributes belong
+            // semantically to the following item but are sibling AST nodes;
+            // retain adjacent attributes so downstream test classification can
+            // distinguish `#[tokio::test]` from an ordinary async function.
+            let raw_body = if language == Language::Rust {
+                rust_item_source(def_node, source_bytes)
+            } else {
+                node_text(def_node, source_bytes)
+            };
             let body = if raw_body.len() > MAX_BODY_LEN {
                 let end = raw_body.floor_char_boundary(MAX_BODY_LEN);
                 let mut truncated = raw_body[..end].to_string();
@@ -312,6 +319,10 @@ impl Extractor {
             } else {
                 raw_body
             };
+            let qualified_name = (language == Language::Rust)
+                .then(|| rust_module_path(def_node, source_bytes))
+                .flatten()
+                .map(|module_path| format!("{module_path}.{name}"));
 
             // Deduplicate: multiple patterns may capture the same node.
             // When a more specific kind (e.g., Interface) overlaps with a
@@ -325,7 +336,7 @@ impl Extractor {
                     nodes[idx] = CodeNode {
                         id: id.clone(),
                         name: name.clone(),
-                        qualified_name: None,
+                        qualified_name: qualified_name.clone(),
                         kind,
                         file_path: file_path.to_string(),
                         start_line,
@@ -345,7 +356,7 @@ impl Extractor {
             nodes.push(CodeNode {
                 id,
                 name,
-                qualified_name: None,
+                qualified_name,
                 kind,
                 file_path: file_path.to_string(),
                 start_line,
@@ -813,16 +824,26 @@ fn extract_call_edges(
         .map(|c| c.id.clone())
         .unwrap_or_else(|| format!("unresolved:{}", callee_name));
 
-    // Include object metadata for method calls (obj.method()).
-    let metadata = m
+    // Preserve the syntactic call form so cross-file rebinding can avoid
+    // treating a receiver dispatch (`p.detect()`) as one arbitrary static
+    // same-named definition.  A simple direct identifier call remains a
+    // normal static-resolution candidate.
+    let mut metadata = HashMap::new();
+    if let Some(object) = m
         .captures
         .iter()
         .find(|c| capture_names[c.index as usize] == "object")
-        .map(|c| {
-            let mut map = HashMap::new();
-            map.insert("object".to_string(), node_text(&c.node, source_bytes));
-            map
-        });
+    {
+        metadata.insert("object".to_string(), node_text(&object.node, source_bytes));
+        metadata.insert("call_form".to_string(), "member".to_string());
+    }
+    if m.captures
+        .iter()
+        .any(|capture| capture_names[capture.index as usize] == "reference.method_call")
+    {
+        metadata.insert("call_form".to_string(), "member".to_string());
+    }
+    let metadata = (!metadata.is_empty()).then_some(metadata);
 
     edges.push(CodeEdge {
         source: source_id,
@@ -1018,6 +1039,43 @@ fn is_exported(node: &tree_sitter::Node) -> bool {
         current = parent.parent();
     }
     false
+}
+
+/// Include contiguous Rust attributes that directly precede an item.  The
+/// Tree-sitter Rust grammar represents attributes as sibling `attribute_item`
+/// nodes, so `function_item` source alone omits `#[test]` and
+/// `#[tokio::test]`.
+fn rust_item_source(node: &tree_sitter::Node, source_bytes: &[u8]) -> String {
+    let mut attributes = Vec::new();
+    let mut previous = node.prev_named_sibling();
+    while let Some(attribute) = previous {
+        if attribute.kind() != "attribute_item" {
+            break;
+        }
+        attributes.push(node_text(&attribute, source_bytes));
+        previous = attribute.prev_named_sibling();
+    }
+    attributes.reverse();
+    attributes.push(node_text(node, source_bytes));
+    attributes.join("\n")
+}
+
+/// Return the lexical Rust module path for an item.  This gives a function in
+/// `mod tests` an explicit, source-derived scope without changing the public
+/// symbol name used for ordinary Rust lookups.
+fn rust_module_path(node: &tree_sitter::Node, source_bytes: &[u8]) -> Option<String> {
+    let mut modules = Vec::new();
+    let mut current = node.parent();
+    while let Some(parent) = current {
+        if parent.kind() == "mod_item" {
+            if let Some(name) = parent.child_by_field_name("name") {
+                modules.push(node_text(&name, source_bytes));
+            }
+        }
+        current = parent.parent();
+    }
+    modules.reverse();
+    (!modules.is_empty()).then(|| modules.join("."))
 }
 
 /// Extract a documentation comment immediately preceding the node.
@@ -1600,6 +1658,30 @@ impl Point {
             .filter(|e| e.kind == EdgeKind::Imports)
             .collect();
         assert!(!imports.is_empty(), "should find use import edges");
+    }
+
+    #[test]
+    fn retains_rust_test_attributes_and_test_module_scope() {
+        let source = r#"
+mod tests {
+    #[tokio::test]
+    async fn run_tool_call_loop() {}
+}
+"#;
+        let nodes = parse_and_extract_nodes_file(source, Language::Rust, "lib.rs");
+        let test = nodes
+            .iter()
+            .find(|node| node.name == "run_tool_call_loop")
+            .expect("tokio test function");
+
+        assert_eq!(
+            test.qualified_name.as_deref(),
+            Some("tests.run_tool_call_loop")
+        );
+        assert!(test
+            .body
+            .as_deref()
+            .is_some_and(|body| body.starts_with("#[tokio::test]")));
     }
 
     // =====================================================================

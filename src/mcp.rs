@@ -8,7 +8,7 @@ use std::io::{self, BufRead, BufReader, BufWriter, Write};
 use serde_json::{json, Map, Value};
 
 use crate::error::{CodeFactsError, Result};
-use crate::service::CodeFacts;
+use crate::service::{CodeFacts, SymbolScope};
 use crate::types::NodeKind;
 
 const PROTOCOL_VERSION: &str = "2024-11-05";
@@ -75,16 +75,19 @@ fn call_tool(facts: &CodeFacts, params: Option<&Value>) -> Result<Value> {
 
     match name {
         "map" => facts.map(),
-        "search" => facts.search_with_page_options(
+        "search" => facts.search_with_page_scope_options(
             required_string(&arguments, "query")?,
             optional_node_kind(&arguments)?,
             optional_string(&arguments, "path_prefix")?,
+            optional_symbol_scope(&arguments)?.unwrap_or(SymbolScope::TopLevel),
             optional_offset(&arguments)?.unwrap_or(0),
             optional_string(&arguments, "cursor")?,
             limit,
         ),
-        "outline" => facts.outline_with_page_options(
+        "outline" => facts.outline_with_page_scope_options(
             required_string(&arguments, "file_path")?,
+            optional_node_kind(&arguments)?,
+            optional_symbol_scope(&arguments)?.unwrap_or(SymbolScope::TopLevel),
             optional_offset(&arguments)?.unwrap_or(0),
             optional_string(&arguments, "cursor")?,
             limit,
@@ -171,6 +174,17 @@ fn optional_node_kind(arguments: &Map<String, Value>) -> Result<Option<NodeKind>
         })
 }
 
+fn optional_symbol_scope(arguments: &Map<String, Value>) -> Result<Option<SymbolScope>> {
+    let Some(scope) = optional_string(arguments, "scope")? else {
+        return Ok(None);
+    };
+    SymbolScope::parse(scope).map(Some).ok_or_else(|| {
+        CodeFactsError::Mcp(format!(
+            "'scope' must be 'top_level' or 'all', got '{scope}'"
+        ))
+    })
+}
+
 fn tool_result(value: Value) -> Value {
     let text = serde_json::to_string_pretty(&value).unwrap_or_else(|_| value.to_string());
     json!({
@@ -200,8 +214,8 @@ fn write_json(output: &mut impl Write, value: Value) -> Result<()> {
 fn tool_definitions() -> Vec<Value> {
     vec![
         tool("map", "Repository structure, language mix, and high-level symbol counts.", json!({ "type": "object", "additionalProperties": false })),
-        tool("search", "Search indexed symbols, endpoints, and documentation headings through source-backed FTS; optionally narrow by kind or path prefix. Continue with next_cursor to keep all pages on one index snapshot; offset is legacy compatibility only. This is not raw grep.", schema(json!({ "query": string_schema("Identifier or words to search"), "kind": kind_schema(), "path_prefix": string_schema("Optional repository-relative file or directory prefix"), "cursor": cursor_schema(), "offset": offset_schema(), "limit": limit_schema() }), &["query"])),
-        tool("outline", "List indexed symbols or documentation headings in one repository-relative file. Continue with next_cursor to keep all pages on one index snapshot; offset is legacy compatibility only.", schema(json!({ "file_path": string_schema("Repository-relative file path"), "cursor": cursor_schema(), "offset": offset_schema(), "limit": limit_schema() }), &["file_path"])),
+        tool("search", "Search indexed symbols, endpoints, and documentation headings through source-backed FTS; optionally narrow by kind, path prefix, or scope. The default top_level scope excludes local variables; pass scope=all for implementation detail. Continue with next_cursor to keep all pages on one index snapshot; offset is legacy compatibility only. This is not raw grep.", schema(json!({ "query": string_schema("Identifier or words to search"), "kind": kind_schema(), "path_prefix": string_schema("Optional repository-relative file or directory prefix"), "scope": scope_schema(), "cursor": cursor_schema(), "offset": offset_schema(), "limit": limit_schema() }), &["query"])),
+        tool("outline", "List indexed symbols or documentation headings in one repository-relative file. The default top_level scope excludes local variables; pass scope=all for implementation detail. Optionally filter by kind. Continue with next_cursor to keep all pages on one index snapshot; offset is legacy compatibility only.", schema(json!({ "file_path": string_schema("Repository-relative file path"), "kind": kind_schema(), "scope": scope_schema(), "cursor": cursor_schema(), "offset": offset_schema(), "limit": limit_schema() }), &["file_path"])),
         tool("expand", "Return one symbol definition plus static callers, callees, references, and related tests. When a user-installed supported LSP is available, include separately labeled semantic reference locations. Use a symbol id or add file_path to disambiguate.", schema(json!({ "symbol": string_schema("Symbol name or exact symbol id"), "file_path": string_schema("Optional repository-relative disambiguator"), "limit": limit_schema() }), &["symbol"])),
         tool("path", "Find the shortest bounded static calls path between two confirmed symbols. Optional file paths disambiguate duplicate names. A missing path never claims runtime unreachability.", schema(json!({ "from": string_schema("Source symbol name or exact id"), "from_file_path": string_schema("Optional repository-relative source disambiguator"), "to": string_schema("Target symbol name or exact id"), "to_file_path": string_schema("Optional repository-relative target disambiguator"), "limit": limit_schema() }), &["from", "to"])),
     ]
@@ -235,6 +249,10 @@ fn kind_schema() -> Value {
     json!({ "type": "string", "enum": ["function", "class", "method", "interface", "type_alias", "enum", "variable", "struct", "trait", "module", "property", "namespace", "constant", "heading", "endpoint"], "description": "Optional exact serialized symbol kind" })
 }
 
+fn scope_schema() -> Value {
+    json!({ "type": "string", "enum": ["top_level", "all"], "description": "top_level excludes variables declared inside a function or method (default); all retains every indexed symbol" })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -264,5 +282,17 @@ mod tests {
             Some(NodeKind::Constant)
         );
         assert_eq!(optional_offset(arguments).expect("valid offset"), Some(0));
+
+        let invalid_scope = json!({ "scope": "locals_only" });
+        assert!(
+            optional_symbol_scope(invalid_scope.as_object().expect("invalid scope arguments"))
+                .is_err()
+        );
+        let valid_scope = json!({ "scope": "all" });
+        assert_eq!(
+            optional_symbol_scope(valid_scope.as_object().expect("valid scope arguments"))
+                .expect("valid scope"),
+            Some(SymbolScope::All)
+        );
     }
 }

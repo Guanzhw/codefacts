@@ -3,7 +3,13 @@
 //! The schema stores normalized source facts and an FTS index. It
 //! intentionally contains no vector tables or embedding cache.
 
-use rusqlite::Connection;
+use rusqlite::{Connection, OptionalExtension};
+
+/// Bump this whenever a parser/extractor change makes persisted facts less
+/// complete or changes their meaning even though the SQLite table shape is
+/// unchanged. Existing indexes then make one safe full source pass instead of
+/// silently serving pre-change facts from unchanged file hashes.
+const FACT_EXTRACTION_VERSION: &str = "2";
 
 // ---------------------------------------------------------------------------
 // DDL constants — kept as separate strings so each statement can be executed
@@ -155,6 +161,7 @@ pub fn initialize_database(db_path: &str) -> rusqlite::Result<Connection> {
     let migrated_edge_evidence = migrate_edge_evidence(&conn)?;
     migrate_add_name_tokens(&conn)?;
     migrate_add_is_test(&conn)?;
+    let migrated_fact_extraction = migrate_fact_extraction_version(&conn)?;
     conn.execute(
         "INSERT OR IGNORE INTO index_metadata (key, value) VALUES ('full_reindex_required', '0')",
         [],
@@ -163,7 +170,7 @@ pub fn initialize_database(db_path: &str) -> rusqlite::Result<Connection> {
         "INSERT OR IGNORE INTO index_metadata (key, value) VALUES ('generation', '0')",
         [],
     )?;
-    if migrated_edge_evidence {
+    if migrated_edge_evidence || migrated_fact_extraction {
         conn.execute(
             "UPDATE index_metadata SET value = '1' WHERE key = 'full_reindex_required'",
             [],
@@ -182,6 +189,27 @@ pub fn initialize_database(db_path: &str) -> rusqlite::Result<Connection> {
     }
 
     Ok(conn)
+}
+
+/// Mark existing indexes for one source rebuild after a semantic extractor
+/// update. This covers facts such as NodeNext import resolution, Markdown
+/// section links, endpoint AST recognition, and Rust test attributes that do
+/// not require an SQLite column migration.
+fn migrate_fact_extraction_version(conn: &Connection) -> rusqlite::Result<bool> {
+    let stored: Option<String> = conn
+        .query_row(
+            "SELECT value FROM index_metadata WHERE key = 'fact_extraction_version'",
+            [],
+            |row| row.get(0),
+        )
+        .optional()?;
+    let requires_reindex = stored.as_deref() != Some(FACT_EXTRACTION_VERSION);
+    conn.execute(
+        "INSERT INTO index_metadata (key, value) VALUES ('fact_extraction_version', ?1) \
+         ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+        [FACT_EXTRACTION_VERSION],
+    )?;
+    Ok(requires_reindex)
 }
 
 /// Migration: add `name_tokens` column to `nodes` and recreate FTS5.
@@ -529,6 +557,44 @@ mod tests {
                 |row| row.get(0),
             )
             .expect("migration state");
+        assert_eq!(reindex_required, "1");
+    }
+
+    #[test]
+    fn fact_extraction_version_change_requires_one_safe_source_reindex() {
+        let file = NamedTempFile::new().expect("temporary database path");
+        let path = file.path().to_str().expect("UTF-8 database path");
+        let initial = initialize_database(path).expect("initialize current database");
+        initial
+            .execute(
+                "UPDATE index_metadata SET value = '1' WHERE key = 'fact_extraction_version'",
+                [],
+            )
+            .expect("simulate an older fact extractor");
+        initial
+            .execute(
+                "UPDATE index_metadata SET value = '0' WHERE key = 'full_reindex_required'",
+                [],
+            )
+            .expect("clear prior migration marker");
+        drop(initial);
+
+        let migrated = initialize_database(path).expect("reopen older fact index");
+        let extraction_version: String = migrated
+            .query_row(
+                "SELECT value FROM index_metadata WHERE key = 'fact_extraction_version'",
+                [],
+                |row| row.get(0),
+            )
+            .expect("current fact extraction version");
+        let reindex_required: String = migrated
+            .query_row(
+                "SELECT value FROM index_metadata WHERE key = 'full_reindex_required'",
+                [],
+                |row| row.get(0),
+            )
+            .expect("migration marker");
+        assert_eq!(extraction_version, FACT_EXTRACTION_VERSION);
         assert_eq!(reindex_required, "1");
     }
 

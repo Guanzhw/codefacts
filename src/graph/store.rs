@@ -4,6 +4,8 @@
 //! `prepare_cached` for automatic statement caching — the Rust equivalent
 //! of the TS version's eagerly-prepared statement map.
 
+use std::collections::BTreeMap;
+
 use rusqlite::types::Value as SqlValue;
 use rusqlite::{params, params_from_iter, Connection};
 
@@ -134,7 +136,8 @@ fn i32_to_base36(mut n: u32) -> String {
 /// Detect whether a node is a test function based on language-specific heuristics.
 ///
 /// # Language rules
-/// - **Rust**: name starts with `test_`, or file path contains `/tests/` or `_test.rs`
+/// - **Rust**: naming/path heuristics plus source-derived test attributes and
+///   `mod tests` scope when a full [`CodeNode`] is available.
 /// - **Python**: name starts with `test_`, or name starts with `Test` (class)
 /// - **JavaScript/TypeScript**: name is `describe`/`it`/`test`, or file matches `*.test.*`/`*.spec.*`
 /// - **Go**: name starts with `Test` or `Benchmark`, or file ends with `_test.go`
@@ -235,6 +238,49 @@ pub fn detect_is_test(name: &str, file_path: &str, language: &str, kind: &str) -
             name_has_test && path_has_test
         }
     }
+}
+
+fn detect_is_test_node(node: &CodeNode) -> bool {
+    if detect_is_test(
+        &node.name,
+        &node.file_path,
+        node.language.as_str(),
+        node.kind.as_str(),
+    ) {
+        return true;
+    }
+
+    node.language.as_str() == "rust"
+        && (rust_test_attribute(node.body.as_deref())
+            || rust_test_module_scope(node.qualified_name.as_deref()))
+}
+
+/// The extractor prefixes adjacent Tree-sitter `attribute_item`s to a Rust
+/// item's stored body.  Recognize both the built-in `#[test]` spelling and
+/// framework paths such as `#[tokio::test]` without treating an arbitrary
+/// textual mention elsewhere in a function as an attribute.
+fn rust_test_attribute(body: Option<&str>) -> bool {
+    let Some(mut remaining) = body.map(str::trim_start) else {
+        return false;
+    };
+    while let Some(attribute) = remaining.strip_prefix("#[") {
+        let Some(end) = attribute.find(']') else {
+            return false;
+        };
+        let path = attribute[..end]
+            .trim()
+            .split_once('(')
+            .map_or(attribute[..end].trim(), |(path, _)| path.trim());
+        if path == "test" || path.ends_with("::test") {
+            return true;
+        }
+        remaining = attribute[end + 1..].trim_start();
+    }
+    false
+}
+
+fn rust_test_module_scope(qualified_name: Option<&str>) -> bool {
+    qualified_name.is_some_and(|name| name.split('.').any(|segment| segment == "tests"))
 }
 
 /// Build the metadata JSON object that the TS version stores alongside
@@ -453,12 +499,7 @@ impl GraphStore {
     /// Insert or update a single code node.
     pub fn upsert_node(&self, node: &CodeNode) -> Result<()> {
         let name_tokens = build_name_tokens(&node.name, node.qualified_name.as_deref());
-        let is_test = detect_is_test(
-            &node.name,
-            &node.file_path,
-            node.language.as_str(),
-            node.kind.as_str(),
-        );
+        let is_test = detect_is_test_node(node);
         let mut stmt = self.conn.prepare_cached(UPSERT_NODE_SQL)?;
         stmt.execute(params![
             node.id,
@@ -505,12 +546,7 @@ impl GraphStore {
             let mut stmt = tx.prepare_cached(UPSERT_NODE_SQL)?;
             for node in nodes {
                 let name_tokens = build_name_tokens(&node.name, node.qualified_name.as_deref());
-                let is_test = detect_is_test(
-                    &node.name,
-                    &node.file_path,
-                    node.language.as_str(),
-                    node.kind.as_str(),
-                );
+                let is_test = detect_is_test_node(node);
                 stmt.execute(params![
                     node.id,
                     node.kind.as_str(),
@@ -577,12 +613,7 @@ impl GraphStore {
             let mut ins_node = tx.prepare_cached(UPSERT_NODE_SQL)?;
             for node in nodes {
                 let name_tokens = build_name_tokens(&node.name, node.qualified_name.as_deref());
-                let is_test = detect_is_test(
-                    &node.name,
-                    &node.file_path,
-                    node.language.as_str(),
-                    node.kind.as_str(),
-                );
+                let is_test = detect_is_test_node(node);
                 ins_node.execute(params![
                     node.id,
                     node.kind.as_str(),
@@ -712,7 +743,7 @@ impl GraphStore {
             Some(t) => {
                 let mut stmt = self.conn.prepare_cached(
                     "SELECT * FROM edges WHERE source_id = ?1 AND type = ?2 \
-                         ORDER BY target_id, type",
+                         ORDER BY target_id, type, file_path, line, id",
                 )?;
                 let rows = stmt.query_and_then(params![node_id, t], row_to_code_edge)?;
                 rows.collect::<std::result::Result<Vec<_>, _>>()
@@ -721,7 +752,7 @@ impl GraphStore {
             None => {
                 let mut stmt = self.conn.prepare_cached(
                     "SELECT * FROM edges WHERE source_id = ?1 \
-                         ORDER BY target_id, type",
+                         ORDER BY target_id, type, file_path, line, id",
                 )?;
                 let rows = stmt.query_and_then(params![node_id], row_to_code_edge)?;
                 rows.collect::<std::result::Result<Vec<_>, _>>()
@@ -736,7 +767,7 @@ impl GraphStore {
             Some(t) => {
                 let mut stmt = self.conn.prepare_cached(
                     "SELECT * FROM edges WHERE target_id = ?1 AND type = ?2 \
-                         ORDER BY source_id, type",
+                         ORDER BY source_id, type, file_path, line, id",
                 )?;
                 let rows = stmt.query_and_then(params![node_id, t], row_to_code_edge)?;
                 rows.collect::<std::result::Result<Vec<_>, _>>()
@@ -745,7 +776,7 @@ impl GraphStore {
             None => {
                 let mut stmt = self.conn.prepare_cached(
                     "SELECT * FROM edges WHERE target_id = ?1 \
-                         ORDER BY source_id, type",
+                         ORDER BY source_id, type, file_path, line, id",
                 )?;
                 let rows = stmt.query_and_then(params![node_id], row_to_code_edge)?;
                 rows.collect::<std::result::Result<Vec<_>, _>>()
@@ -784,26 +815,55 @@ impl GraphStore {
         // selective.
         let mut stmt = self.conn.prepare(&query)?;
         let rows = stmt.query_and_then(params_from_iter(values.iter()), row_to_code_edge)?;
-        rows.collect::<std::result::Result<Vec<_>, _>>()
-            .map_err(Into::into)
+        let edges = rows
+            .collect::<std::result::Result<Vec<_>, _>>()
+            .map_err(crate::error::CodeFactsError::from)?;
+        // Heuristic receiver-dispatch candidates are useful evidence in
+        // `expand`, but must not turn `path` into a claim about a confirmed
+        // static calls path.
+        Ok(edges
+            .into_iter()
+            .filter(|edge| {
+                edge.metadata
+                    .as_ref()
+                    .and_then(|metadata| metadata.get("confidence"))
+                    .is_none_or(|confidence| confidence != "heuristic")
+            })
+            .collect())
     }
 
     /// Find test symbols directly related to a confirmed symbol.  This keeps
     /// `expand` bounded even in repositories with a very large symbol table.
-    pub fn get_related_test_nodes(&self, node_id: &str, limit: usize) -> Result<Vec<CodeNode>> {
+    pub fn get_related_test_nodes(
+        &self,
+        node_id: &str,
+        node_name: &str,
+        node_file_path: &str,
+        limit: usize,
+    ) -> Result<Vec<CodeNode>> {
         let sql_limit = i64::try_from(limit).map_err(|_| {
             crate::error::CodeFactsError::Other("test result limit is too large".into())
         })?;
         let mut stmt = self.conn.prepare_cached(
             "SELECT DISTINCT tests.* FROM nodes tests \
              WHERE tests.is_test = 1 AND ( \
-               EXISTS (SELECT 1 FROM edges incoming WHERE incoming.source_id = tests.id AND incoming.target_id = ?1) \
-               OR EXISTS (SELECT 1 FROM edges outgoing WHERE outgoing.target_id = tests.id AND outgoing.source_id = ?1) \
+               EXISTS (SELECT 1 FROM edges incoming \
+                 WHERE incoming.source_id = tests.id AND incoming.target_id = ?1 \
+                   AND COALESCE(json_extract(incoming.properties, '$.confidence'), 'static') <> 'heuristic') \
+               OR EXISTS (SELECT 1 FROM edges outgoing \
+                 WHERE outgoing.target_id = tests.id AND outgoing.source_id = ?1 \
+                   AND COALESCE(json_extract(outgoing.properties, '$.confidence'), 'static') <> 'heuristic') \
              ) \
-             ORDER BY tests.file_path, tests.start_line, tests.start_column, tests.id \
-             LIMIT ?2",
+             ORDER BY \
+               CASE WHEN instr(lower(tests.name), lower(?2)) > 0 THEN 0 ELSE 1 END, \
+               CASE WHEN tests.file_path = ?3 THEN 0 ELSE 1 END, \
+               tests.file_path, tests.start_line, tests.start_column, tests.id \
+             LIMIT ?4",
         )?;
-        let rows = stmt.query_and_then(params![node_id, sql_limit], row_to_code_node)?;
+        let rows = stmt.query_and_then(
+            params![node_id, node_name, node_file_path, sql_limit],
+            row_to_code_node,
+        )?;
         rows.collect::<std::result::Result<Vec<_>, _>>()
             .map_err(Into::into)
     }
@@ -988,6 +1048,26 @@ impl GraphStore {
             edges: self.get_edge_count()?,
             files: self.get_file_count()?,
         })
+    }
+
+    /// Count every indexed source file by its detected language.  Unlike
+    /// `GraphStats::files`, this is sourced from `file_hashes`, so a parsed
+    /// file with no extracted symbols remains visible to `map`.
+    pub fn get_language_file_counts(&self) -> Result<BTreeMap<String, usize>> {
+        let mut statement = self.conn.prepare_cached(
+            "SELECT language, COUNT(*) FROM file_hashes GROUP BY language ORDER BY language",
+        )?;
+        let rows = statement.query_map([], |row| {
+            let language: String = row.get(0)?;
+            let count: i64 = row.get(1)?;
+            Ok((language, count as usize))
+        })?;
+        let mut counts = BTreeMap::new();
+        for row in rows {
+            let (language, count) = row?;
+            counts.insert(language, count);
+        }
+        Ok(counts)
     }
 
     // -------------------------------------------------------------------
@@ -1299,8 +1379,22 @@ mod tests {
                 2,
             ))
             .unwrap();
+        let mut heuristic = make_edge(
+            "test-unrelated",
+            "prod",
+            EdgeKind::Calls,
+            "tests/other.test.ts",
+            2,
+        );
+        heuristic.metadata = Some(HashMap::from([(
+            "confidence".to_string(),
+            "heuristic".to_string(),
+        )]));
+        store.upsert_edge(&heuristic).unwrap();
 
-        let tests = store.get_related_test_nodes("prod", 1).unwrap();
+        let tests = store
+            .get_related_test_nodes("prod", "run", "src/run.ts", 10)
+            .unwrap();
         assert_eq!(tests.len(), 1);
         assert_eq!(tests[0].id, "test-related");
     }
@@ -2428,6 +2522,40 @@ mod tests {
     #[test]
     fn is_test_rust_regular_fn() {
         assert!(!detect_is_test("do_work", "src/lib.rs", "rust", "function"));
+    }
+
+    #[test]
+    fn rust_attribute_and_module_scope_mark_tests_without_testy_names() {
+        let store = setup();
+        let mut attribute_test = make_node(
+            "tokio-test",
+            "run_tool_call_loop",
+            "src/agent.rs",
+            NodeKind::Function,
+            10,
+        );
+        attribute_test.language = Language::Rust;
+        attribute_test.body = Some("#[tokio::test]\nasync fn run_tool_call_loop() {}".into());
+        let mut scoped_test = make_node(
+            "scoped-test",
+            "covers_retry",
+            "src/agent.rs",
+            NodeKind::Function,
+            20,
+        );
+        scoped_test.language = Language::Rust;
+        scoped_test.qualified_name = Some("tests.covers_retry".into());
+
+        store.upsert_nodes(&[attribute_test, scoped_test]).unwrap();
+        let count: i64 = store
+            .conn
+            .query_row(
+                "SELECT COUNT(*) FROM nodes WHERE is_test = 1 AND id IN ('tokio-test', 'scoped-test')",
+                [],
+                |row| row.get(0),
+            )
+            .unwrap();
+        assert_eq!(count, 2);
     }
 
     // -- Python --

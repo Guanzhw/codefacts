@@ -27,7 +27,7 @@ pub struct ImportResolutionResult {
     pub unresolved_refs: Vec<UnresolvedRef>,
 }
 
-/// Extension patterns to try when resolving import specifiers.
+/// Extension patterns to try for an extensionless import specifier.
 /// Ordered by likelihood for each language ecosystem.
 const EXTENSION_PATTERNS: &[&str] = &[
     "",           // exact match (specifier already has extension)
@@ -255,15 +255,7 @@ fn resolve_specifier(
 
     let normalized = normalize_path(&joined);
 
-    // Try each extension pattern
-    for ext in EXTENSION_PATTERNS {
-        let candidate = format!("{}{}", normalized, ext);
-        if indexed_files.contains(&candidate) {
-            return Some(candidate);
-        }
-    }
-
-    None
+    resolve_indexed_path(&normalized, indexed_files)
 }
 
 /// Resolve a path alias to an actual indexed file path.
@@ -272,13 +264,54 @@ fn resolve_specifier(
 /// the indexed file set (same logic as relative imports, but starting
 /// from the already-expanded alias path).
 fn resolve_alias_path(expanded_path: &str, indexed_files: &HashSet<String>) -> Option<String> {
-    for ext in EXTENSION_PATTERNS {
-        let candidate = format!("{}{}", expanded_path, ext);
-        if indexed_files.contains(&candidate) {
-            return Some(candidate);
-        }
+    resolve_indexed_path(expanded_path, indexed_files)
+}
+
+/// Resolve a normalized path against indexed source files.
+///
+/// NodeNext TypeScript deliberately writes runtime `.js` specifiers even when
+/// the source file is `.ts`, `.tsx`, or `.d.ts`.  Treat those spellings as a
+/// replacement mapping after an exact match, never as an appended extension:
+/// `./config.js` may resolve to `config.ts`, but must never become
+/// `config.js.ts`.
+fn resolve_indexed_path(path: &str, indexed_files: &HashSet<String>) -> Option<String> {
+    let mut candidates = Vec::with_capacity(EXTENSION_PATTERNS.len() + 4);
+    candidates.push(path.to_string());
+
+    if let Some(stem) = path.strip_suffix(".js") {
+        candidates.extend([
+            format!("{stem}.ts"),
+            format!("{stem}.tsx"),
+            format!("{stem}.d.ts"),
+        ]);
+    } else if let Some(stem) = path.strip_suffix(".jsx") {
+        candidates.extend([format!("{stem}.tsx"), format!("{stem}.ts")]);
     }
-    None
+
+    // An explicit source extension is already fully spelled.  The only
+    // exception above is the NodeNext runtime extension mapping.  Keeping
+    // extensionless probing separate avoids nonsensical candidates such as
+    // `file.js.ts` and prevents an explicit JSON/JS source file from being
+    // silently redirected to an unrelated sibling.
+    if path
+        .rsplit('/')
+        .next()
+        .is_some_and(|name| name.contains('.'))
+    {
+        return candidates
+            .into_iter()
+            .find(|candidate| indexed_files.contains(candidate));
+    }
+
+    candidates.extend(
+        EXTENSION_PATTERNS
+            .iter()
+            .filter(|extension| !extension.is_empty())
+            .map(|extension| format!("{path}{extension}")),
+    );
+    candidates
+        .into_iter()
+        .find(|candidate| indexed_files.contains(candidate))
 }
 
 /// Resolve barrel exports: when a file re-exports from another file
@@ -525,6 +558,39 @@ mod tests {
         // If specifier already has extension, exact match first
         let result = resolve_specifier("src/main.ts", "./config.json", &files);
         assert_eq!(result, Some("src/config.json".to_string()));
+    }
+
+    #[test]
+    fn resolves_nodenext_js_specifier_to_typescript_source() {
+        let files: HashSet<String> = ["src/config.ts", "src/main.ts"]
+            .iter()
+            .map(|s| s.to_string())
+            .collect();
+
+        let result = resolve_specifier("src/main.ts", "./config.js", &files);
+        assert_eq!(result, Some("src/config.ts".to_string()));
+    }
+
+    #[test]
+    fn nodenext_runtime_mapping_keeps_exact_javascript_first() {
+        let files: HashSet<String> = ["src/config.js", "src/config.ts", "src/main.ts"]
+            .iter()
+            .map(|s| s.to_string())
+            .collect();
+
+        let result = resolve_specifier("src/main.ts", "./config.js", &files);
+        assert_eq!(result, Some("src/config.js".to_string()));
+    }
+
+    #[test]
+    fn resolves_nodenext_js_specifier_to_declaration_source() {
+        let files: HashSet<String> = ["src/config.d.ts", "src/main.ts"]
+            .iter()
+            .map(|s| s.to_string())
+            .collect();
+
+        let result = resolve_specifier("src/main.ts", "./config.js", &files);
+        assert_eq!(result, Some("src/config.d.ts".to_string()));
     }
 
     #[test]
