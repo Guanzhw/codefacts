@@ -27,6 +27,8 @@ jobs:
         run: cargo test --all-targets --locked
       - name: Build deployed binary
         run: cargo build --release --locked --bin codefacts
+      - name: Install npm launcher test dependencies
+        run: npm --prefix npm install --ignore-scripts --no-audit --no-fund --package-lock=false
       - name: Verify npm launcher package and protocol
         run: |
           node npm/scripts/check-release-version.mjs

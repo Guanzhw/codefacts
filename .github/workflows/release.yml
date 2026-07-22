@@ -36,6 +36,7 @@ jobs:
       - run: cargo clippy --all-targets --locked -- -D warnings
       - run: cargo build --release --locked --bin codefacts
       - run: node npm/scripts/check-release-version.mjs
+      - run: npm --prefix npm install --ignore-scripts --no-audit --no-fund --package-lock=false
       - run: node --test npm/test/*.test.mjs
 
   validate-launcher:
@@ -80,6 +81,7 @@ jobs:
         with:
           node-version: 24
       - run: cargo build --release --locked --bin codefacts
+      - run: npm --prefix npm install --ignore-scripts --no-audit --no-fund --package-lock=false
       - name: Verify packed launcher and stdio protocol on this target
         run: node --test npm/test/*.test.mjs
       - name: Stage Windows binary
