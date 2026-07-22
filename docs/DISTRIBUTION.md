@@ -9,11 +9,11 @@ project's contract.
 ## What users run
 
 ```text
-npx -y codefacts@0.1.5 mcp --root .
+npx -y codefacts@0.1.6 mcp --root .
 ```
 
 The optional `--root` is a default project for existing single-project MCP
-configurations. A rootless `npx -y codefacts@0.1.5 mcp` server accepts an
+configurations. A rootless `npx -y codefacts@0.1.6 mcp` server accepts an
 explicit `repository_root` in each read-only tool call and creates a separate
 external SQLite state file for each selected project.
 
@@ -88,7 +88,7 @@ Before creating the first tag:
    a clean prefix without scripts, then completes a real stdio MCP handshake
    and source-backed search through the launcher.
 
-Then create and push a matching tag, for example `v0.1.5`. The workflow audits
+Then create and push a matching tag, for example `v0.1.6`. The workflow audits
 licenses, tests the Rust project, builds all assets, creates the GitHub Release
 with `SHA256SUMS`, stages a checksum-pinned npm tarball, and publishes it with
 provenance. A tag must not be considered an online-installable release until

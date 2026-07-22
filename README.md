@@ -109,7 +109,7 @@ the MCP server. Node.js 18 or later is the only installation prerequisite; Rust
 is not required.
 
 ```powershell
-npx -y codefacts@0.1.5 --install
+npx -y codefacts@0.1.6 --install
 ```
 
 The command prints the local binary path. Pin the version in a shared MCP
@@ -150,7 +150,7 @@ repository that you want Claude Code to inspect:
       "command": "npx",
       "args": [
         "-y",
-        "codefacts@0.1.5",
+        "codefacts@0.1.6",
         "mcp",
         "--root",
         "${CLAUDE_PROJECT_DIR:-.}"
@@ -166,7 +166,7 @@ follows the project root. Project-scoped MCP servers require your approval on
 first use. Alternatively, add a fixed repository root from the CLI:
 
 ```powershell
-claude mcp add --scope project --transport stdio codefacts -- npx -y codefacts@0.1.5 mcp --root D:\WorkSpace\your-repository
+claude mcp add --scope project --transport stdio codefacts -- npx -y codefacts@0.1.6 mcp --root D:\WorkSpace\your-repository
 claude mcp get codefacts
 ```
 
@@ -182,7 +182,7 @@ repository rather than the CodeFacts checkout.
   "mcp": {
     "codefacts": {
       "type": "local",
-      "command": ["npx", "-y", "codefacts@0.1.5", "mcp", "--root", "."],
+      "command": ["npx", "-y", "codefacts@0.1.6", "mcp", "--root", "."],
       "cwd": ".",
       "enabled": true,
       "timeout": 120000
@@ -205,7 +205,7 @@ For a fixed project, register a clearly named entry with an explicit root and
 a startup timeout that allows the first verified launcher download:
 
 ```powershell
-codex mcp add codefacts-opensession -- cmd /c npx -y codefacts@0.1.5 mcp --root D:\WorkSpace\OpenSession
+codex mcp add codefacts-opensession -- cmd /c npx -y codefacts@0.1.6 mcp --root D:\WorkSpace\OpenSession
 ```
 
 Then set `startup_timeout_sec = 120` (or higher) for that named
@@ -219,7 +219,7 @@ codex mcp list
 For a user-wide server that needs to inspect several projects, omit `--root`:
 
 ```powershell
-codex mcp add codefacts -- cmd /c npx -y codefacts@0.1.5 mcp
+codex mcp add codefacts -- cmd /c npx -y codefacts@0.1.6 mcp
 ```
 
 Then pass the absolute target directory in every tool call, for example

@@ -1,5 +1,6 @@
 use std::fs;
 use std::io::Write;
+use std::path::Path;
 use std::process::{Command, Stdio};
 
 use codefacts::lsp::LspMode;
@@ -7,6 +8,23 @@ use codefacts::service::{CodeFacts, SymbolScope};
 use codefacts::types::NodeKind;
 use serde_json::{json, Value};
 use tempfile::tempdir;
+
+fn assert_repository_root_identity(actual: &Value, expected: &Path) {
+    let actual = actual.as_str().expect("repository root string");
+    assert_eq!(
+        Path::new(actual)
+            .canonicalize()
+            .expect("canonical returned repository root"),
+        expected
+            .canonicalize()
+            .expect("canonical expected repository root")
+    );
+    #[cfg(windows)]
+    assert!(
+        !actual.starts_with(r"\\?\"),
+        "repository root should not expose a Win32 extended-length prefix: {actual}"
+    );
+}
 
 #[test]
 fn stdio_server_exposes_only_the_five_source_backed_workflows() {
@@ -244,13 +262,13 @@ fn stdio_server_indexes_and_queries_multiple_explicit_project_roots() {
         .expect("missing-root error text")
         .contains("repository_root"));
 
-    assert_eq!(
-        responses[3]["result"]["structuredContent"]["freshness"]["repository_root"],
-        project_a_root
+    assert_repository_root_identity(
+        &responses[3]["result"]["structuredContent"]["freshness"]["repository_root"],
+        project_a.path(),
     );
-    assert_eq!(
-        responses[4]["result"]["structuredContent"]["freshness"]["repository_root"],
-        project_b_root
+    assert_repository_root_identity(
+        &responses[4]["result"]["structuredContent"]["freshness"]["repository_root"],
+        project_b.path(),
     );
     assert_eq!(
         responses[5]["result"]["structuredContent"]["results"][0]["name"],

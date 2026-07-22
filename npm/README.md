@@ -12,7 +12,7 @@ It never uploads the repository being indexed.
 Use a fixed version in MCP configuration:
 
 ```sh
-npx -y codefacts@0.1.5 --install
+npx -y codefacts@0.1.6 --install
 ```
 
 The command prints the cached binary path. It is optional but recommended before
@@ -22,7 +22,7 @@ startup timeout.
 ## Run
 
 ```sh
-npx -y codefacts@0.1.5 mcp --root .
+npx -y codefacts@0.1.6 mcp --root .
 ```
 
 `--root` is a default project, not a limit on the MCP server. To inspect
