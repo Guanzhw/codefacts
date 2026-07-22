@@ -8,12 +8,12 @@ use std::io::{self, BufRead, BufReader, BufWriter, Write};
 use serde_json::{json, Map, Value};
 
 use crate::error::{CodeFactsError, Result};
-use crate::service::{CodeFacts, SymbolScope};
+use crate::service::{CodeFactsRegistry, SymbolScope};
 use crate::types::NodeKind;
 
 const PROTOCOL_VERSION: &str = "2024-11-05";
 
-pub fn serve(facts: &CodeFacts) -> Result<()> {
+pub fn serve(projects: &mut CodeFactsRegistry) -> Result<()> {
     let stdin = io::stdin();
     let stdout = io::stdout();
     let mut output = BufWriter::new(stdout.lock());
@@ -33,14 +33,14 @@ pub fn serve(facts: &CodeFacts) -> Result<()> {
                 continue;
             }
         };
-        if let Some(response) = handle_request(facts, request) {
+        if let Some(response) = handle_request(projects, request) {
             write_json(&mut output, response)?;
         }
     }
     Ok(())
 }
 
-fn handle_request(facts: &CodeFacts, request: Value) -> Option<Value> {
+fn handle_request(projects: &mut CodeFactsRegistry, request: Value) -> Option<Value> {
     let id = request.get("id").cloned();
     let method = request.get("method").and_then(Value::as_str);
     let response = match method {
@@ -50,7 +50,7 @@ fn handle_request(facts: &CodeFacts, request: Value) -> Option<Value> {
             "serverInfo": { "name": "codefacts", "version": env!("CARGO_PKG_VERSION") }
         }),
         Some("tools/list") => json!({ "tools": tool_definitions() }),
-        Some("tools/call") => match call_tool(facts, request.get("params")) {
+        Some("tools/call") => match call_tool(projects, request.get("params")) {
             Ok(value) => tool_result(value),
             Err(error) => tool_error(&error.to_string()),
         },
@@ -61,7 +61,7 @@ fn handle_request(facts: &CodeFacts, request: Value) -> Option<Value> {
     id.map(|id| json!({ "jsonrpc": "2.0", "id": id, "result": response }))
 }
 
-fn call_tool(facts: &CodeFacts, params: Option<&Value>) -> Result<Value> {
+fn call_tool(projects: &mut CodeFactsRegistry, params: Option<&Value>) -> Result<Value> {
     let params = params
         .and_then(Value::as_object)
         .ok_or_else(|| CodeFactsError::Mcp("tools/call requires object params".into()))?;
@@ -72,6 +72,14 @@ fn call_tool(facts: &CodeFacts, params: Option<&Value>) -> Result<Value> {
         .cloned()
         .unwrap_or_default();
     let limit = optional_limit(&arguments)?;
+    let repository_root = optional_string(&arguments, "repository_root")?.map(str::to_owned);
+
+    if !matches!(name, "map" | "search" | "outline" | "expand" | "path") {
+        return Err(CodeFactsError::Mcp(format!(
+            "unknown tool '{name}'; CodeFacts exposes only map, search, outline, expand, and path"
+        )));
+    }
+    let facts = projects.project(repository_root.as_deref())?;
 
     match name {
         "map" => facts.map(),
@@ -104,9 +112,7 @@ fn call_tool(facts: &CodeFacts, params: Option<&Value>) -> Result<Value> {
             optional_string(&arguments, "to_file_path")?,
             limit,
         ),
-        _ => Err(CodeFactsError::Mcp(format!(
-            "unknown tool '{name}'; CodeFacts exposes only map, search, outline, expand, and path"
-        ))),
+        _ => unreachable!("tool name was validated before project selection"),
     }
 }
 
@@ -213,11 +219,11 @@ fn write_json(output: &mut impl Write, value: Value) -> Result<()> {
 
 fn tool_definitions() -> Vec<Value> {
     vec![
-        tool("map", "Repository structure, language mix, and high-level symbol counts.", json!({ "type": "object", "additionalProperties": false })),
-        tool("search", "Search indexed symbols, endpoints, and documentation headings through source-backed FTS; optionally narrow by kind, path prefix, or scope. The default top_level scope excludes local variables; pass scope=all for implementation detail. Continue with next_cursor to keep all pages on one index snapshot; offset is legacy compatibility only. This is not raw grep.", schema(json!({ "query": string_schema("Identifier or words to search"), "kind": kind_schema(), "path_prefix": string_schema("Optional repository-relative file or directory prefix"), "scope": scope_schema(), "cursor": cursor_schema(), "offset": offset_schema(), "limit": limit_schema() }), &["query"])),
-        tool("outline", "List indexed symbols or documentation headings in one repository-relative file. The default top_level scope excludes local variables; pass scope=all for implementation detail. Optionally filter by kind. Continue with next_cursor to keep all pages on one index snapshot; offset is legacy compatibility only.", schema(json!({ "file_path": string_schema("Repository-relative file path"), "kind": kind_schema(), "scope": scope_schema(), "cursor": cursor_schema(), "offset": offset_schema(), "limit": limit_schema() }), &["file_path"])),
-        tool("expand", "Return one symbol definition plus static callers, callees, references, and related tests. When a user-installed supported LSP is available, include separately labeled semantic reference locations. Use a symbol id or add file_path to disambiguate.", schema(json!({ "symbol": string_schema("Symbol name or exact symbol id"), "file_path": string_schema("Optional repository-relative disambiguator"), "limit": limit_schema() }), &["symbol"])),
-        tool("path", "Find the shortest bounded static calls path between two confirmed symbols. Optional file paths disambiguate duplicate names. A missing path never claims runtime unreachability.", schema(json!({ "from": string_schema("Source symbol name or exact id"), "from_file_path": string_schema("Optional repository-relative source disambiguator"), "to": string_schema("Target symbol name or exact id"), "to_file_path": string_schema("Optional repository-relative target disambiguator"), "limit": limit_schema() }), &["from", "to"])),
+        tool("map", "Repository structure, language mix, and high-level symbol counts. Set repository_root to inspect a project other than the configured default.", schema(json!({ "repository_root": repository_root_schema() }), &[])),
+        tool("search", "Search indexed symbols, endpoints, and documentation headings through source-backed FTS; optionally narrow by kind, path prefix, or scope. Set repository_root to select a project for this call. The default top_level scope excludes local variables; pass scope=all for implementation detail. Continue with next_cursor to keep all pages on one index snapshot; offset is legacy compatibility only. This is not raw grep.", schema(json!({ "query": string_schema("Identifier or words to search"), "repository_root": repository_root_schema(), "kind": kind_schema(), "path_prefix": string_schema("Optional selected-project-relative file or directory prefix"), "scope": scope_schema(), "cursor": cursor_schema(), "offset": offset_schema(), "limit": limit_schema() }), &["query"])),
+        tool("outline", "List indexed symbols or documentation headings in one selected-project-relative file. Set repository_root to select a project for this call. The default top_level scope excludes local variables; pass scope=all for implementation detail. Optionally filter by kind. Continue with next_cursor to keep all pages on one index snapshot; offset is legacy compatibility only.", schema(json!({ "repository_root": repository_root_schema(), "file_path": string_schema("Selected-project-relative file path"), "kind": kind_schema(), "scope": scope_schema(), "cursor": cursor_schema(), "offset": offset_schema(), "limit": limit_schema() }), &["file_path"])),
+        tool("expand", "Return one symbol definition plus static callers, callees, references, and related tests from one selected project. Set repository_root to select a project for this call. When a user-installed supported LSP is available, include separately labeled semantic reference locations. Use a symbol id or add file_path to disambiguate.", schema(json!({ "repository_root": repository_root_schema(), "symbol": string_schema("Symbol name or exact symbol id"), "file_path": string_schema("Optional selected-project-relative disambiguator"), "limit": limit_schema() }), &["symbol"])),
+        tool("path", "Find the shortest bounded static calls path within one selected project. Set repository_root to select that project; static relationships are not merged across projects. Optional file paths disambiguate duplicate names. A missing path never claims runtime unreachability.", schema(json!({ "repository_root": repository_root_schema(), "from": string_schema("Source symbol name or exact id"), "from_file_path": string_schema("Optional selected-project-relative source disambiguator"), "to": string_schema("Target symbol name or exact id"), "to_file_path": string_schema("Optional selected-project-relative target disambiguator"), "limit": limit_schema() }), &["from", "to"])),
     ]
 }
 
@@ -231,6 +237,10 @@ fn schema(properties: Value, required: &[&str]) -> Value {
 
 fn string_schema(description: &str) -> Value {
     json!({ "type": "string", "minLength": 1, "description": description })
+}
+
+fn repository_root_schema() -> Value {
+    string_schema("Optional project root for this call. Required when the server was started without --root; use an absolute path to avoid server-working-directory ambiguity.")
 }
 
 fn limit_schema() -> Value {

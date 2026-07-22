@@ -36,6 +36,21 @@ pub struct CodeFacts {
     lsp: LspManager,
 }
 
+/// Lazily opens one independent, external fact store for each repository that
+/// an MCP request explicitly selects. A server may still have one configured
+/// default root for backwards-compatible project-local configuration.
+///
+/// The registry deliberately does not merge stores: source paths, symbol IDs,
+/// freshness generations, and pagination cursors remain meaningful only within
+/// one repository snapshot. Cross-project use means selecting a repository per
+/// tool call, not treating unrelated source trees as one synthetic project.
+#[derive(Debug)]
+pub struct CodeFactsRegistry {
+    projects: HashMap<PathBuf, CodeFacts>,
+    default_root: Option<PathBuf>,
+    lsp_mode: LspMode,
+}
+
 #[derive(Debug, Serialize)]
 pub struct Freshness {
     pub status: &'static str,
@@ -160,13 +175,7 @@ impl CodeFacts {
         database_path: impl AsRef<Path>,
         lsp_mode: LspMode,
     ) -> Result<Self> {
-        let root = root.as_ref().canonicalize().map_err(CodeFactsError::Io)?;
-        if !root.is_dir() {
-            return Err(CodeFactsError::Other(format!(
-                "repository root is not a directory: {}",
-                root.display()
-            )));
-        }
+        let root = canonical_repository_root(root.as_ref())?;
 
         let database_path = database_path.as_ref().to_path_buf();
         if let Some(parent) = database_path.parent() {
@@ -314,6 +323,7 @@ impl CodeFacts {
         };
         let scope = page_scope(&[
             "search",
+            &freshness.repository_root,
             query,
             kind.map(|kind| kind.as_str()).unwrap_or(""),
             path_prefix.as_deref().unwrap_or(""),
@@ -445,6 +455,7 @@ impl CodeFacts {
         let limit = bounded_limit(limit);
         let page_scope = page_scope(&[
             "outline",
+            &freshness.repository_root,
             &file_path,
             kind.map(|kind| kind.as_str()).unwrap_or(""),
             symbol_scope.as_str(),
@@ -1062,6 +1073,74 @@ impl CodeFacts {
             Ok(Some(prefix.to_string()))
         }
     }
+}
+
+impl CodeFactsRegistry {
+    /// Create a registry with an optional default repository. Omitting the
+    /// default never infers the process working directory: callers must pass
+    /// `repository_root` to each MCP tool invocation instead.
+    pub fn open_with_lsp(
+        default_root: Option<PathBuf>,
+        default_state_path: Option<PathBuf>,
+        lsp_mode: LspMode,
+    ) -> Result<Self> {
+        if default_root.is_none() && default_state_path.is_some() {
+            return Err(CodeFactsError::Other(
+                "--state requires --root; dynamic project roots each use their own external default state path"
+                    .into(),
+            ));
+        }
+
+        let mut registry = Self {
+            projects: HashMap::new(),
+            default_root: None,
+            lsp_mode,
+        };
+        if let Some(default_root) = default_root {
+            let root = canonical_repository_root(&default_root)?;
+            let state_path = default_state_path.unwrap_or_else(|| default_database_path(&root));
+            let facts = CodeFacts::open_with_lsp(&root, &state_path, lsp_mode)?;
+            registry.default_root = Some(root.clone());
+            registry.projects.insert(root, facts);
+        }
+        Ok(registry)
+    }
+
+    /// Return the project selected for one tool call, opening its independent
+    /// external SQLite store on first use.
+    pub fn project(&mut self, repository_root: Option<&str>) -> Result<&CodeFacts> {
+        let root = match repository_root {
+            Some(repository_root) => canonical_repository_root(Path::new(repository_root))?,
+            None => self.default_root.clone().ok_or_else(|| {
+                CodeFactsError::Mcp(
+                    "'repository_root' is required when CodeFacts was started without --root"
+                        .into(),
+                )
+            })?,
+        };
+
+        if !self.projects.contains_key(&root) {
+            let state_path = default_database_path(&root);
+            let facts = CodeFacts::open_with_lsp(&root, &state_path, self.lsp_mode)?;
+            self.projects.insert(root.clone(), facts);
+        }
+        self.projects.get(&root).ok_or_else(|| {
+            CodeFactsError::Other(
+                "selected repository disappeared from the CodeFacts registry".into(),
+            )
+        })
+    }
+}
+
+fn canonical_repository_root(root: &Path) -> Result<PathBuf> {
+    let root = root.canonicalize().map_err(CodeFactsError::Io)?;
+    if !root.is_dir() {
+        return Err(CodeFactsError::Other(format!(
+            "repository root is not a directory: {}",
+            root.display()
+        )));
+    }
+    Ok(root)
 }
 
 pub fn default_database_path(root: &Path) -> PathBuf {

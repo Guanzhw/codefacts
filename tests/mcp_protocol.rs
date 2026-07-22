@@ -168,6 +168,176 @@ fn stdio_server_exposes_only_the_five_source_backed_workflows() {
 }
 
 #[test]
+fn stdio_server_indexes_and_queries_multiple_explicit_project_roots() {
+    let project_a = tempdir().expect("first project");
+    fs::create_dir_all(project_a.path().join("src")).expect("first source directory");
+    fs::write(project_a.path().join("src/lib.rs"), "pub fn alpha() {}\n")
+        .expect("first source fixture");
+
+    let project_b = tempdir().expect("second project");
+    fs::create_dir_all(project_b.path().join("src")).expect("second source directory");
+    fs::write(
+        project_b.path().join("src/lib.rs"),
+        "pub fn beta() {}\n\npub fn entry() {\n    beta();\n}\n",
+    )
+    .expect("second source fixture");
+    let state_dir = tempdir().expect("external dynamic state directory");
+
+    let project_a_root = project_a.path().to_str().expect("UTF-8 first project");
+    let project_b_root = project_b.path().to_str().expect("UTF-8 second project");
+    let mut child = Command::new(env!("CARGO_BIN_EXE_codefacts"))
+        .arg("mcp")
+        .env("CODEFACTS_STATE_DIR", state_dir.path())
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("start rootless CodeFacts MCP server");
+
+    let requests = [
+        json!({"jsonrpc":"2.0", "id":1, "method":"initialize", "params":{}}),
+        json!({"jsonrpc":"2.0", "id":2, "method":"tools/list"}),
+        json!({"jsonrpc":"2.0", "id":3, "method":"tools/call", "params":{"name":"map", "arguments":{}}}),
+        json!({"jsonrpc":"2.0", "id":4, "method":"tools/call", "params":{"name":"map", "arguments":{"repository_root":project_a_root}}}),
+        json!({"jsonrpc":"2.0", "id":5, "method":"tools/call", "params":{"name":"map", "arguments":{"repository_root":project_b_root}}}),
+        json!({"jsonrpc":"2.0", "id":6, "method":"tools/call", "params":{"name":"search", "arguments":{"repository_root":project_a_root, "query":"alpha"}}}),
+        json!({"jsonrpc":"2.0", "id":7, "method":"tools/call", "params":{"name":"search", "arguments":{"repository_root":project_b_root, "query":"beta"}}}),
+        json!({"jsonrpc":"2.0", "id":8, "method":"tools/call", "params":{"name":"search", "arguments":{"repository_root":project_a_root, "query":"beta"}}}),
+        json!({"jsonrpc":"2.0", "id":9, "method":"tools/call", "params":{"name":"outline", "arguments":{"repository_root":project_b_root, "file_path":"src/lib.rs"}}}),
+        json!({"jsonrpc":"2.0", "id":10, "method":"tools/call", "params":{"name":"expand", "arguments":{"repository_root":project_b_root, "symbol":"beta", "file_path":"src/lib.rs"}}}),
+        json!({"jsonrpc":"2.0", "id":11, "method":"tools/call", "params":{"name":"path", "arguments":{"repository_root":project_b_root, "from":"entry", "to":"beta"}}}),
+    ];
+    let mut input = child.stdin.take().expect("MCP stdin");
+    for request in requests {
+        writeln!(input, "{request}").expect("write MCP request");
+    }
+    drop(input);
+
+    let output = child.wait_with_output().expect("wait for MCP server");
+    assert!(
+        output.status.success(),
+        "server stderr: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let responses = String::from_utf8(output.stdout)
+        .expect("UTF-8 JSONL")
+        .lines()
+        .map(|line| serde_json::from_str::<Value>(line).expect("JSON-RPC response"))
+        .collect::<Vec<_>>();
+    assert_eq!(responses.len(), 11);
+
+    let tools = responses[1]["result"]["tools"]
+        .as_array()
+        .expect("tool list");
+    for tool in tools {
+        assert!(
+            tool["inputSchema"]["properties"]
+                .get("repository_root")
+                .is_some(),
+            "{} should accept repository_root",
+            tool["name"]
+        );
+    }
+    assert_eq!(responses[2]["result"]["isError"], true);
+    assert!(responses[2]["result"]["content"][0]["text"]
+        .as_str()
+        .expect("missing-root error text")
+        .contains("repository_root"));
+
+    assert_eq!(
+        responses[3]["result"]["structuredContent"]["freshness"]["repository_root"],
+        project_a_root
+    );
+    assert_eq!(
+        responses[4]["result"]["structuredContent"]["freshness"]["repository_root"],
+        project_b_root
+    );
+    assert_eq!(
+        responses[5]["result"]["structuredContent"]["results"][0]["name"],
+        "alpha"
+    );
+    assert_eq!(
+        responses[6]["result"]["structuredContent"]["results"][0]["name"],
+        "beta"
+    );
+    assert!(responses[7]["result"]["structuredContent"]["results"]
+        .as_array()
+        .expect("first-project result array")
+        .is_empty());
+    assert_eq!(
+        responses[8]["result"]["structuredContent"]["symbols"]
+            .as_array()
+            .expect("second-project outline")
+            .len(),
+        2
+    );
+    assert_eq!(
+        responses[9]["result"]["structuredContent"]["definition"]["name"],
+        "beta"
+    );
+    assert_eq!(responses[10]["result"]["structuredContent"]["status"], "ok");
+    assert_eq!(
+        responses[10]["result"]["structuredContent"]["path"][0]["name"],
+        "entry"
+    );
+    assert_eq!(
+        responses[10]["result"]["structuredContent"]["path"][1]["name"],
+        "beta"
+    );
+}
+
+#[test]
+fn pagination_cursors_are_scoped_to_the_selected_project_root() {
+    let project_a = tempdir().expect("first project");
+    fs::create_dir_all(project_a.path().join("src")).expect("first source directory");
+    fs::write(
+        project_a.path().join("src/lib.rs"),
+        "pub fn needle_one() {}\npub fn needle_two() {}\n",
+    )
+    .expect("first source fixture");
+    let facts_a = CodeFacts::open(project_a.path(), project_a.path().join("external.sqlite"))
+        .expect("open first project");
+
+    let project_b = tempdir().expect("second project");
+    fs::create_dir_all(project_b.path().join("src")).expect("second source directory");
+    fs::write(
+        project_b.path().join("src/lib.rs"),
+        "pub fn needle_three() {}\npub fn needle_four() {}\n",
+    )
+    .expect("second source fixture");
+    let facts_b = CodeFacts::open(project_b.path(), project_b.path().join("external.sqlite"))
+        .expect("open second project");
+
+    let first_page = facts_a
+        .search_with_page_scope_options(
+            "needle",
+            Some(NodeKind::Function),
+            None,
+            SymbolScope::TopLevel,
+            0,
+            None,
+            Some(1),
+        )
+        .expect("first project search");
+    let cursor = first_page["next_cursor"]
+        .as_str()
+        .expect("first project continuation cursor");
+
+    let error = facts_b
+        .search_with_page_scope_options(
+            "needle",
+            Some(NodeKind::Function),
+            None,
+            SymbolScope::TopLevel,
+            0,
+            Some(cursor),
+            Some(1),
+        )
+        .expect_err("a cursor from another project must be rejected");
+    assert!(error.to_string().contains("cursor does not belong"));
+}
+
+#[test]
 fn refresh_prunes_facts_for_deleted_or_newly_ignored_files() {
     let repository = tempdir().expect("temporary repository");
     fs::create_dir_all(repository.path().join("src")).expect("source directory");
@@ -937,11 +1107,17 @@ fn markdown_sections_hierarchy_and_local_anchor_links_are_source_backed() {
 }
 
 #[test]
-fn mcp_mode_rejects_an_implicit_working_directory_root() {
-    let output = Command::new(env!("CARGO_BIN_EXE_codefacts"))
+fn rootless_mcp_requires_a_tool_root_but_state_requires_a_default_root() {
+    let rootless = Command::new(env!("CARGO_BIN_EXE_codefacts"))
         .arg("mcp")
         .output()
-        .expect("run codefacts without root");
+        .expect("run rootless codefacts");
+    assert!(rootless.status.success());
+
+    let output = Command::new(env!("CARGO_BIN_EXE_codefacts"))
+        .args(["mcp", "--state", "external.sqlite"])
+        .output()
+        .expect("run rootless codefacts with state");
     assert!(!output.status.success());
-    assert!(String::from_utf8_lossy(&output.stderr).contains("--root is required"));
+    assert!(String::from_utf8_lossy(&output.stderr).contains("--state requires --root"));
 }

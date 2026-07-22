@@ -3,7 +3,7 @@ use std::process;
 
 use codefacts::lsp::LspMode;
 use codefacts::mcp;
-use codefacts::service::{default_database_path, CodeFacts};
+use codefacts::service::CodeFactsRegistry;
 
 fn main() {
     let (root, state, lsp_mode) = match parse_arguments() {
@@ -13,21 +13,20 @@ fn main() {
             process::exit(2);
         }
     };
-    let database_path = state.unwrap_or_else(|| default_database_path(&root));
-    let facts = match CodeFacts::open_with_lsp(&root, &database_path, lsp_mode) {
-        Ok(facts) => facts,
+    let mut projects = match CodeFactsRegistry::open_with_lsp(root, state, lsp_mode) {
+        Ok(projects) => projects,
         Err(error) => {
             eprintln!("codefacts: {error}");
             process::exit(1);
         }
     };
-    if let Err(error) = mcp::serve(&facts) {
+    if let Err(error) = mcp::serve(&mut projects) {
         eprintln!("codefacts: {error}");
         process::exit(1);
     }
 }
 
-fn parse_arguments() -> Result<(PathBuf, Option<PathBuf>, LspMode), String> {
+fn parse_arguments() -> Result<(Option<PathBuf>, Option<PathBuf>, LspMode), String> {
     let mut args = std::env::args_os().skip(1);
     match args.next().as_deref() {
         Some(command) if command == "mcp" => {}
@@ -43,9 +42,9 @@ fn parse_arguments() -> Result<(PathBuf, Option<PathBuf>, LspMode), String> {
     }
 
     // An MCP process can be launched from a client-owned or implementation
-    // working directory. Requiring an explicit root prevents a global config
-    // from silently indexing the CodeFacts checkout (or any other unrelated
-    // repository) when used from a different project.
+    // working directory. It never infers that directory as a project root:
+    // --root is an optional default, and a rootless server requires every
+    // tool call to name its repository_root explicitly.
     let mut root = None;
     let mut state = None;
     let mut lsp_mode = LspMode::Auto;
@@ -67,12 +66,16 @@ fn parse_arguments() -> Result<(PathBuf, Option<PathBuf>, LspMode), String> {
             other => return Err(format!("unknown argument '{other}'.\n{}", usage())),
         }
     }
-    let root = root
-        .ok_or("--root is required for MCP mode; configure the repository to index explicitly")?;
+    if root.is_none() && state.is_some() {
+        return Err(
+            "--state requires --root; dynamic project roots use independent external state files"
+                .into(),
+        );
+    }
     Ok((root, state, lsp_mode))
 }
 
 fn usage() -> String {
-    "Usage: codefacts mcp --root <repository> [--state <external-sqlite-path>] [--lsp <auto|off>]"
+    "Usage: codefacts mcp [--root <default-repository>] [--state <external-sqlite-path>] [--lsp <auto|off>]"
         .into()
 }

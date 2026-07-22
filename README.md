@@ -62,6 +62,16 @@ Version 1 deliberately exposes exactly five read-only tools:
 
 Every result is bounded, includes file/line/hash evidence, and refreshes the incremental index before answering. Its `freshness` object includes the canonical `repository_root` and fact-store `generation`, so a caller can verify that the facts belong to the intended project. A `no_static_path` result never claims that runtime execution is unreachable.
 
+All five tools accept an optional `repository_root` project directory. It
+selects (and, on first use, indexes) that project's independent external SQLite
+fact store for the current call. A server started with `--root` uses that root
+when the field is omitted; a rootless server requires `repository_root` on
+every call and never guesses from its working directory. File paths such as
+`file_path`, `path_prefix`, and `from_file_path` remain relative to the
+selected project. Results never merge unrelated projects: each response's
+`freshness.repository_root` identifies the source snapshot, and `path` only
+traverses static relationships within that selected project.
+
 `search` accepts optional `kind`, `path_prefix`, `scope`, and non-negative
 `offset`; `outline` accepts `kind`, `scope`, and `offset`. `scope` defaults to
 `top_level`, which suppresses variables declared inside functions or methods;
@@ -99,7 +109,7 @@ the MCP server. Node.js 18 or later is the only installation prerequisite; Rust
 is not required.
 
 ```powershell
-npx -y codefacts@0.1.4 --install
+npx -y codefacts@0.1.5 --install
 ```
 
 The command prints the local binary path. Pin the version in a shared MCP
@@ -140,7 +150,7 @@ repository that you want Claude Code to inspect:
       "command": "npx",
       "args": [
         "-y",
-        "codefacts@0.1.4",
+        "codefacts@0.1.5",
         "mcp",
         "--root",
         "${CLAUDE_PROJECT_DIR:-.}"
@@ -156,7 +166,7 @@ follows the project root. Project-scoped MCP servers require your approval on
 first use. Alternatively, add a fixed repository root from the CLI:
 
 ```powershell
-claude mcp add --scope project --transport stdio codefacts -- npx -y codefacts@0.1.4 mcp --root D:\WorkSpace\your-repository
+claude mcp add --scope project --transport stdio codefacts -- npx -y codefacts@0.1.5 mcp --root D:\WorkSpace\your-repository
 claude mcp get codefacts
 ```
 
@@ -172,7 +182,7 @@ repository rather than the CodeFacts checkout.
   "mcp": {
     "codefacts": {
       "type": "local",
-      "command": ["npx", "-y", "codefacts@0.1.4", "mcp", "--root", "."],
+      "command": ["npx", "-y", "codefacts@0.1.5", "mcp", "--root", "."],
       "cwd": ".",
       "enabled": true,
       "timeout": 120000
@@ -191,14 +201,11 @@ opencode mcp list
 
 ### Codex
 
-Do not register one enabled user-wide `codefacts` server with a hard-coded
-repository root. It remains callable in other projects and can silently return
-facts from the wrong checkout. Instead, register a clearly named entry for the
-one repository you intend to inspect, with an explicit root and a startup
-timeout that allows the first verified launcher download:
+For a fixed project, register a clearly named entry with an explicit root and
+a startup timeout that allows the first verified launcher download:
 
 ```powershell
-codex mcp add codefacts-opensession -- cmd /c npx -y codefacts@0.1.4 mcp --root D:\WorkSpace\OpenSession
+codex mcp add codefacts-opensession -- cmd /c npx -y codefacts@0.1.5 mcp --root D:\WorkSpace\OpenSession
 ```
 
 Then set `startup_timeout_sec = 120` (or higher) for that named
@@ -209,11 +216,20 @@ and verify it before use:
 codex mcp list
 ```
 
-Use a distinct server name and explicit `--root` for every repository. The
-MCP result's `freshness.repository_root` is the final evidence of scope; if it
-does not match the repository being evaluated, discard the result. CodeFacts
-intentionally rejects `codefacts mcp` without `--root` instead of guessing from
-the process working directory.
+For a user-wide server that needs to inspect several projects, omit `--root`:
+
+```powershell
+codex mcp add codefacts -- cmd /c npx -y codefacts@0.1.5 mcp
+```
+
+Then pass the absolute target directory in every tool call, for example
+`map({"repository_root":"D:\\WorkSpace\\OpenSession"})` or
+`search({"repository_root":"D:\\WorkSpace\\OpenSession","query":"ProviderAdapter"})`.
+The first request for a root builds or refreshes only that project's external
+index; subsequent requests reuse it for the lifetime of the MCP process.
+CodeFacts does not infer a project from the server working directory. The MCP
+result's `freshness.repository_root` remains the final evidence of scope; if it
+does not match the repository being evaluated, discard the result.
 
 ### Cache, trust, and offline use
 
@@ -239,11 +255,29 @@ The server uses newline-delimited JSON-RPC over stdio. Its SQLite state is exter
 codefacts mcp --root D:\WorkSpace\your-repository
 ```
 
-Use `--state` to select an explicit external database location:
+To select projects per tool call instead, start without a default root:
+
+```text
+codefacts mcp
+```
+
+Each `map`, `search`, `outline`, `expand`, and `path` call must then include an
+absolute `repository_root`, such as:
+
+```json
+{"repository_root":"D:\\WorkSpace\\your-repository","query":"Handler"}
+```
+
+Use `--state` to select an explicit external database location for the default
+`--root` project:
 
 ```text
 codefacts mcp --root D:\WorkSpace\your-repository --state D:\CodeFactsState\your-repository.sqlite
 ```
+
+`--state` intentionally requires `--root`; dynamically selected projects use
+separate default external state files, keyed by their canonical root. Set
+`CODEFACTS_STATE_DIR` to choose their parent directory.
 
 ### Optional LSP enrichment
 

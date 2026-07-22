@@ -12,7 +12,7 @@ It never uploads the repository being indexed.
 Use a fixed version in MCP configuration:
 
 ```sh
-npx -y codefacts@0.1.4 --install
+npx -y codefacts@0.1.5 --install
 ```
 
 The command prints the cached binary path. It is optional but recommended before
@@ -22,8 +22,14 @@ startup timeout.
 ## Run
 
 ```sh
-npx -y codefacts@0.1.4 mcp --root .
+npx -y codefacts@0.1.5 mcp --root .
 ```
+
+`--root` is a default project, not a limit on the MCP server. To inspect
+several local projects from one read-only server, start it without `--root` and
+pass an absolute `repository_root` argument to every `map`, `search`,
+`outline`, `expand`, or `path` call. Each selected project gets its own
+external index and every result reports `freshness.repository_root`.
 
 The launcher supports Windows x64, macOS x64/arm64, and Linux x64/arm64.
 It writes download progress only to stderr; stdout remains reserved for JSON-RPC.
