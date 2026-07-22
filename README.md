@@ -102,20 +102,45 @@ Release asset. The launcher downloads the matching release binary once,
 verifies its SHA-256 against the checksum embedded in the versioned npm package,
 and runs it locally over stdio. It does not upload the repository being indexed.
 
-### Online install (published releases)
+### Interactive agent install
 
-After a tagged release is published, prefetch its native binary before adding
-the MCP server. Node.js 18 or later is the only installation prerequisite; Rust
-is not required.
+Node.js 18 or later is the only installation prerequisite; Rust is not
+required. To configure the coding agents on this machine, run:
 
 ```powershell
-npx -y codefacts@0.1.6 --install
+npx --yes --prefer-online codefacts@latest install
 ```
 
-The command prints the local binary path. Pin the version in a shared MCP
-configuration so a future npm release cannot silently change the executable
-that starts in a coding session. `@latest` is acceptable for an interactive
-upgrade, but not the default for a checked-in project configuration.
+The installer detects and lets you choose among Codex, Claude Code, OpenCode,
+Cursor, and Gemini CLI. It displays the target configuration files and asks for
+confirmation before changing anything. It only creates or replaces the named
+`codefacts` MCP entry: it does not create project files, agent instruction
+files, permissions, indexes, hooks, watchers, or background processes.
+Before writing a selected configuration, it prefetches and checksum-verifies the
+resolved release; if that step fails, no agent configuration is changed.
+
+The installed user-wide server is rootless and uses:
+
+```text
+npx --yes --prefer-online codefacts@latest mcp
+```
+
+`--prefer-online` makes npm check the registry even when a package is cached,
+so the next MCP launch after a release uses the current `latest` package. The
+new launcher then downloads and checksum-verifies its matching native binary.
+This automatic-update mode needs registry access when an agent starts. For a
+checked-in, offline, or reproducible configuration, use a fixed
+`codefacts@<version>` manual configuration instead.
+
+### Prefetch a release binary (optional)
+
+To download and verify the currently resolved release before an agent starts:
+
+```powershell
+npx --yes --prefer-online codefacts@latest --install
+```
+
+The command prints the local binary path.
 
 The launcher supports Windows x64, macOS x64/arm64, and Linux x64/arm64.
 Its first download can take longer than a normal MCP startup, so prefetch it or
@@ -137,7 +162,13 @@ path in the MCP configuration below. The examples use `C:\Tools\codefacts.exe`;
 on macOS or Linux, use the equivalent absolute path such as
 `/usr/local/bin/codefacts`. Release assets use the same `codefacts` command.
 
-### Claude Code
+### Manual project configuration
+
+The examples below use the same automatic-update policy as the interactive
+installer. Replace `--prefer-online codefacts@latest` with `-y
+codefacts@<version>` when a project must pin its executable.
+
+#### Claude Code
 
 For a project-local online configuration, put this `.mcp.json` in the
 repository that you want Claude Code to inspect:
@@ -149,8 +180,9 @@ repository that you want Claude Code to inspect:
       "type": "stdio",
       "command": "npx",
       "args": [
-        "-y",
-        "codefacts@0.1.6",
+        "--yes",
+        "--prefer-online",
+        "codefacts@latest",
         "mcp",
         "--root",
         "${CLAUDE_PROJECT_DIR:-.}"
@@ -166,11 +198,11 @@ follows the project root. Project-scoped MCP servers require your approval on
 first use. Alternatively, add a fixed repository root from the CLI:
 
 ```powershell
-claude mcp add --scope project --transport stdio codefacts -- npx -y codefacts@0.1.6 mcp --root D:\WorkSpace\your-repository
+claude mcp add --scope project --transport stdio codefacts -- npx --yes --prefer-online codefacts@latest mcp --root D:\WorkSpace\your-repository
 claude mcp get codefacts
 ```
 
-### OpenCode
+#### OpenCode
 
 Add this `opencode.json` to the root of the repository to inspect. OpenCode
 resolves the local server `cwd` from that workspace, so `--root .` indexes that
@@ -182,7 +214,7 @@ repository rather than the CodeFacts checkout.
   "mcp": {
     "codefacts": {
       "type": "local",
-      "command": ["npx", "-y", "codefacts@0.1.6", "mcp", "--root", "."],
+      "command": ["npx", "--yes", "--prefer-online", "codefacts@latest", "mcp", "--root", "."],
       "cwd": ".",
       "enabled": true,
       "timeout": 120000
@@ -192,20 +224,20 @@ repository rather than the CodeFacts checkout.
 ```
 
 For user-wide configuration, place the same `mcp` entry in
-`~/.config/opencode/opencode.json` and set `cwd`/`--root` to the repository you
-want to index. Verify the connection with:
+`~/.config/opencode/opencode.jsonc` (or an existing `opencode.json`) and set
+`cwd`/`--root` to the repository you want to index. Verify the connection with:
 
 ```text
 opencode mcp list
 ```
 
-### Codex
+#### Codex
 
 For a fixed project, register a clearly named entry with an explicit root and
 a startup timeout that allows the first verified launcher download:
 
 ```powershell
-codex mcp add codefacts-opensession -- cmd /c npx -y codefacts@0.1.6 mcp --root D:\WorkSpace\OpenSession
+codex mcp add codefacts-opensession -- cmd /d /s /c npx --yes --prefer-online codefacts@latest mcp --root D:\WorkSpace\OpenSession
 ```
 
 Then set `startup_timeout_sec = 120` (or higher) for that named
@@ -219,7 +251,7 @@ codex mcp list
 For a user-wide server that needs to inspect several projects, omit `--root`:
 
 ```powershell
-codex mcp add codefacts -- cmd /c npx -y codefacts@0.1.6 mcp
+codex mcp add codefacts -- cmd /d /s /c npx --yes --prefer-online codefacts@latest mcp
 ```
 
 Then pass the absolute target directory in every tool call, for example

@@ -9,16 +9,22 @@ project's contract.
 ## What users run
 
 ```text
-npx -y codefacts@0.1.6 mcp --root .
+npx -y codefacts@0.1.7 mcp --root .
 ```
 
 The optional `--root` is a default project for existing single-project MCP
-configurations. A rootless `npx -y codefacts@0.1.6 mcp` server accepts an
+configurations. A rootless `npx -y codefacts@0.1.7 mcp` server accepts an
 explicit `repository_root` in each read-only tool call and creates a separate
 external SQLite state file for each selected project.
 
-The `codefacts` npm package contains no runtime dependencies and no source
-indexer. It is a Node.js launcher that:
+For an interactive, user-wide coding-agent installation, use
+`npx --yes --prefer-online codefacts@latest install`. That is intentionally a
+different policy from this version-pinned distribution example: it writes a
+rootless MCP command that asks npm to check `latest` at each agent startup.
+Shared, offline, and reproducible configurations should stay version-pinned.
+
+The `codefacts` npm package contains no source indexer. It is a Node.js
+launcher that:
 
 1. maps the local OS/architecture to one named GitHub Release asset;
 2. reads that asset's SHA-256 embedded in the same versioned npm package;
@@ -50,12 +56,15 @@ source checkout from silently trusting an unpinned release asset.
 
 ## Trust model
 
-The npm package is the initial trust root. It should remain small, dependency
-free, version-pinned, and published with npm provenance. The embedded SHA-256
-means a compromised or mutable GitHub Release asset is rejected unless its
-contents match the hash shipped with the npm package. Conversely, a compromised
-npm package can change the expected hash, so users should pin package versions
-and inspect provenance for upgrades.
+The npm package is the initial trust root. It should remain small, versioned,
+and published with npm provenance. Its only installer dependency is the
+MIT-licensed `jsonc-parser`, used to preserve comments and unrelated fields
+when the interactive installer updates JSONC agent configuration. The embedded
+SHA-256 means a compromised or mutable GitHub Release asset is rejected unless
+its contents match the hash shipped with the npm package. Conversely, a
+compromised npm package can change the expected hash, so users should pin
+package versions and inspect provenance for upgrades when reproducibility is
+required.
 
 The launcher uses an exclusive cache lock and an atomic rename to avoid two
 MCP clients publishing a partial download into the same cache. The verified
@@ -88,7 +97,7 @@ Before creating the first tag:
    a clean prefix without scripts, then completes a real stdio MCP handshake
    and source-backed search through the launcher.
 
-Then create and push a matching tag, for example `v0.1.6`. The workflow audits
+Then create and push a matching tag, for example `v0.1.7`. The workflow audits
 licenses, tests the Rust project, builds all assets, creates the GitHub Release
 with `SHA256SUMS`, stages a checksum-pinned npm tarball, and publishes it with
 provenance. A tag must not be considered an online-installable release until
