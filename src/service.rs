@@ -103,6 +103,17 @@ pub struct RelationshipFact {
     pub resolution: Option<String>,
 }
 
+/// Evidence for one hop in a successful `path` result.
+///
+/// Entries are ordered to match adjacent `path` nodes: entry `i` describes
+/// the confirmed static call from `path[i]` to `path[i + 1]`. The endpoint
+/// facts deliberately live only in `path`, avoiding a second copy of their
+/// evidence for every hop.
+#[derive(Debug, Serialize)]
+pub struct PathRelationshipFact {
+    pub evidence: Evidence,
+}
+
 #[derive(Debug, Serialize)]
 pub struct SemanticLocationFact {
     pub evidence: Evidence,
@@ -231,23 +242,16 @@ impl CodeFacts {
             indexed_languages.push(node.language);
         }
         let language_file_counts = self.store.get_language_file_counts()?;
-        let languages = language_file_counts.clone();
         let indexed_files = language_file_counts.values().sum::<usize>();
         let files_indexed_this_refresh = freshness.files_indexed;
 
         Ok(json!({
-            "repository": repository_root_identity(&self.root),
             "freshness": freshness,
-            // `files` and `languages` are retained as compact compatibility
-            // aliases. The explicit fields below make their meanings visible
-            // without comparing an all-time fact count to one refresh pass.
-            "files": stats.files,
             "files_with_facts": stats.files,
             "indexed_files": indexed_files,
             "files_indexed_this_refresh": files_indexed_this_refresh,
             "symbols": stats.nodes,
             "relationships": stats.edges,
-            "languages": languages,
             "language_file_counts": language_file_counts,
             "language_symbol_counts": language_symbol_counts,
             "symbol_kinds": kinds,
@@ -806,7 +810,7 @@ impl CodeFacts {
         from: &str,
         to: &str,
         previous: &HashMap<String, (String, CodeEdge)>,
-    ) -> Result<(Vec<SymbolFact>, Vec<RelationshipFact>)> {
+    ) -> Result<(Vec<SymbolFact>, Vec<PathRelationshipFact>)> {
         let mut ids = vec![to.to_string()];
         let mut edges = Vec::new();
         let mut cursor = to;
@@ -830,7 +834,7 @@ impl CodeFacts {
         }
         let relationships = edges
             .iter()
-            .map(|edge| self.relationship_fact(edge))
+            .map(|edge| self.path_relationship_fact(edge))
             .collect::<Result<Vec<_>>>()?;
         Ok((nodes, relationships))
     }
@@ -988,24 +992,34 @@ impl CodeFacts {
             kind: edge.kind.as_str().to_string(),
             from: self.symbol_fact(&from)?,
             to: self.symbol_fact(&to)?,
-            evidence: Evidence {
-                file_path: edge.file_path.clone(),
-                start_line: edge.line,
-                end_line: edge.line,
-                source_hash: self.source_hash(&edge.file_path)?,
-                extractor: extractor_for_edge(edge),
-                confidence: edge
-                    .metadata
-                    .as_ref()
-                    .and_then(|metadata| metadata.get("confidence"))
-                    .cloned()
-                    .unwrap_or_else(|| "static".to_string()),
-            },
+            evidence: self.edge_evidence(edge)?,
             resolution: edge
                 .metadata
                 .as_ref()
                 .and_then(|metadata| metadata.get("resolution"))
                 .cloned(),
+        })
+    }
+
+    fn path_relationship_fact(&self, edge: &CodeEdge) -> Result<PathRelationshipFact> {
+        Ok(PathRelationshipFact {
+            evidence: self.edge_evidence(edge)?,
+        })
+    }
+
+    fn edge_evidence(&self, edge: &CodeEdge) -> Result<Evidence> {
+        Ok(Evidence {
+            file_path: edge.file_path.clone(),
+            start_line: edge.line,
+            end_line: edge.line,
+            source_hash: self.source_hash(&edge.file_path)?,
+            extractor: extractor_for_edge(edge),
+            confidence: edge
+                .metadata
+                .as_ref()
+                .and_then(|metadata| metadata.get("confidence"))
+                .cloned()
+                .unwrap_or_else(|| "static".to_string()),
         })
     }
 

@@ -60,7 +60,7 @@ Version 1 deliberately exposes exactly five read-only tools:
 | `expand` | One definition plus static callers, candidate polymorphic callees, references, related tests, Markdown section text, and optional semantic references. |
 | `path` | A shortest bounded static calls path between confirmed symbols, with optional endpoint file-path disambiguation. |
 
-Every result is bounded, includes file/line/hash evidence, and refreshes the incremental index before answering. Its `freshness` object includes the canonical `repository_root` and fact-store `generation`, so a caller can verify that the facts belong to the intended project. A `no_static_path` result never claims that runtime execution is unreachable.
+Every result is bounded, includes file/line/hash evidence, and refreshes the incremental index before answering. Its `freshness` object includes the canonical `repository_root` and fact-store `generation`, so a caller can verify that the facts belong to the intended project. Successful MCP results keep a compact serialized JSON `TextContent` for older clients and carry the equivalent object in `structuredContent`. A `no_static_path` result never claims that runtime execution is unreachable.
 
 All five tools accept an optional `repository_root` project directory. It
 selects (and, on first use, indexes) that project's independent external SQLite
@@ -83,6 +83,9 @@ cannot provide that snapshot guarantee. `path` accepts `from_file_path` and `to_
 to distinguish same-named symbols. If the shortest confirmed path is longer
 than the requested response limit, it returns `path_too_long` with its length
 instead of sending an oversized path or claiming that no static path exists.
+For a successful path, `relationships[i].evidence` is the confirmed static
+call from `path[i]` to `path[i + 1]`; endpoint facts are represented only once
+in `path`.
 
 `map.unresolved_references` reports the count plus at most 20 source-backed
 unresolved import/reference samples. It describes a static-analysis gap; it
@@ -92,8 +95,12 @@ does not establish that a target is absent at runtime.
 least one fact, while `map.indexed_files` is every successfully parsed,
 supported source file. `map.files_indexed_this_refresh` is only the number
 parsed during the latest refresh. `language_file_counts` and
-`language_symbol_counts` make the two language measures explicit; legacy
-`languages` is the file-count alias.
+`language_symbol_counts` make the two language measures explicit. The prior
+redundant `map.repository`, `map.files`, and `map.languages` aliases are not
+returned; use `freshness.repository_root`, `files_with_facts`, and
+`language_file_counts` instead. Rust `struct` declarations retain the
+serialized kind `struct`, so `search` and `outline` kind filters match their
+source construct directly.
 
 ## Install
 
@@ -318,7 +325,8 @@ language server; it detects a separately installed supported server on `PATH`
 and uses an isolated stdio session only while expanding a matching symbol.
 `map` lists relevant providers as `deferred` without launching external
 processes; `expand` performs and caches the availability probe only for a
-matching supported symbol. `expand.references.semantic`
+matching supported symbol. That version probe has a 200 ms interactive budget;
+use `--lsp off` to skip it entirely. `expand.references.semantic`
 returns separately labeled semantic locations when the request succeeds.
 
 The initial providers are `rust-analyzer` for Rust and

@@ -141,15 +141,30 @@ fn stdio_server_exposes_only_the_five_source_backed_workflows() {
         .as_str()
         .expect("repository root identity");
     assert!(!repository_root.starts_with(r"\\?\"));
-    let repository = responses[2]["result"]["structuredContent"]["repository"]
-        .as_str()
-        .expect("repository identity");
-    assert_eq!(repository, repository_root);
+    let map = &responses[2]["result"]["structuredContent"];
+    assert!(
+        map.get("repository").is_none(),
+        "root is carried by freshness"
+    );
+    assert!(map.get("files").is_none(), "files alias was removed");
+    assert!(
+        map.get("languages").is_none(),
+        "languages alias was removed"
+    );
     assert!(responses[2]["result"]["structuredContent"]["freshness"]["generation"].is_i64());
     assert_eq!(
         responses[2]["result"]["structuredContent"]["unresolved_references"]["count"],
         0
     );
+    let map_text = responses[2]["result"]["content"][0]["text"]
+        .as_str()
+        .expect("compact map TextContent");
+    assert!(
+        !map_text.contains('\n'),
+        "TextContent should be compact JSON"
+    );
+    let map_from_text: Value = serde_json::from_str(map_text).expect("parse map TextContent");
+    assert_eq!(map_from_text, *map, "TextContent mirrors structuredContent");
     assert_eq!(
         responses[3]["result"]["structuredContent"]["results"][0]["name"],
         "helper"
@@ -168,6 +183,12 @@ fn stdio_server_exposes_only_the_five_source_backed_workflows() {
         responses[6]["result"]["structuredContent"]["path"][1]["name"],
         "helper"
     );
+    let first_path_hop = &responses[6]["result"]["structuredContent"]["relationships"][0];
+    assert!(
+        first_path_hop.get("from").is_none() && first_path_hop.get("to").is_none(),
+        "path endpoints are represented once in the ordered path"
+    );
+    assert_eq!(first_path_hop["evidence"]["file_path"], "src/lib.rs");
     assert_eq!(responses[7]["result"]["structuredContent"]["status"], "ok");
     assert_eq!(
         responses[8]["result"]["structuredContent"]["results"][0]["name"],
@@ -1038,7 +1059,9 @@ export function summarizeSession() {
     assert_eq!(map["indexed_files"], 1);
     assert_eq!(map["files_indexed_this_refresh"], 1);
     assert_eq!(map["language_file_counts"]["typescript"], 1);
-    assert_eq!(map["languages"]["typescript"], 1);
+    assert!(map.get("files").is_none());
+    assert!(map.get("languages").is_none());
+    assert!(map.get("repository").is_none());
     assert!(
         map["language_symbol_counts"]["typescript"]
             .as_u64()
@@ -1086,6 +1109,45 @@ export function summarizeSession() {
         .expect("top-level variable results")
         .iter()
         .all(|symbol| symbol["name"] != "session"));
+}
+
+#[test]
+fn rust_structs_are_searchable_as_structs() {
+    let repository = tempdir().expect("temporary repository");
+    fs::write(
+        repository.path().join("lib.rs"),
+        "pub struct IndexedConfig { pub port: u16 }\n",
+    )
+    .expect("Rust struct fixture");
+    let facts = CodeFacts::open(repository.path(), repository.path().join("external.sqlite"))
+        .expect("open source-backed facts");
+
+    let structs = facts
+        .search_with_page_scope_options(
+            "IndexedConfig",
+            Some(NodeKind::Struct),
+            None,
+            SymbolScope::TopLevel,
+            0,
+            None,
+            Some(20),
+        )
+        .expect("search Rust struct");
+    assert_eq!(structs["results"][0]["name"], "IndexedConfig");
+    assert_eq!(structs["results"][0]["kind"], "struct");
+
+    let classes = facts
+        .search_with_page_scope_options(
+            "IndexedConfig",
+            Some(NodeKind::Class),
+            None,
+            SymbolScope::TopLevel,
+            0,
+            None,
+            Some(20),
+        )
+        .expect("search Rust struct as class");
+    assert!(classes["results"].as_array().is_some_and(Vec::is_empty));
 }
 
 #[test]

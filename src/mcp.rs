@@ -192,7 +192,11 @@ fn optional_symbol_scope(arguments: &Map<String, Value>) -> Result<Option<Symbol
 }
 
 fn tool_result(value: Value) -> Value {
-    let text = serde_json::to_string_pretty(&value).unwrap_or_else(|_| value.to_string());
+    // MCP clients that do not consume `structuredContent` still need the
+    // complete serialized result in TextContent. Keep that compatibility
+    // payload compact: pretty-printing repeats structural whitespace without
+    // adding any source-backed fact.
+    let text = serde_json::to_string(&value).unwrap_or_else(|_| value.to_string());
     json!({
         "content": [{ "type": "text", "text": text }],
         "structuredContent": value,

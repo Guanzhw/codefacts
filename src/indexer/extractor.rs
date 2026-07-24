@@ -36,6 +36,7 @@ fn definition_kind(capture_name: &str) -> Option<NodeKind> {
         "definition.function" => Some(NodeKind::Function),
         "definition.class" => Some(NodeKind::Class),
         "definition.class_with_heritage" => Some(NodeKind::Class),
+        "definition.struct" => Some(NodeKind::Struct),
         "definition.method" => Some(NodeKind::Method),
         "definition.interface" => Some(NodeKind::Interface),
         "definition.interface_extends" => Some(NodeKind::Interface),
@@ -1586,11 +1587,8 @@ struct Config {
 
         let config = nodes
             .iter()
-            .find(|n| n.name == "Config" && n.kind == NodeKind::Class);
-        assert!(
-            config.is_some(),
-            "should find Config struct (mapped to Class)"
-        );
+            .find(|n| n.name == "Config" && n.kind == NodeKind::Struct);
+        assert!(config.is_some(), "should find Config as a Rust struct");
     }
 
     #[test]

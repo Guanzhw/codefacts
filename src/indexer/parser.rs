@@ -1630,6 +1630,10 @@ in {
             names.contains(&"definition.function"),
             "Rust missing @definition.function"
         );
+        assert!(
+            names.contains(&"definition.struct"),
+            "Rust missing @definition.struct"
+        );
     }
 
     #[test]

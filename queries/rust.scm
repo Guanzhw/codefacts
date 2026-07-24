@@ -1,7 +1,7 @@
 ; =============================================================================
 ; CodeGraph: Rust Tree-sitter Queries
 ; =============================================================================
-; Captures: @definition.function, @definition.class (struct), @definition.method,
+; Captures: @definition.function, @definition.struct, @definition.method,
 ;           @definition.interface (trait), @definition.enum, @definition.type,
 ;           @definition.variable, @name, @reference.call, @reference.import,
 ;           @reference.type
@@ -13,10 +13,10 @@
   name: (identifier) @name) @definition.function
 
 ; ---------------------------------------------------------------------------
-; Structs -> mapped to @definition.class
+; Structs
 ; ---------------------------------------------------------------------------
 (struct_item
-  name: (type_identifier) @name) @definition.class
+  name: (type_identifier) @name) @definition.struct
 
 ; ---------------------------------------------------------------------------
 ; Enums

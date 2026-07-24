@@ -9,7 +9,7 @@ use rusqlite::{Connection, OptionalExtension};
 /// complete or changes their meaning even though the SQLite table shape is
 /// unchanged. Existing indexes then make one safe full source pass instead of
 /// silently serving pre-change facts from unchanged file hashes.
-const FACT_EXTRACTION_VERSION: &str = "2";
+const FACT_EXTRACTION_VERSION: &str = "3";
 
 // ---------------------------------------------------------------------------
 // DDL constants — kept as separate strings so each statement can be executed

@@ -17,7 +17,7 @@ fn eval_fixture_preserves_source_backed_facts_with_a_generous_performance_budget
         started.elapsed() < Duration::from_secs(5),
         "the small fixed fixture should not take multiple seconds to index"
     );
-    assert_eq!(map["files"], 11);
+    assert_eq!(map["indexed_files"], 11);
     assert!(map["symbols"].as_u64().unwrap_or_default() >= 86);
     assert!(map["relationships"].as_u64().unwrap_or_default() >= 362);
 

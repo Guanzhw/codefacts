@@ -21,7 +21,9 @@ use serde_json::{json, Value};
 
 use crate::types::{CodeNode, Language};
 
-const PROBE_TIMEOUT: Duration = Duration::from_millis(750);
+// A version check should be effectively instantaneous. Keep a missing or
+// hung optional provider from dominating the first `expand` response.
+const PROBE_TIMEOUT: Duration = Duration::from_millis(200);
 const REQUEST_TIMEOUT: Duration = Duration::from_secs(4);
 
 const RUST_LANGUAGES: &[Language] = &[Language::Rust];
@@ -98,7 +100,6 @@ struct LspProvider {
 #[derive(Debug, Serialize)]
 pub struct LspReport {
     pub mode: &'static str,
-    pub behavior: &'static str,
     pub servers: Vec<LspServerReport>,
     pub unsupported_languages: Vec<String>,
 }
@@ -194,9 +195,7 @@ impl LspManager {
                             command: provider_command(provider),
                             languages: provider.languages.iter().map(Language::as_str).collect(),
                             status: "deferred",
-                            detail: Some(
-                                "availability is probed only by a supported expand request".into(),
-                            ),
+                            detail: None,
                         }
                     }
                 })
@@ -205,12 +204,6 @@ impl LspManager {
 
         LspReport {
             mode: self.mode.as_str(),
-            behavior: match self.mode {
-                LspMode::Auto => {
-                    "CodeFacts probes a separately installed server only for a supported expand request."
-                }
-                LspMode::Off => "LSP probing and enrichment are disabled by --lsp off.",
-            },
             servers,
             unsupported_languages,
         }
@@ -374,7 +367,10 @@ fn probe(provider: &LspProvider) -> LspAvailability {
             Ok(None) => {
                 let _ = child.kill();
                 let _ = child.wait();
-                return LspAvailability::Unusable("the version probe timed out".to_string());
+                return LspAvailability::Unusable(format!(
+                    "the version probe exceeded the {} ms budget",
+                    PROBE_TIMEOUT.as_millis()
+                ));
             }
             Err(_) => {
                 return LspAvailability::Unusable(
@@ -754,6 +750,22 @@ mod tests {
         assert_eq!(LspMode::parse("auto"), Some(LspMode::Auto));
         assert_eq!(LspMode::parse("off"), Some(LspMode::Off));
         assert_eq!(LspMode::parse("required"), None);
+    }
+
+    #[test]
+    fn deferred_lsp_report_is_compact() {
+        let manager = LspManager::new(LspMode::Auto);
+        let report = serde_json::to_value(manager.report([Language::Rust], false))
+            .expect("serialize deferred LSP report");
+        assert_eq!(report["mode"], "auto");
+        assert!(report.get("behavior").is_none());
+        assert_eq!(report["servers"][0]["status"], "deferred");
+        assert!(report["servers"][0].get("detail").is_none());
+    }
+
+    #[test]
+    fn version_probe_budget_stays_within_interactive_expand_expectations() {
+        assert!(PROBE_TIMEOUT <= Duration::from_millis(250));
     }
 
     #[test]
