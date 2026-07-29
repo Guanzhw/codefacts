@@ -335,7 +335,7 @@ need a compatible `typescript` installation that provides `tsserver`; a local
 workspace installation takes precedence. Use `--lsp off` to prevent all LSP
 probing and child processes while retaining the same static facts.
 
-No repository hooks, watchers, background server, generated agent instructions, or prompt injection are installed or started.
+No repository hooks, watchers, background server, generated agent instructions, or prompt injection are installed or started. CodeFacts serves both initialization-based clients and stateless MCP `2026-07-28` clients; its `initialize` and `server/discover` responses deliberately omit `instructions`, so it never tells a host agent to prefer it or injects context into the agent's prompt.
 
 For development from source, run `cargo build --release`; published builds are
 intended to be a single native binary for Windows, macOS, and Linux.

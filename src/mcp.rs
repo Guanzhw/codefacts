@@ -11,7 +11,26 @@ use crate::error::{CodeFactsError, Result};
 use crate::service::{CodeFactsRegistry, SymbolScope};
 use crate::types::NodeKind;
 
-const PROTOCOL_VERSION: &str = "2024-11-05";
+const LEGACY_PROTOCOL_VERSION: &str = "2025-11-25";
+const ORIGINAL_LEGACY_PROTOCOL_VERSION: &str = "2024-11-05";
+const MODERN_PROTOCOL_VERSION: &str = "2026-07-28";
+const PROTOCOL_VERSION_META_KEY: &str = "io.modelcontextprotocol/protocolVersion";
+const CLIENT_INFO_META_KEY: &str = "io.modelcontextprotocol/clientInfo";
+const CLIENT_CAPABILITIES_META_KEY: &str = "io.modelcontextprotocol/clientCapabilities";
+const SERVER_INFO_META_KEY: &str = "io.modelcontextprotocol/serverInfo";
+
+#[derive(Clone, Copy)]
+enum ProtocolEra {
+    Legacy,
+    Modern,
+}
+
+enum ProtocolSelection {
+    Legacy,
+    Modern,
+    Invalid(String),
+    Unsupported(String),
+}
 
 pub fn serve(projects: &mut CodeFactsRegistry) -> Result<()> {
     let stdin = io::stdin();
@@ -43,11 +62,22 @@ pub fn serve(projects: &mut CodeFactsRegistry) -> Result<()> {
 fn handle_request(projects: &mut CodeFactsRegistry, request: Value) -> Option<Value> {
     let id = request.get("id").cloned();
     let method = request.get("method").and_then(Value::as_str);
+    let protocol = match select_protocol(&request) {
+        ProtocolSelection::Legacy => ProtocolEra::Legacy,
+        ProtocolSelection::Modern => ProtocolEra::Modern,
+        ProtocolSelection::Invalid(message) => {
+            return id.map(|id| json_rpc_error(id, -32602, &message));
+        }
+        ProtocolSelection::Unsupported(requested) => {
+            return id.map(|id| unsupported_protocol_version_error(id, &requested));
+        }
+    };
     let response = match method {
-        Some("initialize") => json!({
-            "protocolVersion": PROTOCOL_VERSION,
+        Some("server/discover") if matches!(protocol, ProtocolEra::Modern) => discovery_result(),
+        Some("initialize") if matches!(protocol, ProtocolEra::Legacy) => json!({
+            "protocolVersion": legacy_protocol_version(&request),
             "capabilities": { "tools": {} },
-            "serverInfo": { "name": "codefacts", "version": env!("CARGO_PKG_VERSION") }
+            "serverInfo": server_info()
         }),
         Some("tools/list") => json!({ "tools": tool_definitions() }),
         Some("tools/call") => match call_tool(projects, request.get("params")) {
@@ -58,7 +88,111 @@ fn handle_request(projects: &mut CodeFactsRegistry, request: Value) -> Option<Va
         Some(_) => return id.map(|id| json_rpc_error(id, -32601, "method not found")),
         None => return id.map(|id| json_rpc_error(id, -32600, "request has no method")),
     };
+    let response = match protocol {
+        ProtocolEra::Legacy => response,
+        ProtocolEra::Modern => complete_result(response),
+    };
     id.map(|id| json!({ "jsonrpc": "2.0", "id": id, "result": response }))
+}
+
+fn select_protocol(request: &Value) -> ProtocolSelection {
+    let method = request.get("method").and_then(Value::as_str);
+    let meta = request
+        .get("params")
+        .and_then(Value::as_object)
+        .and_then(|params| params.get("_meta"))
+        .and_then(Value::as_object);
+    let has_modern_claim = meta.is_some_and(|meta| {
+        meta.contains_key(PROTOCOL_VERSION_META_KEY)
+            || meta.contains_key(CLIENT_INFO_META_KEY)
+            || meta.contains_key(CLIENT_CAPABILITIES_META_KEY)
+    });
+
+    if method != Some("server/discover") && !has_modern_claim {
+        return ProtocolSelection::Legacy;
+    }
+
+    let Some(meta) = meta else {
+        return ProtocolSelection::Invalid(
+            "2026-07-28 requests require params._meta with protocolVersion and clientCapabilities"
+                .into(),
+        );
+    };
+    let Some(version) = meta.get(PROTOCOL_VERSION_META_KEY).and_then(Value::as_str) else {
+        return ProtocolSelection::Invalid(format!(
+            "2026-07-28 requests require params._meta.{PROTOCOL_VERSION_META_KEY}"
+        ));
+    };
+    if version != MODERN_PROTOCOL_VERSION {
+        return ProtocolSelection::Unsupported(version.to_owned());
+    }
+    if !meta
+        .get(CLIENT_CAPABILITIES_META_KEY)
+        .is_some_and(Value::is_object)
+    {
+        return ProtocolSelection::Invalid(format!(
+            "2026-07-28 requests require object params._meta.{CLIENT_CAPABILITIES_META_KEY}"
+        ));
+    }
+    if let Some(client_info) = meta.get(CLIENT_INFO_META_KEY) {
+        let valid = client_info.as_object().is_some_and(|info| {
+            info.get("name").and_then(Value::as_str).is_some()
+                && info.get("version").and_then(Value::as_str).is_some()
+        });
+        if !valid {
+            return ProtocolSelection::Invalid(format!(
+                "params._meta.{CLIENT_INFO_META_KEY} must contain string name and version when present"
+            ));
+        }
+    }
+    ProtocolSelection::Modern
+}
+
+fn discovery_result() -> Value {
+    json!({
+        "supportedVersions": supported_protocol_versions(),
+        "capabilities": { "tools": {} }
+    })
+}
+
+fn legacy_protocol_version(request: &Value) -> &str {
+    match request
+        .get("params")
+        .and_then(Value::as_object)
+        .and_then(|params| params.get("protocolVersion"))
+        .and_then(Value::as_str)
+    {
+        Some(ORIGINAL_LEGACY_PROTOCOL_VERSION) => ORIGINAL_LEGACY_PROTOCOL_VERSION,
+        _ => LEGACY_PROTOCOL_VERSION,
+    }
+}
+
+fn supported_protocol_versions() -> Vec<&'static str> {
+    vec![
+        MODERN_PROTOCOL_VERSION,
+        LEGACY_PROTOCOL_VERSION,
+        ORIGINAL_LEGACY_PROTOCOL_VERSION,
+    ]
+}
+
+fn server_info() -> Value {
+    json!({ "name": "codefacts", "version": env!("CARGO_PKG_VERSION") })
+}
+
+fn complete_result(mut result: Value) -> Value {
+    let object = result
+        .as_object_mut()
+        .expect("all CodeFacts MCP results are JSON objects");
+    object.insert("resultType".into(), Value::String("complete".into()));
+    let meta = object
+        .entry("_meta")
+        .or_insert_with(|| Value::Object(Map::new()));
+    if let Some(meta) = meta.as_object_mut() {
+        meta.insert(SERVER_INFO_META_KEY.into(), server_info());
+    } else {
+        *meta = json!({ SERVER_INFO_META_KEY: server_info() });
+    }
+    result
 }
 
 fn call_tool(projects: &mut CodeFactsRegistry, params: Option<&Value>) -> Result<Value> {
@@ -213,6 +347,21 @@ fn tool_error(message: &str) -> Value {
 
 fn json_rpc_error(id: Value, code: i32, message: &str) -> Value {
     json!({ "jsonrpc": "2.0", "id": id, "error": { "code": code, "message": message } })
+}
+
+fn unsupported_protocol_version_error(id: Value, requested: &str) -> Value {
+    json!({
+        "jsonrpc": "2.0",
+        "id": id,
+        "error": {
+            "code": -32022,
+            "message": "Unsupported protocol version",
+            "data": {
+                "supported": supported_protocol_versions(),
+                "requested": requested
+            }
+        }
+    })
 }
 
 fn write_json(output: &mut impl Write, value: Value) -> Result<()> {

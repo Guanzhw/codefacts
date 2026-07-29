@@ -96,6 +96,15 @@ fn stdio_server_exposes_only_the_five_source_backed_workflows() {
         .collect::<Vec<_>>();
     assert_eq!(responses.len(), 12);
 
+    let initialize = responses[0]["result"]
+        .as_object()
+        .expect("initialize result");
+    assert_eq!(initialize["serverInfo"]["name"], "codefacts");
+    assert!(
+        !initialize.contains_key("instructions"),
+        "CodeFacts must not inject agent instructions through MCP initialization"
+    );
+
     let tools = responses[1]["result"]["tools"]
         .as_array()
         .expect("tool list");
