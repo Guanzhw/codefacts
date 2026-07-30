@@ -91,6 +91,8 @@ fn stdio_server_supports_stateless_2026_07_28_requests() {
 
     let listed = &responses[1]["result"];
     assert_eq!(listed["resultType"], "complete");
+    assert_eq!(listed["ttlMs"], 0);
+    assert_eq!(listed["cacheScope"], "private");
     assert_eq!(listed["tools"].as_array().expect("tools").len(), 5);
     assert_eq!(
         listed["_meta"]["io.modelcontextprotocol/serverInfo"]["name"],

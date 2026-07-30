@@ -113,6 +113,8 @@ fn stdio_server_exposes_only_the_five_source_backed_workflows() {
     let tools = responses[1]["result"]["tools"]
         .as_array()
         .expect("tool list");
+    assert_eq!(responses[1]["result"]["ttlMs"], 0);
+    assert_eq!(responses[1]["result"]["cacheScope"], "private");
     let names = tools
         .iter()
         .map(|tool| tool["name"].as_str().expect("tool name"))

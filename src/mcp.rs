@@ -18,6 +18,12 @@ const PROTOCOL_VERSION_META_KEY: &str = "io.modelcontextprotocol/protocolVersion
 const CLIENT_INFO_META_KEY: &str = "io.modelcontextprotocol/clientInfo";
 const CLIENT_CAPABILITIES_META_KEY: &str = "io.modelcontextprotocol/clientCapabilities";
 const SERVER_INFO_META_KEY: &str = "io.modelcontextprotocol/serverInfo";
+// `tools/list` is a cacheable result in the 2026-07-28 protocol. Keep the
+// advertised tool surface private and immediately stale: CodeFacts refreshes
+// its source facts on demand, and clients must not reuse a list across users
+// or configuration changes.
+const TOOL_LIST_CACHE_TTL_MS: u64 = 0;
+const TOOL_LIST_CACHE_SCOPE: &str = "private";
 
 #[derive(Clone, Copy)]
 enum ProtocolEra {
@@ -79,7 +85,11 @@ fn handle_request(projects: &mut CodeFactsRegistry, request: Value) -> Option<Va
             "capabilities": { "tools": {} },
             "serverInfo": server_info()
         }),
-        Some("tools/list") => json!({ "tools": tool_definitions() }),
+        Some("tools/list") => json!({
+            "tools": tool_definitions(),
+            "ttlMs": TOOL_LIST_CACHE_TTL_MS,
+            "cacheScope": TOOL_LIST_CACHE_SCOPE
+        }),
         Some("tools/call") => match call_tool(projects, request.get("params")) {
             Ok(value) => tool_result(value),
             Err(error) => tool_error(&error.to_string()),
