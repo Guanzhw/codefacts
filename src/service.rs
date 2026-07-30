@@ -23,9 +23,13 @@ use crate::types::{CodeEdge, CodeNode, EdgeKind, NodeKind};
 
 const DEFAULT_LIMIT: usize = 20;
 const MAX_LIMIT: usize = 50;
+const DEFAULT_CONTEXT_LIMIT: usize = 1;
+const MAX_CONTEXT_LIMIT: usize = 3;
+const CONTEXT_RELATIONSHIP_LIMIT: usize = 5;
 const UNRESOLVED_REFERENCE_SAMPLE_LIMIT: usize = 20;
 const PATH_SEARCH_VISIT_LIMIT: usize = MAX_LIMIT * 100;
 const MAX_MARKDOWN_SECTION_RESPONSE_LEN: usize = 2 * 1024;
+const MAX_DEFINITION_SOURCE_RESPONSE_LEN: usize = 4 * 1024;
 
 /// A CodeFacts index rooted at one repository.
 #[derive(Debug)]
@@ -161,6 +165,34 @@ impl SymbolScope {
         match input {
             "top_level" => Some(Self::TopLevel),
             "all" => Some(Self::All),
+            _ => None,
+        }
+    }
+}
+
+/// Response detail for a `search` result page.
+///
+/// The default remains compact structural facts. `Context` adds a bounded
+/// source-backed neighborhood for the highest-ranked results without adding a
+/// separate broad exploration tool.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SearchDetail {
+    Facts,
+    Context,
+}
+
+impl SearchDetail {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Facts => "facts",
+            Self::Context => "context",
+        }
+    }
+
+    pub fn parse(input: &str) -> Option<Self> {
+        match input {
+            "facts" => Some(Self::Facts),
+            "context" => Some(Self::Context),
             _ => None,
         }
     }
@@ -314,8 +346,44 @@ impl CodeFacts {
         cursor: Option<&str>,
         limit: Option<usize>,
     ) -> Result<Value> {
+        self.search_with_page_scope_detail_options(
+            query,
+            kind,
+            path_prefix,
+            symbol_scope,
+            SearchDetail::Facts,
+            DEFAULT_CONTEXT_LIMIT,
+            offset,
+            cursor,
+            limit,
+        )
+    }
+
+    /// Search with an explicit compact or context-rich response projection.
+    ///
+    /// Context entries are deliberately separate from the stable `results`
+    /// array so existing consumers can continue to parse every result as a
+    /// `SymbolFact`.
+    #[allow(clippy::too_many_arguments)] // Mirrors the individually optional MCP arguments.
+    pub fn search_with_page_scope_detail_options(
+        &self,
+        query: &str,
+        kind: Option<NodeKind>,
+        path_prefix: Option<&str>,
+        symbol_scope: SymbolScope,
+        detail: SearchDetail,
+        context_limit: usize,
+        offset: usize,
+        cursor: Option<&str>,
+        limit: Option<usize>,
+    ) -> Result<Value> {
         let freshness = self.refresh()?;
         let limit = bounded_limit(limit);
+        let context_limit = if detail == SearchDetail::Context {
+            context_limit.clamp(1, MAX_CONTEXT_LIMIT)
+        } else {
+            DEFAULT_CONTEXT_LIMIT
+        };
         let path_prefix = path_prefix
             .map(|prefix| self.normalized_path_prefix(prefix))
             .transpose()?
@@ -332,6 +400,8 @@ impl CodeFacts {
             kind.map(|kind| kind.as_str()).unwrap_or(""),
             path_prefix.as_deref().unwrap_or(""),
             symbol_scope.as_str(),
+            detail.as_str(),
+            &context_limit.to_string(),
         ]);
         let offset = match page_offset(cursor, offset, freshness.generation, &scope)? {
             PageOffset::Current(offset) => offset,
@@ -366,11 +436,14 @@ impl CodeFacts {
         // Put exact names first so a common identifier does not get pushed out
         // of the bounded FTS result set by comments, signatures, or file paths.
         // Filtering and paging happen after this ordering is established.
-        let exact_name = query.trim();
-        let mut exact_nodes = self.store.get_nodes_by_name(exact_name)?;
-        exact_nodes.retain(|node| node_matches_filters(node, filters.kind, filters.path_prefix));
-        self.filter_nodes_by_scope(&mut exact_nodes, filters.symbol_scope)?;
+        let exact_nodes = self.exact_search_nodes(query, filters)?;
         let exact_count = exact_nodes.len();
+        let mut exact_node_names = exact_nodes
+            .iter()
+            .map(|node| node.name.clone())
+            .collect::<Vec<_>>();
+        exact_node_names.sort();
+        exact_node_names.dedup();
 
         // Fetch one additional item to say whether the caller can continue.
         let page_capacity = limit.saturating_add(1);
@@ -387,19 +460,34 @@ impl CodeFacts {
         if nodes.len() < page_capacity {
             let fts_offset = offset.saturating_sub(exact_count);
             let remaining = page_capacity - nodes.len();
-            nodes.extend(
-                self.search_fts_nodes(&fts_query, exact_name, filters, fts_offset, remaining)?,
-            );
+            nodes.extend(self.search_fts_nodes(
+                &fts_query,
+                filters,
+                &exact_node_names,
+                fts_offset,
+                remaining,
+            )?);
         }
 
         let has_more = nodes.len() > limit;
         nodes.truncate(limit);
+        let context_entries = if detail == SearchDetail::Context {
+            nodes
+                .iter()
+                .take(context_limit)
+                .map(|node| self.context_entry(node))
+                .collect::<Result<Vec<_>>>()?
+        } else {
+            Vec::new()
+        };
+        let context_entries_truncated =
+            detail == SearchDetail::Context && nodes.len() > context_entries.len();
         let results = nodes
             .iter()
             .map(|node| self.symbol_fact(node))
             .collect::<Result<Vec<_>>>()?;
 
-        Ok(json!({
+        let mut result = json!({
             "freshness": freshness,
             "query": query,
             "scope": symbol_scope.as_str(),
@@ -408,7 +496,26 @@ impl CodeFacts {
             "next_cursor": has_more.then(|| encode_page_cursor(freshness.generation, offset.saturating_add(limit), &scope)).transpose()?,
             "next_offset": has_more.then_some(offset.saturating_add(limit)),
             "bounded_by": limit,
-        }))
+        });
+        if detail == SearchDetail::Context {
+            let object = result
+                .as_object_mut()
+                .expect("search results are always JSON objects");
+            object.insert("context_entries".into(), Value::Array(context_entries));
+            object.insert(
+                "context_entries_truncated".into(),
+                Value::Bool(context_entries_truncated),
+            );
+            object.insert(
+                "context_bounded_by".into(),
+                json!({
+                    "entries": context_limit,
+                    "relationships_per_entry": CONTEXT_RELATIONSHIP_LIMIT,
+                    "source_bytes_per_entry": MAX_DEFINITION_SOURCE_RESPONSE_LEN,
+                }),
+            );
+        }
+        Ok(result)
     }
 
     pub fn outline(&self, file_path: &str, limit: Option<usize>) -> Result<Value> {
@@ -547,11 +654,13 @@ impl CodeFacts {
         let tests = self.related_tests(&node, limit)?;
         let semantic_references = self.semantic_references(&node, limit)?;
         let section = markdown_section(&node);
+        let source = self.definition_source(&node, MAX_DEFINITION_SOURCE_RESPONSE_LEN)?;
 
         Ok(json!({
             "freshness": freshness,
             "status": "ok",
             "definition": self.symbol_fact(&node)?,
+            "source": source,
             "section": section,
             "callers": callers,
             "callees": callees,
@@ -716,21 +825,25 @@ impl CodeFacts {
     fn search_fts_nodes(
         &self,
         fts_query: &str,
-        exact_name: &str,
         filters: SearchFilters<'_>,
+        excluded_node_names: &[String],
         offset: usize,
         limit: usize,
     ) -> Result<Vec<CodeNode>> {
         let mut query = String::from(
             "SELECT nodes.* FROM fts_nodes
              JOIN nodes ON nodes.rowid = fts_nodes.rowid
-             WHERE fts_nodes MATCH ?
-               AND nodes.name <> ?",
+             WHERE fts_nodes MATCH ?",
         );
-        let mut values = vec![
-            SqlValue::Text(fts_query.to_string()),
-            SqlValue::Text(exact_name.to_string()),
-        ];
+        let mut values = vec![SqlValue::Text(fts_query.to_string())];
+
+        if !excluded_node_names.is_empty() {
+            let placeholders = std::iter::repeat_n("?", excluded_node_names.len())
+                .collect::<Vec<_>>()
+                .join(", ");
+            query.push_str(&format!(" AND nodes.name NOT IN ({placeholders})"));
+            values.extend(excluded_node_names.iter().cloned().map(SqlValue::Text));
+        }
 
         if let Some(kind) = filters.kind {
             query.push_str(" AND nodes.type = ?");
@@ -779,6 +892,58 @@ impl CodeFacts {
         let rows = statement.query_and_then(params_from_iter(values.iter()), row_to_code_node)?;
         rows.collect::<std::result::Result<Vec<_>, _>>()
             .map_err(Into::into)
+    }
+
+    /// Return exact direct-name matches before FTS results. In addition to an
+    /// exact whole-query match, a short natural-language query can carry a
+    /// high-signal CamelCase, PascalCase, or snake_case identifier. Those
+    /// identifiers remain verifiable facts rather than a fuzzy semantic guess.
+    fn exact_search_nodes(&self, query: &str, filters: SearchFilters<'_>) -> Result<Vec<CodeNode>> {
+        let mut names = Vec::new();
+        let exact_query = query.trim();
+        if !exact_query.is_empty() {
+            names.push(exact_query);
+        }
+        names.extend(
+            query_tokens(query)
+                .into_iter()
+                .filter(|token| is_identifier_anchor(token)),
+        );
+
+        let mut seen_names = HashSet::new();
+        let mut seen_nodes = HashSet::new();
+        let mut exact_nodes = Vec::new();
+        for name in names {
+            if !seen_names.insert(name) {
+                continue;
+            }
+            let mut candidates = self.store.get_nodes_by_name(name)?;
+            candidates.retain(|node| node_matches_filters(node, filters.kind, filters.path_prefix));
+            self.filter_nodes_by_scope(&mut candidates, filters.symbol_scope)?;
+            exact_nodes.extend(
+                candidates
+                    .into_iter()
+                    .filter(|node| seen_nodes.insert(node.id.clone())),
+            );
+        }
+        Ok(exact_nodes)
+    }
+
+    /// Enrich one search candidate without starting optional LSP processes.
+    /// The entry intentionally exposes direct static facts only; semantic
+    /// references remain an explicit `expand` request with their own status.
+    fn context_entry(&self, node: &CodeNode) -> Result<Value> {
+        Ok(json!({
+            "symbol": self.symbol_fact(node)?,
+            "source": self.definition_source(node, MAX_DEFINITION_SOURCE_RESPONSE_LEN)?,
+            "callers": self.relationships_to(node, true, Some(EdgeKind::Calls), CONTEXT_RELATIONSHIP_LIMIT)?,
+            "callees": self.relationships_to(node, false, Some(EdgeKind::Calls), CONTEXT_RELATIONSHIP_LIMIT)?,
+            "references": {
+                "inbound": self.relationships_to(node, true, Some(EdgeKind::References), CONTEXT_RELATIONSHIP_LIMIT)?,
+                "outbound": self.relationships_to(node, false, Some(EdgeKind::References), CONTEXT_RELATIONSHIP_LIMIT)?,
+            },
+            "tests": self.related_tests(node, CONTEXT_RELATIONSHIP_LIMIT)?,
+        }))
     }
 
     fn path_resolution_result(
@@ -1041,6 +1206,97 @@ impl CodeFacts {
         })
     }
 
+    /// Return a definition-only source excerpt whose bytes are verified against
+    /// the hash carried by the symbol's stored evidence. This is intentionally
+    /// an on-demand projection: source text does not become a second canonical
+    /// copy inside the fact store.
+    fn definition_source(&self, node: &CodeNode, max_bytes: usize) -> Result<Value> {
+        let source_path = self.root.join(&node.file_path);
+        let canonical_source = match source_path.canonicalize() {
+            Ok(path) if path.starts_with(&self.root) => path,
+            Ok(_) => {
+                return Ok(json!({
+                    "status": "unavailable",
+                    "message": "The indexed definition source no longer resolves inside the selected repository.",
+                }));
+            }
+            Err(_) => {
+                return Ok(json!({
+                    "status": "unavailable",
+                    "message": "The indexed definition source could not be read after refresh.",
+                }));
+            }
+        };
+        let content = match fs::read_to_string(canonical_source) {
+            Ok(content) => content,
+            Err(_) => {
+                return Ok(json!({
+                    "status": "unavailable",
+                    "message": "The indexed definition source could not be read after refresh.",
+                }));
+            }
+        };
+        let Some(expected_hash) = self.source_hash(&node.file_path)? else {
+            return Ok(json!({
+                "status": "unavailable",
+                "message": "The indexed definition has no source hash to verify a source excerpt.",
+            }));
+        };
+        let actual_hash = hex::encode(Sha256::digest(content.as_bytes()));
+        if actual_hash != expected_hash {
+            return Ok(json!({
+                "status": "changed_during_query",
+                "message": "The source changed after the index refresh; retry to receive an excerpt that matches the evidence hash.",
+            }));
+        }
+
+        let start_line = node.start_line.max(1);
+        let definition_end_line = node.end_line.max(start_line);
+        let mut text = String::new();
+        let mut returned_end_line = start_line.saturating_sub(1);
+        let mut found_start = false;
+        for (index, line) in content.split_inclusive('\n').enumerate() {
+            let line_number = u32::try_from(index + 1).unwrap_or(u32::MAX);
+            if line_number < start_line {
+                continue;
+            }
+            if line_number > definition_end_line {
+                break;
+            }
+            found_start = true;
+            if text.len().saturating_add(line.len()) > max_bytes {
+                if text.is_empty() {
+                    let end = line.floor_char_boundary(line.len().min(max_bytes));
+                    text.push_str(&line[..end]);
+                    if end > 0 {
+                        returned_end_line = line_number;
+                    }
+                }
+                break;
+            }
+            text.push_str(line);
+            returned_end_line = line_number;
+        }
+
+        if !found_start || returned_end_line < start_line {
+            return Ok(json!({
+                "status": "unavailable",
+                "message": "The indexed definition range is no longer available in the verified source file.",
+            }));
+        }
+
+        let byte_length = text.len();
+        Ok(json!({
+            "status": "ok",
+            "start_line": start_line,
+            "end_line": returned_end_line,
+            "definition_end_line": definition_end_line,
+            "text": text,
+            "byte_length": byte_length,
+            "truncated": returned_end_line < definition_end_line,
+        }))
+    }
+
     fn source_hash(&self, file_path: &str) -> Result<Option<String>> {
         let mut statement = self
             .store
@@ -1267,12 +1523,22 @@ fn bounded_limit(limit: Option<usize>) -> usize {
 }
 
 fn fts_query(query: &str) -> Option<String> {
-    let tokens = query
-        .split(|character: char| !character.is_alphanumeric() && character != '_')
-        .filter(|token| !token.is_empty())
+    let tokens = query_tokens(query)
+        .into_iter()
         .map(|token| format!("\"{}\"*", token.replace('"', "")))
         .collect::<Vec<_>>();
     (!tokens.is_empty()).then(|| tokens.join(" AND "))
+}
+
+fn query_tokens(query: &str) -> Vec<&str> {
+    query
+        .split(|character: char| !character.is_alphanumeric() && character != '_')
+        .filter(|token| !token.is_empty())
+        .collect()
+}
+
+fn is_identifier_anchor(token: &str) -> bool {
+    token.contains('_') || token.chars().any(char::is_uppercase)
 }
 
 fn node_matches_filters(
@@ -1450,5 +1716,29 @@ mod tests {
             names[1..].iter().all(|name| name.starts_with("noise_")),
             "remaining slots should come from the FTS fallback"
         );
+    }
+
+    #[test]
+    fn definition_source_refuses_changed_bytes_after_the_fact_snapshot() {
+        let repository = tempdir().expect("temporary repository");
+        let source_path = repository.path().join("lib.rs");
+        fs::write(&source_path, "pub fn target() { 1 }\n").expect("source fixture");
+        let facts = CodeFacts::open(repository.path(), repository.path().join("external.sqlite"))
+            .expect("open source-backed facts");
+        facts.map().expect("seed source hash");
+        let node = match facts
+            .resolve_symbol("target", Some("lib.rs"))
+            .expect("resolve indexed symbol")
+        {
+            SymbolResolution::One(node) => node,
+            _ => panic!("target should resolve exactly"),
+        };
+
+        fs::write(&source_path, "pub fn target() { 2 }\n").expect("change source after snapshot");
+        let excerpt = facts
+            .definition_source(&node, MAX_DEFINITION_SOURCE_RESPONSE_LEN)
+            .expect("read changed definition source");
+        assert_eq!(excerpt["status"], "changed_during_query");
+        assert!(excerpt.get("text").is_none());
     }
 }

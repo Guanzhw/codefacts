@@ -8,7 +8,7 @@ use std::io::{self, BufRead, BufReader, BufWriter, Write};
 use serde_json::{json, Map, Value};
 
 use crate::error::{CodeFactsError, Result};
-use crate::service::{CodeFactsRegistry, SymbolScope};
+use crate::service::{CodeFactsRegistry, SearchDetail, SymbolScope};
 use crate::types::NodeKind;
 
 const LEGACY_PROTOCOL_VERSION: &str = "2025-11-25";
@@ -217,15 +217,26 @@ fn call_tool(projects: &mut CodeFactsRegistry, params: Option<&Value>) -> Result
 
     match name {
         "map" => facts.map(),
-        "search" => facts.search_with_page_scope_options(
-            required_string(&arguments, "query")?,
-            optional_node_kind(&arguments)?,
-            optional_string(&arguments, "path_prefix")?,
-            optional_symbol_scope(&arguments)?.unwrap_or(SymbolScope::TopLevel),
-            optional_offset(&arguments)?.unwrap_or(0),
-            optional_string(&arguments, "cursor")?,
-            limit,
-        ),
+        "search" => {
+            let detail = optional_search_detail(&arguments)?.unwrap_or(SearchDetail::Facts);
+            let context_limit = optional_context_limit(&arguments)?;
+            if context_limit.is_some() && detail != SearchDetail::Context {
+                return Err(CodeFactsError::Mcp(
+                    "context_limit requires detail='context'".into(),
+                ));
+            }
+            facts.search_with_page_scope_detail_options(
+                required_string(&arguments, "query")?,
+                optional_node_kind(&arguments)?,
+                optional_string(&arguments, "path_prefix")?,
+                optional_symbol_scope(&arguments)?.unwrap_or(SymbolScope::TopLevel),
+                detail,
+                context_limit.unwrap_or(1),
+                optional_offset(&arguments)?.unwrap_or(0),
+                optional_string(&arguments, "cursor")?,
+                limit,
+            )
+        }
         "outline" => facts.outline_with_page_scope_options(
             required_string(&arguments, "file_path")?,
             optional_node_kind(&arguments)?,
@@ -325,6 +336,32 @@ fn optional_symbol_scope(arguments: &Map<String, Value>) -> Result<Option<Symbol
     })
 }
 
+fn optional_search_detail(arguments: &Map<String, Value>) -> Result<Option<SearchDetail>> {
+    let Some(detail) = optional_string(arguments, "detail")? else {
+        return Ok(None);
+    };
+    SearchDetail::parse(detail).map(Some).ok_or_else(|| {
+        CodeFactsError::Mcp(format!(
+            "'detail' must be 'facts' or 'context', got '{detail}'"
+        ))
+    })
+}
+
+fn optional_context_limit(arguments: &Map<String, Value>) -> Result<Option<usize>> {
+    let Some(value) = arguments.get("context_limit") else {
+        return Ok(None);
+    };
+    let value = value
+        .as_u64()
+        .filter(|value| (1..=3).contains(value))
+        .ok_or_else(|| {
+            CodeFactsError::Mcp("'context_limit' must be an integer from 1 through 3".into())
+        })?;
+    usize::try_from(value)
+        .map(Some)
+        .map_err(|_| CodeFactsError::Mcp("'context_limit' is too large for this platform".into()))
+}
+
 fn tool_result(value: Value) -> Value {
     // MCP clients that do not consume `structuredContent` still need the
     // complete serialized result in TextContent. Keep that compatibility
@@ -373,9 +410,9 @@ fn write_json(output: &mut impl Write, value: Value) -> Result<()> {
 fn tool_definitions() -> Vec<Value> {
     vec![
         tool("map", "Repository structure, language mix, and high-level symbol counts. Set repository_root to inspect a project other than the configured default.", schema(json!({ "repository_root": repository_root_schema() }), &[])),
-        tool("search", "Search indexed symbols, endpoints, and documentation headings through source-backed FTS; optionally narrow by kind, path prefix, or scope. Set repository_root to select a project for this call. The default top_level scope excludes local variables; pass scope=all for implementation detail. Continue with next_cursor to keep all pages on one index snapshot; offset is legacy compatibility only. This is not raw grep.", schema(json!({ "query": string_schema("Identifier or words to search"), "repository_root": repository_root_schema(), "kind": kind_schema(), "path_prefix": string_schema("Optional selected-project-relative file or directory prefix"), "scope": scope_schema(), "cursor": cursor_schema(), "offset": offset_schema(), "limit": limit_schema() }), &["query"])),
+        tool("search", "Search indexed symbols, endpoints, and documentation headings through source-backed FTS; optionally narrow by kind, path prefix, or scope. detail=context adds bounded definition source and direct static neighborhoods for the highest-ranked candidates while preserving the compact facts result array; context_limit requires detail=context. Set repository_root to select a project for this call. The default top_level scope excludes local variables; pass scope=all for implementation detail. Continue with next_cursor to keep all pages on one index snapshot; offset is legacy compatibility only. This is not raw grep.", schema(json!({ "query": string_schema("Identifier or words to search"), "repository_root": repository_root_schema(), "kind": kind_schema(), "path_prefix": string_schema("Optional selected-project-relative file or directory prefix"), "scope": scope_schema(), "detail": detail_schema(), "context_limit": context_limit_schema(), "cursor": cursor_schema(), "offset": offset_schema(), "limit": limit_schema() }), &["query"])),
         tool("outline", "List indexed symbols or documentation headings in one selected-project-relative file. Set repository_root to select a project for this call. The default top_level scope excludes local variables; pass scope=all for implementation detail. Optionally filter by kind. Continue with next_cursor to keep all pages on one index snapshot; offset is legacy compatibility only.", schema(json!({ "repository_root": repository_root_schema(), "file_path": string_schema("Selected-project-relative file path"), "kind": kind_schema(), "scope": scope_schema(), "cursor": cursor_schema(), "offset": offset_schema(), "limit": limit_schema() }), &["file_path"])),
-        tool("expand", "Return one symbol definition plus static callers, callees, references, and related tests from one selected project. Set repository_root to select a project for this call. When a user-installed supported LSP is available, include separately labeled semantic reference locations. Use a symbol id or add file_path to disambiguate.", schema(json!({ "repository_root": repository_root_schema(), "symbol": string_schema("Symbol name or exact symbol id"), "file_path": string_schema("Optional selected-project-relative disambiguator"), "limit": limit_schema() }), &["symbol"])),
+        tool("expand", "Return one symbol definition, a verified bounded definition-source excerpt, static callers, callees, references, and related tests from one selected project. Set repository_root to select a project for this call. When a user-installed supported LSP is available, include separately labeled semantic reference locations. Use a symbol id or add file_path to disambiguate.", schema(json!({ "repository_root": repository_root_schema(), "symbol": string_schema("Symbol name or exact symbol id"), "file_path": string_schema("Optional selected-project-relative disambiguator"), "limit": limit_schema() }), &["symbol"])),
         tool("path", "Find the shortest bounded static calls path within one selected project. Set repository_root to select that project; static relationships are not merged across projects. Optional file paths disambiguate duplicate names. A missing path never claims runtime unreachability.", schema(json!({ "repository_root": repository_root_schema(), "from": string_schema("Source symbol name or exact id"), "from_file_path": string_schema("Optional selected-project-relative source disambiguator"), "to": string_schema("Target symbol name or exact id"), "to_file_path": string_schema("Optional selected-project-relative target disambiguator"), "limit": limit_schema() }), &["from", "to"])),
     ]
 }
@@ -414,6 +451,14 @@ fn kind_schema() -> Value {
 
 fn scope_schema() -> Value {
     json!({ "type": "string", "enum": ["top_level", "all"], "description": "top_level excludes variables declared inside a function or method (default); all retains every indexed symbol" })
+}
+
+fn detail_schema() -> Value {
+    json!({ "type": "string", "enum": ["facts", "context"], "default": "facts", "description": "facts returns compact SymbolFacts (default); context adds bounded source and direct static neighborhoods in context_entries" })
+}
+
+fn context_limit_schema() -> Value {
+    json!({ "type": "integer", "minimum": 1, "maximum": 3, "default": 1, "description": "Requires detail=context; highest-ranked results enriched (default 1, capped at 3)" })
 }
 
 #[cfg(test)]

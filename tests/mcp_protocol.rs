@@ -4,9 +4,10 @@ use std::path::Path;
 use std::process::{Command, Stdio};
 
 use codefacts::lsp::LspMode;
-use codefacts::service::{CodeFacts, SymbolScope};
+use codefacts::service::{CodeFacts, SearchDetail, SymbolScope};
 use codefacts::types::NodeKind;
 use serde_json::{json, Value};
+use sha2::{Digest, Sha256};
 use tempfile::tempdir;
 
 fn assert_repository_root_identity(actual: &Value, expected: &Path) {
@@ -69,6 +70,10 @@ fn stdio_server_exposes_only_the_five_source_backed_workflows() {
         json!({"jsonrpc":"2.0", "id":10, "method":"tools/call", "params":{"name":"outline", "arguments":{"file_path":"README.md", "offset":1, "limit":1}}}),
         json!({"jsonrpc":"2.0", "id":11, "method":"tools/call", "params":{"name":"search", "arguments":{"query":"helper", "kind":"const"}}}),
         json!({"jsonrpc":"2.0", "id":12, "method":"tools/call", "params":{"name":"search", "arguments":{"query":"helper", "limit":0}}}),
+        json!({"jsonrpc":"2.0", "id":13, "method":"tools/call", "params":{"name":"search", "arguments":{"query":"helper", "detail":"context", "context_limit":1}}}),
+        json!({"jsonrpc":"2.0", "id":14, "method":"tools/call", "params":{"name":"search", "arguments":{"query":"helper", "detail":"full"}}}),
+        json!({"jsonrpc":"2.0", "id":15, "method":"tools/call", "params":{"name":"search", "arguments":{"query":"helper", "detail":"context", "context_limit":4}}}),
+        json!({"jsonrpc":"2.0", "id":16, "method":"tools/call", "params":{"name":"search", "arguments":{"query":"helper", "context_limit":1}}}),
     ];
     let mut input = child.stdin.take().expect("child stdin");
     for request in requests {
@@ -94,7 +99,7 @@ fn stdio_server_exposes_only_the_five_source_backed_workflows() {
         .lines()
         .map(|line| serde_json::from_str::<Value>(line).expect("JSON-RPC response"))
         .collect::<Vec<_>>();
-    assert_eq!(responses.len(), 12);
+    assert_eq!(responses.len(), 16);
 
     let initialize = responses[0]["result"]
         .as_object()
@@ -122,6 +127,10 @@ fn stdio_server_exposes_only_the_five_source_backed_workflows() {
         .get("path_prefix")
         .is_some());
     assert!(search["inputSchema"]["properties"].get("scope").is_some());
+    assert!(search["inputSchema"]["properties"].get("detail").is_some());
+    assert!(search["inputSchema"]["properties"]
+        .get("context_limit")
+        .is_some());
     assert!(search["inputSchema"]["properties"].get("offset").is_some());
     assert!(search["inputSchema"]["properties"].get("cursor").is_some());
     let path = tools
@@ -178,11 +187,21 @@ fn stdio_server_exposes_only_the_five_source_backed_workflows() {
         responses[3]["result"]["structuredContent"]["results"][0]["name"],
         "helper"
     );
+    assert!(
+        responses[3]["result"]["structuredContent"]
+            .get("context_entries")
+            .is_none(),
+        "default search output stays compact and homogeneous"
+    );
     assert_eq!(
         responses[4]["result"]["structuredContent"]["symbols"][0]["kind"],
         "heading"
     );
     assert_eq!(responses[5]["result"]["structuredContent"]["status"], "ok");
+    assert_eq!(
+        responses[5]["result"]["structuredContent"]["source"]["status"],
+        "ok"
+    );
     assert_eq!(responses[6]["result"]["structuredContent"]["status"], "ok");
     assert_eq!(
         responses[6]["result"]["structuredContent"]["path"][0]["name"],
@@ -213,6 +232,17 @@ fn stdio_server_exposes_only_the_five_source_backed_workflows() {
     );
     assert_eq!(responses[10]["result"]["isError"], true);
     assert_eq!(responses[11]["result"]["isError"], true);
+    assert_eq!(
+        responses[12]["result"]["structuredContent"]["context_entries"][0]["symbol"]["name"],
+        "helper"
+    );
+    assert_eq!(
+        responses[12]["result"]["structuredContent"]["context_entries"][0]["source"]["status"],
+        "ok"
+    );
+    assert_eq!(responses[13]["result"]["isError"], true);
+    assert_eq!(responses[14]["result"]["isError"], true);
+    assert_eq!(responses[15]["result"]["isError"], true);
 }
 
 #[test]
@@ -1193,6 +1223,111 @@ fn markdown_sections_hierarchy_and_local_anchor_links_are_source_backed() {
         .expect("local anchor references")
         .iter()
         .any(|reference| reference["to"]["name"] == "Overview"));
+}
+
+#[test]
+fn search_context_prioritizes_identifier_anchors_and_returns_bounded_static_context() {
+    let repository = tempdir().expect("temporary repository");
+    fs::create_dir_all(repository.path().join("src")).expect("source directory");
+    let source = format!(
+        "export function ProviderAdapter() {{\n    // {}\n    return helper();\n}}\n\nexport function entry() {{ return ProviderAdapter(); }}\n\nexport function helper() {{ return 1; }}\n",
+        "x".repeat(5_000)
+    );
+    fs::write(repository.path().join("src/providers.ts"), &source)
+        .expect("TypeScript source fixture");
+    fs::write(
+        repository.path().join("GUIDE.md"),
+        "# ProviderAdapter lifecycle notes guide\n",
+    )
+    .expect("Markdown FTS fixture");
+    let facts = CodeFacts::open(repository.path(), repository.path().join("external.sqlite"))
+        .expect("open source-backed facts");
+
+    let compact = facts
+        .search("ProviderAdapter lifecycle notes", Some(10))
+        .expect("compact search");
+    assert_eq!(compact["results"][0]["name"], "ProviderAdapter");
+    assert!(
+        compact.get("context_entries").is_none(),
+        "the default result shape must remain compact"
+    );
+
+    let contextual = facts
+        .search_with_page_scope_detail_options(
+            "ProviderAdapter lifecycle notes",
+            None,
+            None,
+            SymbolScope::TopLevel,
+            SearchDetail::Context,
+            1,
+            0,
+            None,
+            Some(10),
+        )
+        .expect("context search");
+    let results = contextual["results"]
+        .as_array()
+        .expect("homogeneous results");
+    assert_eq!(results[0]["name"], "ProviderAdapter");
+    assert!(results.len() > 1, "the Markdown FTS candidate is retained");
+    assert!(results.iter().all(|result| result.get("source").is_none()));
+
+    let context = &contextual["context_entries"][0];
+    assert_eq!(context["symbol"]["id"], results[0]["id"]);
+    assert_eq!(context["source"]["status"], "ok");
+    assert!(context["source"]["text"]
+        .as_str()
+        .expect("source excerpt")
+        .contains("export function ProviderAdapter"));
+    assert_eq!(context["source"]["truncated"], true);
+    assert!(
+        context["source"]["byte_length"]
+            .as_u64()
+            .expect("source byte length")
+            <= 4 * 1024
+    );
+    assert_eq!(
+        context["symbol"]["evidence"]["source_hash"],
+        hex::encode(Sha256::digest(source.as_bytes()))
+    );
+    assert!(context["callers"]
+        .as_array()
+        .expect("static callers")
+        .iter()
+        .any(|relationship| relationship["from"]["name"] == "entry"));
+    assert!(context["callees"]
+        .as_array()
+        .expect("static callees")
+        .iter()
+        .any(|relationship| relationship["to"]["name"] == "helper"));
+    assert_eq!(contextual["context_bounded_by"]["entries"], 1);
+    assert_eq!(contextual["context_entries_truncated"], true);
+    assert_eq!(
+        contextual["context_bounded_by"]["source_bytes_per_entry"],
+        4 * 1024
+    );
+
+    let expanded = facts
+        .expand("ProviderAdapter", Some("src/providers.ts"), Some(10))
+        .expect("expand enriched definition");
+    assert_eq!(expanded["source"]["status"], "ok");
+    assert_eq!(expanded["source"]["truncated"], true);
+    assert!(
+        expanded["source"]["byte_length"]
+            .as_u64()
+            .expect("bounded expand source")
+            <= 4 * 1024
+    );
+    assert!(expanded["callers"]
+        .as_array()
+        .expect("expand callers")
+        .iter()
+        .any(|relationship| relationship["from"]["name"] == "entry"));
+    assert!(expanded["callees"]
+        .as_array()
+        .expect("expand callees")
+        .iter()
+        .any(|relationship| relationship["to"]["name"] == "helper"));
 }
 
 #[test]

@@ -55,9 +55,9 @@ Version 1 deliberately exposes exactly five read-only tools:
 | Tool | Purpose |
 | --- | --- |
 | `map` | Repository structure, explicit language file/symbol counts, deferred LSP-provider status, and bounded unresolved-reference evidence. |
-| `search` | Indexed symbols, endpoints, and Markdown documentation headings through FTS; optionally narrow by kind, path prefix, or local-detail scope and continue on one snapshot. |
+| `search` | Indexed symbols, endpoints, and Markdown documentation headings through FTS; optionally narrow by kind, path prefix, or local-detail scope, or request bounded context for the highest-ranked candidates, and continue on one snapshot. |
 | `outline` | Symbols or headings in one file, with optional kind/local-detail filtering and snapshot-bound continuation. |
-| `expand` | One definition plus static callers, candidate polymorphic callees, references, related tests, Markdown section text, and optional semantic references. |
+| `expand` | One definition with a verified bounded source excerpt, plus static callers, candidate polymorphic callees, references, related tests, Markdown section text, and optional semantic references. |
 | `path` | A shortest bounded static calls path between confirmed symbols, with optional endpoint file-path disambiguation. |
 
 Every result is bounded, includes file/line/hash evidence, and refreshes the incremental index before answering. Its `freshness` object includes the canonical `repository_root` and fact-store `generation`, so a caller can verify that the facts belong to the intended project. Successful MCP results keep a compact serialized JSON `TextContent` for older clients and carry the equivalent object in `structuredContent`. A `no_static_path` result never claims that runtime execution is unreachable.
@@ -72,8 +72,18 @@ selected project. Results never merge unrelated projects: each response's
 `freshness.repository_root` identifies the source snapshot, and `path` only
 traverses static relationships within that selected project.
 
-`search` accepts optional `kind`, `path_prefix`, `scope`, and non-negative
-`offset`; `outline` accepts `kind`, `scope`, and `offset`. `scope` defaults to
+`search` accepts optional `kind`, `path_prefix`, `scope`, non-negative
+`offset`, and `detail`. `detail: "facts"` is the compact default. For a single,
+bounded structural exploration, use `detail: "context"` with an optional
+`context_limit` from 1 through 3: the regular `results` array remains unchanged
+and a separate `context_entries` array adds the verified definition excerpt plus
+direct static callers, callees, references, and related tests for the
+highest-ranked candidates. Each excerpt is capped at 4 KiB and is returned only
+when its current on-disk file hash still matches the fact evidence; otherwise
+the entry states that the source changed during the query. A mixed query that
+contains an exact CamelCase, PascalCase, or snake_case identifier ranks that
+confirmed identifier ahead of broad FTS matches. `outline` accepts `kind`,
+`scope`, and `offset`. `scope` defaults to
 `top_level`, which suppresses variables declared inside functions or methods;
 use `scope: "all"` for implementation detail. Both return an opaque `next_cursor` when another
 bounded page exists. Supplying that cursor prevents mixed-snapshot pagination:
@@ -90,6 +100,10 @@ in `path`.
 `map.unresolved_references` reports the count plus at most 20 source-backed
 unresolved import/reference samples. It describes a static-analysis gap; it
 does not establish that a target is absent at runtime.
+
+`expand` always includes the same verified, 4 KiB-bounded definition excerpt
+for its single resolved symbol. Its relationship facts remain static; semantic
+references retain their separate availability/status contract.
 
 `map.files_with_facts` is the number of indexed files that currently own at
 least one fact, while `map.indexed_files` is every successfully parsed,
