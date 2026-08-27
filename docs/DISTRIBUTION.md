@@ -9,11 +9,11 @@ project's contract.
 ## What users run
 
 ```text
-npx -y codefacts@0.1.11 mcp --root .
+npx -y codefacts@0.1.12 mcp --root .
 ```
 
 The optional `--root` is a default project for existing single-project MCP
-configurations. A rootless `npx -y codefacts@0.1.11 mcp` server accepts an
+configurations. A rootless `npx -y codefacts@0.1.12 mcp` server accepts an
 explicit `repository_root` in each read-only tool call and creates a separate
 external SQLite state file for each selected project.
 
@@ -26,11 +26,11 @@ Shared, offline, and reproducible configurations should stay version-pinned.
 The `codefacts` npm package contains no source indexer. It is a Node.js
 launcher that:
 
-1. maps the local OS/architecture to one named GitHub Release asset;
-2. reads that asset's SHA-256 embedded in the same versioned npm package;
-3. downloads the asset to a versioned user cache if no verified cache exists;
-4. verifies the cached executable before every invocation; and
-5. starts the native binary with inherited stdio, forwarding `mcp --root ...`.
+1. maps the local OS/architecture to one platform package;
+2. resolves that package from npm's installed optional dependencies;
+3. verifies its version, platform metadata, executable, and embedded SHA-256;
+   and
+4. starts the native binary with inherited stdio, forwarding `mcp --root ...`.
 
 The launcher is intentionally a thin distribution layer, not a second MCP
 server. Its status messages use stderr so they cannot corrupt the JSON-RPC
@@ -40,49 +40,37 @@ stream on stdout.
 
 Every `v<version>` tag builds these direct-download assets:
 
-| Platform | Asset |
-| --- | --- |
-| Windows x64 | `codefacts-windows-x86_64.exe` |
-| macOS x64 | `codefacts-macos-x86_64` |
-| macOS arm64 | `codefacts-macos-aarch64` |
-| Linux x64 | `codefacts-linux-x86_64` |
-| Linux arm64 | `codefacts-linux-aarch64` |
+| Platform | npm package | Direct-download asset |
+| --- | --- | --- |
+| Windows x64 | `@acetamido/codefacts-win32-x64` | `codefacts-windows-x86_64.exe` |
+| macOS x64 | `@acetamido/codefacts-darwin-x64` | `codefacts-macos-x86_64` |
+| macOS arm64 | `@acetamido/codefacts-darwin-arm64` | `codefacts-macos-aarch64` |
+| Linux x64 | `@acetamido/codefacts-linux-x64` | `codefacts-linux-x86_64` |
+| Linux arm64 | `@acetamido/codefacts-linux-arm64` | `codefacts-linux-aarch64` |
 
-The Release also contains `LICENSE` and `SHA256SUMS`. The release workflow
-stages a temporary copy of `npm/`, replacing its placeholder `checksums.json`
-with hashes from that exact file, then publishes that staged package. The
-committed placeholder is deliberately unusable for download: it prevents a
-source checkout from silently trusting an unpinned release asset.
+The Release also contains `LICENSE` and `SHA256SUMS` for users who need a
+direct-download channel. The release workflow stages and publishes one npm
+platform package for each target before publishing the main `codefacts`
+launcher. Each platform package carries its native executable, `os`/`cpu`
+metadata, exact version, and SHA-256.
 
 ## Trust model
 
-The npm package is the initial trust root. It should remain small, versioned,
-and published with npm provenance. Its only installer dependency is the
-MIT-licensed `jsonc-parser`, used to preserve comments and unrelated fields
-when the interactive installer updates JSONC agent configuration. The embedded
-SHA-256 means a compromised or mutable GitHub Release asset is rejected unless
-its contents match the hash shipped with the npm package. Conversely, a
-compromised npm package can change the expected hash, so users should pin
-package versions and inspect provenance for upgrades when reproducibility is
-required.
+The npm packages are the installation trust root. They are versioned and
+published with npm provenance. The platform package's embedded SHA-256 rejects
+replacement or tampered bytes after installation; a compromised npm package
+can still change its expected hash, so users should pin versions and inspect
+provenance when reproducibility matters. The launcher has no runtime network
+download or GitHub Release fallback.
 
-The launcher uses an exclusive cache lock and an atomic rename to avoid two
-MCP clients publishing a partial download into the same cache. The verified
-binary cache lives outside the indexed repository:
-
-- Windows: `%LOCALAPPDATA%\CodeFacts\bin`
-- macOS: `~/Library/Caches/codefacts/bin`
-- Linux: `${XDG_CACHE_HOME:-~/.cache}/codefacts/bin`
-
-Set `CODEFACTS_CACHE_DIR` to a different cache directory. Set
-`CODEFACTS_DOWNLOAD_BASE_URL` only for a trusted mirror that has the same
-versioned names and bytes; checksum verification remains active. Air-gapped
-systems can pre-populate the cache from a verified asset or configure the
-native binary directly instead of using `npx`.
+For air-gapped installs, transfer the main package and the matching platform
+package tarball, then install both with npm. Unsupported operating systems and
+installations made with `--no-optional` fail explicitly with the package that
+is missing.
 
 ## Publishing a release
 
-Before creating the first tag:
+Before creating a tag:
 
 1. Use an npm account that can publish the public package name `codefacts` and
    add a granular `NPM_TOKEN` repository secret for the bootstrap release.
@@ -92,16 +80,17 @@ Before creating the first tag:
    release, then revoke the bootstrap token. The workflow supports both paths.
 2. Keep `Cargo.toml`, `npm/package.json`, and `server.json` on the same semantic
    version. `node npm/scripts/check-release-version.mjs` enforces this.
-3. Verify the launcher locally with `node --test npm/test/*.test.mjs`. That
-   test creates a release-like binary asset, runs `npm pack`, installs it into
-   a clean prefix without scripts, then completes a real stdio MCP handshake
-   and source-backed search through the launcher.
+3. Verify the launcher locally with `node --test npm/test/*.test.mjs` and
+   stage a platform package with `node npm/scripts/stage-platform-package.mjs`.
 
-Then create and push a matching tag, for example `v0.1.11`. The workflow audits
+Then create and push a matching tag, for example `v0.1.12`. The workflow audits
 licenses, tests the Rust project, builds all assets, creates the GitHub Release
-with `SHA256SUMS`, stages a checksum-pinned npm tarball, and publishes it with
-provenance. A tag must not be considered an online-installable release until
-both the GitHub Release and `npm publish` jobs succeed.
+with `SHA256SUMS`, publishes all platform npm packages, and publishes the main
+launcher with provenance. A tag must not be considered an online-installable
+release until the GitHub Release and every npm package publish job succeeds.
+The npm publish step compares each local tarball's SHA-512 integrity with any
+existing immutable registry version, so an interrupted run can resume safely;
+it fails if an existing version has different bytes.
 
 ## MCP Registry
 

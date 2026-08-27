@@ -7,6 +7,7 @@ const os = require('node:os');
 const path = require('node:path');
 const readline = require('node:readline/promises');
 const { applyEdits, modify, parse, printParseErrorCode } = require('jsonc-parser');
+const { ensureBinary } = require('./launcher');
 
 const SERVER_NAME = 'codefacts';
 const STARTUP_TIMEOUT_SECONDS = 120;
@@ -361,21 +362,12 @@ function execute(command, args, options = {}) {
   });
 }
 
-async function prefetchLatest(options = {}) {
-  if (typeof options.prefetch === 'function') {
-    await options.prefetch();
+async function verifyInstalledPackage(options = {}) {
+  if (typeof options.verifyInstalledPackage === 'function') {
+    await options.verifyInstalledPackage();
     return;
   }
-  const npxCommand = process.platform === 'win32' ? 'npx.cmd' : 'npx';
-  const exitCode = await execute(npxCommand, [
-    '--yes',
-    '--prefer-online',
-    'codefacts@latest',
-    '--install',
-  ], options);
-  if (exitCode !== 0) {
-    throw new Error(`could not prefetch the latest CodeFacts release (exit code ${exitCode})`);
-  }
+  await ensureBinary(options);
 }
 
 async function applyInstall(plans, options = {}) {
@@ -475,8 +467,8 @@ async function runInteractiveInstall(options = {}) {
       output.write('Installation cancelled; no configuration was changed.\n');
       return { cancelled: true, applied: [] };
     }
-    output.write('\nPrefetching and checksum-verifying the current CodeFacts release before changing agent configuration…\n');
-    await prefetchLatest(options);
+    output.write('\nVerifying the installed CodeFacts native package before changing agent configuration…\n');
+    await verifyInstalledPackage(options);
     const applied = await applyInstall(plans, options);
     output.write('\nInstalled CodeFacts for: ');
     output.write(`${applied.filter((plan) => plan.changed).map((plan) => plan.label).join(', ') || 'none (already current)'}.\n`);
@@ -497,7 +489,7 @@ module.exports = {
   detectAgents,
   entryForAgent,
   parseSelection,
-  prefetchLatest,
+  verifyInstalledPackage,
   prepareInstall,
   replaceCodexEntry,
   resolveConfigPath,

@@ -35,5 +35,23 @@ const npmPackage = serverJson.packages?.find((entry) => entry.registryType === '
 if (!npmPackage || npmPackage.identifier !== npmMetadata.name || npmPackage.version !== cargoVersion) {
   throw new Error('server.json must reference the exact released npm package and version');
 }
+const platformAssets = JSON.parse(await readFile(resolve(npmDirectory, 'assets.json'), 'utf8'));
+const optionalDependencies = npmMetadata.optionalDependencies || {};
+const expectedPlatformPackages = Object.values(platformAssets)
+  .map((asset) => asset.packageName)
+  .sort();
+const actualPlatformPackages = Object.keys(optionalDependencies).sort();
+if (JSON.stringify(actualPlatformPackages) !== JSON.stringify(expectedPlatformPackages)) {
+  throw new Error(
+    `npm optional dependencies must exactly match supported platform packages: ${expectedPlatformPackages.join(', ')}`,
+  );
+}
+for (const [platform, asset] of Object.entries(platformAssets)) {
+  if (optionalDependencies[asset.packageName] !== cargoVersion) {
+    throw new Error(
+      `npm optional dependency ${asset.packageName} for ${platform} must be pinned to ${cargoVersion}`,
+    );
+  }
+}
 
 process.stdout.write(`CodeFacts release version ${cargoVersion} is synchronized.\n`);

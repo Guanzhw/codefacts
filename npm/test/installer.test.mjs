@@ -210,7 +210,7 @@ test('applies the selected interactive installation after confirmation', async (
     ask: async () => replies.shift(),
     commandAvailable: async () => true,
     platform: 'linux',
-    prefetch: async () => undefined,
+    verifyInstalledPackage: async () => undefined,
   });
 
   assert.equal(result.cancelled, false);
@@ -221,7 +221,7 @@ test('applies the selected interactive installation after confirmation', async (
   );
 });
 
-test('does not update agent configuration when release prefetch fails', async (context) => {
+test('does not update agent configuration when installed-package verification fails', async (context) => {
   const homeDirectory = await temporaryHome(context);
   const output = { isTTY: true, write: () => undefined };
   const input = { isTTY: true };
@@ -234,7 +234,7 @@ test('does not update agent configuration when release prefetch fails', async (c
       output,
       ask: async () => replies.shift(),
       commandAvailable: async () => true,
-      prefetch: async () => {
+      verifyInstalledPackage: async () => {
         throw new Error('network unavailable');
       },
     }),

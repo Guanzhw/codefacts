@@ -118,10 +118,10 @@ source construct directly.
 
 ## Install
 
-CodeFacts is distributed online as a small npm launcher plus a native GitHub
-Release asset. The launcher downloads the matching release binary once,
-verifies its SHA-256 against the checksum embedded in the versioned npm package,
-and runs it locally over stdio. It does not upload the repository being indexed.
+CodeFacts is distributed online as a small npm launcher plus one native npm
+optional dependency for each supported platform. npm installs the matching
+platform package, whose launcher verifies its SHA-256 and runs it locally over
+stdio. It does not upload the repository being indexed.
 
 ### Interactive agent install
 
@@ -137,8 +137,8 @@ Cursor, and Gemini CLI. It displays the target configuration files and asks for
 confirmation before changing anything. It only creates or replaces the named
 `codefacts` MCP entry: it does not create project files, agent instruction
 files, permissions, indexes, hooks, watchers, or background processes.
-Before writing a selected configuration, it prefetches and checksum-verifies the
-resolved release; if that step fails, no agent configuration is changed.
+Before writing a selected configuration, it verifies the installed native
+package; if that step fails, no agent configuration is changed.
 
 The installed user-wide server is rootless and uses:
 
@@ -147,26 +147,27 @@ npx --yes --prefer-online codefacts@latest mcp
 ```
 
 `--prefer-online` makes npm check the registry even when a package is cached,
-so the next MCP launch after a release uses the current `latest` package. The
-new launcher then downloads and checksum-verifies its matching native binary.
+so the next MCP launch after a release uses the current `latest` package. npm
+resolves the matching platform optional dependency during installation.
 This automatic-update mode needs registry access when an agent starts. For a
 checked-in, offline, or reproducible configuration, use a fixed
 `codefacts@<version>` manual configuration instead.
 
-### Prefetch a release binary (optional)
+### Verify the installed binary (optional)
 
-To download and verify the currently resolved release before an agent starts:
+To verify the currently installed platform binary before an agent starts:
 
 ```powershell
 npx --yes --prefer-online codefacts@latest --install
 ```
 
-The command prints the local binary path.
+The command prints the installed binary path and performs no GitHub Release
+download.
 
 The launcher supports Windows x64, macOS x64/arm64, and Linux x64/arm64.
-Its first download can take longer than a normal MCP startup, so prefetch it or
-use the 120-second timeout shown below. Download status goes to stderr only;
-stdio stdout remains valid JSON-RPC.
+The first launch uses the binary installed by npm. Status goes to stderr only;
+stdio stdout remains valid JSON-RPC. If the optional dependency is missing, the
+launcher reports the exact package to install.
 
 ### Build from source
 
@@ -255,7 +256,7 @@ opencode mcp list
 #### Codex
 
 For a fixed project, register a clearly named entry with an explicit root and
-a startup timeout that allows the first verified launcher download:
+a startup timeout that allows the installed native package to be verified:
 
 ```powershell
 codex mcp add codefacts-opensession -- cmd /d /s /c npx --yes --prefer-online codefacts@latest mcp --root D:\WorkSpace\OpenSession
@@ -284,20 +285,13 @@ CodeFacts does not infer a project from the server working directory. The MCP
 result's `freshness.repository_root` remains the final evidence of scope; if it
 does not match the repository being evaluated, discard the result.
 
-### Cache, trust, and offline use
+### Trust and offline use
 
-The launcher verifies the cached binary against its embedded SHA-256 before
-every start. Its default cache is `%LOCALAPPDATA%\CodeFacts\bin` on Windows,
-`~/Library/Caches/codefacts/bin` on macOS, and
-`${XDG_CACHE_HOME:-~/.cache}/codefacts/bin` on Linux. Set
-`CODEFACTS_CACHE_DIR` to move that cache (for example to a pre-populated CI
-cache). `CODEFACTS_DOWNLOAD_BASE_URL` can point at a trusted internal mirror
-that serves the same versioned asset names; the embedded checksum still has to
-match.
-
-An air-gapped machine can pre-populate that cache from a verified Release asset
-or use a source-built binary directly. Details of the artifact names, checksum
-chain, npm provenance, and release setup are in
+The launcher verifies the installed platform binary against the checksum in its
+platform package before every start. It never downloads a GitHub Release asset
+at runtime. For an air-gapped machine, transfer the main package and matching
+platform package tarballs and install them together with npm. Details of the
+artifact names, checksum chain, npm provenance, and release setup are in
 [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md).
 
 ## Run as an MCP server
@@ -355,11 +349,11 @@ For development from source, run `cargo build --release`; published builds are
 intended to be a single native binary for Windows, macOS, and Linux.
 
 Tagged releases build Windows x64, macOS x64/arm64, and Linux x64/arm64
-binaries after a dependency-license audit and publish a checksum-pinned npm
-launcher. Ordinary commits never publish a release. The optional
-`server.json` is ready for publication to the official MCP Registry after the
-npm package exists; registry metadata is discovery information, not a hosted
-CodeFacts service.
+binaries after a dependency-license audit and publish the platform npm
+packages followed by the main launcher. Ordinary commits never publish a
+release. The optional `server.json` is ready for publication to the official
+MCP Registry after the npm package exists; registry metadata is discovery
+information, not a hosted CodeFacts service.
 
 ## Storage model and scope
 

@@ -2,11 +2,7 @@
 
 'use strict';
 
-const {
-  PACKAGE_VERSION,
-  ensureBinary,
-  runBinary,
-} = require('../lib/launcher');
+const { PACKAGE_VERSION, ensureBinary, runBinary } = require('../lib/launcher');
 const { runInteractiveInstall } = require('../lib/installer');
 
 const USAGE = `CodeFacts ${PACKAGE_VERSION}
@@ -16,9 +12,9 @@ Usage:
   codefacts install
   codefacts mcp [--root <repository>] [--state <external-sqlite-path>]
 
-The launcher downloads a checksum-verified native binary on first use and
-runs it locally. \`install\` interactively configures supported coding agents
-to run \`codefacts@latest\` with npm update checks. Progress is written only to
+The launcher resolves the matching native npm optional dependency and runs it
+locally. \`install\` interactively configures supported coding agents
+to run \`codefacts@latest\` with npm update checks. Status is written only to
 stderr so MCP stdout remains valid JSON-RPC.`;
 
 async function main() {

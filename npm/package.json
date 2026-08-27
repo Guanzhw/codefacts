@@ -1,6 +1,6 @@
 {
   "name": "codefacts",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "Local, verifiable code facts for coding agents",
   "license": "MIT",
   "repository": {
@@ -17,11 +17,17 @@
   "dependencies": {
     "jsonc-parser": "3.3.1"
   },
+  "optionalDependencies": {
+    "@acetamido/codefacts-darwin-arm64": "0.1.12",
+    "@acetamido/codefacts-darwin-x64": "0.1.12",
+    "@acetamido/codefacts-linux-arm64": "0.1.12",
+    "@acetamido/codefacts-linux-x64": "0.1.12",
+    "@acetamido/codefacts-win32-x64": "0.1.12"
+  },
   "files": [
     "bin",
     "lib",
     "assets.json",
-    "checksums.json",
     "README.md",
     "LICENSE"
   ],

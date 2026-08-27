@@ -1,87 +1,35 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { createReadStream } from 'node:fs';
-import {
-  access,
-  copyFile,
-  mkdtemp,
-  readFile,
-  rm,
-  stat,
-  writeFile,
-} from 'node:fs/promises';
-import { createServer } from 'node:http';
-import { once } from 'node:events';
-import { createRequire } from 'node:module';
+import { access, mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { basename, dirname, join, resolve } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
+import { createRequire } from 'node:module';
 import { spawn, spawnSync } from 'node:child_process';
+import { once } from 'node:events';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 const require = createRequire(import.meta.url);
 const launcher = require('../lib/launcher.js');
-const testDirectory = dirname(fileURLToPath(import.meta.url));
-const npmDirectory = resolve(testDirectory, '..');
+const npmDirectory = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const repositoryRoot = resolve(npmDirectory, '..');
-const stageScript = resolve(npmDirectory, 'scripts', 'stage-package.mjs');
 const fixtureRoot = resolve(repositoryRoot, 'tests', 'fixtures', 'eval-project');
+const stagePlatformScript = resolve(npmDirectory, 'scripts', 'stage-platform-package.mjs');
+const stageMainScript = resolve(npmDirectory, 'scripts', 'stage-package.mjs');
 const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 
 function commandResult(command, args, options = {}) {
   const isWindowsCommand = process.platform === 'win32' && command.endsWith('.cmd');
   const executable = isWindowsCommand ? process.env.ComSpec || 'cmd.exe' : command;
-  const quoteForCmd = (argument) => {
-    const text = String(argument);
-    return /[\s"]/u.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
-  };
   const commandArguments = isWindowsCommand
-    ? ['/d', '/s', '/c', [command, ...args.map(quoteForCmd)].join(' ')]
+    ? ['/d', '/s', '/c', [command, ...args.map((argument) => {
+      const text = String(argument);
+      return /[\s"]/u.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
+    })].join(' ')]
     : args;
-  const result = spawnSync(executable, commandArguments, {
-    ...options,
-    encoding: 'utf8',
-  });
-  assert.equal(
-    result.status,
-    0,
-    `${command} ${args.join(' ')} failed:\n${result.stderr || ''}${result.stdout || ''}`,
-  );
+  const result = spawnSync(executable, commandArguments, { ...options, encoding: 'utf8' });
+  assert.equal(result.status, 0, `${command} ${args.join(' ')} failed:\n${result.stderr || ''}${result.stdout || ''}`);
   return result;
-}
-
-async function sha256(filePath) {
-  const hash = createHash('sha256');
-  for await (const chunk of createReadStream(filePath)) {
-    hash.update(chunk);
-  }
-  return hash.digest('hex');
-}
-
-async function startReleaseServer(assetPath, expectedPath) {
-  let requests = 0;
-  const server = createServer((request, response) => {
-    if (request.url !== expectedPath) {
-      response.statusCode = 404;
-      response.end('not found');
-      return;
-    }
-    requests += 1;
-    response.statusCode = 200;
-    createReadStream(assetPath).pipe(response);
-  });
-  server.listen(0, '127.0.0.1');
-  await once(server, 'listening');
-  const address = server.address();
-  assert.ok(address && typeof address === 'object');
-  return {
-    baseUrl: `http://127.0.0.1:${address.port}/v${launcher.PACKAGE_VERSION}`,
-    getRequests: () => requests,
-    close: async () => {
-      server.close();
-      await once(server, 'close');
-    },
-  };
 }
 
 function startMcp(launcherPath, args, environment) {
@@ -94,7 +42,6 @@ function startMcp(launcherPath, args, environment) {
   let outputBuffer = '';
   let errorOutput = '';
   const pending = new Map();
-
   child.stdout.setEncoding('utf8');
   child.stdout.on('data', (chunk) => {
     outputBuffer += chunk;
@@ -102,16 +49,12 @@ function startMcp(launcherPath, args, environment) {
     while ((newline = outputBuffer.indexOf('\n')) >= 0) {
       const line = outputBuffer.slice(0, newline);
       outputBuffer = outputBuffer.slice(newline + 1);
-      if (!line.trim()) {
-        continue;
-      }
+      if (!line.trim()) continue;
       let message;
       try {
         message = JSON.parse(line);
       } catch (error) {
-        for (const { reject } of pending.values()) {
-          reject(new Error(`launcher corrupted MCP stdout with ${line}: ${error.message}`));
-        }
+        for (const { reject } of pending.values()) reject(new Error(`invalid MCP stdout: ${error.message}`));
         pending.clear();
         return;
       }
@@ -123,16 +66,11 @@ function startMcp(launcherPath, args, environment) {
     }
   });
   child.stderr.setEncoding('utf8');
-  child.stderr.on('data', (chunk) => {
-    errorOutput += chunk;
-  });
+  child.stderr.on('data', (chunk) => { errorOutput += chunk; });
   child.once('close', (code) => {
-    for (const { reject } of pending.values()) {
-      reject(new Error(`CodeFacts exited with ${code}; stderr: ${errorOutput}`));
-    }
+    for (const { reject } of pending.values()) reject(new Error(`CodeFacts exited with ${code}: ${errorOutput}`));
     pending.clear();
   });
-
   return {
     request(id, method, params = {}) {
       return new Promise((resolveResponse, rejectResponse) => {
@@ -154,13 +92,37 @@ function startMcp(launcherPath, args, environment) {
   };
 }
 
-test('maps supported native assets and rejects unsupported platforms', () => {
-  assert.deepEqual(launcher.assetForPlatform('win32', 'x64'), {
-    key: 'win32-x64',
-    assetName: 'codefacts-windows-x86_64.exe',
-    executableName: 'codefacts.exe',
-  });
+async function temporaryNativePackage(context, platform, binary = 'native binary') {
+  const root = await mkdtemp(join(tmpdir(), 'codefacts-native-package-'));
+  context.after(() => rm(root, { recursive: true, force: true }));
+  const asset = launcher.assetForPlatform(platform, platform === 'win32' ? 'x64' : process.arch);
+  const binaryPath = join(root, asset.executableName);
+  await writeFile(binaryPath, binary);
+  const checksum = createHash('sha256').update(binary).digest('hex');
+  await writeFile(join(root, 'package.json'), JSON.stringify({
+    name: asset.packageName,
+    version: launcher.PACKAGE_VERSION,
+    os: [asset.os],
+    cpu: [asset.cpu],
+    codefacts: {
+      platform: asset.key,
+      assetName: asset.assetName,
+      executableName: asset.executableName,
+      sha256: checksum,
+    },
+  }));
+  return { root, asset, binaryPath, checksum };
+}
+
+test('maps supported native packages and rejects unsupported platforms', () => {
+  assert.equal(
+    launcher.platformPackageFor('win32', 'x64').packageName,
+    '@acetamido/codefacts-win32-x64',
+  );
   assert.deepEqual(launcher.assetForPlatform('darwin', 'arm64'), {
+    packageName: '@acetamido/codefacts-darwin-arm64',
+    os: 'darwin',
+    cpu: 'arm64',
     key: 'darwin-arm64',
     assetName: 'codefacts-macos-aarch64',
     executableName: 'codefacts',
@@ -168,37 +130,58 @@ test('maps supported native assets and rejects unsupported platforms', () => {
   assert.throws(() => launcher.assetForPlatform('freebsd', 'x64'), /does not publish a binary/);
 });
 
-test('refuses a downloaded binary whose embedded checksum does not match', async (context) => {
-  const temporaryDirectory = await mkdtemp(join(tmpdir(), 'codefacts-launcher-mismatch-'));
-  context.after(() => rm(temporaryDirectory, { recursive: true, force: true }));
-  const asset = launcher.assetForPlatform();
-  const assetPath = join(temporaryDirectory, asset.assetName);
-  await writeFile(assetPath, 'not a CodeFacts binary');
-  const server = await startReleaseServer(assetPath, `/v${launcher.PACKAGE_VERSION}/${asset.assetName}`);
-  context.after(() => server.close());
-
-  const environment = {
-    ...process.env,
-    CODEFACTS_CACHE_DIR: join(temporaryDirectory, 'cache'),
-    CODEFACTS_DOWNLOAD_BASE_URL: server.baseUrl,
-  };
-  await assert.rejects(
-    launcher.ensureBinary({
-      env: environment,
-      checksumDocument: {
-        version: launcher.PACKAGE_VERSION,
-        assets: { [asset.assetName]: '0'.repeat(64) },
-      },
-      onProgress: () => {},
-    }),
-    /SHA-256 verification failed/,
-  );
-  const location = launcher.binaryLocation({ env: environment });
-  await assert.rejects(access(location.binaryPath));
-  assert.equal(server.getRequests(), 1);
+test('resolves and checksum-verifies the installed native package without downloading', async (context) => {
+  const fixture = await temporaryNativePackage(context, process.platform);
+  const resolved = await launcher.ensureBinary({ packageDirectory: fixture.root });
+  assert.equal(resolved, fixture.binaryPath);
+  assert.equal(await readFile(resolved, 'utf8'), 'native binary');
 });
 
-test('packed launcher downloads a release-like binary and speaks MCP over stdio', async (context) => {
+test('fails explicitly when the matching optional dependency is absent', async () => {
+  await assert.rejects(
+    launcher.ensureBinary({
+      platform: 'linux',
+      arch: 'x64',
+      packageDirectory: join(tmpdir(), 'codefacts-no-such-native-package'),
+    }),
+    /native package metadata is unavailable/,
+  );
+});
+
+test('rejects a tampered installed native package', async (context) => {
+  const fixture = await temporaryNativePackage(context, process.platform);
+  await writeFile(fixture.binaryPath, 'tampered binary');
+  await assert.rejects(
+    launcher.ensureBinary({ packageDirectory: fixture.root }),
+    /SHA-256 verification failed/,
+  );
+});
+
+test('requires the staged asset identity and checksum metadata', async (context) => {
+  const fixture = await temporaryNativePackage(context, process.platform);
+  const metadataPath = join(fixture.root, 'package.json');
+  const metadata = JSON.parse(await readFile(metadataPath, 'utf8'));
+  delete metadata.codefacts.sha256;
+  await writeFile(metadataPath, JSON.stringify(metadata));
+  await assert.rejects(launcher.ensureBinary({ packageDirectory: fixture.root }), /invalid SHA-256/);
+
+  metadata.codefacts.sha256 = fixture.checksum;
+  metadata.codefacts.assetName = 'wrong-asset';
+  await writeFile(metadataPath, JSON.stringify(metadata));
+  await assert.rejects(
+    launcher.ensureBinary({ packageDirectory: fixture.root }),
+    /does not contain the expected/,
+  );
+});
+
+test('stage metadata points at a package-local executable', async (context) => {
+  const fixture = await temporaryNativePackage(context, process.platform);
+  const location = launcher.binaryLocation({ packageDirectory: fixture.root });
+  await access(location.packageJsonPath);
+  assert.equal(location.directory, fixture.root);
+});
+
+test('packed launcher installs the matching optional package and speaks MCP', async (context) => {
   const executableName = process.platform === 'win32' ? 'codefacts.exe' : 'codefacts';
   const nativeBinary = resolve(repositoryRoot, 'target', 'release', executableName);
   try {
@@ -208,30 +191,31 @@ test('packed launcher downloads a release-like binary and speaks MCP over stdio'
     return;
   }
 
-  const temporaryDirectory = await mkdtemp(join(tmpdir(), 'codefacts-launcher-protocol-'));
+  const temporaryDirectory = await mkdtemp(join(tmpdir(), 'codefacts-packed-install-'));
   context.after(() => rm(temporaryDirectory, { recursive: true, force: true }));
-  const asset = launcher.assetForPlatform();
-  const releaseDirectory = join(temporaryDirectory, 'release');
-  const assetPath = join(releaseDirectory, asset.assetName);
-  await (await import('node:fs/promises')).mkdir(releaseDirectory, { recursive: true });
-  await copyFile(nativeBinary, assetPath);
-  const checksum = await sha256(assetPath);
-  const checksumFile = join(temporaryDirectory, 'SHA256SUMS');
-  const checksumLines = Object.values(launcher.PLATFORM_ASSETS)
-    .map(({ assetName }) => `${assetName === asset.assetName ? checksum : '0'.repeat(64)}  ${assetName}`)
-    .join('\n');
-  await writeFile(checksumFile, `${checksumLines}\n`);
-
-  const stagedPackage = join(temporaryDirectory, 'staged-package');
+  const platform = launcher.platformPackageFor();
+  const platformStage = join(temporaryDirectory, 'platform-package');
   commandResult(process.execPath, [
-    stageScript,
+    stagePlatformScript,
     '--version', launcher.PACKAGE_VERSION,
-    '--checksums', checksumFile,
-    '--output', stagedPackage,
+    '--platform', platform.key,
+    '--binary', nativeBinary,
+    '--output', platformStage,
   ]);
-  const packOutput = commandResult(npmCommand, ['pack', '--json'], { cwd: stagedPackage });
-  const [{ filename }] = JSON.parse(packOutput.stdout);
-  const archivePath = join(stagedPackage, filename);
+  const [{ filename: platformFilename }] = JSON.parse(
+    commandResult(npmCommand, ['pack', platformStage, '--pack-destination', temporaryDirectory, '--json']).stdout,
+  );
+
+  const mainStage = join(temporaryDirectory, 'main-package');
+  commandResult(process.execPath, [
+    stageMainScript,
+    '--version', launcher.PACKAGE_VERSION,
+    '--output', mainStage,
+  ]);
+  const [{ filename: mainFilename }] = JSON.parse(
+    commandResult(npmCommand, ['pack', mainStage, '--pack-destination', temporaryDirectory, '--json']).stdout,
+  );
+
   const installationRoot = join(temporaryDirectory, 'installation');
   commandResult(npmCommand, [
     'install',
@@ -239,59 +223,27 @@ test('packed launcher downloads a release-like binary and speaks MCP over stdio'
     '--ignore-scripts',
     '--no-audit',
     '--no-fund',
-    archivePath,
+    join(temporaryDirectory, mainFilename),
+    join(temporaryDirectory, platformFilename),
   ]);
-
-  const installedLauncher = join(
-    installationRoot,
-    'node_modules',
-    'codefacts',
-    'bin',
-    'codefacts.js',
-  );
+  const installedLauncher = join(installationRoot, 'node_modules', 'codefacts', 'bin', 'codefacts.js');
   await access(installedLauncher);
-  const server = await startReleaseServer(assetPath, `/v${launcher.PACKAGE_VERSION}/${asset.assetName}`);
-  context.after(() => server.close());
-  const statePath = join(temporaryDirectory, 'state.sqlite');
-  const environment = {
-    ...process.env,
-    CODEFACTS_CACHE_DIR: join(temporaryDirectory, 'cache'),
-    CODEFACTS_DOWNLOAD_BASE_URL: server.baseUrl,
-  };
 
   const client = startMcp(installedLauncher, [
     'mcp',
     '--root', fixtureRoot,
-    '--state', statePath,
-  ], environment);
+    '--state', join(temporaryDirectory, 'state.sqlite'),
+  ], process.env);
   const initialized = await client.request(1, 'initialize');
   assert.equal(initialized.result.serverInfo.name, 'codefacts');
   client.notify('notifications/initialized');
   const tools = await client.request(2, 'tools/list');
-  assert.deepEqual(
-    tools.result.tools.map((tool) => tool.name),
-    ['map', 'search', 'outline', 'expand', 'path'],
-  );
+  assert.deepEqual(tools.result.tools.map((tool) => tool.name), ['map', 'search', 'outline', 'expand', 'path']);
   const search = await client.request(3, 'tools/call', {
     name: 'search',
     arguments: { query: 'AuthService' },
   });
   assert.equal(search.result.isError, false);
   assert.match(search.result.content[0].text, /AuthService/);
-  const stderr = await client.close();
-  assert.match(stderr, /downloading CodeFacts/);
-
-  const location = launcher.binaryLocation({ env: environment });
-  assert.equal(await sha256(location.binaryPath), checksum);
-  assert.equal(server.getRequests(), 1);
-
-  const cachedClient = startMcp(installedLauncher, [
-    'mcp',
-    '--root', fixtureRoot,
-    '--state', join(temporaryDirectory, 'cached-state.sqlite'),
-  ], environment);
-  const cachedInitialized = await cachedClient.request(4, 'initialize');
-  assert.equal(cachedInitialized.result.serverInfo.name, 'codefacts');
-  await cachedClient.close();
-  assert.equal(server.getRequests(), 1, 'a verified cache avoids a second download');
+  await client.close();
 });

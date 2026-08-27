@@ -1,9 +1,9 @@
 # CodeFacts
 
 CodeFacts is a local, source-backed MCP server for repository structure and
-static relationships. This npm package is a small launcher:
-it downloads a checksum-verified native binary from the matching GitHub Release
-and then runs that binary locally over stdio.
+static relationships. This npm package is a small launcher that resolves the
+matching platform-specific optional dependency and runs its native binary
+locally over stdio.
 
 It never uploads the repository being indexed.
 
@@ -17,23 +17,23 @@ The interactive installer detects and configures Codex, Claude Code, OpenCode,
 Cursor, and Gemini CLI after showing the changes and receiving confirmation. It
 only writes the selected agent's `codefacts` MCP entry; it never creates project
 files, instructions, permissions, hooks, indexes, or background processes.
-Before it writes a selected configuration, it prefetches and checksum-verifies
-the resolved release; a prefetch failure leaves agent configuration unchanged.
+Before it writes a selected configuration, it verifies the installed native
+package; a verification failure leaves agent configuration unchanged.
 
 Those entries run `npx --yes --prefer-online codefacts@latest mcp`, which makes
 npm check for the current `latest` package when the agent starts its MCP server.
-The launcher then downloads and checksum-verifies the matching native binary.
-Use a fixed `codefacts@<version>` manual configuration for offline or
-reproducible setups.
+The platform binary is installed by npm's optional dependency resolution. Use
+a fixed `codefacts@<version>` manual configuration for offline or reproducible
+setups.
 
-## Prefetch
+## Verify the installed binary
 
 ```sh
 npx --yes --prefer-online codefacts@latest --install
 ```
 
-This optional command prints the cached binary path and avoids a cold native
-download during the first MCP connection.
+This optional command prints the installed platform binary path and verifies
+its package metadata and SHA-256. It performs no GitHub Release download.
 
 ## Run
 
@@ -48,8 +48,8 @@ pass an absolute `repository_root` argument to every `map`, `search`,
 external index and every result reports `freshness.repository_root`.
 
 The launcher supports Windows x64, macOS x64/arm64, and Linux x64/arm64.
-It writes download progress only to stderr; stdout remains reserved for JSON-RPC.
+It writes status only to stderr; stdout remains reserved for JSON-RPC.
 
 See the [project README](https://github.com/Guanzhw/codefacts#readme) for
-Claude Code and OpenCode configurations, trust model, cache controls, and
-manual binary installation.
+Claude Code and OpenCode configurations, trust model, and manual binary
+installation.
