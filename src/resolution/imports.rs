@@ -79,11 +79,9 @@ pub fn resolve_imports(
 
         // Determine if this is a resolvable import
         let importing_file = edge.file_path.as_str();
-        let resolved_path;
-
-        if is_relative_import(specifier) {
+        let resolved_path = if is_relative_import(specifier) {
             // Resolve relative imports (./  ../)
-            resolved_path = match resolve_specifier(importing_file, specifier, indexed_files) {
+            match resolve_specifier(importing_file, specifier, indexed_files) {
                 Some(p) => p,
                 None => {
                     unresolved_refs.push(UnresolvedRef {
@@ -96,11 +94,11 @@ pub fn resolve_imports(
                     });
                     continue;
                 }
-            };
+            }
         } else if is_path_alias(specifier) {
             // Resolve path aliases (@/  ~/) by mapping to src/ prefix
             let alias_path = resolve_path_alias(specifier);
-            resolved_path = match resolve_alias_path(&alias_path, indexed_files) {
+            match resolve_alias_path(&alias_path, indexed_files) {
                 Some(p) => p,
                 None => {
                     unresolved_refs.push(UnresolvedRef {
@@ -113,7 +111,7 @@ pub fn resolve_imports(
                     });
                     continue;
                 }
-            };
+            }
         } else {
             // Package/absolute imports — skip
             continue;
