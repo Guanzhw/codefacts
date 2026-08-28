@@ -8,6 +8,8 @@ import { fileURLToPath } from 'node:url';
 
 const execFileAsync = promisify(execFile);
 const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+const visibilityTimeoutMs = 15 * 60 * 1000;
+const visibilityPollIntervalMs = 15 * 1000;
 
 function readTarEntry(buffer, wantedName) {
   for (let offset = 0; offset + 512 <= buffer.length;) {
@@ -42,15 +44,16 @@ export async function packageIntegrity(archivePath) {
   return `sha512-${createHash('sha512').update(bytes).digest('base64')}`;
 }
 
-async function runNpm(args) {
+async function runNpm(args, { timeoutMs } = {}) {
   try {
-    const result = await execFileAsync(npmCommand, args, { encoding: 'utf8' });
+    const result = await execFileAsync(npmCommand, args, { encoding: 'utf8', timeout: timeoutMs });
     return { status: 0, stdout: result.stdout || '', stderr: result.stderr || '' };
   } catch (error) {
     return {
       status: typeof error.code === 'number' ? error.code : 1,
       stdout: error.stdout || '',
       stderr: error.stderr || '',
+      timedOut: timeoutMs !== undefined && (error.code === 'ETIMEDOUT' || error.signal === 'SIGTERM'),
     };
   }
 }
@@ -66,8 +69,9 @@ function parseIntegrity(stdout) {
   }
 }
 
-async function publishedIntegrity(name, version, executeNpm) {
-  const result = await executeNpm(['view', `${name}@${version}`, 'dist.integrity', '--json']);
+async function publishedIntegrity(name, version, executeNpm, timeoutMs) {
+  const result = await executeNpm(['view', `${name}@${version}`, 'dist.integrity', '--json'], { timeoutMs });
+  if (result.timedOut) return null;
   if (result.status === 0) return parseIntegrity(result.stdout);
   if (/\bE404\b|\b404\b/u.test(`${result.stdout}\n${result.stderr}`)) return null;
   throw new Error(`npm view failed for ${name}@${version}: ${result.stderr || result.stdout}`.trim());
@@ -92,16 +96,43 @@ export async function publishArchive(archivePath, { executeNpm = runNpm } = {}) 
   return { action: 'published', name: metadata.name, version: metadata.version, integrity: localIntegrity };
 }
 
-export async function verifyArchivePublished(archivePath, { executeNpm = runNpm } = {}) {
+export async function verifyArchivePublished(
+  archivePath,
+  {
+    executeNpm = runNpm,
+    sleep = (durationMs) => new Promise((resolveSleep) => setTimeout(resolveSleep, durationMs)),
+    now = Date.now,
+    timeoutMs = visibilityTimeoutMs,
+    pollIntervalMs = visibilityPollIntervalMs,
+  } = {},
+) {
   const metadata = await packageMetadata(archivePath);
   const expectedIntegrity = await packageIntegrity(archivePath);
-  const actualIntegrity = await publishedIntegrity(metadata.name, metadata.version, executeNpm);
-  if (actualIntegrity !== expectedIntegrity) {
-    throw new Error(
-      `npm package ${metadata.name}@${metadata.version} is not visible with the expected integrity ${expectedIntegrity}`,
+  const deadline = now() + timeoutMs;
+  while (true) {
+    const remainingBeforeViewMs = deadline - now();
+    if (remainingBeforeViewMs <= 0) break;
+    const actualIntegrity = await publishedIntegrity(
+      metadata.name,
+      metadata.version,
+      executeNpm,
+      remainingBeforeViewMs,
     );
+    if (actualIntegrity === expectedIntegrity && now() <= deadline) {
+      return { name: metadata.name, version: metadata.version, integrity: expectedIntegrity };
+    }
+    if (actualIntegrity !== null) {
+      throw new Error(
+        `npm package ${metadata.name}@${metadata.version} is not visible with the expected integrity ${expectedIntegrity}`,
+      );
+    }
+    const remainingMs = deadline - now();
+    if (remainingMs <= 0) break;
+    await sleep(Math.min(pollIntervalMs, remainingMs));
   }
-  return { name: metadata.name, version: metadata.version, integrity: expectedIntegrity };
+  throw new Error(
+    `npm package ${metadata.name}@${metadata.version} is not visible with the expected integrity ${expectedIntegrity}`,
+  );
 }
 
 async function packageArchives(directory) {
