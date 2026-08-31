@@ -1153,6 +1153,20 @@ export function summarizeSession() {
 }
 
 #[test]
+fn map_marks_an_invalid_source_as_partial_instead_of_fresh() {
+    let repository = tempdir().expect("temporary repository");
+    fs::write(repository.path().join("broken.ts"), [0xff, 0xfe, 0xfd])
+        .expect("invalid UTF-8 fixture");
+    let facts = CodeFacts::open(repository.path(), repository.path().join("external.sqlite"))
+        .expect("open source-backed facts");
+
+    let map = facts.map().expect("map partial source snapshot");
+    assert_eq!(map["freshness"]["status"], "partial");
+    assert_eq!(map["freshness"]["files_unreadable"], 1);
+    assert_eq!(map["freshness"]["files_failed"], 1);
+}
+
+#[test]
 fn rust_structs_are_searchable_as_structs() {
     let repository = tempdir().expect("temporary repository");
     fs::write(

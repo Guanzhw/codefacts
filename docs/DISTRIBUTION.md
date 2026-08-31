@@ -9,11 +9,11 @@ project's contract.
 ## What users run
 
 ```text
-npx -y codefacts@0.1.12 mcp --root .
+npx -y codefacts@0.1.13 mcp --root .
 ```
 
 The optional `--root` is a default project for existing single-project MCP
-configurations. A rootless `npx -y codefacts@0.1.12 mcp` server accepts an
+configurations. A rootless `npx -y codefacts@0.1.13 mcp` server accepts an
 explicit `repository_root` in each read-only tool call and creates a separate
 external SQLite state file for each selected project.
 
@@ -83,7 +83,7 @@ Before creating a tag:
 3. Verify the launcher locally with `node --test npm/test/*.test.mjs` and
    stage a platform package with `node npm/scripts/stage-platform-package.mjs`.
 
-Then create and push a matching tag, for example `v0.1.12`. The workflow audits
+Then create and push a matching tag, for example `v0.1.13`. The workflow audits
 licenses, tests the Rust project, builds all assets, creates the GitHub Release
 with `SHA256SUMS`, publishes all platform npm packages, and publishes the main
 launcher with provenance. A tag must not be considered an online-installable

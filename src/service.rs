@@ -8,15 +8,12 @@ use std::collections::{BTreeMap, HashMap, HashSet, VecDeque};
 use std::fs;
 use std::path::{Component, Path, PathBuf};
 
-use rusqlite::params_from_iter;
-use rusqlite::types::Value as SqlValue;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use sha2::{Digest, Sha256};
 
-use crate::db::converters::row_to_code_node;
 use crate::error::{CodeFactsError, Result};
-use crate::graph::store::GraphStore;
+use crate::graph::store::{FtsSearchOptions, GraphStore};
 use crate::indexer::{IndexOptions, IndexResult, IndexingPipeline};
 use crate::lsp::{self, LspManager, LspMode, SemanticReferenceResult};
 use crate::types::{CodeEdge, CodeNode, EdgeKind, NodeKind};
@@ -57,6 +54,9 @@ pub struct CodeFactsRegistry {
 
 #[derive(Debug, Serialize)]
 pub struct Freshness {
+    /// `partial` means one or more source files could not be read, parsed,
+    /// extracted, or accepted because they exceeded the indexing limit; the
+    /// response remains useful but must not be treated as a complete snapshot.
     pub status: &'static str,
     /// Canonical repository identity for this fact snapshot.  MCP clients can
     /// reject facts from a different project instead of inferring scope from a
@@ -68,7 +68,18 @@ pub struct Freshness {
     /// Supported source files parsed or re-parsed during this refresh; this
     /// is not a total repository-file count.
     pub files_indexed: usize,
+    /// Total files not successfully indexed during this refresh, including
+    /// unchanged files reused from the prior snapshot, size-limited files,
+    /// and files with a read/parse/extract failure.
     pub files_skipped: usize,
+    pub files_unchanged: usize,
+    pub files_too_large: usize,
+    pub files_unreadable: usize,
+    pub files_parse_failed: usize,
+    pub files_extract_failed: usize,
+    /// Read/parse/extract failures; size-limit skips are reported
+    /// separately.
+    pub files_failed: usize,
     /// Existing edge occurrences whose target binding was recomputed during
     /// this refresh.
     pub relationships_rebound: usize,
@@ -830,68 +841,15 @@ impl CodeFacts {
         offset: usize,
         limit: usize,
     ) -> Result<Vec<CodeNode>> {
-        let mut query = String::from(
-            "SELECT nodes.* FROM fts_nodes
-             JOIN nodes ON nodes.rowid = fts_nodes.rowid
-             WHERE fts_nodes MATCH ?",
-        );
-        let mut values = vec![SqlValue::Text(fts_query.to_string())];
-
-        if !excluded_node_names.is_empty() {
-            let placeholders = std::iter::repeat_n("?", excluded_node_names.len())
-                .collect::<Vec<_>>()
-                .join(", ");
-            query.push_str(&format!(" AND nodes.name NOT IN ({placeholders})"));
-            values.extend(excluded_node_names.iter().cloned().map(SqlValue::Text));
-        }
-
-        if let Some(kind) = filters.kind {
-            query.push_str(" AND nodes.type = ?");
-            values.push(SqlValue::Text(kind.as_str().to_string()));
-        }
-        if let Some(prefix) = filters.path_prefix {
-            let prefix_with_separator = format!("{prefix}/");
-            // Avoid LIKE so valid path characters such as '%' and '_' retain
-            // their literal meaning. The extra separator prevents `src` from
-            // matching an unrelated `src-old` directory.
-            query.push_str(
-                " AND (nodes.file_path = ?
-                   OR substr(nodes.file_path, 1, length(?)) = ?)",
-            );
-            values.push(SqlValue::Text(prefix.to_string()));
-            values.push(SqlValue::Text(prefix_with_separator.clone()));
-            values.push(SqlValue::Text(prefix_with_separator));
-        }
-        if filters.symbol_scope == SymbolScope::TopLevel {
-            // Variables declared inside a function/method are useful only on
-            // demand. Apply this before ranking and pagination so a page of
-            // lexical noise cannot hide every structural symbol that follows.
-            query.push_str(
-                " AND (nodes.type <> 'variable' OR NOT EXISTS ( \
-                    SELECT 1 FROM nodes enclosing \
-                    WHERE enclosing.file_path = nodes.file_path \
-                      AND enclosing.type IN ('function', 'method') \
-                      AND enclosing.id <> nodes.id \
-                      AND enclosing.start_line <= nodes.start_line \
-                      AND enclosing.end_line >= nodes.end_line \
-                ))",
-            );
-        }
-        query.push_str(
-            " ORDER BY bm25(fts_nodes), nodes.file_path, nodes.start_line, nodes.id
-              LIMIT ? OFFSET ?",
-        );
-        let sql_limit = i64::try_from(limit)
-            .map_err(|_| CodeFactsError::Other("search page limit is too large".into()))?;
-        let sql_offset = i64::try_from(offset)
-            .map_err(|_| CodeFactsError::Other("offset is too large".into()))?;
-        values.push(SqlValue::Integer(sql_limit));
-        values.push(SqlValue::Integer(sql_offset));
-
-        let mut statement = self.store.conn.prepare_cached(&query)?;
-        let rows = statement.query_and_then(params_from_iter(values.iter()), row_to_code_node)?;
-        rows.collect::<std::result::Result<Vec<_>, _>>()
-            .map_err(Into::into)
+        self.store.search_fts_nodes(FtsSearchOptions {
+            query: fts_query,
+            excluded_node_names,
+            kind: filters.kind.as_ref().map(NodeKind::as_str),
+            path_prefix: filters.path_prefix,
+            top_level: filters.symbol_scope == SymbolScope::TopLevel,
+            offset,
+            limit,
+        })
     }
 
     /// Return exact direct-name matches before FTS results. In addition to an
@@ -1298,16 +1256,7 @@ impl CodeFacts {
     }
 
     fn source_hash(&self, file_path: &str) -> Result<Option<String>> {
-        let mut statement = self
-            .store
-            .conn
-            .prepare_cached("SELECT content_hash FROM file_hashes WHERE file_path = ?1")?;
-        let value = statement.query_row([file_path], |row| row.get(0));
-        match value {
-            Ok(hash) => Ok(Some(hash)),
-            Err(rusqlite::Error::QueryReturnedNoRows) => Ok(None),
-            Err(error) => Err(error.into()),
-        }
+        self.store.get_file_hash(file_path)
     }
 
     fn relative_path(&self, input: &str) -> Result<String> {
@@ -1435,11 +1384,21 @@ enum SymbolResolution {
 
 fn freshness(result: IndexResult, repository_root: String, generation: i64) -> Freshness {
     Freshness {
-        status: "fresh",
+        status: if result.files_failed == 0 && result.files_too_large == 0 {
+            "fresh"
+        } else {
+            "partial"
+        },
         repository_root,
         generation,
         files_indexed: result.files_indexed,
         files_skipped: result.files_skipped,
+        files_unchanged: result.files_unchanged,
+        files_too_large: result.files_too_large,
+        files_unreadable: result.files_unreadable,
+        files_parse_failed: result.files_parse_failed,
+        files_extract_failed: result.files_extract_failed,
+        files_failed: result.files_failed,
         relationships_rebound: result.relationships_rebound,
         duration_ms: result.duration_ms,
     }
@@ -1682,17 +1641,20 @@ mod tests {
 
         let fts_first_name = facts
             .store
-            .conn
-            .query_row(
-                "SELECT nodes.name FROM fts_nodes
-                 JOIN nodes ON nodes.rowid = fts_nodes.rowid
-                 WHERE fts_nodes MATCH ?1
-                 ORDER BY bm25(fts_nodes), nodes.file_path, nodes.start_line, nodes.id
-                 LIMIT 1",
-                [fts_query("agent_turn").expect("valid FTS query")],
-                |row| row.get::<_, String>(0),
-            )
-            .expect("rank the raw FTS result");
+            .search_fts_nodes(FtsSearchOptions {
+                query: &fts_query("agent_turn").expect("valid FTS query"),
+                excluded_node_names: &[],
+                kind: None,
+                path_prefix: None,
+                top_level: false,
+                offset: 0,
+                limit: 1,
+            })
+            .expect("rank the raw FTS result")
+            .first()
+            .expect("ranked FTS result")
+            .name
+            .clone();
         assert_eq!(fts_first_name, "agent_turn");
 
         let result = facts

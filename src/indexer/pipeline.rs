@@ -57,7 +57,17 @@ pub struct IndexOptions {
 #[derive(Debug, Clone)]
 pub struct IndexResult {
     pub files_indexed: usize,
+    /// Total files not successfully indexed during this refresh, including
+    /// unchanged files reused from the prior snapshot.
     pub files_skipped: usize,
+    pub files_unchanged: usize,
+    pub files_too_large: usize,
+    pub files_unreadable: usize,
+    pub files_parse_failed: usize,
+    pub files_extract_failed: usize,
+    /// Read/path/parse/extract failures that make the snapshot partial;
+    /// size-limit skips are reported separately in `files_too_large`.
+    pub files_failed: usize,
     pub nodes_created: usize,
     pub edges_created: usize,
     /// Existing edge occurrences whose target bindings were recomputed during
@@ -89,6 +99,32 @@ struct FileParseState {
     nodes: Vec<CodeNode>,
     endpoints: Vec<EndpointBinding>,
     markdown_edges: Vec<CodeEdge>,
+    tree: Option<tree_sitter::Tree>,
+}
+
+#[derive(Default)]
+struct FileSkipCounts {
+    unchanged: AtomicUsize,
+    too_large: AtomicUsize,
+    unreadable: AtomicUsize,
+    parse_failed: AtomicUsize,
+    extract_failed: AtomicUsize,
+}
+
+impl FileSkipCounts {
+    fn total(&self) -> usize {
+        self.unchanged.load(Ordering::Relaxed)
+            + self.too_large.load(Ordering::Relaxed)
+            + self.unreadable.load(Ordering::Relaxed)
+            + self.parse_failed.load(Ordering::Relaxed)
+            + self.extract_failed.load(Ordering::Relaxed)
+    }
+
+    fn failures(&self) -> usize {
+        self.unreadable.load(Ordering::Relaxed)
+            + self.parse_failed.load(Ordering::Relaxed)
+            + self.extract_failed.load(Ordering::Relaxed)
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -117,51 +153,54 @@ impl<'a> IndexingPipeline<'a> {
         // ---- Collect files ----
         let file_paths = collect_files(root);
 
-        // Remove facts for files that are deleted, renamed, newly ignored, or
-        // no longer indexable. Without this sweep an incremental index would
-        // retain symbols that are absent from the current repository view.
         let current_paths: HashSet<String> = file_paths
             .iter()
-            .filter_map(|path| path.strip_prefix(root).ok())
+            .map(|path| {
+                path.strip_prefix(root)
+                    .expect("collect_files returns paths rooted at root")
+            })
             .map(|path| path.to_string_lossy().replace('\\', "/"))
             .collect();
-        let removed_nodes = self.remove_paths_not_in(&current_paths)?;
 
         // Pre-fetch all file hashes for incremental checks (before rayon).
         // This avoids touching the non-Sync Connection from parallel threads.
-        let stored_hashes: HashMap<String, String> = if incremental {
-            self.load_all_file_hashes()
-        } else {
-            HashMap::new()
-        };
+        let stored_hashes = self.store.get_file_hashes()?;
+        let removed_paths: Vec<String> = stored_hashes
+            .keys()
+            .filter(|path| !current_paths.contains(*path))
+            .cloned()
+            .collect();
+        let mut removed_nodes = Vec::new();
+        for path in &removed_paths {
+            removed_nodes.extend(self.store.get_nodes_by_file(path)?);
+        }
+        let removed_path_set: HashSet<&str> = removed_paths.iter().map(String::as_str).collect();
 
-        let files_skipped = AtomicUsize::new(0);
+        let skip_counts = FileSkipCounts::default();
 
         // ---- Pass 1: parse & extract nodes (parallel via rayon) ----
-        // The closure only captures `root`, `stored_hashes`, `files_skipped`,
+        // The closure only captures `root`, `stored_hashes`, `skip_counts`,
         // and `incremental` — all are Sync. No DB access here.
         let parsed: Vec<FileParseState> = file_paths
             .par_iter()
             .filter_map(|abs_path| {
                 // Compute relative path
-                let rel_path = match abs_path.strip_prefix(root) {
-                    Ok(r) => r.to_string_lossy().replace('\\', "/"),
-                    Err(_) => {
-                        files_skipped.fetch_add(1, Ordering::Relaxed);
-                        return None;
-                    }
-                };
+                let rel_path = abs_path
+                    .strip_prefix(root)
+                    .expect("collect_files returns paths rooted at root")
+                    .to_string_lossy()
+                    .replace('\\', "/");
 
                 // Check file size
                 let metadata = match fs::metadata(abs_path) {
                     Ok(m) => m,
                     Err(_) => {
-                        files_skipped.fetch_add(1, Ordering::Relaxed);
+                        skip_counts.unreadable.fetch_add(1, Ordering::Relaxed);
                         return None;
                     }
                 };
                 if metadata.len() > MAX_FILE_SIZE {
-                    files_skipped.fetch_add(1, Ordering::Relaxed);
+                    skip_counts.too_large.fetch_add(1, Ordering::Relaxed);
                     return None;
                 }
 
@@ -169,7 +208,7 @@ impl<'a> IndexingPipeline<'a> {
                 let source_text = match fs::read_to_string(abs_path) {
                     Ok(s) => s,
                     Err(_) => {
-                        files_skipped.fetch_add(1, Ordering::Relaxed);
+                        skip_counts.unreadable.fetch_add(1, Ordering::Relaxed);
                         return None;
                     }
                 };
@@ -181,31 +220,27 @@ impl<'a> IndexingPipeline<'a> {
                 if incremental {
                     if let Some(stored) = stored_hashes.get(&rel_path) {
                         if stored == &content_hash {
-                            files_skipped.fetch_add(1, Ordering::Relaxed);
+                            skip_counts.unchanged.fetch_add(1, Ordering::Relaxed);
                             return None;
                         }
                     }
                 }
 
                 // Detect language
-                let language = match CodeParser::detect_language(&rel_path) {
-                    Some(l) => l,
-                    None => {
-                        files_skipped.fetch_add(1, Ordering::Relaxed);
-                        return None;
-                    }
-                };
+                let language = CodeParser::detect_language(&rel_path)
+                    .expect("collect_files returns supported source paths");
 
-                let (mut nodes, endpoints, markdown_edges) = if language == Language::Markdown {
+                let (mut nodes, endpoints, markdown_edges, tree) = if language == Language::Markdown
+                {
                     let extraction = extract_markdown(&rel_path, &source_text);
-                    (extraction.nodes, Vec::new(), extraction.edges)
+                    (extraction.nodes, Vec::new(), extraction.edges, None)
                 } else {
                     // Parse with a thread-local Parser (Parser is NOT Send/Sync)
                     let parser = CodeParser::new();
                     let tree = match parser.parse(&source_text, language) {
                         Ok(t) => t,
                         Err(_) => {
-                            files_skipped.fetch_add(1, Ordering::Relaxed);
+                            skip_counts.parse_failed.fetch_add(1, Ordering::Relaxed);
                             return None;
                         }
                     };
@@ -213,7 +248,7 @@ impl<'a> IndexingPipeline<'a> {
                         match Extractor::extract_nodes(&tree, &rel_path, language, &source_text) {
                             Ok(n) => n,
                             Err(_) => {
-                                files_skipped.fetch_add(1, Ordering::Relaxed);
+                                skip_counts.extract_failed.fetch_add(1, Ordering::Relaxed);
                                 return None;
                             }
                         };
@@ -221,6 +256,7 @@ impl<'a> IndexingPipeline<'a> {
                         nodes,
                         extract_endpoints(&rel_path, language, &source_text, &tree),
                         Vec::new(),
+                        Some(tree),
                     )
                 };
                 nodes.extend(endpoints.iter().map(|binding| binding.endpoint.clone()));
@@ -233,6 +269,7 @@ impl<'a> IndexingPipeline<'a> {
                     nodes,
                     endpoints,
                     markdown_edges,
+                    tree,
                 })
             })
             .collect();
@@ -257,7 +294,9 @@ impl<'a> IndexingPipeline<'a> {
             let reindexed_paths: std::collections::HashSet<&str> =
                 parsed.iter().map(|s| s.relative_path.as_str()).collect();
             for node in &existing_nodes {
-                if !reindexed_paths.contains(node.file_path.as_str()) {
+                if !reindexed_paths.contains(node.file_path.as_str())
+                    && !removed_path_set.contains(node.file_path.as_str())
+                {
                     all_nodes.push(node);
                 }
             }
@@ -285,20 +324,22 @@ impl<'a> IndexingPipeline<'a> {
         );
 
         // ---- Pass 2: extract edges & persist (parallel edge extraction) ----
-        #[allow(clippy::type_complexity)]
-        let edge_results: Vec<
-            Result<(String, Language, String, Vec<CodeNode>, Vec<CodeEdge>)>,
-        > = parsed
+        type FileData = (String, Language, String, Vec<CodeNode>, Vec<CodeEdge>);
+        let edge_results: Vec<Result<FileData>> = parsed
             .par_iter()
             .map(|state| {
                 let mut edges = if state.language == Language::Markdown {
                     state.markdown_edges.clone()
                 } else {
-                    // Each thread creates its own Parser (not Send/Sync)
-                    let parser = CodeParser::new();
-                    let tree = parser.parse(&state.source_text, state.language)?;
+                    // Pass 1 already parsed this exact source and loaded the
+                    // same language query. Reuse that tree so Pass 2 cannot
+                    // manufacture a second, divergent source-failure path.
+                    let tree = state
+                        .tree
+                        .as_ref()
+                        .expect("non-Markdown parse state retains its syntax tree");
                     Extractor::extract_edges(
-                        &tree,
+                        tree,
                         &state.relative_path,
                         state.language,
                         &state.source_text,
@@ -325,85 +366,99 @@ impl<'a> IndexingPipeline<'a> {
             .collect();
 
         // ---- Collect edge results ----
-        type FileData = (String, Language, String, Vec<CodeNode>, Vec<CodeEdge>);
-        let mut file_data: Vec<FileData> = Vec::new();
-        for result in edge_results {
-            file_data.push(result?);
-        }
+        let file_data: Vec<FileData> = edge_results.into_iter().collect::<Result<_>>()?;
 
         // ---- Persist to SQLite (sequential — single connection) ----
-        let mut files_indexed = 0usize;
-        let mut nodes_created = 0usize;
-        let mut edges_created = 0usize;
-        let mut relationships_rebound = 0usize;
+        // Every mutation, including cleanup and generation metadata, shares
+        // one store-owned transaction. Failed parsing above never enters it.
+        let full_pass_complete = !incremental
+            && skip_counts.failures() == 0
+            && skip_counts.too_large.load(Ordering::Relaxed) == 0;
+        let (files_indexed, nodes_created, edges_created, relationships_rebound) =
+            self.store.with_transaction(|store| {
+                for path in &removed_paths {
+                    self.remove_file(path)?;
+                }
 
-        for (rel_path, language, content_hash, nodes, edges) in file_data {
-            self.store.replace_file_data(&rel_path, &nodes, &edges)?;
-            self.upsert_file_hash(&rel_path, &content_hash, language)?;
+                let mut files_indexed = 0usize;
+                let mut nodes_created = 0usize;
+                let mut edges_created = 0usize;
+                for (rel_path, language, content_hash, nodes, edges) in file_data {
+                    store.replace_file_data(&rel_path, &nodes, &edges)?;
+                    store.upsert_file_hash(&rel_path, &content_hash, language.as_str())?;
+                    nodes_created += nodes.len();
+                    edges_created += edges.len();
+                    files_indexed += 1;
+                }
 
-            nodes_created += nodes.len();
-            edges_created += edges.len();
-            files_indexed += 1;
-        }
+                let changed = files_indexed > 0 || !removed_paths.is_empty();
+                let mut relationships_rebound = 0usize;
+                if changed {
+                    let current_nodes = store.get_all_nodes()?;
+                    // A full pass resolves call candidates before persistence.
+                    // Only an incremental pass revisits unchanged callers after
+                    // a target definition has been added, moved, or removed.
+                    if incremental {
+                        relationships_rebound =
+                            self.rebind_static_targets(&changed_target_names, &current_nodes)?;
+                    }
 
-        let changed = files_indexed > 0 || !removed_nodes.is_empty();
-        if changed {
-            let current_nodes = self.store.get_all_nodes()?;
-            // A full pass resolves call candidates before persistence. Only
-            // an incremental pass needs to revisit unchanged callers after a
-            // target definition has been added, moved, or removed.
-            if incremental {
-                relationships_rebound =
-                    self.rebind_static_targets(&changed_target_names, &current_nodes)?;
-            }
+                    // Import resolution depends on both source paths and target
+                    // symbols. Re-evaluate its derived relation set atomically.
+                    store.delete_resolved_import_edges()?;
+                    store.clear_all_unresolved_refs()?;
+                    let current_node_refs = current_nodes.iter().collect::<Vec<_>>();
+                    let current_node_index = build_node_index(&current_node_refs);
+                    let mut nodes_by_file: HashMap<String, Vec<CodeNode>> = HashMap::new();
+                    for node in &current_nodes {
+                        nodes_by_file
+                            .entry(node.file_path.clone())
+                            .or_default()
+                            .push(node.clone());
+                    }
+                    let raw_import_edges = store.get_raw_import_edges()?;
+                    let resolution_result = resolve_imports(
+                        &raw_import_edges,
+                        &current_paths,
+                        &current_node_index,
+                        &nodes_by_file,
+                    );
+                    store.upsert_edges(&resolution_result.resolved_edges)?;
+                    edges_created += resolution_result.resolved_edges.len();
+                    for uref in &resolution_result.unresolved_refs {
+                        store.insert_unresolved_ref(
+                            &uref.source_id,
+                            &uref.specifier,
+                            &uref.ref_type,
+                            &uref.file_path,
+                            uref.line,
+                        )?;
+                    }
+                }
 
-            // Import resolution depends on both source paths and target
-            // symbols. Re-evaluate its small derived relation set without
-            // parsing unchanged files.
-            self.store.delete_resolved_import_edges()?;
-            self.store.clear_all_unresolved_refs()?;
-            let current_node_refs = current_nodes.iter().collect::<Vec<_>>();
-            let current_node_index = build_node_index(&current_node_refs);
-            let mut nodes_by_file: HashMap<String, Vec<CodeNode>> = HashMap::new();
-            for node in &current_nodes {
-                nodes_by_file
-                    .entry(node.file_path.clone())
-                    .or_default()
-                    .push(node.clone());
-            }
-            let raw_import_edges = self.store.get_raw_import_edges()?;
-            let resolution_result = resolve_imports(
-                &raw_import_edges,
-                &current_paths,
-                &current_node_index,
-                &nodes_by_file,
-            );
-            self.store.upsert_edges(&resolution_result.resolved_edges)?;
-            edges_created += resolution_result.resolved_edges.len();
-            for uref in &resolution_result.unresolved_refs {
-                self.store.insert_unresolved_ref(
-                    &uref.source_id,
-                    &uref.specifier,
-                    &uref.ref_type,
-                    &uref.file_path,
-                    uref.line,
-                )?;
-            }
-
-            if !incremental {
-                self.store.mark_full_reindex_complete()?;
-            }
-            self.store.advance_generation()?;
-        } else if !incremental {
-            // An empty repository is still a successful full source pass.
-            // Clear an extractor/schema migration marker so it does not force
-            // every later read to repeat the same no-op rebuild.
-            self.store.mark_full_reindex_complete()?;
-        }
+                if full_pass_complete {
+                    store.mark_full_reindex_complete()?;
+                }
+                if changed {
+                    store.advance_generation()?;
+                }
+                Ok((
+                    files_indexed,
+                    nodes_created,
+                    edges_created,
+                    relationships_rebound,
+                ))
+            })?;
 
         Ok(IndexResult {
             files_indexed,
-            files_skipped: files_skipped.load(Ordering::Relaxed),
+            files_skipped: skip_counts.total(),
+            files_unchanged: skip_counts.unchanged.load(Ordering::Relaxed),
+            files_too_large: skip_counts.too_large.load(Ordering::Relaxed),
+            files_unreadable: skip_counts.unreadable.load(Ordering::Relaxed),
+            files_parse_failed: skip_counts.parse_failed.load(Ordering::Relaxed),
+            files_extract_failed: skip_counts.extract_failed.load(Ordering::Relaxed),
+            files_failed: skip_counts.failures(),
             nodes_created,
             edges_created,
             relationships_rebound,
@@ -416,7 +471,7 @@ impl<'a> IndexingPipeline<'a> {
         self.store
             .delete_file_nodes_preserving_incoming(relative_path)?;
         self.store.clear_unresolved_refs_for_file(relative_path)?;
-        self.delete_file_hash(relative_path)?;
+        self.store.delete_file_hash(relative_path)?;
         Ok(())
     }
 
@@ -510,73 +565,6 @@ impl<'a> IndexingPipeline<'a> {
     // -----------------------------------------------------------------------
     // File hash helpers (incremental indexing)
     // -----------------------------------------------------------------------
-
-    /// Load all stored file hashes into memory for fast incremental lookups.
-    /// Called once before the parallel section to avoid DB access from rayon threads.
-    fn load_all_file_hashes(&self) -> HashMap<String, String> {
-        let mut map = HashMap::new();
-        let result = self
-            .store
-            .conn
-            .prepare("SELECT file_path, content_hash FROM file_hashes");
-        if let Ok(mut stmt) = result {
-            let _ = stmt
-                .query_map([], |row| {
-                    let path: String = row.get(0)?;
-                    let hash: String = row.get(1)?;
-                    Ok((path, hash))
-                })
-                .map(|rows| {
-                    for row in rows.flatten() {
-                        map.insert(row.0, row.1);
-                    }
-                });
-        }
-        map
-    }
-
-    fn remove_paths_not_in(&self, current_paths: &HashSet<String>) -> Result<Vec<CodeNode>> {
-        let mut removed_nodes = Vec::new();
-        for relative_path in self.load_all_file_hashes().into_keys() {
-            if !current_paths.contains(&relative_path) {
-                removed_nodes.extend(self.store.get_nodes_by_file(&relative_path)?);
-                self.remove_file(&relative_path)?;
-            }
-        }
-        Ok(removed_nodes)
-    }
-
-    fn upsert_file_hash(
-        &self,
-        file_path: &str,
-        content_hash: &str,
-        language: Language,
-    ) -> Result<()> {
-        self.store
-            .conn
-            .prepare_cached(
-                "INSERT INTO file_hashes (file_path, content_hash, language)
-             VALUES (?1, ?2, ?3)
-             ON CONFLICT(file_path) DO UPDATE SET
-               content_hash = excluded.content_hash,
-               indexed_at = datetime('now'),
-               language = excluded.language",
-            )?
-            .execute(rusqlite::params![
-                file_path,
-                content_hash,
-                language.as_str()
-            ])?;
-        Ok(())
-    }
-
-    fn delete_file_hash(&self, file_path: &str) -> Result<()> {
-        self.store
-            .conn
-            .prepare_cached("DELETE FROM file_hashes WHERE file_path = ?1")?
-            .execute([file_path])?;
-        Ok(())
-    }
 }
 
 // ---------------------------------------------------------------------------
@@ -813,9 +801,7 @@ fn collect_files(root: &Path) -> Vec<PathBuf> {
             continue;
         }
         let path = entry.path();
-        if CodeParser::is_supported(&path.to_string_lossy())
-            && fs::metadata(path).is_ok_and(|metadata| metadata.len() <= MAX_FILE_SIZE)
-        {
+        if CodeParser::is_supported(&path.to_string_lossy()) {
             files.push(path.to_path_buf());
         }
     }
@@ -972,6 +958,8 @@ class Calculator:
             .unwrap();
         assert_eq!(r2.files_indexed, 0);
         assert_eq!(r2.files_skipped, 2);
+        assert_eq!(r2.files_unchanged, 2);
+        assert_eq!(r2.files_failed, 0);
     }
 
     #[test]
@@ -1009,6 +997,183 @@ export function greetV2(name: string): string {
             .unwrap();
         assert_eq!(r2.files_indexed, 1);
         assert_eq!(r2.files_skipped, 1);
+        assert_eq!(r2.files_unchanged, 1);
+        assert_eq!(r2.files_failed, 0);
+    }
+
+    #[test]
+    fn refresh_transaction_rolls_back_replacement_deletion_hashes_and_generation() {
+        let source = tempfile::tempdir().unwrap();
+        fs::write(
+            source.path().join("keep.ts"),
+            "export function original(): string { return removed(); }\n",
+        )
+        .unwrap();
+        fs::write(
+            source.path().join("remove.ts"),
+            "export function removed(): string { return 'old'; }\n",
+        )
+        .unwrap();
+
+        let database_dir = tempfile::tempdir().unwrap();
+        let database_path = database_dir.path().join("facts.sqlite");
+        let store = GraphStore::new(database_path.to_str().unwrap()).unwrap();
+        let pipeline = IndexingPipeline::new(&store);
+        pipeline
+            .index_directory(&IndexOptions {
+                root_dir: source.path().to_path_buf(),
+                incremental: true,
+            })
+            .unwrap();
+
+        let generation = store.generation().unwrap();
+        let keep_hash = store.get_file_hash("keep.ts").unwrap();
+        let remove_hash = store.get_file_hash("remove.ts").unwrap();
+        let stats = store.get_stats().unwrap();
+
+        fs::write(
+            source.path().join("keep.ts"),
+            "export function changed(): string { return 'new'; }\n",
+        )
+        .unwrap();
+        fs::remove_file(source.path().join("remove.ts")).unwrap();
+
+        let trigger_connection = rusqlite::Connection::open(&database_path).unwrap();
+        trigger_connection
+            .execute_batch(
+                "CREATE TRIGGER fail_generation_update
+                 BEFORE UPDATE OF value ON index_metadata
+                 WHEN OLD.key = 'generation'
+                 BEGIN
+                   SELECT RAISE(ABORT, 'injected generation failure');
+                 END;",
+            )
+            .unwrap();
+        drop(trigger_connection);
+
+        let error = pipeline
+            .index_directory(&IndexOptions {
+                root_dir: source.path().to_path_buf(),
+                incremental: true,
+            })
+            .expect_err("generation failure must abort the refresh");
+        assert!(error.to_string().contains("injected generation failure"));
+
+        assert_eq!(store.generation().unwrap(), generation);
+        assert_eq!(store.get_file_hash("keep.ts").unwrap(), keep_hash);
+        assert_eq!(store.get_file_hash("remove.ts").unwrap(), remove_hash);
+        assert_eq!(store.get_stats().unwrap().nodes, stats.nodes);
+        assert_eq!(store.get_stats().unwrap().edges, stats.edges);
+        assert!(store
+            .get_nodes_by_file("keep.ts")
+            .unwrap()
+            .iter()
+            .any(|node| node.name == "original"));
+        assert!(!store
+            .get_nodes_by_file("keep.ts")
+            .unwrap()
+            .iter()
+            .any(|node| node.name == "changed"));
+        assert!(store
+            .get_nodes_by_file("remove.ts")
+            .unwrap()
+            .iter()
+            .any(|node| node.name == "removed"));
+    }
+
+    #[test]
+    fn index_directory_reports_oversized_and_unreadable_files() {
+        let (tmp, store) = setup_test_project();
+        fs::write(
+            tmp.path().join("large.ts"),
+            "x".repeat((MAX_FILE_SIZE + 1) as usize),
+        )
+        .unwrap();
+        fs::write(tmp.path().join("invalid-utf8.ts"), [0xff, 0xfe, 0xfd]).unwrap();
+
+        let result = IndexingPipeline::new(&store)
+            .index_directory(&IndexOptions {
+                root_dir: tmp.path().to_path_buf(),
+                incremental: false,
+            })
+            .unwrap();
+
+        assert_eq!(result.files_indexed, 2);
+        assert_eq!(result.files_too_large, 1);
+        assert_eq!(result.files_unreadable, 1);
+        assert_eq!(result.files_failed, 1);
+        assert_eq!(
+            result.files_skipped,
+            result.files_too_large + result.files_unreadable
+        );
+    }
+
+    #[test]
+    fn source_gap_retains_prior_snapshot_and_recovers_when_source_is_valid_again() {
+        let (tmp, store) = setup_test_project();
+        let pipeline = IndexingPipeline::new(&store);
+        pipeline
+            .index_directory(&IndexOptions {
+                root_dir: tmp.path().to_path_buf(),
+                incremental: true,
+            })
+            .unwrap();
+
+        let generation = store.generation().unwrap();
+        let prior_hash = store.get_file_hash("hello.ts").unwrap();
+
+        fs::write(tmp.path().join("hello.ts"), [0xff, 0xfe, 0xfd]).unwrap();
+        let unreadable = pipeline
+            .index_directory(&IndexOptions {
+                root_dir: tmp.path().to_path_buf(),
+                incremental: true,
+            })
+            .unwrap();
+        assert_eq!(unreadable.files_unreadable, 1);
+        assert_eq!(unreadable.files_failed, 1);
+        assert_eq!(store.generation().unwrap(), generation);
+        assert_eq!(store.get_file_hash("hello.ts").unwrap(), prior_hash);
+        assert!(store
+            .get_nodes_by_file("hello.ts")
+            .unwrap()
+            .iter()
+            .any(|node| node.name == "greet"));
+
+        fs::write(
+            tmp.path().join("hello.ts"),
+            "x".repeat((MAX_FILE_SIZE + 1) as usize),
+        )
+        .unwrap();
+        let oversized = pipeline
+            .index_directory(&IndexOptions {
+                root_dir: tmp.path().to_path_buf(),
+                incremental: true,
+            })
+            .unwrap();
+        assert_eq!(oversized.files_too_large, 1);
+        assert_eq!(oversized.files_failed, 0);
+        assert_eq!(store.generation().unwrap(), generation);
+        assert_eq!(store.get_file_hash("hello.ts").unwrap(), prior_hash);
+
+        fs::write(
+            tmp.path().join("hello.ts"),
+            "export function recovered(): string { return 'fresh'; }\n",
+        )
+        .unwrap();
+        let recovered = pipeline
+            .index_directory(&IndexOptions {
+                root_dir: tmp.path().to_path_buf(),
+                incremental: true,
+            })
+            .unwrap();
+        assert_eq!(recovered.files_indexed, 1);
+        assert_eq!(recovered.files_failed, 0);
+        assert_eq!(recovered.files_too_large, 0);
+        assert!(store.generation().unwrap() > generation);
+        assert_ne!(store.get_file_hash("hello.ts").unwrap(), prior_hash);
+        let nodes = store.get_nodes_by_file("hello.ts").unwrap();
+        assert!(nodes.iter().any(|node| node.name == "recovered"));
+        assert!(!nodes.iter().any(|node| node.name == "greet"));
     }
 
     #[test]

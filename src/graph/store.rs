@@ -4,7 +4,7 @@
 //! `prepare_cached` for automatic statement caching — the Rust equivalent
 //! of the TS version's eagerly-prepared statement map.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashMap};
 
 use rusqlite::types::Value as SqlValue;
 use rusqlite::{params, params_from_iter, Connection};
@@ -26,6 +26,18 @@ pub struct GraphStats {
     pub files: usize,
 }
 
+/// Bounded options for searching the derived FTS index.
+#[derive(Debug, Clone, Copy)]
+pub struct FtsSearchOptions<'a> {
+    pub query: &'a str,
+    pub excluded_node_names: &'a [String],
+    pub kind: Option<&'a str>,
+    pub path_prefix: Option<&'a str>,
+    pub top_level: bool,
+    pub offset: usize,
+    pub limit: usize,
+}
+
 // ---------------------------------------------------------------------------
 // GraphStore
 // ---------------------------------------------------------------------------
@@ -38,7 +50,7 @@ pub struct GraphStats {
 /// TypeScript version's eagerly-prepared statements while being more
 /// ergonomic (no upfront prepare step, no lifetime gymnastics).
 pub struct GraphStore {
-    pub conn: Connection,
+    conn: Connection,
 }
 
 impl std::fmt::Debug for GraphStore {
@@ -444,6 +456,27 @@ impl GraphStore {
         Self { conn }
     }
 
+    /// Run a group of graph mutations as one transaction owned by the store.
+    /// A nested store operation joins the active transaction, so batch methods
+    /// remain atomic both on their own and inside a larger refresh.
+    pub(crate) fn with_transaction<T, F>(&self, operation: F) -> Result<T>
+    where
+        F: FnOnce(&Self) -> Result<T>,
+    {
+        if !self.conn.is_autocommit() {
+            return operation(self);
+        }
+
+        let transaction = self.conn.unchecked_transaction()?;
+        match operation(self) {
+            Ok(value) => {
+                transaction.commit()?;
+                Ok(value)
+            }
+            Err(error) => Err(error),
+        }
+    }
+
     // -------------------------------------------------------------------
     // Index identity and migration state
     // -------------------------------------------------------------------
@@ -536,14 +569,13 @@ impl GraphStore {
     }
 
     // -------------------------------------------------------------------
-    // Batch mutations (transactional)
+    // Batch mutations
     // -------------------------------------------------------------------
 
-    /// Batch-insert nodes inside a single transaction.
+    /// Batch-insert nodes atomically.
     pub fn upsert_nodes(&self, nodes: &[CodeNode]) -> Result<()> {
-        let tx = self.conn.unchecked_transaction()?;
-        {
-            let mut stmt = tx.prepare_cached(UPSERT_NODE_SQL)?;
+        self.with_transaction(|store| {
+            let mut stmt = store.conn.prepare_cached(UPSERT_NODE_SQL)?;
             for node in nodes {
                 let name_tokens = build_name_tokens(&node.name, node.qualified_name.as_deref());
                 let is_test = detect_is_test_node(node);
@@ -564,16 +596,14 @@ impl GraphStore {
                     is_test as i32,
                 ])?;
             }
-        }
-        tx.commit()?;
-        Ok(())
+            Ok(())
+        })
     }
 
-    /// Batch-insert edges inside a single transaction.
+    /// Batch-insert edges atomically.
     pub fn upsert_edges(&self, edges: &[CodeEdge]) -> Result<()> {
-        let tx = self.conn.unchecked_transaction()?;
-        {
-            let mut stmt = tx.prepare_cached(UPSERT_EDGE_SQL)?;
+        self.with_transaction(|store| {
+            let mut stmt = store.conn.prepare_cached(UPSERT_EDGE_SQL)?;
             for edge in edges {
                 stmt.execute(params![
                     edge.source,
@@ -585,32 +615,29 @@ impl GraphStore {
                     build_edge_properties(edge),
                 ])?;
             }
-        }
-        tx.commit()?;
-        Ok(())
+            Ok(())
+        })
     }
 
     /// Atomically replace all graph data for a single file.
     ///
     /// Deletes every node and edge associated with `file_path`, then
-    /// inserts the new `nodes` and `edges` — all inside one transaction.
+    /// inserts the new `nodes` and `edges`.
     pub fn replace_file_data(
         &self,
         file_path: &str,
         nodes: &[CodeNode],
         edges: &[CodeEdge],
     ) -> Result<()> {
-        let tx = self.conn.unchecked_transaction()?;
-        {
+        self.with_transaction(|store| {
             // Delete edges first (they reference nodes via FK).
-            let mut del_edges = tx.prepare_cached(DELETE_EDGES_BY_FILE_SQL)?;
+            let mut del_edges = store.conn.prepare_cached(DELETE_EDGES_BY_FILE_SQL)?;
             del_edges.execute(params![file_path])?;
-
-            let mut del_nodes = tx.prepare_cached(DELETE_NODES_BY_FILE_SQL)?;
+            let mut del_nodes = store.conn.prepare_cached(DELETE_NODES_BY_FILE_SQL)?;
             del_nodes.execute(params![file_path])?;
 
             // Insert replacements.
-            let mut ins_node = tx.prepare_cached(UPSERT_NODE_SQL)?;
+            let mut ins_node = store.conn.prepare_cached(UPSERT_NODE_SQL)?;
             for node in nodes {
                 let name_tokens = build_name_tokens(&node.name, node.qualified_name.as_deref());
                 let is_test = detect_is_test_node(node);
@@ -631,8 +658,7 @@ impl GraphStore {
                     is_test as i32,
                 ])?;
             }
-
-            let mut ins_edge = tx.prepare_cached(UPSERT_EDGE_SQL)?;
+            let mut ins_edge = store.conn.prepare_cached(UPSERT_EDGE_SQL)?;
             for edge in edges {
                 ins_edge.execute(params![
                     edge.source,
@@ -644,39 +670,34 @@ impl GraphStore {
                     build_edge_properties(edge),
                 ])?;
             }
-        }
-        tx.commit()?;
-        Ok(())
+            Ok(())
+        })
     }
 
     /// Delete all nodes and edges associated with `file_path`.
     pub fn delete_file_nodes(&self, file_path: &str) -> Result<()> {
-        let tx = self.conn.unchecked_transaction()?;
-        {
-            let mut del_edges = tx.prepare_cached(DELETE_ALL_EDGES_BY_NODE_FILE_SQL)?;
+        self.with_transaction(|store| {
+            let mut del_edges = store
+                .conn
+                .prepare_cached(DELETE_ALL_EDGES_BY_NODE_FILE_SQL)?;
             del_edges.execute(params![file_path])?;
-
-            let mut del_nodes = tx.prepare_cached(DELETE_NODES_BY_FILE_SQL)?;
+            let mut del_nodes = store.conn.prepare_cached(DELETE_NODES_BY_FILE_SQL)?;
             del_nodes.execute(params![file_path])?;
-        }
-        tx.commit()?;
-        Ok(())
+            Ok(())
+        })
     }
 
     /// Delete facts emitted by one file while retaining incoming source facts
     /// from other files. The incremental pipeline uses this narrower variant
     /// so those facts can be rebound to a moved or newly added definition.
     pub fn delete_file_nodes_preserving_incoming(&self, file_path: &str) -> Result<()> {
-        let tx = self.conn.unchecked_transaction()?;
-        {
-            let mut del_edges = tx.prepare_cached(DELETE_EDGES_BY_FILE_SQL)?;
+        self.with_transaction(|store| {
+            let mut del_edges = store.conn.prepare_cached(DELETE_EDGES_BY_FILE_SQL)?;
             del_edges.execute(params![file_path])?;
-
-            let mut del_nodes = tx.prepare_cached(DELETE_NODES_BY_FILE_SQL)?;
+            let mut del_nodes = store.conn.prepare_cached(DELETE_NODES_BY_FILE_SQL)?;
             del_nodes.execute(params![file_path])?;
-        }
-        tx.commit()?;
-        Ok(())
+            Ok(())
+        })
     }
 
     // -------------------------------------------------------------------
@@ -868,6 +889,125 @@ impl GraphStore {
             .map_err(Into::into)
     }
 
+    /// Load the persisted source hashes used by incremental indexing.
+    pub fn get_file_hashes(&self) -> Result<HashMap<String, String>> {
+        let mut statement = self
+            .conn
+            .prepare_cached("SELECT file_path, content_hash FROM file_hashes")?;
+        let rows = statement.query_map([], |row| {
+            Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?))
+        })?;
+        rows.collect::<std::result::Result<HashMap<_, _>, _>>()
+            .map_err(Into::into)
+    }
+
+    /// Return the persisted source hash for one indexed file, if present.
+    pub fn get_file_hash(&self, file_path: &str) -> Result<Option<String>> {
+        let mut statement = self
+            .conn
+            .prepare_cached("SELECT content_hash FROM file_hashes WHERE file_path = ?1")?;
+        match statement.query_row([file_path], |row| row.get(0)) {
+            Ok(hash) => Ok(Some(hash)),
+            Err(rusqlite::Error::QueryReturnedNoRows) => Ok(None),
+            Err(error) => Err(error.into()),
+        }
+    }
+
+    /// Insert or update one source hash used by incremental indexing.
+    pub fn upsert_file_hash(
+        &self,
+        file_path: &str,
+        content_hash: &str,
+        language: &str,
+    ) -> Result<()> {
+        self.conn
+            .prepare_cached(
+                "INSERT INTO file_hashes (file_path, content_hash, language)
+             VALUES (?1, ?2, ?3)
+             ON CONFLICT(file_path) DO UPDATE SET
+               content_hash = excluded.content_hash,
+               indexed_at = datetime('now'),
+               language = excluded.language",
+            )?
+            .execute(params![file_path, content_hash, language])?;
+        Ok(())
+    }
+
+    /// Remove one source hash after its file leaves the repository view.
+    pub fn delete_file_hash(&self, file_path: &str) -> Result<()> {
+        self.conn
+            .prepare_cached("DELETE FROM file_hashes WHERE file_path = ?1")?
+            .execute([file_path])?;
+        Ok(())
+    }
+
+    /// Search the derived FTS index while preserving the source-backed node
+    /// ordering and structural filters used by the service layer.
+    pub fn search_fts_nodes(&self, options: FtsSearchOptions<'_>) -> Result<Vec<CodeNode>> {
+        let mut query = String::from(
+            "SELECT nodes.* FROM fts_nodes
+             JOIN nodes ON nodes.rowid = fts_nodes.rowid
+             WHERE fts_nodes MATCH ?",
+        );
+        let mut values = vec![SqlValue::Text(options.query.to_string())];
+
+        if !options.excluded_node_names.is_empty() {
+            let placeholders = std::iter::repeat_n("?", options.excluded_node_names.len())
+                .collect::<Vec<_>>()
+                .join(", ");
+            query.push_str(&format!(" AND nodes.name NOT IN ({placeholders})"));
+            values.extend(
+                options
+                    .excluded_node_names
+                    .iter()
+                    .cloned()
+                    .map(SqlValue::Text),
+            );
+        }
+        if let Some(kind) = options.kind {
+            query.push_str(" AND nodes.type = ?");
+            values.push(SqlValue::Text(kind.to_string()));
+        }
+        if let Some(prefix) = options.path_prefix {
+            let prefix_with_separator = format!("{prefix}/");
+            query.push_str(
+                " AND (nodes.file_path = ?
+                   OR substr(nodes.file_path, 1, length(?)) = ?)",
+            );
+            values.push(SqlValue::Text(prefix.to_string()));
+            values.push(SqlValue::Text(prefix_with_separator.clone()));
+            values.push(SqlValue::Text(prefix_with_separator));
+        }
+        if options.top_level {
+            query.push_str(
+                " AND (nodes.type <> 'variable' OR NOT EXISTS ( \
+                    SELECT 1 FROM nodes enclosing \
+                    WHERE enclosing.file_path = nodes.file_path \
+                      AND enclosing.type IN ('function', 'method') \
+                      AND enclosing.id <> nodes.id \
+                      AND enclosing.start_line <= nodes.start_line \
+                      AND enclosing.end_line >= nodes.end_line \
+                ))",
+            );
+        }
+        query.push_str(
+            " ORDER BY bm25(fts_nodes), nodes.file_path, nodes.start_line, nodes.id
+              LIMIT ? OFFSET ?",
+        );
+        let sql_limit = i64::try_from(options.limit).map_err(|_| {
+            crate::error::CodeFactsError::Other("search page limit is too large".into())
+        })?;
+        let sql_offset = i64::try_from(options.offset)
+            .map_err(|_| crate::error::CodeFactsError::Other("offset is too large".into()))?;
+        values.push(SqlValue::Integer(sql_limit));
+        values.push(SqlValue::Integer(sql_offset));
+
+        let mut statement = self.conn.prepare_cached(&query)?;
+        let rows = statement.query_and_then(params_from_iter(values.iter()), row_to_code_node)?;
+        rows.collect::<std::result::Result<Vec<_>, _>>()
+            .map_err(Into::into)
+    }
+
     /// Load source-spelled static edges whose target name may have changed
     /// resolution after a definition edit.
     pub fn get_edges_by_target_names(&self, target_names: &[String]) -> Result<Vec<CodeEdge>> {
@@ -953,17 +1093,14 @@ impl GraphStore {
         Ok(())
     }
 
-    /// Atomically replace a set of relationship occurrences. Incremental
-    /// re-resolution uses this to avoid exposing a half-rebound graph and to
-    /// avoid one SQLite transaction per affected edge.
+    /// Replace a set of relationship occurrences atomically.
     pub fn replace_edge_occurrences(
         &self,
         deleted: &[CodeEdge],
         inserted: &[CodeEdge],
     ) -> Result<()> {
-        let tx = self.conn.unchecked_transaction()?;
-        {
-            let mut delete = tx.prepare_cached(DELETE_EDGE_OCCURRENCE_SQL)?;
+        self.with_transaction(|store| {
+            let mut delete = store.conn.prepare_cached(DELETE_EDGE_OCCURRENCE_SQL)?;
             for edge in deleted {
                 delete.execute(params![
                     edge.source,
@@ -973,7 +1110,7 @@ impl GraphStore {
                     edge.line
                 ])?;
             }
-            let mut insert = tx.prepare_cached(UPSERT_EDGE_SQL)?;
+            let mut insert = store.conn.prepare_cached(UPSERT_EDGE_SQL)?;
             for edge in inserted {
                 insert.execute(params![
                     edge.source,
@@ -985,9 +1122,8 @@ impl GraphStore {
                     build_edge_properties(edge),
                 ])?;
             }
-        }
-        tx.commit()?;
-        Ok(())
+            Ok(())
+        })
     }
 
     // -------------------------------------------------------------------
@@ -2284,6 +2420,32 @@ mod tests {
         let conn = initialize_database(":memory:").unwrap();
         let store = GraphStore::from_connection(conn);
         assert_eq!(store.get_node_count().unwrap(), 0);
+    }
+
+    #[test]
+    fn file_hash_queries_propagate_database_errors() {
+        let store = GraphStore::from_connection(Connection::open_in_memory().unwrap());
+        assert!(store.get_file_hashes().is_err());
+        assert!(store.get_file_hash("missing.ts").is_err());
+    }
+
+    #[test]
+    fn store_transaction_rolls_back_mutations_and_generation_on_failure() {
+        let store = setup();
+        let generation = store.generation().unwrap();
+        let node = make_node("rollback", "rollback", "rollback.ts", NodeKind::Function, 1);
+
+        let result: Result<()> = store.with_transaction(|store| {
+            store.upsert_nodes(std::slice::from_ref(&node))?;
+            store.advance_generation()?;
+            Err(crate::error::CodeFactsError::Other(
+                "injected failure".into(),
+            ))
+        });
+
+        assert!(result.is_err());
+        assert_eq!(store.generation().unwrap(), generation);
+        assert!(store.get_node("rollback").unwrap().is_none());
     }
 
     // -- concurrent operations in same store ------------------------------

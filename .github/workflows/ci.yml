@@ -42,3 +42,25 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - run: cargo fmt --check
       - run: cargo clippy --all-targets --locked -- -D warnings
+
+  npm-minimum-node:
+    name: npm launcher (Node 18)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - uses: dtolnay/rust-toolchain@stable
+      - run: npm --prefix npm install --ignore-scripts --no-audit --no-fund --package-lock=false
+      - run: cargo build --release --locked --bin codefacts
+      - run: node npm/scripts/check-release-version.mjs
+      - run: node --test npm/test/*.test.mjs
+
+  rust-minimum:
+    name: Rust MSRV
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.91.0
+      - run: cargo check --locked --lib --bin codefacts

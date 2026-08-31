@@ -60,7 +60,7 @@ Version 1 deliberately exposes exactly five read-only tools:
 | `expand` | One definition with a verified bounded source excerpt, plus static callers, candidate polymorphic callees, references, related tests, Markdown section text, and optional semantic references. |
 | `path` | A shortest bounded static calls path between confirmed symbols, with optional endpoint file-path disambiguation. |
 
-Every result is bounded, includes file/line/hash evidence, and refreshes the incremental index before answering. Its `freshness` object includes the canonical `repository_root` and fact-store `generation`, so a caller can verify that the facts belong to the intended project. Successful MCP results keep a compact serialized JSON `TextContent` for older clients and carry the equivalent object in `structuredContent`. A `no_static_path` result never claims that runtime execution is unreachable.
+Every result is bounded, includes file/line/hash evidence, and refreshes the incremental index before answering. Its `freshness` object includes the canonical `repository_root` and fact-store `generation`, so a caller can verify that the facts belong to the intended project. `freshness.status` is `partial` when a source file could not be read, parsed, extracted, or accepted because it exceeded the indexing limit; the accompanying `files_failed` and reason counters make that gap explicit. Successful MCP results keep a compact serialized JSON `TextContent` for older clients and carry the equivalent object in `structuredContent`. A `no_static_path` result never claims that runtime execution is unreachable.
 
 All five tools accept an optional `repository_root` project directory. It
 selects (and, on first use, indexes) that project's independent external SQLite
@@ -108,7 +108,13 @@ references retain their separate availability/status contract.
 `map.files_with_facts` is the number of indexed files that currently own at
 least one fact, while `map.indexed_files` is every successfully parsed,
 supported source file. `map.files_indexed_this_refresh` is only the number
-parsed during the latest refresh. `language_file_counts` and
+parsed during the latest refresh. `freshness.files_skipped` is the total number
+not successfully indexed during the refresh, including unchanged, size-limited,
+and failed files. `freshness.files_unchanged` identifies files reused from the prior
+snapshot, while `files_unreadable`,
+`files_parse_failed`, `files_extract_failed`, and `files_too_large` identify
+actual source gaps.
+`language_file_counts` and
 `language_symbol_counts` make the two language measures explicit. The prior
 redundant `map.repository`, `map.files`, and `map.languages` aliases are not
 returned; use `freshness.repository_root`, `files_with_facts`, and
