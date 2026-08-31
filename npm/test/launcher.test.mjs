@@ -192,7 +192,12 @@ test('packed launcher installs the matching optional package and speaks MCP', as
   }
 
   const temporaryDirectory = await mkdtemp(join(tmpdir(), 'codefacts-packed-install-'));
-  context.after(() => rm(temporaryDirectory, { recursive: true, force: true }));
+  context.after(() => rm(temporaryDirectory, {
+    recursive: true,
+    force: true,
+    maxRetries: 10,
+    retryDelay: 100,
+  }));
   const platform = launcher.platformPackageFor();
   const platformStage = join(temporaryDirectory, 'platform-package');
   commandResult(process.execPath, [
