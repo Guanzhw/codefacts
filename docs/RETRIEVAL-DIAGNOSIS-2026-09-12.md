@@ -104,3 +104,8 @@ also contains transport/metadata fields and is retained separately.
 
 Zero evaluation-model invocations means the replay itself needed no model run;
 engineering analysis and artifact preparation still consume model resources.
+
+The subsequent [call-site continuation diagnostic](CALLSITE-DIAGNOSTIC-2026-09-12.md)
+tested using the existing production edge in four controlled agent runs. Both
+conditions passed, but the added guidance failed the frozen token and output
+size improvement gates; product and existing usage guidance were retained.

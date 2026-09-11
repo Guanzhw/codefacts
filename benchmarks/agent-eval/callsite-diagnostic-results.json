@@ -1,0 +1,308 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-09-12",
+  "condition": "supplied-callsite-guidance-diagnostic",
+  "sourceRevision": "76bae6820c3032e952dbfb5aeb8560b949af185c",
+  "agent": {
+    "cli": "Codex 0.153.4",
+    "model": "gpt-5.6-luna",
+    "reasoningEffort": "medium"
+  },
+  "question": "After editing a source file, parsing succeeds but relationship extraction fails. Which previous facts remain queryable, and how does an MCP caller learn that the index is incomplete? Explain the behavior and cite source and regression coverage.",
+  "freeze": {
+    "protocolCommit": "3ba4aed",
+    "driverCommit": "d6603b9",
+    "hashes": {
+      "runner": "d0b33697fa5db2b43db0968757cbb761bc2a341adc45845c1dc2a92dcac7aecf",
+      "rawresponse": "c2e9c0de51a339a5870074dc956e8b8e50aef00f023847e6dcb6325fd5c0c38b",
+      "task": "4fab957ed8a8513507db80e3a4353d0c3e8bf83242de4e9c7843e81ff3bb8f8d",
+      "sharedtext": "9207b7d9fea88ae80c568bd5d036f73bbf1fb4193f1529ed4590318740622e95",
+      "CLI": "3d6ca7085c932b62ef4ee4877e92f15b050fb94b2eb8e6c10a346a06248c6004",
+      "sourcearchive": {
+        "codefacts": "bbb1d466c77091bae99414a5c8d646e28be56587a29353cad15ef527fc55e1ef",
+        "opensession": "fd35c8a9127711a0d8ab08c5e0ea1eaf7e75df78500c43ad15392ae8e9e8be16"
+      },
+      "manifests": {
+        "control": "22795b1cfb4cdbbc3dcd611abd13ab7239f62abe710bfe2733b7a155966ff1ca",
+        "callsite": "ac294e2c207c9945352d77046f24ef0353a2c505b445f9fef6b802bf0bf3e0e1"
+      },
+      "driver": "a59e08911435c689fe329dc03f8b8bc1e3ca6257a51a632d61fab9dbb454f31b"
+    }
+  },
+  "limits": {
+    "maxRuns": 4,
+    "actualRuns": 4,
+    "retries": 0,
+    "modelPreflights": 0,
+    "perRunTimeoutMs": 180000,
+    "beforeLaunchTokenThreshold": 1500000
+  },
+  "runs": [
+    {
+      "id": "A1",
+      "condition": "control",
+      "inputTokens": 261125,
+      "cachedInputTokens": 218368,
+      "uncachedInputTokens": 42757,
+      "outputTokens": 2672,
+      "totalTokens": 263797,
+      "durationMs": 69765,
+      "commandCalls": 9,
+      "commandOutputBytes": 148056,
+      "wrapperOutputBytes": 122949,
+      "usageReconciled": true,
+      "rawEvaluationValidity": "valid",
+      "answerSha256": "7a0dc3bb9a75af04d8517f8bed6d8678b3cd9c038ebf49cb67c27c8afa645b75",
+      "grade": {
+        "id": "answer-01",
+        "score": 3,
+        "pass": true,
+        "rationale": "Correctly separates the propagated Pass-2 edge-extraction error from successful partial freshness, explains that persistence is not reached, and says no direct Pass-2 regression exists. It uses the source-gap regression rather than the rubric's closest transaction rollback regression, so it does not establish every requested regression detail for full credit.",
+        "citation": "src/indexer/pipeline.rs:326-379; src/service.rs:257-274,1385-1403; src/indexer/pipeline.rs:1004-1082"
+      },
+      "answer": "A pass-2 relationship-extraction failure preserves the entire previous persisted snapshot: prior symbols, relationships, file hash, and generation remain queryable. The newly parsed nodes are only in memory, and `collect::<Result<_>>()?` aborts before the SQLite transaction begins, so no part of that refresh is committed (`src/indexer/pipeline.rs:328-369`, transaction at `371-451`).\n\nHowever, this failure is not reported as `freshness.status = \"partial\"`. That status is constructed only from `IndexResult.files_failed` or `files_too_large` (`src/service.rs:1385-1404`), while pass-2 extraction errors are propagated directly through `CodeFacts::refresh()` (`src/service.rs:258-275`). Consequently, an MCP caller receives a tool error with `isError: true`, rather than a normal result carrying freshness counters (`src/mcp.rs:93-95`, `375-388`). The caller therefore learns the refresh failed, but not through a structured `partial` freshness object.\n\nThe regression coverage verifies the same snapshot-retention principle for an unreadable edited file: generation and prior hash/nodes remain unchanged, and recovery later replaces them (`src/indexer/pipeline.rs`, `source_gap_retains_prior_snapshot_and_recovers_when_source_is_valid_again`, lines 1112-1170). MCP’s structured partial-status coverage is for an invalid source and asserts `status = \"partial\"` plus failure counters (`tests/mcp_protocol.rs:1155-1167`); it does not specifically cover pass-2 relationship-extraction failure.",
+      "manuallyEligible": true
+    },
+    {
+      "id": "B1",
+      "condition": "callsite",
+      "inputTokens": 417258,
+      "cachedInputTokens": 366080,
+      "uncachedInputTokens": 51178,
+      "outputTokens": 2593,
+      "totalTokens": 419851,
+      "durationMs": 72329,
+      "commandCalls": 9,
+      "commandOutputBytes": 231085,
+      "wrapperOutputBytes": 143229,
+      "usageReconciled": true,
+      "rawEvaluationValidity": "valid",
+      "answerSha256": "f2fc9a4c61e8fc76015cb2edcc0e558200036f9b703c919ece55b0abdd73fbc0",
+      "grade": {
+        "id": "answer-04",
+        "score": 3,
+        "pass": true,
+        "rationale": "Correctly distinguishes a failed Pass-2 refresh from a normal partial answer and accurately describes the preserved old snapshot and MCP error. The cited source-gap test is relevant but not the rubric's closest transaction rollback regression, so the regression account is incomplete for score 4.",
+        "citation": "src/indexer/pipeline.rs:326-379,1004-1082; src/service.rs:257-274,1385-1403"
+      },
+      "answer": "A relationship-extraction failure leaves the entire previous committed snapshot queryable: prior nodes, edges, file hashes, and generation remain unchanged. Pass 2 propagates the extraction error before SQLite persistence, so the edited file’s new nodes/relationships are not committed (`src/indexer/pipeline.rs:328-369`). The transaction boundary confirms failed parsing/extraction never mutates the store (`src/indexer/pipeline.rs:371-376`).\n\nThe MCP caller learns this through a failed tool result: `isError: true` with the error text, because `refresh()` propagates the pipeline error and the MCP dispatcher converts errors via `tool_error` (`src/service.rs:257-268`, `src/mcp.rs:80-84`, `src/mcp.rs:388-393`). It does not receive a normal result containing `freshness.status = \"partial\"` for this pass-2 failure. The `partial` freshness status applies to failures handled during pass 1, with counters such as `files_extract_failed` (`src/service.rs:55-82`, `src/service.rs:1385-1403`).\n\nRegression coverage verifies the intended snapshot-retention pattern for source failures: `source_gap_retains_prior_snapshot_and_recovers_when_source_is_valid_again` preserves the prior hash, generation, and nodes (`src/indexer/pipeline.rs:1109-1173`), while the MCP-level partial signaling is covered by `map_marks_an_invalid_source_as_partial_instead_of_fresh` (`tests/mcp_protocol.rs:1156-1167`).",
+      "manuallyEligible": true
+    },
+    {
+      "id": "B2",
+      "condition": "callsite",
+      "inputTokens": 291669,
+      "cachedInputTokens": 249856,
+      "uncachedInputTokens": 41813,
+      "outputTokens": 2924,
+      "totalTokens": 294593,
+      "durationMs": 74898,
+      "commandCalls": 7,
+      "commandOutputBytes": 120743,
+      "wrapperOutputBytes": 115847,
+      "usageReconciled": true,
+      "rawEvaluationValidity": "valid",
+      "answerSha256": "e0948515a0dd49ec3bd5921f3167fdaeccba5a41b844e6ff386983fe4812d73c",
+      "grade": {
+        "id": "answer-03",
+        "score": 3,
+        "pass": true,
+        "rationale": "Accurately identifies the Pass-2 boundary, unchanged persisted snapshot, refresh error, and separate partial path, and explicitly avoids inventing a direct Pass-2 regression. It omits the existing later-persistence transaction regression that supplies the requested scoped atomicity coverage, preventing full credit.",
+        "citation": "src/indexer/pipeline.rs:326-379,1004-1082; src/service.rs:257-274,1385-1403"
+      },
+      "answer": "When relationship extraction fails after parsing succeeds, the prior snapshot remains intact: the pipeline errors in pass 2 at `extract_edges` before collecting `edge_results` and before entering the SQLite persistence transaction (`src/indexer/pipeline.rs:326-369`). Therefore, previously stored nodes, edges, hashes, and generation remain in the database; the edited file’s new nodes or relationships are not committed. Per-file replacement is only performed later at `src/indexer/pipeline.rs:377-388` (implemented by `replace_file_data`, `src/graph/store.rs:626-674`).\n\nHowever, an MCP caller does not receive that old snapshot in this case. Every read refreshes first (`src/service.rs:391`, `636`, `702`); the refresh error is converted into an MCP tool response with `isError: true` and text-only error content (`src/mcp.rs:93-96`, `388-392`). It does not receive `freshness.status: \"partial\"`.\n\nThe explicit `partial` freshness signal applies to counted read/parse/node-extraction failures and size skips: `Freshness` documents this contract (`src/service.rs:55-82`), and `freshness()` derives the status from those counters (`src/service.rs:1385-1401`). The regression test `map_marks_an_invalid_source_as_partial_instead_of_fresh` verifies this for an unreadable source (`tests/mcp_protocol.rs:1155-1167`). There is no corresponding regression covering pass-2 relationship-extraction failure, so that path currently communicates incompleteness only through the MCP error.",
+      "manuallyEligible": true
+    },
+    {
+      "id": "A2",
+      "condition": "control",
+      "inputTokens": 367990,
+      "cachedInputTokens": 313856,
+      "uncachedInputTokens": 54134,
+      "outputTokens": 3448,
+      "totalTokens": 371438,
+      "durationMs": 89845,
+      "commandCalls": 13,
+      "commandOutputBytes": 129941,
+      "wrapperOutputBytes": 130364,
+      "usageReconciled": true,
+      "rawEvaluationValidity": "valid",
+      "answerSha256": "c770f30c6c79beec6726e62e4bd12fb4783befd27169c7ca4b1b9d19c9deb749",
+      "grade": {
+        "id": "answer-02",
+        "score": 3,
+        "pass": true,
+        "rationale": "Correct central mechanism and caller outcome: old facts remain stored, the failing refresh returns an error, and partial applies only to successful skip-counted paths. Its regression evidence is the separate source-gap case, while it omits the closest transaction rollback regression required for a complete Q2 answer.",
+        "citation": "src/indexer/pipeline.rs:326-379; src/service.rs:257-274,1385-1403; src/indexer/pipeline.rs:1004-1082"
+      },
+      "answer": "The prior SQLite snapshot remains intact: symbols, relationships, file hashes, and generation are unchanged. Pass-2 `extract_edges` errors propagate at [`pipeline.rs:341-369`](.../src/indexer/pipeline.rs:341), before the persistence transaction begins at [`pipeline.rs:371-378`](.../src/indexer/pipeline.rs:371). Thus the edited file’s old facts—and all other prior facts—remain stored, though the failing MCP call itself returns no facts.\n\nFor source read/parse/node-extraction gaps, the refresh instead succeeds as a partial snapshot: unchanged prior facts are retained, and the response reports `freshness.status: \"partial\"` plus failure counters. This is defined in [`service.rs:57-82`](.../src/service.rs:57) and computed at [`service.rs:1385-1403`](.../src/service.rs:1385). The regression [`source_gap_retains_prior_snapshot_and_recovers_when_source_is_valid_again`](.../src/indexer/pipeline.rs:1112) verifies unchanged generation/hash and retention of the old `greet` node during the gap.\n\nAn MCP caller therefore checks `freshness.status` and `files_*_failed` in successful results; [`tests/mcp_protocol.rs:1156-1166`](.../tests/mcp_protocol.rs:1156) covers this. For a literal pass-2 relationship-extraction exception, the caller instead learns through the MCP tool error (`isError: true`), because [`service.rs:259-269`](.../src/service.rs:259) propagates the refresh error and [`mcp.rs:93-95`](.../src/mcp.rs:93) wraps it as an error response.",
+      "manuallyEligible": true
+    }
+  ],
+  "arms": {
+    "control": {
+      "runs": 2,
+      "correct": 2,
+      "totals": {
+        "inputTokens": 629115,
+        "cachedInputTokens": 532224,
+        "uncachedInputTokens": 96891,
+        "outputTokens": 6120,
+        "totalTokens": 635235,
+        "durationMs": 159610,
+        "commandOutputBytes": 277997,
+        "commandCalls": 22
+      },
+      "medians": {
+        "totalTokens": 317617.5,
+        "durationMs": 79805.0,
+        "commandOutputBytes": 138998.5,
+        "wrapperOutputBytes": 126656.5,
+        "uncachedInputTokens": 48445.5,
+        "commandCalls": 11.0
+      }
+    },
+    "callsite": {
+      "runs": 2,
+      "correct": 2,
+      "totals": {
+        "inputTokens": 708927,
+        "cachedInputTokens": 615936,
+        "uncachedInputTokens": 92991,
+        "outputTokens": 5517,
+        "totalTokens": 714444,
+        "durationMs": 147227,
+        "commandOutputBytes": 351828,
+        "commandCalls": 16
+      },
+      "medians": {
+        "totalTokens": 357222.0,
+        "durationMs": 73613.5,
+        "commandOutputBytes": 175914.0,
+        "wrapperOutputBytes": 129538.0,
+        "uncachedInputTokens": 46495.5,
+        "commandCalls": 8.0
+      }
+    }
+  },
+  "callsiteVersusControlMedianPercentChange": {
+    "totalTokens": 12.469243665730012,
+    "durationMs": -7.75828582169037,
+    "commandOutputBytes": 26.55820026834821,
+    "wrapperOutputBytes": 2.2750510238321864,
+    "uncachedInputTokens": -4.02514165402359,
+    "commandCalls": -27.27272727272727
+  },
+  "routeAudit": [
+    {
+      "id": "A1",
+      "extractEdgesReturned": true,
+      "collectErrorReturned": true,
+      "persistBoundaryReturned": true,
+      "gitHistoryUnavailable": null,
+      "commands": 9
+    },
+    {
+      "id": "B1",
+      "extractEdgesReturned": true,
+      "collectErrorReturned": true,
+      "persistBoundaryReturned": true,
+      "gitHistoryUnavailable": null,
+      "commands": 9
+    },
+    {
+      "id": "B2",
+      "extractEdgesReturned": true,
+      "collectErrorReturned": true,
+      "persistBoundaryReturned": true,
+      "gitHistoryUnavailable": true,
+      "commands": 7
+    },
+    {
+      "id": "A2",
+      "extractEdgesReturned": true,
+      "collectErrorReturned": true,
+      "persistBoundaryReturned": true,
+      "gitHistoryUnavailable": null,
+      "commands": 13
+    }
+  ],
+  "snapshotAudit": [
+    {
+      "repo": "codefacts",
+      "checkedFiles": 97,
+      "changedFiles": [],
+      "archiveSha256": "bbb1d466c77091bae99414a5c8d646e28be56587a29353cad15ef527fc55e1ef"
+    },
+    {
+      "repo": "opensession",
+      "checkedFiles": 307,
+      "changedFiles": [],
+      "archiveSha256": "fd35c8a9127711a0d8ab08c5e0ea1eaf7e75df78500c43ad15392ae8e9e8be16"
+    }
+  ],
+  "manualAudit": {
+    "allActualCommandsInspected": true,
+    "contaminationObserved": false,
+    "sourceUnchanged": true,
+    "note": "B2 git history/status attempts returned not a git repository; no history was exposed. All four read the key error branch. All first commands were broad rg searches."
+  },
+  "measurementNotes": [
+    "Command output bytes count completed stdout command items once, including repeated search/read output; not unique source bytes or tokens.",
+    "Wrapper bytes are separately reported, are not added to command bytes, and can differ where direct commands bypass wrappers.",
+    "Shared navigation text is charged in each prompt; discovery, MCP schemas and index construction are excluded.",
+    "Two repetitions of one previously diagnosed task do not establish a population effect or cross-tool ranking."
+  ],
+  "decision": {
+    "acceptGuidance": false,
+    "productChanged": false,
+    "reason": "Equal-quality total token and command-output-byte medians both regress; frozen 10-percent improvement gates fail."
+  },
+  "engineering": {
+    "cutoffUtc": "2026-09-11T18:14:40.413647+00:00",
+    "method": "Sum unique per-response token_usage_record.usage, parent current user turn plus all records in the two independent worker sessions. Cumulative counters are not added.",
+    "threads": [
+      {
+        "role": "parent",
+        "responseRecords": 48,
+        "usage": {
+          "input_tokens": 3758935,
+          "cached_input_tokens": 3627392,
+          "output_tokens": 19886,
+          "total_tokens": 3778821,
+          "uncached_input_tokens": 131543
+        }
+      },
+      {
+        "role": "implementation",
+        "responseRecords": 43,
+        "usage": {
+          "input_tokens": 3964197,
+          "cached_input_tokens": 3868928,
+          "output_tokens": 13635,
+          "total_tokens": 3977832,
+          "uncached_input_tokens": 95269
+        }
+      },
+      {
+        "role": "review",
+        "responseRecords": 10,
+        "usage": {
+          "input_tokens": 592121,
+          "cached_input_tokens": 535040,
+          "output_tokens": 5721,
+          "total_tokens": 597842,
+          "uncached_input_tokens": 57081
+        }
+      }
+    ],
+    "totals": {
+      "input_tokens": 8315253,
+      "cached_input_tokens": 8031360,
+      "output_tokens": 39242,
+      "total_tokens": 8354495,
+      "uncached_input_tokens": 283893
+    },
+    "excludes": "Final report/export invocation completion, commit verification and final reply after this cutoff."
+  }
+}
