@@ -7,6 +7,27 @@ be used for other tools; another agent/provider needs its own usage adapter.
 
 ## Run a controlled comparison
 
+For an existing reviewed campaign, reuse its evidence before launching models:
+
+```powershell
+node benchmarks/agent-eval/summarize.mjs
+node benchmarks/agent-eval/summarize.mjs --input D:/Eval/reviewed-results.json --pretty
+node --test benchmarks/agent-eval/summarize.test.mjs
+```
+
+The offline summary defaults to the pilot and first two improvement cycles,
+keeps campaigns separate, and makes no model calls. It accepts the reviewed
+result formats used here, with the frozen 0–4 grading contract (3 or 4 passes).
+It requires audit and usage evidence, rejects duplicate samples and contradictory
+grades, includes failed attempts in completion cost, and preserves nonpassing
+matched pairs as null savings. Unmeasured time/adoption remains unknown. A raw
+runner `metrics.json` is not a reviewed campaign. Consult the original artifact
+for tool versions, source hashes and the audit rather than treating the compact
+summary as a substitute for its evidence.
+
+The [bounded value screen](../../docs/VALUE-SCREEN-2026-09-12.md) freezes a
+smaller cross-tool screening budget before deciding whether to expand evaluation.
+
 1. Create source snapshots outside the live repository. Freeze their revisions,
    questions, acceptance criteria, tool versions, and allowed tool surfaces.
    Keep the rubric and results outside the agent's source snapshot.
