@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "cycle": 2,
+  "snapshot_identity": {
+    "codefacts_tar_sha256": "BBB1D466C77091BAE99414A5C8D646E28BE56587A29353CAD15EF527FC55E1EF",
+    "opensession_tar_sha256": "FD35C8A9127711A0D8AB08C5E0EA1EAF7E75DF78500C43AD15392AE8E9E8BE16"
+  },
+  "pilot_questions": {
+    "preserved": ["Q1", "Q2", "Q3"],
+    "rubric": "benchmarks/agent-eval/pilot-rubric.md",
+    "unchanged": true
+  },
+  "heldout_tasks": [
+    {
+      "id": "Q4",
+      "repository": "codefacts",
+      "kind": "natural-language-discovery",
+      "prompt": "In the CodeFacts snapshot, an `expand` request has refreshed and resolved a symbol, but the definition file changes before its source excerpt is returned. What result does CodeFacts return for the overall expansion and for the excerpt, why does it refuse to return the changed bytes, and what should the caller do? Cite implementation and regression coverage.",
+      "rubric": "benchmarks/agent-eval/cycle-2-rubric.md",
+      "source_citation_key": [
+        "repos/codefacts/src/service.rs:630-685",
+        "repos/codefacts/src/service.rs:1167-1209",
+        "repos/codefacts/src/service.rs:1683-1705"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": "Q5",
+      "repository": "opensession",
+      "kind": "natural-language-discovery",
+      "prompt": "In the OpenSession snapshot, a locally managed session was sent to Trash and then disappears from its provider. For a trusted per-session management request, which actions remain allowed and which return `Session not found`? Explain the metadata written by restore and permanent delete, and how those flags affect Trash and main-list filtering. Cite implementation and regression coverage.",
+      "rubric": "benchmarks/agent-eval/cycle-2-rubric.md",
+      "source_citation_key": [
+        "repos/opensession/src/routes/mutations.ts:105-123",
+        "repos/opensession/src/meta.ts:93-143",
+        "repos/opensession/src/routes/sessions.ts:41-55",
+        "repos/opensession/src/routes/trash.ts:21-27",
+        "repos/opensession/test/management.test.mjs:85-108,227-229"
+      ],
+      "pass_score": 3
+    }
+  ]
+}

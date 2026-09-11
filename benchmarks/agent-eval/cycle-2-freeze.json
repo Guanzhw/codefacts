@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "frozenAt": "2026-09-11T12:38:47.415Z",
+  "baseCommit": "4a30e3f",
+  "agent": {
+    "cli": "Codex 0.153.4",
+    "model": "gpt-5.6-luna",
+    "reasoningEffort": "medium",
+    "platform": "Windows"
+  },
+  "sourceRevisions": {
+    "codefacts": "76bae6820c3032e952dbfb5aeb8560b949af185c",
+    "opensession": "994942690fe5d1854398017026ef3615b2fdd24f"
+  },
+  "snapshotAudit": {
+    "codefacts": {
+      "checkedFiles": 97,
+      "changedFiles": [],
+      "archiveSha256": "bbb1d466c77091bae99414a5c8d646e28be56587a29353cad15ef527fc55e1ef"
+    },
+    "opensession": {
+      "checkedFiles": 307,
+      "changedFiles": [],
+      "archiveSha256": "fd35c8a9127711a0d8ab08c5e0ea1eaf7e75df78500c43ad15392ae8e9e8be16"
+    }
+  },
+  "guidance": "If a code-navigation MCP is configured, use it for your first repository inspection. Continue with ordinary source reads whenever necessary. If none is configured, start with ordinary source inspection.",
+  "tasks": [
+    {
+      "id": "transaction",
+      "repository": "codefacts",
+      "prompt": "In the CodeFacts snapshot, explain GraphStore::with_transaction success and error behavior. What happens when a store operation is called while a transaction is already active? Cite the implementation and regression coverage."
+    },
+    {
+      "id": "extraction_failure",
+      "repository": "codefacts",
+      "prompt": "After editing a source file, parsing succeeds but relationship extraction fails. Which previous facts remain queryable, and how does an MCP caller learn that the index is incomplete? Explain the behavior and cite source and regression coverage."
+    },
+    {
+      "id": "provider_contract",
+      "repository": "opensession",
+      "prompt": "In the OpenSession snapshot, what is the ProviderAdapter contract for Session Protocol retrieval, what happens when its implementation throws or is unavailable, and where is a provider chosen? Cite the interface, runtime, and consumer or registry source."
+    },
+    {
+      "id": "Q4",
+      "repository": "codefacts",
+      "prompt": "In the CodeFacts snapshot, an `expand` request has refreshed and resolved a symbol, but the definition file changes before its source excerpt is returned. What result does CodeFacts return for the overall expansion and for the excerpt, why does it refuse to return the changed bytes, and what should the caller do? Cite implementation and regression coverage."
+    },
+    {
+      "id": "Q5",
+      "repository": "opensession",
+      "prompt": "In the OpenSession snapshot, a locally managed session was sent to Trash and then disappears from its provider. For a trusted per-session management request, which actions remain allowed and which return `Session not found`? Explain the metadata written by restore and permanent delete, and how those flags affect Trash and main-list filtering. Cite implementation and regression coverage."
+    }
+  ],
+  "arms": [
+    {
+      "id": "before",
+      "binarySha256": "d5ab0c4304ce185c0fffce040a3367ea5bb704ff9a3bc22014ba6c712787e1ab",
+      "configOverrides": [
+        "mcp_servers.codefacts.command=\"{before_binary}\"",
+        "mcp_servers.codefacts.args=[\"mcp\",\"--root\",\"{root}\",\"--state\",\"{root}-cycle-2-before.sqlite\"]",
+        "mcp_servers.codefacts.required=true",
+        "mcp_servers.codefacts.startup_timeout_sec=30",
+        "windows.sandbox=\"elevated\"",
+        "mcp_servers.codefacts.enabled_tools=[\"map\",\"search\",\"outline\",\"expand\",\"path\"]",
+        "mcp_servers.codefacts.tools.map.approval_mode=\"approve\"",
+        "mcp_servers.codefacts.tools.search.approval_mode=\"approve\"",
+        "mcp_servers.codefacts.tools.outline.approval_mode=\"approve\"",
+        "mcp_servers.codefacts.tools.expand.approval_mode=\"approve\"",
+        "mcp_servers.codefacts.tools.path.approval_mode=\"approve\""
+      ]
+    },
+    {
+      "id": "after",
+      "binarySha256": "0253c74ec33cc570bb2005f3c1fe73e9bb06b63f310ecf60d7fcc5e1559c9cf5",
+      "configOverrides": [
+        "mcp_servers.codefacts.command=\"{after_binary}\"",
+        "mcp_servers.codefacts.args=[\"mcp\",\"--root\",\"{root}\",\"--state\",\"{root}-cycle-2-after.sqlite\"]",
+        "mcp_servers.codefacts.required=true",
+        "mcp_servers.codefacts.startup_timeout_sec=30",
+        "windows.sandbox=\"elevated\"",
+        "mcp_servers.codefacts.enabled_tools=[\"map\",\"search\",\"outline\",\"expand\",\"path\"]",
+        "mcp_servers.codefacts.tools.map.approval_mode=\"approve\"",
+        "mcp_servers.codefacts.tools.search.approval_mode=\"approve\"",
+        "mcp_servers.codefacts.tools.outline.approval_mode=\"approve\"",
+        "mcp_servers.codefacts.tools.expand.approval_mode=\"approve\"",
+        "mcp_servers.codefacts.tools.path.approval_mode=\"approve\""
+      ]
+    }
+  ],
+  "fileSha256": {
+    "docs/IMPROVEMENT-CYCLE-2.md": "6698cc9220f49c08e0a65e61faec7a89c0c81854a1ea530a9ca271bb4346a1bc",
+    "benchmarks/agent-eval/runner.mjs": "d0b33697fa5db2b43db0968757cbb761bc2a341adc45845c1dc2a92dcac7aecf",
+    "benchmarks/agent-eval/pilot-rubric.md": "a212d3cf194d5155017ea327548ac7fd9643e7109524b20b78743a71444de0da",
+    "benchmarks/agent-eval/cycle-2-rubric.md": "fbc78e2cba9f61287880375fecb9e4fbcf15e6b9fb304974ab0cec984d21d0ad",
+    "benchmarks/agent-eval/cycle-2-heldout-tasks.json": "9167af34f90efea11c946c68b90c6b0d6bca49ef53f18cb133b7cbe9230eff3e",
+    "benchmarks/agent-eval/cycle-2-trace.json": "072238cfe581417ae6b85fc7dae0ffb7d256469d3a2b36c937f311cc60f10b85",
+    "src/mcp.rs": "8b26e852fdbdd27fb78a1a49cc3be04b3539c29d81b4b881730e4fffa91d65b6",
+    "src/indexer/pipeline.rs": "a2d4a95851d1eb6bd221df8f9d4aebb320a4cea952c6af5fc40fcc5d5cd307d9",
+    "src/db/schema.rs": "04368b30a81ebded208fc4a71d4ee02b108611a96daab92f85e27abbdec59df7",
+    "src/service.rs": "fb9afb4d53ed93022f63de7927266a341cc145f043d6329346f8c6fb438c4b5e",
+    "src/types.rs": "8a42d9f7e427609ba6e02015056018ae66c03925fdd2a5601f5dc7dca86bead8"
+  },
+  "externalManifestSha256": "4554529550ea2a37fbdfc988898d3242497dde4966c817596e83f40f9f6af6d8",
+  "schedulerSha256": "38aa385b09ffd85b1dd6ebda9037aa1766eb29cc2d3becfa88b875330dc27fa9",
+  "design": {
+    "repetitions": 2,
+    "maximumTaskInvocations": 20,
+    "timeoutSeconds": 240,
+    "watchdogCleanupGraceSeconds": 15,
+    "maximumAgentPreflights": 2,
+    "preflightTimeoutSeconds": 90,
+    "maximumConcurrentAgents": 2,
+    "taskOrder": [
+      "transaction",
+      "extraction_failure",
+      "provider_contract",
+      "Q4",
+      "Q5"
+    ],
+    "armLaunchOrder": {
+      "1": [
+        "before",
+        "after"
+      ],
+      "2": [
+        "after",
+        "before"
+      ]
+    },
+    "primaryTask": "extraction_failure",
+    "targetMedianTokenReductionPct": 20,
+    "required": "All answers pass frozen rubric; investigate >10% median regression on each other task",
+    "retryPolicy": "No replacement samples or automatic retries; incomplete campaign stays explicit"
+  },
+  "verified": {
+    "toolsListDifference": "Only search.description; five tools and input schemas unchanged",
+    "protocolTestsPassed": 28,
+    "formatPassed": true,
+    "independentReview": "No material issues; resolver, schema, types, service blobs match baseline",
+    "warmMcpPreflight": "Both arms and both source snapshots passed map"
+  },
+  "billing": null
+}

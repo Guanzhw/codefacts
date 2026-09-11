@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Portable, sanitized trace accounting for cycle-2 guidance freeze",
+  "scope": "extraction_failure; after run-001 and run-002, with both before runs as context",
+  "runs": [
+    {
+      "arm": "after",
+      "run": "run-001",
+      "rawStdoutSha256": "0f83feba4d4cb0e0293b9d6728dea381858e9e9043587b05001f80077ebbe7a0",
+      "provider": {"inputTokens": 609094, "cachedInputTokens": 539648, "outputTokens": 2955, "totalTokens": 612049, "finalContextInputTokens": 73655},
+      "toolOutput": {"mcpCalls": 6, "shellCalls": 8, "mcpStdoutBytes": 96388, "shellStdoutBytes": 203768, "recordedWrapperBytes": 223747, "mcpResultTextBytes": 45467},
+      "sourceContext": {"occurrences": 9, "reportedSourceBytes": 6913, "uniqueSourceBytes": 5698, "exactDuplicateBytes": 1215},
+      "mcpQueries": ["map", "relationships/context", "incomplete/context", "parse_failed/context", "extract_failed/context", "previous facts/context"]
+    },
+    {
+      "arm": "after",
+      "run": "run-002",
+      "rawStdoutSha256": "0a75180e93b9301749558ac8c09b0be138dd5d4b1abfb01d30a3e3011f590d46",
+      "provider": {"inputTokens": 667183, "cachedInputTokens": 605696, "outputTokens": 3674, "totalTokens": 670857, "finalContextInputTokens": 64730},
+      "toolOutput": {"mcpCalls": 3, "shellCalls": 11, "mcpStdoutBytes": 81165, "shellStdoutBytes": 117602, "recordedWrapperBytes": 198427, "mcpResultTextBytes": 38310},
+      "sourceContext": {"occurrences": 6, "reportedSourceBytes": 2197, "uniqueSourceBytes": 2197, "exactDuplicateBytes": 0},
+      "mcpQueries": ["incomplete/context", "relationship/context", "parse/context"]
+    },
+    {
+      "arm": "before",
+      "run": "run-001",
+      "rawStdoutSha256": "20bb31ed3758b055590f76e664b880173a239785de0a6f40bd25880668bf90f1",
+      "provider": {"inputTokens": 720569, "cachedInputTokens": 656384, "outputTokens": 3495, "totalTokens": 724064, "finalContextInputTokens": 66152},
+      "toolOutput": {"mcpCalls": 6, "shellCalls": 12, "mcpStdoutBytes": 20942, "shellStdoutBytes": 183238, "recordedWrapperBytes": 201720, "mcpResultTextBytes": 9699},
+      "sourceContext": {"occurrences": 0, "reportedSourceBytes": 0, "uniqueSourceBytes": 0, "exactDuplicateBytes": 0},
+      "mcpQueries": ["map", "relationship extraction/facts", "index incomplete/facts", "parse succeeds/facts", "extract failed/facts", "incomplete/facts"]
+    },
+    {
+      "arm": "before",
+      "run": "run-002",
+      "rawStdoutSha256": "7d108238c9db9375c635c91ed8c64a083ee4f45e5b573165dc645d5c461b393f",
+      "provider": {"inputTokens": 490958, "cachedInputTokens": 434432, "outputTokens": 3162, "totalTokens": 494120, "finalContextInputTokens": 62807},
+      "toolOutput": {"mcpCalls": 4, "shellCalls": 7, "mcpStdoutBytes": 48262, "shellStdoutBytes": 108467, "recordedWrapperBytes": 191782, "mcpResultTextBytes": 22709},
+      "sourceContext": {"occurrences": 3, "reportedSourceBytes": 4040, "uniqueSourceBytes": 4040, "exactDuplicateBytes": 0},
+      "mcpQueries": ["map", "relationship extraction/facts", "parse failed incomplete index/facts", "freshness/context"]
+    }
+  ],
+  "sourceExcerptRepeatEvidence": [
+    {"arm": "after", "run": "run-001", "queries": ["parse_failed", "extract_failed"], "excerpts": ["src/indexer/pipeline.rs:106-112", "src/indexer/pipeline.rs:123-127", "src/service.rs:1385-1405"], "bytesPerResult": 1215, "exactDuplicateBytes": 1215, "verification": "SHA-256 candidate grouping followed by full ordinal source.text equality"}
+  ],
+  "proposedNarrowChange": "Use detail=facts for initial discovery; request detail=context once after a confirmed identifier or selected candidate, with kind/path_prefix/context_limit=1 when known.",
+  "methods": [
+    "MCP and shell output bytes are completed stdout tool outputs.",
+    "Provider token values are authoritative metrics.json usage fields and are not attributable to individual tools.",
+    "Recorded wrapper bytes come from transcript-tools.json and are not proof of exact post-host-truncation model-visible bytes; they are not additive to MCP and shell streams.",
+    "Source duplicate claims use SHA-256 of source.text and full text equality verification.",
+    "Shell overlap is a line-substring estimate from later aggregated output, not a byte-exact source-file slice."
+  ],
+  "limitations": [
+    "Four observations, one task, and no paid model evaluations.",
+    "Raw logs and private paths are omitted; raw stdout integrity is represented by SHA-256 only.",
+    "No per-tool provider-token attribution is available.",
+    "The evidence bounds a guidance intervention and does not isolate prior cycle-1 resolver effects."
+  ]
+}
