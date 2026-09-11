@@ -25,8 +25,10 @@ runner `metrics.json` is not a reviewed campaign. Consult the original artifact
 for tool versions, source hashes and the audit rather than treating the compact
 summary as a substitute for its evidence.
 
-The [bounded value screen](../../docs/VALUE-SCREEN-2026-09-12.md) freezes a
-smaller cross-tool screening budget before deciding whether to expand evaluation.
+The completed [bounded value screen](../../docs/VALUE-SCREEN-2026-09-12.md)
+applies a smaller cross-tool screening budget and records a limited-investment
+decision. Recompute its [reviewed results](value-screen-results.json) with
+`node benchmarks/agent-eval/summarize.mjs --input benchmarks/agent-eval/value-screen-results.json`.
 
 1. Create source snapshots outside the live repository. Freeze their revisions,
    questions, acceptance criteria, tool versions, and allowed tool surfaces.

@@ -1,0 +1,535 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-09-12",
+  "condition": "guided-warm-single-turn-navigation-value-screen",
+  "purpose": "Six-run screen of repaired CodeFacts against ordinary reads and pinned CodeGraph; not pooled with earlier campaigns.",
+  "agent": {
+    "cli": "Codex 0.153.4",
+    "model": "gpt-5.6-luna",
+    "reasoningEffort": "medium",
+    "platform": "Windows"
+  },
+  "sourceRevisions": {
+    "codefacts": "76bae6820c3032e952dbfb5aeb8560b949af185c"
+  },
+  "tools": {
+    "codefacts": {
+      "sourceMatchesCommit": "4a30e3f",
+      "buildCommit": "34accfd342657319e5ad7a2a0c66c965b656e1dc",
+      "binarySha256": "2e725c9b3947545aecce845ba7fdd41d58e8fd456743d0cd9da2d34355ce7576",
+      "surface": [
+        "map",
+        "search",
+        "outline",
+        "expand",
+        "path"
+      ],
+      "lsp": "auto"
+    },
+    "codegraph": {
+      "package": "@colbymchenry/codegraph",
+      "version": "1.6.0",
+      "packageJsonSha256": "810842931112e1b24877cdacf1bc8bee59088c0f8c6137157c5cb2c313cff110",
+      "lockfileSha256": "363074ead475309f7dcf87fe8c65fc56caa316583c89cd2d599caba5b04a2995",
+      "surface": [
+        "codegraph_explore"
+      ]
+    }
+  },
+  "freeze": {
+    "protocolCommit": "aaacd53",
+    "receiptSha256": "a8c42dd573de2a9dc096cec00e171bef971a4f1b2cc6f3f24dd28b31cf04fd5d",
+    "protocolSha256": "0049b63dcc8e0c0a1ed1f6d8ab81d7fc73b375fc297adf8ceb389197732f0a23",
+    "manifestSha256": "d224c8b96b4670ecce73be5601643952102b16919d47f989a2e890f2cd160c7d",
+    "runnerSha256": "d0b33697fa5db2b43db0968757cbb761bc2a341adc45845c1dc2a92dcac7aecf",
+    "rubricSha256": "a212d3cf194d5155017ea327548ac7fd9643e7109524b20b78743a71444de0da",
+    "gradesSha256": "374167862b281be127c3fdd0b78c48a74e62837b80dd20fb0688b20d053695b9"
+  },
+  "tasks": [
+    {
+      "id": "transaction",
+      "repository": "codefacts",
+      "prompt": "In the CodeFacts snapshot, explain GraphStore::with_transaction success and error behavior. What happens when a store operation is called while a transaction is already active? Cite the implementation and regression coverage."
+    },
+    {
+      "id": "extraction_failure",
+      "repository": "codefacts",
+      "prompt": "After editing a source file, parsing succeeds but relationship extraction fails. Which previous facts remain queryable, and how does an MCP caller learn that the index is incomplete? Explain the behavior and cite source and regression coverage."
+    }
+  ],
+  "snapshotAudit": {
+    "schemaVersion": 1,
+    "snapshots": [
+      {
+        "repo": "codefacts",
+        "checkedFiles": 97,
+        "changedFiles": [],
+        "archiveSha256": "bbb1d466c77091bae99414a5c8d646e28be56587a29353cad15ef527fc55e1ef"
+      },
+      {
+        "repo": "opensession",
+        "checkedFiles": 307,
+        "changedFiles": [],
+        "archiveSha256": "fd35c8a9127711a0d8ab08c5e0ea1eaf7e75df78500c43ad15392ae8e9e8be16"
+      }
+    ]
+  },
+  "manualAudit": {
+    "eligibleRuns": 6,
+    "contaminationObserved": false,
+    "blockedCalls": 0,
+    "timeouts": 0,
+    "method": "All actual nested tool inputs read by parent; source archive and usage reconciled separately.",
+    "notes": [
+      "Baseline Git history/status attempt returned not a git repository; no history exposed.",
+      "Automated pending review and escaped-path heuristic flags do not replace manual audit."
+    ]
+  },
+  "runs": [
+    {
+      "task": "transaction",
+      "arm": "baseline",
+      "repetition": 1,
+      "usage": {
+        "input_tokens": 170322,
+        "cached_input_tokens": 131328,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1611,
+        "reasoning_output_tokens": 545
+      },
+      "totalTokens": 171933,
+      "wallMs": 50981,
+      "runnerWallMs": 51035,
+      "mcpCalls": 0,
+      "shellCalls": 4,
+      "grade": {
+        "opaqueId": "aa50b1091b17ed3173ab93a0",
+        "score": 4,
+        "pass": true,
+        "reasons": "Correctly states commit-on-Ok, drop rollback on Err, active-transaction joining, and test-backed atomic rollback; the broader refresh regression is accurately scoped as additional coverage.",
+        "citations": [
+          "repos/codefacts/src/graph/store.rs:459-477",
+          "repos/codefacts/src/graph/store.rs:2433-2449",
+          "repos/codefacts/src/indexer/pipeline.rs:1005-1082"
+        ]
+      },
+      "manualReview": {
+        "environmentValid": true,
+        "usageReconciled": true,
+        "method": "Parent inspected every actual nested call; independent anonymous source-based grading."
+      },
+      "rawStatus": "pending-manual-review",
+      "rawEvaluationValidity": "valid",
+      "evidence": {
+        "stdoutSha256": "c9dc9ee0a5f37be2809e44d6bab35b80ceb0df1dc60eab7c34f7ecf1598d2ec5",
+        "rolloutSha256": "a1d043690935f3f6eee4cee2a042881c0c5e6ecc7aca0b2be0ed0086c8ac0b52",
+        "answerSha256": "3e18ed40a69dbd74a2d755dc95cbd095f20a87614b1b6c746cb8b6085e5adccd"
+      }
+    },
+    {
+      "task": "transaction",
+      "arm": "codefacts",
+      "repetition": 1,
+      "usage": {
+        "input_tokens": 93503,
+        "cached_input_tokens": 69632,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1111,
+        "reasoning_output_tokens": 337
+      },
+      "totalTokens": 94614,
+      "wallMs": 34053,
+      "runnerWallMs": 34110,
+      "mcpCalls": 1,
+      "shellCalls": 1,
+      "grade": {
+        "opaqueId": "6fe5b6256946332e9dfd7e2e",
+        "score": 4,
+        "pass": true,
+        "reasons": "States the outer transaction success and error behavior, active-transaction join behavior, and the direct rollback regression without material error.",
+        "citations": [
+          "repos/codefacts/src/graph/store.rs:462-477",
+          "repos/codefacts/src/graph/store.rs:2433-2449"
+        ]
+      },
+      "manualReview": {
+        "environmentValid": true,
+        "usageReconciled": true,
+        "method": "Parent inspected every actual nested call; independent anonymous source-based grading."
+      },
+      "rawStatus": "pending-manual-review",
+      "rawEvaluationValidity": "valid",
+      "evidence": {
+        "stdoutSha256": "c0aa7e60dea9367a2452dc6756ff5a00f0c7c1f2111e1081a39d75cad9390b5c",
+        "rolloutSha256": "a6dfed99c58c5e549155f790683657a094fb353ffabe583372ddea592ad79847",
+        "answerSha256": "a5ac75d4627b91118f55d53facd7129043ab77e2fffb7d0528f71cd7f5e2137b"
+      }
+    },
+    {
+      "task": "transaction",
+      "arm": "codegraph",
+      "repetition": 1,
+      "usage": {
+        "input_tokens": 237183,
+        "cached_input_tokens": 210944,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1646,
+        "reasoning_output_tokens": 554
+      },
+      "totalTokens": 238829,
+      "wallMs": 53414,
+      "runnerWallMs": 53476,
+      "mcpCalls": 1,
+      "shellCalls": 5,
+      "grade": {
+        "opaqueId": "05ff18fe635510a665b56310",
+        "score": 4,
+        "pass": true,
+        "reasons": "Correctly distinguishes the active-transaction join path, outer commit-on-Ok path, and drop rollback on Err; cites the direct rollback regression.",
+        "citations": [
+          "repos/codefacts/src/graph/store.rs:462-477",
+          "repos/codefacts/src/graph/store.rs:2433-2449"
+        ]
+      },
+      "manualReview": {
+        "environmentValid": true,
+        "usageReconciled": true,
+        "method": "Parent inspected every actual nested call; independent anonymous source-based grading."
+      },
+      "rawStatus": "pending-manual-review",
+      "rawEvaluationValidity": "valid",
+      "evidence": {
+        "stdoutSha256": "e5128cfcd53460eb6d564478f7b2cd74a8fef3f0d7ca12bb4ec22b25f05f9cc6",
+        "rolloutSha256": "807524095593079a7154811143c7456d84968f35173772ed9e531616c8acce56",
+        "answerSha256": "bddcac97bb4f2ec31df0f19dc9353812023b4ff07dca4650f7c6ba6548cb2203"
+      }
+    },
+    {
+      "task": "extraction_failure",
+      "arm": "codegraph",
+      "repetition": 1,
+      "usage": {
+        "input_tokens": 458287,
+        "cached_input_tokens": 409600,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2814,
+        "reasoning_output_tokens": 655
+      },
+      "totalTokens": 461101,
+      "wallMs": 84871,
+      "runnerWallMs": 84938,
+      "mcpCalls": 1,
+      "shellCalls": 9,
+      "grade": {
+        "opaqueId": "08e21e45d6481bcaa0a21a50",
+        "score": 3,
+        "pass": true,
+        "reasons": "Correctly identifies Pass 2 failure before persistence, preserved prior facts, failed MCP request rather than a partial result, and the separate partial path. The evidence omits the required service refresh boundary citation that connects every read workflow to the propagated refresh error.",
+        "citations": [
+          "repos/codefacts/src/indexer/pipeline.rs:326-373",
+          "repos/codefacts/src/indexer/pipeline.rs:1004-1082",
+          "repos/codefacts/src/service.rs:257-274",
+          "repos/codefacts/src/service.rs:1385-1403"
+        ]
+      },
+      "manualReview": {
+        "environmentValid": true,
+        "usageReconciled": true,
+        "method": "Parent inspected every actual nested call; independent anonymous source-based grading."
+      },
+      "rawStatus": "pending-manual-review",
+      "rawEvaluationValidity": "valid",
+      "evidence": {
+        "stdoutSha256": "28f8cf8c612d98e1257fdea6dca0bdb8aa224e1536a7d0ecd82b61954fa32c77",
+        "rolloutSha256": "7de681d565d064ebeeeaa3987911a1e81c8d5a5cba51f85207e71502ec48f5a6",
+        "answerSha256": "8e49ecff9c1311f94f230067c61519592ecd76d07203e0450352c7d41216d5f9"
+      }
+    },
+    {
+      "task": "extraction_failure",
+      "arm": "codefacts",
+      "repetition": 1,
+      "usage": {
+        "input_tokens": 459114,
+        "cached_input_tokens": 407552,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2760,
+        "reasoning_output_tokens": 804
+      },
+      "totalTokens": 461874,
+      "wallMs": 83673,
+      "runnerWallMs": 83736,
+      "mcpCalls": 1,
+      "shellCalls": 9,
+      "grade": {
+        "opaqueId": "1eb54689737d79c38a10f38a",
+        "score": 1,
+        "pass": false,
+        "reasons": "Materially conflates the prompted Pass 2 edge-extraction error with the Pass 1 skip path by first saying the caller receives freshness.status=partial. Its final qualification correctly says Pass 2 returns an error, but the conflicting partial-result claim triggers the rubric cap.",
+        "citations": [
+          "repos/codefacts/src/indexer/pipeline.rs:326-373",
+          "repos/codefacts/src/service.rs:257-274",
+          "repos/codefacts/src/service.rs:1385-1403"
+        ]
+      },
+      "manualReview": {
+        "environmentValid": true,
+        "usageReconciled": true,
+        "method": "Parent inspected every actual nested call; independent anonymous source-based grading."
+      },
+      "rawStatus": "pending-manual-review",
+      "rawEvaluationValidity": "valid",
+      "evidence": {
+        "stdoutSha256": "77e3fa851571a654cb816ca060e4786e76a6f40a8728afd878291de41d699765",
+        "rolloutSha256": "2c1c44c9f087fe55118c1e95624eadaaddf0f3a78632fcaa898908c9e81acc70",
+        "answerSha256": "cd93347c99a41806afbd3f94c66c333c9ef330d82c6316f534af9d78645287af"
+      }
+    },
+    {
+      "task": "extraction_failure",
+      "arm": "baseline",
+      "repetition": 1,
+      "usage": {
+        "input_tokens": 881882,
+        "cached_input_tokens": 809984,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3757,
+        "reasoning_output_tokens": 1225
+      },
+      "totalTokens": 885639,
+      "wallMs": 107608,
+      "runnerWallMs": 107676,
+      "mcpCalls": 0,
+      "shellCalls": 13,
+      "grade": {
+        "opaqueId": "66e6f44fba334631f2036075",
+        "score": 3,
+        "pass": true,
+        "reasons": "Correctly distinguishes Pass 2 pre-persistence failure from the successful partial path and scopes the preservation regression. It does not give the required line-specific service refresh-boundary evidence for the claim that the MCP call propagates the refresh failure.",
+        "citations": [
+          "repos/codefacts/src/indexer/pipeline.rs:326-373",
+          "repos/codefacts/src/indexer/pipeline.rs:1004-1082",
+          "repos/codefacts/src/service.rs:257-274",
+          "repos/codefacts/src/service.rs:1385-1403"
+        ]
+      },
+      "manualReview": {
+        "environmentValid": true,
+        "usageReconciled": true,
+        "method": "Parent inspected every actual nested call; independent anonymous source-based grading."
+      },
+      "rawStatus": "pending-manual-review",
+      "rawEvaluationValidity": "valid",
+      "evidence": {
+        "stdoutSha256": "a3b66ca4fc56693f5ebcc9e3579b6dbfd1ff667a054f0a00653dbf1be519b1b9",
+        "rolloutSha256": "07d9f3e4f9e4b1248f57bfc8e1133d28a026a80664b2c82b84839fcd2eeea1f7",
+        "answerSha256": "6f0a6a403eadf736bec064981bdb4ed1568252010c13dca1002e779b30bb9c89"
+      }
+    }
+  ],
+  "preflight": [
+    {
+      "arm": "baseline",
+      "usage": {
+        "input_tokens": 103415,
+        "cached_input_tokens": 78848,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 547,
+        "reasoning_output_tokens": 209
+      },
+      "totalTokens": 103962,
+      "usageReconciled": true,
+      "stdoutSha256": "642198a85a278d93c73f436df59c12e7ef2cddc2fafbcc97013fb764afe233ee",
+      "rolloutSha256": "c224e118f2b4f8ffd40f1343975ce4cf0a3a08c2bffc73d70c27aac80a47b2fb"
+    },
+    {
+      "arm": "codefacts",
+      "usage": {
+        "input_tokens": 75401,
+        "cached_input_tokens": 50176,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 552,
+        "reasoning_output_tokens": 176
+      },
+      "totalTokens": 75953,
+      "usageReconciled": true,
+      "stdoutSha256": "478e08da2011ea63ad00dad31a930c267032c3bcf91559b07fdac44180dfc703",
+      "rolloutSha256": "3a8fe6ac684dd2cfdb9f54095ef4dabf2c263bbd39a5eb324650174090cde0cb"
+    },
+    {
+      "arm": "codegraph",
+      "usage": {
+        "input_tokens": 81317,
+        "cached_input_tokens": 54272,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 547,
+        "reasoning_output_tokens": 172
+      },
+      "totalTokens": 81864,
+      "usageReconciled": true,
+      "stdoutSha256": "42027dddb42306ebb8176a3dc0b2a50f1feeed33738625b25a3846afff8983ba",
+      "rolloutSha256": "3e37a3a81336981fc79ac7b23e440759ad36ddbf1f7e54ea6056c7022e429bc4"
+    }
+  ],
+  "execution": {
+    "maxFormalInvocations": 6,
+    "actualFormalInvocations": 6,
+    "maxPreflightInvocations": 3,
+    "actualPreflightInvocations": 3,
+    "formalTokenStopThreshold": 3000000,
+    "thresholdCheck": "Before each next launch; not a hard in-flight token cap.",
+    "retries": 0,
+    "order": [
+      [
+        "transaction",
+        "baseline"
+      ],
+      [
+        "transaction",
+        "codefacts"
+      ],
+      [
+        "transaction",
+        "codegraph"
+      ],
+      [
+        "extraction_failure",
+        "codegraph"
+      ],
+      [
+        "extraction_failure",
+        "codefacts"
+      ],
+      [
+        "extraction_failure",
+        "baseline"
+      ]
+    ]
+  },
+  "setup": {
+    "releaseBuild": {
+      "command": "cargo build --release --locked --bin codefacts",
+      "exitCode": 0,
+      "durationMs": 42844,
+      "sourceCommit": "34accfd342657319e5ad7a2a0c66c965b656e1dc"
+    },
+    "nativePreflights": [
+      {
+        "name": "codefacts",
+        "ok": true,
+        "durationMs": 177,
+        "error": null
+      },
+      {
+        "name": "codegraph",
+        "ok": true,
+        "durationMs": 311,
+        "error": null
+      }
+    ],
+    "warmIndexes": true
+  },
+  "actualBilling": null,
+  "limitations": [
+    "Two previously seen tasks, one repository and one repetition; no repeatability or statistical ranking.",
+    "One CodeFacts failure invalidates quality-gated savings for that task; failure remains in workload cost.",
+    "Warm navigation only; no coding edits, cold installation, multi-turn or user retention evidence.",
+    "All configured MCP arms used MCP; results describe these pinned integrations.",
+    "Task time is timing.json launch-to-exit; runnerWallMs includes accounting overhead."
+  ],
+  "decision": {
+    "escalate": false,
+    "retainTaskHypotheses": [
+      "transaction"
+    ],
+    "perTask": [
+      {
+        "task": "transaction",
+        "allPass": true,
+        "savingsVsBaselinePct": 44.97042452583274,
+        "savingsVsCodegraphPct": 60.384207947946024
+      },
+      {
+        "task": "extraction_failure",
+        "allPass": false,
+        "savingsVsBaselinePct": null,
+        "savingsVsCodegraphPct": null
+      }
+    ],
+    "action": "Limit investment to maintenance and correctness; retain only qualifying task families for narrow validation. No further model runs."
+  },
+  "improvementProcess": {
+    "engineering": {
+      "collectedAt": "2026-09-11T17:10:58.710Z",
+      "boundary": "2026-09-11T16:37:52.634Z",
+      "measurement": "Sum each unique response token_usage_record.payload.usage once after the user request, root plus three engineering workers. Cumulative turn/thread counters are not added.",
+      "scope": "Engineering only; evaluated CLI and preflight sessions excluded and reported separately.",
+      "limitation": "Pre-completion snapshot; reporting after each cutoff is additional. Provider processing is not actual billing.",
+      "actualBilling": null,
+      "records": [
+        {
+          "agent": "root",
+          "through": "2026-09-11T17:10:58.120Z",
+          "responseCount": 88,
+          "input_tokens": 9534046,
+          "cached_input_tokens": 9251200,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 28771,
+          "reasoning_output_tokens": 9318,
+          "total_tokens": 9562817,
+          "uncached_input_tokens": 282846
+        },
+        {
+          "agent": "eval_summary",
+          "through": "2026-09-11T16:46:57.006Z",
+          "responseCount": 35,
+          "input_tokens": 3105727,
+          "cached_input_tokens": 2988288,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 21610,
+          "reasoning_output_tokens": 8338,
+          "total_tokens": 3127337,
+          "uncached_input_tokens": 117439
+        },
+        {
+          "agent": "screen_run",
+          "through": "2026-09-11T17:07:29.122Z",
+          "responseCount": 164,
+          "input_tokens": 26779210,
+          "cached_input_tokens": 26421248,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 53187,
+          "reasoning_output_tokens": 13015,
+          "total_tokens": 26832397,
+          "uncached_input_tokens": 357962
+        },
+        {
+          "agent": "screen_review",
+          "through": "2026-09-11T17:10:37.285Z",
+          "responseCount": 24,
+          "input_tokens": 1854429,
+          "cached_input_tokens": 1744896,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 9814,
+          "reasoning_output_tokens": 4780,
+          "total_tokens": 1864243,
+          "uncached_input_tokens": 109533
+        }
+      ],
+      "totals": {
+        "input_tokens": 41273412,
+        "cached_input_tokens": 40405632,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 113382,
+        "reasoning_output_tokens": 35451,
+        "total_tokens": 41386794,
+        "uncached_input_tokens": 867780
+      }
+    },
+    "formalTokens": 2313990,
+    "preflightTokens": 261779,
+    "observedCombinedTotalTokensThroughCutoffs": 43962563,
+    "actualBilling": null,
+    "engineeringEfficiencyImprovementDemonstrated": false
+  }
+}

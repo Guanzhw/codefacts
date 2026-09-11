@@ -197,6 +197,13 @@ composite score would conceal a failed correctness constraint.
   description-only candidate was reverted under the frozen rule. Engineering
   and evaluation consumption are recorded separately; no deployed savings or
   stable product advantage is claimed.
+- The [bounded value screen](VALUE-SCREEN-2026-09-12.md) compared the repaired
+  binary with ordinary tools and pinned CodeGraph on two questions. CodeFacts
+  passed 1/2 versus 2/2 for each comparator. Known-symbol lookup passed and used
+  44.97% / 60.38% fewer tokens respectively, while failure investigation failed
+  the frozen rubric. The implemented decision is limited maintenance and narrow
+  lookup validation, without a larger campaign. An offline summary now reuses
+  reviewed results without model calls.
 - Multi-turn retention, external user retention, and maintenance return remain
   unmeasured. Do not report them as zero or assume a benefit from bounded results.
 
