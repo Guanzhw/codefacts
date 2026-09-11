@@ -101,10 +101,8 @@ Start with `search` when a symbol or code term is already known; use `map` when
 the task needs a repository overview. FTS query words are prefix matches joined
 by AND, so use short code terms rather than full questions. If no facts match,
 shorten to one distinctive term or use ordinary text search to discover an
-identifier. Use `detail: "facts"` while discovering candidates. For a known or
-selected symbol, request `detail: "context"` when its definition and direct
-relationships are needed together; start with `context_limit: 1` and narrow
-the kind or path when known.
+identifier. Request `detail: "context"` when the definition and its direct
+relationships are needed together.
 
 `map.unresolved_references` reports the count plus at most 20 source-backed
 unresolved import/reference samples. It describes a static-analysis gap; it
