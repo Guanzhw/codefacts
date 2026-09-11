@@ -111,3 +111,10 @@ twenty runs in [cycle-2-freeze.json](cycle-2-freeze.json), with an independent
 the quality improvement, raw-token regressions, one MCP non-use observation,
 engineering overhead, and implemented reversion. Failed answers remain in
 workload cost; a pair only gets quality-gated savings when both answers pass.
+
+The [retrieval diagnosis](../../docs/RETRIEVAL-DIAGNOSIS-2026-09-12.md) replays
+twelve frozen queries without evaluation-model calls. Its
+[results](retrieval-replay-results.json) distinguish candidate ranking from
+actual excerpt coverage. The investigator-selected
+[evidence pack](failure-evidence-pack.md) is prepared for a future separately
+controlled comprehension check and is not evidence of an agent improvement.

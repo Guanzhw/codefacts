@@ -1,0 +1,1199 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Offline diagnosis of observed empty search and identifier lookup. No model calls or product change; diagnostic cases, not held-out task-efficiency evidence.",
+  "sourceRevisions": {
+    "codefacts": "76bae6820c3032e952dbfb5aeb8560b949af185c",
+    "opensession": "994942690fe5d1854398017026ef3615b2fdd24f"
+  },
+  "binarySha256": "2e725c9b3947545aecce845ba7fdd41d58e8fd456743d0cd9da2d34355ce7576",
+  "casesSha256": "b0e908565c6efba54c11f038f8a4c9a261be93fe9af19296a684577c2d279f8c",
+  "rawResponseFileSha256": "c2e9c0de51a339a5870074dc956e8b8e50aef00f023847e6dcb6325fd5c0c38b",
+  "budget": {
+    "formalSearchCalls": 12,
+    "mapPreflights": 2,
+    "modelInvocations": 0,
+    "retries": 0
+  },
+  "mapPreflights": [
+    {
+      "repository": "codefacts",
+      "status": "fresh",
+      "rootValidated": true,
+      "textContentBytes": 1198
+    },
+    {
+      "repository": "opensession",
+      "status": "fresh",
+      "rootValidated": true,
+      "textContentBytes": 6870
+    }
+  ],
+  "results": [
+    {
+      "repository": "codefacts",
+      "query": "relationship extraction",
+      "role": "observed failure query",
+      "arguments": {
+        "repository_root": "{codefacts}",
+        "query": "relationship extraction",
+        "detail": "context",
+        "context_limit": 1,
+        "limit": 5
+      },
+      "freshness": {
+        "status": "fresh",
+        "generation": 1,
+        "rootValidated": true
+      },
+      "returnedCount": 0,
+      "hasMore": false,
+      "textContentBytes": 676,
+      "top5": []
+    },
+    {
+      "repository": "codefacts",
+      "query": "extraction",
+      "role": "word-form diagnostic",
+      "arguments": {
+        "repository_root": "{codefacts}",
+        "query": "extraction",
+        "detail": "context",
+        "context_limit": 1,
+        "limit": 5
+      },
+      "freshness": {
+        "status": "fresh",
+        "generation": 1,
+        "rootValidated": true
+      },
+      "returnedCount": 5,
+      "hasMore": true,
+      "textContentBytes": 3606,
+      "top5": [
+        {
+          "rank": 1,
+          "name": "FACT_EXTRACTION_VERSION",
+          "kind": "variable",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 12,
+            "extractor": "tree-sitter",
+            "file_path": "src/db/schema.rs",
+            "source_hash": "f31280405147689c78291f957076006fc307b757b3f9a61ee612a8a023653978",
+            "start_line": 12
+          },
+          "source": {
+            "byte_length": 44,
+            "definition_end_line": 12,
+            "end_line": 12,
+            "start_line": 12,
+            "status": "ok",
+            "truncated": false
+          },
+          "callerNames": []
+        },
+        {
+          "rank": 2,
+          "name": "migrate_fact_extraction_version",
+          "kind": "function",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 213,
+            "extractor": "tree-sitter",
+            "file_path": "src/db/schema.rs",
+            "source_hash": "f31280405147689c78291f957076006fc307b757b3f9a61ee612a8a023653978",
+            "start_line": 198
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 3,
+          "name": "fact_extraction_version_change_requires_one_safe_source_reindex",
+          "kind": "function",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 599,
+            "extractor": "tree-sitter",
+            "file_path": "src/db/schema.rs",
+            "source_hash": "f31280405147689c78291f957076006fc307b757b3f9a61ee612a8a023653978",
+            "start_line": 564
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 4,
+          "name": "extracts_heading_hierarchy_sections_and_internal_links",
+          "kind": "function",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 371,
+            "extractor": "tree-sitter",
+            "file_path": "src/indexer/markdown.rs",
+            "source_hash": "b06774356b115e2fd0f4970873186eb100da45abe003ae3f3aa503a4e6f021e8",
+            "start_line": 346
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 5,
+          "name": "MarkdownExtraction",
+          "kind": "struct",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 17,
+            "extractor": "tree-sitter",
+            "file_path": "src/indexer/markdown.rs",
+            "source_hash": "b06774356b115e2fd0f4970873186eb100da45abe003ae3f3aa503a4e6f021e8",
+            "start_line": 14
+          },
+          "source": null,
+          "callerNames": []
+        }
+      ]
+    },
+    {
+      "repository": "codefacts",
+      "query": "extract",
+      "role": "prefix diagnostic",
+      "arguments": {
+        "repository_root": "{codefacts}",
+        "query": "extract",
+        "detail": "context",
+        "context_limit": 1,
+        "limit": 5
+      },
+      "freshness": {
+        "status": "fresh",
+        "generation": 1,
+        "rootValidated": true
+      },
+      "returnedCount": 5,
+      "hasMore": true,
+      "textContentBytes": 3386,
+      "top5": [
+        {
+          "rank": 1,
+          "name": "Extractor",
+          "kind": "struct",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 235,
+            "extractor": "tree-sitter",
+            "file_path": "src/indexer/extractor.rs",
+            "source_hash": "a1549735fb9d3a95d74c30981b47da33f90cb7b94e1a86eab9c0073a9ecbe468",
+            "start_line": 235
+          },
+          "source": {
+            "byte_length": 23,
+            "definition_end_line": 235,
+            "end_line": 235,
+            "start_line": 235,
+            "status": "ok",
+            "truncated": false
+          },
+          "callerNames": []
+        },
+        {
+          "rank": 2,
+          "name": "parse_and_extract_nodes",
+          "kind": "function",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 1219,
+            "extractor": "tree-sitter",
+            "file_path": "src/indexer/extractor.rs",
+            "source_hash": "a1549735fb9d3a95d74c30981b47da33f90cb7b94e1a86eab9c0073a9ecbe468",
+            "start_line": 1217
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 3,
+          "name": "parse_and_extract_edges",
+          "kind": "function",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 1237,
+            "extractor": "tree-sitter",
+            "file_path": "src/indexer/extractor.rs",
+            "source_hash": "a1549735fb9d3a95d74c30981b47da33f90cb7b94e1a86eab9c0073a9ecbe468",
+            "start_line": 1231
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 4,
+          "name": "parse_and_extract_nodes_file",
+          "kind": "function",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 1229,
+            "extractor": "tree-sitter",
+            "file_path": "src/indexer/extractor.rs",
+            "source_hash": "a1549735fb9d3a95d74c30981b47da33f90cb7b94e1a86eab9c0073a9ecbe468",
+            "start_line": 1221
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 5,
+          "name": "extractor",
+          "kind": "variable",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 4,
+            "extractor": "tree-sitter",
+            "file_path": "src/indexer/mod.rs",
+            "source_hash": "5b8b3d461c16e038302b51b496a9eda5b0d2a529712208476bfe147820042805",
+            "start_line": 4
+          },
+          "source": null,
+          "callerNames": []
+        }
+      ]
+    },
+    {
+      "repository": "codefacts",
+      "query": "extract edges",
+      "role": "split identifier diagnostic",
+      "arguments": {
+        "repository_root": "{codefacts}",
+        "query": "extract edges",
+        "detail": "context",
+        "context_limit": 1,
+        "limit": 5
+      },
+      "freshness": {
+        "status": "fresh",
+        "generation": 1,
+        "rootValidated": true
+      },
+      "returnedCount": 5,
+      "hasMore": true,
+      "textContentBytes": 8358,
+      "top5": [
+        {
+          "rank": 1,
+          "name": "parse_and_extract_edges",
+          "kind": "function",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 1237,
+            "extractor": "tree-sitter",
+            "file_path": "src/indexer/extractor.rs",
+            "source_hash": "a1549735fb9d3a95d74c30981b47da33f90cb7b94e1a86eab9c0073a9ecbe468",
+            "start_line": 1231
+          },
+          "source": {
+            "byte_length": 231,
+            "definition_end_line": 1237,
+            "end_line": 1237,
+            "start_line": 1231,
+            "status": "ok",
+            "truncated": false
+          },
+          "callerNames": [
+            "extract_containment_edges_class_to_method",
+            "extract_import_edges_from_typescript"
+          ]
+        },
+        {
+          "rank": 2,
+          "name": "parse_and_extract_edges_file",
+          "kind": "function",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 1250,
+            "extractor": "tree-sitter",
+            "file_path": "src/indexer/extractor.rs",
+            "source_hash": "a1549735fb9d3a95d74c30981b47da33f90cb7b94e1a86eab9c0073a9ecbe468",
+            "start_line": 1239
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 3,
+          "name": "extract_import_edges_from_typescript",
+          "kind": "function",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 1477,
+            "extractor": "tree-sitter",
+            "file_path": "src/indexer/extractor.rs",
+            "source_hash": "a1549735fb9d3a95d74c30981b47da33f90cb7b94e1a86eab9c0073a9ecbe468",
+            "start_line": 1454
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 4,
+          "name": "extract_edges",
+          "kind": "method",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 478,
+            "extractor": "tree-sitter",
+            "file_path": "src/indexer/extractor.rs",
+            "source_hash": "a1549735fb9d3a95d74c30981b47da33f90cb7b94e1a86eab9c0073a9ecbe468",
+            "start_line": 390
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 5,
+          "name": "Extractor",
+          "kind": "struct",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 235,
+            "extractor": "tree-sitter",
+            "file_path": "src/indexer/extractor.rs",
+            "source_hash": "a1549735fb9d3a95d74c30981b47da33f90cb7b94e1a86eab9c0073a9ecbe468",
+            "start_line": 235
+          },
+          "source": null,
+          "callerNames": []
+        }
+      ]
+    },
+    {
+      "repository": "codefacts",
+      "query": "extract_edges",
+      "role": "known callee control",
+      "arguments": {
+        "repository_root": "{codefacts}",
+        "query": "extract_edges",
+        "detail": "context",
+        "context_limit": 1,
+        "limit": 5
+      },
+      "freshness": {
+        "status": "fresh",
+        "generation": 1,
+        "rootValidated": true
+      },
+      "returnedCount": 5,
+      "hasMore": true,
+      "textContentBytes": 13991,
+      "top5": [
+        {
+          "rank": 1,
+          "name": "extract_edges",
+          "kind": "method",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 478,
+            "extractor": "tree-sitter",
+            "file_path": "src/indexer/extractor.rs",
+            "source_hash": "a1549735fb9d3a95d74c30981b47da33f90cb7b94e1a86eab9c0073a9ecbe468",
+            "start_line": 390
+          },
+          "source": {
+            "byte_length": 3195,
+            "definition_end_line": 478,
+            "end_line": 478,
+            "start_line": 390,
+            "status": "ok",
+            "truncated": false
+          },
+          "callerNames": [
+            "parse_and_extract_edges_file",
+            "index_directory"
+          ]
+        },
+        {
+          "rank": 2,
+          "name": "parse_and_extract_edges",
+          "kind": "function",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 1237,
+            "extractor": "tree-sitter",
+            "file_path": "src/indexer/extractor.rs",
+            "source_hash": "a1549735fb9d3a95d74c30981b47da33f90cb7b94e1a86eab9c0073a9ecbe468",
+            "start_line": 1231
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 3,
+          "name": "parse_and_extract_edges_file",
+          "kind": "function",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 1250,
+            "extractor": "tree-sitter",
+            "file_path": "src/indexer/extractor.rs",
+            "source_hash": "a1549735fb9d3a95d74c30981b47da33f90cb7b94e1a86eab9c0073a9ecbe468",
+            "start_line": 1239
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 4,
+          "name": "FileData",
+          "kind": "type_alias",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 327,
+            "extractor": "tree-sitter",
+            "file_path": "src/indexer/pipeline.rs",
+            "source_hash": "7b996aeae587e291cc3d5e02805618996f6bd52ce0b39480f7ec91bee9db8633",
+            "start_line": 327
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 5,
+          "name": "tests",
+          "kind": "variable",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 2339,
+            "extractor": "tree-sitter",
+            "file_path": "src/indexer/extractor.rs",
+            "source_hash": "a1549735fb9d3a95d74c30981b47da33f90cb7b94e1a86eab9c0073a9ecbe468",
+            "start_line": 1210
+          },
+          "source": null,
+          "callerNames": []
+        }
+      ]
+    },
+    {
+      "repository": "codefacts",
+      "query": "relationship",
+      "role": "semantic vocabulary diagnostic",
+      "arguments": {
+        "repository_root": "{codefacts}",
+        "query": "relationship",
+        "detail": "context",
+        "context_limit": 1,
+        "limit": 5
+      },
+      "freshness": {
+        "status": "fresh",
+        "generation": 1,
+        "rootValidated": true
+      },
+      "returnedCount": 5,
+      "hasMore": true,
+      "textContentBytes": 3245,
+      "top5": [
+        {
+          "rank": 1,
+          "name": "CONTEXT_RELATIONSHIP_LIMIT",
+          "kind": "variable",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 25,
+            "extractor": "tree-sitter",
+            "file_path": "src/service.rs",
+            "source_hash": "a32c72420e917a1be765d193574d014f94e98b4a6808c999876506f93ad06372",
+            "start_line": 25
+          },
+          "source": {
+            "byte_length": 46,
+            "definition_end_line": 25,
+            "end_line": 25,
+            "start_line": 25,
+            "status": "ok",
+            "truncated": false
+          },
+          "callerNames": []
+        },
+        {
+          "rank": 2,
+          "name": "path_relationship_fact",
+          "kind": "method",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 1131,
+            "extractor": "tree-sitter",
+            "file_path": "src/service.rs",
+            "source_hash": "a32c72420e917a1be765d193574d014f94e98b4a6808c999876506f93ad06372",
+            "start_line": 1127
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 3,
+          "name": "context_entry",
+          "kind": "method",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 905,
+            "extractor": "tree-sitter",
+            "file_path": "src/service.rs",
+            "source_hash": "a32c72420e917a1be765d193574d014f94e98b4a6808c999876506f93ad06372",
+            "start_line": 893
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 4,
+          "name": "relationships_to",
+          "kind": "method",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 1020,
+            "extractor": "tree-sitter",
+            "file_path": "src/service.rs",
+            "source_hash": "a32c72420e917a1be765d193574d014f94e98b4a6808c999876506f93ad06372",
+            "start_line": 987
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 5,
+          "name": "relationship_fact",
+          "kind": "method",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 1125,
+            "extractor": "tree-sitter",
+            "file_path": "src/service.rs",
+            "source_hash": "a32c72420e917a1be765d193574d014f94e98b4a6808c999876506f93ad06372",
+            "start_line": 1107
+          },
+          "source": null,
+          "callerNames": []
+        }
+      ]
+    },
+    {
+      "repository": "codefacts",
+      "query": "index_directory",
+      "role": "error propagation owner control",
+      "arguments": {
+        "repository_root": "{codefacts}",
+        "query": "index_directory",
+        "detail": "context",
+        "context_limit": 1,
+        "limit": 5
+      },
+      "freshness": {
+        "status": "fresh",
+        "generation": 1,
+        "rootValidated": true
+      },
+      "returnedCount": 5,
+      "hasMore": true,
+      "textContentBytes": 20140,
+      "top5": [
+        {
+          "rank": 1,
+          "name": "index_directory",
+          "kind": "method",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 467,
+            "extractor": "tree-sitter",
+            "file_path": "src/indexer/pipeline.rs",
+            "source_hash": "7b996aeae587e291cc3d5e02805618996f6bd52ce0b39480f7ec91bee9db8633",
+            "start_line": 145
+          },
+          "source": {
+            "byte_length": 4037,
+            "definition_end_line": 467,
+            "end_line": 235,
+            "start_line": 145,
+            "status": "ok",
+            "truncated": true
+          },
+          "callerNames": [
+            "cross_file_import_resolution",
+            "incremental_indexing_skips_unchanged_files",
+            "incremental_indexing_skips_unchanged_files",
+            "incremental_reindexes_modified_file",
+            "incremental_reindexes_modified_file"
+          ]
+        },
+        {
+          "rank": 2,
+          "name": "index_directory_full_pipeline",
+          "kind": "function",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 936,
+            "extractor": "tree-sitter",
+            "file_path": "src/indexer/pipeline.rs",
+            "source_hash": "7b996aeae587e291cc3d5e02805618996f6bd52ce0b39480f7ec91bee9db8633",
+            "start_line": 917
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 3,
+          "name": "index_directory_reports_oversized_and_unreadable_files",
+          "kind": "function",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 1109,
+            "extractor": "tree-sitter",
+            "file_path": "src/indexer/pipeline.rs",
+            "source_hash": "7b996aeae587e291cc3d5e02805618996f6bd52ce0b39480f7ec91bee9db8633",
+            "start_line": 1085
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 4,
+          "name": "refresh",
+          "kind": "method",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 270,
+            "extractor": "tree-sitter",
+            "file_path": "src/service.rs",
+            "source_hash": "a32c72420e917a1be765d193574d014f94e98b4a6808c999876506f93ad06372",
+            "start_line": 259
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 5,
+          "name": "incremental_indexing_skips_unchanged_files",
+          "kind": "function",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 963,
+            "extractor": "tree-sitter",
+            "file_path": "src/indexer/pipeline.rs",
+            "source_hash": "7b996aeae587e291cc3d5e02805618996f6bd52ce0b39480f7ec91bee9db8633",
+            "start_line": 939
+          },
+          "source": null,
+          "callerNames": []
+        }
+      ]
+    },
+    {
+      "repository": "codefacts",
+      "query": "GraphStore with_transaction",
+      "role": "observed successful query",
+      "arguments": {
+        "repository_root": "{codefacts}",
+        "query": "GraphStore with_transaction",
+        "detail": "context",
+        "context_limit": 1,
+        "limit": 5
+      },
+      "freshness": {
+        "status": "fresh",
+        "generation": 1,
+        "rootValidated": true
+      },
+      "returnedCount": 2,
+      "hasMore": false,
+      "textContentBytes": 1963,
+      "top5": [
+        {
+          "rank": 1,
+          "name": "GraphStore",
+          "kind": "struct",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 54,
+            "extractor": "tree-sitter",
+            "file_path": "src/graph/store.rs",
+            "source_hash": "f137b1ca9b99f4f26751eae8ad8c4b09f2ab2625f2a97045a7128052ca0b6e6a",
+            "start_line": 52
+          },
+          "source": {
+            "byte_length": 51,
+            "definition_end_line": 54,
+            "end_line": 54,
+            "start_line": 52,
+            "status": "ok",
+            "truncated": false
+          },
+          "callerNames": []
+        },
+        {
+          "rank": 2,
+          "name": "with_transaction",
+          "kind": "method",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 478,
+            "extractor": "tree-sitter",
+            "file_path": "src/graph/store.rs",
+            "source_hash": "f137b1ca9b99f4f26751eae8ad8c4b09f2ab2625f2a97045a7128052ca0b6e6a",
+            "start_line": 462
+          },
+          "source": null,
+          "callerNames": []
+        }
+      ]
+    },
+    {
+      "repository": "codefacts",
+      "query": "with transaction",
+      "role": "split identifier control",
+      "arguments": {
+        "repository_root": "{codefacts}",
+        "query": "with transaction",
+        "detail": "context",
+        "context_limit": 1,
+        "limit": 5
+      },
+      "freshness": {
+        "status": "fresh",
+        "generation": 1,
+        "rootValidated": true
+      },
+      "returnedCount": 5,
+      "hasMore": true,
+      "textContentBytes": 9342,
+      "top5": [
+        {
+          "rank": 1,
+          "name": "with_transaction",
+          "kind": "method",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 478,
+            "extractor": "tree-sitter",
+            "file_path": "src/graph/store.rs",
+            "source_hash": "f137b1ca9b99f4f26751eae8ad8c4b09f2ab2625f2a97045a7128052ca0b6e6a",
+            "start_line": 462
+          },
+          "source": {
+            "byte_length": 488,
+            "definition_end_line": 478,
+            "end_line": 478,
+            "start_line": 462,
+            "status": "ok",
+            "truncated": false
+          },
+          "callerNames": [
+            "store_transaction_rolls_back_mutations_and_generation_on_failure",
+            "delete_file_nodes",
+            "delete_file_nodes_preserving_incoming",
+            "replace_edge_occurrences",
+            "replace_file_data"
+          ]
+        },
+        {
+          "rank": 2,
+          "name": "store_transaction_rolls_back_mutations_and_generation_on_failure",
+          "kind": "function",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 2449,
+            "extractor": "tree-sitter",
+            "file_path": "src/graph/store.rs",
+            "source_hash": "f137b1ca9b99f4f26751eae8ad8c4b09f2ab2625f2a97045a7128052ca0b6e6a",
+            "start_line": 2433
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 3,
+          "name": "delete_file_nodes",
+          "kind": "method",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 688,
+            "extractor": "tree-sitter",
+            "file_path": "src/graph/store.rs",
+            "source_hash": "f137b1ca9b99f4f26751eae8ad8c4b09f2ab2625f2a97045a7128052ca0b6e6a",
+            "start_line": 678
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 4,
+          "name": "upsert_edges",
+          "kind": "method",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 620,
+            "extractor": "tree-sitter",
+            "file_path": "src/graph/store.rs",
+            "source_hash": "f137b1ca9b99f4f26751eae8ad8c4b09f2ab2625f2a97045a7128052ca0b6e6a",
+            "start_line": 604
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 5,
+          "name": "delete_file_nodes_preserving_incoming",
+          "kind": "method",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 701,
+            "extractor": "tree-sitter",
+            "file_path": "src/graph/store.rs",
+            "source_hash": "f137b1ca9b99f4f26751eae8ad8c4b09f2ab2625f2a97045a7128052ca0b6e6a",
+            "start_line": 693
+          },
+          "source": null,
+          "callerNames": []
+        }
+      ]
+    },
+    {
+      "repository": "opensession",
+      "query": "getRuntimeProtocol",
+      "role": "cross-repository known identifier control",
+      "arguments": {
+        "repository_root": "{opensession}",
+        "query": "getRuntimeProtocol",
+        "detail": "context",
+        "context_limit": 1,
+        "limit": 5
+      },
+      "freshness": {
+        "status": "fresh",
+        "generation": 1,
+        "rootValidated": true
+      },
+      "returnedCount": 5,
+      "hasMore": true,
+      "textContentBytes": 17824,
+      "top5": [
+        {
+          "rank": 1,
+          "name": "getRuntimeProtocol",
+          "kind": "function",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 135,
+            "extractor": "tree-sitter",
+            "file_path": "src/protocol-runtime.ts",
+            "source_hash": "e9e608b719a011551438dcdf0c48da1db20fd35b5f29cad278dcb9db5a568098",
+            "start_line": 89
+          },
+          "source": {
+            "byte_length": 1562,
+            "definition_end_line": 135,
+            "end_line": 135,
+            "start_line": 89,
+            "status": "ok",
+            "truncated": false
+          },
+          "callerNames": [
+            "buildRuntimeGraph",
+            "getRuntimeProtocolV3",
+            "registerSessionDetail",
+            "registerSessionDetail",
+            "registerSessionDetail"
+          ]
+        },
+        {
+          "rank": 2,
+          "name": "resolved",
+          "kind": "variable",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 589,
+            "extractor": "tree-sitter",
+            "file_path": "test/codex-v3.test.mjs",
+            "source_hash": "c51fca0663e6ed03b60bcedc005d1ddb07edf97a93d40e9d9a859fad576b7753",
+            "start_line": 589
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 3,
+          "name": "first",
+          "kind": "variable",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 64,
+            "extractor": "tree-sitter",
+            "file_path": "test/protocol-runtime.test.mjs",
+            "source_hash": "5a3612f95327cf8a4e6cfc1ad88a777674fd3768c1738740be375c3ea22a5b2c",
+            "start_line": 64
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 4,
+          "name": "second",
+          "kind": "variable",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 65,
+            "extractor": "tree-sitter",
+            "file_path": "test/protocol-runtime.test.mjs",
+            "source_hash": "5a3612f95327cf8a4e6cfc1ad88a777674fd3768c1738740be375c3ea22a5b2c",
+            "start_line": 65
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 5,
+          "name": "finalized",
+          "kind": "variable",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 77,
+            "extractor": "tree-sitter",
+            "file_path": "test/protocol-runtime.test.mjs",
+            "source_hash": "5a3612f95327cf8a4e6cfc1ad88a777674fd3768c1738740be375c3ea22a5b2c",
+            "start_line": 77
+          },
+          "source": null,
+          "callerNames": []
+        }
+      ]
+    },
+    {
+      "repository": "opensession",
+      "query": "runtime protocol",
+      "role": "cross-repository split identifier control",
+      "arguments": {
+        "repository_root": "{opensession}",
+        "query": "runtime protocol",
+        "detail": "context",
+        "context_limit": 1,
+        "limit": 5
+      },
+      "freshness": {
+        "status": "fresh",
+        "generation": 1,
+        "rootValidated": true
+      },
+      "returnedCount": 5,
+      "hasMore": true,
+      "textContentBytes": 8599,
+      "top5": [
+        {
+          "rank": 1,
+          "name": "ProtocolRuntimeError",
+          "kind": "class",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 41,
+            "extractor": "tree-sitter",
+            "file_path": "src/protocol-runtime.ts",
+            "source_hash": "e9e608b719a011551438dcdf0c48da1db20fd35b5f29cad278dcb9db5a568098",
+            "start_line": 33
+          },
+          "source": {
+            "byte_length": 277,
+            "definition_end_line": 41,
+            "end_line": 41,
+            "start_line": 33,
+            "status": "ok",
+            "truncated": false
+          },
+          "callerNames": [
+            "clampInteger",
+            "decodeCursor",
+            "getRuntimeProtocol",
+            "getRuntimeProtocol",
+            "getRuntimeProtocol"
+          ]
+        },
+        {
+          "rank": 2,
+          "name": "clearProtocolRuntimeCache",
+          "kind": "function",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 82,
+            "extractor": "tree-sitter",
+            "file_path": "src/protocol-runtime.ts",
+            "source_hash": "e9e608b719a011551438dcdf0c48da1db20fd35b5f29cad278dcb9db5a568098",
+            "start_line": 78
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 3,
+          "name": "RuntimeGraphEdge",
+          "kind": "interface",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 439,
+            "extractor": "tree-sitter",
+            "file_path": "src/protocol-runtime.ts",
+            "source_hash": "e9e608b719a011551438dcdf0c48da1db20fd35b5f29cad278dcb9db5a568098",
+            "start_line": 432
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 4,
+          "name": "Runtime protocol subsystem",
+          "kind": "heading",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 247,
+            "extractor": "markdown-heading",
+            "file_path": "AGENTS.md",
+            "source_hash": "40d186729b619f2c3ba73b8277943a152a012b0e5b3f880120339929313929ad",
+            "start_line": 240
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 5,
+          "name": "constructor",
+          "kind": "method",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 40,
+            "extractor": "tree-sitter",
+            "file_path": "src/protocol-runtime.ts",
+            "source_hash": "e9e608b719a011551438dcdf0c48da1db20fd35b5f29cad278dcb9db5a568098",
+            "start_line": 34
+          },
+          "source": null,
+          "callerNames": []
+        }
+      ]
+    },
+    {
+      "repository": "opensession",
+      "query": "protocol unavailable",
+      "role": "cross-repository behavior phrase diagnostic",
+      "arguments": {
+        "repository_root": "{opensession}",
+        "query": "protocol unavailable",
+        "detail": "context",
+        "context_limit": 1,
+        "limit": 5
+      },
+      "freshness": {
+        "status": "fresh",
+        "generation": 1,
+        "rootValidated": true
+      },
+      "returnedCount": 5,
+      "hasMore": true,
+      "textContentBytes": 3528,
+      "top5": [
+        {
+          "rank": 1,
+          "name": "ContentAccess",
+          "kind": "type_alias",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 262,
+            "extractor": "tree-sitter",
+            "file_path": "src/providers/shared/session-protocol.ts",
+            "source_hash": "22b8aaa3d9becb526418ba7462018ce12a6d84762d0e9ca4f8090ebc8e75a66a",
+            "start_line": 262
+          },
+          "source": {
+            "byte_length": 83,
+            "definition_end_line": 262,
+            "end_line": 262,
+            "start_line": 262,
+            "status": "ok",
+            "truncated": false
+          },
+          "callerNames": []
+        },
+        {
+          "rank": 2,
+          "name": "ProtocolRuntimeError",
+          "kind": "class",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 41,
+            "extractor": "tree-sitter",
+            "file_path": "src/protocol-runtime.ts",
+            "source_hash": "e9e608b719a011551438dcdf0c48da1db20fd35b5f29cad278dcb9db5a568098",
+            "start_line": 33
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 3,
+          "name": "constructor",
+          "kind": "method",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 40,
+            "extractor": "tree-sitter",
+            "file_path": "src/protocol-runtime.ts",
+            "source_hash": "e9e608b719a011551438dcdf0c48da1db20fd35b5f29cad278dcb9db5a568098",
+            "start_line": 34
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 4,
+          "name": "CONTENT_ACCESSES",
+          "kind": "variable",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 394,
+            "extractor": "tree-sitter",
+            "file_path": "src/providers/shared/session-protocol.ts",
+            "source_hash": "22b8aaa3d9becb526418ba7462018ce12a6d84762d0e9ca4f8090ebc8e75a66a",
+            "start_line": 392
+          },
+          "source": null,
+          "callerNames": []
+        },
+        {
+          "rank": 5,
+          "name": "RuntimeGraphNode",
+          "kind": "interface",
+          "evidence": {
+            "confidence": "confirmed",
+            "end_line": 430,
+            "extractor": "tree-sitter",
+            "file_path": "src/protocol-runtime.ts",
+            "source_hash": "e9e608b719a011551438dcdf0c48da1db20fd35b5f29cad278dcb9db5a568098",
+            "start_line": 421
+          },
+          "source": null,
+          "callerNames": []
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "allRootsFresh": true,
+    "allReturnedFactSourceHashesMatch": true,
+    "checkedSourceExcerpts": 11,
+    "allReturnedExcerptsMatchSourceBytes": true
+  },
+  "accounting": {
+    "searchTextContentBytes": 94658,
+    "mapTextContentBytes": 8068,
+    "unit": "UTF-8 bytes of each MCP text content block, counted once; not JSON-RPC wire size or model-visible tokens",
+    "agentEvaluationInvocations": 0
+  },
+  "limitations": [
+    "Diagnostic cases selected from prior tasks and known symbols; no held-out recall or productivity claim.",
+    "The evidence pack is investigator-selected and has not been evaluated with a model."
+  ]
+}
