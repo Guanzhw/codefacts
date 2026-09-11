@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Offline diagnosis of observed empty search and identifier lookup. No model calls or product change; diagnostic cases, not held-out task-efficiency evidence.",
+  "sourceRevisions": {
+    "codefacts": "76bae6820c3032e952dbfb5aeb8560b949af185c",
+    "opensession": "994942690fe5d1854398017026ef3615b2fdd24f"
+  },
+  "searchOptions": {"detail": "context", "context_limit": 1, "limit": 5},
+  "cases": [
+    {"repository": "codefacts", "query": "relationship extraction", "role": "observed failure query"},
+    {"repository": "codefacts", "query": "extraction", "role": "word-form diagnostic"},
+    {"repository": "codefacts", "query": "extract", "role": "prefix diagnostic"},
+    {"repository": "codefacts", "query": "extract edges", "role": "split identifier diagnostic"},
+    {"repository": "codefacts", "query": "extract_edges", "role": "known callee control"},
+    {"repository": "codefacts", "query": "relationship", "role": "semantic vocabulary diagnostic"},
+    {"repository": "codefacts", "query": "index_directory", "role": "error propagation owner control"},
+    {"repository": "codefacts", "query": "GraphStore with_transaction", "role": "observed successful query"},
+    {"repository": "codefacts", "query": "with transaction", "role": "split identifier control"},
+    {"repository": "opensession", "query": "getRuntimeProtocol", "role": "cross-repository known identifier control"},
+    {"repository": "opensession", "query": "runtime protocol", "role": "cross-repository split identifier control"},
+    {"repository": "opensession", "query": "protocol unavailable", "role": "cross-repository behavior phrase diagnostic"}
+  ],
+  "relevantEvidence": [
+    {"repository": "codefacts", "name": "extract_edges", "file": "src/indexer/extractor.rs", "line": 390, "role": "callee; finding it alone does not answer error propagation"},
+    {"repository": "codefacts", "name": "index_directory", "file": "src/indexer/pipeline.rs", "line": 145, "essentialSpan": [326, 373], "role": "Pass 2 error occurs before persistence"},
+    {"repository": "codefacts", "name": "refresh", "file": "src/service.rs", "essentialSpan": [257, 274], "role": "refresh error propagates to MCP read workflow"},
+    {"repository": "opensession", "name": "getRuntimeProtocol", "file": "src/protocol-runtime.ts", "line": 89, "role": "known identifier lookup control"}
+  ],
+  "budget": {"formalSearchCalls": 12, "mapPreflights": 2, "modelInvocations": 0, "retries": 0},
+  "decisionRule": "Do not add identifier splitting that already exists. Separate word-form/AND/vocabulary misses from missing extraction facts and insufficient caller evidence. A better callee hit alone cannot establish complete evidence or improved agent correctness. Record response bytes as bytes, never estimated token savings. Stop after the frozen cases; require demonstrated query relevance improvement on independent cases before another agent batch."
+}
