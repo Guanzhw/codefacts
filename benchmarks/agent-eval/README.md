@@ -81,3 +81,10 @@ The [first improvement cycle](../../docs/IMPROVEMENT-CYCLE-1.md) reuses those
 pinned questions for two before/after repetitions. Its portable
 [reviewed results](cycle-1-results.json) include usage, grades, queries, hashes,
 and the missed primary target. Source-bearing transcripts remain local.
+
+The [second cycle](../../docs/IMPROVEMENT-CYCLE-2.md) freezes five tasks and
+twenty runs in [cycle-2-freeze.json](cycle-2-freeze.json), with an independent
+[held-out rubric](cycle-2-rubric.md). Its [results](cycle-2-results.json) preserve
+the quality improvement, raw-token regressions, one MCP non-use observation,
+engineering overhead, and implemented reversion. Failed answers remain in
+workload cost; a pair only gets quality-gated savings when both answers pass.

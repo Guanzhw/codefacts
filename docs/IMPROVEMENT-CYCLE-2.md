@@ -90,3 +90,115 @@ SHA256 values are respectively
 Candidate execution must wait for the binary, source, runner and manifest hash
 receipt and independent review. Hashes are recorded in the evaluation freeze
 receipt before the first task invocation.
+
+## Completed experiment and independent grades
+
+The [freeze receipt](../benchmarks/agent-eval/cycle-2-freeze.json) was committed
+in `ab498ee` before task execution. Candidate `9cd6554` passed independent
+source review, formatting, 28 MCP protocol tests, a release build, and a live
+`tools/list` comparison showing only `search.description` changed. Both agent
+preflights actually called MCP and read source successfully.
+
+All 20 scheduled invocations completed, with no retries or timeouts. The
+[portable results](../benchmarks/agent-eval/cycle-2-results.json) retain every
+run, component usage, actual MCP calls, grades, source identities and raw-log
+hashes. The grader received 20 randomly named answer files containing only
+questions and answers, without arm/repetition labels or efficiency values.
+
+| Task | Before median tokens | Candidate median tokens | Raw change | Passing answers, before / candidate |
+| --- | ---: | ---: | ---: | --- |
+| Known-symbol transaction behavior | 126,632 | 185,214 | +46.26% | 2/2 / 2/2 |
+| Relationship-extraction failure | 591,539 | 739,518.5 | +25.02% | 1/2 / 2/2 |
+| Provider contract tracing | 385,107.5 | 419,269 | +8.87% | 2/2 / 2/2 |
+| Q4: changed definition excerpt | 163,543 | 239,049 | +46.17% | 2/2 / 2/2 |
+| Q5: provider-missing Trash management | 660,369 | 442,246 | -33.03% | 1/2 / 2/2 |
+
+**These medians include failed answers and are not full equal-quality
+comparisons.** Baseline passed 8/10; candidate passed 10/10. The parent checked
+both failing baseline answers against the source: one conflated Pass-2 edge
+extraction failure with a successful partial response; the other claimed that
+restoring metadata returns a vanished provider session to the main list.
+The candidate's observed quality improvement must remain visible.
+
+Total tokens increased from 3,854,381 to 4,050,593 (+5.09%). Including the cost
+of failed attempts, tokens per correct completion **decreased** from 481,797.6
+to 405,059.3 (-15.93%). Uncached input increased from 515,031 to 544,910
+(+5.80%). These measure different outcomes; none establishes actual billed
+cost. The source-backed grading and per-correct-completion calculation take
+precedence over interpreting a cheaper incorrect answer as efficiency.
+
+For the primary failure question, only repetition 1 has two passing answers;
+its candidate used 24.48% fewer tokens. Repetition 2 has a failing baseline,
+so its raw token ratio is not credited as a quality-gated efficiency comparison.
+The full repeated, passing comparison required by the frozen 20% median target
+was not obtained. Two repeats cannot establish a stable quality advantage.
+
+## Regression investigation and implemented decision
+
+The greater-than-10% regression investigations covered both known-symbol
+lookup and Q4. Their answers all passed, so their raw regressions also describe
+comparisons at the same rubric score:
+
+- Known-symbol lookup: candidate repetition 1 searched both `GraphStore` and
+  `with_transaction` with three context entries, versus one baseline search.
+  Repetition 2 still requested three context entries and made two source reads
+  versus one. The instruction to begin with one entry was not adopted.
+- Q4: candidate repetition 1 made no MCP calls and eight shell calls. Retain
+  this as an intention-to-use observation, not evidence of an actual MCP query
+  benefit. Candidate repetition 2 used facts then `expand`, followed by three
+  shell calls; it did not eliminate the implementation/regression reads.
+  Baseline repetition 2 used more MCP calls but fewer tokens, illustrating why
+  tool-call count alone is not a success metric.
+- Failure investigation: candidate repetition 2 did adopt facts discovery,
+  but made five searches, three expansions and thirteen shell calls. It was
+  correct while the baseline answer was not; the additional consumption cannot
+  simply be labeled wasted work. The selected guidance did not demonstrate the
+  intended reliable reduction in discovery and reading effort.
+
+**Revert this cycle's candidate according to the frozen acceptance rule.**
+Reversion `a89b472` restores the cycle-1 search guidance and README. The full
+`src` tree, README and protocol tests match `4a30e3f`; the version-4 receiver
+correctness repair remains intact. The rebuilt binary's live tool definitions
+also match the baseline with no differences, and formatting passes. The exact
+tested candidate binary remains archived separately for reproducibility.
+
+The result is mixed, not proof that the candidate is uniformly worse: observed
+answer quality and tokens per correct completion improved, while the primary
+target and two other same-score task comparisons did not support retention.
+There are no additional samples or third-cycle changes. Further investment
+should start from repeatable consumer evidence and a predeclared priority among
+quality and cost outcomes; it must not retroactively change this campaign's
+acceptance rule or treat a single positive metric as a product-wide advantage.
+
+## Audit and cost of the improvement process
+
+All 20 stdout usage records reconcile with saved rollout cumulative usage.
+Manual direct/nested-call inspection found no writes, network/external-agent
+calls or evaluation-artifact access. One baseline Git history/status attempt
+returned `not a git repository` and exposed no history. Archive verification
+found zero changed files across 97 CodeFacts and 307 OpenSession files. All
+raw automatic review flags remain separate from manual eligibility and grades.
+
+At the engineering ledger collection time, **2026-09-11 13:09:21 UTC**:
+
+| Work | Cumulative processed tokens | Uncached input tokens |
+| --- | ---: | ---: |
+| 20 evaluated task invocations | 7,904,974 | 1,059,941 |
+| Two agent preflights | 124,454 | 15,860 |
+| Engineering, orchestration and review snapshot | 38,308,588 | 941,156 |
+| Observed total through engineering cutoffs | 46,338,016 | 2,016,957 |
+
+Engineering usage sums incremental provider counters from the root and three
+engineering agents after goal creation, detects counter resets, and excludes
+the separately counted evaluated CLI/preflight sessions. Of its 38,167,012
+input tokens, 37,225,856 were cached; output was 141,576. Per-agent timestamps
+are retained in the results. This is a pre-completion snapshot: final reporting
+after those cutoffs is additional, and provider processing is not the app's
+quota gauge or an actual bill.
+
+This cost is part of the investment decision. The candidate was reverted, so
+this cycle establishes no deployed token saving to amortize its engineering
+and evaluation cost. The retained value is the failure evidence, held-out
+rubrics, measured quality/cost tradeoff, and a verified baseline. Future work
+should reduce orchestration and broad-context overhead as well as product
+query cost; repeating large campaigns for wording alone needs stronger evidence.

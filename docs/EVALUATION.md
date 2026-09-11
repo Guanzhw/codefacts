@@ -189,6 +189,14 @@ composite score would conceal a failed correctness constraint.
   15.34%, but failure-investigation median tokens rose 5.31%, missing its
   preselected 20% reduction target. Uncached input rose 3.89%; billing remains
   unknown. This supports bounded investigation rather than a general claim.
+- [Improvement cycle 2](IMPROVEMENT-CYCLE-2.md) completed 20 frozen runs and
+  anonymous independent grading. Candidate quality rose from 8/10 to 10/10,
+  and tokens per correct completion fell 15.93%; raw workload tokens rose
+  5.09%. The complete passing comparison required by its primary target was
+  unavailable, and two same-score task medians regressed about 46%. The
+  description-only candidate was reverted under the frozen rule. Engineering
+  and evaluation consumption are recorded separately; no deployed savings or
+  stable product advantage is claimed.
 - Multi-turn retention, external user retention, and maintenance return remain
   unmeasured. Do not report them as zero or assume a benefit from bounded results.
 

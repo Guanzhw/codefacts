@@ -1,0 +1,1866 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-09-11",
+  "condition": "guided-warm-single-turn-navigation-before-after",
+  "freezeReceipt": "cycle-2-freeze.json",
+  "freezeReceiptSha256": "e6c84c4465a0902a312c53b2395c893d9e2bfa5d8e648d7feae338d9ec6d7c97",
+  "agent": {
+    "cli": "Codex 0.153.4",
+    "model": "gpt-5.6-luna",
+    "reasoningEffort": "medium",
+    "platform": "Windows"
+  },
+  "tasks": [
+    {
+      "id": "transaction",
+      "repository": "codefacts",
+      "prompt": "In the CodeFacts snapshot, explain GraphStore::with_transaction success and error behavior. What happens when a store operation is called while a transaction is already active? Cite the implementation and regression coverage."
+    },
+    {
+      "id": "extraction_failure",
+      "repository": "codefacts",
+      "prompt": "After editing a source file, parsing succeeds but relationship extraction fails. Which previous facts remain queryable, and how does an MCP caller learn that the index is incomplete? Explain the behavior and cite source and regression coverage."
+    },
+    {
+      "id": "provider_contract",
+      "repository": "opensession",
+      "prompt": "In the OpenSession snapshot, what is the ProviderAdapter contract for Session Protocol retrieval, what happens when its implementation throws or is unavailable, and where is a provider chosen? Cite the interface, runtime, and consumer or registry source."
+    },
+    {
+      "id": "Q4",
+      "repository": "codefacts",
+      "prompt": "In the CodeFacts snapshot, an `expand` request has refreshed and resolved a symbol, but the definition file changes before its source excerpt is returned. What result does CodeFacts return for the overall expansion and for the excerpt, why does it refuse to return the changed bytes, and what should the caller do? Cite implementation and regression coverage."
+    },
+    {
+      "id": "Q5",
+      "repository": "opensession",
+      "prompt": "In the OpenSession snapshot, a locally managed session was sent to Trash and then disappears from its provider. For a trusted per-session management request, which actions remain allowed and which return `Session not found`? Explain the metadata written by restore and permanent delete, and how those flags affect Trash and main-list filtering. Cite implementation and regression coverage."
+    }
+  ],
+  "sourceRevisions": {
+    "codefacts": "76bae6820c3032e952dbfb5aeb8560b949af185c",
+    "opensession": "994942690fe5d1854398017026ef3615b2fdd24f"
+  },
+  "arms": [
+    {
+      "id": "before",
+      "binarySha256": "d5ab0c4304ce185c0fffce040a3367ea5bb704ff9a3bc22014ba6c712787e1ab"
+    },
+    {
+      "id": "after",
+      "binarySha256": "0253c74ec33cc570bb2005f3c1fe73e9bb06b63f310ecf60d7fcc5e1559c9cf5"
+    }
+  ],
+  "commits": {
+    "baseline": "4a30e3f",
+    "frozenPlan": "ab498ee",
+    "candidate": "9cd6554",
+    "reversion": "a89b472"
+  },
+  "audit": {
+    "eligibleRuns": 20,
+    "gradedRuns": 20,
+    "noRetries": true,
+    "noTimeouts": true,
+    "usageMatches": 20,
+    "sourceFilesChecked": {
+      "codefacts": 97,
+      "opensession": 307
+    },
+    "sourceFilesChanged": 0,
+    "contaminationObserved": false,
+    "nonUse": [
+      "Q4/after/run-001"
+    ],
+    "gitHistoryAttempt": "extraction_failure/before/run-001 attempted git log/status; both returned not a git repository and exposed no history",
+    "review": "All direct/nested traces reviewed; parent independently reconciled all raw stdout usage and verified both non-passing answers against source",
+    "auditSha256": "25ec0ed029c70354bc838fe548d73c44b0b868af31bb9aa24f3feb9db5fc5300",
+    "gradesSha256": "6b5792a1a3a9d7f54d0948810f543dcc9843dd93694206e11863b49d9a130a2a"
+  },
+  "accounting": {
+    "total": "input + output",
+    "cached": "Subset of input, included once",
+    "reasoning": "Subset of output, included once",
+    "failedAttempts": "Included in total and tokens per correct completion",
+    "pairedSavings": "Only report quality-gated savings when both answers pass; raw changes retained separately",
+    "billing": null
+  },
+  "grading": "anonymous, cost-blind, frozen source rubric",
+  "runs": [
+    {
+      "task": "extraction_failure",
+      "arm": "after",
+      "repetition": 1,
+      "inputTokens": 517946,
+      "cachedInputTokens": 453632,
+      "uncachedInputTokens": 64314,
+      "outputTokens": 2995,
+      "reasoningOutputTokens": 1002,
+      "totalTokens": 520941,
+      "finalInputTokens": 67880,
+      "wallMs": 88371,
+      "mcpCalls": 4,
+      "shellCalls": 8,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "rawReviewStatus": "pending-manual-review",
+      "manualEligibility": "Reviewed source access, no contamination, usage reconciled; retain non-use",
+      "mcpUsed": true,
+      "grade": {
+        "task": "Q2",
+        "score": 3,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [
+          "Does not expressly scope the cited atomicity regression as not a direct Pass-2 edge-extraction failure test."
+        ],
+        "citationValidity": "sufficient",
+        "notes": "Correctly identifies Pass 2, unchanged prior snapshot, MCP error, and the separate partial path."
+      },
+      "opaqueGradeId": "1323b155d1118df7a14430a1",
+      "mcp": [
+        {
+          "tool": "map",
+          "arguments": {},
+          "resultsLength": null,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "incomplete",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 20
+          },
+          "resultsLength": 0,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "relationship extraction",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 20
+          },
+          "resultsLength": 0,
+          "isError": false
+        },
+        {
+          "tool": "expand",
+          "arguments": {
+            "symbol": "index_directory",
+            "file_path": "src/indexer/pipeline.rs",
+            "limit": 10
+          },
+          "resultsLength": null,
+          "isError": false
+        }
+      ],
+      "artifactSha256": {
+        "stdout.jsonl": "afc7c3b1df0e5922cf5604a400aef03801b838057fa53f2d59d39e143c28c5b6",
+        "answer.md": "1dc66fd2c622c55ddd897d847b78f229604bdfa3b6f23edf7557d9f47b96ac4a",
+        "metrics.json": "6f71ff14fa8f696feef490a63bfe77f3403df355d3ca6ba26885d65103a2e331",
+        "request.json": "491d701cb0dfc6f761f3ec6894ef6dd5b9a16725f7c1d5b3573e0592460d5968",
+        "transcript-tools.json": "6cdbcdf871549c288440a115ef7d2e71bca073ec927c4b60f08cb5372c92040c",
+        "timing.json": "c880339b197a9ba0cef6e731346750792db505760cdf7f98c92111529ca6ce16"
+      },
+      "rolloutSha256": "aea7473d5dfac6191f1da34ff0a02fe228e330e68b3bbdb8bab4a15014b87e57"
+    },
+    {
+      "task": "extraction_failure",
+      "arm": "after",
+      "repetition": 2,
+      "inputTokens": 953863,
+      "cachedInputTokens": 881152,
+      "uncachedInputTokens": 72711,
+      "outputTokens": 4233,
+      "reasoningOutputTokens": 1164,
+      "totalTokens": 958096,
+      "finalInputTokens": 71123,
+      "wallMs": 127714,
+      "mcpCalls": 9,
+      "shellCalls": 13,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "rawReviewStatus": "pending-manual-review",
+      "manualEligibility": "Reviewed source access, no contamination, usage reconciled; retain non-use",
+      "mcpUsed": true,
+      "grade": {
+        "task": "Q2",
+        "score": 3,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [
+          "Does not explicitly say the atomicity regression is not a direct Pass-2 edge-extraction failure test."
+        ],
+        "citationValidity": "sufficient",
+        "notes": "Correct prior-snapshot preservation, MCP error, and separate partial-path distinction."
+      },
+      "opaqueGradeId": "cf121688b58b653ae7c5c5ca",
+      "mcp": [
+        {
+          "tool": "map",
+          "arguments": {},
+          "resultsLength": null,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "relationship extraction",
+            "detail": "facts",
+            "limit": 20
+          },
+          "resultsLength": 0,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "parse failed",
+            "detail": "facts",
+            "limit": 20
+          },
+          "resultsLength": 13,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "incomplete",
+            "detail": "facts",
+            "limit": 20
+          },
+          "resultsLength": 0,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "freshness",
+            "detail": "facts",
+            "limit": 20
+          },
+          "resultsLength": 20,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "index",
+            "detail": "facts",
+            "limit": 20
+          },
+          "resultsLength": 20,
+          "isError": false
+        },
+        {
+          "tool": "expand",
+          "arguments": {
+            "symbol": "IndexingPipeline",
+            "file_path": "src/indexer/pipeline.rs",
+            "limit": 10
+          },
+          "resultsLength": null,
+          "isError": false
+        },
+        {
+          "tool": "expand",
+          "arguments": {
+            "symbol": "freshness",
+            "file_path": "src/service.rs",
+            "limit": 10
+          },
+          "resultsLength": null,
+          "isError": false
+        },
+        {
+          "tool": "expand",
+          "arguments": {
+            "symbol": "map_marks_an_invalid_source_as_partial_instead_of_fresh",
+            "file_path": "tests/mcp_protocol.rs",
+            "limit": 10
+          },
+          "resultsLength": null,
+          "isError": false
+        }
+      ],
+      "artifactSha256": {
+        "stdout.jsonl": "a29a0e629ccaa8fdde3d60f6e606d0201910c3142120aa458802f59a7cc8f53a",
+        "answer.md": "b45e0e436a2ebc222fe9d4af62cfc3dba2cea5c7c5bb7e83a4e8b65822899578",
+        "metrics.json": "ed6a87110cdb83840acd9e2c27bfbd1ffbab501f406c56254b025a2323c0710a",
+        "request.json": "0b37ec877c962f40d604ef1720b8220f3770a199f5733e33ad7cc1957b592bc7",
+        "transcript-tools.json": "c0936cac3e98345a1e5b7707e70a83007677b07c27b5acf0cbe0bb1409f1dc74",
+        "timing.json": "198292d2095dff31e3654385700054a16be98739800c25f6dcef540cc4c62c6a"
+      },
+      "rolloutSha256": "36048e8e8322afa34f6f3b622c99edc9ecf57f768045caab0199f04790fd0822"
+    },
+    {
+      "task": "extraction_failure",
+      "arm": "before",
+      "repetition": 1,
+      "inputTokens": 685446,
+      "cachedInputTokens": 627456,
+      "uncachedInputTokens": 57990,
+      "outputTokens": 4396,
+      "reasoningOutputTokens": 1489,
+      "totalTokens": 689842,
+      "finalInputTokens": 57877,
+      "wallMs": 127509,
+      "mcpCalls": 1,
+      "shellCalls": 14,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "rawReviewStatus": "pending-manual-review",
+      "manualEligibility": "Reviewed source access, no contamination, usage reconciled; retain non-use",
+      "mcpUsed": true,
+      "grade": {
+        "task": "Q2",
+        "score": 3,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [
+          "Does not explicitly scope the retention regression as not a direct Pass-2 edge-extraction injection."
+        ],
+        "citationValidity": "sufficient",
+        "notes": "Correctly distinguishes failed Pass-2 MCP behavior from successful partial Pass-1 handling."
+      },
+      "opaqueGradeId": "e9d78cfbd80060101397a412",
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "relationship extraction",
+            "detail": "context",
+            "limit": 3
+          },
+          "resultsLength": 0,
+          "isError": false
+        }
+      ],
+      "artifactSha256": {
+        "stdout.jsonl": "d780ed16133597174652e1dbaa672aaf3e9a82e4c9d44f6d9e071e273848a389",
+        "answer.md": "2db1507694553703357852c902e2554d66e58dd775faadb8a4de902586c8560d",
+        "metrics.json": "e08f4882805d79d23d60ffc0f1a5ef3793006d1be18e65d436a0fa3b84029781",
+        "request.json": "ab377f8ce240e78a13ecdb50f3aab54f485a0f14994c60c1650489574ed6fdbb",
+        "transcript-tools.json": "6fcad3a92ad20b2aa2e20bb2296497f018a1a4c9a9adab1be2b1a2fe38382fd3",
+        "timing.json": "832b5e2616c9a047c6da0f0d4df21b990e944d296369767a3b219be1740b94b7"
+      },
+      "rolloutSha256": "6d52531a25870dc2cf76f0516ad750afd85928653f783cefcd890bfc09115cc0"
+    },
+    {
+      "task": "extraction_failure",
+      "arm": "before",
+      "repetition": 2,
+      "inputTokens": 490082,
+      "cachedInputTokens": 400384,
+      "uncachedInputTokens": 89698,
+      "outputTokens": 3154,
+      "reasoningOutputTokens": 1304,
+      "totalTokens": 493236,
+      "finalInputTokens": 57338,
+      "wallMs": 90747,
+      "mcpCalls": 1,
+      "shellCalls": 9,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "rawReviewStatus": "pending-manual-review",
+      "manualEligibility": "Reviewed source access, no contamination, usage reconciled; retain non-use",
+      "mcpUsed": true,
+      "grade": {
+        "task": "Q2",
+        "score": 1,
+        "pass": false,
+        "materialErrors": [
+          "Conflates the prompted Pass-2 extract_edges failure with the Pass-1 counted node-extraction path and claims a normal partial MCP response."
+        ],
+        "missingFacts": [
+          "Pass-2 edge extraction aborts before persistence and makes the MCP call fail rather than return freshness.partial."
+        ],
+        "citationValidity": "partially_misapplied",
+        "notes": "The cited partial path is real but answers a different failure mode; frozen material-error cap applied."
+      },
+      "opaqueGradeId": "c95b67e0c885fbc6b9d66723",
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "relationship extraction",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 0,
+          "isError": false
+        }
+      ],
+      "artifactSha256": {
+        "stdout.jsonl": "20494e08b7e19429339810403e0f6546d0029acdd3d17a97af46345dd32bd8c1",
+        "answer.md": "df45dc20f34e6bb588fff6beda5d933e878cca19526d6ac6299b840c19e427e3",
+        "metrics.json": "e503e5c6b8f290af88befffe7caf662f5ce290334dc786b920debe30dda74727",
+        "request.json": "49de7056c994d487c63b108db8996c536d9cd321322c000667033211d45ef786",
+        "transcript-tools.json": "4bd2472a27f31738a4581635196a216ddd141cfe3e5dcc7864b92e0fc3337368",
+        "timing.json": "d424c7f24b2422f16b45feacec7ddb1fcdfb68617f0289eb80e0a553362c96f6"
+      },
+      "rolloutSha256": "5289a52a0df3493aea4e9d1b5975cd7fd7c9ee4ddb5178de3147213e0759cfec"
+    },
+    {
+      "task": "provider_contract",
+      "arm": "after",
+      "repetition": 1,
+      "inputTokens": 422770,
+      "cachedInputTokens": 362240,
+      "uncachedInputTokens": 60530,
+      "outputTokens": 2073,
+      "reasoningOutputTokens": 570,
+      "totalTokens": 424843,
+      "finalInputTokens": 65329,
+      "wallMs": 65204,
+      "mcpCalls": 2,
+      "shellCalls": 5,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "rawReviewStatus": "pending-manual-review",
+      "manualEligibility": "Reviewed source access, no contamination, usage reconciled; retain non-use",
+      "mcpUsed": true,
+      "grade": {
+        "task": "Q3",
+        "score": 3,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [
+          "Omits the session-list consumer behavior required for full frozen-rubric coverage."
+        ],
+        "citationValidity": "sufficient",
+        "notes": "Correct on accessor contract, runtime exceptions, route behavior, and detected-provider selection."
+      },
+      "opaqueGradeId": "36b71f9b541fdd8e6e0a3378",
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "ProviderAdapter",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 10,
+          "isError": false
+        },
+        {
+          "tool": "expand",
+          "arguments": {
+            "symbol": "getRuntimeProtocol",
+            "file_path": "src/protocol-runtime.ts",
+            "limit": 20
+          },
+          "resultsLength": null,
+          "isError": false
+        }
+      ],
+      "artifactSha256": {
+        "stdout.jsonl": "9bc23f8e82a315e7d47f2417b3f55314ac9ed38eda81a65e0a19be72fd64ab29",
+        "answer.md": "9dddde6e411735877e0e571295ad8257cef7ba1dae843c107d003a841042b3bf",
+        "metrics.json": "f848fbff1a0685068ea416c53c772465b768f925157d202c812e69ea89d190dc",
+        "request.json": "659a80ce53ec92bfc33bc616474ca6ce552307e271bebd6a1ca5f86fc9d6bcd5",
+        "transcript-tools.json": "025da0ef4800f96f6fc63e9ea3bbf9dfaec011f59cc2b26fb625ba9eb09dd3d3",
+        "timing.json": "1604a5b8459ef7c532a615dd96292c5b7e894359e63407277e4957d2cc3d7ac2"
+      },
+      "rolloutSha256": "9e4f0b89341c8d59211c22cac651fdb2999866a3aacd02b026c25dfe1f19bdd5"
+    },
+    {
+      "task": "provider_contract",
+      "arm": "after",
+      "repetition": 2,
+      "inputTokens": 411677,
+      "cachedInputTokens": 332544,
+      "uncachedInputTokens": 79133,
+      "outputTokens": 2018,
+      "reasoningOutputTokens": 531,
+      "totalTokens": 413695,
+      "finalInputTokens": 62390,
+      "wallMs": 61365,
+      "mcpCalls": 2,
+      "shellCalls": 5,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "rawReviewStatus": "pending-manual-review",
+      "manualEligibility": "Reviewed source access, no contamination, usage reconciled; retain non-use",
+      "mcpUsed": true,
+      "grade": {
+        "task": "Q3",
+        "score": 3,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [
+          "Omits the frozen rubric's session-list fallback behavior for failed protocol lookup."
+        ],
+        "citationValidity": "sufficient",
+        "notes": "Core contract, unavailable/null distinction, thrown-error route behavior, and provider selection are correct."
+      },
+      "opaqueGradeId": "0eef1c44ca40334116c34275",
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "ProviderAdapter",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 10,
+          "isError": false
+        },
+        {
+          "tool": "expand",
+          "arguments": {
+            "symbol": "getRuntimeProtocol",
+            "file_path": "src/protocol-runtime.ts",
+            "limit": 20
+          },
+          "resultsLength": null,
+          "isError": false
+        }
+      ],
+      "artifactSha256": {
+        "stdout.jsonl": "66ca1c6e8d325b7e334ed0c2c1d3ae35b8509e0430a0b1154398eee8bbe195dc",
+        "answer.md": "38d62e58382ab2e6556bb128b12107d4c3193d07325dd294bd765e32e89cebc2",
+        "metrics.json": "5b22dfda89f3afe78c63dbf2dd5fdd823009feed9bcf8178e904fada859c6fb2",
+        "request.json": "dddaaa85e365bdfa009393050630e5a37fb3562f1c9a714d048b2547bd605f5d",
+        "transcript-tools.json": "bde1aa41d73cef3dfd23190bdcb56908d9ec7490463618b3126913f0640b2080",
+        "timing.json": "91a166d899ef4b6242b4ca6c3b1747ffa09566bce6c6af7994977a93115b7518"
+      },
+      "rolloutSha256": "f4a989c794c27579e460b31202b38dd8bd049251b4933a781a80a6018c5028cc"
+    },
+    {
+      "task": "provider_contract",
+      "arm": "before",
+      "repetition": 1,
+      "inputTokens": 421443,
+      "cachedInputTokens": 373248,
+      "uncachedInputTokens": 48195,
+      "outputTokens": 2154,
+      "reasoningOutputTokens": 458,
+      "totalTokens": 423597,
+      "finalInputTokens": 52488,
+      "wallMs": 69920,
+      "mcpCalls": 3,
+      "shellCalls": 6,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "rawReviewStatus": "pending-manual-review",
+      "manualEligibility": "Reviewed source access, no contamination, usage reconciled; retain non-use",
+      "mcpUsed": true,
+      "grade": {
+        "task": "Q3",
+        "score": 3,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [
+          "Does not cover the frozen rubric's session-list consumer behavior for a thrown protocol lookup."
+        ],
+        "citationValidity": "sufficient",
+        "notes": "Correct optional-accessor, unavailable/null, throw, and route/registry account; the v3 discussion is extra."
+      },
+      "opaqueGradeId": "0a97e2756cac691f45d3a1c1",
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "ProviderAdapter",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 10,
+          "isError": false
+        },
+        {
+          "tool": "expand",
+          "arguments": {
+            "symbol": "getRuntimeProtocol",
+            "file_path": "src/protocol-runtime.ts",
+            "limit": 20
+          },
+          "resultsLength": null,
+          "isError": false
+        },
+        {
+          "tool": "expand",
+          "arguments": {
+            "symbol": "getRuntimeProtocolV3",
+            "file_path": "src/protocol-runtime.ts",
+            "limit": 20
+          },
+          "resultsLength": null,
+          "isError": false
+        }
+      ],
+      "artifactSha256": {
+        "stdout.jsonl": "20581dcd5ed9053bb8e262a0e5ad6824eab3bead36a0879e77c77b8fcee2bcba",
+        "answer.md": "7f163e9b12fcf7c3ac9e05fc9a5375ed025aeb415af3981bc4e0885e54d02029",
+        "metrics.json": "f642501fc4ab82476b03e2f5d426ec7c8d13a15f94417b7651bc308bc15f75f5",
+        "request.json": "f003b3ac7f4d4b2e4b878308caf49dccfded0d022cc5a87d4ee0217240747359",
+        "transcript-tools.json": "f2b3c9faf207c818eac2cee980cbb028725059a11e35a04d3b4b23783d12bf45",
+        "timing.json": "7b2c84806717e7d64533fdd28ef186c0aa485f4d46a12616a6b56a7177dee4e8"
+      },
+      "rolloutSha256": "66b5bedc2dea2a7a04e64644c73e2a70f46629ff94886c9d1ed57c335851f3ed"
+    },
+    {
+      "task": "provider_contract",
+      "arm": "before",
+      "repetition": 2,
+      "inputTokens": 344664,
+      "cachedInputTokens": 287744,
+      "uncachedInputTokens": 56920,
+      "outputTokens": 1954,
+      "reasoningOutputTokens": 615,
+      "totalTokens": 346618,
+      "finalInputTokens": 63107,
+      "wallMs": 62546,
+      "mcpCalls": 4,
+      "shellCalls": 4,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "rawReviewStatus": "pending-manual-review",
+      "manualEligibility": "Reviewed source access, no contamination, usage reconciled; retain non-use",
+      "mcpUsed": true,
+      "grade": {
+        "task": "Q3",
+        "score": 3,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [
+          "Omits the session-list consumer behavior required for full frozen-rubric coverage."
+        ],
+        "citationValidity": "sufficient",
+        "notes": "Correct protocol contract, runtime distinction, route behavior, and detected-provider selection."
+      },
+      "opaqueGradeId": "b9c41a59f7188d5da32ba2b8",
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "ProviderAdapter",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 10,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "getRuntimeProtocol",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 10,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "supportsSessionProtocol",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 2,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "session protocol",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 20
+          },
+          "resultsLength": 20,
+          "isError": false
+        }
+      ],
+      "artifactSha256": {
+        "stdout.jsonl": "f277ec1640f8c5db9d33ce89f17dcae99baea24a693330a6142edcd15642d63c",
+        "answer.md": "bfcfa36653e5830a8c5593b31085371ea0d90cded6b750de33604a4e4cd6ff06",
+        "metrics.json": "0bdfb079afb2d4587e0b22af2e3615ed3b46dd80c0c3629110d84414cdd0ebda",
+        "request.json": "0a26db8c53e9e3fb69f0cf943aadab8e5042d9ad5847f2e9a4d4c91b40d62657",
+        "transcript-tools.json": "e5ec3ed2affbc5cc98d3c13602fd66fa37dba429a6a372cb759495c807f2cc2c",
+        "timing.json": "4d4fd722c4e00e6eb07cb6a4e5d2e2d9404b784ee83e123929af07b4a169f4b3"
+      },
+      "rolloutSha256": "5ad0287e5c7c076b618f685d9e58ba4b61e97a0401ca3ccda63003a209607fa0"
+    },
+    {
+      "task": "Q4",
+      "arm": "after",
+      "repetition": 1,
+      "inputTokens": 234141,
+      "cachedInputTokens": 209664,
+      "uncachedInputTokens": 24477,
+      "outputTokens": 2275,
+      "reasoningOutputTokens": 475,
+      "totalTokens": 236416,
+      "finalInputTokens": 31765,
+      "wallMs": 66370,
+      "mcpCalls": 0,
+      "shellCalls": 8,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "rawReviewStatus": "pending-manual-review",
+      "manualEligibility": "Reviewed source access, no contamination, usage reconciled; retain non-use",
+      "mcpUsed": false,
+      "grade": {
+        "task": "Q4",
+        "score": 4,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [],
+        "citationValidity": "sufficient",
+        "notes": "Correct top-level and nested statuses, hash rationale, retry action, and regression evidence."
+      },
+      "opaqueGradeId": "863e21fe2a45dd61fc834482",
+      "mcp": [],
+      "artifactSha256": {
+        "stdout.jsonl": "2eb3a9e037e5d8f02ac5994a5ab5a4d70098acb1645f63332fd9e86f578e1d39",
+        "answer.md": "f14cda3c798a1a14736fd03924aca4e8d48bb4be5effdca65c1a4a238aaf28be",
+        "metrics.json": "3189c2bc557fb3ac19813b9ea7a66467a684e6983afcd7ef0e587463427804b5",
+        "request.json": "e087ed4e574adee2427b5fbfdf626732e8342a64a45aaf62b45fc422961f2a6c",
+        "transcript-tools.json": "ec504597db649a07ff937916139fc58959c5b6b066c5f4b5abf2501c8357138f",
+        "timing.json": "168c00bacaa1e27e3fe1c95458a77b88c42fafd00580ae61833bc7c4b3819ddb"
+      },
+      "rolloutSha256": "6d63e0b05b48bda57c1d21de1a107a1c55f2303084137c3e1144aa2a0a78d3e7"
+    },
+    {
+      "task": "Q4",
+      "arm": "after",
+      "repetition": 2,
+      "inputTokens": 240162,
+      "cachedInputTokens": 199936,
+      "uncachedInputTokens": 40226,
+      "outputTokens": 1520,
+      "reasoningOutputTokens": 401,
+      "totalTokens": 241682,
+      "finalInputTokens": 46146,
+      "wallMs": 48787,
+      "mcpCalls": 2,
+      "shellCalls": 3,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "rawReviewStatus": "pending-manual-review",
+      "manualEligibility": "Reviewed source access, no contamination, usage reconciled; retain non-use",
+      "mcpUsed": true,
+      "grade": {
+        "task": "Q4",
+        "score": 4,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [],
+        "citationValidity": "sufficient",
+        "notes": "Complete changed-during-query explanation and scoped regression evidence."
+      },
+      "opaqueGradeId": "8c9f554b86a55e4a51da69b2",
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "expand",
+            "detail": "facts",
+            "limit": 20
+          },
+          "resultsLength": 20,
+          "isError": false
+        },
+        {
+          "tool": "expand",
+          "arguments": {
+            "symbol": "method:src/service.rs:expand:630",
+            "limit": 50
+          },
+          "resultsLength": null,
+          "isError": false
+        }
+      ],
+      "artifactSha256": {
+        "stdout.jsonl": "9917fbd3d629bc039fa901995f246064b047fe420deda33187078d3f835319f5",
+        "answer.md": "2d0f70e07e625670dce3eff112f6828dfb1825fb1228c6ef37ffc3da2140f45a",
+        "metrics.json": "d7e5d2da002addd2e271d7e01a3bb2a7c527567896a544d9adffb31b3c34cc61",
+        "request.json": "da960d2f9098f7a833779d5e2042a61859a700d6dcf807dcf133830eac2d9696",
+        "transcript-tools.json": "715cd985b14b20011bd78d790c44d35b533cbbbcab0c492ad8a04eb89604cec1",
+        "timing.json": "27ef35f952688020fe748cd47e77d646bb04a57c731478dbc60f9d7f818f0090"
+      },
+      "rolloutSha256": "d7a543b536b0ed95a687d95d2dce674194e5189a8755f6644eac2c5f44151995"
+    },
+    {
+      "task": "Q4",
+      "arm": "before",
+      "repetition": 1,
+      "inputTokens": 182215,
+      "cachedInputTokens": 153088,
+      "uncachedInputTokens": 29127,
+      "outputTokens": 1606,
+      "reasoningOutputTokens": 390,
+      "totalTokens": 183821,
+      "finalInputTokens": 39694,
+      "wallMs": 47994,
+      "mcpCalls": 1,
+      "shellCalls": 3,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "rawReviewStatus": "pending-manual-review",
+      "manualEligibility": "Reviewed source access, no contamination, usage reconciled; retain non-use",
+      "mcpUsed": true,
+      "grade": {
+        "task": "Q4",
+        "score": 4,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [],
+        "citationValidity": "sufficient",
+        "notes": "Complete source-backed changed-byte handling and regression explanation."
+      },
+      "opaqueGradeId": "e5141bc1ef780fb9c89260b3",
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "expand",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 20
+          },
+          "resultsLength": 20,
+          "isError": false
+        }
+      ],
+      "artifactSha256": {
+        "stdout.jsonl": "7a2463e626028996d93e16e03aabfd5671a61299fc57572f5a673addf01dfcaf",
+        "answer.md": "b8574e1c1f5e0aaa259ab6f2e5eb26f329787eec103ce872164c71056cbc9474",
+        "metrics.json": "af204fab9be1bc3168069328a2181e04deffb801f7237f1dbc6137b9e09fbfea",
+        "request.json": "dfff88e113f9964823430eaa63c6557082060b65de9484f0485dbecec75eb3e4",
+        "transcript-tools.json": "887a53f123fa51d36cbef6bcbf6fd6dbd2b41937a6725c17b6fe0ccacd7f72a2",
+        "timing.json": "de0afd1a766be3cdf8518b4719f726958a84f1a9aced090f6d88842546a90d20"
+      },
+      "rolloutSha256": "432b08497db1f2dd47632091f4ed2669f087e46af67856d4236615bc637dc7c0"
+    },
+    {
+      "task": "Q4",
+      "arm": "before",
+      "repetition": 2,
+      "inputTokens": 141741,
+      "cachedInputTokens": 109312,
+      "uncachedInputTokens": 32429,
+      "outputTokens": 1524,
+      "reasoningOutputTokens": 481,
+      "totalTokens": 143265,
+      "finalInputTokens": 37420,
+      "wallMs": 44492,
+      "mcpCalls": 6,
+      "shellCalls": 1,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "rawReviewStatus": "pending-manual-review",
+      "manualEligibility": "Reviewed source access, no contamination, usage reconciled; retain non-use",
+      "mcpUsed": true,
+      "grade": {
+        "task": "Q4",
+        "score": 4,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [],
+        "citationValidity": "sufficient",
+        "notes": "Complete explanation with correct retry and no-text regression outcome."
+      },
+      "opaqueGradeId": "9d67321c3607c8f18d00c17f",
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "expand",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 20
+          },
+          "resultsLength": 20,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "definition_source",
+            "detail": "facts",
+            "limit": 50
+          },
+          "resultsLength": 6,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "changed bytes",
+            "detail": "facts",
+            "limit": 50
+          },
+          "resultsLength": 2,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "source excerpt",
+            "detail": "facts",
+            "limit": 50
+          },
+          "resultsLength": 4,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "changed_definition",
+            "detail": "facts",
+            "limit": 50
+          },
+          "resultsLength": 3,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "stale",
+            "detail": "facts",
+            "limit": 50
+          },
+          "resultsLength": 18,
+          "isError": false
+        }
+      ],
+      "artifactSha256": {
+        "stdout.jsonl": "886079b9f2cd957662d6a2ebe8f3f66ef9f803d6f4e886d68c142e9ff378cff4",
+        "answer.md": "391ea3fbbf69ad9a57d118ebf5ddeaa2de138bf92a5ad5daa7a6fb5cd6a0a493",
+        "metrics.json": "d54d4b9fb67ea5072eb5f6e3e9283dbccf435f21ecf7ed3e5cc0939ae8a72839",
+        "request.json": "ff879bd6e8f1cb8ad9c4b463badbab892407b9535029b7973bb6a514b75704e6",
+        "transcript-tools.json": "d2f0edbf3aad3bd1c23ebf32e404774addc0177d309c55410d63ce0bd4575311",
+        "timing.json": "a97a435b7a5b518e4eda881a657f0da646a0a88d7ab5685684f0b572621e16d9"
+      },
+      "rolloutSha256": "37bc5b38a6957e862a6a0bbd173a9a01533153f3c4cc37c54297799b3f1e1106"
+    },
+    {
+      "task": "Q5",
+      "arm": "after",
+      "repetition": 1,
+      "inputTokens": 491664,
+      "cachedInputTokens": 424448,
+      "uncachedInputTokens": 67216,
+      "outputTokens": 3441,
+      "reasoningOutputTokens": 1094,
+      "totalTokens": 495105,
+      "finalInputTokens": 71492,
+      "wallMs": 90692,
+      "mcpCalls": 1,
+      "shellCalls": 7,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "rawReviewStatus": "pending-manual-review",
+      "manualEligibility": "Reviewed source access, no contamination, usage reconciled; retain non-use",
+      "mcpUsed": true,
+      "grade": {
+        "task": "Q5",
+        "score": 3,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [
+          "Does not explicitly connect the disappeared provider record to continued absence from the main list after restore."
+        ],
+        "citationValidity": "sufficient",
+        "notes": "Correct allowed-action and filtering account; correctly notes the missing record cannot render in Trash."
+      },
+      "opaqueGradeId": "7254cd8c17935d8cc5a54752",
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "Session not found",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 10,
+          "isError": false
+        }
+      ],
+      "artifactSha256": {
+        "stdout.jsonl": "618ac9bf80d3213aa75de23eba3b3fdc80096b2777e3dcb32b35b8c4558193bb",
+        "answer.md": "02adc262a43ca485ecf4716d8f06f93bc0dd32c51def06e57fe88c571ea6ce13",
+        "metrics.json": "a6eb49eaa6918aa0fcb29e429122cca3f0a8021e59c0c56d58ab184fe3cde10b",
+        "request.json": "33eb1cf3b424857ee4e990b7f828b7a22ee3f4b752e71e17f8940ae39b43d590",
+        "transcript-tools.json": "4db6182101a585a357c1939ab0d24c969c2a934e6b0782f9418dc69f00a8d80e",
+        "timing.json": "4fa4ce2b6203ae13399f057015a403832524d9c75bf6581bafdb3632cfd1001f"
+      },
+      "rolloutSha256": "61d30d8ec9bc834a6e415554419fe9cb846c027c6425f088370e1980a787bcf0"
+    },
+    {
+      "task": "Q5",
+      "arm": "after",
+      "repetition": 2,
+      "inputTokens": 386631,
+      "cachedInputTokens": 327424,
+      "uncachedInputTokens": 59207,
+      "outputTokens": 2756,
+      "reasoningOutputTokens": 695,
+      "totalTokens": 389387,
+      "finalInputTokens": 60677,
+      "wallMs": 78197,
+      "mcpCalls": 3,
+      "shellCalls": 6,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "rawReviewStatus": "pending-manual-review",
+      "manualEligibility": "Reviewed source access, no contamination, usage reconciled; retain non-use",
+      "mcpUsed": true,
+      "grade": {
+        "task": "Q5",
+        "score": 3,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [
+          "Does not state that metadata restoration alone cannot make a vanished provider record visible."
+        ],
+        "citationValidity": "sufficient",
+        "notes": "Correctly states action gate, metadata updates, Trash selection, exclusion, and permanent-record caveat."
+      },
+      "opaqueGradeId": "32a0ce22d332af54cde90140",
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "Session not found",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 10,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "restore",
+            "detail": "facts",
+            "limit": 20
+          },
+          "resultsLength": 20,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "permanent delete",
+            "detail": "facts",
+            "limit": 20
+          },
+          "resultsLength": 20,
+          "isError": false
+        }
+      ],
+      "artifactSha256": {
+        "stdout.jsonl": "5dcc895abd1d3dfbdef8cc9f855c621d3c6f6f045116fa18b7eced9399b3122c",
+        "answer.md": "61f0a7e1cdbf44b43a344a0a0eb0beb38b2984954dccb54dfe70d32ae0062bb4",
+        "metrics.json": "bb2c4ab3382cb03ecf8694d342832139a3fb63785609246ae7dfc0309f3ab7e1",
+        "request.json": "0e5186a3de1cc9af67134dc27cc1498bb9f27ba4cff9dcc0c030d7eac12d48a7",
+        "transcript-tools.json": "091c959bd9435b7d94dd8c2a3762ebe35714fe116123d761f899c41efc2f8c7d",
+        "timing.json": "a14d1892b4b6ced7a9844579429d53bb971757b3b6645b4ff8a7e88a528d8aa3"
+      },
+      "rolloutSha256": "0539c08601fae527b29b2ac615a376fc88f1d0a7b5d7bb59bbb74e8c7d2ba1af"
+    },
+    {
+      "task": "Q5",
+      "arm": "before",
+      "repetition": 1,
+      "inputTokens": 560679,
+      "cachedInputTokens": 498688,
+      "uncachedInputTokens": 61991,
+      "outputTokens": 3284,
+      "reasoningOutputTokens": 972,
+      "totalTokens": 563963,
+      "finalInputTokens": 63229,
+      "wallMs": 109765,
+      "mcpCalls": 4,
+      "shellCalls": 9,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "rawReviewStatus": "pending-manual-review",
+      "manualEligibility": "Reviewed source access, no contamination, usage reconciled; retain non-use",
+      "mcpUsed": true,
+      "grade": {
+        "task": "Q5",
+        "score": 2,
+        "pass": false,
+        "materialErrors": [],
+        "missingFacts": [
+          "For the prompted disappeared provider record, restore only removes metadata exclusion; it does not return the absent source session to the main list."
+        ],
+        "citationValidity": "sufficient",
+        "notes": "The route and flag mechanics are correct, but the claimed restored main-list outcome is wrong for the source-missing scenario."
+      },
+      "opaqueGradeId": "2ffd1309da6d3855888ffd69",
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "Session not found",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 10,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "permanent delete",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 10,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "restore",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 10,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "trash",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 10,
+          "isError": false
+        }
+      ],
+      "artifactSha256": {
+        "stdout.jsonl": "6f1355be35aaf2cef7e0ae9cf7748091701609489ad47da0c775b2a5052e2cc8",
+        "answer.md": "45fbac46e882e21978eafdbf2f46041f7345006ee562ea1b7e00ce868e373e91",
+        "metrics.json": "b20e17f0d7409bce6de439c73b87b379517d0ce5c0f00acbd98a1c857e3692a7",
+        "request.json": "c288a3ba133cf9020e11df46fce57c8e4508bc853521d5c5ddd21518830f6ffa",
+        "transcript-tools.json": "68625087b2f320124c7cd5b7d4d77f0711ae23f4b0b43dea48f163ff01fab987",
+        "timing.json": "70559867b51cc9de228c2693bfca7a0b4f50ad9ba2371687e6f893515d41e773"
+      },
+      "rolloutSha256": "710d7c09dcc2c912895dcf5c9c4a1e433702771a4c0cf7f01e6895fae50420ba"
+    },
+    {
+      "task": "Q5",
+      "arm": "before",
+      "repetition": 2,
+      "inputTokens": 753456,
+      "cachedInputTokens": 673536,
+      "uncachedInputTokens": 79920,
+      "outputTokens": 3319,
+      "reasoningOutputTokens": 866,
+      "totalTokens": 756775,
+      "finalInputTokens": 79717,
+      "wallMs": 97000,
+      "mcpCalls": 1,
+      "shellCalls": 10,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "rawReviewStatus": "pending-manual-review",
+      "manualEligibility": "Reviewed source access, no contamination, usage reconciled; retain non-use",
+      "mcpUsed": true,
+      "grade": {
+        "task": "Q5",
+        "score": 3,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [
+          "Does not explicitly state that clearing metadata exclusion cannot make the disappeared provider record visible in the main list."
+        ],
+        "citationValidity": "sufficient",
+        "notes": "Correctly distinguishes allowed missing-source actions, metadata flags, and Trash/filter queries."
+      },
+      "opaqueGradeId": "0ace80f538c42fc2c864b25c",
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "Session not found",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 20
+          },
+          "resultsLength": 20,
+          "isError": false
+        }
+      ],
+      "artifactSha256": {
+        "stdout.jsonl": "26457c3399cc78ca6d27c68461fc1bef254248d86fc606185f0f3215cceb655a",
+        "answer.md": "f8a305a245b6a6bf55a6f2dd04d629f8d7e8f4065119571f2cccdbb7fc133723",
+        "metrics.json": "e03b5dfe5a626e57a5ba5f18d7ed4aded53d711bc66685786b3d81fce2203266",
+        "request.json": "f46b0104af59668328e632788268db24366eae2148d0f5e14aa394218c6da04c",
+        "transcript-tools.json": "6b3e10e9dcf4f47e8b588eab42155d9eb41fee9dc03a54dc3236f5346805b6f7",
+        "timing.json": "8a84ee26818e5fd4f6c253bf6a65096e4dd22d61003e2870d12a0e104d1e4f48"
+      },
+      "rolloutSha256": "d06cf3afce6bcb9a48f26db30d641c697e4a02c718422296579afedaf9e1f717"
+    },
+    {
+      "task": "transaction",
+      "arm": "after",
+      "repetition": 1,
+      "inputTokens": 226507,
+      "cachedInputTokens": 177664,
+      "uncachedInputTokens": 48843,
+      "outputTokens": 1263,
+      "reasoningOutputTokens": 473,
+      "totalTokens": 227770,
+      "finalInputTokens": 53457,
+      "wallMs": 39407,
+      "mcpCalls": 2,
+      "shellCalls": 2,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "rawReviewStatus": "pending-manual-review",
+      "manualEligibility": "Reviewed source access, no contamination, usage reconciled; retain non-use",
+      "mcpUsed": true,
+      "grade": {
+        "task": "Q1",
+        "score": 4,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [],
+        "citationValidity": "sufficient",
+        "notes": "Complete transaction, nesting, and rollback-regression explanation."
+      },
+      "opaqueGradeId": "0ec65893cb3cba250513f642",
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "GraphStore",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 10,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "with_transaction",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 20
+          },
+          "resultsLength": 8,
+          "isError": false
+        }
+      ],
+      "artifactSha256": {
+        "stdout.jsonl": "2b48a6a0d9ecb3141f1e4d855c84b1c8b12624eed0b97f4eb5b831f17e000da5",
+        "answer.md": "fbde302a7b7360b4cd955d792043344531bd14d8b10cfdba0ab9c204ace3090e",
+        "metrics.json": "8026154972f47c5469d06baeebe06e45fe7d35c5aff8c5512f3152092778ee84",
+        "request.json": "7262821f59b6facb5e33b9261486220a85327f910b75099ba8a0d1724c937bb1",
+        "transcript-tools.json": "c0094014748f257391f0ce231bd0e3d38859c65e7576cfb65112ce7f1616e2f0",
+        "timing.json": "e79afa7d193e18af8490593c367ce98f0bbd0196d708eb0978db31cd57bc9111"
+      },
+      "rolloutSha256": "d6bd3858a30fc94f6867cda5bbd64883567385b90e99ae096a2d4364c1448a5d"
+    },
+    {
+      "task": "transaction",
+      "arm": "after",
+      "repetition": 2,
+      "inputTokens": 141661,
+      "cachedInputTokens": 113408,
+      "uncachedInputTokens": 28253,
+      "outputTokens": 997,
+      "reasoningOutputTokens": 306,
+      "totalTokens": 142658,
+      "finalInputTokens": 35518,
+      "wallMs": 30859,
+      "mcpCalls": 1,
+      "shellCalls": 2,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "rawReviewStatus": "pending-manual-review",
+      "manualEligibility": "Reviewed source access, no contamination, usage reconciled; retain non-use",
+      "mcpUsed": true,
+      "grade": {
+        "task": "Q1",
+        "score": 4,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [],
+        "citationValidity": "sufficient",
+        "notes": "Complete outer transaction, nested operation, and rollback-regression answer."
+      },
+      "opaqueGradeId": "b16d5d2774403952031ee43e",
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "with_transaction",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 8,
+          "isError": false
+        }
+      ],
+      "artifactSha256": {
+        "stdout.jsonl": "5df56712e3af21c98ed830f64a775f8adf77a3c2ced55f4304398ce2feccbdc2",
+        "answer.md": "5b160caf1970f7dbe1c14d84f5f2b6fd76cdfb840a60465401cfbc1f317b4fdb",
+        "metrics.json": "8e416922a5efe0f7e3bb893c24947a253f36d716179b995b687e3734f0cdaa83",
+        "request.json": "85e807e1dfea218f8d6208f1b684eb8177d3e34da118e7ac0e86df40e1b0e55a",
+        "transcript-tools.json": "2738124d5bc765fcbea8056f0b664e2bc633df89f714b2767de4eac0b0f8a6a3",
+        "timing.json": "643ced16beac9dffdbaf47b6a47c87157d0d2fa38f8e59af7cb171ac8c9c5092"
+      },
+      "rolloutSha256": "fccdef37039e04ea31a49eb951884bed0fa5ad8a9a571baaa8f948b90776f9ad"
+    },
+    {
+      "task": "transaction",
+      "arm": "before",
+      "repetition": 1,
+      "inputTokens": 149813,
+      "cachedInputTokens": 119552,
+      "uncachedInputTokens": 30261,
+      "outputTokens": 1232,
+      "reasoningOutputTokens": 402,
+      "totalTokens": 151045,
+      "finalInputTokens": 38356,
+      "wallMs": 36840,
+      "mcpCalls": 1,
+      "shellCalls": 2,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "rawReviewStatus": "pending-manual-review",
+      "manualEligibility": "Reviewed source access, no contamination, usage reconciled; retain non-use",
+      "mcpUsed": true,
+      "grade": {
+        "task": "Q1",
+        "score": 4,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [],
+        "citationValidity": "sufficient",
+        "notes": "Complete and source-backed transaction and nesting explanation with regression coverage."
+      },
+      "opaqueGradeId": "79bb3bb231243761a630c3c7",
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "with_transaction",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 8,
+          "isError": false
+        }
+      ],
+      "artifactSha256": {
+        "stdout.jsonl": "fae89dc3cd85fd0cc5b5e2a8dded89f76860588cfdd17659bb6fb53d13dede0d",
+        "answer.md": "a56241b64fc9afef84fa743bce9fada2d7e45d8d9f52c7958066af4a64fa7254",
+        "metrics.json": "c31401ae593c677982ddceed4c670bb0f52d696b68f1bebda73910900b4c2839",
+        "request.json": "4c00b19a7214b24ebb1d4e6d0dc7cbb735ec64bbdf28a0edfbdd01a37fab10aa",
+        "transcript-tools.json": "a745b7067b6839b134468f7317b73da8026eb029f98d37bd58e1927fa43ca921",
+        "timing.json": "11b6f5a3cb26580c6962b7152d62ffd755085f4142b4700dd2758361bdc39dbb"
+      },
+      "rolloutSha256": "19f2b80b7def75c90764f06c89e227b66036710c2e92aa2c2be4ebb0d09a165c"
+    },
+    {
+      "task": "transaction",
+      "arm": "before",
+      "repetition": 2,
+      "inputTokens": 101204,
+      "cachedInputTokens": 72704,
+      "uncachedInputTokens": 28500,
+      "outputTokens": 1015,
+      "reasoningOutputTokens": 458,
+      "totalTokens": 102219,
+      "finalInputTokens": 33712,
+      "wallMs": 30063,
+      "mcpCalls": 1,
+      "shellCalls": 1,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "rawReviewStatus": "pending-manual-review",
+      "manualEligibility": "Reviewed source access, no contamination, usage reconciled; retain non-use",
+      "mcpUsed": true,
+      "grade": {
+        "task": "Q1",
+        "score": 4,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [],
+        "citationValidity": "sufficient",
+        "notes": "Complete, accurate implementation and regression explanation."
+      },
+      "opaqueGradeId": "bbbe7004968e7211c9cc8738",
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "GraphStore with_transaction",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 2,
+          "isError": false
+        }
+      ],
+      "artifactSha256": {
+        "stdout.jsonl": "09312c8792275f13318d61a496725dd0f1206a21608563598173e58d9be54425",
+        "answer.md": "29d23cec3ece97aefb81fddd47f235f393a3cfd35f6448b4f438d155ea0840b8",
+        "metrics.json": "1032a8d734ba5929687e0b885618bab936d7755a7cacde3525ecf34900cff2f0",
+        "request.json": "aeabdcd61c42d9eb514cfe25577c6899115365f11b8d464d6878b36c51ddad0e",
+        "transcript-tools.json": "47dadc7e7cafc948061154989d2e0144e25be44c4653e7277d4c1ad6f0eed5db",
+        "timing.json": "9a2a9781c7a49277c4fd10c97ab38f76b5c1695c8d7e6a87c86622b67f19f1e2"
+      },
+      "rolloutSha256": "bbd175f57b6f61f247e7f0ea4868d3a29a852c8ae0857678b75718cfdf388ba6"
+    }
+  ],
+  "byTask": {
+    "transaction": {
+      "before": [
+        102219,
+        151045
+      ],
+      "after": [
+        142658,
+        227770
+      ],
+      "beforeMedian": 126632,
+      "afterMedian": 185214,
+      "ratioAfterToBefore": 1.4626160844020468,
+      "savingsPct": -46.26160844020468,
+      "metric": "Raw cumulative task tokens; failed answers remain included",
+      "quality": {
+        "before": {
+          "attempts": 2,
+          "correctCompletions": 2,
+          "scores": [
+            4,
+            4
+          ],
+          "tokensPerCorrectCompletion": 126632
+        },
+        "after": {
+          "attempts": 2,
+          "correctCompletions": 2,
+          "scores": [
+            4,
+            4
+          ],
+          "tokensPerCorrectCompletion": 185214
+        }
+      }
+    },
+    "extraction_failure": {
+      "before": [
+        493236,
+        689842
+      ],
+      "after": [
+        520941,
+        958096
+      ],
+      "beforeMedian": 591539,
+      "afterMedian": 739518.5,
+      "ratioAfterToBefore": 1.2501601754068625,
+      "savingsPct": -25.016017540686253,
+      "metric": "Raw cumulative task tokens; failed answers remain included",
+      "quality": {
+        "before": {
+          "attempts": 2,
+          "correctCompletions": 1,
+          "scores": [
+            3,
+            1
+          ],
+          "tokensPerCorrectCompletion": 1183078
+        },
+        "after": {
+          "attempts": 2,
+          "correctCompletions": 2,
+          "scores": [
+            3,
+            3
+          ],
+          "tokensPerCorrectCompletion": 739518.5
+        }
+      }
+    },
+    "provider_contract": {
+      "before": [
+        346618,
+        423597
+      ],
+      "after": [
+        413695,
+        424843
+      ],
+      "beforeMedian": 385107.5,
+      "afterMedian": 419269,
+      "ratioAfterToBefore": 1.088706400160994,
+      "savingsPct": -8.870640016099408,
+      "metric": "Raw cumulative task tokens; failed answers remain included",
+      "quality": {
+        "before": {
+          "attempts": 2,
+          "correctCompletions": 2,
+          "scores": [
+            3,
+            3
+          ],
+          "tokensPerCorrectCompletion": 385107.5
+        },
+        "after": {
+          "attempts": 2,
+          "correctCompletions": 2,
+          "scores": [
+            3,
+            3
+          ],
+          "tokensPerCorrectCompletion": 419269
+        }
+      }
+    },
+    "Q4": {
+      "before": [
+        143265,
+        183821
+      ],
+      "after": [
+        236416,
+        241682
+      ],
+      "beforeMedian": 163543,
+      "afterMedian": 239049,
+      "ratioAfterToBefore": 1.4616889747650466,
+      "savingsPct": -46.168897476504654,
+      "metric": "Raw cumulative task tokens; failed answers remain included",
+      "quality": {
+        "before": {
+          "attempts": 2,
+          "correctCompletions": 2,
+          "scores": [
+            4,
+            4
+          ],
+          "tokensPerCorrectCompletion": 163543
+        },
+        "after": {
+          "attempts": 2,
+          "correctCompletions": 2,
+          "scores": [
+            4,
+            4
+          ],
+          "tokensPerCorrectCompletion": 239049
+        }
+      }
+    },
+    "Q5": {
+      "before": [
+        563963,
+        756775
+      ],
+      "after": [
+        389387,
+        495105
+      ],
+      "beforeMedian": 660369,
+      "afterMedian": 442246,
+      "ratioAfterToBefore": 0.6696952764287845,
+      "savingsPct": 33.03047235712155,
+      "metric": "Raw cumulative task tokens; failed answers remain included",
+      "quality": {
+        "before": {
+          "attempts": 2,
+          "correctCompletions": 1,
+          "scores": [
+            2,
+            3
+          ],
+          "tokensPerCorrectCompletion": 1320738
+        },
+        "after": {
+          "attempts": 2,
+          "correctCompletions": 2,
+          "scores": [
+            3,
+            3
+          ],
+          "tokensPerCorrectCompletion": 442246
+        }
+      }
+    }
+  },
+  "paired": [
+    {
+      "task": "transaction",
+      "repetition": 1,
+      "beforeTotalTokens": 151045,
+      "afterTotalTokens": 227770,
+      "savingsPct": -50.79612036148167,
+      "rawSavingsPct": -50.79612036148167,
+      "bothAnswersPass": true
+    },
+    {
+      "task": "transaction",
+      "repetition": 2,
+      "beforeTotalTokens": 102219,
+      "afterTotalTokens": 142658,
+      "savingsPct": -39.56113834023029,
+      "rawSavingsPct": -39.56113834023029,
+      "bothAnswersPass": true
+    },
+    {
+      "task": "extraction_failure",
+      "repetition": 1,
+      "beforeTotalTokens": 689842,
+      "afterTotalTokens": 520941,
+      "savingsPct": 24.484012281073053,
+      "rawSavingsPct": 24.484012281073053,
+      "bothAnswersPass": true
+    },
+    {
+      "task": "extraction_failure",
+      "repetition": 2,
+      "beforeTotalTokens": 493236,
+      "afterTotalTokens": 958096,
+      "savingsPct": null,
+      "rawSavingsPct": -94.24697305143988,
+      "bothAnswersPass": false
+    },
+    {
+      "task": "provider_contract",
+      "repetition": 1,
+      "beforeTotalTokens": 423597,
+      "afterTotalTokens": 424843,
+      "savingsPct": -0.2941475034053509,
+      "rawSavingsPct": -0.2941475034053509,
+      "bothAnswersPass": true
+    },
+    {
+      "task": "provider_contract",
+      "repetition": 2,
+      "beforeTotalTokens": 346618,
+      "afterTotalTokens": 413695,
+      "savingsPct": -19.35185131758881,
+      "rawSavingsPct": -19.35185131758881,
+      "bothAnswersPass": true
+    },
+    {
+      "task": "Q4",
+      "repetition": 1,
+      "beforeTotalTokens": 183821,
+      "afterTotalTokens": 236416,
+      "savingsPct": -28.612073702134143,
+      "rawSavingsPct": -28.612073702134143,
+      "bothAnswersPass": true
+    },
+    {
+      "task": "Q4",
+      "repetition": 2,
+      "beforeTotalTokens": 143265,
+      "afterTotalTokens": 241682,
+      "savingsPct": -68.69577356646775,
+      "rawSavingsPct": -68.69577356646775,
+      "bothAnswersPass": true
+    },
+    {
+      "task": "Q5",
+      "repetition": 1,
+      "beforeTotalTokens": 563963,
+      "afterTotalTokens": 495105,
+      "savingsPct": null,
+      "rawSavingsPct": 12.209666236969452,
+      "bothAnswersPass": false
+    },
+    {
+      "task": "Q5",
+      "repetition": 2,
+      "beforeTotalTokens": 756775,
+      "afterTotalTokens": 389387,
+      "savingsPct": 48.54652968187374,
+      "rawSavingsPct": 48.54652968187374,
+      "bothAnswersPass": true
+    }
+  ],
+  "totals": {
+    "before": {
+      "attempts": 10,
+      "correctCompletions": 8,
+      "inputTokens": 3830743,
+      "cachedInputTokens": 3315712,
+      "uncachedInputTokens": 515031,
+      "outputTokens": 23638,
+      "totalTokens": 3854381,
+      "mcpCalls": 23,
+      "shellCalls": 59,
+      "tokensPerCorrectCompletion": 481797.625,
+      "mcpUsedRuns": 10
+    },
+    "after": {
+      "attempts": 10,
+      "correctCompletions": 10,
+      "inputTokens": 4027022,
+      "cachedInputTokens": 3482112,
+      "uncachedInputTokens": 544910,
+      "outputTokens": 23571,
+      "totalTokens": 4050593,
+      "mcpCalls": 26,
+      "shellCalls": 59,
+      "tokensPerCorrectCompletion": 405059.3,
+      "mcpUsedRuns": 9
+    }
+  },
+  "rawTotalTokenChangePct": 5.09062285228159,
+  "uncachedInputChangePct": 5.801398362428678,
+  "tokensPerCorrectCompletionChangePct": -15.92750171817472,
+  "acceptance": {
+    "primaryTask": "extraction_failure",
+    "targetMedianReductionPct": 20,
+    "rawObservedMedianReductionPct": -25.016017540686253,
+    "rawTargetMet": false,
+    "allAnswersPass": false,
+    "candidateAnswersAllPass": true,
+    "equalQualityFullComparison": false,
+    "regressionThresholdPct": 10,
+    "rawRegressionsAboveThreshold": [
+      "transaction",
+      "Q4"
+    ],
+    "decision": "Revert candidate per frozen acceptance; quality gain is retained as a promising but small-sample observation, not discarded"
+  },
+  "investment": {
+    "evaluationTotalTokens": 7904974,
+    "preflightTotalTokens": 124454,
+    "preflight": {
+      "before": {
+        "input_tokens": 61297,
+        "cached_input_tokens": 53248,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 523,
+        "reasoning_output_tokens": 148,
+        "total_tokens": 61820,
+        "uncached_input_tokens": 8049,
+        "stdoutSha256": "638f78dd1b092d09e471ec61731f94ec29e2b77453e4785d6678e3f2ddddfe69"
+      },
+      "after": {
+        "input_tokens": 62083,
+        "cached_input_tokens": 54272,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 551,
+        "reasoning_output_tokens": 123,
+        "total_tokens": 62634,
+        "uncached_input_tokens": 7811,
+        "stdoutSha256": "18051bd54112e6d508f5c01bab097bf1e36c2621b3001b4c64bb271908a197cf"
+      }
+    },
+    "engineering": {
+      "schemaVersion": 1,
+      "collectedAt": "2026-09-11T13:09:21.352Z",
+      "boundary": "2026-09-11T12:25:23Z",
+      "measurement": "Sum of incremental provider token_count.total_token_usage counters after goal creation, separately for root and three engineering agents; detect counter resets and count their new segment once.",
+      "scope": "Engineering orchestration, trace analysis, rubric creation, review, implementation, evaluation operation and reporting through each recorded timestamp. Includes remainder of goal-creation turn, excludes earlier cycle1 work. Evaluated CLI task and preflight sessions are separate and not included here.",
+      "limitations": "Active streams are sampled before final reporting/completion; later usage is outside this snapshot. This measures provider-accounted processing, not actual billed cost or the app goal gauge.",
+      "billing": null,
+      "records": [
+        {
+          "agent": "root",
+          "through": "2026-09-11T13:08:29.345Z",
+          "tokenCountEvents": 107,
+          "counterResetsAfterStart": 0,
+          "input_tokens": 15116577,
+          "cached_input_tokens": 14882688,
+          "output_tokens": 47704,
+          "reasoning_output_tokens": 21078,
+          "total_tokens": 15164281,
+          "uncached_input_tokens": 233889
+        },
+        {
+          "agent": "cycle_eval",
+          "through": "2026-09-11T13:00:11.278Z",
+          "tokenCountEvents": 97,
+          "counterResetsAfterStart": 1,
+          "input_tokens": 13939221,
+          "cached_input_tokens": 13593344,
+          "output_tokens": 41983,
+          "reasoning_output_tokens": 12037,
+          "total_tokens": 13981204,
+          "uncached_input_tokens": 345877
+        },
+        {
+          "agent": "cycle2_trace",
+          "through": "2026-09-11T12:37:21.061Z",
+          "tokenCountEvents": 48,
+          "counterResetsAfterStart": 0,
+          "input_tokens": 4986861,
+          "cached_input_tokens": 4834816,
+          "output_tokens": 26971,
+          "reasoning_output_tokens": 8261,
+          "total_tokens": 5013832,
+          "uncached_input_tokens": 152045
+        },
+        {
+          "agent": "cycle2_rubric",
+          "through": "2026-09-11T13:08:17.614Z",
+          "tokenCountEvents": 27,
+          "counterResetsAfterStart": 0,
+          "input_tokens": 4124353,
+          "cached_input_tokens": 3915008,
+          "output_tokens": 24918,
+          "reasoning_output_tokens": 7560,
+          "total_tokens": 4149271,
+          "uncached_input_tokens": 209345
+        }
+      ],
+      "totals": {
+        "input_tokens": 38167012,
+        "cached_input_tokens": 37225856,
+        "output_tokens": 141576,
+        "reasoning_output_tokens": 48936,
+        "total_tokens": 38308588,
+        "uncached_input_tokens": 941156
+      }
+    },
+    "observedCombinedTotalTokensThroughEngineeringCutoff": 46338016,
+    "actualBilling": null
+  },
+  "finalState": {
+    "sourceAndReadmeMatchBaseline": true,
+    "toolsListDifferencesFromBaseline": [],
+    "restoredBinarySha256": "8dccd9d6fc41d2462a2217a1b435969628dc6373ab0163f8777ed4e293abbda6",
+    "protectedVersion4RepairRetained": true
+  },
+  "limitations": [
+    "Five tasks, two repositories, two repetitions per arm; no statistical stability or competitor ranking",
+    "Before has two failed answers, so raw token medians are not full equal-quality efficiency comparisons",
+    "One candidate run did not use MCP; retained as intention-to-use, not an attributable query benefit",
+    "Warm single-turn navigation only; no cold setup, real edit-and-test, multi-turn or adoption result",
+    "At most two concurrent agents per pair; timings descriptive",
+    "Engineering usage is a pre-completion snapshot with explicit per-agent cutoffs; billing and app quota semantics differ",
+    "Raw private logs remain local; portable artifact retains usage, grades, queries and integrity hashes"
+  ]
+}
