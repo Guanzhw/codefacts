@@ -42,11 +42,12 @@ requested three contexts, so this replay is not an agent before/after comparison
 `relationship` alone returned the relationship-limit constant first. A generic
 word producing many hits is not a successful substitute for the original query.
 
-The exact `extract_edges` response included two callers, both test helpers;
-it did not include the production `index_directory` caller whose source invokes
-`Extractor::extract_edges` at lines 341–349. This is a gap in the relationship
-evidence returned in this replay. Its extraction/resolution cause has not been
-isolated, so following the returned callers cannot yet be assumed sufficient.
+The exact `extract_edges` response included two callers: the test helper
+`parse_and_extract_edges_file` and the production `index_directory`. The latter
+has call-site evidence at `src/indexer/pipeline.rs:341`. Thus the current tool
+already provides a route to the relevant production source. A bounded ordinary
+source read around that call site can inspect the late error branch; discovering
+the correct entry and using its relationship evidence remain distinct steps.
 
 The implementation already indexes split identifier words in `name_tokens`
 (`src/graph/store.rs:359-390`) and tests camel/snake component lookup
@@ -83,9 +84,9 @@ Do not add duplicate identifier splitting, hardcoded query synonyms, or a larger
 default excerpt. First use offline independent cases to evaluate whether a narrow
 ranking change can put an explicitly requested member ahead of its container or
 test helper, preserving controls that intentionally ask for those other symbols.
-Also isolate the absent production call-site evidence before assuming relationship
-navigation can replace source search. For long definitions, verify an existing
-source-read continuation at confirmed locations before adding another option.
+For long definitions, verify an existing source-read continuation at the returned
+production call-site location before adding another option. No relationship
+extraction defect was established by this replay.
 
 The next gate requires both a relevant candidate and the evidence needed for
 the question; top-five presence alone is insufficient. Record false promotions,
