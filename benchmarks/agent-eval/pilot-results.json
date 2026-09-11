@@ -1,0 +1,526 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-09-11",
+  "condition": "guided-warm-single-turn-navigation",
+  "purpose": "Harness validation and failure discovery; no stable product ranking.",
+  "agent": {
+    "cli": "Codex 0.153.4",
+    "model": "gpt-5.6-luna",
+    "reasoningEffort": "medium",
+    "platform": "Windows"
+  },
+  "tools": {
+    "codefacts": {
+      "version": "0.1.13",
+      "revision": "76bae6820c3032e952dbfb5aeb8560b949af185c",
+      "surface": [
+        "map",
+        "search",
+        "outline",
+        "expand",
+        "path"
+      ],
+      "lsp": "auto, deferred in observed calls"
+    },
+    "codegraph": {
+      "package": "@colbymchenry/codegraph",
+      "version": "1.6.0",
+      "surface": [
+        "codegraph_explore"
+      ]
+    }
+  },
+  "sourceRevisions": {
+    "codefacts": "76bae6820c3032e952dbfb5aeb8560b949af185c",
+    "opensession": "994942690fe5d1854398017026ef3615b2fdd24f"
+  },
+  "snapshotAudit": {
+    "codefacts": {
+      "checkedFiles": 97,
+      "changedFiles": [],
+      "archiveSha256": "bbb1d466c77091bae99414a5c8d646e28be56587a29353cad15ef527fc55e1ef"
+    },
+    "opensession": {
+      "checkedFiles": 307,
+      "changedFiles": [],
+      "archiveSha256": "fd35c8a9127711a0d8ab08c5e0ea1eaf7e75df78500c43ad15392ae8e9e8be16"
+    }
+  },
+  "guidance": "If a code-navigation MCP is configured, use it for your first repository inspection. Continue with ordinary source reads whenever necessary. If none is configured, start with ordinary source inspection.",
+  "tasks": [
+    {
+      "id": "transaction",
+      "repository": "codefacts",
+      "prompt": "In the CodeFacts snapshot, explain GraphStore::with_transaction success and error behavior. What happens when a store operation is called while a transaction is already active? Cite the implementation and regression coverage."
+    },
+    {
+      "id": "extraction_failure",
+      "repository": "codefacts",
+      "prompt": "After editing a source file, parsing succeeds but relationship extraction fails. Which previous facts remain queryable, and how does an MCP caller learn that the index is incomplete? Explain the behavior and cite source and regression coverage."
+    },
+    {
+      "id": "provider_contract",
+      "repository": "opensession",
+      "prompt": "In the OpenSession snapshot, what is the ProviderAdapter contract for Session Protocol retrieval, what happens when its implementation throws or is unavailable, and where is a provider chosen? Cite the interface, runtime, and consumer or registry source."
+    }
+  ],
+  "accounting": {
+    "totalTokens": "input_tokens + output_tokens",
+    "cachedInput": "subset of input; not added again",
+    "reasoningOutput": "subset of output; not added again",
+    "authoritative": "stdout turn.completed.usage",
+    "reconciliation": "final rollout total_token_usage",
+    "context": "last_token_usage.input_tokens",
+    "wallTime": "process launch through exit including MCP startup",
+    "billing": null
+  },
+  "limitations": [
+    "One repetition per arm and task",
+    "Only three navigation questions in two repositories",
+    "Not edit-and-test productivity or multi-turn retention",
+    "Some simultaneous runs and staggered starts; timings descriptive",
+    "Cold install/index setup excluded",
+    "Grader blind to efficiency but arm labels visible",
+    "Provider-contract CodeFacts arm did not use MCP",
+    "Invalid preflight attempts retained locally, excluded from matched results",
+    "Earlier natural-choice trial is a separate adoption diagnostic"
+  ],
+  "runs": [
+    {
+      "task": "extraction_failure",
+      "arm": "baseline",
+      "repetition": 1,
+      "usage": {
+        "input_tokens": 457815,
+        "cached_input_tokens": 401408,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3173,
+        "reasoning_output_tokens": 1123
+      },
+      "totalTokens": 460988,
+      "wallMs": 89935,
+      "startedAt": "2026-09-10T17:50:20.626Z",
+      "endedAt": "2026-09-10T17:51:50.562Z",
+      "mcpCalls": 0,
+      "shellCalls": 9,
+      "finalRequestInputTokens": 56866,
+      "peakRequestInputTokens": 56866,
+      "usageReconciled": true,
+      "stdoutSha256": "8907a79cfaf87ee7dd4be3ee7ebf1c5143dad37262f2220832fca735d3da39c8",
+      "rolloutSha256": "e9b2722adeb406c9057531b111a61835475c99f5213136d0efbb04086f72cf8f",
+      "grade": {
+        "score": 4,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [],
+        "citationValidity": {
+          "valid": true,
+          "notes": "Pipeline, refresh, MCP error, and partial-freshness citations resolve to the snapshot and support the distinctions made."
+        },
+        "notes": "Correctly says the prior stored snapshot remains intact while a normal MCP read fails during the persistent Pass-2 error. It correctly keeps Pass-1 partial freshness separate and explicitly notes the lack of a direct Pass-2 regression fixture."
+      },
+      "manualReview": {
+        "reviewer": "primary investigator",
+        "date": "2026-09-11",
+        "environmentValid": true,
+        "usageReconciled": true,
+        "evidenceReviewed": [
+          "stdout commands and MCP arguments/results",
+          "rollout tool attempts",
+          "source archive byte comparison"
+        ],
+        "observedExternalAnswerOrIndexContamination": false,
+        "guidanceFollowed": true,
+        "note": "MCP non-use retained as configured-arm observation; process completion is distinct from the independent source grade."
+      }
+    },
+    {
+      "task": "extraction_failure",
+      "arm": "codefacts",
+      "repetition": 1,
+      "usage": {
+        "input_tokens": 690952,
+        "cached_input_tokens": 622080,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3506,
+        "reasoning_output_tokens": 1127
+      },
+      "totalTokens": 694458,
+      "wallMs": 110190,
+      "startedAt": "2026-09-10T17:49:56.323Z",
+      "endedAt": "2026-09-10T17:51:46.514Z",
+      "mcpCalls": 4,
+      "shellCalls": 10,
+      "finalRequestInputTokens": 71229,
+      "peakRequestInputTokens": 71229,
+      "usageReconciled": true,
+      "stdoutSha256": "175a8884ce0c840e71ced6c6a5b7b397a9ec2e6318d594a395824421389d0bcc",
+      "rolloutSha256": "c6cb2efed6f9427f57cb85cd72a0bb8ccad523d60417181447a469de54bf5c96",
+      "grade": {
+        "score": 4,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [],
+        "citationValidity": {
+          "valid": true,
+          "notes": "Citations to pipeline.rs, service.rs, mcp.rs, and the two named regressions resolve and substantiate the answer."
+        },
+        "notes": "Accurately distinguishes preserved database state from unavailable successful MCP reads, and accurately separates Pass-2 abort behavior from successful partial freshness."
+      },
+      "manualReview": {
+        "reviewer": "primary investigator",
+        "date": "2026-09-11",
+        "environmentValid": true,
+        "usageReconciled": true,
+        "evidenceReviewed": [
+          "stdout commands and MCP arguments/results",
+          "rollout tool attempts",
+          "source archive byte comparison"
+        ],
+        "observedExternalAnswerOrIndexContamination": false,
+        "guidanceFollowed": true,
+        "note": "MCP non-use retained as configured-arm observation; process completion is distinct from the independent source grade."
+      }
+    },
+    {
+      "task": "extraction_failure",
+      "arm": "codegraph",
+      "repetition": 1,
+      "usage": {
+        "input_tokens": 475459,
+        "cached_input_tokens": 424960,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3222,
+        "reasoning_output_tokens": 1058
+      },
+      "totalTokens": 478681,
+      "wallMs": 95896,
+      "startedAt": "2026-09-10T17:49:56.516Z",
+      "endedAt": "2026-09-10T17:51:32.413Z",
+      "mcpCalls": 1,
+      "shellCalls": 9,
+      "finalRequestInputTokens": 53595,
+      "peakRequestInputTokens": 53595,
+      "usageReconciled": true,
+      "stdoutSha256": "9030f9487e8b85f528715cbebc6a49ee73c873f5299c4239ef6465c5a72dd98d",
+      "rolloutSha256": "d07de885a1a7601681986906fce64dce771402093c7785a8bd80f729b15d654f",
+      "grade": {
+        "score": 4,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [],
+        "citationValidity": {
+          "valid": true,
+          "notes": "All cited source and regression locations resolve to the snapshot; the partial-freshness regression is correctly presented as a separate failure path."
+        },
+        "notes": "Correctly explains that old facts remain in the store but the refresh-first MCP workflow returns an error for Pass-2 extraction failure. The word 'queryable' is fairly qualified by the subsequent MCP-error distinction."
+      },
+      "manualReview": {
+        "reviewer": "primary investigator",
+        "date": "2026-09-11",
+        "environmentValid": true,
+        "usageReconciled": true,
+        "evidenceReviewed": [
+          "stdout commands and MCP arguments/results",
+          "rollout tool attempts",
+          "source archive byte comparison"
+        ],
+        "observedExternalAnswerOrIndexContamination": false,
+        "guidanceFollowed": true,
+        "note": "MCP non-use retained as configured-arm observation; process completion is distinct from the independent source grade."
+      }
+    },
+    {
+      "task": "provider_contract",
+      "arm": "baseline",
+      "repetition": 1,
+      "usage": {
+        "input_tokens": 469171,
+        "cached_input_tokens": 394496,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2466,
+        "reasoning_output_tokens": 536
+      },
+      "totalTokens": 471637,
+      "wallMs": 72749,
+      "startedAt": "2026-09-10T17:52:47.368Z",
+      "endedAt": "2026-09-10T17:54:00.117Z",
+      "mcpCalls": 0,
+      "shellCalls": 8,
+      "finalRequestInputTokens": 64645,
+      "peakRequestInputTokens": 64645,
+      "usageReconciled": true,
+      "stdoutSha256": "0e84e2670cf18b7d08edbed40c17415192da96273b68b66c994feb4bb333800e",
+      "rolloutSha256": "483d9afc7a4850421d9c1b78302cba6bb6f3616ba2e0771119701ec009a50407",
+      "grade": {
+        "score": 4,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [],
+        "citationValidity": {
+          "valid": true,
+          "notes": "Interface, runtime, route, server, and registry citations resolve to the snapshot and support each claim."
+        },
+        "notes": "Correctly states the optional accessor contract, unavailable/null outcomes, propagated provider exception with route-specific handling, and provider selection through detected startup adapters and the URL provider segment."
+      },
+      "manualReview": {
+        "reviewer": "primary investigator",
+        "date": "2026-09-11",
+        "environmentValid": true,
+        "usageReconciled": true,
+        "evidenceReviewed": [
+          "stdout commands and MCP arguments/results",
+          "rollout tool attempts",
+          "source archive byte comparison"
+        ],
+        "observedExternalAnswerOrIndexContamination": false,
+        "guidanceFollowed": true,
+        "note": "MCP non-use retained as configured-arm observation; process completion is distinct from the independent source grade."
+      }
+    },
+    {
+      "task": "provider_contract",
+      "arm": "codefacts",
+      "repetition": 1,
+      "usage": {
+        "input_tokens": 385254,
+        "cached_input_tokens": 332544,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2166,
+        "reasoning_output_tokens": 407
+      },
+      "totalTokens": 387420,
+      "wallMs": 66822,
+      "startedAt": "2026-09-10T17:52:47.582Z",
+      "endedAt": "2026-09-10T17:53:54.405Z",
+      "mcpCalls": 0,
+      "shellCalls": 7,
+      "finalRequestInputTokens": 56823,
+      "peakRequestInputTokens": 56823,
+      "usageReconciled": true,
+      "stdoutSha256": "bdcbcd98ae38d51bb4d4a62cb5bec50698833aa208dd327933295f3c21acf884",
+      "rolloutSha256": "fffa994c72477aea4d3492f4b545e3ffb2223c9a23bf218ad943557f5ffb02b7",
+      "grade": {
+        "score": 4,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [],
+        "citationValidity": {
+          "valid": true,
+          "notes": "Interface, runtime, session-detail, session-list, registry, and server citations resolve to the snapshot and support the answer."
+        },
+        "trajectoryValidity": {
+          "valid": true,
+          "notes": "The available tool trajectory contains seven read-only shell inspections, no blocked calls, and no forbidden CodeFacts/CodeGraph CLI invocation. It contains no CodeFacts MCP call; record that as arm non-use, not a correctness penalty."
+        },
+        "notes": "Correctly distinguishes missing accessor, null result, and a thrown adapter exception; explains two supported consumer outcomes and detected-provider selection."
+      },
+      "manualReview": {
+        "reviewer": "primary investigator",
+        "date": "2026-09-11",
+        "environmentValid": true,
+        "usageReconciled": true,
+        "evidenceReviewed": [
+          "stdout commands and MCP arguments/results",
+          "rollout tool attempts",
+          "source archive byte comparison"
+        ],
+        "observedExternalAnswerOrIndexContamination": false,
+        "guidanceFollowed": false,
+        "note": "MCP non-use retained as configured-arm observation; process completion is distinct from the independent source grade."
+      }
+    },
+    {
+      "task": "provider_contract",
+      "arm": "codegraph",
+      "repetition": 1,
+      "usage": {
+        "input_tokens": 345354,
+        "cached_input_tokens": 297728,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2730,
+        "reasoning_output_tokens": 444
+      },
+      "totalTokens": 348084,
+      "wallMs": 71275,
+      "startedAt": "2026-09-10T17:51:47.455Z",
+      "endedAt": "2026-09-10T17:52:58.730Z",
+      "mcpCalls": 1,
+      "shellCalls": 6,
+      "finalRequestInputTokens": 51916,
+      "peakRequestInputTokens": 51916,
+      "usageReconciled": true,
+      "stdoutSha256": "fe1c58a227ba6cd5b78518258690570537cc6d45fb9b1efa8972cbfb6bb6fba9",
+      "rolloutSha256": "b917a04df0e5f11d2ca0494cb8f012a5175a73fa07b77b3f738ca9025ee584ef",
+      "grade": {
+        "score": 4,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [],
+        "citationValidity": {
+          "valid": true,
+          "notes": "Interface, runtime, route, registry, and startup selection citations resolve to the snapshot and support the claims."
+        },
+        "notes": "Correctly describes optional protocol retrieval, null and missing-accessor errors, propagation of a provider-thrown exception, consumer-specific HTTP handling, and detected-provider selection by request provider ID."
+      },
+      "manualReview": {
+        "reviewer": "primary investigator",
+        "date": "2026-09-11",
+        "environmentValid": true,
+        "usageReconciled": true,
+        "evidenceReviewed": [
+          "stdout commands and MCP arguments/results",
+          "rollout tool attempts",
+          "source archive byte comparison"
+        ],
+        "observedExternalAnswerOrIndexContamination": false,
+        "guidanceFollowed": true,
+        "note": "MCP non-use retained as configured-arm observation; process completion is distinct from the independent source grade."
+      }
+    },
+    {
+      "task": "transaction",
+      "arm": "baseline",
+      "repetition": 1,
+      "usage": {
+        "input_tokens": 238663,
+        "cached_input_tokens": 213760,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1771,
+        "reasoning_output_tokens": 448
+      },
+      "totalTokens": 240434,
+      "wallMs": 59247,
+      "startedAt": "2026-09-10T17:48:52.744Z",
+      "endedAt": "2026-09-10T17:49:51.992Z",
+      "mcpCalls": 0,
+      "shellCalls": 6,
+      "finalRequestInputTokens": 31086,
+      "peakRequestInputTokens": 31086,
+      "usageReconciled": true,
+      "stdoutSha256": "1a89f588fe20bb9da9e022cf749580bfc3b929a60ac0cc0623b3dfcac2b68806",
+      "rolloutSha256": "733946367cc9c40009aeb8cf30d6ba9c397751ad28a6a52d036109eb71ac24c7",
+      "grade": {
+        "score": 4,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [],
+        "citationValidity": {
+          "valid": true,
+          "notes": "The cited store implementation and rollback regression locations support the claims; the additional pipeline atomicity citation is also valid."
+        },
+        "notes": "Accurately states outer commit/error behavior, direct nested execution, and the rollback regression."
+      },
+      "manualReview": {
+        "reviewer": "primary investigator",
+        "date": "2026-09-11",
+        "environmentValid": true,
+        "usageReconciled": true,
+        "evidenceReviewed": [
+          "stdout commands and MCP arguments/results",
+          "rollout tool attempts",
+          "source archive byte comparison"
+        ],
+        "observedExternalAnswerOrIndexContamination": false,
+        "guidanceFollowed": true,
+        "note": "MCP non-use retained as configured-arm observation; process completion is distinct from the independent source grade."
+      }
+    },
+    {
+      "task": "transaction",
+      "arm": "codefacts",
+      "repetition": 1,
+      "usage": {
+        "input_tokens": 170161,
+        "cached_input_tokens": 137728,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1090,
+        "reasoning_output_tokens": 294
+      },
+      "totalTokens": 171251,
+      "wallMs": 35544,
+      "startedAt": "2026-09-10T17:48:52.899Z",
+      "endedAt": "2026-09-10T17:49:28.443Z",
+      "mcpCalls": 1,
+      "shellCalls": 3,
+      "finalRequestInputTokens": 35798,
+      "peakRequestInputTokens": 35798,
+      "usageReconciled": true,
+      "stdoutSha256": "a35fd084238b21f6c9c6baa0a0c77d9edeacafb7fdeafb05e0c70194b436f508",
+      "rolloutSha256": "d9ee631a51be7d77041d5e0f04b7e947d8968ce9e591b7993cc423f65172a129",
+      "grade": {
+        "score": 4,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [],
+        "citationValidity": {
+          "valid": true,
+          "notes": "store.rs:459-478 and store.rs:2433-2449 directly support the described transaction and regression behavior."
+        },
+        "notes": "Complete, concise account of autocommit versus active transaction, successful commit, error rollback, and nested participation."
+      },
+      "manualReview": {
+        "reviewer": "primary investigator",
+        "date": "2026-09-11",
+        "environmentValid": true,
+        "usageReconciled": true,
+        "evidenceReviewed": [
+          "stdout commands and MCP arguments/results",
+          "rollout tool attempts",
+          "source archive byte comparison"
+        ],
+        "observedExternalAnswerOrIndexContamination": false,
+        "guidanceFollowed": true,
+        "note": "MCP non-use retained as configured-arm observation; process completion is distinct from the independent source grade."
+      }
+    },
+    {
+      "task": "transaction",
+      "arm": "codegraph",
+      "repetition": 1,
+      "usage": {
+        "input_tokens": 131442,
+        "cached_input_tokens": 105216,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1435,
+        "reasoning_output_tokens": 498
+      },
+      "totalTokens": 132877,
+      "wallMs": 48812,
+      "startedAt": "2026-09-10T17:48:53.138Z",
+      "endedAt": "2026-09-10T17:49:41.950Z",
+      "mcpCalls": 1,
+      "shellCalls": 2,
+      "finalRequestInputTokens": 34405,
+      "peakRequestInputTokens": 34405,
+      "usageReconciled": true,
+      "stdoutSha256": "89fd3806528d03dde4fa29d8110ee06836811aa985daa45d358043cd0c41a4b3",
+      "rolloutSha256": "f27344fd3e655ab5aeb80cf2be67005b80ed54b971a0a89956c24341787ec279",
+      "grade": {
+        "score": 4,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [],
+        "citationValidity": {
+          "valid": true,
+          "notes": "The absolute snapshot links resolve to store.rs:459-477 and store.rs:2433-2449; cited pipeline coverage is consistent with source."
+        },
+        "notes": "Correctly distinguishes the two transaction paths and correctly describes the nested regression outcome."
+      },
+      "manualReview": {
+        "reviewer": "primary investigator",
+        "date": "2026-09-11",
+        "environmentValid": true,
+        "usageReconciled": true,
+        "evidenceReviewed": [
+          "stdout commands and MCP arguments/results",
+          "rollout tool attempts",
+          "source archive byte comparison"
+        ],
+        "observedExternalAnswerOrIndexContamination": false,
+        "guidanceFollowed": true,
+        "note": "MCP non-use retained as configured-arm observation; process completion is distinct from the independent source grade."
+      }
+    }
+  ]
+}

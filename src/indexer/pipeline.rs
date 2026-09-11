@@ -543,9 +543,12 @@ impl<'a> IndexingPipeline<'a> {
                 call_candidates(template, target_name, &node_index)
             };
             if candidates.targets.is_empty() {
-                let mut unresolved = template.clone();
-                unresolved.target = format!("unresolved:{target_name}");
-                inserted.push(unresolved);
+                inserted.push(unresolved_candidate_edge(
+                    template,
+                    target_name,
+                    candidates.candidate_count,
+                    candidates.resolution,
+                ));
             } else {
                 inserted.extend(materialize_candidate_edges(template, candidates));
             }
@@ -619,6 +622,43 @@ struct CandidateSet<'a> {
     candidate_count: usize,
 }
 
+/// Preserve an uncertain call site when no compatible target currently exists.
+/// The unresolved target keeps it out of confirmed traversals while the
+/// metadata allows a later incremental refresh to rebind the source spelling.
+fn unresolved_candidate_edge(
+    template: &CodeEdge,
+    target_name: &str,
+    candidate_count: usize,
+    resolution: Option<&'static str>,
+) -> CodeEdge {
+    let mut unresolved = template.clone();
+    unresolved.target = format!("unresolved:{target_name}");
+    clear_candidate_metadata(&mut unresolved);
+    if let Some(resolution) = resolution {
+        let metadata = unresolved.metadata.get_or_insert_with(HashMap::new);
+        metadata.insert("confidence".to_string(), "heuristic".to_string());
+        metadata.insert("resolution".to_string(), resolution.to_string());
+        metadata.insert("candidate_count".to_string(), candidate_count.to_string());
+    }
+    unresolved
+}
+
+fn clear_candidate_metadata(edge: &mut CodeEdge) {
+    if let Some(metadata) = edge.metadata.as_mut() {
+        for key in [
+            "confidence",
+            "resolution",
+            "candidate_count",
+            "candidates_truncated",
+        ] {
+            metadata.remove(key);
+        }
+    }
+    if edge.metadata.as_ref().is_some_and(HashMap::is_empty) {
+        edge.metadata = None;
+    }
+}
+
 /// Materialize a bounded candidate set as relationship occurrences while
 /// retaining the uncertainty label on every emitted edge.
 fn materialize_candidate_edges(template: &CodeEdge, candidates: CandidateSet<'_>) -> Vec<CodeEdge> {
@@ -630,6 +670,7 @@ fn materialize_candidate_edges(template: &CodeEdge, candidates: CandidateSet<'_>
         .map(|target| {
             let mut resolved = template.clone();
             resolved.target = target.id.clone();
+            clear_candidate_metadata(&mut resolved);
             if let Some(resolution) = candidates.resolution {
                 let metadata = resolved.metadata.get_or_insert_with(HashMap::new);
                 metadata.insert("confidence".to_string(), "heuristic".to_string());
@@ -666,7 +707,14 @@ fn resolve_initial_call_candidates(
             continue;
         };
         let candidates = call_candidates(&edge, target_name, node_index);
-        if candidates.resolution.is_none() || candidates.targets.is_empty() {
+        if candidates.targets.is_empty() {
+            resolved.push(unresolved_candidate_edge(
+                &edge,
+                target_name,
+                candidates.candidate_count,
+                candidates.resolution,
+            ));
+        } else if candidates.resolution.is_none() {
             resolved.push(edge);
         } else {
             resolved.extend(materialize_candidate_edges(&edge, candidates));
@@ -707,11 +755,12 @@ fn callable_candidates<'a>(
     candidates
 }
 
-/// Return candidates for one call site and label ambiguity explicitly. A
-/// unique same-file callable is static. Receiver dispatch preserves all
-/// bounded targets, while a plain duplicate-name call retains one deterministic
-/// heuristic representative so a large C/C++ overload set cannot multiply the
-/// stored graph at every call site.
+/// Return candidates for one call site and label uncertainty explicitly. A
+/// unique same-file callable is static for a direct identifier call. Receiver
+/// dispatch has no type binding in this index, so even one same-named method
+/// remains a heuristic candidate. Plain duplicate-name calls retain one
+/// deterministic heuristic representative so a large C/C++ overload set
+/// cannot multiply the stored graph at every call site.
 fn call_candidates<'a>(
     edge: &CodeEdge,
     target_name: &str,
@@ -723,14 +772,19 @@ fn call_candidates<'a>(
         .as_ref()
         .and_then(|metadata| metadata.get("call_form"))
         .is_some_and(|form| form == "member");
-    // A member call has a receiver. Once multiple compatible methods exist,
-    // a same-file spelling is not enough evidence to claim that it is the
-    // runtime receiver's one static target. Preserve the candidate set.
-    if is_member_call && candidates.len() > 1 {
+    // A member call has a receiver, but this index has no type binding for
+    // that receiver. Preserve the candidate evidence and keep it out of
+    // confirmed static paths, even when only one method currently has that
+    // name.
+    if is_member_call {
         let candidate_count = candidates.len();
         return CandidateSet {
             targets: candidates,
-            resolution: Some("polymorphic"),
+            resolution: Some(if candidate_count > 1 {
+                "polymorphic"
+            } else {
+                "unresolved_receiver"
+            }),
             candidate_count,
         };
     }

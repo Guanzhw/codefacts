@@ -1,0 +1,60 @@
+{
+  "arms": [
+    {
+      "configOverrides": [
+        "windows.sandbox=\"elevated\""
+      ],
+      "id": "baseline"
+    },
+    {
+      "configOverrides": [
+        "mcp_servers.codefacts.command=\"D:/Eval/bin/codefacts.exe\"",
+        "mcp_servers.codefacts.args=[\"mcp\",\"--root\",\"{root}\"]",
+        "mcp_servers.codefacts.required=true",
+        "mcp_servers.codefacts.startup_timeout_sec=30",
+        "windows.sandbox=\"elevated\"",
+        "mcp_servers.codefacts.enabled_tools=[\"map\",\"search\",\"outline\",\"expand\",\"path\"]",
+        "mcp_servers.codefacts.tools.map.approval_mode=\"approve\"",
+        "mcp_servers.codefacts.tools.search.approval_mode=\"approve\"",
+        "mcp_servers.codefacts.tools.outline.approval_mode=\"approve\"",
+        "mcp_servers.codefacts.tools.expand.approval_mode=\"approve\"",
+        "mcp_servers.codefacts.tools.path.approval_mode=\"approve\""
+      ],
+      "id": "codefacts"
+    },
+    {
+      "configOverrides": [
+        "mcp_servers.codegraph.command=\"C:/Program Files/nodejs/node.exe\"",
+        "mcp_servers.codegraph.args=[\"D:/Eval/tools/node_modules/@colbymchenry/codegraph/npm-shim.js\",\"serve\",\"--mcp\"]",
+        "mcp_servers.codegraph.cwd=\"{root}\"",
+        "mcp_servers.codegraph.env={CODEGRAPH_NO_DAEMON=\"1\",CODEGRAPH_TELEMETRY=\"0\",DO_NOT_TRACK=\"1\",CODEGRAPH_NO_DOWNLOAD=\"1\"}",
+        "mcp_servers.codegraph.required=true",
+        "mcp_servers.codegraph.startup_timeout_sec=30",
+        "windows.sandbox=\"elevated\"",
+        "mcp_servers.codegraph.enabled_tools=[\"codegraph_explore\"]",
+        "mcp_servers.codegraph.tools.codegraph_explore.approval_mode=\"approve\""
+      ],
+      "id": "codegraph"
+    }
+  ],
+  "runs": 1,
+  "tasks": [
+    {
+      "prompt": "In the CodeFacts snapshot, explain GraphStore::with_transaction success and error behavior. What happens when a store operation is called while a transaction is already active? Cite the implementation and regression coverage.",
+      "root": "D:/Eval/repos/codefacts",
+      "id": "transaction"
+    },
+    {
+      "prompt": "After editing a source file, parsing succeeds but relationship extraction fails. Which previous facts remain queryable, and how does an MCP caller learn that the index is incomplete? Explain the behavior and cite source and regression coverage.",
+      "root": "D:/Eval/repos/codefacts",
+      "id": "extraction_failure"
+    },
+    {
+      "prompt": "In the OpenSession snapshot, what is the ProviderAdapter contract for Session Protocol retrieval, what happens when its implementation throws or is unavailable, and where is a provider chosen? Cite the interface, runtime, and consumer or registry source.",
+      "root": "D:/Eval/repos/opensession",
+      "id": "provider_contract"
+    }
+  ],
+  "codexBin": "D:/Eval/bin/codex.exe",
+  "guidance": "If a code-navigation MCP is configured, use it for your first repository inspection. Continue with ordinary source reads whenever necessary. If none is configured, start with ordinary source inspection."
+}

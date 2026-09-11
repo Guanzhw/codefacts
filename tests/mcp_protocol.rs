@@ -6,6 +6,7 @@ use std::process::{Command, Stdio};
 use codefacts::lsp::LspMode;
 use codefacts::service::{CodeFacts, SearchDetail, SymbolScope};
 use codefacts::types::NodeKind;
+use rusqlite::Connection;
 use serde_json::{json, Value};
 use sha2::{Digest, Sha256};
 use tempfile::tempdir;
@@ -1007,6 +1008,254 @@ export function getAvailableProviders(providers: Provider[]) {
 }
 
 #[test]
+fn unknown_receiver_with_one_candidate_stays_heuristic_but_direct_import_is_static() {
+    let repository = tempdir().expect("temporary repository");
+    fs::create_dir_all(repository.path().join("src")).expect("source directory");
+    fs::write(
+        repository.path().join("src/local.ts"),
+        "export function charge() { return 1; }\n",
+    )
+    .expect("callee fixture");
+    fs::write(
+        repository.path().join("src/caller.ts"),
+        "import { charge } from './local';\nexport function invoke(client: any) { return client.charge(); }\nexport function direct() { return charge(); }\n",
+    )
+    .expect("caller fixture");
+    let facts = CodeFacts::open(repository.path(), repository.path().join("external.sqlite"))
+        .expect("open source-backed facts");
+
+    let invoke = facts
+        .expand("invoke", Some("src/caller.ts"), Some(20))
+        .expect("expand unknown receiver call");
+    let receiver_targets = invoke["callees"]
+        .as_array()
+        .expect("callee facts")
+        .iter()
+        .filter(|callee| callee["to"]["name"] == "charge")
+        .collect::<Vec<_>>();
+    assert_eq!(receiver_targets.len(), 1);
+    assert_eq!(receiver_targets[0]["evidence"]["confidence"], "heuristic");
+    assert_eq!(receiver_targets[0]["resolution"], "unresolved_receiver");
+    let charge_id = receiver_targets[0]["to"]["id"]
+        .as_str()
+        .expect("charge candidate id");
+    let receiver_path = facts
+        .path("invoke", charge_id, Some(20))
+        .expect("query unknown receiver path");
+    assert_eq!(receiver_path["status"], "no_static_path");
+
+    let direct_path = facts
+        .path_with_files(
+            "direct",
+            Some("src/caller.ts"),
+            "charge",
+            Some("src/local.ts"),
+            Some(20),
+        )
+        .expect("query direct imported call path");
+    assert_eq!(direct_path["status"], "ok");
+}
+
+#[test]
+fn older_persistent_receiver_binding_is_rebuilt_after_extraction_version_bump() {
+    let repository = tempdir().expect("temporary repository");
+    fs::create_dir_all(repository.path().join("src")).expect("source directory");
+    fs::write(
+        repository.path().join("src/local.ts"),
+        "export function charge() { return 1; }\n",
+    )
+    .expect("callee fixture");
+    fs::write(
+        repository.path().join("src/caller.ts"),
+        "export function invoke(client: any) { return client.charge(); }\n",
+    )
+    .expect("caller fixture");
+    let state = repository.path().join("external.sqlite");
+
+    {
+        let facts = CodeFacts::open(repository.path(), &state).expect("create initial index");
+        let initial = facts
+            .expand("invoke", Some("src/caller.ts"), Some(20))
+            .expect("initial receiver facts");
+        assert_eq!(initial["callees"][0]["evidence"]["confidence"], "heuristic");
+    }
+
+    // Simulate a database produced by the previous extractor: the source
+    // hashes and node facts are still valid, but the member edge was persisted
+    // as a static relationship without receiver uncertainty metadata.
+    let old = Connection::open(&state).expect("open persisted state");
+    old.execute(
+        "UPDATE index_metadata SET value = '3' WHERE key = 'fact_extraction_version'",
+        [],
+    )
+    .expect("mark old extractor version");
+    old.execute(
+        "UPDATE index_metadata SET value = '0' WHERE key = 'full_reindex_required'",
+        [],
+    )
+    .expect("clear reindex marker");
+    old.execute(
+        "UPDATE edges SET properties = json_remove(properties, '$.confidence', '$.resolution') \
+         WHERE target_name = 'charge'",
+        [],
+    )
+    .expect("simulate old static member edge");
+    drop(old);
+
+    let facts = CodeFacts::open(repository.path(), &state).expect("reopen old index");
+    let rebuilt = facts
+        .expand("invoke", Some("src/caller.ts"), Some(20))
+        .expect("refresh old receiver facts");
+    assert_eq!(rebuilt["freshness"]["files_indexed"], 2);
+    assert_eq!(rebuilt["callees"][0]["evidence"]["confidence"], "heuristic");
+    assert_eq!(rebuilt["callees"][0]["resolution"], "unresolved_receiver");
+    let charge_id = rebuilt["callees"][0]["to"]["id"]
+        .as_str()
+        .expect("charge id");
+    let path = facts
+        .path("invoke", charge_id, Some(20))
+        .expect("query rebuilt receiver path");
+    assert_eq!(path["status"], "no_static_path");
+}
+
+#[test]
+fn unchanged_receiver_edges_rebind_when_the_only_candidate_is_renamed() {
+    let repository = tempdir().expect("temporary repository");
+    fs::create_dir_all(repository.path().join("src")).expect("source directory");
+    fs::write(
+        repository.path().join("src/caller.ts"),
+        "export function invoke(client: any) { return client.charge(); }\n",
+    )
+    .expect("caller fixture");
+    fs::write(
+        repository.path().join("src/local.ts"),
+        "export function charge() { return 1; }\n",
+    )
+    .expect("initial candidate fixture");
+    let state = repository.path().join("external.sqlite");
+    let facts = CodeFacts::open(repository.path(), &state).expect("open source-backed facts");
+
+    let initial = facts
+        .expand("invoke", Some("src/caller.ts"), Some(20))
+        .expect("initial receiver candidate");
+    assert_eq!(
+        initial["callees"]
+            .as_array()
+            .expect("initial callees")
+            .len(),
+        1
+    );
+
+    fs::write(
+        repository.path().join("src/local.ts"),
+        "export function cost() { return 1; }\n",
+    )
+    .expect("rename candidate fixture");
+    let renamed = facts
+        .expand("invoke", Some("src/caller.ts"), Some(20))
+        .expect("refresh after candidate rename");
+    assert!(renamed["callees"]
+        .as_array()
+        .expect("callees after rename")
+        .is_empty());
+    assert_eq!(renamed["freshness"]["relationships_rebound"], 1);
+
+    fs::write(
+        repository.path().join("src/new-target.ts"),
+        "export function charge() { return 2; }\n",
+    )
+    .expect("replacement candidate fixture");
+    let replaced = facts
+        .expand("invoke", Some("src/caller.ts"), Some(20))
+        .expect("refresh after candidate replacement");
+    let replacement = replaced["callees"]
+        .as_array()
+        .expect("callees after replacement");
+    assert_eq!(replacement.len(), 1);
+    assert_eq!(replacement[0]["evidence"]["confidence"], "heuristic");
+    assert_eq!(replacement[0]["resolution"], "unresolved_receiver");
+    assert_eq!(
+        replacement[0]["to"]["evidence"]["file_path"],
+        "src/new-target.ts"
+    );
+    assert_eq!(replaced["freshness"]["relationships_rebound"], 1);
+}
+
+#[test]
+fn member_call_with_no_callable_candidate_cannot_bind_to_a_same_named_variable() {
+    let repository = tempdir().expect("temporary repository");
+    fs::create_dir_all(repository.path().join("src")).expect("source directory");
+    fs::write(
+        repository.path().join("src/caller.ts"),
+        "export const charge = 0;\nexport const collect = 0;\nexport function invoke(client: any) { return client.charge(); }\nexport function direct() { return collect(); }\n",
+    )
+    .expect("caller fixture");
+    let state = repository.path().join("external.sqlite");
+    let facts = CodeFacts::open(repository.path(), &state).expect("open source-backed facts");
+
+    let cold = facts
+        .expand("invoke", Some("src/caller.ts"), Some(20))
+        .expect("cold member call facts");
+    assert!(cold["callees"].as_array().expect("cold callees").is_empty());
+    let variable_path = facts
+        .path_with_files(
+            "invoke",
+            Some("src/caller.ts"),
+            "charge",
+            Some("src/caller.ts"),
+            Some(20),
+        )
+        .expect("cold variable path");
+    assert_eq!(variable_path["status"], "no_static_path");
+    let direct_variable_path = facts
+        .path_with_files(
+            "direct",
+            Some("src/caller.ts"),
+            "collect",
+            Some("src/caller.ts"),
+            Some(20),
+        )
+        .expect("cold direct variable path");
+    assert_eq!(direct_variable_path["status"], "no_static_path");
+
+    fs::write(
+        repository.path().join("src/target.ts"),
+        "export function charge() { return 1; }\n",
+    )
+    .expect("callable candidate fixture");
+    let incremental = facts
+        .expand("invoke", Some("src/caller.ts"), Some(20))
+        .expect("incremental callable candidate facts");
+    assert_eq!(
+        incremental["callees"][0]["evidence"]["confidence"],
+        "heuristic"
+    );
+
+    fs::write(
+        repository.path().join("src/target.ts"),
+        "export function cost() { return 1; }\n",
+    )
+    .expect("remove callable candidate fixture");
+    let removed = facts
+        .expand("invoke", Some("src/caller.ts"), Some(20))
+        .expect("incremental removal facts");
+    assert!(removed["callees"]
+        .as_array()
+        .expect("callees after removal")
+        .is_empty());
+    let removed_path = facts
+        .path_with_files(
+            "invoke",
+            Some("src/caller.ts"),
+            "charge",
+            Some("src/caller.ts"),
+            Some(20),
+        )
+        .expect("removed variable path");
+    assert_eq!(removed_path["status"], "no_static_path");
+}
+
+#[test]
 fn ambiguous_direct_calls_stay_heuristic_without_graph_fanout() {
     let repository = tempdir().expect("temporary repository");
     fs::create_dir_all(repository.path().join("src")).expect("source directory");
@@ -1045,6 +1294,26 @@ fn ambiguous_direct_calls_stay_heuristic_without_graph_fanout() {
         .path("entry", target_id, Some(20))
         .expect("confirmed path query");
     assert_eq!(path["status"], "no_static_path");
+
+    fs::remove_file(repository.path().join("src/two.ts")).expect("remove duplicate target");
+    let rebound = facts
+        .expand("entry", Some("src/caller.ts"), Some(20))
+        .expect("rebind direct call after duplicate removal");
+    let rebound_target = rebound["callees"]
+        .as_array()
+        .expect("rebound callee facts")
+        .iter()
+        .find(|callee| callee["to"]["name"] == "target")
+        .expect("unique target after removal");
+    assert_eq!(rebound_target["evidence"]["confidence"], "static");
+    assert!(!rebound_target
+        .as_object()
+        .unwrap()
+        .contains_key("resolution"));
+    let rebound_path = facts
+        .path("entry", "target", Some(20))
+        .expect("static path after duplicate removal");
+    assert_eq!(rebound_path["status"], "ok");
 }
 
 #[test]

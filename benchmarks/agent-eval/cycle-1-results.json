@@ -1,0 +1,1227 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-09-11",
+  "condition": "guided-warm-single-turn-navigation-before-after",
+  "purpose": "One bounded improvement cycle; primary efficiency target missed.",
+  "agent": {
+    "cli": "Codex 0.153.4",
+    "model": "gpt-5.6-luna",
+    "reasoningEffort": "medium",
+    "platform": "Windows"
+  },
+  "tools": {
+    "before": {
+      "revision": "76bae6820c3032e952dbfb5aeb8560b949af185c",
+      "binarySha256": "6505f7f29d0980a8a8afdff1e5230e616c187c8ccaf8115d25b68ac2f13ffb60"
+    },
+    "after": {
+      "baseRevision": "76bae6820c3032e952dbfb5aeb8560b949af185c",
+      "state": "working-tree cycle 1 candidate",
+      "binarySha256": "d5ab0c4304ce185c0fffce040a3367ea5bb704ff9a3bc22014ba6c712787e1ab",
+      "sourceSha256": {
+        "src/indexer/pipeline.rs": "a2d4a95851d1eb6bd221df8f9d4aebb320a4cea952c6af5fc40fcc5d5cd307d9",
+        "src/db/schema.rs": "04368b30a81ebded208fc4a71d4ee02b108611a96daab92f85e27abbdec59df7",
+        "src/mcp.rs": "f2c9601d700903cb4df975331f832512441460c8528c2ad7bedc15c0b757b3ac"
+      }
+    },
+    "surface": [
+      "map",
+      "search",
+      "outline",
+      "expand",
+      "path"
+    ],
+    "lsp": "auto; map/search defer, expand may trigger optional LSP; included in task execution"
+  },
+  "sourceRevisions": {
+    "codefacts": "76bae6820c3032e952dbfb5aeb8560b949af185c",
+    "opensession": "994942690fe5d1854398017026ef3615b2fdd24f"
+  },
+  "snapshotAudit": {
+    "codefacts": {
+      "checkedFiles": 97,
+      "changedFiles": [],
+      "archiveSha256": "bbb1d466c77091bae99414a5c8d646e28be56587a29353cad15ef527fc55e1ef"
+    },
+    "opensession": {
+      "checkedFiles": 307,
+      "changedFiles": [],
+      "archiveSha256": "fd35c8a9127711a0d8ab08c5e0ea1eaf7e75df78500c43ad15392ae8e9e8be16"
+    }
+  },
+  "snapshotAuditRechecked": "All 97 CodeFacts and 307 OpenSession archived files unchanged after these 12 runs.",
+  "guidance": "If a code-navigation MCP is configured, use it for your first repository inspection. Continue with ordinary source reads whenever necessary. If none is configured, start with ordinary source inspection.",
+  "tasks": [
+    {
+      "id": "transaction",
+      "repository": "codefacts",
+      "prompt": "In the CodeFacts snapshot, explain GraphStore::with_transaction success and error behavior. What happens when a store operation is called while a transaction is already active? Cite the implementation and regression coverage."
+    },
+    {
+      "id": "extraction_failure",
+      "repository": "codefacts",
+      "prompt": "After editing a source file, parsing succeeds but relationship extraction fails. Which previous facts remain queryable, and how does an MCP caller learn that the index is incomplete? Explain the behavior and cite source and regression coverage."
+    },
+    {
+      "id": "provider_contract",
+      "repository": "opensession",
+      "prompt": "In the OpenSession snapshot, what is the ProviderAdapter contract for Session Protocol retrieval, what happens when its implementation throws or is unavailable, and where is a provider chosen? Cite the interface, runtime, and consumer or registry source."
+    }
+  ],
+  "setup": {
+    "freshAgentSessionPerRun": true,
+    "warmSeparateIndexesPerArm": true,
+    "sourceAndMcpPreflight": "passed",
+    "agentConfig": "Ignore user config; read-only; project instructions, unrelated plugins, web and multi-agent disabled; required five-tool MCP; known read tools preapproved; Windows elevated sandbox.",
+    "taskOrder": [
+      "transaction",
+      "extraction_failure",
+      "provider_contract"
+    ],
+    "repetitions": 2,
+    "maxConcurrentAgents": 2,
+    "scheduling": "One task/repetition pair at a time; launch before then after in repetition 1, reverse in repetition 2."
+  },
+  "accounting": {
+    "totalTokens": "input_tokens + output_tokens",
+    "cachedInput": "subset of input; not added again",
+    "reasoningOutput": "subset of output; not added again",
+    "authoritative": "stdout turn.completed.usage",
+    "reconciliation": "final rollout total_token_usage",
+    "context": "last_token_usage.input_tokens",
+    "wallTime": "process launch through exit including MCP startup",
+    "billing": null
+  },
+  "acceptance": {
+    "primary": {
+      "task": "extraction_failure",
+      "targetMedianTokenReductionPct": 20,
+      "observedMedianTokenReductionPct": -5.312990484196156,
+      "met": false
+    },
+    "knownSymbolRegression": {
+      "task": "transaction",
+      "investigateAbovePct": 10,
+      "observedChangePct": -0.8338371374674969,
+      "triggered": false
+    },
+    "quality": {
+      "required": "All answers pass frozen source rubric",
+      "met": true
+    }
+  },
+  "manualAudit": {
+    "eligibleRuns": 12,
+    "scope": "All direct shell and nested wrapper calls, MCP roots and actual use, raw answers and usage reconciliation; independent source-only cost-blind grading.",
+    "contaminationObserved": false,
+    "blockedCalls": 0,
+    "timeouts": 0,
+    "gitHistoryAttempt": "extraction_failure/before/run-001 attempted git log/status; both returned not a git repository, exposing no history. Its ordinary source search continued.",
+    "rawAutomaticStatuses": "Preserved as pending-manual-review; eligibility is recorded separately here."
+  },
+  "grading": "Frozen pilot rubric; source-only, cost-blind.",
+  "runs": [
+    {
+      "task": "extraction_failure",
+      "arm": "after",
+      "repetition": 1,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "inputTokens": 609094,
+      "cachedInputTokens": 539648,
+      "outputTokens": 2955,
+      "reasoningOutputTokens": 1020,
+      "totalTokens": 612049,
+      "finalInputTokens": 73655,
+      "wallMs": 85333,
+      "mcpCalls": 6,
+      "shellCalls": 8,
+      "uncachedInputTokens": 69446,
+      "rawReviewStatus": "pending-manual-review",
+      "manualReview": "eligible after source, nested-call and contamination review",
+      "grade": {
+        "score": 3,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [
+          "Does not explicitly state that no regression injects the exact Pass-2 edge-extraction failure; the cited source-gap test covers an unreadable-file skip, not Pass 2."
+        ],
+        "citationValidity": "sufficient for score 3: accurate Pass-2, MCP error, freshness, and atomicity citations. The answer omits the rubric-required test-coverage limit.",
+        "notes": "Correct about preservation and failed MCP response; no material conflation of Pass 2 with partial freshness."
+      },
+      "mcp": [
+        {
+          "tool": "map",
+          "arguments": {},
+          "resultsLength": null,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "relationships",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 10,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "incomplete",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 0,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "parse_failed",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 9,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "extract_failed",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 9,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "previous facts",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 0,
+          "isError": false
+        }
+      ],
+      "artifacts": {
+        "stdout.jsonl": {
+          "sha256": "0f83feba4d4cb0e0293b9d6728dea381858e9e9043587b05001f80077ebbe7a0"
+        },
+        "answer.md": {
+          "sha256": "90f75191a0efac0c2a14feb78e1052b7d4895ea48b10fb7a39793c052b8028fa"
+        },
+        "metrics.json": {
+          "sha256": "23814aa41cf80e8dd54b0bdd7490b219d837ed45e455f9b06d7efbc57692a6da"
+        },
+        "transcript-tools.json": {
+          "sha256": "cfe01b1db07629cd527af89140c7d25be39ca6193369dd0097fc4167e474e0ca"
+        },
+        "request.json": {
+          "sha256": "c032f9496b4befa639b5fd353f0b8d5f04d20c3dc143d63e27508dd4cc56305c"
+        },
+        "timing.json": {
+          "sha256": "da44b92a57a9ffee08573b81f8589cd606cbd72a049aed4c0bc9fa440c655ac5"
+        }
+      },
+      "rolloutSha256": "50354cda04dac7843b96dccbfa02bfc30b679befef5b5e1fcd0bf2020b3ba590"
+    },
+    {
+      "task": "extraction_failure",
+      "arm": "after",
+      "repetition": 2,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "inputTokens": 667183,
+      "cachedInputTokens": 605696,
+      "outputTokens": 3674,
+      "reasoningOutputTokens": 1210,
+      "totalTokens": 670857,
+      "finalInputTokens": 64730,
+      "wallMs": 99027,
+      "mcpCalls": 3,
+      "shellCalls": 11,
+      "uncachedInputTokens": 61487,
+      "rawReviewStatus": "pending-manual-review",
+      "manualReview": "eligible after source, nested-call and contamination review",
+      "grade": {
+        "score": 3,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [
+          "Does not explicitly state that no regression injects the exact Pass-2 edge-extraction failure; its regression citations cover later persistence failure and an unreadable source, not the exact Pass-2 case."
+        ],
+        "citationValidity": "sufficient for score 3: cites pipeline, refresh, MCP error conversion, freshness, and scoped atomicity tests.",
+        "notes": "Correctly keeps hard extraction failure separate from successful partial freshness."
+      },
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "incomplete",
+            "detail": "context",
+            "limit": 10,
+            "context_limit": 3
+          },
+          "resultsLength": 0,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "relationship",
+            "detail": "context",
+            "limit": 10,
+            "context_limit": 3
+          },
+          "resultsLength": 10,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "parse",
+            "detail": "context",
+            "limit": 10,
+            "context_limit": 3
+          },
+          "resultsLength": 10,
+          "isError": false
+        }
+      ],
+      "artifacts": {
+        "stdout.jsonl": {
+          "sha256": "0a75180e93b9301749558ac8c09b0be138dd5d4b1abfb01d30a3e3011f590d46"
+        },
+        "answer.md": {
+          "sha256": "9a5504c8dd1e1d58ea113a4be7e63f1d8ee1fae8b81e6d13964a66f4b352d583"
+        },
+        "metrics.json": {
+          "sha256": "981e970b6eab51613cbae04aafe3f497d46eb59d70060dbf296168547df7bb37"
+        },
+        "transcript-tools.json": {
+          "sha256": "499adbed21db899ed6dd1187b984b0af14ee00f2551803375f56ee07dbce1a14"
+        },
+        "request.json": {
+          "sha256": "548458d03de882bfdda263a62dc4efbc4bbcca4c05a0ec44f8f13f9e724b5032"
+        },
+        "timing.json": {
+          "sha256": "5b8b138ec0d3acec6b09259732f921733883d517065fed5bae19fae1f60750ef"
+        }
+      },
+      "rolloutSha256": "ce2f54bd162624bb861e28712767839a61df68751929e7beb4523040c3cbbee4"
+    },
+    {
+      "task": "extraction_failure",
+      "arm": "before",
+      "repetition": 1,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "inputTokens": 720569,
+      "cachedInputTokens": 656384,
+      "outputTokens": 3495,
+      "reasoningOutputTokens": 1155,
+      "totalTokens": 724064,
+      "finalInputTokens": 66152,
+      "wallMs": 100204,
+      "mcpCalls": 6,
+      "shellCalls": 12,
+      "uncachedInputTokens": 64185,
+      "rawReviewStatus": "pending-manual-review",
+      "manualReview": "eligible after source, nested-call and contamination review",
+      "grade": {
+        "score": 3,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [
+          "Does not explicitly state that no regression injects the exact Pass-2 edge-extraction failure; cited source-gap coverage is a separate recoverable unreadable-source case."
+        ],
+        "citationValidity": "sufficient for score 3: Pass-2 pipeline, refresh/MCP failure, freshness, and atomicity sources are cited. The source-gap citation must not be read as direct Pass-2 coverage.",
+        "notes": "Correctly distinguishes hard Pass-2 request failure from successful partial freshness and correctly preserves the old snapshot."
+      },
+      "mcp": [
+        {
+          "tool": "map",
+          "arguments": {},
+          "resultsLength": null,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "relationship extraction",
+            "detail": "facts",
+            "limit": 20,
+            "scope": "all"
+          },
+          "resultsLength": 0,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "index incomplete",
+            "detail": "facts",
+            "limit": 20,
+            "scope": "all"
+          },
+          "resultsLength": 0,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "parse succeeds",
+            "detail": "facts",
+            "limit": 20,
+            "scope": "all"
+          },
+          "resultsLength": 1,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "extract failed",
+            "detail": "facts",
+            "limit": 20,
+            "scope": "all"
+          },
+          "resultsLength": 15,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "incomplete",
+            "detail": "facts",
+            "limit": 20,
+            "scope": "all"
+          },
+          "resultsLength": 0,
+          "isError": false
+        }
+      ],
+      "artifacts": {
+        "stdout.jsonl": {
+          "sha256": "20bb31ed3758b055590f76e664b880173a239785de0a6f40bd25880668bf90f1"
+        },
+        "answer.md": {
+          "sha256": "554b8914eb98acca399c8a6b25137f47f97360d6712a5f843c6607acb9aa6e6c"
+        },
+        "metrics.json": {
+          "sha256": "bcfa1a1a0ecaf4b6e6991107ddd1ee0fde31c3cc1aadb5fc66a0bcc063ce0d56"
+        },
+        "transcript-tools.json": {
+          "sha256": "da33d86a3dfb9c5efa2cc64e130cc3fec6be2c7635fa5b59ac4cf85aaa832d34"
+        },
+        "request.json": {
+          "sha256": "60af4bb4583f46c291a72d150ac288ee8c8d252d54159fd492fe1283b4667da9"
+        },
+        "timing.json": {
+          "sha256": "6c7dd1ffb8c1848b6bf08aaac808a74ec75eb6bcac0b0fbfe177031eba4446cc"
+        }
+      },
+      "rolloutSha256": "ac8f692c7115db6fc7b97c5342f3851fb6a2758ed655ebe23a47105486e1411b"
+    },
+    {
+      "task": "extraction_failure",
+      "arm": "before",
+      "repetition": 2,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "inputTokens": 490958,
+      "cachedInputTokens": 434432,
+      "outputTokens": 3162,
+      "reasoningOutputTokens": 1235,
+      "totalTokens": 494120,
+      "finalInputTokens": 62807,
+      "wallMs": 83565,
+      "mcpCalls": 4,
+      "shellCalls": 7,
+      "uncachedInputTokens": 56526,
+      "rawReviewStatus": "pending-manual-review",
+      "manualReview": "eligible after source, nested-call and contamination review",
+      "grade": {
+        "score": 3,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [
+          "Does not explicitly state that no regression injects the exact Pass-2 edge-extraction failure; the cited source-gap test is a separate unreadable-file skip."
+        ],
+        "citationValidity": "sufficient for score 3: cites the Pass-2 abort, service/MCP error boundary, freshness, and atomicity coverage.",
+        "notes": "Correctly states a failed tool result rather than partial freshness and keeps old facts intact."
+      },
+      "mcp": [
+        {
+          "tool": "map",
+          "arguments": {},
+          "resultsLength": null,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "relationship extraction",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 0,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "parse failed incomplete index",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 0,
+          "isError": false
+        },
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "freshness",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 10,
+          "isError": false
+        }
+      ],
+      "artifacts": {
+        "stdout.jsonl": {
+          "sha256": "7d108238c9db9375c635c91ed8c64a083ee4f45e5b573165dc645d5c461b393f"
+        },
+        "answer.md": {
+          "sha256": "43349070bfa29d80f95cac2692059b8d0d3033b498cf933ba497e4a42d97fd04"
+        },
+        "metrics.json": {
+          "sha256": "bd2d6c0157e18b3939088dfb87f29a8edc8274741185a35c1b85bd9e77a643bf"
+        },
+        "transcript-tools.json": {
+          "sha256": "eac8b5ee1207b9377c416ec898a8e1d94dc2ead809bb981b3eae0be7219cb3ef"
+        },
+        "request.json": {
+          "sha256": "1875e4a85ea65fbc2f57f0c8c55d8354a50307768d9eb08fae4de68dadd67aae"
+        },
+        "timing.json": {
+          "sha256": "c81d9f699c12ee5869c2a9ba42bde936c03e8251584c13ca1a964d894c42b255"
+        }
+      },
+      "rolloutSha256": "a4b3434ed0aef612ee709c13a1246a9a33b15b8db014b2eeb44be047de76c3b3"
+    },
+    {
+      "task": "provider_contract",
+      "arm": "after",
+      "repetition": 1,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "inputTokens": 274506,
+      "cachedInputTokens": 199680,
+      "outputTokens": 2093,
+      "reasoningOutputTokens": 578,
+      "totalTokens": 276599,
+      "finalInputTokens": 51541,
+      "wallMs": 56911,
+      "mcpCalls": 1,
+      "shellCalls": 4,
+      "uncachedInputTokens": 74826,
+      "rawReviewStatus": "pending-manual-review",
+      "manualReview": "eligible after source, nested-call and contamination review",
+      "grade": {
+        "score": 3,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [
+          "Omits the session-history provider-selection boundary based on SessionRef.provider.",
+          "Omits the session-list-stats consumer fallback for a thrown accessor."
+        ],
+        "citationValidity": "sufficient for score 3: valid snapshot-relative interface, runtime, route, registry, and server citations remain despite one malformed Markdown link.",
+        "notes": "Correctly distinguishes missing accessor from a thrown implementation and identifies URL/providerMap selection."
+      },
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "ProviderAdapter",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 10,
+          "isError": false
+        }
+      ],
+      "artifacts": {
+        "stdout.jsonl": {
+          "sha256": "50702187042fa1b246d3644eca676a417a64febdfeb1f7839930cd889dfbb40f"
+        },
+        "answer.md": {
+          "sha256": "53d3edd3c3fc19e879329151b762be2a4cec723719f82ba33617c089493e34a3"
+        },
+        "metrics.json": {
+          "sha256": "f63acadcad58659ba60f3394df306501c81ac454016f8534de09e5044dcf4ba2"
+        },
+        "transcript-tools.json": {
+          "sha256": "e31c2fffacc82579ca2bfe590a2effebbd802f5ecdb2f0c9d0415c41217a03ec"
+        },
+        "request.json": {
+          "sha256": "dd1de2e26e71cd68c6b186cc2434d295fbc1d94c61d7cd7b671572c96e77cd07"
+        },
+        "timing.json": {
+          "sha256": "7360a1b9527c1e290784bf4f3caee31e31c73f6cc505d8aefcf2cdbad3d74641"
+        }
+      },
+      "rolloutSha256": "d656dcd54d0a177d84436ebcc5e92ca5f8d0db5304d64f37d3a6acfc63fba768"
+    },
+    {
+      "task": "provider_contract",
+      "arm": "after",
+      "repetition": 2,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "inputTokens": 262982,
+      "cachedInputTokens": 213248,
+      "outputTokens": 1716,
+      "reasoningOutputTokens": 579,
+      "totalTokens": 264698,
+      "finalInputTokens": 52640,
+      "wallMs": 47424,
+      "mcpCalls": 1,
+      "shellCalls": 4,
+      "uncachedInputTokens": 49734,
+      "rawReviewStatus": "pending-manual-review",
+      "manualReview": "eligible after source, nested-call and contamination review",
+      "grade": {
+        "score": 3,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [
+          "Omits the session-history provider-selection boundary and session-list-stats fallback consumer."
+        ],
+        "citationValidity": "sufficient for score 3: interface, runtime, route, registry, and server citations support the central requested facets.",
+        "notes": "Correct optional/null contract, runtime propagation, contextual 500 consumer handling, and detected-provider route selection."
+      },
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "ProviderAdapter",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 10,
+          "isError": false
+        }
+      ],
+      "artifacts": {
+        "stdout.jsonl": {
+          "sha256": "b20ef6a643d9dc656ddf2c76b271b27f228c588c4563dcc87d3b6d20ed2ae566"
+        },
+        "answer.md": {
+          "sha256": "a578e316cd1e919842a181175fb01626b7653c103700e8f000519ca60015c26a"
+        },
+        "metrics.json": {
+          "sha256": "46fa1ec5c44e89756996918ec4c1e9c5b4b0a834386abc2dfcbc2955b58bc374"
+        },
+        "transcript-tools.json": {
+          "sha256": "51efeebe4d210fe4ce91a145464c9e9d86ce814dfe7c649636039faa6591778c"
+        },
+        "request.json": {
+          "sha256": "1cf8b343ce6acec9e685d2bdb0cbf102c11a44cc3b44b77d2a24b0c8ad7d1f6a"
+        },
+        "timing.json": {
+          "sha256": "b2cc12975922c0c6c3692280f66a409a5a072f4c696e86ca67df50208e8370f6"
+        }
+      },
+      "rolloutSha256": "fcff2ff5e6e50bdc171f837c724fdbac8c6ea0c44ba41858c34a31669113459b"
+    },
+    {
+      "task": "provider_contract",
+      "arm": "before",
+      "repetition": 1,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "inputTokens": 444041,
+      "cachedInputTokens": 375552,
+      "outputTokens": 2140,
+      "reasoningOutputTokens": 498,
+      "totalTokens": 446181,
+      "finalInputTokens": 70477,
+      "wallMs": 61842,
+      "mcpCalls": 5,
+      "shellCalls": 5,
+      "uncachedInputTokens": 68489,
+      "rawReviewStatus": "pending-manual-review",
+      "manualReview": "eligible after source, nested-call and contamination review",
+      "grade": {
+        "score": 3,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [
+          "Omits the session-history provider-selection boundary based on SessionRef.provider.",
+          "Omits the session-list-stats consumer behavior for thrown accessor errors."
+        ],
+        "citationValidity": "sufficient for score 3: interface, runtime, route consumer, registry, and server selection citations support the stated behavior.",
+        "notes": "Correct about optional/null accessor, missing versus thrown behavior, and detected-provider server routing."
+      },
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "ProviderAdapter",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 10,
+          "isError": false
+        },
+        {
+          "tool": "expand",
+          "arguments": {
+            "symbol": "function:src/protocol-runtime.ts:getRuntimeProtocol:89",
+            "file_path": "src/protocol-runtime.ts",
+            "limit": 20
+          },
+          "resultsLength": null,
+          "isError": false
+        },
+        {
+          "tool": "expand",
+          "arguments": {
+            "symbol": "function:src/protocol-runtime.ts:getRuntimeProtocolV3:138",
+            "file_path": "src/protocol-runtime.ts",
+            "limit": 20
+          },
+          "resultsLength": null,
+          "isError": false
+        },
+        {
+          "tool": "expand",
+          "arguments": {
+            "symbol": "function:src/routes/sessions.ts:registerSessions:22",
+            "file_path": "src/routes/sessions.ts",
+            "limit": 20
+          },
+          "resultsLength": null,
+          "isError": false
+        },
+        {
+          "tool": "expand",
+          "arguments": {
+            "symbol": "variable:src/providers/index.ts:ALL_PROVIDERS:11",
+            "file_path": "src/providers/index.ts",
+            "limit": 20
+          },
+          "resultsLength": null,
+          "isError": false
+        }
+      ],
+      "artifacts": {
+        "stdout.jsonl": {
+          "sha256": "33e1e1b33baa323015925c08046a5ea366b7127e96f4dcdffc699c0ee69aad7e"
+        },
+        "answer.md": {
+          "sha256": "3673f2631088affb780a6d127102ba7c1bbbf45b3d7c384ab870795b4d25181d"
+        },
+        "metrics.json": {
+          "sha256": "0457e91d5da800066db0c3e6d96a886a51a138163673e1a496d7bc8f74875bbe"
+        },
+        "transcript-tools.json": {
+          "sha256": "ad9d674383f85e6eaa803d7d221519735c31a061f28254450877da464b2226c3"
+        },
+        "request.json": {
+          "sha256": "045a57fa365cfea086df841297e3f8beb1e4916186a53f7b895f0062b8bc1bc4"
+        },
+        "timing.json": {
+          "sha256": "d4f25e745e2d819a392ee5ecc06f83e876d30d533f15f5f2015578c0fcfa3c46"
+        }
+      },
+      "rolloutSha256": "08c87bbff330f4625dcf5e3815749293464a9b02fb4a045d02c212366cc55868"
+    },
+    {
+      "task": "provider_contract",
+      "arm": "before",
+      "repetition": 2,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "inputTokens": 539574,
+      "cachedInputTokens": 480512,
+      "outputTokens": 2573,
+      "reasoningOutputTokens": 511,
+      "totalTokens": 542147,
+      "finalInputTokens": 62887,
+      "wallMs": 75685,
+      "mcpCalls": 4,
+      "shellCalls": 7,
+      "uncachedInputTokens": 59062,
+      "rawReviewStatus": "pending-manual-review",
+      "manualReview": "eligible after source, nested-call and contamination review",
+      "grade": {
+        "score": 3,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [
+          "States the v2 accessor must return a finalized protocol, but runtime source explicitly finalizes an unfinalized SessionProtocol.",
+          "Omits the session-history provider-selection boundary and session-list-stats fallback."
+        ],
+        "citationValidity": "sufficient for score 3: interface, runtime, route, registry, and server citations substantiate the central answer.",
+        "notes": "Central optional/null, unavailable, thrown, and routing behavior is correct; the finalized-only contract overstates the interface."
+      },
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "ProviderAdapter",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 10,
+          "isError": false
+        },
+        {
+          "tool": "expand",
+          "arguments": {
+            "symbol": "getRuntimeProtocol",
+            "file_path": "src/protocol-runtime.ts",
+            "limit": 20
+          },
+          "resultsLength": null,
+          "isError": false
+        },
+        {
+          "tool": "expand",
+          "arguments": {
+            "symbol": "getRuntimeProtocolV3",
+            "file_path": "src/protocol-runtime.ts",
+            "limit": 20
+          },
+          "resultsLength": null,
+          "isError": false
+        },
+        {
+          "tool": "expand",
+          "arguments": {
+            "symbol": "supportsSessionProtocol",
+            "file_path": "src/providers/kinds.ts",
+            "limit": 10
+          },
+          "resultsLength": null,
+          "isError": false
+        }
+      ],
+      "artifacts": {
+        "stdout.jsonl": {
+          "sha256": "12b090758cb452a93bb224e616efe5301c724191c6f9888821615ae71794cd0c"
+        },
+        "answer.md": {
+          "sha256": "b0589eda3e278565d47ce7f9d3c9e5f9f49f4606560e78a3aab5aea02530f2a3"
+        },
+        "metrics.json": {
+          "sha256": "c5254493292cc9230b3f4e910ae1a0812c286f3a0f872e34446d2c67853d4997"
+        },
+        "transcript-tools.json": {
+          "sha256": "891c31ce549c22b5ee110f66031bea4459fdafe3a02c13adf0a2ca746cdb92bb"
+        },
+        "request.json": {
+          "sha256": "7ab9f24b238e328f04331b54fb4e397ec97ee34d47e0f5f60263b3130ba901a4"
+        },
+        "timing.json": {
+          "sha256": "c805775247bf67add3866f2d24cbf583e23384c5aa1445a54e70cdc36f035014"
+        }
+      },
+      "rolloutSha256": "8fc465782c4bc6393d277552f7cee7da4b4bc3ab1c738ca5019f88dc1ad68095"
+    },
+    {
+      "task": "transaction",
+      "arm": "after",
+      "repetition": 1,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "inputTokens": 188827,
+      "cachedInputTokens": 160256,
+      "outputTokens": 1486,
+      "reasoningOutputTokens": 443,
+      "totalTokens": 190313,
+      "finalInputTokens": 38971,
+      "wallMs": 42771,
+      "mcpCalls": 1,
+      "shellCalls": 3,
+      "uncachedInputTokens": 28571,
+      "rawReviewStatus": "pending-manual-review",
+      "manualReview": "eligible after source, nested-call and contamination review",
+      "grade": {
+        "score": 4,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [],
+        "citationValidity": "sufficient: implementation and regression citations cover all requested behavior; one malformed absolute Markdown link is nonessential because valid snapshot-relative citations remain.",
+        "notes": "Correctly identifies direct nested execution, outer responsibility, commit/error behavior, and rollback coverage."
+      },
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "with_transaction",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 8,
+          "isError": false
+        }
+      ],
+      "artifacts": {
+        "stdout.jsonl": {
+          "sha256": "2a62e999865ff1c3cb0b1f769eb950fcd20717f46cb425621345cf0fa3915ef3"
+        },
+        "answer.md": {
+          "sha256": "54afdeecd67d5eeb1ca90d586f71996278efb3b1c036fa34c1d136241c0e6a0c"
+        },
+        "metrics.json": {
+          "sha256": "d307e8975adcddd8e33fed19ec90d46531659432d741fc7d1b5bd25bb89ee042"
+        },
+        "transcript-tools.json": {
+          "sha256": "a8b04512ac80e494fb63e4842722f564d168ce815c9df4a26652d2aac6b1e4a7"
+        },
+        "request.json": {
+          "sha256": "0c921126a60666680b6d7e13f76a953372af292b5f583e52e37648f0d341169e"
+        },
+        "timing.json": {
+          "sha256": "a1da88572e06f308f9f50ac6aced7f792de79beac7c78bcd677c2b38afd5c555"
+        }
+      },
+      "rolloutSha256": "76d95b2a597067aff8c18c7878ed2228e0648c429c5b2496692161545b7ec3ec"
+    },
+    {
+      "task": "transaction",
+      "arm": "after",
+      "repetition": 2,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "inputTokens": 108839,
+      "cachedInputTokens": 78848,
+      "outputTokens": 1021,
+      "reasoningOutputTokens": 350,
+      "totalTokens": 109860,
+      "finalInputTokens": 37718,
+      "wallMs": 28716,
+      "mcpCalls": 1,
+      "shellCalls": 1,
+      "uncachedInputTokens": 29991,
+      "rawReviewStatus": "pending-manual-review",
+      "manualReview": "eligible after source, nested-call and contamination review",
+      "grade": {
+        "score": 4,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [],
+        "citationValidity": "sufficient: implementation and regression citations cover success/error and nested behavior.",
+        "notes": "Correctly states no nested transaction, independent commit, or independent rollback."
+      },
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "with_transaction",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 8,
+          "isError": false
+        }
+      ],
+      "artifacts": {
+        "stdout.jsonl": {
+          "sha256": "5ff7d119493887e1a0eff66d0f02972e0e46e6820edaeadd6178d38a1c157316"
+        },
+        "answer.md": {
+          "sha256": "a9b8cbb2f235e8b168c3550a3a0c056f9b81cd5db8038f471581b544066114a7"
+        },
+        "metrics.json": {
+          "sha256": "56b257282e6aab3dfbf72bffe343430f6d0205daf3815aa7ab59aee4d02b92a5"
+        },
+        "transcript-tools.json": {
+          "sha256": "abe3d4c05f066eaf5b0dba808ec28ca5388cc0e8cad06615133a1a7f6aa4998c"
+        },
+        "request.json": {
+          "sha256": "22aa940a6e4bfb17db37d64cb80dfc4d567cc611172b06fce35c606ece3b9523"
+        },
+        "timing.json": {
+          "sha256": "f6644f08ace23c65ffcfca1f1820f3854ec9047b578391e78bed8699b87a51db"
+        }
+      },
+      "rolloutSha256": "df65a7c07f72f5a47401ccb47c48b71546c4088466b6e66b0d390e6c9427903b"
+    },
+    {
+      "task": "transaction",
+      "arm": "before",
+      "repetition": 1,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "inputTokens": 150203,
+      "cachedInputTokens": 119552,
+      "outputTokens": 1299,
+      "reasoningOutputTokens": 573,
+      "totalTokens": 151502,
+      "finalInputTokens": 40887,
+      "wallMs": 36922,
+      "mcpCalls": 1,
+      "shellCalls": 2,
+      "uncachedInputTokens": 30651,
+      "rawReviewStatus": "pending-manual-review",
+      "manualReview": "eligible after source, nested-call and contamination review",
+      "grade": {
+        "score": 4,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [],
+        "citationValidity": "sufficient: implementation and rollback regression citations are snapshot-relative and substantively cover success, error, and nested behavior.",
+        "notes": "Correctly describes outer transaction commit/drop rollback and active-transaction join; regression outcome is accurately scoped."
+      },
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "with_transaction",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 8,
+          "isError": false
+        }
+      ],
+      "artifacts": {
+        "stdout.jsonl": {
+          "sha256": "83b7ccdc55336e6ae692745a90c9b5719eba8dc777edb642304493427f8d152a"
+        },
+        "answer.md": {
+          "sha256": "01163cea87b8ae8ba22f1aa49233d4f000acbb5cd20ae98f64d449a6ee8b1719"
+        },
+        "metrics.json": {
+          "sha256": "a2a15f470bac3d4b805af51b0a691fd35ed1a43c11bab20ee38b07edb225189e"
+        },
+        "transcript-tools.json": {
+          "sha256": "726c516c31fe90244066471511b60aadebd802370300d95889da2091bb8c8841"
+        },
+        "request.json": {
+          "sha256": "66c779aeefe6d80e568262d68d86b0ae8629c86d516373ed62e269b0dda6f646"
+        },
+        "timing.json": {
+          "sha256": "218db9fd6dbb95065cc68f6f69e17df74870254a4d8ee5427e28a3bf892523d6"
+        }
+      },
+      "rolloutSha256": "59c375332afdddb9118c4862bdb9a002b5d33523dd5942f8d2076a7404f5bd93"
+    },
+    {
+      "task": "transaction",
+      "arm": "before",
+      "repetition": 2,
+      "executionCompleted": true,
+      "usageReconciled": true,
+      "inputTokens": 149842,
+      "cachedInputTokens": 126464,
+      "outputTokens": 1353,
+      "reasoningOutputTokens": 505,
+      "totalTokens": 151195,
+      "finalInputTokens": 29929,
+      "wallMs": 37369,
+      "mcpCalls": 1,
+      "shellCalls": 3,
+      "uncachedInputTokens": 23378,
+      "rawReviewStatus": "pending-manual-review",
+      "manualReview": "eligible after source, nested-call and contamination review",
+      "grade": {
+        "score": 4,
+        "pass": true,
+        "materialErrors": [],
+        "missingFacts": [],
+        "citationValidity": "sufficient: snapshot-relative implementation and regression citations cover all requested behavior.",
+        "notes": "Correctly describes autocommit boundary, unchecked transaction, rollback-by-drop, and nested-operation participation."
+      },
+      "mcp": [
+        {
+          "tool": "search",
+          "arguments": {
+            "query": "GraphStore::with_transaction",
+            "detail": "context",
+            "context_limit": 3,
+            "limit": 10
+          },
+          "resultsLength": 2,
+          "isError": false
+        }
+      ],
+      "artifacts": {
+        "stdout.jsonl": {
+          "sha256": "86a03c4666ac18f033f28f734f02252b35557b6319bb57708acc66fa06c87fc8"
+        },
+        "answer.md": {
+          "sha256": "c6e4d740b0cc83f0b12540995636c80deab0edac27232264e7888fe2c95914f2"
+        },
+        "metrics.json": {
+          "sha256": "8acef5515df3f3178fadb3018ee871b0a4dc560da76d0757cf9ab6b975263c76"
+        },
+        "transcript-tools.json": {
+          "sha256": "0b3067830b9b37ace06b0c352dda37b76edbad1c91bdbf887e6f87417c088a66"
+        },
+        "request.json": {
+          "sha256": "b9a33724a123d8b90efd8b3254e37503af1b0d916cf26a2fa8c66bbd56ca36ba"
+        },
+        "timing.json": {
+          "sha256": "49f454712a39754558b10f5cd322665eac045f640e0d0b93b9355eb6b3e11bd1"
+        }
+      },
+      "rolloutSha256": "1420f20ed37d359cd6df5e21363dd07a67235a40381072f1fe2f65cd49b64dde"
+    }
+  ],
+  "byTask": {
+    "transaction": {
+      "before": [
+        151195,
+        151502
+      ],
+      "after": [
+        109860,
+        190313
+      ],
+      "beforeMedian": 151348.5,
+      "afterMedian": 150086.5,
+      "ratioAfterToBefore": 0.991661628625325,
+      "savingsPct": 0.8338371374674969
+    },
+    "extraction_failure": {
+      "before": [
+        494120,
+        724064
+      ],
+      "after": [
+        612049,
+        670857
+      ],
+      "beforeMedian": 609092,
+      "afterMedian": 641453,
+      "ratioAfterToBefore": 1.0531299048419616,
+      "savingsPct": -5.312990484196156
+    },
+    "provider_contract": {
+      "before": [
+        446181,
+        542147
+      ],
+      "after": [
+        264698,
+        276599
+      ],
+      "beforeMedian": 494164,
+      "afterMedian": 270648.5,
+      "ratioAfterToBefore": 0.5476896334010571,
+      "savingsPct": 45.231036659894286
+    }
+  },
+  "paired": [
+    {
+      "task": "transaction",
+      "repetition": 1,
+      "beforeTotalTokens": 151502,
+      "afterTotalTokens": 190313,
+      "savingsPct": -25.617483597576275
+    },
+    {
+      "task": "transaction",
+      "repetition": 2,
+      "beforeTotalTokens": 151195,
+      "afterTotalTokens": 109860,
+      "savingsPct": 27.338867026025994
+    },
+    {
+      "task": "extraction_failure",
+      "repetition": 1,
+      "beforeTotalTokens": 724064,
+      "afterTotalTokens": 612049,
+      "savingsPct": 15.470317540990852
+    },
+    {
+      "task": "extraction_failure",
+      "repetition": 2,
+      "beforeTotalTokens": 494120,
+      "afterTotalTokens": 670857,
+      "savingsPct": -35.768032056990194
+    },
+    {
+      "task": "provider_contract",
+      "repetition": 1,
+      "beforeTotalTokens": 446181,
+      "afterTotalTokens": 276599,
+      "savingsPct": 38.007445408925975
+    },
+    {
+      "task": "provider_contract",
+      "repetition": 2,
+      "beforeTotalTokens": 542147,
+      "afterTotalTokens": 264698,
+      "savingsPct": 51.17597256832557
+    }
+  ],
+  "totals": {
+    "before": {
+      "runs": 6,
+      "correctCompletions": 6,
+      "inputTokens": 2495187,
+      "cachedInputTokens": 2192896,
+      "uncachedInputTokens": 302291,
+      "outputTokens": 14022,
+      "totalTokens": 2509209,
+      "mcpCalls": 21,
+      "shellCalls": 36,
+      "tokensPerCorrectCompletion": 418201.5
+    },
+    "after": {
+      "runs": 6,
+      "correctCompletions": 6,
+      "inputTokens": 2111431,
+      "cachedInputTokens": 1797376,
+      "uncachedInputTokens": 314055,
+      "outputTokens": 12945,
+      "totalTokens": 2124376,
+      "mcpCalls": 13,
+      "shellCalls": 31,
+      "tokensPerCorrectCompletion": 354062.6666666667
+    }
+  },
+  "totalTokenReductionPct": 15.33682527043383,
+  "uncachedInputChangePct": 3.8916143715823415,
+  "decision": {
+    "correctness": "Keep receiver uncertainty, zero-callable and stale-metadata fixes with index migration.",
+    "guidance": "Retain provisionally: provider workflow used one contextual search in both after runs instead of repeated expands, with no grade loss. Failure investigation regressed and needs separate targeted work.",
+    "efficiency": "Primary target missed. Total reduction is descriptive of this fixed workload; no universal or billing savings claim."
+  },
+  "limitations": [
+    "Three navigation questions, two repositories, two repetitions per arm; no statistical stability or cross-tool ranking.",
+    "Paired token changes range from a 35.77% increase to a 51.18% reduction.",
+    "Resolver and description changes were evaluated together; no individual causal attribution.",
+    "Grader blind to efficiency, with arm labels visible; scores 3/4 retain secondary omissions.",
+    "Only warm single-turn navigation; no edit-and-test, cold setup, multi-turn or adoption measurement.",
+    "Two agents overlap within each pair; wall time is descriptive.",
+    "Uncached input increased; actual billing is unknown.",
+    "Raw transcripts remain local; portable artifact includes hashes, queries, usage and grades rather than private paths or source-bearing logs."
+  ]
+}

@@ -5,6 +5,9 @@ repository, storage, CPU, operating system, and filesystem cache state. This
 repository ships a reproducible development-only runner for the metrics in the
 v1 contract; it is not part of the deployed MCP binary.
 
+For agent task correctness, token efficiency, cross-tool comparisons, and
+continued-investment criteria, use the [product evaluation scorecard](EVALUATION.md).
+
 ## Run the benchmark
 
 Build the server, then point the runner at the release binary and a repository.

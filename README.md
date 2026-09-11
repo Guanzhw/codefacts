@@ -57,7 +57,7 @@ Version 1 deliberately exposes exactly five read-only tools:
 | `map` | Repository structure, explicit language file/symbol counts, deferred LSP-provider status, and bounded unresolved-reference evidence. |
 | `search` | Indexed symbols, endpoints, and Markdown documentation headings through FTS; optionally narrow by kind, path prefix, or local-detail scope, or request bounded context for the highest-ranked candidates, and continue on one snapshot. |
 | `outline` | Symbols or headings in one file, with optional kind/local-detail filtering and snapshot-bound continuation. |
-| `expand` | One definition with a verified bounded source excerpt, plus static callers, candidate polymorphic callees, references, related tests, Markdown section text, and optional semantic references. |
+| `expand` | One definition with a verified bounded source excerpt, plus callers, callees with explicit confidence, references, related tests, Markdown section text, and optional semantic references. |
 | `path` | A shortest bounded static calls path between confirmed symbols, with optional endpoint file-path disambiguation. |
 
 Every result is bounded, includes file/line/hash evidence, and refreshes the incremental index before answering. Its `freshness` object includes the canonical `repository_root` and fact-store `generation`, so a caller can verify that the facts belong to the intended project. `freshness.status` is `partial` when a source file could not be read, parsed, extracted, or accepted because it exceeded the indexing limit; the accompanying `files_failed` and reason counters make that gap explicit. Successful MCP results keep a compact serialized JSON `TextContent` for older clients and carry the equivalent object in `structuredContent`. A `no_static_path` result never claims that runtime execution is unreachable.
@@ -97,13 +97,22 @@ For a successful path, `relationships[i].evidence` is the confirmed static
 call from `path[i]` to `path[i + 1]`; endpoint facts are represented only once
 in `path`.
 
+Start with `search` when a symbol or code term is already known; use `map` when
+the task needs a repository overview. FTS query words are prefix matches joined
+by AND, so use short code terms rather than full questions. If no facts match,
+shorten to one distinctive term or use ordinary text search to discover an
+identifier. Request `detail: "context"` when the definition and its direct
+relationships are needed together.
+
 `map.unresolved_references` reports the count plus at most 20 source-backed
 unresolved import/reference samples. It describes a static-analysis gap; it
 does not establish that a target is absent at runtime.
 
 `expand` always includes the same verified, 4 KiB-bounded definition excerpt
-for its single resolved symbol. Its relationship facts remain static; semantic
-references retain their separate availability/status contract.
+for its single resolved symbol. Check each relationship's confidence: receiver
+calls without type binding remain heuristic candidates, including when only one
+same-named definition exists. Semantic references retain their separate
+availability/status contract.
 
 `map.files_with_facts` is the number of indexed files that currently own at
 least one fact, while `map.indexed_files` is every successfully parsed,
@@ -375,10 +384,11 @@ Endpoint facts use AST call/annotation nodes for conservative known routing rece
 
 NodeNext runtime specifiers such as `import "./config.js"` resolve to indexed
 TypeScript sources (`.ts`, `.tsx`, or `.d.ts`) when the exact JavaScript file
-is absent. Receiver dispatch with multiple matching methods is returned as a
-bounded `heuristic` relationship with `resolution: "polymorphic"`; it is
-visible in `expand` but deliberately excluded from `path`, which only follows
-confirmed static calls. Rust test facts include source-derived `#[test]` and
+is absent. Receiver dispatch without a type binding is returned as a bounded
+`heuristic` relationship: `resolution: "unresolved_receiver"` for one matching
+callable and `"polymorphic"` for multiple candidates. These candidates are visible
+in `expand` and excluded from `path`, which only follows confirmed static calls.
+Rust test facts include source-derived `#[test]` and
 framework attributes such as `#[tokio::test]`, as well as functions under
 `mod tests`.
 
