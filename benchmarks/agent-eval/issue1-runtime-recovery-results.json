@@ -1,0 +1,485 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-09-13",
+  "condition": "guided-warm-real-issue-triage-complete-runtime",
+  "purpose": "Separate runtime recovery campaign; one real read-only diagnosis, no sample replacement.",
+  "agent": {
+    "cli": "Codex 0.154.0-alpha.6.2",
+    "model": "gpt-5.6-luna",
+    "reasoningEffort": "medium",
+    "platform": "Windows"
+  },
+  "sourceRevisions": {
+    "opensession": "994942690fe5d1854398017026ef3615b2fdd24f"
+  },
+  "tools": {
+    "codefacts": {
+      "sourceCommit": "5a88820",
+      "binarySha256": "f43e6fd9a5d556e6ac7890a8a6840f04acb1216aab5f051b4dc1d862ff312386",
+      "surface": [
+        "map",
+        "search",
+        "outline",
+        "expand",
+        "path"
+      ]
+    },
+    "codegraph": {
+      "package": "@colbymchenry/codegraph",
+      "version": "1.6.0",
+      "surface": [
+        "codegraph_explore"
+      ]
+    }
+  },
+  "freeze": {
+    "protocolCommit": "3b82085e0b234a0bd4a5b08426184846fe0bbc9b",
+    "receiptSha256": "7f10ca9f5a3746ac2cdec17f500029c2c141c3543fc4596b21d0d201f921f90d",
+    "artifactCount": 1139,
+    "checks": [
+      {
+        "stage": "before-formal-baseline",
+        "passed": true,
+        "at": "2026-09-13T11:38:09.331291+00:00"
+      },
+      {
+        "stage": "before-formal-codefacts",
+        "passed": true,
+        "at": "2026-09-13T11:40:31.619767+00:00"
+      },
+      {
+        "stage": "before-formal-codegraph",
+        "passed": true,
+        "at": "2026-09-13T11:42:41.971680+00:00"
+      },
+      {
+        "stage": "after-formal-final",
+        "passed": true,
+        "at": "2026-09-13T11:45:25.727867+00:00"
+      }
+    ],
+    "protocolSha256": "019ae6292260436d0fd4812a6488315ca9eb138680c7b617c3eb9d2b09e8f05d",
+    "rubricSha256": "e0c2719d02b16b05df4b1003f94587d24e4908634bdc7125d77a7fb382a892d3",
+    "gradesSha256": "f0ccff7a0b4eb172c4de8f09a58b6502cf03b26be3f432f29b5cc64028b2997b",
+    "formalAuditSha256": "165427f2200e7a109b63c661f88f644ccd09aac576cfa07601c7f7b297d53bc1",
+    "sourceAuditSha256": "f5ff3269cb9b5d673bb34a50303775d51c0aa4dec4b721e98a4c25a536b406a3"
+  },
+  "tasks": [
+    {
+      "id": "issue1-triage",
+      "prompt": "A repository issue reported empty searches for `analysis lifecycle snapshot evidence validator manifest launch` and `ProviderAdapter interface detection capabilities resumeCommand` in an older AgentSession checkout. Triage that report against this pinned OpenSession checkout: determine whether the described code areas are present, locate the provider contract for detection, capabilities and resume-command behavior, and recommend what a maintainer should verify before changing retrieval behavior. Support your conclusion with current source and relevant repository migration records. Distinguish code declarations from mentions in documentation; do not infer a tool's performance or an implementation defect from an empty query alone.",
+      "repository": "opensession"
+    }
+  ],
+  "snapshotAudit": {
+    "filesPerRoot": 307,
+    "bytesPerRoot": 6561961,
+    "archiveSha256": "fd35c8a9127711a0d8ab08c5e0ea1eaf7e75df78500c43ad15392ae8e9e8be16",
+    "changedFiles": [],
+    "codegraphGeneratedExceptions": [
+      ".codegraph/.gitignore",
+      ".codegraph/codegraph.db",
+      ".codegraph/codegraph.db-shm",
+      ".codegraph/codegraph.db-wal"
+    ]
+  },
+  "runs": [
+    {
+      "task": "issue1-triage",
+      "arm": "baseline",
+      "repetition": 1,
+      "usage": {
+        "input_tokens": 494061,
+        "cached_input_tokens": 414208,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3390,
+        "reasoning_output_tokens": 751
+      },
+      "totalTokens": 497451,
+      "wallMs": 107514,
+      "mcpCalls": 0,
+      "shellCalls": 8,
+      "outputVolume": {
+        "command": {
+          "calls": 8,
+          "outputBytes": 249733,
+          "outputChars": 246999
+        },
+        "mcp": {
+          "calls": 0,
+          "outputBytes": 0,
+          "outputChars": 0
+        }
+      },
+      "finalContextInputTokens": 80442,
+      "grade": {
+        "opaqueId": "16640ba46a3c82a6",
+        "criteria": {
+          "A": 1,
+          "B": 0,
+          "C": 1,
+          "D": 0
+        },
+        "rawScore": 2,
+        "pass": false,
+        "reasons": {
+          "A": "Correctly identifies the retired Session Analysis surface and cites S6.",
+          "B": "Correctly names ProviderAdapter, required detect(), and optional resume behavior, but omits that capabilities is optional; the required contract distinction is incomplete.",
+          "C": "S6 and ProviderAdapter are accurate, line-located support for material findings.",
+          "D": "It recommends checkout and scope checks before changing retrieval, but does not require recovery of the original revision or a reproducer against a currently present target."
+        },
+        "citations": [
+          "docs/specs/runtime-protocol-workbench/tasks.md:99-107",
+          "src/providers/interface.ts:123-176"
+        ],
+        "materialUnsupportedClaims": [],
+        "score": 2
+      },
+      "manualReview": {
+        "environmentValid": true,
+        "usageReconciled": true,
+        "contaminationObserved": false,
+        "method": "Parent inspected every actual nested call input, direct completions, startup/blocked flags and stderr; all source access remained in the assigned snapshot. Source equality and frozen artifacts separately verified.",
+        "notes": [
+          "One rg command referenced nonexistent src/providers/registry.ts; returned source matches alongside the missing-file error.",
+          "One stderr policy_denied warning has unknown path; no requested source read was blocked in retained call results.",
+          "Repository .agents/decisions contains relevant migration records; no user config or evaluation artifacts read."
+        ]
+      },
+      "rawStatus": "pending-manual-review",
+      "rawEvaluationValidity": "valid",
+      "evidence": {
+        "request_jsonSha256": "1947b17e4dae9b5b32e176b57a859216b8a05d01f169818dfef2b1e83cdb6ccf",
+        "stdout_jsonlSha256": "33ce6b2ca346145dcf47f5730d3d59310bbecdf7bf6ca02542f6dfdc400385d3",
+        "stderrSha256": "1e866242f4bca64e7280b0c9ab8260855b35b8001a5a70d0925b7bed50c17bd6",
+        "answer_mdSha256": "e5e3758818265145390ffe311bbbb7d66d083da396bf58c5e08f68515f75cb39",
+        "metrics_jsonSha256": "6acf9a8ea492b2f66f936742f9788dc9660036c4d5651769da515d5f3192e4b5",
+        "timing_jsonSha256": "0c8814281ff93e280cc2da5f7794963d409688bea9b9ff7602d32475231119a7",
+        "transcript-tools_jsonSha256": "91f932807354405562fe9ff51c17b4c7ed57da12ab1b318e19b0f54cb6a08dc2",
+        "rolloutSha256": "a0263add6433a63c5539309c30de24a019ab845804b587160384f60328167e81"
+      }
+    },
+    {
+      "task": "issue1-triage",
+      "arm": "codefacts",
+      "repetition": 1,
+      "usage": {
+        "input_tokens": 420303,
+        "cached_input_tokens": 366080,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3331,
+        "reasoning_output_tokens": 809
+      },
+      "totalTokens": 423634,
+      "wallMs": 98432,
+      "mcpCalls": 2,
+      "shellCalls": 6,
+      "outputVolume": {
+        "command": {
+          "calls": 6,
+          "outputBytes": 86260,
+          "outputChars": 84840
+        },
+        "mcp": {
+          "calls": 2,
+          "outputBytes": 37060,
+          "outputChars": 37060
+        }
+      },
+      "finalContextInputTokens": 58250,
+      "grade": {
+        "opaqueId": "b5e12ea6a0125307",
+        "criteria": {
+          "A": 1,
+          "B": 0,
+          "C": 1,
+          "D": 0
+        },
+        "rawScore": 2,
+        "pass": false,
+        "reasons": {
+          "A": "Correctly ties the absence of the old analysis area to completed S6 removal work.",
+          "B": "It identifies ProviderAdapter and the relevant fields, but does not say that capabilities and resumeCommand are optional, nor explain that providers need not share identical capability/resume behavior.",
+          "C": "S6 and the ProviderAdapter line references are accurate material source support.",
+          "D": "It recommends general checkout and history checks, but does not request the original revision or a present-target reproducer before changing search."
+        },
+        "citations": [
+          "docs/specs/runtime-protocol-workbench/tasks.md:99-107",
+          "src/providers/interface.ts:123-176",
+          "src/providers/shared/session-protocol.ts:324-368"
+        ],
+        "materialUnsupportedClaims": [],
+        "score": 2
+      },
+      "manualReview": {
+        "environmentValid": true,
+        "usageReconciled": true,
+        "contaminationObserved": false,
+        "method": "Parent inspected every actual nested call input, direct completions, startup/blocked flags and stderr; all source access remained in the assigned snapshot. Source equality and frozen artifacts separately verified.",
+        "notes": [
+          "First search returned complete ProviderAdapter lines 123-176 including required/optional markers; all 21 returned source hash/context checks passed."
+        ]
+      },
+      "rawStatus": "pending-manual-review",
+      "rawEvaluationValidity": "valid",
+      "evidence": {
+        "request_jsonSha256": "b76521d5b577a88acc68f5b17badb2ac3455de4bf3757da768c44419aa321667",
+        "stdout_jsonlSha256": "6881309dcd13a9576abb888435e0a55d8be9529b8cafaca2f4fcbb2ea693104a",
+        "stderrSha256": "3beacc755d2f5f4aed71a3e5cfdb2f7f09b0f0dfd3db00ba38ab382ce3ffcefe",
+        "answer_mdSha256": "6a9ab2576d1d64b1995dde78f9bd53b0cd6293729518f9ce00677477fe37e9ed",
+        "metrics_jsonSha256": "f479bfb221a48ab3fc040b4f93bd335115149a7be3b8ad4f290d315643ae4b58",
+        "timing_jsonSha256": "0e69ac4689f3f4abbead4b96efef605e6c210bd1ff9dc2f7833548e268e0d750",
+        "transcript-tools_jsonSha256": "461b2a946bd88fa384fc25a84888e90865b8cb0e2920905e09960e9e2bdddca8",
+        "rolloutSha256": "40aeb62582d18032c1e7a78dcbb6c29935fbbfac0e947ed184c214e7b3af1161"
+      }
+    },
+    {
+      "task": "issue1-triage",
+      "arm": "codegraph",
+      "repetition": 1,
+      "usage": {
+        "input_tokens": 566906,
+        "cached_input_tokens": 503808,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3616,
+        "reasoning_output_tokens": 700
+      },
+      "totalTokens": 570522,
+      "wallMs": 112931,
+      "mcpCalls": 1,
+      "shellCalls": 9,
+      "outputVolume": {
+        "command": {
+          "calls": 9,
+          "outputBytes": 308106,
+          "outputChars": 304278
+        },
+        "mcp": {
+          "calls": 1,
+          "outputBytes": 21771,
+          "outputChars": 21745
+        }
+      },
+      "finalContextInputTokens": 65525,
+      "grade": {
+        "opaqueId": "33b438bd4764b353",
+        "criteria": {
+          "A": 1,
+          "B": 0,
+          "C": 1,
+          "D": 0
+        },
+        "rawScore": 2,
+        "pass": false,
+        "reasons": {
+          "A": "Correctly identifies removal of the dedicated Analysis subsystem from S6.",
+          "B": "It locates ProviderAdapter and detect(), but does not state that both capabilities and resumeCommand are optional contract fields or explain the resulting non-uniform provider behavior.",
+          "C": "The S6 and ProviderAdapter citations are accurate and support the central findings.",
+          "D": "It asks for checkout and query-scope verification, but does not call for the original revision or a reproducer with a target that exists in the current source."
+        },
+        "citations": [
+          "docs/specs/runtime-protocol-workbench/tasks.md:99-107",
+          "src/providers/interface.ts:123-176",
+          "src/config.ts:212-236"
+        ],
+        "materialUnsupportedClaims": [],
+        "score": 2
+      },
+      "manualReview": {
+        "environmentValid": true,
+        "usageReconciled": true,
+        "contaminationObserved": false,
+        "method": "Parent inspected every actual nested call input, direct completions, startup/blocked flags and stderr; all source access remained in the assigned snapshot. Source equality and frozen artifacts separately verified.",
+        "notes": [
+          "Model catalog refresh timed out in stderr; selected-model turn and tools completed successfully, with no structured startup error or blocked call."
+        ]
+      },
+      "rawStatus": "pending-manual-review",
+      "rawEvaluationValidity": "valid",
+      "evidence": {
+        "request_jsonSha256": "99026c40d55d49fc2b10fc43fad1698fbd46a108a827035b93732d0a027e6616",
+        "stdout_jsonlSha256": "7ba3b81c08594d14b4e7c9e5554180b698f4c73a22216275d11ac0e1b112a6a2",
+        "stderrSha256": "8922da9e8739157f9662f47816b009931edca4d4772f7d62e25c35f1f72e9b86",
+        "answer_mdSha256": "97249ec33dd63c6efac1b57c15aa568e181602a97e6a8761e75ead3bbde0d85e",
+        "metrics_jsonSha256": "21452bb13d1f77a0ec9e447ba2c24acf63edc21bd7f54dfef6949d50edf1aa24",
+        "timing_jsonSha256": "ff5a4f1278bad6d7bd63be201d6587db5931c60a3d59e79c2ab40312a3c34769",
+        "transcript-tools_jsonSha256": "2d901ed013985dfa953f668fe019071000a53d6d05a91e8b9636a7634218a7e2",
+        "rolloutSha256": "1b8d6a437e15ea68a9dd5a16159239ef00ff68a3d8ae2932b995cede55bb9ee5"
+      }
+    }
+  ],
+  "preflight": [
+    {
+      "arm": "baseline",
+      "pass": true,
+      "usage": {
+        "input_tokens": 90909,
+        "cached_input_tokens": 71680,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 519,
+        "reasoning_output_tokens": 212
+      },
+      "totalTokens": 91428,
+      "wallMs": 36798,
+      "usageReconciled": true,
+      "stdoutSha256": "d7b48a44a10beaeadabf781cbb669119ff533656967024d665f34557721627e0",
+      "metricsSha256": "89189a7ce57f2fed741eba2b3954f008de6364af1702ba1aad02eb9fb6d6ef8e"
+    },
+    {
+      "arm": "codefacts",
+      "pass": true,
+      "usage": {
+        "input_tokens": 91694,
+        "cached_input_tokens": 56320,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 643,
+        "reasoning_output_tokens": 176
+      },
+      "totalTokens": 92337,
+      "wallMs": 42927,
+      "usageReconciled": true,
+      "stdoutSha256": "54cd65071df0e7833b7b9446b56902ef7521fec61fb3730bc9275d556cc4e8d0",
+      "metricsSha256": "d57d1b26402838388a4a45790d66078c6aec696e49b50ab4ee1f3bcb9830a018"
+    },
+    {
+      "arm": "codegraph",
+      "pass": true,
+      "usage": {
+        "input_tokens": 95155,
+        "cached_input_tokens": 73728,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 573,
+        "reasoning_output_tokens": 155
+      },
+      "totalTokens": 95728,
+      "wallMs": 38934,
+      "usageReconciled": true,
+      "stdoutSha256": "6110d5a2c6b4098b0eb624e1ef60c506eb19caf8749949d89b19cd0a71545010",
+      "metricsSha256": "9fdc0f841c8a638f09c7357500501973141501729f076c0de017572742c3490c"
+    }
+  ],
+  "grading": {
+    "method": "Independent source-based anonymous grading; only snapshot-root prefixes removed, opaque filenames, no arm identities or efficiency data. Parent audited actual calls separately.",
+    "scoreEncoding": "score equals rawScore; mandatory criteria and every original pass/fail judgment are retained."
+  },
+  "execution": {
+    "formalInvocations": 3,
+    "readinessInvocations": 3,
+    "retries": 0,
+    "replacements": 0,
+    "order": [
+      "baseline",
+      "codefacts",
+      "codegraph"
+    ],
+    "timeoutMs": 180000,
+    "readinessTimeoutMs": 60000,
+    "formalTokenStopThreshold": 1500000,
+    "completedTokensBeforeLaunch": [
+      0,
+      497451,
+      921085
+    ],
+    "formalTotalTokens": 1491607,
+    "readinessTotalTokens": 279493
+  },
+  "setup": {
+    "completeInstalledRuntime": true,
+    "warmIndexes": true,
+    "newBuild": false,
+    "firstUseInstallAndIndexCost": null,
+    "inheritedSetupCampaign": "issue1-triage-2026-09-13"
+  },
+  "actualBilling": null,
+  "limitations": [
+    "One task, one repetition, fixed arm order, shared-host caching; no statistical or causal ranking.",
+    "Read-only diagnosis with warm indexes; no edit correctness, cold-start economics or adoption evidence.",
+    "Logged output bytes can precede truncation or duplicate structured/text content; they are not tokens or exact model-visible volume.",
+    "Failed answers remain in cost. Only passing pairs support efficiency claims.",
+    "This campaign does not repair or replace earlier invalid samples."
+  ],
+  "decision": {
+    "allPass": false,
+    "rawTokenReductionPct": {
+      "baseline": 14.839049474219568,
+      "codegraph": 25.74624641994524
+    },
+    "qualityGatedSavingsPct": null,
+    "codefactsToBaselineTimeRatio": 0.9155272801681641,
+    "tokenGatePass": false,
+    "timeGatePass": true,
+    "escalate": false,
+    "nextAction": "Limited maintenance; require a concrete present-target failure or a new independently sourced consumer task before another model campaign."
+  },
+  "improvementProcess": {
+    "cutoffUtc": "2026-09-13T11:51:25.423628+00:00",
+    "method": "Sum deduplicated top-level token_usage_record.payload.usage by response_id for the current parent user turn and the two engineering agent sessions. Parent total reconciles with latest turn total; readiness/formal CLI runs excluded. Cached input and reasoning output are subsets.",
+    "usage": {
+      "input_tokens": 6506789,
+      "cached_input_tokens": 6157824,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 40029,
+      "reasoning_output_tokens": 11061,
+      "uncached_input_tokens": 348965,
+      "total_tokens": 6546818
+    },
+    "sessions": [
+      {
+        "role": "parent-current-user-turn",
+        "threadId": "01a08ba7-0ca2-72b2-82a0-178d382c195f",
+        "turnId": "01a09a85-43c6-7c52-8848-3635d97728e6",
+        "records": 56,
+        "usage": {
+          "input_tokens": 5711612,
+          "cached_input_tokens": 5434368,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 33224,
+          "reasoning_output_tokens": 8997,
+          "uncached_input_tokens": 277244,
+          "total_tokens": 5744836
+        },
+        "sourcePrefixBytes": 19712946,
+        "sourcePrefixSha256": "493eb0292e61a09f640655015eef6b3fb42608349da3355bcc355d2aee5001d2",
+        "lastUsageAt": "2026-09-13T11:51:25.184Z"
+      },
+      {
+        "role": "/root/runtime_prereq_audit",
+        "threadId": "01a09a87-05f6-7243-af99-83538b7116ad",
+        "turnId": null,
+        "records": 8,
+        "usage": {
+          "input_tokens": 316577,
+          "cached_input_tokens": 289792,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 2449,
+          "reasoning_output_tokens": 347,
+          "uncached_input_tokens": 26785,
+          "total_tokens": 319026
+        },
+        "sourcePrefixBytes": 231584,
+        "sourcePrefixSha256": "46fdbce4f14269af63cbc403499e48488db69c015c4831f4cf24a2d1a94f679d",
+        "lastUsageAt": "2026-09-13T11:30:10.334Z"
+      },
+      {
+        "role": "/root/issue1_recovery_grade",
+        "threadId": "01a09a96-6226-79b2-8fa8-26b7fe55edb7",
+        "turnId": null,
+        "records": 10,
+        "usage": {
+          "input_tokens": 478600,
+          "cached_input_tokens": 433664,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 4356,
+          "reasoning_output_tokens": 1717,
+          "uncached_input_tokens": 44936,
+          "total_tokens": 482956
+        },
+        "sourcePrefixBytes": 507931,
+        "sourcePrefixSha256": "9ffdc462e231ce7ed5b9169b132a66fec639f73668c0fad15ef0722a83a0f57f",
+        "lastUsageAt": "2026-09-13T11:50:24.332Z"
+      }
+    ],
+    "excluded": "Subsequent final reporting, checks and commit; prior campaigns; evaluated CLI runs (reported separately).",
+    "actualBilling": null
+  }
+}

@@ -10,7 +10,7 @@ rules; this page owns the active queue and investment decisions.
 | Priority | Work | Evidence and completion condition | Status |
 | --- | --- | --- | --- |
 | 1 | Implement explicit member-query ranking | Native Top-1 improved 7/12 to 10/12 on earlier cases and 9/12 to 12/12 on a third repository; regression tests preserve pagination, filters and context. | Complete; retained in `5a88820`. [Results and cost](MEMBER-RANKING-IMPLEMENTATION-2026-09-13.md). |
-| 2 | Verify usefulness during real repository work | Issue #1 triage found a removed subsystem and a working present-target query. Its comparison stopped at invalid readiness; first verify the complete CLI runtime before a new protocol. | Triage and runner repair complete; efficiency evidence pending. [Results](ISSUE1-TRIAGE-RESULTS-2026-09-13.md). |
+| 2 | Verify usefulness during real repository work | The complete-runtime follow-up ran all three arms; all answers scored 2/4 and no quality-gated savings were established. CodeFacts supplied the complete contract, but the final answer omitted required distinctions. | Complete; limited maintenance retained. [Results](ISSUE1-RUNTIME-RECOVERY-2026-09-13.md). |
 | 3 | Resolve a demonstrated remaining retrieval defect | Container names can collide with document headings; explicit kind filters already exist. Require a concrete failed lookup and independent source-labeled cases before changing default ranking. | Evidence collection only. |
 | Continuous | Maintain source correctness, freshness, and installation reliability | Reproduce a reported failure, fix its owning boundary, add the smallest meaningful regression and verify the affected native/protocol/platform surface. | Triggered by failures. |
 
@@ -40,9 +40,13 @@ The issue-triage cycle also failed its environment gate: three exit-zero
 readiness runs could not start the tool host, costing 129,756 tokens; no formal
 tasks ran. Runner repair `88c5cd1` identifies that failure explicitly. Its
 14,697,083 processed engineering tokens at cutoff show that preparation overhead
-still needs control. Next verify runtime completeness locally, require actual
-source/MCP results, and stop on the first failed readiness result. Keep the
-failed campaign closed instead of replacing its samples.
+still needs control. The separately frozen complete-runtime follow-up passed
+readiness and produced three valid attempts, all failing the frozen quality
+gate. It consumed 1,491,607 formal tokens plus 279,493 readiness tokens. Its
+source audit found complete provider-contract evidence in the CodeFacts
+response, so the answer omission does not establish a ranking defect. Keep both
+campaigns closed; another model run needs a new independently sourced consumer
+task or changed failure evidence, not a prompt tweak or relaxed scoring.
 
 The next model-based campaign requires a named real task, frozen comparator
 versions/configurations, correctness rubric, invocation and time limits, and

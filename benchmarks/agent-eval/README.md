@@ -125,3 +125,8 @@ twelve frozen queries without evaluation-model calls. Its
 actual excerpt coverage. The investigator-selected
 [evidence pack](failure-evidence-pack.md) is prepared for a future separately
 controlled comprehension check and is not evidence of an agent improvement.
+
+The [real issue runtime-recovery campaign](../../docs/ISSUE1-RUNTIME-RECOVERY-2026-09-13.md)
+uses the complete CLI runtime and three substantive readiness gates. Its
+[reviewed results](issue1-runtime-recovery-results.json) retain three valid
+but incomplete diagnoses; no passing pair supports an efficiency claim.
