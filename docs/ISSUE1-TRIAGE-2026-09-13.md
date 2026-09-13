@@ -1,6 +1,8 @@
 # Real issue triage: frozen protocol
 
-Status: prepared before evaluated-agent execution.
+Status: closed as an invalid environment; zero formal tasks ran. The protocol
+was committed before readiness in `b71aff7`. [Results and repair](ISSUE1-TRIAGE-RESULTS-2026-09-13.md)
+record the failure, protocol deviations and retained cost.
 
 ## Maintenance question
 
@@ -81,4 +83,7 @@ this task.
 
 ## Results
 
-Pending the frozen run and independent grading.
+Three readiness invocations failed because the copied CLI lacked its Code Mode
+host. Formal execution stopped; there are no grades or savings estimates.
+The shared runner now explicitly classifies the observed startup failure in
+`88c5cd1`. See the [results](ISSUE1-TRIAGE-RESULTS-2026-09-13.md).

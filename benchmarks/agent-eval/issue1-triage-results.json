@@ -1,0 +1,285 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-09-13",
+  "status": "invalid-environment",
+  "issue": "https://github.com/Guanzhw/codefacts/issues/1",
+  "protocolCommit": "b71aff7a36271905eab44b7580c1be276c6cce41",
+  "fixCommit": "88c5cd1",
+  "sourceRevision": "994942690fe5d1854398017026ef3615b2fdd24f",
+  "sourceArchiveSha256": "fd35c8a9127711a0d8ab08c5e0ea1eaf7e75df78500c43ad15392ae8e9e8be16",
+  "agent": {
+    "version": "codex-cli 0.154.0-alpha.6.2",
+    "model": "gpt-5.6-luna",
+    "reasoning": "medium"
+  },
+  "execution": {
+    "formalInvocations": 0,
+    "readinessInvocations": 3,
+    "nativeQueryCalls": 4,
+    "formalRetries": 0,
+    "formalSavings": null,
+    "preflightTokenTotal": 129756,
+    "preflightWallMs": 85711
+  },
+  "diagnosis": {
+    "cause": "Only codex.exe was copied; adjacent codex-code-mode-host.exe was absent. All three readiness processes exited zero while tool execution was unavailable.",
+    "successfulSourceOrMcpCalls": 0,
+    "previousParser": "pending-manual-review with no explicit startup error; existing eligibility still required manual review",
+    "fixedParser": "invalid-environment, exact startup diagnostic and usage preserved"
+  },
+  "protocolDeviations": [
+    "Initial CodeGraph native response said the project was not indexed. Setup then indexed it and repeated both native probes, exceeding the one-query-per-tool rule. Both records are retained.",
+    "Readiness continued after the first invalid environment because the helper checked exit status alone. No formal task was launched.",
+    "A complete hash launch receipt was not produced before readiness. Post-failure hashes below are forensic records, not a reconstructed pre-launch freeze."
+  ],
+  "snapshotAudit": {
+    "baseline": {
+      "files": 307,
+      "bytes": 6561961,
+      "beforeAfterAndArchiveMatch": true,
+      "generatedFiles": []
+    },
+    "codefacts": {
+      "files": 307,
+      "bytes": 6561961,
+      "beforeAfterAndArchiveMatch": true,
+      "generatedFiles": []
+    },
+    "codegraph": {
+      "files": 307,
+      "bytes": 6561961,
+      "beforeAfterAndArchiveMatch": true,
+      "generatedFiles": [
+        ".codegraph/.gitignore",
+        ".codegraph/codegraph.db",
+        ".codegraph/codegraph.db-shm",
+        ".codegraph/codegraph.db-wal"
+      ]
+    }
+  },
+  "nativeIssueInspection": {
+    "responseSha256": "95fb4ccbbed1c4d3f8a4542063e2792d84e931e22b3ffd01189c4904dc78fff0",
+    "queries": [
+      {
+        "query": "analysis lifecycle snapshot evidence validator manifest launch",
+        "results": 0,
+        "freshness": "fresh",
+        "sourceEvidenceMatches": true
+      },
+      {
+        "query": "ProviderAdapter interface detection capabilities resumeCommand",
+        "results": 1,
+        "freshness": "fresh",
+        "sourceEvidenceMatches": true
+      }
+    ],
+    "conclusions": [
+      "ProviderAdapter exists; the tested CodeFacts binary returned its complete definition at src/providers/interface.ts:123-176.",
+      "The pinned snapshot explicitly records Session Analysis removal in docs/specs/runtime-protocol-workbench/tasks.md:99-107.",
+      "The original issue did not pin a source revision; current absence does not disprove the historical report or justify a broad query fallback."
+    ]
+  },
+  "preflight": [
+    {
+      "arm": "baseline",
+      "before": {
+        "status": "pending-manual-review",
+        "evaluationValidity": "pending_manual_review"
+      },
+      "after": {
+        "status": "invalid-environment",
+        "evaluationValidity": "invalid_environment"
+      },
+      "usage": {
+        "input_tokens": 42789,
+        "cached_input_tokens": 34048,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 511,
+        "reasoning_output_tokens": 271
+      },
+      "totalTokens": 43300,
+      "wallMs": 29959,
+      "toolCalls": 0,
+      "diagnostics": 1,
+      "usageReconciled": true,
+      "successfulSourceOrMcpCalls": 0,
+      "stdoutToolCalls": 0,
+      "rolloutToolAttempts": 1,
+      "threadId": "01a09a7a-ca5f-7093-9955-3c5fd01b58a0",
+      "artifacts": {
+        "request.json": "2192179da6fc18bdcfcb8a1e9f82e83fc556b7d746d8b0801d9d02480f48e0b8",
+        "stdout.jsonl": "3cd7ae66e06045d53ebcd937ef8c15a051bfff804fe65a9222b74d4ce4008d0e",
+        "stderr": "9d55f565769b3eb23b6482a7f736e669b974e3750058451f3932c21df43e1772"
+      },
+      "rolloutSha256": "c1ef2b6299a4dbbd262194019a6f49a54752c0499562862fdfcf665efbc7e3bc"
+    },
+    {
+      "arm": "codefacts",
+      "before": {
+        "status": "pending-manual-review",
+        "evaluationValidity": "pending_manual_review"
+      },
+      "after": {
+        "status": "invalid-environment",
+        "evaluationValidity": "invalid_environment"
+      },
+      "usage": {
+        "input_tokens": 42752,
+        "cached_input_tokens": 37120,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 461,
+        "reasoning_output_tokens": 197
+      },
+      "totalTokens": 43213,
+      "wallMs": 27318,
+      "toolCalls": 0,
+      "diagnostics": 1,
+      "usageReconciled": true,
+      "successfulSourceOrMcpCalls": 0,
+      "stdoutToolCalls": 0,
+      "rolloutToolAttempts": 1,
+      "threadId": "01a09a7b-4028-76a2-93c4-420b98cf10c7",
+      "artifacts": {
+        "request.json": "9b80d041233beb2b889a473d8e6f19cacdf0044a7fd674aa812babcfa7692d14",
+        "stdout.jsonl": "e5ef9ad9edec2a82e0fd03a20d682acf7acde78428496abe0e80f5106a012555",
+        "stderr": "a70b4ece6052b68d405faa6b21c9d6af5229feef727bb53fd6bea96f741c8f7f"
+      },
+      "rolloutSha256": "02bc15fb565d474bedff730674f8bbdf23851d2d9cf4346fad2129161a81aebd"
+    },
+    {
+      "arm": "codegraph",
+      "before": {
+        "status": "pending-manual-review",
+        "evaluationValidity": "pending_manual_review"
+      },
+      "after": {
+        "status": "invalid-environment",
+        "evaluationValidity": "invalid_environment"
+      },
+      "usage": {
+        "input_tokens": 42714,
+        "cached_input_tokens": 37120,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 529,
+        "reasoning_output_tokens": 249
+      },
+      "totalTokens": 43243,
+      "wallMs": 28434,
+      "toolCalls": 0,
+      "diagnostics": 1,
+      "usageReconciled": true,
+      "successfulSourceOrMcpCalls": 0,
+      "stdoutToolCalls": 0,
+      "rolloutToolAttempts": 1,
+      "threadId": "01a09a7b-ad86-7962-aeff-ac12c671dd25",
+      "artifacts": {
+        "request.json": "cc9b5bb2cb98a0b0567742ef1d0e52f4292e25f8bdb4b1581048eb55969b555c",
+        "stdout.jsonl": "8d95093462eaa0df1ef449528fc2aa6d83fa43162fbc78ab08b202a42c3b9520",
+        "stderr": "ddc779315e939b253548bc68baa818d018db03251e913c998b752c36ad295daf"
+      },
+      "rolloutSha256": "20554e3e1ca23540500a1516b69785ecf044ef5f668e11c4e467072bbb10a52f"
+    }
+  ],
+  "forensicHashes": {
+    "preflight\\native-initial-noindex.json": "55f0eed04cf0dd1b78869b698529aafcf37289da2fcd4d7d8bfc09f876bfcc38",
+    "preflight\\native.json": "8eeb79f38670cf06f7b29689e207203f22b4eeb66c3a82f462ac49b342edc913",
+    "source-audit-before.json": "6bfc7807799edb8760c60540729c87ec2b1a1e13eed4427a208d1efe202b1f67",
+    "source-audit-after.json": "151beed65973994c8c204e0484ae154f32e701f5f879d8f0266496ad15f81189",
+    "parser-comparison.json": "6247260661b4f652c66861d23d9cb85052d10362932780e54b53a78175ea3539",
+    "tools\\codex.exe": "081e4de4be8e38fac6ed4d95e3b1a0b9f6d31c090ddc36e1696b349fe406f575",
+    "tools\\codefacts.exe": "f43e6fd9a5d556e6ac7890a8a6840f04acb1216aab5f051b4dc1d862ff312386",
+    "tools\\runner.mjs": "d0b33697fa5db2b43db0968757cbb761bc2a341adc45845c1dc2a92dcac7aecf",
+    "manifest-baseline.json": "9705eb346eb83e48ac0dad72a71f5a36ad50f19fca836a31120bada74a0a9b56",
+    "manifest-codefacts.json": "10f0921af033384853516e23254c31ffaf85b76796f0a7aa9a8ce12a03308fd6",
+    "manifest-codegraph.json": "77ea1ddba32c23af751df1bd2760b427bb239ebc3c28ccce6794ae6bf67b201c"
+  },
+  "validation": {
+    "testsPassed": 16,
+    "realLogReplays": 3,
+    "newModelCallsForFix": 0,
+    "independentReview": "pass"
+  },
+  "decision": {
+    "comparisonValid": false,
+    "qualityGrades": null,
+    "tokenSavings": null,
+    "productRankingChanged": false,
+    "maintainLimitedInvestment": true,
+    "next": "Verify a complete runtime and substantive readiness before separately freezing another real-task comparison. Reuse this evidence; no replacement sample in this campaign."
+  },
+  "engineering": {
+    "cutoffUtc": "2026-09-13T11:24:39.961582+00:00",
+    "method": "Unique per-response token_usage_record.usage for current parent turn and four engineering sessions. Cached input is already included in input.",
+    "parentTurn": "01a09a71-0b80-7a61-93c3-bf331324434b",
+    "threads": [
+      {
+        "role": "parent",
+        "sessionId": "01a08ba7-0ca2-72b2-82a0-178d382c195f",
+        "responseRecords": 56,
+        "usage": {
+          "input_tokens": 7607494,
+          "cached_input_tokens": 7437440,
+          "output_tokens": 33666,
+          "total_tokens": 7641160,
+          "uncached_input_tokens": 170054
+        }
+      },
+      {
+        "role": "task_selection",
+        "sessionId": "01a09a71-712b-7110-acc5-7814754988aa",
+        "responseRecords": 12,
+        "usage": {
+          "input_tokens": 603641,
+          "cached_input_tokens": 566272,
+          "output_tokens": 2830,
+          "total_tokens": 606471,
+          "uncached_input_tokens": 37369
+        }
+      },
+      {
+        "role": "setup_execution",
+        "sessionId": "01a09a74-cc35-7943-825d-f0894c75e859",
+        "responseRecords": 51,
+        "usage": {
+          "input_tokens": 5403959,
+          "cached_input_tokens": 5259520,
+          "output_tokens": 26252,
+          "total_tokens": 5430211,
+          "uncached_input_tokens": 144439
+        }
+      },
+      {
+        "role": "independent_review",
+        "sessionId": "01a09a76-587b-71e3-9ee1-6ce883a63e38",
+        "responseRecords": 8,
+        "usage": {
+          "input_tokens": 350890,
+          "cached_input_tokens": 314368,
+          "output_tokens": 1715,
+          "total_tokens": 352605,
+          "uncached_input_tokens": 36522
+        }
+      },
+      {
+        "role": "runner_fix",
+        "sessionId": "01a09a7d-d7f8-7d61-a160-9eafedf96938",
+        "responseRecords": 13,
+        "usage": {
+          "input_tokens": 663276,
+          "cached_input_tokens": 635648,
+          "output_tokens": 3360,
+          "total_tokens": 666636,
+          "uncached_input_tokens": 27628
+        }
+      }
+    ],
+    "totals": {
+      "input_tokens": 14629260,
+      "cached_input_tokens": 14213248,
+      "output_tokens": 67823,
+      "total_tokens": 14697083,
+      "uncached_input_tokens": 416012
+    },
+    "excludes": "Three separately reported readiness sessions; export completion and later report/commit/final reply. Processed tokens are not monetary billing."
+  }
+}
