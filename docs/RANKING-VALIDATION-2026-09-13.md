@@ -20,9 +20,10 @@ production integration are outside the result it can establish.
 
 ## Cases and isolation
 
-An independent source-only worker selects five previously unused real
+An independent source-only worker assessed five previously unused candidate
 container/member pairs: three from the pinned OpenSession snapshot and two
-from the pinned CodeFacts snapshot. For each pair, four cases ask for the
+from the pinned CodeFacts snapshot. Source verification retained three, as
+recorded below. For each retained pair, four cases ask for the
 member using container plus member, the member alone, the container alone,
 and the container using wording that also mentions the member. The last
 case checks that a callable preference does not override explicit container
