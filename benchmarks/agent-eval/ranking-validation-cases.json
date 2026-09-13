@@ -1,0 +1,339 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Frozen source-only ranking validation cases. Queries and expected facts were selected from pinned source before any CodeFacts search or ranking output inspection.",
+  "sourceRevisions": {
+    "opensession": "994942690fe5d1854398017026ef3615b2fdd24f",
+    "codefacts": "76bae6820c3032e952dbfb5aeb8560b949af185c"
+  },
+  "cases": [
+    {
+      "repository": "opensession",
+      "query": "Router dispatch",
+      "expected": {
+        "name": "dispatch",
+        "kind": "method",
+        "file_path": "src/router.ts",
+        "start_line": 59,
+        "end_line": 90,
+        "source_hash": "374ce886fe90a23bc06817e0be60ae767a3e8fdfb2df293ad931799acf65516a"
+      },
+      "essentialSpan": [
+        60,
+        89
+      ],
+      "id": "ranking-01",
+      "intent": "Locate dispatch and inspect route matching and the handled/unhandled return result.",
+      "role": "member",
+      "cohort": "independent"
+    },
+    {
+      "repository": "opensession",
+      "query": "dispatch",
+      "expected": {
+        "name": "dispatch",
+        "kind": "method",
+        "file_path": "src/router.ts",
+        "start_line": 59,
+        "end_line": 90,
+        "source_hash": "374ce886fe90a23bc06817e0be60ae767a3e8fdfb2df293ad931799acf65516a"
+      },
+      "essentialSpan": [
+        60,
+        89
+      ],
+      "id": "ranking-02",
+      "intent": "Locate dispatch and inspect route matching and the handled/unhandled return result.",
+      "role": "exact-member-control",
+      "cohort": "independent"
+    },
+    {
+      "repository": "opensession",
+      "query": "Router",
+      "expected": {
+        "name": "Router",
+        "kind": "class",
+        "file_path": "src/router.ts",
+        "start_line": 30,
+        "end_line": 91,
+        "source_hash": "374ce886fe90a23bc06817e0be60ae767a3e8fdfb2df293ad931799acf65516a"
+      },
+      "essentialSpan": [
+        30,
+        31
+      ],
+      "id": "ranking-03",
+      "intent": "Locate the named container declaration and its fields; the member, when present in the query, identifies the container.",
+      "role": "container-control",
+      "cohort": "independent"
+    },
+    {
+      "repository": "opensession",
+      "query": "class Router providing dispatch",
+      "expected": {
+        "name": "Router",
+        "kind": "class",
+        "file_path": "src/router.ts",
+        "start_line": 30,
+        "end_line": 91,
+        "source_hash": "374ce886fe90a23bc06817e0be60ae767a3e8fdfb2df293ad931799acf65516a"
+      },
+      "essentialSpan": [
+        30,
+        31
+      ],
+      "id": "ranking-04",
+      "intent": "Locate the named container declaration and its fields; the member, when present in the query, identifies the container.",
+      "role": "container-intent-control",
+      "cohort": "independent"
+    },
+    {
+      "repository": "codefacts",
+      "query": "CodeFacts search_with_page_options",
+      "expected": {
+        "name": "search_with_page_options",
+        "kind": "method",
+        "file_path": "src/service.rs",
+        "start_line": 326,
+        "end_line": 344,
+        "source_hash": "a32c72420e917a1be765d193574d014f94e98b4a6808c999876506f93ad06372"
+      },
+      "essentialSpan": [
+        326,
+        344
+      ],
+      "id": "ranking-13",
+      "intent": "Locate the pagination wrapper and inspect forwarding of cursor and top-level scope.",
+      "role": "member",
+      "cohort": "independent"
+    },
+    {
+      "repository": "codefacts",
+      "query": "search_with_page_options",
+      "expected": {
+        "name": "search_with_page_options",
+        "kind": "method",
+        "file_path": "src/service.rs",
+        "start_line": 326,
+        "end_line": 344,
+        "source_hash": "a32c72420e917a1be765d193574d014f94e98b4a6808c999876506f93ad06372"
+      },
+      "essentialSpan": [
+        326,
+        344
+      ],
+      "id": "ranking-14",
+      "intent": "Locate the pagination wrapper and inspect forwarding of cursor and top-level scope.",
+      "role": "exact-member-control",
+      "cohort": "independent"
+    },
+    {
+      "repository": "codefacts",
+      "query": "CodeFacts",
+      "expected": {
+        "name": "CodeFacts",
+        "kind": "struct",
+        "file_path": "src/service.rs",
+        "start_line": 33,
+        "end_line": 38,
+        "source_hash": "a32c72420e917a1be765d193574d014f94e98b4a6808c999876506f93ad06372"
+      },
+      "essentialSpan": [
+        33,
+        38
+      ],
+      "id": "ranking-15",
+      "intent": "Locate the named container declaration and its fields; the member, when present in the query, identifies the container.",
+      "role": "container-control",
+      "cohort": "independent"
+    },
+    {
+      "repository": "codefacts",
+      "query": "class CodeFacts providing search_with_page_options",
+      "expected": {
+        "name": "CodeFacts",
+        "kind": "struct",
+        "file_path": "src/service.rs",
+        "start_line": 33,
+        "end_line": 38,
+        "source_hash": "a32c72420e917a1be765d193574d014f94e98b4a6808c999876506f93ad06372"
+      },
+      "essentialSpan": [
+        33,
+        38
+      ],
+      "id": "ranking-16",
+      "intent": "Locate the named container declaration and its fields; the member, when present in the query, identifies the container.",
+      "role": "container-intent-control",
+      "cohort": "independent"
+    },
+    {
+      "repository": "codefacts",
+      "query": "GraphStore get_related_test_nodes",
+      "expected": {
+        "name": "get_related_test_nodes",
+        "kind": "method",
+        "file_path": "src/graph/store.rs",
+        "start_line": 858,
+        "end_line": 890,
+        "source_hash": "f137b1ca9b99f4f26751eae8ad8c4b09f2ab2625f2a97045a7128052ca0b6e6a"
+      },
+      "essentialSpan": [
+        858,
+        890
+      ],
+      "id": "ranking-17",
+      "intent": "Locate related test lookup and inspect relationship confidence filtering and bounded ordering.",
+      "role": "member",
+      "cohort": "independent"
+    },
+    {
+      "repository": "codefacts",
+      "query": "get_related_test_nodes",
+      "expected": {
+        "name": "get_related_test_nodes",
+        "kind": "method",
+        "file_path": "src/graph/store.rs",
+        "start_line": 858,
+        "end_line": 890,
+        "source_hash": "f137b1ca9b99f4f26751eae8ad8c4b09f2ab2625f2a97045a7128052ca0b6e6a"
+      },
+      "essentialSpan": [
+        858,
+        890
+      ],
+      "id": "ranking-18",
+      "intent": "Locate related test lookup and inspect relationship confidence filtering and bounded ordering.",
+      "role": "exact-member-control",
+      "cohort": "independent"
+    },
+    {
+      "repository": "codefacts",
+      "query": "GraphStore",
+      "expected": {
+        "name": "GraphStore",
+        "kind": "struct",
+        "file_path": "src/graph/store.rs",
+        "start_line": 52,
+        "end_line": 54,
+        "source_hash": "f137b1ca9b99f4f26751eae8ad8c4b09f2ab2625f2a97045a7128052ca0b6e6a"
+      },
+      "essentialSpan": [
+        52,
+        54
+      ],
+      "id": "ranking-19",
+      "intent": "Locate the named container declaration and its fields; the member, when present in the query, identifies the container.",
+      "role": "container-control",
+      "cohort": "independent"
+    },
+    {
+      "repository": "codefacts",
+      "query": "class GraphStore providing get_related_test_nodes",
+      "expected": {
+        "name": "GraphStore",
+        "kind": "struct",
+        "file_path": "src/graph/store.rs",
+        "start_line": 52,
+        "end_line": 54,
+        "source_hash": "f137b1ca9b99f4f26751eae8ad8c4b09f2ab2625f2a97045a7128052ca0b6e6a"
+      },
+      "essentialSpan": [
+        52,
+        54
+      ],
+      "id": "ranking-20",
+      "intent": "Locate the named container declaration and its fields; the member, when present in the query, identifies the container.",
+      "role": "container-intent-control",
+      "cohort": "independent"
+    },
+    {
+      "id": "calibration-01",
+      "repository": "codefacts",
+      "query": "GraphStore with_transaction",
+      "role": "member",
+      "cohort": "calibration",
+      "intent": "Locate the named function and inspect its complete definition.",
+      "expected": {
+        "name": "with_transaction",
+        "kind": "method",
+        "file_path": "src/graph/store.rs",
+        "start_line": 462,
+        "end_line": 478,
+        "source_hash": "f137b1ca9b99f4f26751eae8ad8c4b09f2ab2625f2a97045a7128052ca0b6e6a"
+      },
+      "essentialSpan": [
+        462,
+        478
+      ]
+    },
+    {
+      "id": "calibration-02",
+      "repository": "codefacts",
+      "query": "extract edges",
+      "role": "split-word-control",
+      "cohort": "calibration",
+      "intent": "Locate the named function and inspect its complete definition.",
+      "expected": {
+        "name": "extract_edges",
+        "kind": "method",
+        "file_path": "src/indexer/extractor.rs",
+        "start_line": 390,
+        "end_line": 478,
+        "source_hash": "a1549735fb9d3a95d74c30981b47da33f90cb7b94e1a86eab9c0073a9ecbe468"
+      },
+      "essentialSpan": [
+        390,
+        478
+      ]
+    },
+    {
+      "id": "calibration-03",
+      "repository": "codefacts",
+      "query": "parse_and_extract_edges_file",
+      "role": "exact-helper-control",
+      "cohort": "calibration",
+      "intent": "Locate the named function and inspect its complete definition.",
+      "expected": {
+        "name": "parse_and_extract_edges_file",
+        "kind": "function",
+        "file_path": "src/indexer/extractor.rs",
+        "start_line": 1239,
+        "end_line": 1250,
+        "source_hash": "a1549735fb9d3a95d74c30981b47da33f90cb7b94e1a86eab9c0073a9ecbe468"
+      },
+      "essentialSpan": [
+        1239,
+        1250
+      ]
+    },
+    {
+      "id": "calibration-04",
+      "repository": "codefacts",
+      "query": "extract_edges",
+      "role": "exact-member-control",
+      "cohort": "calibration",
+      "intent": "Locate the named function and inspect its complete definition.",
+      "expected": {
+        "name": "extract_edges",
+        "kind": "method",
+        "file_path": "src/indexer/extractor.rs",
+        "start_line": 390,
+        "end_line": 478,
+        "source_hash": "a1549735fb9d3a95d74c30981b47da33f90cb7b94e1a86eab9c0073a9ecbe468"
+      },
+      "essentialSpan": [
+        390,
+        478
+      ]
+    }
+  ],
+  "sourceSelectionAudit": {
+    "originalCandidatePairs": 5,
+    "retainedPairs": 3,
+    "removed": [
+      "SessionHistoryService.search: proposed container location names a different interface; not a verified class/member pair.",
+      "SessionFileStore.getFamily: implementation is returned by a factory; the proposed named container does not exist at the cited location."
+    ],
+    "corrections": "Parent corrected declaration spans and essential task spans against source before any native search. No ranking outputs were used to select or amend independent cases."
+  }
+}
