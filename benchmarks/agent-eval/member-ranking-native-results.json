@@ -1,0 +1,1885 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-09-13",
+  "purpose": "Native production member ranking verification; output bytes do not establish agent token efficiency.",
+  "freeze": {
+    "candidateSourceCommit": "5a88820f6aa43c93575fc50b26fb0ccb67c22e33",
+    "manifestSha256": "7c852d1c2f841cccb5275745b9dd493a5e774242ba70d98894a9a1c70ca2a8c8",
+    "driverSha256": "1db3acb1d5d354b8475673f0707369e1407520f2058cb30bc42768d5393b573d",
+    "helperSha256": "f8afc6743159933eac72b3bc7d9f2dd81443aa5e7af6e6ad3c4db520d3c627d4",
+    "casesSha256": {
+      "ranking-validation-cases.json": "e7c5435af196258b9a6de5a352a47e077ecc6c189255e591401aa390d0a6bdee",
+      "member-ranking-heldout.json": "02f9ce0c1958ccd6064c625669d3e181d40871c7a15f37265ac7d42bb45c7551"
+    },
+    "binaries": {
+      "baseline": {
+        "sha256": "2e725c9b3947545aecce845ba7fdd41d58e8fd456743d0cd9da2d34355ce7576"
+      },
+      "candidate": {
+        "sha256": "f43e6fd9a5d556e6ac7890a8a6840f04acb1216aab5f051b4dc1d862ff312386"
+      }
+    },
+    "rawArtifactsSha256": {
+      "baseline-codefacts-response.json": "3af2470b3b9f5cc0b2b7b79193e5cf15c9a647efc7dc1bf112d09648fea05ed0",
+      "baseline-opensession-response.json": "1cf2560b1af4090367f96ebdca3c656f361dad383cecf1582508327ac4302f39",
+      "baseline-pi-local-mcp-response.json": "c9954939381fffbf0f9dfa6372022c94675f484e85859c17b7522cbdd03ee60d",
+      "candidate-codefacts-response.json": "187690e5573fdcf74787385d175cfde219fc89360b350f975d3e08c6e928150b",
+      "candidate-opensession-response.json": "4d0974edfe762ea7af06cd1dd1ae0f63419f36c0c11cde57ad6df146dea665b4",
+      "candidate-pi-local-mcp-response.json": "ffc572dd37d68eb9e344eb6428ee2bf11b5e759ac6dc672bfec638a41b9079bf",
+      "results.json": "eb54ccd37579ff3c3c731584b395f2f74e00ffe4e04a51db1f62d25fa2390701",
+      "launch-receipt.json": "0b88c0df54177b35472fc0ee9c307663be8eeb82be9586cde53ef1977939032e",
+      "preflight-rejected.json": "8241e1029a79169e97931b2ec47a726c5b18eced4d0d822e867aacfeeff248ff"
+    }
+  },
+  "repositories": {
+    "opensession": {
+      "revision": "994942690fe5d1854398017026ef3615b2fdd24f",
+      "archiveSha256": "fd35c8a9127711a0d8ab08c5e0ea1eaf7e75df78500c43ad15392ae8e9e8be16",
+      "files": 307,
+      "sourceBeforeAfterMatch": true
+    },
+    "codefacts": {
+      "revision": "76bae6820c3032e952dbfb5aeb8560b949af185c",
+      "archiveSha256": "bbb1d466c77091bae99414a5c8d646e28be56587a29353cad15ef527fc55e1ef",
+      "files": 97,
+      "sourceBeforeAfterMatch": true
+    },
+    "pi-local-mcp": {
+      "revision": "779bf77b111f300d354a009875a040da4c7aea44",
+      "archiveSha256": "51be34e4c55d4471c8b5d03a3e1c34b9c72b10fb1cb5a39bae8c2fcafc7030a8",
+      "files": 20,
+      "sourceBeforeAfterMatch": true
+    }
+  },
+  "execution": {
+    "searches": 56,
+    "maps": 6,
+    "evaluatedModelInvocations": 0,
+    "queryRetries": 0,
+    "preflightRejections": 1,
+    "preflightReason": "Previous CodeGraph artifacts in reused directories; zero calls before rejection. Unchanged archives extracted to fresh roots; cases and binaries unchanged.",
+    "searchOptions": {
+      "detail": "context",
+      "context_limit": 1,
+      "limit": 5,
+      "timeoutMs": 60000,
+      "maxSearchCallsPerBinary": 28,
+      "mapCallsPerRepositoryPerBinary": 1,
+      "retries": 0
+    }
+  },
+  "results": [
+    {
+      "id": "ranking-01",
+      "repository": "opensession",
+      "query": "Router dispatch",
+      "cohort": "independent",
+      "role": "member",
+      "expected": {
+        "name": "dispatch",
+        "kind": "method",
+        "file_path": "src/router.ts",
+        "start_line": 59,
+        "end_line": 90,
+        "source_hash": "374ce886fe90a23bc06817e0be60ae767a3e8fdfb2df293ad931799acf65516a",
+        "essentialSpan": [
+          60,
+          89
+        ]
+      },
+      "baseline": {
+        "top1": false,
+        "rank": 2,
+        "mrr5": 0.5,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 6828,
+        "firstSourceBytes": 2008,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "class:src/router.ts:Router:30",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 7870,
+        "firstSourceBytes": 1086,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "method:src/router.ts:dispatch:59",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ranking-02",
+      "repository": "opensession",
+      "query": "dispatch",
+      "cohort": "independent",
+      "role": "exact-member-control",
+      "expected": {
+        "name": "dispatch",
+        "kind": "method",
+        "file_path": "src/router.ts",
+        "start_line": 59,
+        "end_line": 90,
+        "source_hash": "374ce886fe90a23bc06817e0be60ae767a3e8fdfb2df293ad931799acf65516a",
+        "essentialSpan": [
+          60,
+          89
+        ]
+      },
+      "baseline": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 8386,
+        "firstSourceBytes": 1086,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "method:src/router.ts:dispatch:59",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 8386,
+        "firstSourceBytes": 1086,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "method:src/router.ts:dispatch:59",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ranking-03",
+      "repository": "opensession",
+      "query": "Router",
+      "cohort": "independent",
+      "role": "container-control",
+      "expected": {
+        "name": "Router",
+        "kind": "class",
+        "file_path": "src/router.ts",
+        "start_line": 30,
+        "end_line": 91,
+        "source_hash": "374ce886fe90a23bc06817e0be60ae767a3e8fdfb2df293ad931799acf65516a",
+        "essentialSpan": [
+          30,
+          31
+        ]
+      },
+      "baseline": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 7029,
+        "firstSourceBytes": 2008,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "class:src/router.ts:Router:30",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 7029,
+        "firstSourceBytes": 2008,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "class:src/router.ts:Router:30",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ranking-04",
+      "repository": "opensession",
+      "query": "class Router providing dispatch",
+      "cohort": "independent",
+      "role": "container-intent-control",
+      "expected": {
+        "name": "Router",
+        "kind": "class",
+        "file_path": "src/router.ts",
+        "start_line": 30,
+        "end_line": 91,
+        "source_hash": "374ce886fe90a23bc06817e0be60ae767a3e8fdfb2df293ad931799acf65516a",
+        "essentialSpan": [
+          30,
+          31
+        ]
+      },
+      "baseline": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 5482,
+        "firstSourceBytes": 2008,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 2,
+          "contextStatus": [
+            {
+              "symbolId": "class:src/router.ts:Router:30",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 5482,
+        "firstSourceBytes": 2008,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 2,
+          "contextStatus": [
+            {
+              "symbolId": "class:src/router.ts:Router:30",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ranking-13",
+      "repository": "codefacts",
+      "query": "CodeFacts search_with_page_options",
+      "cohort": "independent",
+      "role": "member",
+      "expected": {
+        "name": "search_with_page_options",
+        "kind": "method",
+        "file_path": "src/service.rs",
+        "start_line": 326,
+        "end_line": 344,
+        "source_hash": "a32c72420e917a1be765d193574d014f94e98b4a6808c999876506f93ad06372",
+        "essentialSpan": [
+          326,
+          344
+        ]
+      },
+      "baseline": {
+        "top1": false,
+        "rank": 4,
+        "mrr5": 0.25,
+        "recall5": 1,
+        "coverage": false,
+        "actualTextBytes": 6722,
+        "firstSourceBytes": 3550,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "heading:README.md:CodeFacts:1",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 9055,
+        "firstSourceBytes": 484,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "method:src/service.rs:search_with_page_options:326",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ranking-14",
+      "repository": "codefacts",
+      "query": "search_with_page_options",
+      "cohort": "independent",
+      "role": "exact-member-control",
+      "expected": {
+        "name": "search_with_page_options",
+        "kind": "method",
+        "file_path": "src/service.rs",
+        "start_line": 326,
+        "end_line": 344,
+        "source_hash": "a32c72420e917a1be765d193574d014f94e98b4a6808c999876506f93ad06372",
+        "essentialSpan": [
+          326,
+          344
+        ]
+      },
+      "baseline": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 8401,
+        "firstSourceBytes": 484,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 4,
+          "contextStatus": [
+            {
+              "symbolId": "method:src/service.rs:search_with_page_options:326",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 8401,
+        "firstSourceBytes": 484,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 4,
+          "contextStatus": [
+            {
+              "symbolId": "method:src/service.rs:search_with_page_options:326",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ranking-15",
+      "repository": "codefacts",
+      "query": "CodeFacts",
+      "cohort": "independent",
+      "role": "container-control",
+      "expected": {
+        "name": "CodeFacts",
+        "kind": "struct",
+        "file_path": "src/service.rs",
+        "start_line": 33,
+        "end_line": 38,
+        "source_hash": "a32c72420e917a1be765d193574d014f94e98b4a6808c999876506f93ad06372",
+        "essentialSpan": [
+          33,
+          38
+        ]
+      },
+      "baseline": {
+        "top1": false,
+        "rank": 3,
+        "mrr5": 0.3333333333333333,
+        "recall5": 1,
+        "coverage": false,
+        "actualTextBytes": 6820,
+        "firstSourceBytes": 3550,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "heading:README.md:CodeFacts:1",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": false,
+        "rank": 3,
+        "mrr5": 0.3333333333333333,
+        "recall5": 1,
+        "coverage": false,
+        "actualTextBytes": 6820,
+        "firstSourceBytes": 3550,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "heading:README.md:CodeFacts:1",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ranking-16",
+      "repository": "codefacts",
+      "query": "class CodeFacts providing search_with_page_options",
+      "cohort": "independent",
+      "role": "container-intent-control",
+      "expected": {
+        "name": "CodeFacts",
+        "kind": "struct",
+        "file_path": "src/service.rs",
+        "start_line": 33,
+        "end_line": 38,
+        "source_hash": "a32c72420e917a1be765d193574d014f94e98b4a6808c999876506f93ad06372",
+        "essentialSpan": [
+          33,
+          38
+        ]
+      },
+      "baseline": {
+        "top1": false,
+        "rank": 3,
+        "mrr5": 0.3333333333333333,
+        "recall5": 1,
+        "coverage": false,
+        "actualTextBytes": 6292,
+        "firstSourceBytes": 3550,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 5,
+          "contextStatus": [
+            {
+              "symbolId": "heading:README.md:CodeFacts:1",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": false,
+        "rank": 3,
+        "mrr5": 0.3333333333333333,
+        "recall5": 1,
+        "coverage": false,
+        "actualTextBytes": 6292,
+        "firstSourceBytes": 3550,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 5,
+          "contextStatus": [
+            {
+              "symbolId": "heading:README.md:CodeFacts:1",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ranking-17",
+      "repository": "codefacts",
+      "query": "GraphStore get_related_test_nodes",
+      "cohort": "independent",
+      "role": "member",
+      "expected": {
+        "name": "get_related_test_nodes",
+        "kind": "method",
+        "file_path": "src/graph/store.rs",
+        "start_line": 858,
+        "end_line": 890,
+        "source_hash": "f137b1ca9b99f4f26751eae8ad8c4b09f2ab2625f2a97045a7128052ca0b6e6a",
+        "essentialSpan": [
+          858,
+          890
+        ]
+      },
+      "baseline": {
+        "top1": false,
+        "rank": 2,
+        "mrr5": 0.5,
+        "recall5": 1,
+        "coverage": false,
+        "actualTextBytes": 2007,
+        "firstSourceBytes": 51,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 3,
+          "contextStatus": [
+            {
+              "symbolId": "struct:src/graph/store.rs:GraphStore:52",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 6243,
+        "firstSourceBytes": 1583,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 3,
+          "contextStatus": [
+            {
+              "symbolId": "method:src/graph/store.rs:get_related_test_nodes:858",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ranking-18",
+      "repository": "codefacts",
+      "query": "get_related_test_nodes",
+      "cohort": "independent",
+      "role": "exact-member-control",
+      "expected": {
+        "name": "get_related_test_nodes",
+        "kind": "method",
+        "file_path": "src/graph/store.rs",
+        "start_line": 858,
+        "end_line": 890,
+        "source_hash": "f137b1ca9b99f4f26751eae8ad8c4b09f2ab2625f2a97045a7128052ca0b6e6a",
+        "essentialSpan": [
+          858,
+          890
+        ]
+      },
+      "baseline": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 6770,
+        "firstSourceBytes": 1583,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 4,
+          "contextStatus": [
+            {
+              "symbolId": "method:src/graph/store.rs:get_related_test_nodes:858",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 6770,
+        "firstSourceBytes": 1583,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 4,
+          "contextStatus": [
+            {
+              "symbolId": "method:src/graph/store.rs:get_related_test_nodes:858",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ranking-19",
+      "repository": "codefacts",
+      "query": "GraphStore",
+      "cohort": "independent",
+      "role": "container-control",
+      "expected": {
+        "name": "GraphStore",
+        "kind": "struct",
+        "file_path": "src/graph/store.rs",
+        "start_line": 52,
+        "end_line": 54,
+        "source_hash": "f137b1ca9b99f4f26751eae8ad8c4b09f2ab2625f2a97045a7128052ca0b6e6a",
+        "essentialSpan": [
+          52,
+          54
+        ]
+      },
+      "baseline": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 3202,
+        "firstSourceBytes": 51,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "struct:src/graph/store.rs:GraphStore:52",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 3202,
+        "firstSourceBytes": 51,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "struct:src/graph/store.rs:GraphStore:52",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ranking-20",
+      "repository": "codefacts",
+      "query": "class GraphStore providing get_related_test_nodes",
+      "cohort": "independent",
+      "role": "container-intent-control",
+      "expected": {
+        "name": "GraphStore",
+        "kind": "struct",
+        "file_path": "src/graph/store.rs",
+        "start_line": 52,
+        "end_line": 54,
+        "source_hash": "f137b1ca9b99f4f26751eae8ad8c4b09f2ab2625f2a97045a7128052ca0b6e6a",
+        "essentialSpan": [
+          52,
+          54
+        ]
+      },
+      "baseline": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 2023,
+        "firstSourceBytes": 51,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 3,
+          "contextStatus": [
+            {
+              "symbolId": "struct:src/graph/store.rs:GraphStore:52",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 2023,
+        "firstSourceBytes": 51,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 3,
+          "contextStatus": [
+            {
+              "symbolId": "struct:src/graph/store.rs:GraphStore:52",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "calibration-01",
+      "repository": "codefacts",
+      "query": "GraphStore with_transaction",
+      "cohort": "calibration",
+      "role": "member",
+      "expected": {
+        "name": "with_transaction",
+        "kind": "method",
+        "file_path": "src/graph/store.rs",
+        "start_line": 462,
+        "end_line": 478,
+        "source_hash": "f137b1ca9b99f4f26751eae8ad8c4b09f2ab2625f2a97045a7128052ca0b6e6a",
+        "essentialSpan": [
+          462,
+          478
+        ]
+      },
+      "baseline": {
+        "top1": false,
+        "rank": 2,
+        "mrr5": 0.5,
+        "recall5": 1,
+        "coverage": false,
+        "actualTextBytes": 1989,
+        "firstSourceBytes": 51,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 3,
+          "contextStatus": [
+            {
+              "symbolId": "struct:src/graph/store.rs:GraphStore:52",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 7890,
+        "firstSourceBytes": 488,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 3,
+          "contextStatus": [
+            {
+              "symbolId": "method:src/graph/store.rs:with_transaction:462",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "calibration-02",
+      "repository": "codefacts",
+      "query": "extract edges",
+      "cohort": "calibration",
+      "role": "split-word-control",
+      "expected": {
+        "name": "extract_edges",
+        "kind": "method",
+        "file_path": "src/indexer/extractor.rs",
+        "start_line": 390,
+        "end_line": 478,
+        "source_hash": "a1549735fb9d3a95d74c30981b47da33f90cb7b94e1a86eab9c0073a9ecbe468",
+        "essentialSpan": [
+          390,
+          478
+        ]
+      },
+      "baseline": {
+        "top1": false,
+        "rank": 4,
+        "mrr5": 0.25,
+        "recall5": 1,
+        "coverage": false,
+        "actualTextBytes": 8384,
+        "firstSourceBytes": 231,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "function:src/indexer/extractor.rs:parse_and_extract_edges:1231",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": false,
+        "rank": 4,
+        "mrr5": 0.25,
+        "recall5": 1,
+        "coverage": false,
+        "actualTextBytes": 8384,
+        "firstSourceBytes": 231,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "function:src/indexer/extractor.rs:parse_and_extract_edges:1231",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "calibration-03",
+      "repository": "codefacts",
+      "query": "parse_and_extract_edges_file",
+      "cohort": "calibration",
+      "role": "exact-helper-control",
+      "expected": {
+        "name": "parse_and_extract_edges_file",
+        "kind": "function",
+        "file_path": "src/indexer/extractor.rs",
+        "start_line": 1239,
+        "end_line": 1250,
+        "source_hash": "a1549735fb9d3a95d74c30981b47da33f90cb7b94e1a86eab9c0073a9ecbe468",
+        "essentialSpan": [
+          1239,
+          1250
+        ]
+      },
+      "baseline": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 15884,
+        "firstSourceBytes": 507,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "function:src/indexer/extractor.rs:parse_and_extract_edges_file:1239",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 15884,
+        "firstSourceBytes": 507,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "function:src/indexer/extractor.rs:parse_and_extract_edges_file:1239",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "calibration-04",
+      "repository": "codefacts",
+      "query": "extract_edges",
+      "cohort": "calibration",
+      "role": "exact-member-control",
+      "expected": {
+        "name": "extract_edges",
+        "kind": "method",
+        "file_path": "src/indexer/extractor.rs",
+        "start_line": 390,
+        "end_line": 478,
+        "source_hash": "a1549735fb9d3a95d74c30981b47da33f90cb7b94e1a86eab9c0073a9ecbe468",
+        "essentialSpan": [
+          390,
+          478
+        ]
+      },
+      "baseline": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 14017,
+        "firstSourceBytes": 3195,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "method:src/indexer/extractor.rs:extract_edges:390",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 14017,
+        "firstSourceBytes": 3195,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "method:src/indexer/extractor.rs:extract_edges:390",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "pi-1-member",
+      "repository": "pi-local-mcp",
+      "query": "PiRpcProcess rejectPending",
+      "cohort": "heldout",
+      "role": "member",
+      "expected": {
+        "name": "rejectPending",
+        "kind": "method",
+        "file_path": "src/pi-rpc.mjs",
+        "start_line": 258,
+        "end_line": 264,
+        "source_hash": "6feec8b5c6fe9d5efa95fed311e5e4e741abd8861d2eec694323e2b23b09d63c",
+        "essentialSpan": [
+          258,
+          264
+        ]
+      },
+      "baseline": {
+        "top1": false,
+        "rank": 2,
+        "mrr5": 0.5,
+        "recall5": 1,
+        "coverage": false,
+        "actualTextBytes": 7953,
+        "firstSourceBytes": 4073,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 5,
+          "contextStatus": [
+            {
+              "symbolId": "class:src/pi-rpc.mjs:PiRpcProcess:40",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 4799,
+        "firstSourceBytes": 185,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 5,
+          "contextStatus": [
+            {
+              "symbolId": "method:src/pi-rpc.mjs:rejectPending:258",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "pi-1-exact",
+      "repository": "pi-local-mcp",
+      "query": "rejectPending",
+      "cohort": "heldout",
+      "role": "exact-member-control",
+      "expected": {
+        "name": "rejectPending",
+        "kind": "method",
+        "file_path": "src/pi-rpc.mjs",
+        "start_line": 258,
+        "end_line": 264,
+        "source_hash": "6feec8b5c6fe9d5efa95fed311e5e4e741abd8861d2eec694323e2b23b09d63c",
+        "essentialSpan": [
+          258,
+          264
+        ]
+      },
+      "baseline": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 4452,
+        "firstSourceBytes": 185,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 4,
+          "contextStatus": [
+            {
+              "symbolId": "method:src/pi-rpc.mjs:rejectPending:258",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 4452,
+        "firstSourceBytes": 185,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 4,
+          "contextStatus": [
+            {
+              "symbolId": "method:src/pi-rpc.mjs:rejectPending:258",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "pi-1-container",
+      "repository": "pi-local-mcp",
+      "query": "PiRpcProcess",
+      "cohort": "heldout",
+      "role": "container-control",
+      "expected": {
+        "name": "PiRpcProcess",
+        "kind": "class",
+        "file_path": "src/pi-rpc.mjs",
+        "start_line": 40,
+        "end_line": 308,
+        "source_hash": "6feec8b5c6fe9d5efa95fed311e5e4e741abd8861d2eec694323e2b23b09d63c",
+        "essentialSpan": [
+          40,
+          43
+        ]
+      },
+      "baseline": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 8550,
+        "firstSourceBytes": 4073,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "class:src/pi-rpc.mjs:PiRpcProcess:40",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 8550,
+        "firstSourceBytes": 4073,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "class:src/pi-rpc.mjs:PiRpcProcess:40",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "pi-1-intent",
+      "repository": "pi-local-mcp",
+      "query": "class PiRpcProcess providing rejectPending",
+      "cohort": "heldout",
+      "role": "container-intent-control",
+      "expected": {
+        "name": "PiRpcProcess",
+        "kind": "class",
+        "file_path": "src/pi-rpc.mjs",
+        "start_line": 40,
+        "end_line": 308,
+        "source_hash": "6feec8b5c6fe9d5efa95fed311e5e4e741abd8861d2eec694323e2b23b09d63c",
+        "essentialSpan": [
+          40,
+          43
+        ]
+      },
+      "baseline": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 7295,
+        "firstSourceBytes": 4073,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 3,
+          "contextStatus": [
+            {
+              "symbolId": "class:src/pi-rpc.mjs:PiRpcProcess:40",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 7295,
+        "firstSourceBytes": 4073,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 3,
+          "contextStatus": [
+            {
+              "symbolId": "class:src/pi-rpc.mjs:PiRpcProcess:40",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "pi-2-member",
+      "repository": "pi-local-mcp",
+      "query": "PiService getSession",
+      "cohort": "heldout",
+      "role": "member",
+      "expected": {
+        "name": "getSession",
+        "kind": "method",
+        "file_path": "src/pi-service.mjs",
+        "start_line": 696,
+        "end_line": 702,
+        "source_hash": "5cead216322e6b0905b571c76287960e569c54267669507fde13154b954269fe",
+        "essentialSpan": [
+          696,
+          702
+        ]
+      },
+      "baseline": {
+        "top1": false,
+        "rank": 2,
+        "mrr5": 0.5,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 7552,
+        "firstSourceBytes": 4090,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "class:src/pi-service.mjs:PiService:644",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 9384,
+        "firstSourceBytes": 236,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "method:src/pi-service.mjs:getSession:696",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "pi-2-exact",
+      "repository": "pi-local-mcp",
+      "query": "getSession",
+      "cohort": "heldout",
+      "role": "exact-member-control",
+      "expected": {
+        "name": "getSession",
+        "kind": "method",
+        "file_path": "src/pi-service.mjs",
+        "start_line": 696,
+        "end_line": 702,
+        "source_hash": "5cead216322e6b0905b571c76287960e569c54267669507fde13154b954269fe",
+        "essentialSpan": [
+          696,
+          702
+        ]
+      },
+      "baseline": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 9374,
+        "firstSourceBytes": 236,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "method:src/pi-service.mjs:getSession:696",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 9374,
+        "firstSourceBytes": 236,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "method:src/pi-service.mjs:getSession:696",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "pi-2-container",
+      "repository": "pi-local-mcp",
+      "query": "PiService",
+      "cohort": "heldout",
+      "role": "container-control",
+      "expected": {
+        "name": "PiService",
+        "kind": "class",
+        "file_path": "src/pi-service.mjs",
+        "start_line": 644,
+        "end_line": 1489,
+        "source_hash": "5cead216322e6b0905b571c76287960e569c54267669507fde13154b954269fe",
+        "essentialSpan": [
+          644,
+          647
+        ]
+      },
+      "baseline": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 7610,
+        "firstSourceBytes": 4090,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "class:src/pi-service.mjs:PiService:644",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 7610,
+        "firstSourceBytes": 4090,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "class:src/pi-service.mjs:PiService:644",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "pi-2-intent",
+      "repository": "pi-local-mcp",
+      "query": "class PiService providing getSession",
+      "cohort": "heldout",
+      "role": "container-intent-control",
+      "expected": {
+        "name": "PiService",
+        "kind": "class",
+        "file_path": "src/pi-service.mjs",
+        "start_line": 644,
+        "end_line": 1489,
+        "source_hash": "5cead216322e6b0905b571c76287960e569c54267669507fde13154b954269fe",
+        "essentialSpan": [
+          644,
+          647
+        ]
+      },
+      "baseline": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 6270,
+        "firstSourceBytes": 4090,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 3,
+          "contextStatus": [
+            {
+              "symbolId": "class:src/pi-service.mjs:PiService:644",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 6270,
+        "firstSourceBytes": 4090,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 3,
+          "contextStatus": [
+            {
+              "symbolId": "class:src/pi-service.mjs:PiService:644",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "pi-3-member",
+      "repository": "pi-local-mcp",
+      "query": "PiService listSessions",
+      "cohort": "heldout",
+      "role": "member",
+      "expected": {
+        "name": "listSessions",
+        "kind": "method",
+        "file_path": "src/pi-service.mjs",
+        "start_line": 1346,
+        "end_line": 1358,
+        "source_hash": "5cead216322e6b0905b571c76287960e569c54267669507fde13154b954269fe",
+        "essentialSpan": [
+          1346,
+          1358
+        ]
+      },
+      "baseline": {
+        "top1": false,
+        "rank": 2,
+        "mrr5": 0.5,
+        "recall5": 1,
+        "coverage": false,
+        "actualTextBytes": 6971,
+        "firstSourceBytes": 4090,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 5,
+          "contextStatus": [
+            {
+              "symbolId": "class:src/pi-service.mjs:PiService:644",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 9324,
+        "firstSourceBytes": 604,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 5,
+          "contextStatus": [
+            {
+              "symbolId": "method:src/pi-service.mjs:listSessions:1346",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "pi-3-exact",
+      "repository": "pi-local-mcp",
+      "query": "listSessions",
+      "cohort": "heldout",
+      "role": "exact-member-control",
+      "expected": {
+        "name": "listSessions",
+        "kind": "method",
+        "file_path": "src/pi-service.mjs",
+        "start_line": 1346,
+        "end_line": 1358,
+        "source_hash": "5cead216322e6b0905b571c76287960e569c54267669507fde13154b954269fe",
+        "essentialSpan": [
+          1346,
+          1358
+        ]
+      },
+      "baseline": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 9319,
+        "firstSourceBytes": 604,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 5,
+          "contextStatus": [
+            {
+              "symbolId": "method:src/pi-service.mjs:listSessions:1346",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 9319,
+        "firstSourceBytes": 604,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 5,
+          "contextStatus": [
+            {
+              "symbolId": "method:src/pi-service.mjs:listSessions:1346",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "pi-3-container",
+      "repository": "pi-local-mcp",
+      "query": "PiService",
+      "cohort": "heldout",
+      "role": "container-control",
+      "expected": {
+        "name": "PiService",
+        "kind": "class",
+        "file_path": "src/pi-service.mjs",
+        "start_line": 644,
+        "end_line": 1489,
+        "source_hash": "5cead216322e6b0905b571c76287960e569c54267669507fde13154b954269fe",
+        "essentialSpan": [
+          644,
+          647
+        ]
+      },
+      "baseline": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 7610,
+        "firstSourceBytes": 4090,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "class:src/pi-service.mjs:PiService:644",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 7610,
+        "firstSourceBytes": 4090,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 6,
+          "contextStatus": [
+            {
+              "symbolId": "class:src/pi-service.mjs:PiService:644",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "pi-3-intent",
+      "repository": "pi-local-mcp",
+      "query": "class PiService providing listSessions",
+      "cohort": "heldout",
+      "role": "container-intent-control",
+      "expected": {
+        "name": "PiService",
+        "kind": "class",
+        "file_path": "src/pi-service.mjs",
+        "start_line": 644,
+        "end_line": 1489,
+        "source_hash": "5cead216322e6b0905b571c76287960e569c54267669507fde13154b954269fe",
+        "essentialSpan": [
+          644,
+          647
+        ]
+      },
+      "baseline": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 6281,
+        "firstSourceBytes": 4090,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 3,
+          "contextStatus": [
+            {
+              "symbolId": "class:src/pi-service.mjs:PiService:644",
+              "status": "ok"
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "top1": true,
+        "rank": 1,
+        "mrr5": 1,
+        "recall5": 1,
+        "coverage": true,
+        "actualTextBytes": 6281,
+        "firstSourceBytes": 4090,
+        "kindMismatch": false,
+        "evidence": {
+          "allMatch": true,
+          "checks": 3,
+          "contextStatus": [
+            {
+              "symbolId": "class:src/pi-service.mjs:PiService:644",
+              "status": "ok"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "summary": {
+    "independent": {
+      "cases": 12,
+      "arms": {
+        "baseline": {
+          "top1": 7,
+          "covered": 8,
+          "unknownCoverage": 0,
+          "recall5": 12,
+          "mrr5": 0.7430555555555555,
+          "actualTextBytes": 69962
+        },
+        "candidate": {
+          "top1": 10,
+          "covered": 10,
+          "unknownCoverage": 0,
+          "recall5": 12,
+          "mrr5": 0.8888888888888888,
+          "actualTextBytes": 77573
+        }
+      },
+      "coveredTop1Members": [
+        "ranking-01",
+        "ranking-13",
+        "ranking-17"
+      ],
+      "controlRegressions": [],
+      "outputByteChangePercent": 10.878762756925187
+    },
+    "heldout": {
+      "cases": 12,
+      "arms": {
+        "baseline": {
+          "top1": 9,
+          "covered": 10,
+          "unknownCoverage": 0,
+          "recall5": 12,
+          "mrr5": 0.875,
+          "actualTextBytes": 89237
+        },
+        "candidate": {
+          "top1": 12,
+          "covered": 12,
+          "unknownCoverage": 0,
+          "recall5": 12,
+          "mrr5": 1.0,
+          "actualTextBytes": 90268
+        }
+      },
+      "coveredTop1Members": [
+        "pi-1-member",
+        "pi-2-member",
+        "pi-3-member"
+      ],
+      "controlRegressions": [],
+      "outputByteChangePercent": 1.1553503591559489
+    },
+    "calibration": {
+      "cases": 4,
+      "arms": {
+        "baseline": {
+          "top1": 2,
+          "covered": 2,
+          "unknownCoverage": 0,
+          "recall5": 4,
+          "mrr5": 0.6875,
+          "actualTextBytes": 40274
+        },
+        "candidate": {
+          "top1": 3,
+          "covered": 3,
+          "unknownCoverage": 0,
+          "recall5": 4,
+          "mrr5": 0.8125,
+          "actualTextBytes": 46175
+        }
+      },
+      "coveredTop1Members": [
+        "calibration-01"
+      ],
+      "controlRegressions": [],
+      "outputByteChangePercent": 14.652132889705527
+    }
+  },
+  "decision": {
+    "gatePassed": true,
+    "retainImplementation": true,
+    "requiredRustTests": 754,
+    "additionalTargetedRegression": "passed",
+    "clippy": "passed",
+    "formatting": "passed",
+    "releaseBuild": "passed",
+    "npmTests": 23,
+    "harnessTests": 10,
+    "platform": "Windows native, stable Rust",
+    "limits": "No new end-to-end agent comparison, latency claim, external adoption evidence, remote CI, or package publication."
+  },
+  "engineering": {
+    "cutoffUtc": "2026-09-13T10:50:14.633505+00:00",
+    "method": "Unique per-response token_usage_record.usage for current parent turn and three engineering sessions. Cached input is already included in input.",
+    "parentTurn": "01a09a55-8e3a-7e20-8dad-f9c0fca76c00",
+    "threads": [
+      {
+        "role": "parent",
+        "session": "01a08ba7-0ca2-72b2-82a0-178d382c195f",
+        "responseRecords": 44,
+        "usage": {
+          "input_tokens": 6269243,
+          "cached_input_tokens": 5971456,
+          "output_tokens": 30530,
+          "total_tokens": 6299773,
+          "uncached_input_tokens": 297787
+        }
+      },
+      {
+        "role": "implementation",
+        "session": "01a09a56-3101-7da2-9b5e-cd499f24cef4",
+        "responseRecords": 46,
+        "usage": {
+          "input_tokens": 3533690,
+          "cached_input_tokens": 3410432,
+          "output_tokens": 21688,
+          "total_tokens": 3555378,
+          "uncached_input_tokens": 123258
+        }
+      },
+      {
+        "role": "native_harness",
+        "session": "01a09a57-d0e8-78c0-93f9-c72d23bca80f",
+        "responseRecords": 9,
+        "usage": {
+          "input_tokens": 512684,
+          "cached_input_tokens": 460544,
+          "output_tokens": 5927,
+          "total_tokens": 518611,
+          "uncached_input_tokens": 52140
+        }
+      },
+      {
+        "role": "independent_review",
+        "session": "01a09a5a-606e-78c0-87c7-50ca6b1be2f5",
+        "responseRecords": 16,
+        "usage": {
+          "input_tokens": 1190243,
+          "cached_input_tokens": 1108992,
+          "output_tokens": 9661,
+          "total_tokens": 1199904,
+          "uncached_input_tokens": 81251
+        }
+      }
+    ],
+    "totals": {
+      "input_tokens": 11505860,
+      "cached_input_tokens": 10951424,
+      "output_tokens": 67806,
+      "total_tokens": 11573666,
+      "uncached_input_tokens": 554436
+    },
+    "excludes": "Export completion and later report, commits and final reply. This is processed usage, not monetary billing or evaluated-agent tokens."
+  }
+}
