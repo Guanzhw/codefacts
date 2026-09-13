@@ -1,0 +1,248 @@
+{
+  "schemaVersion": 1,
+  "sourceRevision": "779bf77b111f300d354a009875a040da4c7aea44",
+  "archiveSha256": "51be34e4c55d4471c8b5d03a3e1c34b9c72b10fb1cb5a39bae8c2fcafc7030a8",
+  "selection": "Source-only, prior to native ranking. Three diagnostic method lookups across two classes, including early and late definitions; not random user tasks.",
+  "cases": [
+    {
+      "id": "pi-1-member",
+      "repository": "pi-local-mcp",
+      "cohort": "heldout",
+      "query": "PiRpcProcess rejectPending",
+      "role": "member",
+      "intent": "Locate the named method and its complete body.",
+      "expected": {
+        "name": "rejectPending",
+        "kind": "method",
+        "file_path": "src/pi-rpc.mjs",
+        "start_line": 258,
+        "end_line": 264,
+        "source_hash": "6feec8b5c6fe9d5efa95fed311e5e4e741abd8861d2eec694323e2b23b09d63c"
+      },
+      "essentialSpan": [
+        258,
+        264
+      ]
+    },
+    {
+      "id": "pi-1-exact",
+      "repository": "pi-local-mcp",
+      "cohort": "heldout",
+      "query": "rejectPending",
+      "role": "exact-member-control",
+      "intent": "Locate the named method and its complete body.",
+      "expected": {
+        "name": "rejectPending",
+        "kind": "method",
+        "file_path": "src/pi-rpc.mjs",
+        "start_line": 258,
+        "end_line": 264,
+        "source_hash": "6feec8b5c6fe9d5efa95fed311e5e4e741abd8861d2eec694323e2b23b09d63c"
+      },
+      "essentialSpan": [
+        258,
+        264
+      ]
+    },
+    {
+      "id": "pi-1-container",
+      "repository": "pi-local-mcp",
+      "cohort": "heldout",
+      "query": "PiRpcProcess",
+      "role": "container-control",
+      "intent": "Locate the named container declaration and constructor.",
+      "expected": {
+        "name": "PiRpcProcess",
+        "kind": "class",
+        "file_path": "src/pi-rpc.mjs",
+        "start_line": 40,
+        "end_line": 308,
+        "source_hash": "6feec8b5c6fe9d5efa95fed311e5e4e741abd8861d2eec694323e2b23b09d63c"
+      },
+      "essentialSpan": [
+        40,
+        43
+      ]
+    },
+    {
+      "id": "pi-1-intent",
+      "repository": "pi-local-mcp",
+      "cohort": "heldout",
+      "query": "class PiRpcProcess providing rejectPending",
+      "role": "container-intent-control",
+      "intent": "Locate the named container declaration and constructor.",
+      "expected": {
+        "name": "PiRpcProcess",
+        "kind": "class",
+        "file_path": "src/pi-rpc.mjs",
+        "start_line": 40,
+        "end_line": 308,
+        "source_hash": "6feec8b5c6fe9d5efa95fed311e5e4e741abd8861d2eec694323e2b23b09d63c"
+      },
+      "essentialSpan": [
+        40,
+        43
+      ]
+    },
+    {
+      "id": "pi-2-member",
+      "repository": "pi-local-mcp",
+      "cohort": "heldout",
+      "query": "PiService getSession",
+      "role": "member",
+      "intent": "Locate the named method and its complete body.",
+      "expected": {
+        "name": "getSession",
+        "kind": "method",
+        "file_path": "src/pi-service.mjs",
+        "start_line": 696,
+        "end_line": 702,
+        "source_hash": "5cead216322e6b0905b571c76287960e569c54267669507fde13154b954269fe"
+      },
+      "essentialSpan": [
+        696,
+        702
+      ]
+    },
+    {
+      "id": "pi-2-exact",
+      "repository": "pi-local-mcp",
+      "cohort": "heldout",
+      "query": "getSession",
+      "role": "exact-member-control",
+      "intent": "Locate the named method and its complete body.",
+      "expected": {
+        "name": "getSession",
+        "kind": "method",
+        "file_path": "src/pi-service.mjs",
+        "start_line": 696,
+        "end_line": 702,
+        "source_hash": "5cead216322e6b0905b571c76287960e569c54267669507fde13154b954269fe"
+      },
+      "essentialSpan": [
+        696,
+        702
+      ]
+    },
+    {
+      "id": "pi-2-container",
+      "repository": "pi-local-mcp",
+      "cohort": "heldout",
+      "query": "PiService",
+      "role": "container-control",
+      "intent": "Locate the named container declaration and constructor.",
+      "expected": {
+        "name": "PiService",
+        "kind": "class",
+        "file_path": "src/pi-service.mjs",
+        "start_line": 644,
+        "end_line": 1489,
+        "source_hash": "5cead216322e6b0905b571c76287960e569c54267669507fde13154b954269fe"
+      },
+      "essentialSpan": [
+        644,
+        647
+      ]
+    },
+    {
+      "id": "pi-2-intent",
+      "repository": "pi-local-mcp",
+      "cohort": "heldout",
+      "query": "class PiService providing getSession",
+      "role": "container-intent-control",
+      "intent": "Locate the named container declaration and constructor.",
+      "expected": {
+        "name": "PiService",
+        "kind": "class",
+        "file_path": "src/pi-service.mjs",
+        "start_line": 644,
+        "end_line": 1489,
+        "source_hash": "5cead216322e6b0905b571c76287960e569c54267669507fde13154b954269fe"
+      },
+      "essentialSpan": [
+        644,
+        647
+      ]
+    },
+    {
+      "id": "pi-3-member",
+      "repository": "pi-local-mcp",
+      "cohort": "heldout",
+      "query": "PiService listSessions",
+      "role": "member",
+      "intent": "Locate the named method and its complete body.",
+      "expected": {
+        "name": "listSessions",
+        "kind": "method",
+        "file_path": "src/pi-service.mjs",
+        "start_line": 1346,
+        "end_line": 1358,
+        "source_hash": "5cead216322e6b0905b571c76287960e569c54267669507fde13154b954269fe"
+      },
+      "essentialSpan": [
+        1346,
+        1358
+      ]
+    },
+    {
+      "id": "pi-3-exact",
+      "repository": "pi-local-mcp",
+      "cohort": "heldout",
+      "query": "listSessions",
+      "role": "exact-member-control",
+      "intent": "Locate the named method and its complete body.",
+      "expected": {
+        "name": "listSessions",
+        "kind": "method",
+        "file_path": "src/pi-service.mjs",
+        "start_line": 1346,
+        "end_line": 1358,
+        "source_hash": "5cead216322e6b0905b571c76287960e569c54267669507fde13154b954269fe"
+      },
+      "essentialSpan": [
+        1346,
+        1358
+      ]
+    },
+    {
+      "id": "pi-3-container",
+      "repository": "pi-local-mcp",
+      "cohort": "heldout",
+      "query": "PiService",
+      "role": "container-control",
+      "intent": "Locate the named container declaration and constructor.",
+      "expected": {
+        "name": "PiService",
+        "kind": "class",
+        "file_path": "src/pi-service.mjs",
+        "start_line": 644,
+        "end_line": 1489,
+        "source_hash": "5cead216322e6b0905b571c76287960e569c54267669507fde13154b954269fe"
+      },
+      "essentialSpan": [
+        644,
+        647
+      ]
+    },
+    {
+      "id": "pi-3-intent",
+      "repository": "pi-local-mcp",
+      "cohort": "heldout",
+      "query": "class PiService providing listSessions",
+      "role": "container-intent-control",
+      "intent": "Locate the named container declaration and constructor.",
+      "expected": {
+        "name": "PiService",
+        "kind": "class",
+        "file_path": "src/pi-service.mjs",
+        "start_line": 644,
+        "end_line": 1489,
+        "source_hash": "5cead216322e6b0905b571c76287960e569c54267669507fde13154b954269fe"
+      },
+      "essentialSpan": [
+        644,
+        647
+      ]
+    }
+  ]
+}
