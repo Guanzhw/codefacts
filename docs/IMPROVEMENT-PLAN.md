@@ -10,7 +10,7 @@ rules; this page owns the active queue and investment decisions.
 | Priority | Work | Evidence and completion condition | Status |
 | --- | --- | --- | --- |
 | 1 | Implement explicit member-query ranking | Native Top-1 improved 7/12 to 10/12 on earlier cases and 9/12 to 12/12 on a third repository; regression tests preserve pagination, filters and context. | Complete; retained in `5a88820`. [Results and cost](MEMBER-RANKING-IMPLEMENTATION-2026-09-13.md). |
-| 2 | Verify usefulness during real repository work | Collect a source-backed task outside these constructed queries; measure correct completion, tokens and elapsed time including failures. Expand only after matched-quality benefit. | Await a real task; no synthetic model campaign queued. |
+| 2 | Verify usefulness during real repository work | Triage actual issue #1 against a pinned OpenSession checkout; compare correct diagnosis, tokens and time across three tools. | In progress; [frozen single-task protocol](ISSUE1-TRIAGE-2026-09-13.md). |
 | 3 | Resolve a demonstrated remaining retrieval defect | Container names can collide with document headings; explicit kind filters already exist. Require a concrete failed lookup and independent source-labeled cases before changing default ranking. | Evidence collection only. |
 | Continuous | Maintain source correctness, freshness, and installation reliability | Reproduce a reported failure, fix its owning boundary, add the smallest meaningful regression and verify the affected native/protocol/platform surface. | Triggered by failures. |
 
