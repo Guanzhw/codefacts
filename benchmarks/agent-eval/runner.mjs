@@ -104,6 +104,7 @@ function parseJsonl(stdout) {
   const parseErrors = [];
   const usageEvents = [];
   const messages = [];
+  const startupErrors = [];
   const calls = new Map();
   const outputByCall = new Map();
   let threadId;
@@ -125,6 +126,9 @@ function parseJsonl(stdout) {
     }
     const topLevelItem = event.item && typeof event.item === 'object' ? event.item : null;
     const item = topLevelItem || (event.type && event.type.startsWith('item.') ? event : null);
+    if (event.type === 'item.completed' && item?.type === 'error' && typeof item.message === 'string' && /^Code Mode is unavailable because failed to spawn code-mode host .*: host executable was not found\./.test(item.message)) {
+      startupErrors.push({ id: item.id ?? null, message: item.message });
+    }
     if (item && item.type) {
       const commandLike = COMMAND_TYPES.has(item.type);
       const mcpLike = MCP_TYPES.has(item.type);
@@ -205,6 +209,7 @@ function parseJsonl(stdout) {
     threadId: threadId || null,
     eventCount: events.length,
     parseErrors,
+    startupErrors,
     turnCompleted,
     answer: messages.length ? messages[messages.length - 1] : '',
     usage: normalizeUsage(usage),
@@ -406,7 +411,9 @@ function metricsFrom({ parsed, processResult = null, rollout = null }) {
   const stdoutUsage = parsed.usage;
   const stdoutUsageAvailable = Number.isFinite(stdoutUsage?.input_tokens) && Number.isFinite(stdoutUsage?.output_tokens);
   const usageAvailable = stdoutUsageAvailable;
-  const rawEvaluationValidity = rollout?.evaluationValidity || 'unknown';
+  const rawEvaluationValidity = parsed.startupErrors.length
+    ? 'invalid_environment'
+    : (rollout?.evaluationValidity || 'unknown');
   const toolCalls = parsed.toolCalls;
   const usageReconciliation = rollout ? {
     stdout: parsed.usage,
@@ -453,6 +460,7 @@ function metricsFrom({ parsed, processResult = null, rollout = null }) {
     threadId: parsed.threadId,
     eventCount: parsed.eventCount,
     parseErrors: parsed.parseErrors,
+    startupErrors: parsed.startupErrors,
     turnCompleted: parsed.turnCompleted,
     usage: parsed.usage,
     rolloutUsage: rollout?.finalTotalUsage || null,

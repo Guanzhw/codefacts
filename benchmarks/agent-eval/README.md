@@ -40,6 +40,13 @@ decision. Recompute its [reviewed results](value-screen-results.json) with
    steps; the runner does not install tools or change global configuration.
 3. Preflight real source reads and each required MCP. Verify that the agent can
    inspect source and execute an actual MCP query. Preserve failed preflights.
+   Pin a complete usable Codex runtime: copying only `codex.exe` can omit its
+   adjacent `codex-code-mode-host.exe`. Check required runtime files before
+   spending model calls. Exit code zero alone is insufficient; the shared
+   parser records the observed structured host-not-found error in `startupErrors`
+   and classifies it as `invalid-environment`, retaining usage. Require actual
+   source reads and substantive MCP facts, and stop before another invocation
+   when readiness fails. Keep failed preflight data separate from task results.
 4. Run one task/arm/repetition, then interleave or randomize the remaining arms:
 
    ```powershell

@@ -35,6 +35,38 @@ test('stdout direct MCP calls remain visible without a wrapper transcript', () =
   assert.equal(metrics.evaluationEligible, false);
 });
 
+test('fatal Code Mode startup error invalidates an otherwise successful exit', () => {
+  const message = 'Code Mode is unavailable because failed to spawn code-mode host D:\\Eval\\codex-code-mode-host.exe: host executable was not found. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`.';
+  const parsed = parseJsonl(jsonl([
+    { type: 'item.completed', item: { id: 'err-1', type: 'error', message } },
+    { type: 'turn.completed', usage: { input_tokens: 10, output_tokens: 3 } },
+  ]));
+  const metrics = metricsFrom({ parsed, processResult: { exitCode: 0, timedOut: false, spawnError: null } });
+  assert.deepEqual(parsed.startupErrors, [{ id: 'err-1', message }]);
+  assert.deepEqual(metrics.startupErrors, parsed.startupErrors);
+  assert.equal(metrics.rawEvaluationValidity, 'invalid_environment');
+  assert.equal(metrics.evaluationValidity, 'invalid_environment');
+  assert.equal(metrics.status, 'invalid-environment');
+  assert.equal(metrics.executionCompleted, true);
+  assert.equal(metrics.total_tokens, 13);
+  assert.equal(metrics.tokenEligible, false);
+  assert.equal(metrics.evaluationEligible, false);
+  assert.equal(metrics.toolCalls.total, 0);
+});
+
+test('Code Mode wording in agent messages and ordinary errors remains unchanged', () => {
+  const message = 'Code Mode is unavailable because failed to spawn code-mode host D:\\Eval\\codex-code-mode-host.exe: host executable was not found. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`.';
+  const parsed = parseJsonl(jsonl([
+    { type: 'item.completed', item: { id: 'msg-1', type: 'agent_message', text: message } },
+    { type: 'item.completed', item: { id: 'err-2', type: 'error', message: 'failed test command' } },
+    { type: 'turn.completed', usage: { input_tokens: 10, output_tokens: 3 } },
+  ]));
+  assert.deepEqual(parsed.startupErrors, []);
+  const metrics = metricsFrom({ parsed });
+  assert.equal(metrics.rawEvaluationValidity, 'unknown');
+  assert.equal(metrics.status, 'pending-manual-review');
+});
+
 test('completed item metadata replaces sparse started metadata', () => {
   const parsed = parseJsonl(jsonl([
     { type: 'item.started', item: { id: 'm1', type: 'mcp_tool_call' } },
