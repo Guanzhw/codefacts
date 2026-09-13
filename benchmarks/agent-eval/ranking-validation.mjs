@@ -82,7 +82,7 @@ export async function verifyEvidence(response, repositoryRoot) {
   return { checks, allMatch: checks.every((check) => Object.values(check).slice(1).every(Boolean)) };
 }
 
-async function runServer(binary, root, statePath, cases) {
+export async function runServer(binary, root, statePath, cases) {
   return new Promise((done) => {
     const child = spawn(binary, ['mcp', '--root', root, '--state', statePath], { cwd: root, windowsHide: true, stdio: ['pipe', 'pipe', 'pipe'] });
     const messages = [], stderr = []; let buffer = '', cursor = 0, timer, stopped = false;

@@ -30,7 +30,7 @@ pub struct GraphStats {
 #[derive(Debug, Clone, Copy)]
 pub struct FtsSearchOptions<'a> {
     pub query: &'a str,
-    pub excluded_node_names: &'a [String],
+    pub excluded_node_ids: &'a [String],
     pub kind: Option<&'a str>,
     pub path_prefix: Option<&'a str>,
     pub top_level: bool,
@@ -951,14 +951,14 @@ impl GraphStore {
         );
         let mut values = vec![SqlValue::Text(options.query.to_string())];
 
-        if !options.excluded_node_names.is_empty() {
-            let placeholders = std::iter::repeat_n("?", options.excluded_node_names.len())
+        if !options.excluded_node_ids.is_empty() {
+            let placeholders = std::iter::repeat_n("?", options.excluded_node_ids.len())
                 .collect::<Vec<_>>()
                 .join(", ");
-            query.push_str(&format!(" AND nodes.name NOT IN ({placeholders})"));
+            query.push_str(&format!(" AND nodes.id NOT IN ({placeholders})"));
             values.extend(
                 options
-                    .excluded_node_names
+                    .excluded_node_ids
                     .iter()
                     .cloned()
                     .map(SqlValue::Text),

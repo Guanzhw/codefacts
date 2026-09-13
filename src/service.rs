@@ -449,12 +449,10 @@ impl CodeFacts {
         // Filtering and paging happen after this ordering is established.
         let exact_nodes = self.exact_search_nodes(query, filters)?;
         let exact_count = exact_nodes.len();
-        let mut exact_node_names = exact_nodes
+        let exact_node_ids = exact_nodes
             .iter()
-            .map(|node| node.name.clone())
+            .map(|node| node.id.clone())
             .collect::<Vec<_>>();
-        exact_node_names.sort();
-        exact_node_names.dedup();
 
         // Fetch one additional item to say whether the caller can continue.
         let page_capacity = limit.saturating_add(1);
@@ -474,7 +472,7 @@ impl CodeFacts {
             nodes.extend(self.search_fts_nodes(
                 &fts_query,
                 filters,
-                &exact_node_names,
+                &exact_node_ids,
                 fts_offset,
                 remaining,
             )?);
@@ -837,13 +835,13 @@ impl CodeFacts {
         &self,
         fts_query: &str,
         filters: SearchFilters<'_>,
-        excluded_node_names: &[String],
+        excluded_node_ids: &[String],
         offset: usize,
         limit: usize,
     ) -> Result<Vec<CodeNode>> {
         self.store.search_fts_nodes(FtsSearchOptions {
             query: fts_query,
-            excluded_node_names,
+            excluded_node_ids,
             kind: filters.kind.as_ref().map(NodeKind::as_str),
             path_prefix: filters.path_prefix,
             top_level: filters.symbol_scope == SymbolScope::TopLevel,
@@ -857,26 +855,56 @@ impl CodeFacts {
     /// high-signal CamelCase, PascalCase, or snake_case identifier. Those
     /// identifiers remain verifiable facts rather than a fuzzy semantic guess.
     fn exact_search_nodes(&self, query: &str, filters: SearchFilters<'_>) -> Result<Vec<CodeNode>> {
-        let mut names = Vec::new();
         let exact_query = query.trim();
+        let mut names = Vec::new();
+        // Keep an exact whole-query name ahead of every narrower interpretation
+        // of the query. This matters for headings or symbols intentionally named
+        // with spaces.
         if !exact_query.is_empty() {
-            names.push(exact_query);
+            names.push((exact_query, false));
         }
+
+        // An explicit `Container member` query can identify a callable even
+        // when the lowercase member is not an identifier anchor. The container
+        // lookup is intentionally unfiltered: it only activates ordering when
+        // an exact container declaration exists, and it never asserts an
+        // ownership relation between the two names.
+        if let Some((container_name, member_name)) = member_query_tokens(query) {
+            let has_exact_container = self
+                .store
+                .get_nodes_by_name(container_name)?
+                .into_iter()
+                .any(|node| {
+                    matches!(
+                        node.kind,
+                        NodeKind::Class | NodeKind::Struct | NodeKind::Interface | NodeKind::Trait
+                    )
+                });
+            if has_exact_container {
+                names.push((member_name, true));
+            }
+        }
+
         names.extend(
             query_tokens(query)
                 .into_iter()
-                .filter(|token| is_identifier_anchor(token)),
+                .filter(|token| is_identifier_anchor(token))
+                .map(|token| (token, false)),
         );
-
         let mut seen_names = HashSet::new();
         let mut seen_nodes = HashSet::new();
         let mut exact_nodes = Vec::new();
-        for name in names {
-            if !seen_names.insert(name) {
+        for (name, callable_only) in names {
+            // Callable priority must preserve the existing all-kind anchor
+            // lookup, including same-name facts that do not match the full FTS query.
+            if !seen_names.insert((name, callable_only)) {
                 continue;
             }
             let mut candidates = self.store.get_nodes_by_name(name)?;
-            candidates.retain(|node| node_matches_filters(node, filters.kind, filters.path_prefix));
+            candidates.retain(|node| {
+                (!callable_only || matches!(node.kind, NodeKind::Method | NodeKind::Function))
+                    && node_matches_filters(node, filters.kind, filters.path_prefix)
+            });
             self.filter_nodes_by_scope(&mut candidates, filters.symbol_scope)?;
             exact_nodes.extend(
                 candidates
@@ -1500,6 +1528,25 @@ fn is_identifier_anchor(token: &str) -> bool {
     token.contains('_') || token.chars().any(char::is_uppercase)
 }
 
+fn member_query_tokens(query: &str) -> Option<(&str, &str)> {
+    let mut tokens = query.split_whitespace();
+    let container = tokens.next()?;
+    let member = tokens.next()?;
+    if tokens.next().is_some() || !is_ascii_identifier(container) || !is_ascii_identifier(member) {
+        return None;
+    }
+    Some((container, member))
+}
+
+fn is_ascii_identifier(token: &str) -> bool {
+    let mut bytes = token.bytes();
+    let Some(first) = bytes.next() else {
+        return false;
+    };
+    (first == b'_' || first.is_ascii_alphabetic())
+        && bytes.all(|byte| byte == b'_' || byte.is_ascii_alphanumeric())
+}
+
 fn node_matches_filters(
     node: &CodeNode,
     kind: Option<NodeKind>,
@@ -1643,7 +1690,7 @@ mod tests {
             .store
             .search_fts_nodes(FtsSearchOptions {
                 query: &fts_query("agent_turn").expect("valid FTS query"),
-                excluded_node_names: &[],
+                excluded_node_ids: &[],
                 kind: None,
                 path_prefix: None,
                 top_level: false,

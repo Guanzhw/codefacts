@@ -1475,6 +1475,164 @@ fn rust_structs_are_searchable_as_structs() {
 }
 
 #[test]
+fn member_queries_rank_exact_callables_before_containers_before_pagination() {
+    let repository = tempdir().expect("temporary repository");
+    fs::create_dir_all(repository.path().join("src")).expect("source directory");
+    fs::write(
+        repository.path().join("src/router.ts"),
+        "export class Router {\n    dispatch() { return 'router'; }\n}\n\nexport class OtherRouter {\n    dispatch() { return 'other'; }\n}\n\nexport function dispatch() { return 'function'; }\nexport const dispatch = 0; // Router dispatch\nexport function test_helper() { return 1; }\n",
+    )
+    .expect("TypeScript fixture");
+    fs::write(
+        repository.path().join("src/rust_router.rs"),
+        "pub struct Router {}\n\nimpl Router {\n    pub fn dispatch(&self) {}\n}\n",
+    )
+    .expect("Rust fixture");
+    fs::write(repository.path().join("README.md"), "# Router dispatch\n")
+        .expect("whole-query heading fixture");
+    fs::write(
+        repository.path().join("src/anchored.ts"),
+        "export class AnchorRouter { get_value() { return 1; } }\n",
+    )
+    .expect("anchored member fixture");
+    fs::write(
+        repository.path().join("src/unrelated.ts"),
+        "export const get_value = 0;\n",
+    )
+    .expect("same-name anchor without container term");
+
+    let facts = CodeFacts::open(repository.path(), repository.path().join("external.sqlite"))
+        .expect("open source-backed facts");
+
+    let member_query = facts
+        .search_with_page_scope_detail_options(
+            "Router dispatch",
+            None,
+            Some("src"),
+            SymbolScope::TopLevel,
+            SearchDetail::Context,
+            1,
+            0,
+            None,
+            Some(20),
+        )
+        .expect("member search");
+    assert_eq!(member_query["results"][0]["name"], "dispatch");
+    assert_eq!(member_query["results"][0]["kind"], "method");
+    assert_eq!(
+        member_query["context_entries"][0]["symbol"]["id"],
+        member_query["results"][0]["id"]
+    );
+    assert!(member_query["context_entries"][0]["source"]["text"]
+        .as_str()
+        .expect("first member source")
+        .contains("dispatch()"));
+    assert!(member_query["results"]
+        .as_array()
+        .expect("member results")
+        .iter()
+        .any(|result| result["name"] == "dispatch" && result["kind"] == "variable"));
+
+    let anchored = facts
+        .search_with_options("AnchorRouter get_value", None, Some("src"), 0, Some(20))
+        .expect("preserve all-kind exact anchors after callable priority");
+    assert_eq!(anchored["results"][0]["name"], "get_value");
+    assert_eq!(anchored["results"][0]["kind"], "method");
+    assert!(anchored["results"]
+        .as_array()
+        .expect("anchor results")
+        .iter()
+        .any(|result| result["name"] == "get_value"
+            && result["kind"] == "variable"
+            && result["evidence"]["file_path"] == "src/unrelated.ts"));
+
+    let method_page = facts
+        .search_with_options(
+            "Router dispatch",
+            Some(NodeKind::Method),
+            Some("src/router.ts"),
+            0,
+            Some(1),
+        )
+        .expect("filtered method page");
+    assert_eq!(method_page["results"][0]["name"], "dispatch");
+    assert_eq!(method_page["results"][0]["kind"], "method");
+    assert_eq!(
+        method_page["results"][0]["evidence"]["file_path"],
+        "src/router.ts"
+    );
+
+    let struct_result = facts
+        .search_with_options(
+            "Router dispatch",
+            Some(NodeKind::Struct),
+            Some("src/rust_router.rs"),
+            0,
+            Some(20),
+        )
+        .expect("filtered struct search");
+    assert_eq!(struct_result["results"][0]["name"], "Router");
+    assert_eq!(struct_result["results"][0]["kind"], "struct");
+
+    let whole_name = facts
+        .search_with_options("Router dispatch", None, None, 0, Some(20))
+        .expect("whole-query name search");
+    assert_eq!(whole_name["results"][0]["name"], "Router dispatch");
+    assert_eq!(whole_name["results"][0]["kind"], "heading");
+
+    let explicit_container = facts
+        .search_with_options("Router", None, Some("src"), 0, Some(20))
+        .expect("explicit container search");
+    assert_eq!(explicit_container["results"][0]["name"], "Router");
+    assert!(facts
+        .search_with_options("test_helper", None, Some("src"), 0, Some(20))
+        .expect("single identifier search")["results"]
+        .as_array()
+        .expect("single identifier results")
+        .iter()
+        .any(|result| result["name"] == "test_helper"));
+
+    let all_results = facts
+        .search_with_options("Router dispatch", None, Some("src"), 0, Some(20))
+        .expect("large member page")["results"]
+        .as_array()
+        .expect("large results")
+        .iter()
+        .map(|result| result["id"].as_str().expect("result id").to_string())
+        .collect::<Vec<_>>();
+    let mut paged_results = Vec::new();
+    let mut cursor = None;
+    loop {
+        let page = facts
+            .search_with_page_options(
+                "Router dispatch",
+                None,
+                Some("src"),
+                0,
+                cursor.as_deref(),
+                Some(1),
+            )
+            .expect("member cursor page");
+        paged_results.extend(
+            page["results"]
+                .as_array()
+                .expect("page results")
+                .iter()
+                .map(|result| result["id"].as_str().expect("page result id").to_string()),
+        );
+        cursor = page["next_cursor"].as_str().map(str::to_string);
+        if cursor.is_none() {
+            break;
+        }
+    }
+    assert_eq!(paged_results, all_results);
+    let unique_ids = paged_results
+        .iter()
+        .collect::<std::collections::HashSet<_>>();
+    assert_eq!(unique_ids.len(), paged_results.len());
+}
+
+#[test]
 fn markdown_sections_hierarchy_and_local_anchor_links_are_source_backed() {
     let repository = tempdir().expect("temporary repository");
     fs::write(

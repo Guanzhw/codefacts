@@ -82,7 +82,11 @@ highest-ranked candidates. Each excerpt is capped at 4 KiB and is returned only
 when its current on-disk file hash still matches the fact evidence; otherwise
 the entry states that the source changed during the query. A mixed query that
 contains an exact CamelCase, PascalCase, or snake_case identifier ranks that
-confirmed identifier ahead of broad FTS matches. `outline` accepts `kind`,
+confirmed identifier ahead of broad FTS matches. Two-identifier queries such as
+`Router dispatch` put exact callable matches before the named container,
+including lowercase members. Exact whole-query names retain priority; same-name
+candidates remain distinct, and ordering alone does not establish membership.
+`outline` accepts `kind`,
 `scope`, and `offset`. `scope` defaults to
 `top_level`, which suppresses variables declared inside functions or methods;
 use `scope: "all"` for implementation detail. Both return an opaque `next_cursor` when another
@@ -396,7 +400,7 @@ Performance measurement is documented in [docs/PERFORMANCE.md](docs/PERFORMANCE.
 
 An evidence snapshot comparing the five workflows with CodeMapper on five local repositories is in [docs/CODEMAPPER-COMPARISON.md](docs/CODEMAPPER-COMPARISON.md).
 
-Out of scope for v1: editing, hooks, watchers, HTTP servers, dashboards, embeddings/vector search, reranking, security scans, Git analytics, agent memory, natural-language Q&A, and automated context injection.
+Out of scope for v1: editing, hooks, watchers, HTTP servers, dashboards, embeddings/vector search, model-based reranking, security scans, Git analytics, agent memory, natural-language Q&A, and automated context injection.
 
 ## Upstream provenance
 

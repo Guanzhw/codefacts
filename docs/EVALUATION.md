@@ -8,6 +8,10 @@ This scorecard separates product value from index speed. The repository-level
 latency and resource runner remains documented in [PERFORMANCE.md](PERFORMANCE.md).
 Thresholds below are initial decision targets, not measured product claims.
 
+The active implementation queue and investment decisions are maintained in
+[IMPROVEMENT-PLAN.md](IMPROVEMENT-PLAN.md); completed milestones link to their
+frozen cases and measured results.
+
 ## Basis and cross-tool applicability
 
 These are task-outcome metrics, with tool-specific diagnostics underneath:
