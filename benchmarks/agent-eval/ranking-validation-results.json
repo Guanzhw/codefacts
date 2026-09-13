@@ -1,0 +1,905 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-09-13",
+  "purpose": "Offline bounded member-ranking validation; output-byte evidence, no evaluated-model token claim.",
+  "freeze": {
+    "casesCommit": "c816acd",
+    "driverCommit": "6f264d3",
+    "casesSha256": "e7c5435af196258b9a6de5a352a47e077ecc6c189255e591401aa390d0a6bdee",
+    "driverSha256": "fa96cd029001f39e136ac4471a85c940ba22ec247577612f5c3bd6aeebcb3edc",
+    "binarySha256": "2e725c9b3947545aecce845ba7fdd41d58e8fd456743d0cd9da2d34355ce7576",
+    "rawResponseSha256": "dbc74ea5f979916adabf48de2a4846f6034c991ccd4f72aa5e6ae600adf1dbae",
+    "rawResultSha256": "6cae46c86a60a1321bcad354028bc7da07923eb103132e2ea5a14ef3a8c17c92"
+  },
+  "sourceRevisions": {
+    "opensession": "994942690fe5d1854398017026ef3615b2fdd24f",
+    "codefacts": "76bae6820c3032e952dbfb5aeb8560b949af185c"
+  },
+  "execution": {
+    "searches": 16,
+    "maps": 2,
+    "retries": 0,
+    "evaluatedModelInvocations": 0,
+    "searchOptions": {
+      "limit": 5,
+      "detail": "context",
+      "context_limit": 1
+    }
+  },
+  "actualBaselineSearchTextBytes": 109820,
+  "results": [
+    {
+      "id": "ranking-13",
+      "repository": "codefacts",
+      "query": "CodeFacts search_with_page_options",
+      "cohort": "independent",
+      "role": "member",
+      "actualBaselineTextContentBytes": 6696,
+      "modeledBaselinePayloadBytes": 6696,
+      "modeledCandidatePayloadBytes": 9029,
+      "baseline": {
+        "firstRelevantRank": 4,
+        "top1": false,
+        "mrr5": 0.25,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "heading:README.md:CodeFacts:1",
+        "firstSourceBytes": 3550,
+        "essentialSpanCovered": false
+      },
+      "candidate": {
+        "firstRelevantRank": 1,
+        "top1": true,
+        "mrr5": 1,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "method:src/service.rs:search_with_page_options:326",
+        "firstSourceBytes": 484,
+        "essentialSpanCovered": true,
+        "falsePromotion": false
+      },
+      "rerank": {
+        "applied": true,
+        "reason": "exact-container-callable-rerank",
+        "missingContextSymbolIds": []
+      },
+      "verifiedEvidence": {
+        "evidence": {
+          "allMatch": true,
+          "checks": 6
+        },
+        "candidateEvidence": {
+          "allMatch": true,
+          "checks": 6
+        }
+      },
+      "candidatePayloadComplete": true
+    },
+    {
+      "id": "ranking-14",
+      "repository": "codefacts",
+      "query": "search_with_page_options",
+      "cohort": "independent",
+      "role": "exact-member-control",
+      "actualBaselineTextContentBytes": 8375,
+      "modeledBaselinePayloadBytes": 8375,
+      "modeledCandidatePayloadBytes": 8375,
+      "baseline": {
+        "firstRelevantRank": 1,
+        "top1": true,
+        "mrr5": 1,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "method:src/service.rs:search_with_page_options:326",
+        "firstSourceBytes": 484,
+        "essentialSpanCovered": true
+      },
+      "candidate": {
+        "firstRelevantRank": 1,
+        "top1": true,
+        "mrr5": 1,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "method:src/service.rs:search_with_page_options:326",
+        "firstSourceBytes": 484,
+        "essentialSpanCovered": true,
+        "falsePromotion": false
+      },
+      "rerank": {
+        "applied": false,
+        "reason": "query-not-exactly-two-ascii-tokens",
+        "missingContextSymbolIds": []
+      },
+      "verifiedEvidence": {
+        "evidence": {
+          "allMatch": true,
+          "checks": 4
+        },
+        "candidateEvidence": {
+          "allMatch": true,
+          "checks": 4
+        }
+      },
+      "candidatePayloadComplete": true
+    },
+    {
+      "id": "ranking-15",
+      "repository": "codefacts",
+      "query": "CodeFacts",
+      "cohort": "independent",
+      "role": "container-control",
+      "actualBaselineTextContentBytes": 6794,
+      "modeledBaselinePayloadBytes": 6794,
+      "modeledCandidatePayloadBytes": 6794,
+      "baseline": {
+        "firstRelevantRank": 3,
+        "top1": false,
+        "mrr5": 0.3333333333333333,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "heading:README.md:CodeFacts:1",
+        "firstSourceBytes": 3550,
+        "essentialSpanCovered": false
+      },
+      "candidate": {
+        "firstRelevantRank": 3,
+        "top1": false,
+        "mrr5": 0.3333333333333333,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "heading:README.md:CodeFacts:1",
+        "firstSourceBytes": 3550,
+        "essentialSpanCovered": false,
+        "falsePromotion": false
+      },
+      "rerank": {
+        "applied": false,
+        "reason": "query-not-exactly-two-ascii-tokens",
+        "missingContextSymbolIds": []
+      },
+      "verifiedEvidence": {
+        "evidence": {
+          "allMatch": true,
+          "checks": 6
+        },
+        "candidateEvidence": {
+          "allMatch": true,
+          "checks": 6
+        }
+      },
+      "candidatePayloadComplete": true
+    },
+    {
+      "id": "ranking-16",
+      "repository": "codefacts",
+      "query": "class CodeFacts providing search_with_page_options",
+      "cohort": "independent",
+      "role": "container-intent-control",
+      "actualBaselineTextContentBytes": 6266,
+      "modeledBaselinePayloadBytes": 6266,
+      "modeledCandidatePayloadBytes": 6266,
+      "baseline": {
+        "firstRelevantRank": 3,
+        "top1": false,
+        "mrr5": 0.3333333333333333,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "heading:README.md:CodeFacts:1",
+        "firstSourceBytes": 3550,
+        "essentialSpanCovered": false
+      },
+      "candidate": {
+        "firstRelevantRank": 3,
+        "top1": false,
+        "mrr5": 0.3333333333333333,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "heading:README.md:CodeFacts:1",
+        "firstSourceBytes": 3550,
+        "essentialSpanCovered": false,
+        "falsePromotion": false
+      },
+      "rerank": {
+        "applied": false,
+        "reason": "query-not-exactly-two-ascii-tokens",
+        "missingContextSymbolIds": []
+      },
+      "verifiedEvidence": {
+        "evidence": {
+          "allMatch": true,
+          "checks": 5
+        },
+        "candidateEvidence": {
+          "allMatch": true,
+          "checks": 5
+        }
+      },
+      "candidatePayloadComplete": true
+    },
+    {
+      "id": "ranking-17",
+      "repository": "codefacts",
+      "query": "GraphStore get_related_test_nodes",
+      "cohort": "independent",
+      "role": "member",
+      "actualBaselineTextContentBytes": 1981,
+      "modeledBaselinePayloadBytes": 1981,
+      "modeledCandidatePayloadBytes": 6217,
+      "baseline": {
+        "firstRelevantRank": 2,
+        "top1": false,
+        "mrr5": 0.5,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "struct:src/graph/store.rs:GraphStore:52",
+        "firstSourceBytes": 51,
+        "essentialSpanCovered": false
+      },
+      "candidate": {
+        "firstRelevantRank": 1,
+        "top1": true,
+        "mrr5": 1,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "method:src/graph/store.rs:get_related_test_nodes:858",
+        "firstSourceBytes": 1583,
+        "essentialSpanCovered": true,
+        "falsePromotion": false
+      },
+      "rerank": {
+        "applied": true,
+        "reason": "exact-container-callable-rerank",
+        "missingContextSymbolIds": []
+      },
+      "verifiedEvidence": {
+        "evidence": {
+          "allMatch": true,
+          "checks": 3
+        },
+        "candidateEvidence": {
+          "allMatch": true,
+          "checks": 3
+        }
+      },
+      "candidatePayloadComplete": true
+    },
+    {
+      "id": "ranking-18",
+      "repository": "codefacts",
+      "query": "get_related_test_nodes",
+      "cohort": "independent",
+      "role": "exact-member-control",
+      "actualBaselineTextContentBytes": 6744,
+      "modeledBaselinePayloadBytes": 6744,
+      "modeledCandidatePayloadBytes": 6744,
+      "baseline": {
+        "firstRelevantRank": 1,
+        "top1": true,
+        "mrr5": 1,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "method:src/graph/store.rs:get_related_test_nodes:858",
+        "firstSourceBytes": 1583,
+        "essentialSpanCovered": true
+      },
+      "candidate": {
+        "firstRelevantRank": 1,
+        "top1": true,
+        "mrr5": 1,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "method:src/graph/store.rs:get_related_test_nodes:858",
+        "firstSourceBytes": 1583,
+        "essentialSpanCovered": true,
+        "falsePromotion": false
+      },
+      "rerank": {
+        "applied": false,
+        "reason": "query-not-exactly-two-ascii-tokens",
+        "missingContextSymbolIds": []
+      },
+      "verifiedEvidence": {
+        "evidence": {
+          "allMatch": true,
+          "checks": 4
+        },
+        "candidateEvidence": {
+          "allMatch": true,
+          "checks": 4
+        }
+      },
+      "candidatePayloadComplete": true
+    },
+    {
+      "id": "ranking-19",
+      "repository": "codefacts",
+      "query": "GraphStore",
+      "cohort": "independent",
+      "role": "container-control",
+      "actualBaselineTextContentBytes": 3176,
+      "modeledBaselinePayloadBytes": 3176,
+      "modeledCandidatePayloadBytes": 3176,
+      "baseline": {
+        "firstRelevantRank": 1,
+        "top1": true,
+        "mrr5": 1,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "struct:src/graph/store.rs:GraphStore:52",
+        "firstSourceBytes": 51,
+        "essentialSpanCovered": true
+      },
+      "candidate": {
+        "firstRelevantRank": 1,
+        "top1": true,
+        "mrr5": 1,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "struct:src/graph/store.rs:GraphStore:52",
+        "firstSourceBytes": 51,
+        "essentialSpanCovered": true,
+        "falsePromotion": false
+      },
+      "rerank": {
+        "applied": false,
+        "reason": "query-not-exactly-two-ascii-tokens",
+        "missingContextSymbolIds": []
+      },
+      "verifiedEvidence": {
+        "evidence": {
+          "allMatch": true,
+          "checks": 6
+        },
+        "candidateEvidence": {
+          "allMatch": true,
+          "checks": 6
+        }
+      },
+      "candidatePayloadComplete": true
+    },
+    {
+      "id": "ranking-20",
+      "repository": "codefacts",
+      "query": "class GraphStore providing get_related_test_nodes",
+      "cohort": "independent",
+      "role": "container-intent-control",
+      "actualBaselineTextContentBytes": 1997,
+      "modeledBaselinePayloadBytes": 1997,
+      "modeledCandidatePayloadBytes": 1997,
+      "baseline": {
+        "firstRelevantRank": 1,
+        "top1": true,
+        "mrr5": 1,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "struct:src/graph/store.rs:GraphStore:52",
+        "firstSourceBytes": 51,
+        "essentialSpanCovered": true
+      },
+      "candidate": {
+        "firstRelevantRank": 1,
+        "top1": true,
+        "mrr5": 1,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "struct:src/graph/store.rs:GraphStore:52",
+        "firstSourceBytes": 51,
+        "essentialSpanCovered": true,
+        "falsePromotion": false
+      },
+      "rerank": {
+        "applied": false,
+        "reason": "query-not-exactly-two-ascii-tokens",
+        "missingContextSymbolIds": []
+      },
+      "verifiedEvidence": {
+        "evidence": {
+          "allMatch": true,
+          "checks": 3
+        },
+        "candidateEvidence": {
+          "allMatch": true,
+          "checks": 3
+        }
+      },
+      "candidatePayloadComplete": true
+    },
+    {
+      "id": "calibration-01",
+      "repository": "codefacts",
+      "query": "GraphStore with_transaction",
+      "cohort": "calibration",
+      "role": "member",
+      "actualBaselineTextContentBytes": 1963,
+      "modeledBaselinePayloadBytes": 1963,
+      "modeledCandidatePayloadBytes": null,
+      "baseline": {
+        "firstRelevantRank": 2,
+        "top1": false,
+        "mrr5": 0.5,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "struct:src/graph/store.rs:GraphStore:52",
+        "firstSourceBytes": 51,
+        "essentialSpanCovered": false
+      },
+      "candidate": {
+        "firstRelevantRank": 1,
+        "top1": true,
+        "mrr5": 1,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": null,
+        "firstSourceBytes": null,
+        "essentialSpanCovered": null,
+        "falsePromotion": false
+      },
+      "rerank": {
+        "applied": true,
+        "reason": "exact-container-callable-rerank",
+        "missingContextSymbolIds": [
+          "method:src/graph/store.rs:with_transaction:462"
+        ]
+      },
+      "verifiedEvidence": {
+        "evidence": {
+          "allMatch": true,
+          "checks": 3
+        },
+        "candidateEvidence": {
+          "allMatch": true,
+          "checks": 2
+        }
+      },
+      "candidatePayloadComplete": false
+    },
+    {
+      "id": "calibration-02",
+      "repository": "codefacts",
+      "query": "extract edges",
+      "cohort": "calibration",
+      "role": "split-word-control",
+      "actualBaselineTextContentBytes": 8358,
+      "modeledBaselinePayloadBytes": 8358,
+      "modeledCandidatePayloadBytes": 8358,
+      "baseline": {
+        "firstRelevantRank": 4,
+        "top1": false,
+        "mrr5": 0.25,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "function:src/indexer/extractor.rs:parse_and_extract_edges:1231",
+        "firstSourceBytes": 231,
+        "essentialSpanCovered": false
+      },
+      "candidate": {
+        "firstRelevantRank": 4,
+        "top1": false,
+        "mrr5": 0.25,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "function:src/indexer/extractor.rs:parse_and_extract_edges:1231",
+        "firstSourceBytes": 231,
+        "essentialSpanCovered": false,
+        "falsePromotion": false
+      },
+      "rerank": {
+        "applied": false,
+        "reason": "container-token0-missing",
+        "missingContextSymbolIds": []
+      },
+      "verifiedEvidence": {
+        "evidence": {
+          "allMatch": true,
+          "checks": 6
+        },
+        "candidateEvidence": {
+          "allMatch": true,
+          "checks": 6
+        }
+      },
+      "candidatePayloadComplete": true
+    },
+    {
+      "id": "calibration-03",
+      "repository": "codefacts",
+      "query": "parse_and_extract_edges_file",
+      "cohort": "calibration",
+      "role": "exact-helper-control",
+      "actualBaselineTextContentBytes": 15858,
+      "modeledBaselinePayloadBytes": 15858,
+      "modeledCandidatePayloadBytes": 15858,
+      "baseline": {
+        "firstRelevantRank": 1,
+        "top1": true,
+        "mrr5": 1,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "function:src/indexer/extractor.rs:parse_and_extract_edges_file:1239",
+        "firstSourceBytes": 507,
+        "essentialSpanCovered": true
+      },
+      "candidate": {
+        "firstRelevantRank": 1,
+        "top1": true,
+        "mrr5": 1,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "function:src/indexer/extractor.rs:parse_and_extract_edges_file:1239",
+        "firstSourceBytes": 507,
+        "essentialSpanCovered": true,
+        "falsePromotion": false
+      },
+      "rerank": {
+        "applied": false,
+        "reason": "query-not-exactly-two-ascii-tokens",
+        "missingContextSymbolIds": []
+      },
+      "verifiedEvidence": {
+        "evidence": {
+          "allMatch": true,
+          "checks": 6
+        },
+        "candidateEvidence": {
+          "allMatch": true,
+          "checks": 6
+        }
+      },
+      "candidatePayloadComplete": true
+    },
+    {
+      "id": "calibration-04",
+      "repository": "codefacts",
+      "query": "extract_edges",
+      "cohort": "calibration",
+      "role": "exact-member-control",
+      "actualBaselineTextContentBytes": 13991,
+      "modeledBaselinePayloadBytes": 13991,
+      "modeledCandidatePayloadBytes": 13991,
+      "baseline": {
+        "firstRelevantRank": 1,
+        "top1": true,
+        "mrr5": 1,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "method:src/indexer/extractor.rs:extract_edges:390",
+        "firstSourceBytes": 3195,
+        "essentialSpanCovered": true
+      },
+      "candidate": {
+        "firstRelevantRank": 1,
+        "top1": true,
+        "mrr5": 1,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "method:src/indexer/extractor.rs:extract_edges:390",
+        "firstSourceBytes": 3195,
+        "essentialSpanCovered": true,
+        "falsePromotion": false
+      },
+      "rerank": {
+        "applied": false,
+        "reason": "query-not-exactly-two-ascii-tokens",
+        "missingContextSymbolIds": []
+      },
+      "verifiedEvidence": {
+        "evidence": {
+          "allMatch": true,
+          "checks": 6
+        },
+        "candidateEvidence": {
+          "allMatch": true,
+          "checks": 6
+        }
+      },
+      "candidatePayloadComplete": true
+    },
+    {
+      "id": "ranking-01",
+      "repository": "opensession",
+      "query": "Router dispatch",
+      "cohort": "independent",
+      "role": "member",
+      "actualBaselineTextContentBytes": 6802,
+      "modeledBaselinePayloadBytes": 6802,
+      "modeledCandidatePayloadBytes": 7844,
+      "baseline": {
+        "firstRelevantRank": 2,
+        "top1": false,
+        "mrr5": 0.5,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "class:src/router.ts:Router:30",
+        "firstSourceBytes": 2008,
+        "essentialSpanCovered": true
+      },
+      "candidate": {
+        "firstRelevantRank": 1,
+        "top1": true,
+        "mrr5": 1,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "method:src/router.ts:dispatch:59",
+        "firstSourceBytes": 1086,
+        "essentialSpanCovered": true,
+        "falsePromotion": false
+      },
+      "rerank": {
+        "applied": true,
+        "reason": "exact-container-callable-rerank",
+        "missingContextSymbolIds": []
+      },
+      "verifiedEvidence": {
+        "evidence": {
+          "allMatch": true,
+          "checks": 6
+        },
+        "candidateEvidence": {
+          "allMatch": true,
+          "checks": 6
+        }
+      },
+      "candidatePayloadComplete": true
+    },
+    {
+      "id": "ranking-02",
+      "repository": "opensession",
+      "query": "dispatch",
+      "cohort": "independent",
+      "role": "exact-member-control",
+      "actualBaselineTextContentBytes": 8360,
+      "modeledBaselinePayloadBytes": 8360,
+      "modeledCandidatePayloadBytes": 8360,
+      "baseline": {
+        "firstRelevantRank": 1,
+        "top1": true,
+        "mrr5": 1,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "method:src/router.ts:dispatch:59",
+        "firstSourceBytes": 1086,
+        "essentialSpanCovered": true
+      },
+      "candidate": {
+        "firstRelevantRank": 1,
+        "top1": true,
+        "mrr5": 1,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "method:src/router.ts:dispatch:59",
+        "firstSourceBytes": 1086,
+        "essentialSpanCovered": true,
+        "falsePromotion": false
+      },
+      "rerank": {
+        "applied": false,
+        "reason": "query-not-exactly-two-ascii-tokens",
+        "missingContextSymbolIds": []
+      },
+      "verifiedEvidence": {
+        "evidence": {
+          "allMatch": true,
+          "checks": 6
+        },
+        "candidateEvidence": {
+          "allMatch": true,
+          "checks": 6
+        }
+      },
+      "candidatePayloadComplete": true
+    },
+    {
+      "id": "ranking-03",
+      "repository": "opensession",
+      "query": "Router",
+      "cohort": "independent",
+      "role": "container-control",
+      "actualBaselineTextContentBytes": 7003,
+      "modeledBaselinePayloadBytes": 7003,
+      "modeledCandidatePayloadBytes": 7003,
+      "baseline": {
+        "firstRelevantRank": 1,
+        "top1": true,
+        "mrr5": 1,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "class:src/router.ts:Router:30",
+        "firstSourceBytes": 2008,
+        "essentialSpanCovered": true
+      },
+      "candidate": {
+        "firstRelevantRank": 1,
+        "top1": true,
+        "mrr5": 1,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "class:src/router.ts:Router:30",
+        "firstSourceBytes": 2008,
+        "essentialSpanCovered": true,
+        "falsePromotion": false
+      },
+      "rerank": {
+        "applied": false,
+        "reason": "query-not-exactly-two-ascii-tokens",
+        "missingContextSymbolIds": []
+      },
+      "verifiedEvidence": {
+        "evidence": {
+          "allMatch": true,
+          "checks": 6
+        },
+        "candidateEvidence": {
+          "allMatch": true,
+          "checks": 6
+        }
+      },
+      "candidatePayloadComplete": true
+    },
+    {
+      "id": "ranking-04",
+      "repository": "opensession",
+      "query": "class Router providing dispatch",
+      "cohort": "independent",
+      "role": "container-intent-control",
+      "actualBaselineTextContentBytes": 5456,
+      "modeledBaselinePayloadBytes": 5456,
+      "modeledCandidatePayloadBytes": 5456,
+      "baseline": {
+        "firstRelevantRank": 1,
+        "top1": true,
+        "mrr5": 1,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "class:src/router.ts:Router:30",
+        "firstSourceBytes": 2008,
+        "essentialSpanCovered": true
+      },
+      "candidate": {
+        "firstRelevantRank": 1,
+        "top1": true,
+        "mrr5": 1,
+        "recall5": 1,
+        "kindMismatch": false,
+        "firstContextSymbolId": "class:src/router.ts:Router:30",
+        "firstSourceBytes": 2008,
+        "essentialSpanCovered": true,
+        "falsePromotion": false
+      },
+      "rerank": {
+        "applied": false,
+        "reason": "query-not-exactly-two-ascii-tokens",
+        "missingContextSymbolIds": []
+      },
+      "verifiedEvidence": {
+        "evidence": {
+          "allMatch": true,
+          "checks": 2
+        },
+        "candidateEvidence": {
+          "allMatch": true,
+          "checks": 2
+        }
+      },
+      "candidatePayloadComplete": true
+    }
+  ],
+  "summary": {
+    "independent": {
+      "cases": 12,
+      "arms": {
+        "baseline": {
+          "top1": 7,
+          "mrr5": 0.7430555555555555,
+          "recall5": 12,
+          "covered": 8,
+          "unknownCoverage": 0,
+          "modeledPayloadBytes": 69650,
+          "coveredPerPayloadKiB": 0.11761665470208184
+        },
+        "candidate": {
+          "top1": 10,
+          "mrr5": 0.8888888888888888,
+          "recall5": 12,
+          "covered": 10,
+          "unknownCoverage": 0,
+          "modeledPayloadBytes": 77261,
+          "coveredPerPayloadKiB": 0.13253776161323308
+        }
+      },
+      "controlRegressions": [],
+      "coveredMemberPromotions": [
+        "ranking-13",
+        "ranking-17",
+        "ranking-01"
+      ]
+    },
+    "calibration": {
+      "cases": 4,
+      "arms": {
+        "baseline": {
+          "top1": 2,
+          "mrr5": 0.6875,
+          "recall5": 4,
+          "covered": 2,
+          "unknownCoverage": 0,
+          "modeledPayloadBytes": 40170,
+          "coveredPerPayloadKiB": 0.05098332088623351
+        },
+        "candidate": {
+          "top1": 3,
+          "mrr5": 0.8125,
+          "recall5": 4,
+          "covered": 2,
+          "unknownCoverage": 1,
+          "modeledPayloadBytes": null,
+          "coveredPerPayloadKiB": null
+        }
+      },
+      "controlRegressions": [],
+      "coveredMemberPromotions": []
+    }
+  },
+  "decision": {
+    "independentGatePassed": true,
+    "productModified": false,
+    "next": "Qualifies a narrow production ranking design and independent replication; no agent token savings established."
+  },
+  "engineering": {
+    "cutoffUtc": "2026-09-13T10:24:47.692646+00:00",
+    "method": "Unique per-response token_usage_record.usage for current parent turn and three independent engineering sessions; cached input is a subset.",
+    "threads": [
+      {
+        "role": "parent",
+        "responseRecords": 24,
+        "usage": {
+          "input_tokens": 3191043,
+          "cached_input_tokens": 3112448,
+          "output_tokens": 18456,
+          "total_tokens": 3209499,
+          "uncached_input_tokens": 78595
+        }
+      },
+      {
+        "role": "source_selection",
+        "responseRecords": 19,
+        "usage": {
+          "input_tokens": 1782756,
+          "cached_input_tokens": 1671424,
+          "output_tokens": 7381,
+          "total_tokens": 1790137,
+          "uncached_input_tokens": 111332
+        }
+      },
+      {
+        "role": "implementation",
+        "responseRecords": 19,
+        "usage": {
+          "input_tokens": 1527945,
+          "cached_input_tokens": 1438976,
+          "output_tokens": 10506,
+          "total_tokens": 1538451,
+          "uncached_input_tokens": 88969
+        }
+      },
+      {
+        "role": "review",
+        "responseRecords": 12,
+        "usage": {
+          "input_tokens": 690322,
+          "cached_input_tokens": 632832,
+          "output_tokens": 4021,
+          "total_tokens": 694343,
+          "uncached_input_tokens": 57490
+        }
+      }
+    ],
+    "totals": {
+      "input_tokens": 7192066,
+      "cached_input_tokens": 6855680,
+      "output_tokens": 40364,
+      "total_tokens": 7232430,
+      "uncached_input_tokens": 336386
+    },
+    "excludes": "Export completion and subsequent report/commit/final reply. Evaluated-model invocations are zero, not engineering usage."
+  }
+}

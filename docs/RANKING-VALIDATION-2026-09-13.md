@@ -8,7 +8,7 @@ therefore give the container the sole source context. This experiment tests
 whether a narrow ordering change improves independently selected lookups.
 
 The prototype only reorders the existing first five results. For a query with
-exactly two identifier tokens, it requires an exact first-token match of kind
+exactly two whitespace-separated ASCII identifiers, it requires an exact first-token match of kind
 class, struct, interface or trait, and an exact second-token match of kind
 method or function in that page. It stably moves the second-token callable
 matches first. All other orders remain unchanged. It adds no facts and makes
@@ -99,4 +99,102 @@ families are not a random sample of repositories or user tasks.
 
 ## Results
 
-Pending the frozen offline replay.
+**The independent offline gate passed.** The narrow ordering prototype is
+worth a separately scoped production design and further independent validation.
+This experiment made no product changes and establishes no agent token saving.
+
+The cases were frozen in `c816acd`, then the harness in `6f264d3`, before native
+replay. Exactly 16 search requests and two map checks completed without retries
+or evaluated-model invocations. Source hashes and excerpts matched the files;
+97 CodeFacts files and 307 OpenSession files remained identical to their pinned
+archives before and after. An independent reviewer verified the cases, native
+results, measurement rules and acceptance calculation. Nine harness tests pass.
+
+| Independent cases (12) | Native ordering | Offline prototype |
+| --- | ---: | ---: |
+| Relevant result first | 7/12 (58.3%) | 10/12 (83.3%) |
+| Reciprocal rank at five, mean | 0.7431 | 0.8889 |
+| Target in first five | 12/12 | 12/12 |
+| Necessary evidence in first context | 8/12 | 10/12 |
+| Modeled serialized output bytes | 69,650 | 77,261 |
+| Covered cases per modeled output KiB | 0.1176 | 0.1325 |
+| Newly regressed control cases | — | 0 |
+
+The prototype increases modeled output bytes by **10.93%** while increasing
+covered cases per KiB by **12.69%**. The numerator counts cases whose required
+source span is present in the first context, not completed agent answers. These
+byte-normalized measurements are a retrieval diagnostic and cannot be converted
+into a token, latency or billing improvement percentage.
+
+| Independent member query | Native rank → prototype rank | Source coverage before → after |
+| --- | --- | --- |
+| `Router dispatch` | 2 → 1 | yes → yes |
+| `CodeFacts search_with_page_options` | 4 → 1 | no → yes |
+| `GraphStore get_related_test_nodes` | 2 → 1 | no → yes |
+
+The `Router` class excerpt already contained the method body. Promoting
+`dispatch` improved target rank but did not add missing evidence in that case.
+The two Rust cases gained necessary source coverage. All three satisfy the
+frozen condition of an improved rank-one member with complete required source,
+including an OpenSession case; the two coverage gains occur in CodeFacts.
+
+The two `CodeFacts` container controls remain at rank three. Native search puts
+the equally named README headings first. This pre-existing problem is visible
+in the result and was not corrected by changing the frozen prototype. The
+control criterion is no newly introduced regression, not universal correctness.
+
+## Calibration and missing evidence
+
+The four calibration/control queries remain separate from the acceptance gate.
+`GraphStore with_transaction` moves from rank two to one, but the frozen replay
+contains no other query returning that method's context. Its candidate context
+therefore remains **unknown**. Portable results set that candidate payload size
+and calibration-wide candidate byte efficiency to null; a shorter response with
+missing context is not credited as a byte improvement.
+
+`extract edges` still returns its production target fourth. The exact
+`extract_edges` and `parse_and_extract_edges_file` controls remain first. This
+confirms the prototype's narrow scope; it does not repair split-word ranking or
+penalize explicitly requested test helpers.
+
+## Decision and next boundary
+
+The evidence supports exploring one bounded product change: prioritize an
+explicitly named member in the two-identifier query shape. Production work must
+preserve stable pagination, duplicate-name handling, explicit whole-name lookup,
+filters and source context identity; this top-five simulation does not prove
+those integration behaviors. A separate implementation should carry these
+fixtures forward and add independent repository cases before broader claims.
+The small, source-selected dataset—particularly its single external pair—does
+not establish general user benefit or reopen the large agent-evaluation campaign.
+
+The source-only case-selection draft initially included two invalid named
+container pairs and several inaccurate ranges. Parent/source review corrected
+these before native querying. Harness review also caught coverage-file identity,
+missing-context and pre-launch validation errors before the recorded run.
+These corrections are engineering work; they are not failed model-evaluation
+samples or reasons to rerun the frozen queries.
+
+## Artifacts and engineering cost
+
+- [Frozen cases](../benchmarks/agent-eval/ranking-validation-cases.json).
+- [Replay and prototype](../benchmarks/agent-eval/ranking-validation.mjs), with
+  [tests](../benchmarks/agent-eval/ranking-validation.test.mjs).
+- [Portable results](../benchmarks/agent-eval/ranking-validation-results.json),
+  including per-query ranks, source coverage, byte counts, evidence checks and
+  frozen artifact hashes. Local raw receipts and responses are retained in the
+  session artifact directory's `ranking-validation-2026-09-13` folder.
+
+At **2026-09-13 10:24:47 UTC** (18:24:47 Asia/Shanghai), engineering usage was
+**7,232,430 processed tokens**: parent 3,209,499; source selection 1,790,137;
+implementation 1,538,451; independent review 694,343. Input was 7,192,066,
+including 6,855,680 cached tokens; uncached input was 336,386 and output 40,364.
+Cached input is already included in input. The ledger sums unique per-response
+usage records for the current parent turn and the three engineering sessions;
+export completion and subsequent reporting/commit/final reply are excluded.
+
+The native replay required zero evaluated-model calls. Engineering usage remains
+substantial, and this cutoff quantity is neither monetary billing nor an
+equal-work comparison with previous cycles. A separate current-checkout `map`
+was ordinary engineering inspection and is not one of the two experiment maps.
+No additional query or rule variant was run after seeing the results.
