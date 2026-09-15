@@ -10,7 +10,7 @@ rules; this page owns the active queue and investment decisions.
 | Priority | Work | Evidence and completion condition | Status |
 | --- | --- | --- | --- |
 | 1 | Implement explicit member-query ranking | Native Top-1 improved 7/12 to 10/12 on earlier cases and 9/12 to 12/12 on a third repository; regression tests preserve pagination, filters and context. | Complete; retained in `5a88820`. [Results and cost](MEMBER-RANKING-IMPLEMENTATION-2026-09-13.md). |
-| 2 | Verify usefulness during real repository work | The complete-runtime follow-up ran all three arms; all answers scored 2/4 and no quality-gated savings were established. CodeFacts supplied the complete contract, but the final answer omitted required distinctions. | Complete; limited maintenance retained. [Results](ISSUE1-RUNTIME-RECOVERY-2026-09-13.md). |
+| 2 | Verify usefulness during real repository work | The earlier diagnosis scored 2/4 in all arms. A new edit-and-test task delivered a real fix with all patches passing 4/4, but both MCP arms made zero formal calls and CodeFacts had execution-policy interference. No retrieval-efficiency gain was established. | Both campaigns closed; limited maintenance retained. [Diagnosis](ISSUE1-RUNTIME-RECOVERY-2026-09-13.md), [edit-and-test pilot](TEMP-CLEANUP-PILOT-2026-09-16.md). |
 | 3 | Resolve a demonstrated remaining retrieval defect | Container names can collide with document headings; explicit kind filters already exist. Require a concrete failed lookup and independent source-labeled cases before changing default ranking. | Evidence collection only. |
 | Continuous | Maintain source correctness, freshness, and installation reliability | Reproduce a reported failure, fix its owning boundary, add the smallest meaningful regression and verify the affected native/protocol/platform surface. | Triggered by failures. |
 
@@ -47,6 +47,17 @@ source audit found complete provider-contract evidence in the CodeFacts
 response, so the answer omission does not establish a ranking defect. Keep both
 campaigns closed; another model run needs a new independently sourced consumer
 task or changed failure evidence, not a prompt tweak or relaxed scoring.
+
+The subsequent temporary-fixture cleanup pilot met that new-task gate and is
+now closed. All three patches passed four required quality criteria, with 24
+failure/success probes and 162 existing tests per patch. The selected OpenSession
+repair also passed Linux acceptance and was committed on an isolated branch.
+Formal usage was 1,842,741 tokens plus 261,756 readiness tokens; unaggregated
+engineering cost remains unknown. Both MCP arms chose ordinary tools, and two
+real policy rejections interfered with the CodeFacts attempt. Retain the repair
+and reusable edit-mode runner, preserve the raw costs, and make no tool-savings
+claim from this campaign. No demonstrated product defect justifies another
+feature or model-run cycle now.
 
 The next model-based campaign requires a named real task, frozen comparator
 versions/configurations, correctness rubric, invocation and time limits, and

@@ -121,6 +121,21 @@ before comparing usage. The agent's final answer and exit status alone cannot
 establish a correct repair. The existing usage parser and manual review gate
 apply to both modes.
 
+The completed [OpenSession cleanup pilot](../../docs/TEMP-CLEANUP-PILOT-2026-09-16.md)
+uses the frozen [four-required-criteria rubric](temp-cleanup-rubric.md).
+Its [reviewed results](temp-cleanup-results.json) separate passing patches from
+execution interference and natural MCP non-use. This stricter edit-pilot schema
+is separate from the older `summarize.mjs` schema; do not aggregate it through
+the older 3/4 pass threshold. Deterministic acceptance needs no model calls:
+
+```powershell
+node benchmarks/agent-eval/temp-cleanup/acceptance.mjs `
+  D:/Eval/opensession-patched D:/Eval/temp-cleanup-check
+```
+
+Use a disposable checkout at the report's frozen source plus the accepted patch,
+with dependencies and build already prepared, and a fresh output directory.
+
 ## Artifacts and accounting
 
 Each run retains `request.json`, `stdout.jsonl`, `stderr`, `answer.md`,

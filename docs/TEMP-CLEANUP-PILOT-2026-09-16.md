@@ -74,8 +74,8 @@ unverified rather than a passing point.
 
 Token definitions follow [EVALUATION.md](EVALUATION.md): input plus output;
 cached input is a subset, and uncached input is input minus cached input.
-Both matched patches must pass before a token or time savings percentage is
-reported. Preparation, evaluator work, and engineering usage are separate.
+Both matched patches must pass and execution must be comparable before a token
+or time savings percentage is reported. Preparation, evaluator work, and engineering usage are separate.
 Subscription token counts do not establish an API bill.
 
 The runner uses documented [Codex non-interactive execution](https://learn.chatgpt.com/docs/non-interactive-mode)
@@ -85,4 +85,125 @@ temporary-file writing, runtime APIs, and MCP connectivity.
 
 ## Results
 
-Pending formal execution and independent review.
+The pilot is **closed with a verified maintenance patch and no demonstrated
+retrieval-efficiency gain**. All three patches passed the frozen 4/4 quality
+gate. Both configured MCP arms chose shell tools throughout the formal task.
+CodeFacts also experienced two real command-launch policy rejections, so the
+three-arm run cannot support a clean efficiency comparison.
+
+The [reviewed results](../benchmarks/agent-eval/temp-cleanup-results.json) keep
+quality, execution eligibility, usage, and the investment decision separate.
+They use this campaign's strict four-required-criteria schema; the older
+`summarize.mjs` format permits 3/4 and does not aggregate this campaign.
+
+| Arm | Quality | Input | Cached input | Uncached input | Output | Total tokens | Wall time | Formal MCP calls |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Ordinary tools | 4/4 | 522,391 | 464,000 | 58,391 | 6,866 | 529,257 | 308.792 s | 0 |
+| + CodeGraph 1.6.0 | 4/4 | 565,972 | 515,200 | 50,772 | 9,648 | 575,620 | 368.659 s | 0 |
+| + CodeFacts 0.1.14 | 4/4 | 729,588 | 680,832 | 48,756 | 8,276 | 737,864 | 339.517 s | 0 |
+
+These are recorded costs, not a ranking of tool efficiency. CodeFacts has the
+lowest uncached input and highest total in this sample, but neither observation
+establishes a retrieval benefit or penalty. No formal query consumed facts from
+either MCP. Successful readiness queries establish availability; natural non-use
+is the adoption observation for this one task. Earlier query/answer campaigns
+remain separate, and this is a new task on a previously used repository.
+
+### Execution audit and cost
+
+All formal attempts completed within the frozen 12-minute limit, with no model
+reruns. Their cumulative CLI usage matches the saved provider rollouts. The
+randomized order was frozen as ordinary, CodeGraph, then CodeFacts.
+
+The original parser labeled all three `invalid-environment`. Independent
+inspection cleared the ordinary and CodeGraph arms: successful commands emitted
+optional global Git ignore permission warnings, and test-title strings about
+OpenCode triggered an external-agent heuristic. Source reads, edits, builds and
+tests were available. Failed agent-authored helper commands and their corrections
+remain part of each attempt and its cost; an ordinary-arm internal stream retry
+also remains included.
+
+The CodeFacts arm had **two confirmed `CreateProcess ... blocked by policy`
+rejections**, separate from its benign Git warnings. One combined validation
+setup/execution/cleanup command and one later cleanup command were rejected
+before launch. Later rewritten commands completed, but that recovery does not
+remove the interference. All arms used the same execution policy. The logs do
+not identify the rejecting rule or establish a CodeFacts-specific policy or MCP
+failure. This arm remains `environment-interfered` and ineligible for a clean
+efficiency comparison even though its patch passed quality review. Original
+flags and logs are retained without changing the parser after the freeze.
+
+There were 15, 14 and 15 emitted shell execution events respectively; the
+CodeFacts transcript additionally records its two rejected shell attempts
+(17 attempts). Logged shell output was 206,184, 292,346 and 279,388 bytes. These
+are shell-specific counts; edit-tool calls are separate, and output bytes may
+precede model-visible truncation.
+
+Formal usage totals **1,842,741 tokens**. The three clean readiness runs cost
+153,179 tokens; the earlier excluded readiness cost 108,577. Thus recorded agent
+usage including readiness is **2,104,497 tokens**. Installation, build and native
+readiness receipts are retained separately. Controller, reviewer and evaluator
+engineering usage has not been aggregated at this cutoff, and actual billing is
+unknown. This measured subset does not establish total project cost or ROI.
+
+### Patch acceptance and delivery
+
+The independent reviewer received anonymous patches and acceptance evidence
+without arm identities or efficiency figures. All three passed Q1-Q4 after
+source review, inspection of all 72 Windows probe records, and verification of
+each patch's complete 162-test run. This checks actual owned removals, matching
+writer-close events, expected injected failures and unchanged sentinels; it does
+not rely on an agent's final answer or the automatic summary alone.
+
+The CodeFacts and CodeGraph patches were byte-identical. Both register `t.after`
+immediately after each owned temporary directory is created and protect the
+SQLite writer with an inner `finally`. Existing reader closure, environment
+restoration and test assertions remain. The ordinary patch also passed, using
+broader `try/finally` wrapping with more indentation changes. The reviewer
+recommended the identical smaller patches on maintainability grounds.
+
+The selected patch also passed **24 probes and all 162 tests on Linux / Node
+24.16.0**. Windows used Node 26.5.1. The OpenSession delivery worktree passed
+`npm run review`, `npm run build`, the two complete test files,
+`npm run pre-push`, and `git diff --check`.
+
+The repair is committed in the OpenSession repository:
+
+- Branch: `codex/test-fixture-cleanup`
+- Commit: `d4d9ae36e9c8d75bd01e04afdc5f31c6b93fab92`
+- Files: `test/core.test.mjs`, `test/codex-provider.test.mjs`
+- Delivery: independent, clean worktree; local commit, not pushed or merged.
+
+All 48 preexisting dirty OpenSession files retain their initial hashes, and its
+working-tree status is unchanged. The patch passes `git apply --check` against
+that live tree. This delivery addresses the seven frozen fixtures; the issue's
+SEA smoke lifecycle and historical TEMP files were not part of this acceptance.
+
+To repeat deterministic acceptance, use a separate installed/built OpenSession
+checkout containing the repair and a fresh output directory. No model calls are
+needed:
+
+```powershell
+node benchmarks/agent-eval/temp-cleanup/acceptance.mjs `
+  D:/Eval/opensession-patched D:/Eval/temp-cleanup-check
+```
+
+The evaluator uses Node preload probes and requires the target's existing tests
+and built output. Run it on a disposable checkout, not a live development tree.
+Preserve existing result directories as evidence.
+
+## Keep/stop decision
+
+Retain **limited maintenance** of CodeFacts and stop this campaign. The work
+delivered a real OpenSession fix and made the evaluation runner support isolated
+edit-and-test tasks, explicit model/reasoning settings, and per-arm temporary
+roots. It also fixed the observed account-app catalog isolation gap. The runner
+change passed 15 tests and independent review in commit `687a8fb`.
+
+This task exposed no queried retrieval defect and supplies no evidence for
+expanding the five-tool product surface. A later investment should start from a
+reproducible correctness, freshness, installation or retrieval failure, or new
+independently sourced consumer work with a frozen decision and acceptance gate.
+Reusing these deterministic fixtures is appropriate; rerunning this model task
+with stronger MCP instructions would be a different experiment, not a repair of
+the current result.
