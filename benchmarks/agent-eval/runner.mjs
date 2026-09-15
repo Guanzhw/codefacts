@@ -2,7 +2,7 @@
 
 import { spawn, spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, stat, writeFile } from 'node:fs/promises';
 import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -11,6 +11,11 @@ const DEFAULT_TIMEOUT_MS = 240_000;
 const BASE_PROMPT = `You are answering a bounded repository question for a token-efficiency evaluation.
 
 Use read-only inspection of this task's repository snapshot only. Use available code-navigation MCP tools if useful and ordinary shell rg/file reads. Do not edit files, write to the repository, access the network, read user/home skills or config, access generated indexes or evaluation artifacts, inspect another repository, invoke external agents, or invoke CodeFacts or CodeGraph through a shell command. Cite source paths and line or symbol locations for factual claims. Be concise and stop when there is sufficient evidence; keep the final answer under about 250 words.`;
+const EDIT_PROMPT = `You are completing a bounded repository development task for a token-efficiency evaluation.
+
+Inspect and edit only this task's repository snapshot. Use available code-navigation MCP tools and ordinary shell tools freely when useful. Run the repository's existing build and test commands to verify the change; temporary test files may use the supplied TEMP, TMP, or TMPDIR directory. Do not access the network, install dependencies, read user/home skills or config, access generated indexes or evaluation artifacts or answers, inspect another repository snapshot, invoke external agents, or invoke CodeFacts or CodeGraph through a shell command. Do not commit changes or rewrite Git history. Make a focused change and report what changed, the verification performed, and any remaining failure. Cite source paths and line or symbol locations for factual claims; keep the final answer under about 250 words.`;
+const DEFAULT_EXECUTION = { mode: 'readonly', model: 'gpt-5.6-luna', reasoningEffort: 'medium' };
+const REASONING_EFFORTS = new Set(['none', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max', 'ultra']);
 
 const COMMAND_TYPES = new Set(['command_execution', 'shell_command', 'command', 'local_shell']);
 const MCP_TYPES = new Set(['mcp_tool_call', 'mcp_call', 'mcp_tool']);
@@ -33,10 +38,14 @@ Run selected manifest entries (all selected entries run sequentially):
   --help                 Show this help
 
 Manifest shape:
-  { "tasks": [{ "id": "...", "root": "...", "prompt": "..." }],
+  { "tasks": [{ "id": "...", "root": "...", "prompt": "...", "tempDir": "..." }],
     "arms": [{ "id": "...", "configOverrides": ["key=value"] }],
     "runs": 2, "codexBin": "C:/absolute/path/codex.exe",
+    "mode": "readonly", "model": "gpt-5.6-luna", "reasoningEffort": "medium",
     "guidance": "Optional identical guidance appended to every arm" }
+  mode/model/reasoningEffort are optional compatibility defaults shown above.
+  mode="edit" enables workspace-write; optional task.tempDir must be an
+  absolute path to an existing directory and supplies TEMP/TMP/TMPDIR.
 `;
 }
 
@@ -517,13 +526,15 @@ async function allocateRunDir(outputDir, taskId, armId, runNumber) {
   }
 }
 
-function buildArgs(task, arm) {
+function buildArgs(task, arm, execution = DEFAULT_EXECUTION) {
   const args = [
     '-a', 'never', 'exec', '--ignore-user-config', '--json', '--skip-git-repo-check',
-    '-s', 'read-only', '-C', task.root, '-m', 'gpt-5.6-luna',
-    '-c', 'model_reasoning_effort="medium"', '-c', 'project_doc_max_bytes=0',
+    '-s', execution.mode === 'edit' ? 'workspace-write' : 'read-only', '-C', task.root, '-m', execution.model,
+    '-c', `model_reasoning_effort=${JSON.stringify(execution.reasoningEffort)}`, '-c', 'project_doc_max_bytes=0',
     '--disable', 'standalone_web_search', '--disable', 'browser_use', '--disable', 'browser_use_external',
     '--disable', 'multi_agent', '--disable', 'plugins', '--disable', 'remote_plugin',
+    '--disable', 'apps', '--disable', 'memories', '--disable', 'skill_search',
+    '--enable', 'skip_host_skill_discovery',
   ];
   for (const override of arm.configOverrides || []) {
     if (typeof override !== 'string' || !override.includes('=')) throw new Error(`Invalid config override for arm ${arm.id}: ${String(override)}`);
@@ -532,13 +543,18 @@ function buildArgs(task, arm) {
   return args;
 }
 
-function runProcess(command, args, cwd, prompt, timeoutMs) {
+function runProcess(command, args, cwd, prompt, timeoutMs, tempDir) {
   return new Promise((resolveProcess) => {
     const startedAt = new Date().toISOString();
     const start = Date.now();
     let child;
     try {
-      child = spawn(command, args, { cwd, windowsHide: true, shell: false, stdio: ['pipe', 'pipe', 'pipe'] });
+      let env;
+      if (tempDir !== undefined) {
+        env = Object.fromEntries(Object.entries(process.env).filter(([key]) => !['TEMP', 'TMP', 'TMPDIR'].includes(key.toUpperCase())));
+        Object.assign(env, { TEMP: tempDir, TMP: tempDir, TMPDIR: tempDir });
+      }
+      child = spawn(command, args, { cwd, env, windowsHide: true, shell: false, stdio: ['pipe', 'pipe', 'pipe'] });
     } catch (error) {
       resolveProcess({ startedAt, endedAt: new Date().toISOString(), durationMs: Date.now() - start, pid: null, exitCode: null, signal: null, timedOut: false, spawnError: error.message, stdout: Buffer.alloc(0), stderr: Buffer.from(error.stack || error.message) });
       return;
@@ -577,14 +593,14 @@ async function writeJson(path, value) {
   await writeFile(path, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
 
-async function runOne({ task, arm, runNumber, outputDir, timeoutMs, codex, rolloutPath, sessionsDir, guidance = '' }) {
-  const resultDir = await allocateRunDir(outputDir, task.id, arm.id, runNumber);
-  const args = buildArgs(task, arm);
-  const prompt = `${BASE_PROMPT}${guidance ? `\n\nEvaluation guidance:\n${guidance}` : ''}\n\nRepository question:\n${task.prompt}`;
-  const request = {
+function buildRunRequest({ task, arm, runNumber, timeoutMs, codex, rolloutPath, sessionsDir, guidance = '', execution = DEFAULT_EXECUTION }) {
+  const args = buildArgs(task, arm, execution);
+  const prompt = `${execution.mode === 'edit' ? EDIT_PROMPT : BASE_PROMPT}${guidance ? `\n\nEvaluation guidance:\n${guidance}` : ''}\n\nRepository ${execution.mode === 'edit' ? 'task' : 'question'}:\n${task.prompt}`;
+  return {
     schemaVersion: 1,
-    task: { id: task.id, root: task.root, prompt: task.prompt },
+    task: { id: task.id, root: task.root, prompt: task.prompt, tempDir: task.tempDir || null },
     arm: { id: arm.id, configOverrides: arm.configOverrides || [] },
+    execution: { ...execution, sandbox: execution.mode === 'edit' ? 'workspace-write' : 'read-only' },
     run: runNumber,
     prompt,
     command: [codex.path, ...args],
@@ -596,7 +612,14 @@ async function runOne({ task, arm, runNumber, outputDir, timeoutMs, codex, rollo
     rolloutPath: rolloutPath || null,
     guidance: guidance || null,
   };
-  const processResult = await runProcess(codex.path, args, task.root, prompt, timeoutMs);
+}
+
+async function runOne(options) {
+  const { task, arm, runNumber, outputDir, timeoutMs, codex, rolloutPath, sessionsDir } = options;
+  if (task.tempDir !== undefined && !(await stat(task.tempDir)).isDirectory()) throw new Error(`Task tempDir is not a directory: ${task.tempDir}`);
+  const request = buildRunRequest(options);
+  const resultDir = await allocateRunDir(outputDir, task.id, arm.id, runNumber);
+  const processResult = await runProcess(codex.path, request.command.slice(1), task.root, request.prompt, timeoutMs, task.tempDir);
   const stdout = processResult.stdout.toString('utf8');
   const stderr = processResult.stderr.toString('utf8');
   const parsed = parseJsonl(stdout);
@@ -630,12 +653,22 @@ function validateManifest(manifest) {
   if (!manifest || !Array.isArray(manifest.tasks) || !manifest.tasks.length) throw new Error('Manifest requires a non-empty tasks array');
   if (!Array.isArray(manifest.arms) || !manifest.arms.length) throw new Error('Manifest requires a non-empty arms array');
   if (!Number.isInteger(manifest.runs) || manifest.runs < 1) throw new Error('Manifest runs must be a positive integer');
+  const execution = {
+    mode: manifest.mode === undefined ? DEFAULT_EXECUTION.mode : manifest.mode,
+    model: manifest.model === undefined ? DEFAULT_EXECUTION.model : manifest.model,
+    reasoningEffort: manifest.reasoningEffort === undefined ? DEFAULT_EXECUTION.reasoningEffort : manifest.reasoningEffort,
+  };
+  if (!['readonly', 'edit'].includes(execution.mode)) throw new Error('Manifest mode must be readonly or edit');
+  if (typeof execution.model !== 'string' || !execution.model.trim()) throw new Error('Manifest model must be a non-empty string');
+  if (!REASONING_EFFORTS.has(execution.reasoningEffort)) throw new Error('Manifest reasoningEffort is unsupported');
   for (const task of manifest.tasks) {
     if (!task.id || !task.root || typeof task.prompt !== 'string') throw new Error(`Invalid task: ${JSON.stringify(task)}`);
+    if (task.tempDir !== undefined && (typeof task.tempDir !== 'string' || !isAbsolute(task.tempDir))) throw new Error(`Task tempDir must be an absolute path: ${task.id}`);
   }
   for (const arm of manifest.arms) {
     if (!arm.id || !Array.isArray(arm.configOverrides || [])) throw new Error(`Invalid arm: ${JSON.stringify(arm)}`);
   }
+  return execution;
 }
 
 async function main() {
@@ -655,7 +688,7 @@ async function main() {
   }
   const manifestPath = resolve(options.manifest);
   const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
-  validateManifest(manifest);
+  const execution = validateManifest(manifest);
   const tasks = manifest.tasks.filter((task) => options.task === undefined || task.id === options.task);
   const arms = manifest.arms.filter((arm) => options.arm === undefined || arm.id === options.arm);
   if (!tasks.length) throw new Error(`No task matched --task ${options.task}`);
@@ -665,14 +698,14 @@ async function main() {
   const sessionsDir = options.sessionsDir || process.env.CODEX_SESSIONS_DIR || (process.env.CODEX_HOME || process.env.USERPROFILE ? join(process.env.CODEX_HOME || process.env.USERPROFILE, process.env.CODEX_HOME ? 'sessions' : '.codex/sessions') : null);
   const results = [];
   for (const task of tasks) for (const arm of arms) for (const runNumber of runs) {
-    const result = await runOne({ task, arm, runNumber, outputDir: resolve(options.outputDir), timeoutMs: options.timeoutMs, codex, rolloutPath: options.rollout, sessionsDir, guidance: manifest.guidance || '' });
+    const result = await runOne({ task, arm, runNumber, outputDir: resolve(options.outputDir), timeoutMs: options.timeoutMs, codex, rolloutPath: options.rollout, sessionsDir, guidance: manifest.guidance || '', execution });
     results.push(result);
     process.stdout.write(`${JSON.stringify({ task: task.id, arm: arm.id, run: runNumber, resultDir: result.resultDir, status: result.status, usage: result.usage, toolCalls: result.toolCalls })}\n`);
   }
   process.stdout.write(`Completed ${results.length} run(s).\n`);
 }
 
-export { BASE_PROMPT, buildArgs, discoverCodex, findRollout, metricsFrom, parseJsonl, parseRollout };
+export { BASE_PROMPT, EDIT_PROMPT, buildArgs, buildRunRequest, discoverCodex, findRollout, metricsFrom, parseJsonl, parseRollout, runOne, runProcess, validateManifest };
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   main().catch((error) => { process.stderr.write(`${error.stack || error.message}\n`); process.exitCode = 1; });
