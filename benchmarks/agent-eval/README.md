@@ -16,6 +16,11 @@ this observed isolation fix.
 
 ## Run a controlled comparison
 
+The [OpenSession history corpus](opensession-corpus/README.md) freezes six
+real-history source questions, source-backed grading criteria, and a Luna
+comparison of ordinary tools, CodeFacts, and CodeGraph. Its native preparation,
+readiness, formal execution, and manual audit are separate steps.
+
 For an existing reviewed campaign, reuse its evidence before launching models:
 
 ```powershell
