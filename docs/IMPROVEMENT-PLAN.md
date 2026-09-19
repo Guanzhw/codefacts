@@ -75,19 +75,27 @@ The subsequent [compact-response implementation](COMPACT-RESPONSES-2026-09-20.md
 passed the frozen native cases and preserves evidence across continuation pages.
 The next delivery step is a release that updates the separately maintained plugin
 pin/guidance and verifies a new client's loaded schema. Further relation-ranking
-changes still require their own correctness evidence. Byte reductions are measured;
-end-to-end agent token savings and comprehension remain to be evaluated in real work.
-Before shipping the default shape change, verify one real client can consume the
-compact evidence and continuations correctly, and complete the existing three-OS
-CI. The two native cases needed two calls instead of one; their recorded cumulative
+changes still require their own correctness evidence. Native byte reductions
+are measured. Real-client comprehension and three-OS CI were then exercised in the
+[four-run client acceptance](CLIENT-ACCEPTANCE-2026-09-20.md): all answers passed
+their four correctness criteria, both compact runs followed actual cursors and
+preserved evidence interpretation, and all six existing CI jobs passed. Compact
+avoided MCP output truncation, but total tokens rose 42.0% and 3.6% in the two
+pairs; elapsed time was mixed. This guided n=1 comparison required a continuation
+page and did not equalize retrieved facts or source reads. Retain the 16 KiB
+initial budget for bounded output, make no end-to-end savings claim, and close
+this campaign without replacement runs. Plugin release/install verification is
+still outstanding.
+
+The two native cases needed two calls instead of one; their recorded cumulative
 tool time did not decrease. Treat 16 KiB as an initial budget, and choose any later
 adjustment by correct-task total cost rather than response size alone.
 
 The next model-based campaign requires a named real task, frozen comparator
 versions/configurations, correctness rubric, invocation and time limits, and
 a concrete decision it can change. Native retrieval checks come first. Raw
-output bytes describe tool behavior; only matched correct task outcomes can
-establish a token-efficiency claim. External adoption and actual maintenance
+output bytes describe tool behavior; matched correct task outcomes are required
+before evaluating a token-efficiency claim. External adoption and actual maintenance
 effort are still needed before broad product investment.
 
 ## Product boundaries and evidence owners
