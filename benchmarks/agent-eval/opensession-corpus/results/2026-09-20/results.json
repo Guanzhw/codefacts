@@ -1,0 +1,4176 @@
+{
+  "schemaVersion": 1,
+  "frozenAt": "2026-09-19T17:57:01.639Z",
+  "completedAt": "2026-09-19T18:58:27.274Z",
+  "sourceRevision": "543e874e697523bf474f494bcf897a17f19587de",
+  "sourceIdentity": {
+    "files": 446,
+    "bytes": 8168468,
+    "digest": "df41b12fa5983a2711a680071dea0ef22cbb24d0f9fb29686dec1b2c6ea86b90"
+  },
+  "execution": {
+    "mode": "readonly",
+    "model": "gpt-5.6-luna",
+    "reasoningEffort": "medium",
+    "timeoutMs": 240000,
+    "approvalPolicy": "never",
+    "windowsSandbox": "elevated",
+    "projectDocMaxBytes": 0,
+    "plugins": "disabled"
+  },
+  "harnessCommit": "f060988dc44b8a9bdebf9045a36afb90220787a8",
+  "codefacts": {
+    "sourceCommit": "30217876d5ebdaf73462205e51c0bf4dd7b28822",
+    "packageVersion": "0.1.14",
+    "note": "Unreleased compact-response branch binary; identity is the source commit plus binary hash."
+  },
+  "codegraph": {
+    "version": "1.6.0",
+    "gitHead": "dfccdf62547fcd76d343344d823a0e1998d3a89f"
+  },
+  "runtimeHashes": {
+    "tasksSha256": "9d1d05373adb0796215d4cd12c29920530ecb67558022d568740aef240636d03",
+    "rubricSha256": "a733de31db1179c2ffc90bba77a385bb2594951edfdcc97fccde2ecce3791073",
+    "provenanceSha256": "2d3da92db2fe8d2688d59658322f95d21190def782cf018d69d85ae03a261634",
+    "readmeSha256": "8f9e42b19b7ae6db439add06b094823c06b817bc3ceb1fa5e29917392bbbba24",
+    "preparedSha256": "4989f2460c97a573cf2f1dcb8b1c08b633bddeac947c7bb3a9d30d4071461cdf",
+    "runnerSha256": "590dfc17f66fd2e535e96453bd94dd987f28bb5916fa70b801a5870726516dd8",
+    "campaignSha256": "1b8b2d996cb9801c667ec39cf6314981ef51c5513f7f61d696ba1ffa0babe73f",
+    "configSha256": "65ecb4b3c8c6bf1d41944382eff15634bb6755254bd7fc52470c499eb752e9a8",
+    "codexSha256": "bc45017e8239dc150258f69309ced9df6bbcdf5b8e4f346decf780ac0999e226",
+    "codefactsSha256": "66cae60808c437998a43eb9006908e9bdc62fa219feb404f88269caa77c1e5c7",
+    "codegraphNodeSha256": "b3094d0b49f9ad602262a9921551737bb97637c05dd357a06ae98188d7290aa3",
+    "codegraphPackageSha256": "0112ff636d89344bb56f2e7ff6146f4cc0e0030f196e943648b33d63457f5937",
+    "codegraphDistDigest": "02c4ea5f1667de28380273f4883ef69cdb09c4ee8ca6e7d37d01b1a675153bb2"
+  },
+  "preparation": {
+    "codefacts": {
+      "durationMs": 4008.643,
+      "bytes": 92532736,
+      "indexedFiles": 308
+    },
+    "codegraph": {
+      "durationMs": 3370.7159999999994,
+      "bytes": 24572133,
+      "indexedFiles": 242
+    }
+  },
+  "readiness": {
+    "r2RecordedTokens": 215056,
+    "supersededRecordedTokens": 50311,
+    "totalRecordedTokens": 265367,
+    "preModelStartupFailure": "Initial CodeFacts TOML path escaping error; usage unavailable. Fixed before r2 freeze; failed campaign preserved."
+  },
+  "engineering": {
+    "scope": "parent engineering session only; delegated engineering usage is not yet aggregated",
+    "anchor": "2026-09-19T17:27:13.350Z",
+    "cutoff": "2026-09-19T19:00:41.398Z",
+    "usage": {
+      "input_tokens": 26674144,
+      "cached_input_tokens": 25998080,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 85975,
+      "reasoning_output_tokens": 47025,
+      "total_tokens": 26760119
+    }
+  },
+  "grading": {
+    "primary": "businessEquivalent",
+    "sensitivity": "initial",
+    "threshold": "3/4 and no material false claim",
+    "correctMeans": "Meets the frozen task pass threshold, not a claim that every answer detail is correct.",
+    "blinding": "Arm/repetition/cost metadata was withheld. Original answer prose was preserved and can sometimes reveal tool identity; this is not complete double blinding.",
+    "note": "Initial graders inconsistently required unasked parameter/cache details. Independent metadata-blinded adjudication applied the frozen global business-equivalence rule to every task; root reviewed disputed source semantics. No formal attempt was repeated. Literal-conjunction diagnostic notes remain local."
+  },
+  "callCounting": "Executed counts come from stdout item.completed events. Frozen rollout call-site heuristics undercount loops in attempts16 and30; their original counters are preserved separately. Tokens/time/output bytes are unchanged.",
+  "analyses": {
+    "initial": {
+      "primary": {
+        "ordinary": {
+          "correctCompletions": 6,
+          "allAttempts": 12,
+          "correctnessRate": 0.5,
+          "gradesPresent": 12,
+          "attemptsPresent": 12,
+          "nonUse": 0,
+          "overCallAuditThreshold": 0,
+          "metrics": {
+            "totalTokensAllAttempts": {
+              "value": 4227157,
+              "observed": 12,
+              "expected": 12
+            },
+            "totalTokensPerCorrectCompletion": {
+              "value": 704526.1666666666,
+              "denominatorCorrect": 6,
+              "complete": true
+            },
+            "uncachedInputTokensAllAttempts": {
+              "value": 672634,
+              "observed": 12,
+              "expected": 12
+            },
+            "uncachedInputTokensPerCorrectCompletion": {
+              "value": 112105.66666666667,
+              "denominatorCorrect": 6,
+              "complete": true
+            },
+            "outputTokensAllAttempts": {
+              "value": 29403,
+              "observed": 12,
+              "expected": 12
+            },
+            "outputTokensPerCorrectCompletion": {
+              "value": 4900.5,
+              "denominatorCorrect": 6,
+              "complete": true
+            },
+            "durationMsAllAttempts": {
+              "value": 930406,
+              "observed": 12,
+              "expected": 12
+            },
+            "durationMsPerCorrectCompletion": {
+              "value": 155067.66666666666,
+              "denominatorCorrect": 6,
+              "complete": true
+            }
+          }
+        },
+        "codefacts": {
+          "correctCompletions": 7,
+          "allAttempts": 12,
+          "correctnessRate": 0.5833333333333334,
+          "gradesPresent": 12,
+          "attemptsPresent": 12,
+          "nonUse": 0,
+          "overCallAuditThreshold": 0,
+          "metrics": {
+            "totalTokensAllAttempts": {
+              "value": 4805072,
+              "observed": 12,
+              "expected": 12
+            },
+            "totalTokensPerCorrectCompletion": {
+              "value": 686438.8571428572,
+              "denominatorCorrect": 7,
+              "complete": true
+            },
+            "uncachedInputTokensAllAttempts": {
+              "value": 784180,
+              "observed": 12,
+              "expected": 12
+            },
+            "uncachedInputTokensPerCorrectCompletion": {
+              "value": 112025.71428571429,
+              "denominatorCorrect": 7,
+              "complete": true
+            },
+            "outputTokensAllAttempts": {
+              "value": 24732,
+              "observed": 12,
+              "expected": 12
+            },
+            "outputTokensPerCorrectCompletion": {
+              "value": 3533.1428571428573,
+              "denominatorCorrect": 7,
+              "complete": true
+            },
+            "durationMsAllAttempts": {
+              "value": 829782,
+              "observed": 12,
+              "expected": 12
+            },
+            "durationMsPerCorrectCompletion": {
+              "value": 118540.28571428571,
+              "denominatorCorrect": 7,
+              "complete": true
+            }
+          }
+        },
+        "codegraph": {
+          "correctCompletions": 8,
+          "allAttempts": 12,
+          "correctnessRate": 0.6666666666666666,
+          "gradesPresent": 12,
+          "attemptsPresent": 12,
+          "nonUse": 0,
+          "overCallAuditThreshold": 0,
+          "metrics": {
+            "totalTokensAllAttempts": {
+              "value": 3621374,
+              "observed": 12,
+              "expected": 12
+            },
+            "totalTokensPerCorrectCompletion": {
+              "value": 452671.75,
+              "denominatorCorrect": 8,
+              "complete": true
+            },
+            "uncachedInputTokensAllAttempts": {
+              "value": 665880,
+              "observed": 12,
+              "expected": 12
+            },
+            "uncachedInputTokensPerCorrectCompletion": {
+              "value": 83235,
+              "denominatorCorrect": 8,
+              "complete": true
+            },
+            "outputTokensAllAttempts": {
+              "value": 24806,
+              "observed": 12,
+              "expected": 12
+            },
+            "outputTokensPerCorrectCompletion": {
+              "value": 3100.75,
+              "denominatorCorrect": 8,
+              "complete": true
+            },
+            "durationMsAllAttempts": {
+              "value": 824577,
+              "observed": 12,
+              "expected": 12
+            },
+            "durationMsPerCorrectCompletion": {
+              "value": 103072.125,
+              "denominatorCorrect": 8,
+              "complete": true
+            }
+          }
+        }
+      },
+      "secondaryMatchedCorrect": {
+        "codefacts_vs_ordinary": {
+          "totalTokens": {
+            "medianTaskPercentDifference": 27.98807554303778,
+            "tasks": [
+              {
+                "taskId": "OS-H01",
+                "matchedRepetitions": 2,
+                "percentDifference": 28.63429774676269
+              },
+              {
+                "taskId": "OS-H03",
+                "matchedRepetitions": 1,
+                "percentDifference": -18.06250151627001
+              },
+              {
+                "taskId": "OS-H04",
+                "matchedRepetitions": 1,
+                "percentDifference": 27.34185333931287
+              },
+              {
+                "taskId": "OS-H05",
+                "matchedRepetitions": 1,
+                "percentDifference": 40.73666078072435
+              }
+            ]
+          },
+          "uncachedInputTokens": {
+            "medianTaskPercentDifference": 29.916887996495284,
+            "tasks": [
+              {
+                "taskId": "OS-H01",
+                "matchedRepetitions": 2,
+                "percentDifference": 73.50433368827362
+              },
+              {
+                "taskId": "OS-H03",
+                "matchedRepetitions": 1,
+                "percentDifference": 5.22850325777737
+              },
+              {
+                "taskId": "OS-H04",
+                "matchedRepetitions": 1,
+                "percentDifference": -7.678074441080221
+              },
+              {
+                "taskId": "OS-H05",
+                "matchedRepetitions": 1,
+                "percentDifference": 54.6052727352132
+              }
+            ]
+          },
+          "outputTokens": {
+            "medianTaskPercentDifference": -15.252042510664609,
+            "tasks": [
+              {
+                "taskId": "OS-H01",
+                "matchedRepetitions": 2,
+                "percentDifference": -32.804878824300005
+              },
+              {
+                "taskId": "OS-H03",
+                "matchedRepetitions": 1,
+                "percentDifference": -16.80672268907563
+              },
+              {
+                "taskId": "OS-H04",
+                "matchedRepetitions": 1,
+                "percentDifference": -0.9270455461507456
+              },
+              {
+                "taskId": "OS-H05",
+                "matchedRepetitions": 1,
+                "percentDifference": -13.697362332253588
+              }
+            ]
+          },
+          "durationMs": {
+            "medianTaskPercentDifference": -18.74458806846482,
+            "tasks": [
+              {
+                "taskId": "OS-H01",
+                "matchedRepetitions": 2,
+                "percentDifference": -16.78327218515264
+              },
+              {
+                "taskId": "OS-H03",
+                "matchedRepetitions": 1,
+                "percentDifference": -20.705903951777
+              },
+              {
+                "taskId": "OS-H04",
+                "matchedRepetitions": 1,
+                "percentDifference": -21.214332471267454
+              },
+              {
+                "taskId": "OS-H05",
+                "matchedRepetitions": 1,
+                "percentDifference": 0.8031158050347544
+              }
+            ]
+          }
+        },
+        "codegraph_vs_ordinary": {
+          "totalTokens": {
+            "medianTaskPercentDifference": -13.777745514404105,
+            "tasks": [
+              {
+                "taskId": "OS-H01",
+                "matchedRepetitions": 2,
+                "percentDifference": 29.591582318111357
+              },
+              {
+                "taskId": "OS-H02",
+                "matchedRepetitions": 1,
+                "percentDifference": 10.436106653534505
+              },
+              {
+                "taskId": "OS-H04",
+                "matchedRepetitions": 1,
+                "percentDifference": -44.141765149484264
+              },
+              {
+                "taskId": "OS-H05",
+                "matchedRepetitions": 1,
+                "percentDifference": -37.991597682342714
+              }
+            ]
+          },
+          "uncachedInputTokens": {
+            "medianTaskPercentDifference": -17.404317408673144,
+            "tasks": [
+              {
+                "taskId": "OS-H01",
+                "matchedRepetitions": 2,
+                "percentDifference": 132.7774566075296
+              },
+              {
+                "taskId": "OS-H02",
+                "matchedRepetitions": 1,
+                "percentDifference": -22.161057917225463
+              },
+              {
+                "taskId": "OS-H04",
+                "matchedRepetitions": 1,
+                "percentDifference": -48.31330091445699
+              },
+              {
+                "taskId": "OS-H05",
+                "matchedRepetitions": 1,
+                "percentDifference": -12.647576900120827
+              }
+            ]
+          },
+          "outputTokens": {
+            "medianTaskPercentDifference": -16.74060837092349,
+            "tasks": [
+              {
+                "taskId": "OS-H01",
+                "matchedRepetitions": 2,
+                "percentDifference": -13.166547607187095
+              },
+              {
+                "taskId": "OS-H02",
+                "matchedRepetitions": 1,
+                "percentDifference": -4.627766599597585
+              },
+              {
+                "taskId": "OS-H04",
+                "matchedRepetitions": 1,
+                "percentDifference": -29.060862555421203
+              },
+              {
+                "taskId": "OS-H05",
+                "matchedRepetitions": 1,
+                "percentDifference": -20.31466913465988
+              }
+            ]
+          },
+          "durationMs": {
+            "medianTaskPercentDifference": -12.750733975385803,
+            "tasks": [
+              {
+                "taskId": "OS-H01",
+                "matchedRepetitions": 2,
+                "percentDifference": 9.015184564463786
+              },
+              {
+                "taskId": "OS-H02",
+                "matchedRepetitions": 1,
+                "percentDifference": 4.898952796623597
+              },
+              {
+                "taskId": "OS-H04",
+                "matchedRepetitions": 1,
+                "percentDifference": -41.18492922832584
+              },
+              {
+                "taskId": "OS-H05",
+                "matchedRepetitions": 1,
+                "percentDifference": -30.400420747395202
+              }
+            ]
+          }
+        },
+        "codefacts_vs_codegraph": {
+          "totalTokens": {
+            "medianTaskPercentDifference": 118.53837838941018,
+            "tasks": [
+              {
+                "taskId": "OS-H01",
+                "matchedRepetitions": 2,
+                "percentDifference": -1.886369887021699
+              },
+              {
+                "taskId": "OS-H04",
+                "matchedRepetitions": 2,
+                "percentDifference": 153.03072493731605
+              },
+              {
+                "taskId": "OS-H05",
+                "matchedRepetitions": 2,
+                "percentDifference": 118.53837838941018
+              }
+            ]
+          },
+          "uncachedInputTokens": {
+            "medianTaskPercentDifference": 58.2514483320601,
+            "tasks": [
+              {
+                "taskId": "OS-H01",
+                "matchedRepetitions": 2,
+                "percentDifference": -23.760687353009224
+              },
+              {
+                "taskId": "OS-H04",
+                "matchedRepetitions": 2,
+                "percentDifference": 64.07131265176358
+              },
+              {
+                "taskId": "OS-H05",
+                "matchedRepetitions": 2,
+                "percentDifference": 58.2514483320601
+              }
+            ]
+          },
+          "outputTokens": {
+            "medianTaskPercentDifference": 17.64587251371617,
+            "tasks": [
+              {
+                "taskId": "OS-H01",
+                "matchedRepetitions": 2,
+                "percentDifference": -20.293357068113206
+              },
+              {
+                "taskId": "OS-H04",
+                "matchedRepetitions": 2,
+                "percentDifference": 30.90566094010976
+              },
+              {
+                "taskId": "OS-H05",
+                "matchedRepetitions": 2,
+                "percentDifference": 17.64587251371617
+              }
+            ]
+          },
+          "durationMs": {
+            "medianTaskPercentDifference": 34.366195491759626,
+            "tasks": [
+              {
+                "taskId": "OS-H01",
+                "matchedRepetitions": 2,
+                "percentDifference": -19.05361156642652
+              },
+              {
+                "taskId": "OS-H04",
+                "matchedRepetitions": 2,
+                "percentDifference": 34.366195491759626
+              },
+              {
+                "taskId": "OS-H05",
+                "matchedRepetitions": 2,
+                "percentDifference": 34.827363262839185
+              }
+            ]
+          }
+        }
+      }
+    },
+    "equivalent": {
+      "primary": {
+        "ordinary": {
+          "correctCompletions": 11,
+          "allAttempts": 12,
+          "correctnessRate": 0.9166666666666666,
+          "gradesPresent": 12,
+          "attemptsPresent": 12,
+          "nonUse": 0,
+          "overCallAuditThreshold": 0,
+          "metrics": {
+            "totalTokensAllAttempts": {
+              "value": 4227157,
+              "observed": 12,
+              "expected": 12
+            },
+            "totalTokensPerCorrectCompletion": {
+              "value": 384287,
+              "denominatorCorrect": 11,
+              "complete": true
+            },
+            "uncachedInputTokensAllAttempts": {
+              "value": 672634,
+              "observed": 12,
+              "expected": 12
+            },
+            "uncachedInputTokensPerCorrectCompletion": {
+              "value": 61148.545454545456,
+              "denominatorCorrect": 11,
+              "complete": true
+            },
+            "outputTokensAllAttempts": {
+              "value": 29403,
+              "observed": 12,
+              "expected": 12
+            },
+            "outputTokensPerCorrectCompletion": {
+              "value": 2673,
+              "denominatorCorrect": 11,
+              "complete": true
+            },
+            "durationMsAllAttempts": {
+              "value": 930406,
+              "observed": 12,
+              "expected": 12
+            },
+            "durationMsPerCorrectCompletion": {
+              "value": 84582.36363636363,
+              "denominatorCorrect": 11,
+              "complete": true
+            }
+          }
+        },
+        "codefacts": {
+          "correctCompletions": 12,
+          "allAttempts": 12,
+          "correctnessRate": 1,
+          "gradesPresent": 12,
+          "attemptsPresent": 12,
+          "nonUse": 0,
+          "overCallAuditThreshold": 0,
+          "metrics": {
+            "totalTokensAllAttempts": {
+              "value": 4805072,
+              "observed": 12,
+              "expected": 12
+            },
+            "totalTokensPerCorrectCompletion": {
+              "value": 400422.6666666667,
+              "denominatorCorrect": 12,
+              "complete": true
+            },
+            "uncachedInputTokensAllAttempts": {
+              "value": 784180,
+              "observed": 12,
+              "expected": 12
+            },
+            "uncachedInputTokensPerCorrectCompletion": {
+              "value": 65348.333333333336,
+              "denominatorCorrect": 12,
+              "complete": true
+            },
+            "outputTokensAllAttempts": {
+              "value": 24732,
+              "observed": 12,
+              "expected": 12
+            },
+            "outputTokensPerCorrectCompletion": {
+              "value": 2061,
+              "denominatorCorrect": 12,
+              "complete": true
+            },
+            "durationMsAllAttempts": {
+              "value": 829782,
+              "observed": 12,
+              "expected": 12
+            },
+            "durationMsPerCorrectCompletion": {
+              "value": 69148.5,
+              "denominatorCorrect": 12,
+              "complete": true
+            }
+          }
+        },
+        "codegraph": {
+          "correctCompletions": 11,
+          "allAttempts": 12,
+          "correctnessRate": 0.9166666666666666,
+          "gradesPresent": 12,
+          "attemptsPresent": 12,
+          "nonUse": 0,
+          "overCallAuditThreshold": 0,
+          "metrics": {
+            "totalTokensAllAttempts": {
+              "value": 3621374,
+              "observed": 12,
+              "expected": 12
+            },
+            "totalTokensPerCorrectCompletion": {
+              "value": 329215.8181818182,
+              "denominatorCorrect": 11,
+              "complete": true
+            },
+            "uncachedInputTokensAllAttempts": {
+              "value": 665880,
+              "observed": 12,
+              "expected": 12
+            },
+            "uncachedInputTokensPerCorrectCompletion": {
+              "value": 60534.545454545456,
+              "denominatorCorrect": 11,
+              "complete": true
+            },
+            "outputTokensAllAttempts": {
+              "value": 24806,
+              "observed": 12,
+              "expected": 12
+            },
+            "outputTokensPerCorrectCompletion": {
+              "value": 2255.090909090909,
+              "denominatorCorrect": 11,
+              "complete": true
+            },
+            "durationMsAllAttempts": {
+              "value": 824577,
+              "observed": 12,
+              "expected": 12
+            },
+            "durationMsPerCorrectCompletion": {
+              "value": 74961.54545454546,
+              "denominatorCorrect": 11,
+              "complete": true
+            }
+          }
+        }
+      },
+      "secondaryMatchedCorrect": {
+        "codefacts_vs_ordinary": {
+          "totalTokens": {
+            "medianTaskPercentDifference": 16.546146628794602,
+            "tasks": [
+              {
+                "taskId": "OS-H01",
+                "matchedRepetitions": 2,
+                "percentDifference": 28.63429774676269
+              },
+              {
+                "taskId": "OS-H02",
+                "matchedRepetitions": 2,
+                "percentDifference": 6.418808225690844
+              },
+              {
+                "taskId": "OS-H03",
+                "matchedRepetitions": 2,
+                "percentDifference": 22.681026825529887
+              },
+              {
+                "taskId": "OS-H04",
+                "matchedRepetitions": 2,
+                "percentDifference": 10.411266432059314
+              },
+              {
+                "taskId": "OS-H05",
+                "matchedRepetitions": 1,
+                "percentDifference": 40.73666078072435
+              },
+              {
+                "taskId": "OS-H06",
+                "matchedRepetitions": 2,
+                "percentDifference": -7.639092829004747
+              }
+            ]
+          },
+          "uncachedInputTokens": {
+            "medianTaskPercentDifference": 39.107955691183534,
+            "tasks": [
+              {
+                "taskId": "OS-H01",
+                "matchedRepetitions": 2,
+                "percentDifference": 73.50433368827362
+              },
+              {
+                "taskId": "OS-H02",
+                "matchedRepetitions": 2,
+                "percentDifference": 23.61063864715387
+              },
+              {
+                "taskId": "OS-H03",
+                "matchedRepetitions": 2,
+                "percentDifference": 57.18990308629933
+              },
+              {
+                "taskId": "OS-H04",
+                "matchedRepetitions": 2,
+                "percentDifference": -29.140173341194128
+              },
+              {
+                "taskId": "OS-H05",
+                "matchedRepetitions": 1,
+                "percentDifference": 54.6052727352132
+              },
+              {
+                "taskId": "OS-H06",
+                "matchedRepetitions": 2,
+                "percentDifference": 12.848578117757455
+              }
+            ]
+          },
+          "outputTokens": {
+            "medianTaskPercentDifference": -15.559053038190939,
+            "tasks": [
+              {
+                "taskId": "OS-H01",
+                "matchedRepetitions": 2,
+                "percentDifference": -32.804878824300005
+              },
+              {
+                "taskId": "OS-H02",
+                "matchedRepetitions": 2,
+                "percentDifference": -17.420743744128288
+              },
+              {
+                "taskId": "OS-H03",
+                "matchedRepetitions": 2,
+                "percentDifference": -3.2199482663878953
+              },
+              {
+                "taskId": "OS-H04",
+                "matchedRepetitions": 2,
+                "percentDifference": -11.129513307220066
+              },
+              {
+                "taskId": "OS-H05",
+                "matchedRepetitions": 1,
+                "percentDifference": -13.697362332253588
+              },
+              {
+                "taskId": "OS-H06",
+                "matchedRepetitions": 2,
+                "percentDifference": -20.598197348863554
+              }
+            ]
+          },
+          "durationMs": {
+            "medianTaskPercentDifference": -10.022835528613232,
+            "tasks": [
+              {
+                "taskId": "OS-H01",
+                "matchedRepetitions": 2,
+                "percentDifference": -16.78327218515264
+              },
+              {
+                "taskId": "OS-H02",
+                "matchedRepetitions": 2,
+                "percentDifference": -2.5080623101897115
+              },
+              {
+                "taskId": "OS-H03",
+                "matchedRepetitions": 2,
+                "percentDifference": -5.413073122258629
+              },
+              {
+                "taskId": "OS-H04",
+                "matchedRepetitions": 2,
+                "percentDifference": -14.632597934967837
+              },
+              {
+                "taskId": "OS-H05",
+                "matchedRepetitions": 1,
+                "percentDifference": 0.8031158050347544
+              },
+              {
+                "taskId": "OS-H06",
+                "matchedRepetitions": 2,
+                "percentDifference": -16.69392604302524
+              }
+            ]
+          }
+        },
+        "codegraph_vs_ordinary": {
+          "totalTokens": {
+            "medianTaskPercentDifference": -8.337095913749597,
+            "tasks": [
+              {
+                "taskId": "OS-H01",
+                "matchedRepetitions": 2,
+                "percentDifference": 29.591582318111357
+              },
+              {
+                "taskId": "OS-H02",
+                "matchedRepetitions": 2,
+                "percentDifference": -12.117433811621678
+              },
+              {
+                "taskId": "OS-H03",
+                "matchedRepetitions": 2,
+                "percentDifference": 34.0891172690887
+              },
+              {
+                "taskId": "OS-H04",
+                "matchedRepetitions": 2,
+                "percentDifference": -55.263141078042906
+              },
+              {
+                "taskId": "OS-H05",
+                "matchedRepetitions": 1,
+                "percentDifference": -37.991597682342714
+              },
+              {
+                "taskId": "OS-H06",
+                "matchedRepetitions": 1,
+                "percentDifference": -4.556758015877513
+              }
+            ]
+          },
+          "uncachedInputTokens": {
+            "medianTaskPercentDifference": 6.629895478894173,
+            "tasks": [
+              {
+                "taskId": "OS-H01",
+                "matchedRepetitions": 2,
+                "percentDifference": 132.7774566075296
+              },
+              {
+                "taskId": "OS-H02",
+                "matchedRepetitions": 2,
+                "percentDifference": -20.188620934851258
+              },
+              {
+                "taskId": "OS-H03",
+                "matchedRepetitions": 2,
+                "percentDifference": 25.907367857909172
+              },
+              {
+                "taskId": "OS-H04",
+                "matchedRepetitions": 2,
+                "percentDifference": -57.63835421056059
+              },
+              {
+                "taskId": "OS-H05",
+                "matchedRepetitions": 1,
+                "percentDifference": -12.647576900120827
+              },
+              {
+                "taskId": "OS-H06",
+                "matchedRepetitions": 1,
+                "percentDifference": 33.09282668291197
+              }
+            ]
+          },
+          "outputTokens": {
+            "medianTaskPercentDifference": -16.74060837092349,
+            "tasks": [
+              {
+                "taskId": "OS-H01",
+                "matchedRepetitions": 2,
+                "percentDifference": -13.166547607187095
+              },
+              {
+                "taskId": "OS-H02",
+                "matchedRepetitions": 2,
+                "percentDifference": -5.527493885810134
+              },
+              {
+                "taskId": "OS-H03",
+                "matchedRepetitions": 2,
+                "percentDifference": 0.4896376413404271
+              },
+              {
+                "taskId": "OS-H04",
+                "matchedRepetitions": 2,
+                "percentDifference": -32.32961991868423
+              },
+              {
+                "taskId": "OS-H05",
+                "matchedRepetitions": 1,
+                "percentDifference": -20.31466913465988
+              },
+              {
+                "taskId": "OS-H06",
+                "matchedRepetitions": 1,
+                "percentDifference": -28.136994390315913
+              }
+            ]
+          },
+          "durationMs": {
+            "medianTaskPercentDifference": -15.612445619878482,
+            "tasks": [
+              {
+                "taskId": "OS-H01",
+                "matchedRepetitions": 2,
+                "percentDifference": 9.015184564463786
+              },
+              {
+                "taskId": "OS-H02",
+                "matchedRepetitions": 2,
+                "percentDifference": -0.8244704923617605
+              },
+              {
+                "taskId": "OS-H03",
+                "matchedRepetitions": 2,
+                "percentDifference": 11.199545324165285
+              },
+              {
+                "taskId": "OS-H04",
+                "matchedRepetitions": 2,
+                "percentDifference": -36.48100655514834
+              },
+              {
+                "taskId": "OS-H05",
+                "matchedRepetitions": 1,
+                "percentDifference": -30.400420747395202
+              },
+              {
+                "taskId": "OS-H06",
+                "matchedRepetitions": 1,
+                "percentDifference": -42.82311439333372
+              }
+            ]
+          }
+        },
+        "codefacts_vs_codegraph": {
+          "totalTokens": {
+            "medianTaskPercentDifference": 17.10219599015911,
+            "tasks": [
+              {
+                "taskId": "OS-H01",
+                "matchedRepetitions": 2,
+                "percentDifference": -1.886369887021699
+              },
+              {
+                "taskId": "OS-H02",
+                "matchedRepetitions": 2,
+                "percentDifference": 35.083007930531906
+              },
+              {
+                "taskId": "OS-H03",
+                "matchedRepetitions": 2,
+                "percentDifference": -0.878615950213689
+              },
+              {
+                "taskId": "OS-H04",
+                "matchedRepetitions": 2,
+                "percentDifference": 153.03072493731605
+              },
+              {
+                "taskId": "OS-H05",
+                "matchedRepetitions": 2,
+                "percentDifference": 118.53837838941018
+              },
+              {
+                "taskId": "OS-H06",
+                "matchedRepetitions": 1,
+                "percentDifference": -14.435070546097373
+              }
+            ]
+          },
+          "uncachedInputTokens": {
+            "medianTaskPercentDifference": 42.1781220401458,
+            "tasks": [
+              {
+                "taskId": "OS-H01",
+                "matchedRepetitions": 2,
+                "percentDifference": -23.760687353009224
+              },
+              {
+                "taskId": "OS-H02",
+                "matchedRepetitions": 2,
+                "percentDifference": 53.18379592426051
+              },
+              {
+                "taskId": "OS-H03",
+                "matchedRepetitions": 2,
+                "percentDifference": 31.172448156031095
+              },
+              {
+                "taskId": "OS-H04",
+                "matchedRepetitions": 2,
+                "percentDifference": 64.07131265176358
+              },
+              {
+                "taskId": "OS-H05",
+                "matchedRepetitions": 2,
+                "percentDifference": 58.2514483320601
+              },
+              {
+                "taskId": "OS-H06",
+                "matchedRepetitions": 1,
+                "percentDifference": -11.909427700934044
+              }
+            ]
+          },
+          "outputTokens": {
+            "medianTaskPercentDifference": -1.704992043224427,
+            "tasks": [
+              {
+                "taskId": "OS-H01",
+                "matchedRepetitions": 2,
+                "percentDifference": -20.293357068113206
+              },
+              {
+                "taskId": "OS-H02",
+                "matchedRepetitions": 2,
+                "percentDifference": -12.58317350722414
+              },
+              {
+                "taskId": "OS-H03",
+                "matchedRepetitions": 2,
+                "percentDifference": -4.1495075046904315
+              },
+              {
+                "taskId": "OS-H04",
+                "matchedRepetitions": 2,
+                "percentDifference": 30.90566094010976
+              },
+              {
+                "taskId": "OS-H05",
+                "matchedRepetitions": 2,
+                "percentDifference": 17.64587251371617
+              },
+              {
+                "taskId": "OS-H06",
+                "matchedRepetitions": 1,
+                "percentDifference": 0.7395234182415776
+              }
+            ]
+          },
+          "durationMs": {
+            "medianTaskPercentDifference": 11.44374509517434,
+            "tasks": [
+              {
+                "taskId": "OS-H01",
+                "matchedRepetitions": 2,
+                "percentDifference": -19.05361156642652
+              },
+              {
+                "taskId": "OS-H02",
+                "matchedRepetitions": 2,
+                "percentDifference": -1.9413287685822862
+              },
+              {
+                "taskId": "OS-H03",
+                "matchedRepetitions": 2,
+                "percentDifference": -15.224012739454501
+              },
+              {
+                "taskId": "OS-H04",
+                "matchedRepetitions": 2,
+                "percentDifference": 34.366195491759626
+              },
+              {
+                "taskId": "OS-H05",
+                "matchedRepetitions": 2,
+                "percentDifference": 34.827363262839185
+              },
+              {
+                "taskId": "OS-H06",
+                "matchedRepetitions": 1,
+                "percentDifference": 24.828818958930967
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "attempts": [
+    {
+      "ordinal": 1,
+      "taskId": "OS-H01",
+      "arm": "ordinary",
+      "run": 1,
+      "label": "response-2a8837842790125a",
+      "initialGrade": {
+        "correct": true,
+        "score": 3,
+        "criteria": {
+          "H01-C1": true,
+          "H01-C2": false,
+          "H01-C3": true,
+          "H01-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "正确说明 Codex 委托、同一 captured input 生成 v2/v3，以及 route 经可选 adapter 方法做 provider dispatch。C2 未说明 revision 是 captured.revision 与 memory.revision 的组合，也未明确 inheritedContext 仅在 inheritedMessages 非空时存在。"
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H01-C1": true,
+          "H01-C2": true,
+          "H01-C3": true,
+          "H01-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Independent blind business-equivalence adjudication; original grades retained."
+      },
+      "usage": {
+        "input_tokens": 175028,
+        "cached_input_tokens": 143616,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2438,
+        "reasoning_output_tokens": 497
+      },
+      "totalTokens": 177466,
+      "uncachedInputTokens": 31412,
+      "durationMs": 66674,
+      "setupMs": 0.0020999999999276042,
+      "actualMcpCalls": 0,
+      "actualShellCalls": 7,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [],
+      "combinedCalls": 7,
+      "toolOutputBytes": 54565,
+      "finalContextInputTokens": 27294,
+      "frozenHeuristicMcpCalls": 0,
+      "frozenHeuristicCombinedCalls": 7,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": null,
+      "evidenceUsed": null,
+      "shellErrorCalls": 2,
+      "truncatedCalls": 0,
+      "toolFormats": [],
+      "nonzeroShellExitCalls": 2,
+      "auditNotes": "ordinary OS-H01 run-001; all shell workdir values are the fixed source root and commands are source/docs/test searches or reads. No prohibited scope or mutation observed. The answer is source-based; no external tool evidence exists to attribute.",
+      "issueDetails": [
+        "A PowerShell ParserError came from an interpolated variable followed by a colon in a diagnostic read command; the command was retried with ${f}.",
+        "An rg regex parse error came from an invalid quoted alternation; the command was retried with separate -e expressions."
+      ],
+      "originalAnswerSha256": "06e4080c35e34224fc7cd2fbae78dbb6deb9dd2476ea16cea89eacc8f5e4fe37",
+      "rawHashes": {
+        "metrics": "f6816a70c09f1f2ef3fb9d2c3bc1c8b8c82badd93feba504a106a906c60407cf",
+        "timing": "5fb99e83bd19f0950ef014ca7f8ab875af2233f136e4f0e0bed6822085e8a568",
+        "transcript": "4f11e6bef35d258193a98972bfddd5d8623e28d78e2ed277c7b168f782d4be93",
+        "stdout": "1e4fa8dda202354c832bfef8a4c2f6f24aee4a28df28753092be1dbac9dea2b0",
+        "stderr": "4d7d0ef2aabfaf6bf79d9ecd0fcda5c18a972fffe096d3b72fca385816ddd9cb",
+        "answer": "06e4080c35e34224fc7cd2fbae78dbb6deb9dd2476ea16cea89eacc8f5e4fe37",
+        "request": "f1c303f6f58380ebbbd1ea8ba04151a4712fecc640c9490fc479f158e3d00de7"
+      }
+    },
+    {
+      "ordinal": 2,
+      "taskId": "OS-H01",
+      "arm": "codefacts",
+      "run": 1,
+      "label": "response-619209df2369da3b",
+      "initialGrade": {
+        "correct": true,
+        "score": 3,
+        "criteria": {
+          "H01-C1": true,
+          "H01-C2": false,
+          "H01-C3": true,
+          "H01-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "C1、C3、C4 的结论和引用完整，且没有把 route 写成静态直连。C2 虽说明单次捕获与 inherited context，但遗漏 captured/session revision 与 memory revision 的组合及 inheritedMessages 为空时返回 null 的条件。"
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H01-C1": true,
+          "H01-C2": true,
+          "H01-C3": true,
+          "H01-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Independent blind business-equivalence adjudication; original grades retained."
+      },
+      "usage": {
+        "input_tokens": 309611,
+        "cached_input_tokens": 238080,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1670,
+        "reasoning_output_tokens": 356
+      },
+      "totalTokens": 311281,
+      "uncachedInputTokens": 71531,
+      "durationMs": 60806,
+      "setupMs": 25.091399999990244,
+      "actualMcpCalls": 1,
+      "actualShellCalls": 7,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [
+        {
+          "tool": "search",
+          "format": "full"
+        }
+      ],
+      "combinedCalls": 8,
+      "toolOutputBytes": 120299,
+      "finalContextInputTokens": 44312,
+      "frozenHeuristicMcpCalls": 1,
+      "frozenHeuristicCombinedCalls": 8,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": true,
+      "evidenceUsed": null,
+      "shellErrorCalls": 0,
+      "truncatedCalls": 1,
+      "toolFormats": [
+        "full"
+      ],
+      "nonzeroShellExitCalls": 0,
+      "auditNotes": "CodeFacts OS-H01 run-001; search query getSessionReaderSnapshot is directly relevant and fresh for the fixed source root. Follow-up shell reads re-read the same source facts, so incremental CodeFacts contribution cannot be established.",
+      "issueDetails": [
+        "One later shell output was truncated by the command output limit; the CodeFacts response itself reported fresh results and source locations."
+      ],
+      "originalAnswerSha256": "b7a8b6767423e59d13e5433171343328ab93f1249c96ec8fafca13e4e7b981df",
+      "rawHashes": {
+        "metrics": "f030817feee794e79075ae88ddd4a4890f2123c38b358947d577fbe1736fa6c7",
+        "timing": "c38e2523c075218ab4bbe2f02ff8d32eb48b8e67092617b546480af60e5764ab",
+        "transcript": "60a1277f67478cf7a28501e8d75578c5d042de5c45b63f117e16f4b11f9b5454",
+        "stdout": "7d388728b33242d5224dfa5f39c6843aaa67d4c9c907670a34232cef38e121ce",
+        "stderr": "b176c6a9455a16fac15daeaea4ea655cbff5e8bfdce03c1b844493377a429837",
+        "answer": "b7a8b6767423e59d13e5433171343328ab93f1249c96ec8fafca13e4e7b981df",
+        "request": "07a10d925979d7aa29394b4df93f0bb054335576bb4d7e3bcf2300e8479afcc5"
+      }
+    },
+    {
+      "ordinal": 3,
+      "taskId": "OS-H01",
+      "arm": "codegraph",
+      "run": 1,
+      "label": "response-5625df262d6da386",
+      "initialGrade": {
+        "correct": true,
+        "score": 3,
+        "criteria": {
+          "H01-C1": true,
+          "H01-C2": false,
+          "H01-C3": true,
+          "H01-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "正确追踪 getSessionReaderSnapshot 到 captureCodexReader、同一捕获生成 v2/v3，并把 route 边界判为 provider dispatch。C2 没有交代复合 revision，也没有明确 inheritedContext 的非空条件。"
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H01-C1": true,
+          "H01-C2": true,
+          "H01-C3": true,
+          "H01-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Independent blind business-equivalence adjudication; original grades retained."
+      },
+      "usage": {
+        "input_tokens": 304714,
+        "cached_input_tokens": 204800,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1775,
+        "reasoning_output_tokens": 423
+      },
+      "totalTokens": 306489,
+      "uncachedInputTokens": 99914,
+      "durationMs": 58315,
+      "setupMs": 71.85360000000219,
+      "actualMcpCalls": 1,
+      "actualShellCalls": 6,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [
+        {
+          "tool": "codegraph_explore",
+          "format": "default"
+        }
+      ],
+      "combinedCalls": 7,
+      "toolOutputBytes": 150359,
+      "finalContextInputTokens": 51354,
+      "frozenHeuristicMcpCalls": 1,
+      "frozenHeuristicCombinedCalls": 7,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": true,
+      "evidenceUsed": null,
+      "shellErrorCalls": 0,
+      "truncatedCalls": 2,
+      "toolFormats": [
+        "codegraph_explore"
+      ],
+      "nonzeroShellExitCalls": 0,
+      "auditNotes": "CodeGraph OS-H01 run-001; the exploration prompt targets the exact route, Codex reader capture, inherited context, protocol snapshots, and dispatch relationship. Subsequent source reads repeat the explored facts, so incremental CodeGraph contribution is unknown.",
+      "issueDetails": [
+        "The CodeGraph exploration output and one source-read output were truncated in the recorded transcript."
+      ],
+      "originalAnswerSha256": "02f1a380f340fd12e7c0a28dfa33dcb7d390a711dd94cd75cc65a1c17b9b2da5",
+      "rawHashes": {
+        "metrics": "026a9f3380726e8f092786ed25fc5bc484990268b30a58d3afe4de86cd6593a9",
+        "timing": "21ffbf33007fac100e3705da6f1a9f05d365495b2be38836678df6c62980a874",
+        "transcript": "e7e4972302506b1a2a647e8f2154867f2570cd908932e0e9382a1f3aa78953c8",
+        "stdout": "e4bad36b9171cca9caa60d7c9854bf7dad0efc89864c437c602eb210d0b2ea39",
+        "stderr": "72a998ff9faf74381e2c894929d5867be33dfcbade566b7c2f42223ca549ca46",
+        "answer": "02f1a380f340fd12e7c0a28dfa33dcb7d390a711dd94cd75cc65a1c17b9b2da5",
+        "request": "a130b3937bb78807ee9d16d2bef84441ead734ab2ca03b7334a1105ace27264d"
+      }
+    },
+    {
+      "ordinal": 4,
+      "taskId": "OS-H01",
+      "arm": "codegraph",
+      "run": 2,
+      "label": "response-ed0dc8fd90a7f5f6",
+      "initialGrade": {
+        "correct": true,
+        "score": 3,
+        "criteria": {
+          "H01-C1": true,
+          "H01-C2": false,
+          "H01-C3": true,
+          "H01-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "正确说明单次 capture 的复用、Codex 薄委托、同源 v2/v3 和可选接口分派。C2 没有写出 captured.revision 与 memory.revision 的合并，也未说明 inheritedContext 在无 inherited messages 时为 null。"
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H01-C1": true,
+          "H01-C2": true,
+          "H01-C3": true,
+          "H01-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Independent blind business-equivalence adjudication; original grades retained."
+      },
+      "usage": {
+        "input_tokens": 263781,
+        "cached_input_tokens": 195072,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2342,
+        "reasoning_output_tokens": 426
+      },
+      "totalTokens": 266123,
+      "uncachedInputTokens": 68709,
+      "durationMs": 107884,
+      "setupMs": 92.52740000002086,
+      "actualMcpCalls": 1,
+      "actualShellCalls": 7,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [
+        {
+          "tool": "codegraph_explore",
+          "format": "default"
+        }
+      ],
+      "combinedCalls": 8,
+      "toolOutputBytes": 78589,
+      "finalContextInputTokens": 32883,
+      "frozenHeuristicMcpCalls": 1,
+      "frozenHeuristicCombinedCalls": 8,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": true,
+      "evidenceUsed": null,
+      "shellErrorCalls": 0,
+      "truncatedCalls": 0,
+      "toolFormats": [
+        "codegraph_explore"
+      ],
+      "nonzeroShellExitCalls": 0,
+      "auditNotes": "CodeGraph OS-H01 run-002; exploration is directly targeted to the requested reader document, inherited context, v2/v3 snapshots, and static-versus-provider-dispatch distinction. Later commands re-read the same source, so incremental contribution is unknown.",
+      "issueDetails": [],
+      "originalAnswerSha256": "25c41388b0aee25128d43fb8c9646964a73942527ef16c5259da84e2ce4bd7b8",
+      "rawHashes": {
+        "metrics": "e9ddb39876767e1acf99ab4b48097ec0ae8cf52367282f6eae68cb3ea6f71fd1",
+        "timing": "87ba32ec287b4900472f7d2db02abb34097970dfc53748dfa48d7522f3582f99",
+        "transcript": "e9d473f63c81b1ed36e21489d2cafbf8b7fad10d0b1fd1e4e3e010704eb8e79f",
+        "stdout": "740746a7e9a3b0483c19bff330ae7bfff3ba417a7d323fed6a8f7f202eed876d",
+        "stderr": "f7364b0c0fb1f8d9bc2197f33f92ed51da90fff47f5acc3b6e62e700428a272e",
+        "answer": "25c41388b0aee25128d43fb8c9646964a73942527ef16c5259da84e2ce4bd7b8",
+        "request": "cdc157995d67fd245067dbddb3a937b78d01e4008115d31f42c8ca3d7bde89a4"
+      }
+    },
+    {
+      "ordinal": 5,
+      "taskId": "OS-H01",
+      "arm": "codefacts",
+      "run": 2,
+      "label": "response-93012dedc6520a2c",
+      "initialGrade": {
+        "correct": true,
+        "score": 3,
+        "criteria": {
+          "H01-C1": true,
+          "H01-C2": false,
+          "H01-C3": true,
+          "H01-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "源码链与 provider dispatch 判断正确，相关请求结论均有引用。C2 未说明 revision 的两部分组合，也未明确 inheritedContext 只在 inheritedMessages 非空时暴露；末句关于 CodeFacts 分类属无引用的附带说法，但不改变请求结论。"
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H01-C1": true,
+          "H01-C2": true,
+          "H01-C3": true,
+          "H01-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Independent blind business-equivalence adjudication; original grades retained."
+      },
+      "usage": {
+        "input_tokens": 250392,
+        "cached_input_tokens": 194816,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1530,
+        "reasoning_output_tokens": 315
+      },
+      "totalTokens": 251922,
+      "uncachedInputTokens": 55576,
+      "durationMs": 62164,
+      "setupMs": 21.165399999998044,
+      "actualMcpCalls": 2,
+      "actualShellCalls": 4,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [
+        {
+          "tool": "search",
+          "format": "full"
+        },
+        {
+          "tool": "expand",
+          "format": "full"
+        }
+      ],
+      "combinedCalls": 6,
+      "toolOutputBytes": 126007,
+      "finalContextInputTokens": 47875,
+      "frozenHeuristicMcpCalls": 2,
+      "frozenHeuristicCombinedCalls": 6,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": true,
+      "evidenceUsed": null,
+      "shellErrorCalls": 0,
+      "truncatedCalls": 1,
+      "toolFormats": [
+        "full"
+      ],
+      "nonzeroShellExitCalls": 0,
+      "auditNotes": "CodeFacts OS-H01 run-002; fresh full search for getSessionReaderSnapshot is directly relevant. The answer later states a CodeFacts classification, but the transcript also re-reads the relevant source, so standalone incremental use is not provable.",
+      "issueDetails": [
+        "One broad shell output was truncated by the recorded output limit."
+      ],
+      "originalAnswerSha256": "be5640638c536f99ee966d97259f26e48d94e6819ca96a8d8b00f556ba27bd34",
+      "rawHashes": {
+        "metrics": "bb2e06fdcd029b1c493a30276ce022bfe209409e1984f33c437ce08cbd35a19d",
+        "timing": "aaa9b0f0ff02b6dde324e6c5164777ea672f2a94937bed84aa57b6696adcf5dd",
+        "transcript": "c0f2a21d502279ec507d70dec2ed98b82a16050267b6b8280aa6d72afc5a8ccb",
+        "stdout": "935d2589c7f355a938a49ed2c411adbeb5678b3744e5846d0406c2ee9d69b9c3",
+        "stderr": "e772a195b3342d9baed96f641e63d8cfd49089b154a2b67dfa09448b16d1b661",
+        "answer": "be5640638c536f99ee966d97259f26e48d94e6819ca96a8d8b00f556ba27bd34",
+        "request": "e7d40042ce7722595bc5c7da7d3f749a77f7d828e03f8b572801522a302eee8d"
+      }
+    },
+    {
+      "ordinal": 6,
+      "taskId": "OS-H01",
+      "arm": "ordinary",
+      "run": 2,
+      "label": "response-2ace6c77a8658376",
+      "initialGrade": {
+        "correct": true,
+        "score": 3,
+        "criteria": {
+          "H01-C1": true,
+          "H01-C2": false,
+          "H01-C3": true,
+          "H01-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "委托关系、单次 capture 对 reader/protocol 的复用和 provider dispatch 均正确且有源码引用。C2 缺少 session revision 与 memory revision 合并，并未指出无 inherited messages 时 inheritedContext 为 null。"
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H01-C1": true,
+          "H01-C2": true,
+          "H01-C3": true,
+          "H01-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Independent blind business-equivalence adjudication; original grades retained."
+      },
+      "usage": {
+        "input_tokens": 305405,
+        "cached_input_tokens": 258816,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2322,
+        "reasoning_output_tokens": 378
+      },
+      "totalTokens": 307727,
+      "uncachedInputTokens": 46589,
+      "durationMs": 82627,
+      "setupMs": 0.0009999999892897904,
+      "actualMcpCalls": 0,
+      "actualShellCalls": 9,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [],
+      "combinedCalls": 9,
+      "toolOutputBytes": 107220,
+      "finalContextInputTokens": 40689,
+      "frozenHeuristicMcpCalls": 0,
+      "frozenHeuristicCombinedCalls": 9,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": null,
+      "evidenceUsed": null,
+      "shellErrorCalls": 0,
+      "truncatedCalls": 1,
+      "toolFormats": [],
+      "nonzeroShellExitCalls": 0,
+      "auditNotes": "ordinary OS-H01 run-002; all commands stay within the fixed source root and inspect source/docs/tests. No prohibited scope or mutation observed; no external tool evidence is available to attribute.",
+      "issueDetails": [
+        "One broad source search/read output was truncated by the recorded output limit."
+      ],
+      "originalAnswerSha256": "48100578cfbce9bd266af285f01559e441fe3c8ef939eba84d0f3322ef7c2858",
+      "rawHashes": {
+        "metrics": "9880630eac62816acd3e212c4d57f1817d757f008b026a9533c92fd6b60e2d78",
+        "timing": "5b2ae4fb198d002666679072131a0d7d350f76e57100ed03ae4c896551494bc6",
+        "transcript": "f18b136512a2a2b5a24c032e1e96faf1f0df9119caf6f7cacc92b7268ce502cd",
+        "stdout": "fd8a053f8ca364c1a213b7f5b6901e581b4b6f59fe57377bc90cd4c87819e705",
+        "stderr": "44fad8f04a214a81afae685392bd69b277924352ccf0bf594fc1afcf200af9f2",
+        "answer": "48100578cfbce9bd266af285f01559e441fe3c8ef939eba84d0f3322ef7c2858",
+        "request": "b2abd935af0c33c75cac1028609934a4a294ab9cc95f8e3f89d58b174926401a"
+      }
+    },
+    {
+      "ordinal": 7,
+      "taskId": "OS-H02",
+      "arm": "codefacts",
+      "run": 1,
+      "label": "response-a20c6f6fc0cffb77",
+      "initialGrade": {
+        "correct": false,
+        "score": 2,
+        "criteria": {
+          "H02-C1": true,
+          "H02-C2": false,
+          "H02-C3": true,
+          "H02-C4": false
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "C1/C3 正确。C2 未列出 renderer 的 providerSegment、sessionId 实参（session-detail.ts:318）。C4 虽指出 initRuntimeWorkbench 与缺 root 时退出，但未说明它读取并 JSON.parse data-runtime-evidence；该行为在 runtime-workbench.js:5-7。"
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H02-C1": true,
+          "H02-C2": true,
+          "H02-C3": true,
+          "H02-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Independent blind business-equivalence adjudication; original grades retained."
+      },
+      "usage": {
+        "input_tokens": 442944,
+        "cached_input_tokens": 379136,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2179,
+        "reasoning_output_tokens": 529
+      },
+      "totalTokens": 445123,
+      "uncachedInputTokens": 63808,
+      "durationMs": 85496,
+      "setupMs": 20.704100000031758,
+      "actualMcpCalls": 1,
+      "actualShellCalls": 8,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [
+        {
+          "tool": "search",
+          "format": "default"
+        }
+      ],
+      "combinedCalls": 9,
+      "toolOutputBytes": 182687,
+      "finalContextInputTokens": 58664,
+      "frozenHeuristicMcpCalls": 1,
+      "frozenHeuristicCombinedCalls": 9,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": true,
+      "evidenceUsed": null,
+      "shellErrorCalls": 0,
+      "truncatedCalls": 2,
+      "toolFormats": [
+        "compact"
+      ],
+      "nonzeroShellExitCalls": 0,
+      "auditNotes": "CodeFacts OS-H02 run-001; compact search for session detail/runtime workbench is directly relevant to the requested server-to-client inspection order. Follow-up shell reads re-read the returned candidate source, so incremental contribution is unknown.",
+      "issueDetails": [
+        "Two later shell outputs were truncated by the recorded output limit."
+      ],
+      "originalAnswerSha256": "6efb82e28bbb8f9695b07dd2e320cfc82f23e9f38ab4b8d2b390e812fd95ddd9",
+      "rawHashes": {
+        "metrics": "b46bb9c39b70b67f3c2a2f003eb303bdda8c26fe448a7db86fb078f47914c1fe",
+        "timing": "5a9e564688bf886516ac03934f017f1ebc51316238d1bf8fbc26a8a8d0e52a87",
+        "transcript": "c7d292efe585cf2bdb834e1e7d9804e87061aeb96027785771be88587df47e4d",
+        "stdout": "3ef141c310485e804545a06f64c87b2bcad116a39a82ab400f4e875701a604a9",
+        "stderr": "9c5efe3ede191b9f16b2c40eeb0d01543a6114c01b391f48032c57b04d2d2b93",
+        "answer": "6efb82e28bbb8f9695b07dd2e320cfc82f23e9f38ab4b8d2b390e812fd95ddd9",
+        "request": "6fd44625ed2d277c203fdde1d41bffbdfc3b4517fd0cf7e47a6f339c916a3ee8"
+      }
+    },
+    {
+      "ordinal": 8,
+      "taskId": "OS-H02",
+      "arm": "codegraph",
+      "run": 1,
+      "label": "response-2541b39a39a5bbec",
+      "initialGrade": {
+        "correct": true,
+        "score": 3,
+        "criteria": {
+          "H02-C1": true,
+          "H02-C2": false,
+          "H02-C3": true,
+          "H02-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "正确定位 renderRuntimeWorkbench、root/availability/evidence handoff，并给出 route data → markup → initRuntimeWorkbench 的检查顺序。C2 只写 renderRuntimeWorkbench(reader.runtime, ...)；未明确 providerSegment 与 sessionId 也作为实参传入，见 session-detail.ts:318。"
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H02-C1": true,
+          "H02-C2": true,
+          "H02-C3": true,
+          "H02-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Independent blind business-equivalence adjudication; original grades retained."
+      },
+      "usage": {
+        "input_tokens": 232294,
+        "cached_input_tokens": 203520,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2475,
+        "reasoning_output_tokens": 936
+      },
+      "totalTokens": 234769,
+      "uncachedInputTokens": 28774,
+      "durationMs": 91113,
+      "setupMs": 83.25769999995828,
+      "actualMcpCalls": 1,
+      "actualShellCalls": 6,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [
+        {
+          "tool": "codegraph_explore",
+          "format": "default"
+        }
+      ],
+      "combinedCalls": 7,
+      "toolOutputBytes": 87816,
+      "finalContextInputTokens": 36565,
+      "frozenHeuristicMcpCalls": 1,
+      "frozenHeuristicCombinedCalls": 7,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": true,
+      "evidenceUsed": null,
+      "shellErrorCalls": 1,
+      "truncatedCalls": 0,
+      "toolFormats": [
+        "codegraph_explore"
+      ],
+      "nonzeroShellExitCalls": 1,
+      "auditNotes": "CodeGraph OS-H02 run-001; exploration directly targets runtime workbench route data, server markup/evidence, and browser initialization. Later source reads repeat the explored symbols; incremental contribution is unknown.",
+      "issueDetails": [
+        "A PowerShell ParserError occurred in a diagnostic line-range command; it did not access outside the fixed source root and no successful retry is evidenced in that command."
+      ],
+      "originalAnswerSha256": "317e7e17e47314944e5727d6e0b46da2122161fd679c0e2a9538b5bd5dc43f8b",
+      "rawHashes": {
+        "metrics": "27ab1d0644b1b6238398e23850c318e1dd01dd5de7dbb20d2b53943709380b07",
+        "timing": "4d7cdfb9f60bc4bd1efabb2ac16ee3d5a6d592c462a661925c7624023f87828e",
+        "transcript": "a6350bcb0ced29c494ca9e22e8f49d2040cd5ad666031eb5c5d51c9b33515806",
+        "stdout": "5ca85fe7afae507d3af6e8ff0409e842ae5485c1cd1aa792e89282541ebf812d",
+        "stderr": "efacd7554567777fbe2408bcdf040054abe90b20629c8d0d1697cb18b7b2d0cc",
+        "answer": "317e7e17e47314944e5727d6e0b46da2122161fd679c0e2a9538b5bd5dc43f8b",
+        "request": "aaae7c1e487a260200fd1c20a0d9304691520f8d825c770072e8a385358cd0fb"
+      }
+    },
+    {
+      "ordinal": 9,
+      "taskId": "OS-H02",
+      "arm": "ordinary",
+      "run": 1,
+      "label": "response-c0a4b914e1418d53",
+      "initialGrade": {
+        "correct": false,
+        "score": 2,
+        "criteria": {
+          "H02-C1": true,
+          "H02-C2": false,
+          "H02-C3": false,
+          "H02-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "正确定位 renderer 和客户端初始化/解析，并给出有效检查顺序。C2 未说明 providerSegment、sessionId 是 renderer 实参（session-detail.ts:318）；C3 列出 root 与 evidence，但漏掉 data-runtime-available（runtime-workbench.ts:907）。"
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H02-C1": true,
+          "H02-C2": true,
+          "H02-C3": true,
+          "H02-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Independent blind business-equivalence adjudication; original grades retained."
+      },
+      "usage": {
+        "input_tokens": 356719,
+        "cached_input_tokens": 321536,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2645,
+        "reasoning_output_tokens": 612
+      },
+      "totalTokens": 359364,
+      "uncachedInputTokens": 35183,
+      "durationMs": 97497,
+      "setupMs": 0.0010999999940395355,
+      "actualMcpCalls": 0,
+      "actualShellCalls": 11,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [],
+      "combinedCalls": 11,
+      "toolOutputBytes": 102727,
+      "finalContextInputTokens": 39188,
+      "frozenHeuristicMcpCalls": 0,
+      "frozenHeuristicCombinedCalls": 11,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": null,
+      "evidenceUsed": null,
+      "shellErrorCalls": 0,
+      "truncatedCalls": 1,
+      "toolFormats": [],
+      "nonzeroShellExitCalls": 0,
+      "auditNotes": "ordinary OS-H02 run-001; commands inspect only the fixed source tree and its tests/docs. No prohibited scope or mutation observed; no external tool evidence is available to attribute.",
+      "issueDetails": [
+        "One broad source search/read output was truncated by the recorded output limit."
+      ],
+      "originalAnswerSha256": "525f5a97bf79afd65fb917d5c1c3c880059a89822571f699bf701c14d9dad273",
+      "rawHashes": {
+        "metrics": "825a4d3d0a39c54fbf11a9505935dcc703a7358036f470018225bbd945640baa",
+        "timing": "0f6dab78f9d730438383c48ed0b4392297ef3e67fd15a7993a89028360b60738",
+        "transcript": "0be40eb1b33e04b1efc43397de814322596f845001bc4d188338104e87c6ba2f",
+        "stdout": "d1eea59051de3e9d4809cc67b8c55d3fae91087486b0269b8d57c79e8d52cfea",
+        "stderr": "fd939885fd834e792805660591fa2af5fd31efda6dde0997b03cea634b6b8ca1",
+        "answer": "525f5a97bf79afd65fb917d5c1c3c880059a89822571f699bf701c14d9dad273",
+        "request": "08179cbfdf1670cc039b71475ff4a8993006cd5913484e1b7a323e057b509211"
+      }
+    },
+    {
+      "ordinal": 10,
+      "taskId": "OS-H02",
+      "arm": "ordinary",
+      "run": 2,
+      "label": "response-39b9af20a0b48325",
+      "initialGrade": {
+        "correct": true,
+        "score": 3,
+        "criteria": {
+          "H02-C1": true,
+          "H02-C2": false,
+          "H02-C3": true,
+          "H02-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "renderer、server/client handoff、客户端解析与三层排查顺序均正确。C2 仅说明传递 reader.runtime，没有陈述 renderRuntimeWorkbench(reader.runtime, providerSegment, sessionId) 的 provider 和 session ID 两个参数，见 session-detail.ts:318。"
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H02-C1": true,
+          "H02-C2": true,
+          "H02-C3": true,
+          "H02-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Independent blind business-equivalence adjudication; original grades retained."
+      },
+      "usage": {
+        "input_tokens": 350846,
+        "cached_input_tokens": 286720,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2485,
+        "reasoning_output_tokens": 579
+      },
+      "totalTokens": 353331,
+      "uncachedInputTokens": 64126,
+      "durationMs": 69423,
+      "setupMs": 0.0008999999845400453,
+      "actualMcpCalls": 0,
+      "actualShellCalls": 8,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [],
+      "combinedCalls": 8,
+      "toolOutputBytes": 187695,
+      "finalContextInputTokens": 60033,
+      "frozenHeuristicMcpCalls": 0,
+      "frozenHeuristicCombinedCalls": 8,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": null,
+      "evidenceUsed": null,
+      "shellErrorCalls": 0,
+      "truncatedCalls": 3,
+      "toolFormats": [],
+      "nonzeroShellExitCalls": 0,
+      "auditNotes": "ordinary OS-H02 run-002; all commands inspect only the fixed source tree and its tests/docs. No prohibited scope or mutation observed; no external tool evidence is available to attribute.",
+      "issueDetails": [
+        "Three broad shell outputs were truncated by the recorded output limit."
+      ],
+      "originalAnswerSha256": "90baef54e2aefc2a26a344a53b8971624cd0127c64ae661d1004773b01d06182",
+      "rawHashes": {
+        "metrics": "6696c15a0919d5b1bf85710aa7473490fc5d74a9d178db89d173f8472c685685",
+        "timing": "eb2b3f0560672d0ab57668df0c98d10d9a5257153fab3dfb441ee094c70eeebd",
+        "transcript": "1e2a847097bea6a809ffcd26644d0caa3691e7bc1d45702361b3a044279dc58a",
+        "stdout": "5ee3e6cf6bbd1972103e98f2424d4a63290489c3212f2ae8ecf651eecb22deab",
+        "stderr": "bd0a013c1d767ece24776a26cd66aa5e016ed4c6698b77908b235d0f546049d9",
+        "answer": "90baef54e2aefc2a26a344a53b8971624cd0127c64ae661d1004773b01d06182",
+        "request": "6329dc538c54e4b5b35e702af52cb9c85e644a11744f5bdc7d6981c9b2c809f1"
+      }
+    },
+    {
+      "ordinal": 11,
+      "taskId": "OS-H02",
+      "arm": "codegraph",
+      "run": 2,
+      "label": "response-8d5c744b940e77a9",
+      "initialGrade": {
+        "correct": true,
+        "score": 3,
+        "criteria": {
+          "H02-C1": true,
+          "H02-C2": false,
+          "H02-C3": true,
+          "H02-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "正确覆盖 renderer、availability/evidence handoff、initRuntimeWorkbench 解析及检查顺序。C2 没有明确 renderer 同时接收 providerSegment 和 sessionId；实际调用在 session-detail.ts:318。"
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H02-C1": true,
+          "H02-C2": true,
+          "H02-C3": true,
+          "H02-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Independent blind business-equivalence adjudication; original grades retained."
+      },
+      "usage": {
+        "input_tokens": 387835,
+        "cached_input_tokens": 337920,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2370,
+        "reasoning_output_tokens": 597
+      },
+      "totalTokens": 390205,
+      "uncachedInputTokens": 49915,
+      "durationMs": 72824,
+      "setupMs": 66.7273999999743,
+      "actualMcpCalls": 1,
+      "actualShellCalls": 9,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [
+        {
+          "tool": "codegraph_explore",
+          "format": "default"
+        }
+      ],
+      "combinedCalls": 10,
+      "toolOutputBytes": 107629,
+      "finalContextInputTokens": 41766,
+      "frozenHeuristicMcpCalls": 1,
+      "frozenHeuristicCombinedCalls": 10,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": true,
+      "evidenceUsed": null,
+      "shellErrorCalls": 3,
+      "truncatedCalls": 1,
+      "toolFormats": [
+        "codegraph_explore"
+      ],
+      "nonzeroShellExitCalls": 4,
+      "auditNotes": "CodeGraph OS-H02 run-002; exploration directly targets runtime data, server markup/evidence, and client startup. The answer follows those same symbols, but subsequent shell reads reproduce the explored facts, so incremental contribution is unknown and no stronger use claim is made.",
+      "issueDetails": [
+        "rg reported a missing public path in a source search.",
+        "rg reported invalid Windows wildcard path syntax for src/static/app/*.js and src/views/*.ts.",
+        "rg reported an unclosed regex group in a later diagnostic search."
+      ],
+      "originalAnswerSha256": "24fada37f64c4ec75e7f27a86f5a89f1b117c409d82429741e665b9e9391752c",
+      "rawHashes": {
+        "metrics": "6e8c8cb3e6ab26a15e98651c7a42fbef7565b8bed502eeb706472e232f59daae",
+        "timing": "16366593ae0d0e9f94921ec1715bf7ceb97a231f12783205589e3be337007b36",
+        "transcript": "5342d223cf6ae0cd14dc00a1ad010d636bbee4357897d83cae13d526ac5f2edd",
+        "stdout": "8f9e3c0d919956edf768c003ff49055019be0721c0459d37755aa48e4e3afb29",
+        "stderr": "87a61216f9d495d0cd306fd7c97e3c405f4c187ac4800465e5efa18e04d4a2ff",
+        "answer": "24fada37f64c4ec75e7f27a86f5a89f1b117c409d82429741e665b9e9391752c",
+        "request": "5aac1cf136ca1f35cbc9dae0330ff60614c3bcb7f61dd5616c76d56ae18b407b"
+      }
+    },
+    {
+      "ordinal": 12,
+      "taskId": "OS-H02",
+      "arm": "codefacts",
+      "run": 2,
+      "label": "response-b29efa6a212cb068",
+      "initialGrade": {
+        "correct": false,
+        "score": 1,
+        "criteria": {
+          "H02-C1": true,
+          "H02-C2": false,
+          "H02-C3": false,
+          "H02-C4": false
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "C1 正确。C2 未说明 providerSegment、sessionId 传入 renderer（session-detail.ts:318）；C3 漏掉 data-runtime-available marker（runtime-workbench.ts:907）；C4 未说明 initializer 在 runtime-workbench.js:5-7 解析 evidence JSON。"
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H02-C1": true,
+          "H02-C2": true,
+          "H02-C3": true,
+          "H02-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Independent blind business-equivalence adjudication; original grades retained."
+      },
+      "usage": {
+        "input_tokens": 312314,
+        "cached_input_tokens": 270080,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2057,
+        "reasoning_output_tokens": 484
+      },
+      "totalTokens": 314371,
+      "uncachedInputTokens": 42234,
+      "durationMs": 74486,
+      "setupMs": 19.52670000004582,
+      "actualMcpCalls": 1,
+      "actualShellCalls": 6,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [
+        {
+          "tool": "search",
+          "format": "default"
+        }
+      ],
+      "combinedCalls": 7,
+      "toolOutputBytes": 136284,
+      "finalContextInputTokens": 48307,
+      "frozenHeuristicMcpCalls": 1,
+      "frozenHeuristicCombinedCalls": 7,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": true,
+      "evidenceUsed": null,
+      "shellErrorCalls": 2,
+      "truncatedCalls": 1,
+      "toolFormats": [
+        "compact"
+      ],
+      "nonzeroShellExitCalls": 2,
+      "auditNotes": "CodeFacts OS-H02 run-002; the compact search for session detail is relevant to the route/render/startup question, though its returned candidates are broad. The answer then relies on direct source reads; standalone tool-result use cannot be confirmed.",
+      "issueDetails": [
+        "rg reported invalid Windows wildcard path syntax for src/static/app/*.js.",
+        "rg reported an unclosed regex group in a later diagnostic search."
+      ],
+      "originalAnswerSha256": "5ac544bf1e71c8160d521cb79d762545ce93bb19f4fae7d384314fb85f9d5602",
+      "rawHashes": {
+        "metrics": "efe726ebe618871feea72ec2acefaf0f0ef6403fc50b071718d5e074d3f3940f",
+        "timing": "696dc2303f4f64675f58790559c733525921f01a492107517ea3f64b5f0221ce",
+        "transcript": "30a20d522617f1e6936ee504cc499ac7e9831febc2370fc5de7f036ae6894459",
+        "stdout": "a4796d61a91c3b90ef3417fdfd8ad448935a064b1f341f4db0c265fa8135a470",
+        "stderr": "65dd23c27756ac4f78d5f71b328058d75d1cfdb1b32be07358fe990d595f5c9f",
+        "answer": "5ac544bf1e71c8160d521cb79d762545ce93bb19f4fae7d384314fb85f9d5602",
+        "request": "a29cc509b56b543bfbd92704a48a348a7a4eb849d7cf0524d83bd848338f963d"
+      }
+    },
+    {
+      "ordinal": 13,
+      "taskId": "OS-H03",
+      "arm": "codegraph",
+      "run": 1,
+      "label": "response-309aaecff15ce9ca",
+      "initialGrade": {
+        "correct": false,
+        "score": 2,
+        "criteria": {
+          "H03-C1": false,
+          "H03-C2": true,
+          "H03-C3": false,
+          "H03-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "The Pi adapter delegation and shared finalizer guarantees are correct and cited. H03-C1 is incomplete because the answer never states that the generic runtime prefers the native accessor and calls it only after the native revision cache misses. H03-C3 identifies the entry/base/finalization sequence but does not explain that session, records, and messages from the loaded entry are passed into v3 construction with the base. These are omissions rather than material false claims."
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H03-C1": true,
+          "H03-C2": true,
+          "H03-C3": true,
+          "H03-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Independent blind business-equivalence adjudication; original grades retained."
+      },
+      "usage": {
+        "input_tokens": 275572,
+        "cached_input_tokens": 232192,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2050,
+        "reasoning_output_tokens": 408
+      },
+      "totalTokens": 277622,
+      "uncachedInputTokens": 43380,
+      "durationMs": 62996,
+      "setupMs": 68.55580000008922,
+      "actualMcpCalls": 1,
+      "actualShellCalls": 6,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [
+        {
+          "tool": "codegraph_explore",
+          "format": "default"
+        }
+      ],
+      "combinedCalls": 7,
+      "toolOutputBytes": 121610,
+      "finalContextInputTokens": 44459,
+      "frozenHeuristicMcpCalls": 1,
+      "frozenHeuristicCombinedCalls": 7,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": true,
+      "evidenceUsed": null,
+      "shellErrorCalls": 0,
+      "truncatedCalls": 1,
+      "toolFormats": [
+        "codegraph_explore"
+      ],
+      "nonzeroShellExitCalls": 0,
+      "auditNotes": "CodeGraph OS-H03 run-001; the exploration prompt and returned symbol set target the Pi native v3 runtime path, finalizers, and shared protocol facts. The answer is supported by repeated source reads, so incremental CodeGraph contribution is unknown.",
+      "issueDetails": [
+        "One broad source search output was truncated by the recorded output limit."
+      ],
+      "originalAnswerSha256": "88ec95ffff8aa68785857586370060cd71f75518c0af7f1ad8e69d9572901332",
+      "rawHashes": {
+        "metrics": "200b6e8a3d4bc8d4aed3038fea31f955116fa4412e5d35319be3c9149ad2b41d",
+        "timing": "5768b7f0be87d03a9cfa2c060f9b1125384435d0126bb774a6a9e0939488ee4e",
+        "transcript": "74b87a18cd00ccf01bdd9e580ff6e11733c70c615b1f1f07af3da175c8ed6ada",
+        "stdout": "7b5b5b10af62eac99cda7d464a91bcada4e3482c39f251f08301f85b37d5c22a",
+        "stderr": "1732b0724055b1ddc07b5b70cf66b6867258340b2cde0e4942c37fb5bd146eff",
+        "answer": "88ec95ffff8aa68785857586370060cd71f75518c0af7f1ad8e69d9572901332",
+        "request": "6cb79e6c86db0f187a69ecbca27639e0c6b79593691a43140889435ce1741a8b"
+      }
+    },
+    {
+      "ordinal": 14,
+      "taskId": "OS-H03",
+      "arm": "ordinary",
+      "run": 1,
+      "label": "response-ae6332b3f034e565",
+      "initialGrade": {
+        "correct": false,
+        "score": 2,
+        "criteria": {
+          "H03-C1": false,
+          "H03-C2": true,
+          "H03-C3": false,
+          "H03-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "The Pi delegate, v2-base role, and v3 finalizer guarantees are correct. H03-C1 says the runtime delegates when native support is available but omits the revision-cache hit/miss condition, so it does not establish that the accessor is invoked on a native-cache miss. H03-C3 states that one entry is loaded and the base is extended, but omits the session/records/messages passed from that entry into v3 construction."
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H03-C1": true,
+          "H03-C2": true,
+          "H03-C3": true,
+          "H03-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Independent blind business-equivalence adjudication; original grades retained."
+      },
+      "usage": {
+        "input_tokens": 245684,
+        "cached_input_tokens": 206848,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1881,
+        "reasoning_output_tokens": 259
+      },
+      "totalTokens": 247565,
+      "uncachedInputTokens": 38836,
+      "durationMs": 55305,
+      "setupMs": 0.0007000000914558768,
+      "actualMcpCalls": 0,
+      "actualShellCalls": 7,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [],
+      "combinedCalls": 7,
+      "toolOutputBytes": 102655,
+      "finalContextInputTokens": 40878,
+      "frozenHeuristicMcpCalls": 0,
+      "frozenHeuristicCombinedCalls": 7,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": null,
+      "evidenceUsed": null,
+      "shellErrorCalls": 0,
+      "truncatedCalls": 1,
+      "toolFormats": [],
+      "nonzeroShellExitCalls": 0,
+      "auditNotes": "ordinary OS-H03 run-001; all commands inspect only the fixed source root and its tests/docs. No prohibited scope or mutation observed, and there is no external tool evidence to attribute.",
+      "issueDetails": [
+        "One broad source search output was truncated by the recorded output limit."
+      ],
+      "originalAnswerSha256": "ac314b504143150a01f6737ae0f21030fae028bf4aedeada3e568c8936d9d93b",
+      "rawHashes": {
+        "metrics": "b16b06f67b0bbbec345e03c7af864fd2d43ffaac1a565ecaa5c86a2a78d4ab33",
+        "timing": "05e2fcfaa00e9f704b0d9dce156ce4dc86058be9319360ab0ca2513e7e37b31f",
+        "transcript": "dcc7b763b79e86ef0fe46d8525cc002268feca4e1aa6de40af64251a112ddbe3",
+        "stdout": "4f3273b845e0fd3bca910f26a93dabb8ba6194f665c772f055360faf2499c3a0",
+        "stderr": "293e214a74db98bb853b7dc18356ce73daed587dc5df634ec264b67e47271816",
+        "answer": "ac314b504143150a01f6737ae0f21030fae028bf4aedeada3e568c8936d9d93b",
+        "request": "8e63d4e98623d2406e267fde8517120e61887bcea9b4be4f104a608e1d031359"
+      }
+    },
+    {
+      "ordinal": 15,
+      "taskId": "OS-H03",
+      "arm": "codefacts",
+      "run": 1,
+      "label": "response-d363a9c33679d5ee",
+      "initialGrade": {
+        "correct": false,
+        "score": 2,
+        "criteria": {
+          "H03-C1": false,
+          "H03-C2": true,
+          "H03-C3": false,
+          "H03-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "The Pi adapter delegate, finalized v2 role, and shared v3 finalizer are correctly described and cited. H03-C1 omits the native revision-cache check and therefore does not state that the accessor is called on cache miss. H03-C3 does not explain that the loaded entry's session, records, and messages are supplied to v3 construction together with the base."
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H03-C1": true,
+          "H03-C2": true,
+          "H03-C3": true,
+          "H03-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Independent blind business-equivalence adjudication; original grades retained."
+      },
+      "usage": {
+        "input_tokens": 402506,
+        "cached_input_tokens": 321280,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2076,
+        "reasoning_output_tokens": 478
+      },
+      "totalTokens": 404582,
+      "uncachedInputTokens": 81226,
+      "durationMs": 60769,
+      "setupMs": 20.551900000078604,
+      "actualMcpCalls": 2,
+      "actualShellCalls": 6,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [
+        {
+          "tool": "search",
+          "format": "compact"
+        },
+        {
+          "tool": "search",
+          "format": "compact"
+        }
+      ],
+      "combinedCalls": 8,
+      "toolOutputBytes": 165844,
+      "finalContextInputTokens": 56298,
+      "frozenHeuristicMcpCalls": 2,
+      "frozenHeuristicCombinedCalls": 8,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": true,
+      "evidenceUsed": null,
+      "shellErrorCalls": 0,
+      "truncatedCalls": 1,
+      "toolFormats": [
+        "compact",
+        "compact"
+      ],
+      "nonzeroShellExitCalls": 0,
+      "auditNotes": "CodeFacts OS-H03 run-001; both compact searches are directly relevant: Pi identifies the provider facts and getSessionProtocolV3 identifies the native accessor and Pi implementation. The answer then cites source reads without explicit tool attribution, so actual standalone use is unconfirmed.",
+      "issueDetails": [
+        "One broad shell output was truncated by the recorded output limit."
+      ],
+      "originalAnswerSha256": "e70898e27912804f85e1e5ec7a45350654e53d8f9af88b68ca2ccc6a2d1e43f7",
+      "rawHashes": {
+        "metrics": "8b4304cf7e2dfccf91ba3ed44382e7c40f5be9308c431b4689826eb0abda71a7",
+        "timing": "69452e8d6045e028143274c1c1f4c897eced6c96fa086aa6c241a465cc6c0480",
+        "transcript": "875796b133f1fecb9fe6c72301fdf37c1764722cd63935fc4f5f66382b21ce6b",
+        "stdout": "d0ee205b545d4e868479a2a13eeb67eab0b36eac7dcfbe0d66a7d1c731c33c27",
+        "stderr": "af198c80103a1bc3333ed02420e111612962af99803ed0931d23f8e8bb2e6406",
+        "answer": "e70898e27912804f85e1e5ec7a45350654e53d8f9af88b68ca2ccc6a2d1e43f7",
+        "request": "8818105fd54b629785608f85f9e580bde70099ae5cedbfc03e7c6b10e4d4613c"
+      }
+    },
+    {
+      "ordinal": 16,
+      "taskId": "OS-H03",
+      "arm": "codefacts",
+      "run": 2,
+      "label": "response-865b1a545510aee0",
+      "initialGrade": {
+        "correct": true,
+        "score": 3,
+        "criteria": {
+          "H03-C1": true,
+          "H03-C2": true,
+          "H03-C3": false,
+          "H03-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Correctly identifies the generic native-v3 preference and revision cache, the Pi adapter-to-builder path, the finalized v2 role, and all required v3 finalizer guarantees. H03-C3 is incomplete because it does not state that buildPiSessionProtocolV3For loads one Pi entry and supplies its session, records, and messages along with the finalized base."
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H03-C1": true,
+          "H03-C2": true,
+          "H03-C3": true,
+          "H03-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Independent blind business-equivalence adjudication; original grades retained."
+      },
+      "usage": {
+        "input_tokens": 234539,
+        "cached_input_tokens": 188672,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1881,
+        "reasoning_output_tokens": 479
+      },
+      "totalTokens": 236420,
+      "uncachedInputTokens": 45867,
+      "durationMs": 51829,
+      "setupMs": 21.09279999998398,
+      "actualMcpCalls": 5,
+      "actualShellCalls": 3,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [
+        {
+          "tool": "search",
+          "format": "compact"
+        },
+        {
+          "tool": "search",
+          "format": "compact"
+        },
+        {
+          "tool": "search",
+          "format": "compact"
+        },
+        {
+          "tool": "search",
+          "format": "compact"
+        },
+        {
+          "tool": "search",
+          "format": "compact"
+        }
+      ],
+      "combinedCalls": 8,
+      "toolOutputBytes": 140562,
+      "finalContextInputTokens": 51024,
+      "frozenHeuristicMcpCalls": 2,
+      "frozenHeuristicCombinedCalls": 5,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": true,
+      "evidenceUsed": null,
+      "shellErrorCalls": 0,
+      "truncatedCalls": 3,
+      "toolFormats": [
+        "unspecified",
+        "unspecified"
+      ],
+      "nonzeroShellExitCalls": 0,
+      "auditNotes": "CodeFacts OS-H03 run-002; searches for getRuntimeProtocolV3 and the Pi/native v3 path are directly relevant, with fresh source-backed results in the raw output. The answer cites subsequent source reads and does not explicitly attribute a fact to the search results, so use is not provable.",
+      "issueDetails": [
+        "Both CodeFacts raw outputs were themselves truncated in the recorded transcript, and one additional broad shell output was truncated."
+      ],
+      "originalAnswerSha256": "a0b6f568f0fcdab8f5f1889e2433573ccb7fb8fb8e50262da995dc51474ccd31",
+      "rawHashes": {
+        "metrics": "13064258641ccc0a8aa2ae01c952c79dd120f18dd0c98138867fe23fb2f84769",
+        "timing": "1f2fc088a65aec8862115cde130e35a95dec597d61876b69c70c2328df142664",
+        "transcript": "534beb0140236474e2a27ace948f02a5e49a89cbfbb82ee02f438f0aef1d8a89",
+        "stdout": "8352429ae0a67d809b286220f9794135f9090bb97f0f1e54858993b75c26a7fd",
+        "stderr": "5830b9fb5fda1b25f88fa122adc6c52fc35074dac88d518c803e9af5a965428c",
+        "answer": "a0b6f568f0fcdab8f5f1889e2433573ccb7fb8fb8e50262da995dc51474ccd31",
+        "request": "c7243d389e7086ad7c4d540b921deed25407fe909aa26bb3461ebea3db4e83a5"
+      }
+    },
+    {
+      "ordinal": 17,
+      "taskId": "OS-H03",
+      "arm": "ordinary",
+      "run": 2,
+      "label": "response-254f458bbe08c667",
+      "initialGrade": {
+        "correct": true,
+        "score": 3,
+        "criteria": {
+          "H03-C1": true,
+          "H03-C2": true,
+          "H03-C3": false,
+          "H03-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Correctly traces native-v3 selection/cache behavior, the Pi adapter delegate, the finalized v2 base, and the shared v3 finalizer. H03-C3 is incomplete: it says the base is passed into v3 construction but does not explain that the builder loads one Pi entry and passes that entry's session, records, and messages together with the base. This is a missing detail, not a contrary claim."
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H03-C1": true,
+          "H03-C2": true,
+          "H03-C3": true,
+          "H03-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Independent blind business-equivalence adjudication; original grades retained."
+      },
+      "usage": {
+        "input_tokens": 286276,
+        "cached_input_tokens": 242688,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2261,
+        "reasoning_output_tokens": 301
+      },
+      "totalTokens": 288537,
+      "uncachedInputTokens": 43588,
+      "durationMs": 65363,
+      "setupMs": 0.000699999975040555,
+      "actualMcpCalls": 0,
+      "actualShellCalls": 7,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [],
+      "combinedCalls": 7,
+      "toolOutputBytes": 137124,
+      "finalContextInputTokens": 48476,
+      "frozenHeuristicMcpCalls": 0,
+      "frozenHeuristicCombinedCalls": 7,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": true,
+      "detectorFaultReasons": [
+        "contamination"
+      ],
+      "evaluationValid": true,
+      "useRelevance": null,
+      "evidenceUsed": null,
+      "shellErrorCalls": 1,
+      "truncatedCalls": 2,
+      "toolFormats": [],
+      "nonzeroShellExitCalls": 1,
+      "auditNotes": "ordinary OS-H03 run-002; all commands inspect the fixed source tree. The detector's external-agent flag is a false positive: pi occurs only in source directory paths/search terms, with no executable invocation. No other prohibited scope or mutation observed.",
+      "issueDetails": [
+        "A PowerShell ParserError came from using a variable immediately before a colon in a line-range diagnostic command.",
+        "Two broad source outputs were truncated by the recorded output limit."
+      ],
+      "originalAnswerSha256": "584743e9be19dbae2c2782f8ab94d8e3f04a2973a819988604fc6bfb94395a57",
+      "rawHashes": {
+        "metrics": "a6d9bad3d119d8314fd4edd23d40e2e02950681dd6a80c5429adf9b02ce3c4f0",
+        "timing": "4e33eca6d94e3f8eb4629ca9dfe9b029ecfb81db93675fba68353b509cd51f1c",
+        "transcript": "9afefb1f2873bb840b8891b1fc8ef06c995bda05cd859a86a43f1cbd62213e11",
+        "stdout": "3cef9986cd47ebfa39b9ce6f53eca6cf512bf6e644f10a020d5e36a2bdac5bea",
+        "stderr": "2a8265c27da47f5c220d2f4475a1502df7a04e6dcb180854afb4419b0364bd3b",
+        "answer": "584743e9be19dbae2c2782f8ab94d8e3f04a2973a819988604fc6bfb94395a57",
+        "request": "3e264414846c0ecf873a974da1bf0dbcb5c1d2928efc5a767692390eb4b3c780"
+      }
+    },
+    {
+      "ordinal": 18,
+      "taskId": "OS-H03",
+      "arm": "codegraph",
+      "run": 2,
+      "label": "response-b2a0e2f9711f2b79",
+      "initialGrade": {
+        "correct": false,
+        "score": 2,
+        "criteria": {
+          "H03-C1": true,
+          "H03-C2": true,
+          "H03-C3": false,
+          "H03-C4": false
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "The answer establishes native accessor selection with a revision/cache key and gives an equivalent Pi adapter-to-builder sequence. H03-C3 is incomplete: its undefined shorthand 'input' does not explain that the loaded Pi entry contributes session, records, and messages alongside the finalized base. H03-C4 omits that finalizeSessionProtocolV3 forces version 3; the other stated finalizer guarantees are correct."
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H03-C1": true,
+          "H03-C2": true,
+          "H03-C3": true,
+          "H03-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Independent blind business-equivalence adjudication; original grades retained."
+      },
+      "usage": {
+        "input_tokens": 448145,
+        "cached_input_tokens": 387072,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2080,
+        "reasoning_output_tokens": 498
+      },
+      "totalTokens": 450225,
+      "uncachedInputTokens": 61073,
+      "durationMs": 70914,
+      "setupMs": 75.11689999999999,
+      "actualMcpCalls": 1,
+      "actualShellCalls": 9,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [
+        {
+          "tool": "codegraph_explore",
+          "format": "default"
+        }
+      ],
+      "combinedCalls": 10,
+      "toolOutputBytes": 168060,
+      "finalContextInputTokens": 56308,
+      "frozenHeuristicMcpCalls": 1,
+      "frozenHeuristicCombinedCalls": 10,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": true,
+      "detectorFaultReasons": [
+        "contamination"
+      ],
+      "evaluationValid": true,
+      "useRelevance": true,
+      "evidenceUsed": null,
+      "shellErrorCalls": 2,
+      "truncatedCalls": 2,
+      "toolFormats": [
+        "codegraph_explore"
+      ],
+      "nonzeroShellExitCalls": 2,
+      "auditNotes": "CodeGraph OS-H03 run-002; exploration directly targets the Pi native v3 path, v2 base, and shared finalizers. The detector's external-agent flag is a false positive: the flagged command is rg over src/providers/pi and contains no agent executable. Later shell reads repeat the explored facts, so incremental contribution is unknown.",
+      "issueDetails": [
+        "rg reported a missing src/providers/pi/index.ts path.",
+        "rg reported invalid Windows wildcard syntax for src/*.ts.",
+        "Two broad source outputs were truncated by the recorded output limit."
+      ],
+      "originalAnswerSha256": "0e68e7dd7c6f984028ba0cd3e7f55c63fcbfd32fe936a38043d46bd11467c9d2",
+      "rawHashes": {
+        "metrics": "4f77018eb3f493003c3722bd80d2b3aa3fccdb0d505f34a6f887b16ab1466364",
+        "timing": "784647d3c22f86a14ca6b75d8aab013bd3710c024ae35d7aa06943d6c72d5c96",
+        "transcript": "aefebcd083d1e93251ba191ec5a3545d6b9d1fe1026e0242b466625dffbc5149",
+        "stdout": "82c6e562aad4510bb511f531f024b3a763c41b25b9a00ce783374f29cc9f4852",
+        "stderr": "42cb7c5da88ed9a4db325fdaa0652b12a3a05679872ea79162f32f079e7c0560",
+        "answer": "0e68e7dd7c6f984028ba0cd3e7f55c63fcbfd32fe936a38043d46bd11467c9d2",
+        "request": "b29d39579a33b582927250fd1196138edfcf0ce5852ba89cdee87e2bbdd5cd59"
+      }
+    },
+    {
+      "ordinal": 19,
+      "taskId": "OS-H04",
+      "arm": "ordinary",
+      "run": 1,
+      "label": "response-1061c1546e213973",
+      "initialGrade": {
+        "correct": true,
+        "score": 3,
+        "criteria": {
+          "H04-C1": true,
+          "H04-C2": true,
+          "H04-C3": true,
+          "H04-C4": false
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Correctly identifies configured/default opencode.db storage, the SQLite session/message/part flow, recursive task-linked child attachment, and retention of detached children. Joining each message with its parsed parts is business-equivalent to the required adapter normalization; no particular field-by-field normalization wording is required. H04-C4 omits the DB revision used with the tree when v2/v3 are built, although its no-change conclusion is correct."
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H04-C1": 1,
+          "H04-C2": 1,
+          "H04-C3": 1,
+          "H04-C4": 1
+        },
+        "materialError": false,
+        "citationSufficient": true,
+        "notes": "Complete business-equivalent answer: configured/default SQLite source, joined message parts, recursive task attachment with detached retention, native-tree v2/v3, and no warranted change. DB revision is not repeated but was not a separate prompt requirement."
+      },
+      "usage": {
+        "input_tokens": 396658,
+        "cached_input_tokens": 331264,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2481,
+        "reasoning_output_tokens": 363
+      },
+      "totalTokens": 399139,
+      "uncachedInputTokens": 65394,
+      "durationMs": 93187,
+      "setupMs": 0.0018999999999778083,
+      "actualMcpCalls": 0,
+      "actualShellCalls": 10,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [],
+      "combinedCalls": 10,
+      "toolOutputBytes": 160934,
+      "finalContextInputTokens": 55390,
+      "frozenHeuristicMcpCalls": 0,
+      "frozenHeuristicCombinedCalls": 10,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": null,
+      "evidenceUsed": null,
+      "shellErrorCalls": 0,
+      "truncatedCalls": 1,
+      "toolFormats": [],
+      "nonzeroShellExitCalls": 1,
+      "auditNotes": "ordinary OS-H04 run-001; all commands inspect only the fixed source tree. References to OpenCode and Codex are source paths/search terms, not external executables; no prohibited scope or mutation observed.",
+      "issueDetails": [
+        "One broad source output was truncated by the recorded output limit."
+      ],
+      "originalAnswerSha256": "d48ab2abc0917abe1195616dace509ae58905a533c57fbf82bbe2c2a8043367b",
+      "rawHashes": {
+        "metrics": "a5a59936984dd2b3047b7a73bd0deb34ce3c209e76b06838b7e55a88729dd32f",
+        "timing": "e86ddf1ca63642ec01b54473589b0b1e8af16819b5a5e1bf186b61154e55709c",
+        "transcript": "50fb6d9c5876293827ac76d7ebf2505a0a24a8310a61dd3732ecf2303bb416a9",
+        "stdout": "941b941c1093fb0d73e55ec239aeafa3e605412cc40e0c87b771982c35b58280",
+        "stderr": "95f0510148d8e5e5b65fa6f664ab64b8d349c736f3ea766f445dbc13ec52db9c",
+        "answer": "d48ab2abc0917abe1195616dace509ae58905a533c57fbf82bbe2c2a8043367b",
+        "request": "c6975ffe280d1dbcae3d49f8fb3f0ede47c572879f58f445408c79095ca81de6"
+      }
+    },
+    {
+      "ordinal": 20,
+      "taskId": "OS-H04",
+      "arm": "codefacts",
+      "run": 1,
+      "label": "response-0bf6298e80c0a033",
+      "initialGrade": {
+        "correct": true,
+        "score": 3,
+        "criteria": {
+          "H04-C1": true,
+          "H04-C2": true,
+          "H04-C3": true,
+          "H04-C4": false
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Correctly rejects the Codex JSONL claim, identifies OpenCode's opencode.db SQLite source, explains message/part projection, and describes recursive child attachment plus detachedChildren retention. H04-C4 is incomplete: it explains that v2/v3 come from the OpenCode tree and recommends no change, but does not identify the DB revision that is passed into protocol construction."
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H04-C1": 1,
+          "H04-C2": 1,
+          "H04-C3": 1,
+          "H04-C4": 1
+        },
+        "materialError": false,
+        "citationSufficient": true,
+        "notes": "Correctly rejects the JSONL claim, traces SQLite sessions/messages/parts, explains task-linked and detached children, derives v2/v3 from the native tree, and recommends no boundary change. Omission of the DB revision field is an unasked internal detail."
+      },
+      "usage": {
+        "input_tokens": 505813,
+        "cached_input_tokens": 445440,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2458,
+        "reasoning_output_tokens": 365
+      },
+      "totalTokens": 508271,
+      "uncachedInputTokens": 60373,
+      "durationMs": 73418,
+      "setupMs": 21.936600000000908,
+      "actualMcpCalls": 1,
+      "actualShellCalls": 9,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [
+        {
+          "tool": "search",
+          "format": "compact"
+        }
+      ],
+      "combinedCalls": 10,
+      "toolOutputBytes": 184989,
+      "finalContextInputTokens": 62875,
+      "frozenHeuristicMcpCalls": 1,
+      "frozenHeuristicCombinedCalls": 10,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": true,
+      "detectorFaultReasons": [
+        "contamination"
+      ],
+      "evaluationValid": true,
+      "useRelevance": true,
+      "evidenceUsed": null,
+      "shellErrorCalls": 1,
+      "truncatedCalls": 1,
+      "toolFormats": [
+        "compact"
+      ],
+      "nonzeroShellExitCalls": 2,
+      "auditNotes": "CodeFacts OS-H04 run-001; the OpenCode search is directly relevant to the provider storage boundary and returned fresh source-backed candidates. The detector's external-agent flag is a false positive: opencode occurs only in source directory paths/search terms, with no executable invocation. The answer then relies on source reads, so standalone tool use is not provable.",
+      "issueDetails": [
+        "A PowerShell ParserError came from a variable immediately before a colon in a range diagnostic command.",
+        "One broad source output was truncated by the recorded output limit."
+      ],
+      "originalAnswerSha256": "15424da18c0a45bcb7e8100616fe665535a02bed9521d7916b44ea2fc2bfce3d",
+      "rawHashes": {
+        "metrics": "b9cab8634ee5d3e6057571ddffd2475509ee9d8c64aadb0a2841e6707f40af0c",
+        "timing": "794c4b5aa66741fe4ead13d919540ad5698ed71f6e95a4e61dfe49dc7a4e9522",
+        "transcript": "a0f1f002b96e489cea75a94b755340cdb92c052b7a65565e4e3aa96c660bde6a",
+        "stdout": "27877b24d1c4d3b75a8ef44a2d1f714f81132d0fc207d303003160d8bd172d36",
+        "stderr": "55648a5efa38ecb3cea4899dff5e2b10086d53892c01c4293d918ac835480610",
+        "answer": "15424da18c0a45bcb7e8100616fe665535a02bed9521d7916b44ea2fc2bfce3d",
+        "request": "7939ac9630b405ef5e9b98c3c78d12b7b1e7808a6b8ac4f5306e938a87f8d72e"
+      }
+    },
+    {
+      "ordinal": 21,
+      "taskId": "OS-H04",
+      "arm": "codegraph",
+      "run": 1,
+      "label": "response-ea650e25121f8bf2",
+      "initialGrade": {
+        "correct": true,
+        "score": 3,
+        "criteria": {
+          "H04-C1": true,
+          "H04-C2": true,
+          "H04-C3": true,
+          "H04-C4": false
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Correctly distinguishes OpenCode's opencode.db adapter from Codex JSONL, traces session/message/part records into the structured tree, and explains recursive child attachment and detached retention. The tree-building description is an acceptable business-equivalent account of database normalization. H04-C4 omits the DB revision used to build v2/v3; the recommendation to make no code change is correct."
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H04-C1": 1,
+          "H04-C2": 1,
+          "H04-C3": 1,
+          "H04-C4": 1
+        },
+        "materialError": false,
+        "citationSufficient": true,
+        "notes": "Correctly separates OpenCode SQLite from Codex JSONL, traces database records and shared tree behavior including detached children, explains v2/v3 derivation, and rejects an unsupported code change."
+      },
+      "usage": {
+        "input_tokens": 221192,
+        "cached_input_tokens": 187392,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1760,
+        "reasoning_output_tokens": 436
+      },
+      "totalTokens": 222952,
+      "uncachedInputTokens": 33800,
+      "durationMs": 54808,
+      "setupMs": 71.47230000000013,
+      "actualMcpCalls": 1,
+      "actualShellCalls": 5,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [
+        {
+          "tool": "codegraph_explore",
+          "format": "default"
+        }
+      ],
+      "combinedCalls": 6,
+      "toolOutputBytes": 112512,
+      "finalContextInputTokens": 41518,
+      "frozenHeuristicMcpCalls": 1,
+      "frozenHeuristicCombinedCalls": 6,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": true,
+      "detectorFaultReasons": [
+        "contamination"
+      ],
+      "evaluationValid": true,
+      "useRelevance": true,
+      "evidenceUsed": null,
+      "shellErrorCalls": 0,
+      "truncatedCalls": 0,
+      "toolFormats": [
+        "codegraph_explore"
+      ],
+      "nonzeroShellExitCalls": 0,
+      "auditNotes": "CodeGraph OS-H04 run-001; exploration and follow-up searches directly target the OpenCode SQLite boundary, shared session tree, and Codex JSONL boundary. The detector's external-agent flag is a false positive: opencode is only a directory/search token and no agent executable is invoked. No output truncation observed.",
+      "issueDetails": [],
+      "originalAnswerSha256": "001fd2dc71ca6d4e6d264ae97164d7d42530dd056bf9d8962cf07d96ea9401fa",
+      "rawHashes": {
+        "metrics": "8e828bbf50cd35d0486e58eae739cb4bb8e25cb5de72e0a94813313d5e9e6f75",
+        "timing": "1dabb9cf454d894f5432cac8ece380d46228e7d1fbe1c84b0e778b64f180191d",
+        "transcript": "d08fc43d13dfe891f1879e65c9d0ea25c8f0d5d5a5437ece3cabc4905f065c04",
+        "stdout": "8c21d6b58a27944bef5199523584b51aaf4c2c39184b654c56d561e3378c3318",
+        "stderr": "d4c9bf8990f0e088a5a52081dfa918691f9d21d9216ec7e3cfac13dd2dd94e3d",
+        "answer": "001fd2dc71ca6d4e6d264ae97164d7d42530dd056bf9d8962cf07d96ea9401fa",
+        "request": "f142eac134f19ff96219175e4dd6273d0f861d75c2c55e5ad0bacaa0ac1db3d4"
+      }
+    },
+    {
+      "ordinal": 22,
+      "taskId": "OS-H04",
+      "arm": "codegraph",
+      "run": 2,
+      "label": "response-97d2215037a302a9",
+      "initialGrade": {
+        "correct": true,
+        "score": 3,
+        "criteria": {
+          "H04-C1": true,
+          "H04-C2": true,
+          "H04-C3": true,
+          "H04-C4": false
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Correctly rejects the JSONL report, identifies OpenCode's configured SQLite source, describes decoded text/tool parts, and explains recursive task-session attachment with detached-child retention. Saying configured SQLite is sufficient for H04-C1; the default path variable spelling is not a separate required business conclusion. H04-C4 omits the DB revision passed into protocol construction."
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H04-C1": 1,
+          "H04-C2": 1,
+          "H04-C3": 1,
+          "H04-C4": 1
+        },
+        "materialError": false,
+        "citationSufficient": true,
+        "notes": "Correctly identifies the configured SQLite source, decoded parts, recursive task attachment with detached retention, native-tree v2/v3, and no boundary change. Not spelling out the default filename or DB revision is literal/internal detail, not a missing business conclusion."
+      },
+      "usage": {
+        "input_tokens": 179983,
+        "cached_input_tokens": 133632,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1905,
+        "reasoning_output_tokens": 543
+      },
+      "totalTokens": 181888,
+      "uncachedInputTokens": 46351,
+      "durationMs": 54403,
+      "setupMs": 70.80550000000017,
+      "actualMcpCalls": 1,
+      "actualShellCalls": 3,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [
+        {
+          "tool": "codegraph_explore",
+          "format": "default"
+        }
+      ],
+      "combinedCalls": 4,
+      "toolOutputBytes": 148986,
+      "finalContextInputTokens": 51407,
+      "frozenHeuristicMcpCalls": 1,
+      "frozenHeuristicCombinedCalls": 4,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": true,
+      "detectorFaultReasons": [
+        "contamination"
+      ],
+      "evaluationValid": true,
+      "useRelevance": true,
+      "evidenceUsed": null,
+      "shellErrorCalls": 0,
+      "truncatedCalls": 2,
+      "toolFormats": [
+        "codegraph_explore"
+      ],
+      "nonzeroShellExitCalls": 0,
+      "auditNotes": "CodeGraph OS-H04 run-002; exploration directly targets OpenCode's SQLite/session-tree path versus Codex JSONL. The detector's external-agent flag is a false positive: the flagged command is rg over source directories and invokes no agent. Later source reads repeat the explored facts, so incremental contribution is unknown.",
+      "issueDetails": [
+        "Two broad source outputs were truncated by the recorded output limit."
+      ],
+      "originalAnswerSha256": "8839eefac3bb609e5bf25fb0babdde1af8a0fab654ddf5497cd50615ba46000d",
+      "rawHashes": {
+        "metrics": "980347636e6cdc54fee471195277e3abf3cc14a3817cb3b411731f6f4d97ad3b",
+        "timing": "085d99ec124b2f8cfb9827b22c5c9dbd188424fc27db46323f4e109cabe387fe",
+        "transcript": "90fb870aef4e8e1366eb78cd2c796daee480082ec0d1aa3cb260377aa28e1242",
+        "stdout": "1ff88638eab70ec61e3d21f37984fe635b74b92d9d028e34eb6bc361c0572e3c",
+        "stderr": "e54586eb7bb4bc2ad08bfff78a90773da1bcd18507b3405561a3a8032ea843b2",
+        "answer": "8839eefac3bb609e5bf25fb0babdde1af8a0fab654ddf5497cd50615ba46000d",
+        "request": "cea62f87ebfadf8115ecb12c91e66163dc00e0cbb7e311865bd4bccad080fe7a"
+      }
+    },
+    {
+      "ordinal": 23,
+      "taskId": "OS-H04",
+      "arm": "codefacts",
+      "run": 2,
+      "label": "response-7a0461347b9317f9",
+      "initialGrade": {
+        "correct": true,
+        "score": 3,
+        "criteria": {
+          "H04-C1": true,
+          "H04-C2": true,
+          "H04-C3": true,
+          "H04-C4": false
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Correctly establishes the SQLite boundary, JSON decoding/normalization, the OpenCode wrapper's delegation to the shared recursive tree builder, task-linked attachment, and detached-child retention. H04-C4 correctly traces v2/v3 from the native tree and recommends no change, but never states that protocol construction also receives the DB revision."
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H04-C1": 1,
+          "H04-C2": 1,
+          "H04-C3": 1,
+          "H04-C4": 1
+        },
+        "materialError": false,
+        "citationSufficient": true,
+        "notes": "Explicitly covers the SQLite boundary, JSON decoding/normalization, OpenCode wrapper delegation, recursive attachment and detached children, finalized v2/v3 construction, and the no-change conclusion."
+      },
+      "usage": {
+        "input_tokens": 503482,
+        "cached_input_tokens": 434176,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2327,
+        "reasoning_output_tokens": 468
+      },
+      "totalTokens": 505809,
+      "uncachedInputTokens": 69306,
+      "durationMs": 73323,
+      "setupMs": 22.59570000000008,
+      "actualMcpCalls": 1,
+      "actualShellCalls": 9,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [
+        {
+          "tool": "search",
+          "format": "default"
+        }
+      ],
+      "combinedCalls": 10,
+      "toolOutputBytes": 187908,
+      "finalContextInputTokens": 62077,
+      "frozenHeuristicMcpCalls": 1,
+      "frozenHeuristicCombinedCalls": 10,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": true,
+      "detectorFaultReasons": [
+        "contamination"
+      ],
+      "evaluationValid": true,
+      "useRelevance": true,
+      "evidenceUsed": null,
+      "shellErrorCalls": 0,
+      "truncatedCalls": 1,
+      "toolFormats": [
+        "compact"
+      ],
+      "nonzeroShellExitCalls": 0,
+      "auditNotes": "Root reviewed every command. Source-only relevant OpenCode CodeFacts search followed by source reads; no forbidden executable or data access. External-agent flag is a source-directory false positive; preserved adjudication-stop23.json. Incremental MCP contribution is unknown.",
+      "issueDetails": [
+        "One broad source-read output truncated."
+      ],
+      "originalAnswerSha256": "a99cc14420cd6a537c941a0e18a27fcce1db68a4be01cab0e1bfcb560df6b6d1",
+      "rawHashes": {
+        "metrics": "c75883740ac2bc21c26e34469a0200d6f06100d72160adeaae0d2dc3cc31ea70",
+        "timing": "11fb1f26f7526a2ade4cabbd847a45d4ccc94ad1c3d1597a352049f07257e120",
+        "transcript": "ff6dfacf123be061d26923aec5d2f2895e74986c64a5d1ddeab132ce6b28bf43",
+        "stdout": "8952f22641846813eb92987aba5799946dcf5e026771068c8e00d602f6cf8ae4",
+        "stderr": "fac16916679a2586bc1f0de54cfc44b506306faa51a183cd3460e602eaaed597",
+        "answer": "a99cc14420cd6a537c941a0e18a27fcce1db68a4be01cab0e1bfcb560df6b6d1",
+        "request": "34f35d2093de6b7df6d6ef8811aab8442173890a1324b8ed054a1be1b2932b3f"
+      }
+    },
+    {
+      "ordinal": 24,
+      "taskId": "OS-H04",
+      "arm": "ordinary",
+      "run": 2,
+      "label": "response-eca6de05d0931647",
+      "initialGrade": {
+        "correct": false,
+        "score": 2,
+        "criteria": {
+          "H04-C1": true,
+          "H04-C2": true,
+          "H04-C3": false,
+          "H04-C4": false
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "Correctly identifies the OpenCode SQLite boundary and traces database records into the message/part tree; its wording is business-equivalent to loading and normalization without requiring unasked field-level detail. H04-C3 omits the required fact that children not attached through task-part IDs remain as detachedChildren. H04-C4 omits the DB revision supplied with the OpenCode tree, although its no-change conclusion is correct. These are missing conclusions, not contrary claims."
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 3,
+        "criteria": {
+          "H04-C1": 1,
+          "H04-C2": 1,
+          "H04-C3": 0,
+          "H04-C4": 1
+        },
+        "materialError": false,
+        "citationSufficient": true,
+        "notes": "The storage boundary, SQLite message/part source, task-linked child attachment, native-tree protocols, and no-change conclusion are correct. C3 is incomplete because it never states that children not attached to task parts remain as detachedChildren; this is a real tree-semantics omission, not a hidden field-name requirement."
+      },
+      "usage": {
+        "input_tokens": 538126,
+        "cached_input_tokens": 397824,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2958,
+        "reasoning_output_tokens": 468
+      },
+      "totalTokens": 541084,
+      "uncachedInputTokens": 140302,
+      "durationMs": 79743,
+      "setupMs": 0.002199999999902502,
+      "actualMcpCalls": 0,
+      "actualShellCalls": 10,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [],
+      "combinedCalls": 10,
+      "toolOutputBytes": 220251,
+      "finalContextInputTokens": 72731,
+      "frozenHeuristicMcpCalls": 0,
+      "frozenHeuristicCombinedCalls": 10,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": true,
+      "detectorFaultReasons": [
+        "contamination"
+      ],
+      "evaluationValid": true,
+      "useRelevance": null,
+      "evidenceUsed": null,
+      "shellErrorCalls": 2,
+      "truncatedCalls": 4,
+      "toolFormats": [],
+      "nonzeroShellExitCalls": 1,
+      "auditNotes": "Root reviewed every command. Source-only ordinary inspection; no forbidden executable or data access. External-agent flag is a source-directory false positive; preserved adjudication-stop24.json. Incremental MCP contribution is unknown.",
+      "issueDetails": [
+        "Windows wildcard arguments to rg failed in one call.",
+        "PowerShell interpolation ParserError repaired in the same attempt.",
+        "Four broad outputs truncated."
+      ],
+      "originalAnswerSha256": "fd3df6aaeaba0807724c4f79ef09c6b696eb5e5bb6231ca226ed7e1720dd50bb",
+      "rawHashes": {
+        "metrics": "3281d7148d820942807d483247df0216458ced58c4fdffbf95e09f80a531f0f6",
+        "timing": "9a7fa386b4289ab179d23b22e8b8e748e29f64d7deedcb0a093c8d8501c50908",
+        "transcript": "2ea6270004c0248f8feb1cdfcd7707bf1c3b8dd0e228958da35b1b6da7c64a13",
+        "stdout": "90460d89dec105a64c09140afa470a6a26624ea3c8673d600c712d47e3565e92",
+        "stderr": "afa5b8ff2eeb4aeeceeb5b8034224e1ee4cc5e443539d85b0d4ae548c17c4664",
+        "answer": "fd3df6aaeaba0807724c4f79ef09c6b696eb5e5bb6231ca226ed7e1720dd50bb",
+        "request": "1475f7caf99f05fff8e34dca2e8a2b3b5b2be3481cb84f9e7277b8fe5a3e2829"
+      }
+    },
+    {
+      "ordinal": 25,
+      "taskId": "OS-H05",
+      "arm": "codefacts",
+      "run": 1,
+      "label": "response-628219a2a8a4b8ff",
+      "initialGrade": {
+        "correct": true,
+        "score": 3,
+        "criteria": {
+          "H05-C1": true,
+          "H05-C2": true,
+          "H05-C3": true,
+          "H05-C4": false
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "正确说明 no-envelope parent evidence、NEW_TASK 边界、token-only 至少双 usage snapshot 和 session-only 聚合。C4 把相邻等值分支收窄成 cross-format match；实现没有格式限制，条件见 parser.ts:348-354。"
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 3,
+        "criteria": {
+          "H05-C1": 1,
+          "H05-C2": 1,
+          "H05-C3": 1,
+          "H05-C4": 0
+        },
+        "materialError": false,
+        "citationSufficient": true,
+        "notes": "Correctly explains why parent_id is insufficient, the NEW_TASK boundary, parent-transcript prefix proof, and the two-snapshot minimum. C4 loses the point because it states an immediately adjacent cross-format match as the rule rather than the broader adjacent equal snapshot rule with no conflicting response IDs."
+      },
+      "usage": {
+        "input_tokens": 386205,
+        "cached_input_tokens": 321280,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1821,
+        "reasoning_output_tokens": 341
+      },
+      "totalTokens": 388026,
+      "uncachedInputTokens": 64925,
+      "durationMs": 52706,
+      "setupMs": 21.357799999999997,
+      "actualMcpCalls": 1,
+      "actualShellCalls": 6,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [
+        {
+          "tool": "search",
+          "format": "default"
+        }
+      ],
+      "combinedCalls": 7,
+      "toolOutputBytes": 192176,
+      "finalContextInputTokens": 63987,
+      "frozenHeuristicMcpCalls": 1,
+      "frozenHeuristicCombinedCalls": 7,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": true,
+      "evidenceUsed": null,
+      "shellErrorCalls": 1,
+      "truncatedCalls": 3,
+      "toolFormats": [
+        "compact"
+      ],
+      "nonzeroShellExitCalls": 1,
+      "auditNotes": "CodeFacts OS-H05 run-001; the parent_id search is relevant to the provenance and token-ownership question and returned fresh source-backed candidates. The answer cites subsequent source reads without explicit tool attribution, so standalone tool use is unconfirmed.",
+      "issueDetails": [
+        "rg reported invalid Windows wildcard syntax for test/codex*.",
+        "Three broad shell outputs were truncated by the recorded output limit."
+      ],
+      "originalAnswerSha256": "94205018db68dcb896d05cc797236ca47128b3eee39a2d68bf7e434435c4ec71",
+      "rawHashes": {
+        "metrics": "e69624debf4be3db4eaf82265f847e5ec9c3022c4c899c660fee172bd5615124",
+        "timing": "857aa6c7fcd3078fc3c341a77ed27270091ce779a8527d92b74ebe7d416c475b",
+        "transcript": "468191ffd66a539de4f4c94b35d47978775e14886a6794f5505fc437c25ef187",
+        "stdout": "a913379ca65076bcd89ecedb60ccb941f5eb2ce07c26f0d43b2af3176a010272",
+        "stderr": "5672635de741e1ec00d725d60f0c3d9b3d55526f0714f05afd1e61e9a17649e3",
+        "answer": "94205018db68dcb896d05cc797236ca47128b3eee39a2d68bf7e434435c4ec71",
+        "request": "554579d787839c2fc79540bf7f1542156338e9a6ac0533ff1049111989959a8d"
+      }
+    },
+    {
+      "ordinal": 26,
+      "taskId": "OS-H05",
+      "arm": "codegraph",
+      "run": 1,
+      "label": "response-3e0877cdb5d1412e",
+      "initialGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H05-C1": true,
+          "H05-C2": true,
+          "H05-C3": true,
+          "H05-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "完整覆盖无 envelope 才需 parent transcript、NEW_TASK 所有权边界、至少两个 leading usage fingerprints、两类 duplicate 条件与 session-only 聚合；措辞与冻结实现等价。"
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H05-C1": 1,
+          "H05-C2": 1,
+          "H05-C3": 1,
+          "H05-C4": 1
+        },
+        "materialError": false,
+        "citationSufficient": true,
+        "notes": "Complete business-equivalent account: parent lineage is insufficient, NEW_TASK ends inheritance, the legacy fallback needs at least two matching leading usage snapshots, duplicate detection uses response-ID equality or adjacent equal snapshots subject to ID conflicts, and only session-owned usage is consumed."
+      },
+      "usage": {
+        "input_tokens": 183241,
+        "cached_input_tokens": 136704,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1434,
+        "reasoning_output_tokens": 445
+      },
+      "totalTokens": 184675,
+      "uncachedInputTokens": 46537,
+      "durationMs": 42225,
+      "setupMs": 81.01190000000497,
+      "actualMcpCalls": 1,
+      "actualShellCalls": 4,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [
+        {
+          "tool": "codegraph_explore",
+          "format": "default"
+        }
+      ],
+      "combinedCalls": 5,
+      "toolOutputBytes": 111906,
+      "finalContextInputTokens": 43226,
+      "frozenHeuristicMcpCalls": 1,
+      "frozenHeuristicCombinedCalls": 5,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": true,
+      "evidenceUsed": null,
+      "shellErrorCalls": 0,
+      "truncatedCalls": 0,
+      "toolFormats": [
+        "codegraph_explore"
+      ],
+      "nonzeroShellExitCalls": 0,
+      "auditNotes": "CodeGraph OS-H05 run-001; exploration directly targets Codex parent provenance, copied prefixes, duplicate usage, and owned-token aggregation. The answer follows the explored symbols but later shell reads repeat the facts, so incremental contribution is unknown.",
+      "issueDetails": [],
+      "originalAnswerSha256": "87f01bd44b708c6cbc0d2c74dc0c0cd68d781a7116f0b92bce6ec0b46a07a8fe",
+      "rawHashes": {
+        "metrics": "e6d09d12dd92305d904f9ce1801ba42ec05b0af118c0a809b1b39c1c873fda3c",
+        "timing": "d8afc749b8e1d24e349d3f77424830ceb8d7a4099333f377a4a878c220fcd5b8",
+        "transcript": "0a0da2ec2226a141486bd6931bfff6c6f10abf8cacded43bd1751c58d9cfb629",
+        "stdout": "9e2e7d2038956af865ef043d3c846041f4827be1ce1d193a02fc1187bc78e457",
+        "stderr": "40082df1aa0bf76af624b9833a1bf757602af7e14399f3ff2955e2a6ab25551f",
+        "answer": "87f01bd44b708c6cbc0d2c74dc0c0cd68d781a7116f0b92bce6ec0b46a07a8fe",
+        "request": "387b6e8ebe2cec03e0055869d0754f6d21223807face28eaaada14f90bb6ed3a"
+      }
+    },
+    {
+      "ordinal": 27,
+      "taskId": "OS-H05",
+      "arm": "ordinary",
+      "run": 1,
+      "label": "response-2808e485c634f798",
+      "initialGrade": {
+        "correct": false,
+        "score": 2,
+        "criteria": {
+          "H05-C1": true,
+          "H05-C2": true,
+          "H05-C3": false,
+          "H05-C4": false
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "正确拒绝 parent_id 粗减并说明 NEW_TASK 边界。C3 把 legacy 条件概括为 parent metadata 加两个 ordered records，未说明独立的 token-only fallback 是两个完整的 leading usage snapshots（parser.ts:272-304）。C4 将相邻等值快照误限为 cross-format；实现只要求相邻、快照相等且 response IDs 不冲突（parser.ts:348-354）。"
+      },
+      "businessEquivalentGrade": {
+        "correct": false,
+        "score": 2,
+        "criteria": {
+          "H05-C1": 1,
+          "H05-C2": 1,
+          "H05-C3": 0,
+          "H05-C4": 0
+        },
+        "materialError": false,
+        "citationSufficient": true,
+        "notes": "Correctly rejects parent_id-only subtraction and explains the NEW_TASK boundary. C3 is incorrect because it makes matching parent metadata a general prerequisite: the token-only fallback does not require a replayed parent metadata header and instead requires at least two complete leading usage snapshots matching the declared parent's transcript. C4 is also inaccurate because it presents cross-format adjacency as required; the implementation accepts adjacent equal snapshots of any formats unless both recorded response IDs conflict. These are genuine local rule narrowings, but the main no-broad-subtraction conclusion remains correct and is not a material reversal."
+      },
+      "usage": {
+        "input_tokens": 191283,
+        "cached_input_tokens": 162048,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1588,
+        "reasoning_output_tokens": 259
+      },
+      "totalTokens": 192871,
+      "uncachedInputTokens": 29235,
+      "durationMs": 47772,
+      "setupMs": 0.0010000000038417056,
+      "actualMcpCalls": 0,
+      "actualShellCalls": 6,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [],
+      "combinedCalls": 6,
+      "toolOutputBytes": 80568,
+      "finalContextInputTokens": 35145,
+      "frozenHeuristicMcpCalls": 0,
+      "frozenHeuristicCombinedCalls": 6,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": null,
+      "evidenceUsed": null,
+      "shellErrorCalls": 0,
+      "truncatedCalls": 1,
+      "toolFormats": [],
+      "nonzeroShellExitCalls": 0,
+      "auditNotes": "ordinary OS-H05 run-001; all commands inspect only the fixed source tree and tests. No prohibited scope or mutation observed, and no external tool evidence exists to attribute.",
+      "issueDetails": [
+        "One broad source output was truncated by the recorded output limit."
+      ],
+      "originalAnswerSha256": "3f266470d68fa318a9e359772661802a17ef28be0d286b2e4b5ce7ce0287b340",
+      "rawHashes": {
+        "metrics": "86ae6169e3d0b0b3a552b42dce5f1e673bdd65d025571c4a950cca1376023905",
+        "timing": "e215377f407a7dc8ec2c771df7ed2abb4a661b5645673182963ca65b367a12b1",
+        "transcript": "ef3b752ea8b52d15d69b7a8e00a4119a40ad56a140096c8631964ffff25d3218",
+        "stdout": "0d4c2a9e9dcfea41d3512d5e17a7dff407153164bcc8fa586c4c7923f1eafe37",
+        "stderr": "78eef41f4e228e2fcb8f9b1864552b478c520f86095bbd978eb2126c36b31e0d",
+        "answer": "3f266470d68fa318a9e359772661802a17ef28be0d286b2e4b5ce7ce0287b340",
+        "request": "ec23c00ffae015439473c51b8126c258fdaf14d54fbc7f85587c70c2ca649130"
+      }
+    },
+    {
+      "ordinal": 28,
+      "taskId": "OS-H05",
+      "arm": "ordinary",
+      "run": 2,
+      "label": "response-7264613522f880ba",
+      "initialGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H05-C1": true,
+          "H05-C2": true,
+          "H05-C3": true,
+          "H05-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "四项业务语义均正确且有相关源码位置：lineage 不足、NEW_TASK 边界、legacy 双 leading snapshot、重复累计快照的 response-ID/adjacency 规则及 session-owned 过滤。"
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H05-C1": 1,
+          "H05-C2": 1,
+          "H05-C3": 1,
+          "H05-C4": 1
+        },
+        "materialError": false,
+        "citationSufficient": true,
+        "notes": "Correctly distinguishes lineage from ownership, states the NEW_TASK boundary and two-leading-snapshot fallback, describes repeated cumulative snapshots through response IDs or adjacency without imposing a cross-format requirement, and identifies the session-owned consumer and no-broad-subtraction conclusion."
+      },
+      "usage": {
+        "input_tokens": 368213,
+        "cached_input_tokens": 299520,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2161,
+        "reasoning_output_tokens": 443
+      },
+      "totalTokens": 370374,
+      "uncachedInputTokens": 68693,
+      "durationMs": 70351,
+      "setupMs": 0.0009999999892897904,
+      "actualMcpCalls": 0,
+      "actualShellCalls": 9,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [],
+      "combinedCalls": 9,
+      "toolOutputBytes": 155061,
+      "finalContextInputTokens": 55530,
+      "frozenHeuristicMcpCalls": 0,
+      "frozenHeuristicCombinedCalls": 9,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": null,
+      "evidenceUsed": null,
+      "shellErrorCalls": 2,
+      "truncatedCalls": 2,
+      "toolFormats": [],
+      "nonzeroShellExitCalls": 2,
+      "auditNotes": "ordinary OS-H05 run-002; all commands inspect only the fixed source tree and tests. No prohibited scope or mutation observed, and no external tool evidence exists to attribute.",
+      "issueDetails": [
+        "rg reported invalid Windows wildcard syntax for src/providers/codex/*.ts and test/*codex*.",
+        "rg reported invalid Windows wildcard syntax for test/codex* and test/*parser*.",
+        "Two broad shell outputs were truncated by the recorded output limit."
+      ],
+      "originalAnswerSha256": "53ef9c0ab980a5c06265c3b5809796633d356288be24941e5e022591e49ed06d",
+      "rawHashes": {
+        "metrics": "96f9648f9f377e3f5c7c5d2f669f931b3ea39aa073ff7f013cb9c3ccf1a604ea",
+        "timing": "b63078141bd11dce7586fd017ff6ad5589ab0d3eceac50379305e6dcbe1e6dd2",
+        "transcript": "7e72ab7272d9049c4b59c448c84c87a479f50a22441345b60228ab29ab688ea4",
+        "stdout": "8ecde7106cfc8f9cc3b9786168fe3dd1a7e0f97a20c99a591f3e4dfd50a715e6",
+        "stderr": "ad8ca087eef3d291e7b4daac184e0c5fa698a822d2206576ad7ae90fa5ccf209",
+        "answer": "53ef9c0ab980a5c06265c3b5809796633d356288be24941e5e022591e49ed06d",
+        "request": "ebe41607cd1c6b5667810ba231b20e3aa78b75e451eb6c41b5921a1518e4d3c0"
+      }
+    },
+    {
+      "ordinal": 29,
+      "taskId": "OS-H05",
+      "arm": "codegraph",
+      "run": 2,
+      "label": "response-6b549321933447bb",
+      "initialGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H05-C1": true,
+          "H05-C2": true,
+          "H05-C3": true,
+          "H05-C4": true
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "四项均完整：parent_id 本身不足、NEW_TASK 划界、无 envelope 时双 usage snapshot 证据、response-ID/相邻等值两类 duplicate 及 session-only 聚合，结论与源码一致。"
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H05-C1": 1,
+          "H05-C2": 1,
+          "H05-C3": 1,
+          "H05-C4": 1
+        },
+        "materialError": false,
+        "citationSufficient": true,
+        "notes": "Accurately covers the parent-record gate, NEW_TASK transition, conservative matching prefix, both duplicate branches including response-ID checks, session-only ownership consumption, and the rejection of broad parent-based subtraction."
+      },
+      "usage": {
+        "input_tokens": 227941,
+        "cached_input_tokens": 167936,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1722,
+        "reasoning_output_tokens": 624
+      },
+      "totalTokens": 229663,
+      "uncachedInputTokens": 60005,
+      "durationMs": 48964,
+      "setupMs": 68.30449999999837,
+      "actualMcpCalls": 1,
+      "actualShellCalls": 5,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [
+        {
+          "tool": "codegraph_explore",
+          "format": "default"
+        }
+      ],
+      "combinedCalls": 6,
+      "toolOutputBytes": 105218,
+      "finalContextInputTokens": 41189,
+      "frozenHeuristicMcpCalls": 1,
+      "frozenHeuristicCombinedCalls": 6,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": true,
+      "evidenceUsed": null,
+      "shellErrorCalls": 0,
+      "truncatedCalls": 1,
+      "toolFormats": [
+        "codegraph_explore"
+      ],
+      "nonzeroShellExitCalls": 0,
+      "auditNotes": "CodeGraph OS-H05 run-002; exploration directly targets Codex parent provenance, copied prefixes, duplicate usage, and owned-token aggregation. The answer cites source reads without explicit tool attribution, and later reads reproduce the explored facts, so standalone use and incremental contribution are unconfirmed.",
+      "issueDetails": [
+        "One broad source output was truncated by the recorded output limit."
+      ],
+      "originalAnswerSha256": "3b1e3839c23cae136d8d3cae9ec2fdb86677bdc86909a77bd3095aeb20f7534d",
+      "rawHashes": {
+        "metrics": "517b86c1c3daf24b30aa86fb54146d993e2e92f8033f337d478e9c6650a66b46",
+        "timing": "65f3dafe0e7aa58184050d249642cd3d706fa684f7f478d5945c2e61ac8fadfb",
+        "transcript": "fca8e4866c889c91e85c9b39684cddd47a1257ceff5569b24f8e19a486ae26be",
+        "stdout": "0f6f5dc5c6f2891d324025c7aedd89e5220f9d0a5b188b88893ea1bfed30c926",
+        "stderr": "f6a111e0f225f64578361f56551abfc047545fb39058d689744749404a3bebe8",
+        "answer": "3b1e3839c23cae136d8d3cae9ec2fdb86677bdc86909a77bd3095aeb20f7534d",
+        "request": "e0fd8ed4d0f803aeacc718a523eec0721e8f307b31c85542d78ccef1b7043d20"
+      }
+    },
+    {
+      "ordinal": 30,
+      "taskId": "OS-H05",
+      "arm": "codefacts",
+      "run": 2,
+      "label": "response-53c48dc8c439e31a",
+      "initialGrade": {
+        "correct": true,
+        "score": 3,
+        "criteria": {
+          "H05-C1": true,
+          "H05-C2": true,
+          "H05-C3": true,
+          "H05-C4": false
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "parent-record 门槛、NEW_TASK、legacy 完整双快照与 broad-subtraction 结论正确。C4 将 adjacency 分支写成必须 cross-format；parser.ts:348-354 实际也去重同格式的相邻等值快照，只要双方 response IDs 不冲突。"
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 3,
+        "criteria": {
+          "H05-C1": 1,
+          "H05-C2": 1,
+          "H05-C3": 1,
+          "H05-C4": 0
+        },
+        "materialError": false,
+        "citationSufficient": true,
+        "notes": "Correct on parent evidence, NEW_TASK ownership, the two-complete-snapshot minimum, downstream session ownership, and the broad-subtraction decision. C4 wrongly narrows the adjacent-equal-snapshot branch to cross-format duplicates; cross-format is supported but not required."
+      },
+      "usage": {
+        "input_tokens": 519387,
+        "cached_input_tokens": 413184,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1865,
+        "reasoning_output_tokens": 376
+      },
+      "totalTokens": 521252,
+      "uncachedInputTokens": 106203,
+      "durationMs": 70916,
+      "setupMs": 19.71650000003865,
+      "actualMcpCalls": 8,
+      "actualShellCalls": 6,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [
+        {
+          "tool": "search",
+          "format": "default"
+        },
+        {
+          "tool": "search",
+          "format": "default"
+        },
+        {
+          "tool": "search",
+          "format": "default"
+        },
+        {
+          "tool": "search",
+          "format": "default"
+        },
+        {
+          "tool": "expand",
+          "format": "full"
+        },
+        {
+          "tool": "expand",
+          "format": "full"
+        },
+        {
+          "tool": "expand",
+          "format": "full"
+        },
+        {
+          "tool": "expand",
+          "format": "full"
+        }
+      ],
+      "combinedCalls": 14,
+      "toolOutputBytes": 197306,
+      "finalContextInputTokens": 67338,
+      "frozenHeuristicMcpCalls": 3,
+      "frozenHeuristicCombinedCalls": 9,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": true,
+      "evidenceUsed": null,
+      "shellErrorCalls": 0,
+      "truncatedCalls": 3,
+      "toolFormats": [
+        "compact"
+      ],
+      "nonzeroShellExitCalls": 0,
+      "auditNotes": "CodeFacts OS-H05 run-002; the parent_id search and follow-up search/expand calls are relevant to copied-prefix classification, duplicate usage, and session-owned aggregation. The answer uses direct source/test citations without explicit tool attribution, so standalone use is unconfirmed.",
+      "issueDetails": [
+        "Three broad tool or shell outputs were truncated by the recorded output limit."
+      ],
+      "originalAnswerSha256": "cc4b1af85f7dfe9c9439156b2cf35024ebca620a671bc494347201a7965a8e0f",
+      "rawHashes": {
+        "metrics": "282abe7be098f6fdd90ff8dcd704e85acad2b405548e98218c1d0f854f42d048",
+        "timing": "677596e951083a9116d99fedc81f91ff988e2e1e618f56fbbaf925f671f7a3c3",
+        "transcript": "8faec3992866515511cb11965e422a02c5ff99d3acb29713bd322842c92807ef",
+        "stdout": "b112a78b0b72b85d8e0390ed9c27a18421fd9c4cbca22be666f6cd1de6d08b39",
+        "stderr": "811cdb0ae442d8d0f49e08fa127caccb1d189e7fea0691a45372eed93457b717",
+        "answer": "cc4b1af85f7dfe9c9439156b2cf35024ebca620a671bc494347201a7965a8e0f",
+        "request": "399b7b5c7d017d89daf9777e309aed96b81b9ad10c74914420e84e1d5e4482df"
+      }
+    },
+    {
+      "ordinal": 31,
+      "taskId": "OS-H06",
+      "arm": "codegraph",
+      "run": 1,
+      "label": "response-134542176334f9da",
+      "initialGrade": {
+        "correct": false,
+        "score": 1,
+        "criteria": {
+          "H06-C1": false,
+          "H06-C2": true,
+          "H06-C3": false,
+          "H06-C4": false
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "正确识别 wrapper 成本适用于 tool/reasoning fields，并否定初始 field status。C1 未说明 button 的 part/field/scope/data-load-initial 身份（components.ts:278-280）；C3 转向 reader-process，未说明 progressive client 在 session-workbench.js:29,50-65,79-102 的旧 status 清理及 stale/empty/failure 按需创建；C4 未识别 closest('.progressive') 与 progressive content-updated 契约，所提改动是另一套 reader-process markup。"
+      },
+      "businessEquivalentGrade": {
+        "correct": false,
+        "score": 2,
+        "criteria": {
+          "H06-C1": 1,
+          "H06-C2": 1,
+          "H06-C3": 0,
+          "H06-C4": 0
+        },
+        "materialError": false,
+        "citationSufficient": true,
+        "notes": "Correctly rejects an initial per-field status node and identifies deferred tool/reasoning containers. C3 is incomplete because it does not describe the progressive-field client's removal and conditional stale/empty/failure status creation. C4 shifts to the separate reader-process placeholder instead of identifying the field loader's closest('.progressive') ownership and preserving its retry/search/content-update contract. These are requested behavior omissions, not a reversal of the stale-note conclusion."
+      },
+      "usage": {
+        "input_tokens": 419495,
+        "cached_input_tokens": 361984,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2459,
+        "reasoning_output_tokens": 812
+      },
+      "totalTokens": 421954,
+      "uncachedInputTokens": 57511,
+      "durationMs": 90760,
+      "setupMs": 68.69479999999749,
+      "actualMcpCalls": 1,
+      "actualShellCalls": 7,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [
+        {
+          "tool": "codegraph_explore",
+          "format": "default"
+        }
+      ],
+      "combinedCalls": 8,
+      "toolOutputBytes": 198973,
+      "finalContextInputTokens": 63918,
+      "frozenHeuristicMcpCalls": 1,
+      "frozenHeuristicCombinedCalls": 8,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": true,
+      "evidenceUsed": null,
+      "shellErrorCalls": 0,
+      "truncatedCalls": 1,
+      "toolFormats": [
+        "codegraph_explore"
+      ],
+      "nonzeroShellExitCalls": 0,
+      "auditNotes": "CodeGraph OS-H06 run-001; exploration targets deferred tool/reasoning fields, process placeholders, status behavior, and search/source navigation. Subsequent source reads repeat the explored facts, so incremental contribution is unknown.",
+      "issueDetails": [
+        "One broad source output was truncated by the recorded output limit."
+      ],
+      "originalAnswerSha256": "869cbabb0fa19447abf380ca4b7b9c6765b25f202cdf90da4cc2cd46c859a8ff",
+      "rawHashes": {
+        "metrics": "75404d777c10301b2fd2902a10ec1889ab0871cc8bbe3b99f8917bdb370ffbb4",
+        "timing": "94aee136271895b4c15961a0eb3afc4d5f8881d29f1449791d034d0b3f440640",
+        "transcript": "4c7f73ad1fcfda56f17e93651acd261f9c3bf601c48206b287a44806d965c56d",
+        "stdout": "4c58d40ba62c8d832ed7efc2db07539457630b0ff77fa5dc180c3c31557dfe96",
+        "stderr": "64876ac1d41beb7c4747fa0a5d9622abf0a3a98ae831843ae8689a40bdf55c20",
+        "answer": "869cbabb0fa19447abf380ca4b7b9c6765b25f202cdf90da4cc2cd46c859a8ff",
+        "request": "b08d205e9e03f4b9da07bf3f13f0fd09bb4bc46b2d10e54571571681b1c689d5"
+      }
+    },
+    {
+      "ordinal": 32,
+      "taskId": "OS-H06",
+      "arm": "ordinary",
+      "run": 1,
+      "label": "response-38a9d1476670e3a6",
+      "initialGrade": {
+        "correct": false,
+        "score": 1,
+        "criteria": {
+          "H06-C1": false,
+          "H06-C2": true,
+          "H06-C3": false,
+          "H06-C4": false
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "正确识别 tool/reasoning deferred form、无初始 status 与 closest('.progressive')。C1 只提 next-offset，遗漏 part/field/scope/initial-load identity（components.ts:278-280）；C3 未说明 load start 删除旧 status（session-workbench.js:29）；C4 的 no-change 理由未覆盖 button identity/scope 和 session-reader:content-updated 行为（session-workbench.js:73-77）。"
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H06-C1": 1,
+          "H06-C2": 1,
+          "H06-C3": 1,
+          "H06-C4": 1
+        },
+        "materialError": false,
+        "citationSufficient": true,
+        "notes": "Correctly describes the deferred field wrapper/button, tool and reasoning scope, absence of initial status, conditional retry/stale/empty statuses, closest('.progressive') coupling, bounded continuation, and search reveal. Recommending no change preserves retry and content-update behavior without requiring the event's literal name."
+      },
+      "usage": {
+        "input_tokens": 510380,
+        "cached_input_tokens": 453632,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2796,
+        "reasoning_output_tokens": 542
+      },
+      "totalTokens": 513176,
+      "uncachedInputTokens": 56748,
+      "durationMs": 81137,
+      "setupMs": 0.0013000000035390258,
+      "actualMcpCalls": 0,
+      "actualShellCalls": 11,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [],
+      "combinedCalls": 11,
+      "toolOutputBytes": 170620,
+      "finalContextInputTokens": 58006,
+      "frozenHeuristicMcpCalls": 0,
+      "frozenHeuristicCombinedCalls": 11,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": null,
+      "evidenceUsed": null,
+      "shellErrorCalls": 2,
+      "truncatedCalls": 2,
+      "toolFormats": [],
+      "nonzeroShellExitCalls": 2,
+      "auditNotes": "ordinary OS-H06 run-001; commands inspect only the fixed source tree and tests. No prohibited scope or mutation observed, and no external tool evidence exists to attribute.",
+      "issueDetails": [
+        "rg reported a missing src/server path.",
+        "rg reported an unclosed regex group in a diagnostic search.",
+        "Two broad source outputs were truncated by the recorded output limit."
+      ],
+      "originalAnswerSha256": "f2d1dd94c98622ba975190ec71fce128490d6970dc08df5e44f4be4afa6e95f9",
+      "rawHashes": {
+        "metrics": "d4ba360023e840d72bbc918923a80abecb4758330394141a04d474cd50e86d87",
+        "timing": "0432e7d5c36b5a5cc32061bab1234dcb624bdb3cdd23d081c7616c507e114b30",
+        "transcript": "bcfd33624f6d41459e5d7a840ca1395ce19a27e5e9d2ee6643d6e657460aa192",
+        "stdout": "d995cb726c61117ee091fbd1b6892ce303cc181f44f98b661d940a5bdb292471",
+        "stderr": "98fa09bbe52b5948942f75a2107f2b950f43f8087efea1e01d38a1b403d09e4f",
+        "answer": "f2d1dd94c98622ba975190ec71fce128490d6970dc08df5e44f4be4afa6e95f9",
+        "request": "0733fa20dc5634185eae189cd4d9b82b41985459a28f47437ca08060879bbc36"
+      }
+    },
+    {
+      "ordinal": 33,
+      "taskId": "OS-H06",
+      "arm": "codefacts",
+      "run": 1,
+      "label": "response-62431f5ca8d50e77",
+      "initialGrade": {
+        "correct": false,
+        "score": 1,
+        "criteria": {
+          "H06-C1": false,
+          "H06-C2": true,
+          "H06-C3": false,
+          "H06-C4": false
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "C2 正确列出 reasoning 与 tool input/output。C1 只提 data-load-initial，未说明 part/field/scope identity；C3 说 status 仅在 failure 创建，遗漏 stale artifact 与 empty artifact 分支（session-workbench.js:50-65,79-86）；C4 未指出 closest('.progressive')，也未覆盖 content-updated 事件。"
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 3,
+        "criteria": {
+          "H06-C1": 1,
+          "H06-C2": 1,
+          "H06-C3": 0,
+          "H06-C4": 1
+        },
+        "materialError": false,
+        "citationSufficient": true,
+        "notes": "Correct on wrapper/button markup, reasoning and tool input/output callers, search loading, and retaining the coupled field contract. C3 is narrowed incorrectly by saying the client creates a status node only on failure; the same progressive loader also creates status for stale and empty artifact outcomes. The no-initial-status conclusion remains correct."
+      },
+      "usage": {
+        "input_tokens": 526442,
+        "cached_input_tokens": 464896,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2416,
+        "reasoning_output_tokens": 613
+      },
+      "totalTokens": 528858,
+      "uncachedInputTokens": 61546,
+      "durationMs": 77274,
+      "setupMs": 20.81150000001071,
+      "actualMcpCalls": 1,
+      "actualShellCalls": 9,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [
+        {
+          "tool": "search",
+          "format": "compact"
+        }
+      ],
+      "combinedCalls": 10,
+      "toolOutputBytes": 206321,
+      "finalContextInputTokens": 66981,
+      "frozenHeuristicMcpCalls": 1,
+      "frozenHeuristicCombinedCalls": 10,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": true,
+      "evidenceUsed": null,
+      "shellErrorCalls": 1,
+      "truncatedCalls": 3,
+      "toolFormats": [
+        "compact"
+      ],
+      "nonzeroShellExitCalls": 1,
+      "auditNotes": "CodeFacts OS-H06 run-001; the deferred search is directly relevant and returned fresh source-backed candidates including progressiveContainer. The answer relies on later source reads without explicit tool attribution, so standalone use is unconfirmed.",
+      "issueDetails": [
+        "rg reported invalid Windows wildcard syntax for src/static/app/*.js.",
+        "Three broad tool or shell outputs were truncated by the recorded output limit."
+      ],
+      "originalAnswerSha256": "a114027a6a3f891af4a0d77a4631aec2e6abb47f79bd7e5fb402b50303aad9ff",
+      "rawHashes": {
+        "metrics": "3cf6c7b091fadcd4f7735b054c9f4cc647bd384b46e07148042d25cc30af5c2f",
+        "timing": "1f15a07124f4796b55500870008c6850eba4cdc94ef5038898bb438d3fc7a092",
+        "transcript": "a5658869c649162a2f1799484ac86b33c0b1e7e0d0b6f3b8a668f2f099ab0514",
+        "stdout": "b5a1543d2f72252d747b859c033d793902b3ee3a314b1f72b76f402ab861c66b",
+        "stderr": "681c6b657d0ce25326a968b381ca139cc52bb9692f94e22ef5b7942c7ed7015d",
+        "answer": "a114027a6a3f891af4a0d77a4631aec2e6abb47f79bd7e5fb402b50303aad9ff",
+        "request": "a156003105ceb7320b468add8ff8058f017bd654b81976c96e02b3b8dcf0cc65"
+      }
+    },
+    {
+      "ordinal": 34,
+      "taskId": "OS-H06",
+      "arm": "codefacts",
+      "run": 2,
+      "label": "response-926cd9dc7455104b",
+      "initialGrade": {
+        "correct": false,
+        "score": 2,
+        "criteria": {
+          "H06-C1": false,
+          "H06-C2": true,
+          "H06-C3": true,
+          "H06-C4": false
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "C2/C3 完整：reasoning 与 tool input/output 均 deferred，初始无 status，stale/empty/failure 才创建且 retry 删除旧节点。C1 未说明 button 的 part/field/scope/initial-load identity。C4 虽正确保留 wrapper 并指出 closest/search/retry 风险，但未覆盖 identity/scope 和 session-reader:content-updated 契约（session-workbench.js:73-77）。"
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H06-C1": 1,
+          "H06-C2": 1,
+          "H06-C3": 1,
+          "H06-C4": 1
+        },
+        "materialError": false,
+        "citationSufficient": true,
+        "notes": "Complete business-equivalent answer: deferred reasoning and tool input/output wrappers, no initial status, stale/empty/failure-only dynamic statuses with retry cleanup, closest('.progressive') insertion ownership, complete-content search, and a no-change recommendation preserving the coupled behavior."
+      },
+      "usage": {
+        "input_tokens": 386705,
+        "cached_input_tokens": 325120,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2452,
+        "reasoning_output_tokens": 482
+      },
+      "totalTokens": 389157,
+      "uncachedInputTokens": 61585,
+      "durationMs": 86595,
+      "setupMs": 19.671299999929033,
+      "actualMcpCalls": 1,
+      "actualShellCalls": 8,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [
+        {
+          "tool": "search",
+          "format": "default"
+        }
+      ],
+      "combinedCalls": 9,
+      "toolOutputBytes": 159439,
+      "finalContextInputTokens": 54806,
+      "frozenHeuristicMcpCalls": 1,
+      "frozenHeuristicCombinedCalls": 9,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": true,
+      "evidenceUsed": null,
+      "shellErrorCalls": 0,
+      "truncatedCalls": 1,
+      "toolFormats": [
+        "compact"
+      ],
+      "nonzeroShellExitCalls": 0,
+      "auditNotes": "CodeFacts OS-H06 run-002; the deferred search is directly relevant to progressiveContainer, loader behavior, status nodes, and search reveal. The answer cites subsequent source/test reads without explicit tool attribution, so standalone use is unconfirmed.",
+      "issueDetails": [
+        "One broad source output was truncated by the recorded output limit."
+      ],
+      "originalAnswerSha256": "bc6c6616fa1dec046f1a87dd0371ecdc0e8c3755cd2f8bb1e84fa264a6a18205",
+      "rawHashes": {
+        "metrics": "6e9d32d3c2d5662c5eddad0c6512b29c7c88a33407b228e3754616e3867921b1",
+        "timing": "6aadbf2b1b47bc87616987c092891e4356619be5cdbf0cb160d196b1a2173336",
+        "transcript": "29545b30473b83bdfab4c45925907a9afad3081cab8b0724ec3e0295965d6367",
+        "stdout": "ae6b5388927329e583fa1ff96033ff0d431e1f541a6f4855e3d51a7f9c077a52",
+        "stderr": "c8c9a4a2db6d5818572c3e33a38c14744da6e4cd7a35f401ff91b87ac41059ad",
+        "answer": "bc6c6616fa1dec046f1a87dd0371ecdc0e8c3755cd2f8bb1e84fa264a6a18205",
+        "request": "557a4f69dd959a6e5d18117dcef051b62098fab0fc17794e7bb66cec9b0e1f5f"
+      }
+    },
+    {
+      "ordinal": 35,
+      "taskId": "OS-H06",
+      "arm": "ordinary",
+      "run": 2,
+      "label": "response-663b7a0f094bdbba",
+      "initialGrade": {
+        "correct": false,
+        "score": 1,
+        "criteria": {
+          "H06-C1": false,
+          "H06-C2": true,
+          "H06-C3": false,
+          "H06-C4": false
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "正确认出 deferred tool/reasoning wrapper 与 client closest coupling。C1 未交代 part/field/scope/data-load-initial identity；C3 未说明 retry/load start 删除旧 status，且没有明确 stale 分支；C4 虽选择 no change 并讨论 search/retry，但未覆盖 button identity/scope 与 progressive content-updated 行为（session-workbench.js:73-77）。"
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H06-C1": 1,
+          "H06-C2": 1,
+          "H06-C3": 1,
+          "H06-C4": 1
+        },
+        "materialError": false,
+        "citationSufficient": true,
+        "notes": "Correctly rejects initial field statuses, describes error/empty exceptional statuses, identifies closest('.progressive') ownership and retry, separates the process placeholder, and preserves bounded loading and search behavior by recommending no field change. 'Errors' reasonably includes the stale artifact error outcome."
+      },
+      "usage": {
+        "input_tokens": 473136,
+        "cached_input_tokens": 420608,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3387,
+        "reasoning_output_tokens": 1188
+      },
+      "totalTokens": 476523,
+      "uncachedInputTokens": 52528,
+      "durationMs": 121327,
+      "setupMs": 0.000599999912083149,
+      "actualMcpCalls": 0,
+      "actualShellCalls": 13,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [],
+      "combinedCalls": 13,
+      "toolOutputBytes": 121235,
+      "finalContextInputTokens": 45009,
+      "frozenHeuristicMcpCalls": 0,
+      "frozenHeuristicCombinedCalls": 13,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": null,
+      "evidenceUsed": null,
+      "shellErrorCalls": 3,
+      "truncatedCalls": 1,
+      "toolFormats": [],
+      "nonzeroShellExitCalls": 3,
+      "auditNotes": "Root reviewed every command and command exit events. All source-only reads; ordinary inspection, including a search of the archived repository AGENTS.md. No prohibited scope, mutation, external agent or evaluation access. Incremental MCP contribution unknown.",
+      "issueDetails": [
+        "Two rg regular-expression parse errors and one Select-String regex error; all recorded nonzero exit.",
+        "One broad source query truncated at two wrapper layers, counted as one call."
+      ],
+      "originalAnswerSha256": "57cee8d78e41bffec808acd2be3ae75ccc77e33020900d1095b8ca05222ecb18",
+      "rawHashes": {
+        "metrics": "e38e72fb31392b800c8d7eb458ebed19bc59887086f049eef2c17bf64029d618",
+        "timing": "485920fa7337cc60246b45dce40ea2c62b499029fed17250df38b025962908ad",
+        "transcript": "ed870cbd822e6f4e3f66a1c99b2e5dc17c0cad5e8614a395cbb998f1bbc1271f",
+        "stdout": "52af17b251d7cd72bc65bd67d02d7b09adf887d9fc31afb8989a20d7b7a91e54",
+        "stderr": "3615761506301e38cb42fe14dff3b78eed20e76000271e3c400a1a3992e5d7bc",
+        "answer": "57cee8d78e41bffec808acd2be3ae75ccc77e33020900d1095b8ca05222ecb18",
+        "request": "4c273f05207d412210be3ff968b6ed7cdb6cb1b9526ef3f6cba0d293f488ecb4"
+      }
+    },
+    {
+      "ordinal": 36,
+      "taskId": "OS-H06",
+      "arm": "codegraph",
+      "run": 2,
+      "label": "response-c13c515655acef8a",
+      "initialGrade": {
+        "correct": false,
+        "score": 1,
+        "criteria": {
+          "H06-C1": false,
+          "H06-C2": true,
+          "H06-C3": false,
+          "H06-C4": false
+        },
+        "materialError": null,
+        "citationSufficient": true,
+        "notes": "C2 正确列出 reasoning 和 tool input/output。C1 列出 part/field 等属性，但遗漏 content scope 与 data-load-initial identity（components.ts:278-280）；C3 未说明 load start 删除旧 status（session-workbench.js:29）；C4 未明确 closest('.progressive') 所有权，并遗漏 content-updated 行为。"
+      },
+      "businessEquivalentGrade": {
+        "correct": true,
+        "score": 4,
+        "criteria": {
+          "H06-C1": 1,
+          "H06-C2": 1,
+          "H06-C3": 1,
+          "H06-C4": 1
+        },
+        "materialError": false,
+        "citationSufficient": true,
+        "notes": "Correctly covers wrapper/button identity, reasoning and tool input/output use, no initial progressive status, stale/empty/failure dynamic statuses, retry restoration, and the coordinated loader/search selector surface. Keeping the current contract preserves content updates without requiring the internal event name to be repeated."
+      },
+      "usage": {
+        "input_tokens": 452375,
+        "cached_input_tokens": 382464,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2434,
+        "reasoning_output_tokens": 663
+      },
+      "totalTokens": 454809,
+      "uncachedInputTokens": 69911,
+      "durationMs": 69371,
+      "setupMs": 74.67469999997411,
+      "actualMcpCalls": 1,
+      "actualShellCalls": 7,
+      "applicationMcpErrors": 0,
+      "requestedFormats": [
+        {
+          "tool": "codegraph_explore",
+          "format": "default"
+        }
+      ],
+      "combinedCalls": 8,
+      "toolOutputBytes": 246596,
+      "finalContextInputTokens": 76300,
+      "frozenHeuristicMcpCalls": 1,
+      "frozenHeuristicCombinedCalls": 8,
+      "nonUse": false,
+      "overCallAuditThreshold": false,
+      "detectorEnvironmentFault": false,
+      "detectorFaultReasons": [],
+      "evaluationValid": true,
+      "useRelevance": true,
+      "evidenceUsed": null,
+      "shellErrorCalls": 1,
+      "truncatedCalls": 2,
+      "toolFormats": [
+        "codegraph_explore"
+      ],
+      "nonzeroShellExitCalls": 1,
+      "auditNotes": "Root reviewed every command and command exit events. All source-only reads; one directly relevant CodeGraph exploration followed by source reads. No prohibited scope, mutation, external agent or evaluation access. Incremental MCP contribution unknown.",
+      "issueDetails": [
+        "One broad rg call returned exit1 with stderr redirected to null; detailed failure text unavailable.",
+        "Two broad outputs truncated at wrapper layers."
+      ],
+      "originalAnswerSha256": "ae7e7991d6b79bbf68d2e56c69e908cb7f927336e7a6fbc4846b953ff04265ed",
+      "rawHashes": {
+        "metrics": "242e70e338914fb51c1ddd26de127566763ef953f95321aee4cc4420a6cd7ff7",
+        "timing": "c956a123c56084953c53eb1e0fa821f0634f71aaceb4d691ca8d956cd241cd8f",
+        "transcript": "8c5b98759062c2bce5f50b8e6cad692bae8f11e4e61ee992a4c86f4e4021f764",
+        "stdout": "3558a090e2aa1f0357ec6b1cb7a2135a77043292cbfad07ddc28df972d744f0f",
+        "stderr": "ff9e3c6b066206b335f41d2379f21437909d87956f43519bb2c6b095e680ec4a",
+        "answer": "ae7e7991d6b79bbf68d2e56c69e908cb7f927336e7a6fbc4846b953ff04265ed",
+        "request": "323ed2f75fbaf6660c0325817d8565cf7bb2dae2ea52d33fddc2725da4d754fb"
+      }
+    }
+  ]
+}

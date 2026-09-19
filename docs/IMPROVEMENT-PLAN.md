@@ -7,11 +7,21 @@ rules; this page owns the active queue and investment decisions.
 
 ## Current priorities
 
+The [36-attempt Luna/OpenSession evaluation](LUNA-OPENSESSION-EVAL-2026-09-20.md)
+is complete. CodeFacts passed 12/12 tasks but used the most total tokens;
+ordinary inspection and CodeGraph each passed 11/12. CodeFacts did not establish
+a material repeatable advantage over both alternatives. Keep limited maintenance,
+pause broad feature expansion and token-saving claims, and require a new consumer
+failure or differentiated capability before another investment cycle. CodeGraph
+is an optional lower-token alternative in this sample, with its failed deferred-field
+diagnosis preserved; the evidence does not justify an unconditional replacement.
+
 | Priority | Work | Evidence and completion condition | Status |
 | --- | --- | --- | --- |
 | 1 | Implement explicit member-query ranking | Native Top-1 improved 7/12 to 10/12 on earlier cases and 9/12 to 12/12 on a third repository; regression tests preserve pagination, filters and context. | Complete; retained in `5a88820`. [Results and cost](MEMBER-RANKING-IMPLEMENTATION-2026-09-13.md). |
 | 2 | Verify usefulness during real repository work | The earlier diagnosis scored 2/4 in all arms. A new edit-and-test task delivered a real fix with all patches passing 4/4, but both MCP arms made zero formal calls and CodeFacts had execution-policy interference. No retrieval-efficiency gain was established. | Both campaigns closed; limited maintenance retained. [Diagnosis](ISSUE1-RUNTIME-RECOVERY-2026-09-13.md), [edit-and-test pilot](TEMP-CLEANUP-PILOT-2026-09-16.md). |
 | 3 | Improve real-use output and navigation failures | Fixed: callback locals no longer enter top_level; compact MCP responses share hashes/anchors; expand has a 16 KiB page budget and snapshot-bound continuation. Two real expand cases retain equivalent facts with 44.2% / 44.8% fewer response bytes including continuation. | Implemented and verified locally; release/client update pending. Plugin source guidance is updated separately in agent-plugins. [Implementation and acceptance](COMPACT-RESPONSES-2026-09-20.md), [original audit](OPENSESSION-HISTORY-AUDIT-2026-09-20.md). |
+| 4 | Compare real-history workflows with actual tool use | Six source-backed tasks, three arms, two repetitions, all evaluated with Luna/medium. All 24 tool attempts made relevant MCP calls. Initial and adjudicated scores, every attempt's cost, answers, and runtime hashes are retained. | Complete; campaign closed and limited maintenance retained. [Results and decision](LUNA-OPENSESSION-EVAL-2026-09-20.md), [reusable corpus](../benchmarks/agent-eval/opensession-corpus/README.md). |
 | Continuous | Maintain source correctness, freshness, and installation reliability | Reproduce a reported failure, fix its owning boundary, add the smallest meaningful regression and verify the affected native/protocol/platform surface. | Triggered by failures. |
 
 ## Delivery and investment loop
@@ -73,8 +83,9 @@ findings, loaded-version evidence and proposed completion conditions.
 
 The subsequent [compact-response implementation](COMPACT-RESPONSES-2026-09-20.md)
 passed the frozen native cases and preserves evidence across continuation pages.
-The next delivery step is a release that updates the separately maintained plugin
-pin/guidance and verifies a new client's loaded schema. Further relation-ranking
+The release work would update the separately maintained plugin
+pin/guidance and verify a new client's loaded schema; it remains pending after
+the subsequent Luna investment decision. Further relation-ranking
 changes still require their own correctness evidence. Native byte reductions
 are measured. Real-client comprehension and three-OS CI were then exercised in the
 [four-run client acceptance](CLIENT-ACCEPTANCE-2026-09-20.md): all answers passed
