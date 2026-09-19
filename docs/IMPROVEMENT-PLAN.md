@@ -11,7 +11,7 @@ rules; this page owns the active queue and investment decisions.
 | --- | --- | --- | --- |
 | 1 | Implement explicit member-query ranking | Native Top-1 improved 7/12 to 10/12 on earlier cases and 9/12 to 12/12 on a third repository; regression tests preserve pagination, filters and context. | Complete; retained in `5a88820`. [Results and cost](MEMBER-RANKING-IMPLEMENTATION-2026-09-13.md). |
 | 2 | Verify usefulness during real repository work | The earlier diagnosis scored 2/4 in all arms. A new edit-and-test task delivered a real fix with all patches passing 4/4, but both MCP arms made zero formal calls and CodeFacts had execution-policy interference. No retrieval-efficiency gain was established. | Both campaigns closed; limited maintenance retained. [Diagnosis](ISSUE1-RUNTIME-RECOVERY-2026-09-13.md), [edit-and-test pilot](TEMP-CLEANUP-PILOT-2026-09-16.md). |
-| 3 | Improve real-use output and navigation failures | The OpenSession history audit found 899 actual calls. Fixed-source replay reproduces oversized expand responses and anonymous callback locals incorrectly included in top_level in 0.1.14. Loaded skill guidance also differs from current tool guidance. | Next bounded work: align guidance, reduce response volume while preserving evidence, and fix the demonstrated scope-classification defect. [Audit and acceptance](OPENSESSION-HISTORY-AUDIT-2026-09-20.md). |
+| 3 | Improve real-use output and navigation failures | Fixed: callback locals no longer enter top_level; compact MCP responses share hashes/anchors; expand has a 16 KiB page budget and snapshot-bound continuation. Two real expand cases retain equivalent facts with 44.2% / 44.8% fewer response bytes including continuation. | Implemented and verified locally; release/client update pending. Plugin source guidance is updated separately in agent-plugins. [Implementation and acceptance](COMPACT-RESPONSES-2026-09-20.md), [original audit](OPENSESSION-HISTORY-AUDIT-2026-09-20.md). |
 | Continuous | Maintain source correctness, freshness, and installation reliability | Reproduce a reported failure, fix its owning boundary, add the smallest meaningful regression and verify the affected native/protocol/platform surface. | Triggered by failures. |
 
 ## Delivery and investment loop
@@ -70,6 +70,13 @@ before another model campaign. Keep CodeFacts for now: CodeGraph helped some
 discovery queries but missed another exact target and retained same-name noise.
 The [history audit](OPENSESSION-HISTORY-AUDIT-2026-09-20.md) separates measured
 findings, loaded-version evidence and proposed completion conditions.
+
+The subsequent [compact-response implementation](COMPACT-RESPONSES-2026-09-20.md)
+passed the frozen native cases and preserves evidence across continuation pages.
+The next delivery step is a release that updates the separately maintained plugin
+pin/guidance and verifies a new client's loaded schema. Further relation-ranking
+changes still require their own correctness evidence. Byte reductions are measured;
+end-to-end agent token savings and comprehension remain to be evaluated in real work.
 
 The next model-based campaign requires a named real task, frozen comparator
 versions/configurations, correctness rubric, invocation and time limits, and

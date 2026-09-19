@@ -473,6 +473,7 @@ mod tests {
             body: None,
             documentation: None,
             exported,
+            is_local: false,
         }
     }
 

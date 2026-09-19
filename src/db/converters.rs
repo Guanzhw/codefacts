@@ -65,6 +65,7 @@ pub fn row_to_code_node(row: &Row<'_>) -> rusqlite::Result<CodeNode> {
         body,
         documentation: doc_comment,
         exported,
+        is_local: meta.get("local").and_then(|v| v.as_bool()).unwrap_or(false),
     })
 }
 

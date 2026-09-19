@@ -588,12 +588,29 @@ fn read_message(reader: &mut impl BufRead) -> std::result::Result<Option<Value>,
 }
 
 fn parse_locations(value: &Value) -> Vec<LspLocation> {
-    value
+    let mut locations: Vec<_> = value
         .as_array()
         .into_iter()
         .flatten()
         .filter_map(parse_location)
-        .collect()
+        .collect();
+    locations.sort_by(|a, b| {
+        (
+            &a.uri,
+            a.start_line,
+            a.start_character,
+            a.end_line,
+            a.end_character,
+        )
+            .cmp(&(
+                &b.uri,
+                b.start_line,
+                b.start_character,
+                b.end_line,
+                b.end_character,
+            ))
+    });
+    locations
 }
 
 fn parse_location(value: &Value) -> Option<LspLocation> {
@@ -742,6 +759,7 @@ mod tests {
             body: None,
             documentation: None,
             exported: Some(true),
+            is_local: false,
         }
     }
 
@@ -804,6 +822,34 @@ mod tests {
         ]));
         assert_eq!(locations.len(), 2);
         assert_eq!(locations[1].uri, "file:///repo/other.rs");
+    }
+
+    #[test]
+    fn reference_order_is_independent_of_lsp_response_order() {
+        let locations = json!([
+            {"uri":"file:///repo/b.ts","range":{"start":{"line":1,"character":2},"end":{"line":1,"character":8}}},
+            {"uri":"file:///repo/a.ts","range":{"start":{"line":3,"character":5},"end":{"line":3,"character":9}}},
+            {"uri":"file:///repo/a.ts","range":{"start":{"line":3,"character":1},"end":{"line":3,"character":4}}}
+        ]);
+        let mut reordered = locations.as_array().unwrap().clone();
+        reordered.reverse();
+        let forward = parse_locations(&locations);
+        let backward = parse_locations(&Value::Array(reordered));
+        let positions = |items: Vec<LspLocation>| {
+            items
+                .into_iter()
+                .map(|loc| {
+                    (
+                        loc.uri,
+                        loc.start_line,
+                        loc.start_character,
+                        loc.end_line,
+                        loc.end_character,
+                    )
+                })
+                .collect::<Vec<_>>()
+        };
+        assert_eq!(positions(forward), positions(backward));
     }
 
     #[test]

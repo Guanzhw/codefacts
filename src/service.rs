@@ -18,6 +18,9 @@ use crate::indexer::{IndexOptions, IndexResult, IndexingPipeline};
 use crate::lsp::{self, LspManager, LspMode, SemanticReferenceResult};
 use crate::types::{CodeEdge, CodeNode, EdgeKind, NodeKind};
 
+mod expand;
+pub use expand::ExpandSection;
+
 const DEFAULT_LIMIT: usize = 20;
 const MAX_LIMIT: usize = 50;
 const DEFAULT_CONTEXT_LIMIT: usize = 1;
@@ -151,6 +154,8 @@ struct PageCursor {
     generation: i64,
     offset: usize,
     scope: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    semantic_snapshot: Option<String>,
 }
 
 /// Discovery scope for `search` and `outline`.
@@ -1472,6 +1477,7 @@ fn encode_page_cursor(generation: i64, offset: usize, scope: &str) -> Result<Str
         generation,
         offset,
         scope: scope.to_string(),
+        semantic_snapshot: None,
     };
     Ok(hex::encode(serde_json::to_vec(&cursor)?))
 }
@@ -1481,6 +1487,16 @@ fn page_offset(
     offset: usize,
     generation: i64,
     scope: &str,
+) -> Result<PageOffset> {
+    page_offset_with_snapshot(cursor, offset, generation, scope, None)
+}
+
+fn page_offset_with_snapshot(
+    cursor: Option<&str>,
+    offset: usize,
+    generation: i64,
+    scope: &str,
+    semantic_snapshot: Option<&str>,
 ) -> Result<PageOffset> {
     let Some(cursor) = cursor else {
         return Ok(PageOffset::Current(offset));
@@ -1496,10 +1512,10 @@ fn page_offset(
         .map_err(|_| CodeFactsError::Other("cursor is not valid CodeFacts page data".into()))?;
     if cursor.version != PAGE_CURSOR_VERSION || cursor.scope != scope {
         return Err(CodeFactsError::Other(
-            "cursor does not belong to this search or outline request".into(),
+            "cursor does not belong to this request".into(),
         ));
     }
-    if cursor.generation != generation {
+    if cursor.generation != generation || cursor.semantic_snapshot.as_deref() != semantic_snapshot {
         return Ok(PageOffset::Stale);
     }
     Ok(PageOffset::Current(cursor.offset))
@@ -1558,12 +1574,13 @@ fn node_matches_filters(
 
 fn is_local_variable(node: &CodeNode, file_nodes: &[CodeNode]) -> bool {
     node.kind == NodeKind::Variable
-        && file_nodes.iter().any(|enclosing| {
-            matches!(enclosing.kind, NodeKind::Function | NodeKind::Method)
-                && enclosing.id != node.id
-                && enclosing.start_line <= node.start_line
-                && enclosing.end_line >= node.end_line
-        })
+        && (node.is_local
+            || file_nodes.iter().any(|enclosing| {
+                matches!(enclosing.kind, NodeKind::Function | NodeKind::Method)
+                    && enclosing.id != node.id
+                    && enclosing.start_line <= node.start_line
+                    && enclosing.end_line >= node.end_line
+            }))
 }
 
 fn path_matches_prefix(path: &str, prefix: &str) -> bool {
@@ -1631,6 +1648,7 @@ mod tests {
             body,
             documentation: None,
             exported: Some(true),
+            is_local: false,
         }
     }
 

@@ -112,11 +112,47 @@ relationships are needed together.
 unresolved import/reference samples. It describes a static-analysis gap; it
 does not establish that a target is absent at runtime.
 
-`expand` always includes the same verified, 4 KiB-bounded definition excerpt
-for its single resolved symbol. Check each relationship's confidence: receiver
+`expand` includes a verified, 4 KiB-bounded definition excerpt
+for its single resolved symbol in the overview (`section: "all"`). Check each relationship's confidence: receiver
 calls without type binding remain heuristic candidates, including when only one
 same-named definition exists. Semantic references retain their separate
 availability/status contract.
+
+### Compact responses (development version, not yet released)
+
+All five MCP tools default to `format: "compact"`. File hashes occur once in
+`source_hashes[file_path]`; evidence retains its file, line range, extractor and
+confidence. Null fields and zero refresh counters are omitted; a missing refresh
+counter means zero. Repository identity, generation and freshness status remain.
+Empty result arrays remain explicit.
+
+In an `expand` neighborhood, `definition` is the relationship anchor. Callers
+and inbound references omit the repeated `to`; callees and outbound references
+omit the repeated `from`. The remaining endpoint and call-site evidence keep
+their original field names. A search `context_entries` neighborhood uses its
+own `symbol` as the anchor. `path` retains its ordered-node/edge representation.
+
+Compact `expand` responses are capped at **16 KiB of serialized JSON text**,
+including shared hashes and cursors. `limit` is a per-section maximum; the total
+budget may return fewer entries. A nonempty `next` maps unfinished section names
+to cursors. Continue only the section needed, with the same symbol and optional
+file disambiguator, for example:
+
+```json
+{"symbol":"getRuntimeProtocol","file_path":"src/protocol-runtime.ts","section":"callees","cursor":"<value from next.callees>"}
+```
+
+Selected sections return their facts and the definition, without repeating the
+source excerpt or implying that unrequested sections are empty. Cursors bind
+the repository, symbol, section and index generation. Semantic-reference cursors
+also bind the sorted LSP result; a changed result returns `stale_cursor`.
+Source excerpts still report their own truncation. An oversized ambiguous
+candidate list is explicitly truncated and asks for a file or paged search.
+
+This changes the default MCP output shape. Consumers that need the previous
+nested evidence can request `format: "full"`; `expand` with that format and no
+section/cursor retains the original per-category limit and has no 16 KiB cap.
+The Rust service's existing `expand` method retains its original response.
 
 `map.files_with_facts` is the number of indexed files that currently own at
 least one fact, while `map.indexed_files` is every successfully parsed,

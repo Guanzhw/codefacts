@@ -8,7 +8,7 @@ use std::io::{self, BufRead, BufReader, BufWriter, Write};
 use serde_json::{json, Map, Value};
 
 use crate::error::{CodeFactsError, Result};
-use crate::service::{CodeFactsRegistry, SearchDetail, SymbolScope};
+use crate::service::{CodeFactsRegistry, ExpandSection, SearchDetail, SymbolScope};
 use crate::types::NodeKind;
 
 const LEGACY_PROTOCOL_VERSION: &str = "2025-11-25";
@@ -216,6 +216,15 @@ fn call_tool(projects: &mut CodeFactsRegistry, params: Option<&Value>) -> Result
         .cloned()
         .unwrap_or_default();
     let limit = optional_limit(&arguments)?;
+    let compact = match optional_string(&arguments, "format")? {
+        None | Some("compact") => true,
+        Some("full") => false,
+        Some(_) => {
+            return Err(CodeFactsError::Mcp(
+                "'format' must be 'compact' or 'full'".into(),
+            ))
+        }
+    };
     let repository_root = optional_string(&arguments, "repository_root")?.map(str::to_owned);
 
     if !matches!(name, "map" | "search" | "outline" | "expand" | "path") {
@@ -225,7 +234,7 @@ fn call_tool(projects: &mut CodeFactsRegistry, params: Option<&Value>) -> Result
     }
     let facts = projects.project(repository_root.as_deref())?;
 
-    match name {
+    let result = match name {
         "map" => facts.map(),
         "search" => {
             let detail = optional_search_detail(&arguments)?.unwrap_or(SearchDetail::Facts);
@@ -255,11 +264,28 @@ fn call_tool(projects: &mut CodeFactsRegistry, params: Option<&Value>) -> Result
             optional_string(&arguments, "cursor")?,
             limit,
         ),
-        "expand" => facts.expand(
-            required_string(&arguments, "symbol")?,
-            optional_string(&arguments, "file_path")?,
-            limit,
-        ),
+        "expand" => {
+            let section = optional_string(&arguments, "section")?.unwrap_or("all");
+            let section = ExpandSection::parse(section)
+                .ok_or_else(|| CodeFactsError::Mcp("Invalid expand section".into()))?;
+            let cursor = optional_string(&arguments, "cursor")?;
+            return if !compact && section == ExpandSection::All && cursor.is_none() {
+                facts.expand(
+                    required_string(&arguments, "symbol")?,
+                    optional_string(&arguments, "file_path")?,
+                    limit,
+                )
+            } else {
+                facts.expand_page(
+                    required_string(&arguments, "symbol")?,
+                    optional_string(&arguments, "file_path")?,
+                    section,
+                    cursor,
+                    limit,
+                    compact,
+                )
+            };
+        }
         "path" => facts.path_with_files(
             required_string(&arguments, "from")?,
             optional_string(&arguments, "from_file_path")?,
@@ -268,7 +294,12 @@ fn call_tool(projects: &mut CodeFactsRegistry, params: Option<&Value>) -> Result
             limit,
         ),
         _ => unreachable!("tool name was validated before project selection"),
-    }
+    }?;
+    Ok(if compact {
+        crate::presentation::compact(result)
+    } else {
+        result
+    })
 }
 
 fn required_string<'a>(arguments: &'a Map<String, Value>, key: &str) -> Result<&'a str> {
@@ -427,7 +458,22 @@ fn tool_definitions() -> Vec<Value> {
     ]
 }
 
-fn tool(name: &str, description: &str, input_schema: Value) -> Value {
+fn tool(name: &str, description: &str, mut input_schema: Value) -> Value {
+    input_schema["properties"]["format"] = json!({
+        "type": "string", "enum": ["compact", "full"], "default": "compact",
+        "description": "compact shares per-file source_hashes, omits null fields and zero refresh counters, and omits each relationship's repeated anchor (definition or context symbol). Confidence, direction and locations remain explicit. full returns the original nested facts."
+    });
+    if name == "expand" {
+        input_schema["properties"]["section"] = json!({
+            "type": "string", "enum": ["all", "callers", "callees", "inbound", "outbound", "tests", "semantic"], "default": "all",
+            "description": "all includes definition source and relationship sections. A selected section returns only that part. Compact expand is bounded to 16384 JSON text bytes; next maps remaining section names to cursors. Continue using the same symbol, that section and cursor."
+        });
+        input_schema["properties"]["cursor"] = cursor_schema();
+        input_schema["properties"]["limit"] = json!({
+            "type": "integer", "minimum": 1, "maximum": 50,
+            "description": "Maximum entries per section (default 20, max 50); compact output may return fewer to fit the total byte budget."
+        });
+    }
     json!({ "name": name, "description": description, "inputSchema": input_schema })
 }
 
