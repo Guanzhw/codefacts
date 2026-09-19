@@ -77,6 +77,11 @@ The next delivery step is a release that updates the separately maintained plugi
 pin/guidance and verifies a new client's loaded schema. Further relation-ranking
 changes still require their own correctness evidence. Byte reductions are measured;
 end-to-end agent token savings and comprehension remain to be evaluated in real work.
+Before shipping the default shape change, verify one real client can consume the
+compact evidence and continuations correctly, and complete the existing three-OS
+CI. The two native cases needed two calls instead of one; their recorded cumulative
+tool time did not decrease. Treat 16 KiB as an initial budget, and choose any later
+adjustment by correct-task total cost rather than response size alone.
 
 The next model-based campaign requires a named real task, frozen comparator
 versions/configurations, correctness rubric, invocation and time limits, and
