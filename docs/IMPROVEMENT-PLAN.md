@@ -11,7 +11,7 @@ rules; this page owns the active queue and investment decisions.
 | --- | --- | --- | --- |
 | 1 | Implement explicit member-query ranking | Native Top-1 improved 7/12 to 10/12 on earlier cases and 9/12 to 12/12 on a third repository; regression tests preserve pagination, filters and context. | Complete; retained in `5a88820`. [Results and cost](MEMBER-RANKING-IMPLEMENTATION-2026-09-13.md). |
 | 2 | Verify usefulness during real repository work | The earlier diagnosis scored 2/4 in all arms. A new edit-and-test task delivered a real fix with all patches passing 4/4, but both MCP arms made zero formal calls and CodeFacts had execution-policy interference. No retrieval-efficiency gain was established. | Both campaigns closed; limited maintenance retained. [Diagnosis](ISSUE1-RUNTIME-RECOVERY-2026-09-13.md), [edit-and-test pilot](TEMP-CLEANUP-PILOT-2026-09-16.md). |
-| 3 | Resolve a demonstrated remaining retrieval defect | Container names can collide with document headings; explicit kind filters already exist. Require a concrete failed lookup and independent source-labeled cases before changing default ranking. | Evidence collection only. |
+| 3 | Improve real-use output and navigation failures | The OpenSession history audit found 899 actual calls. Fixed-source replay reproduces oversized expand responses and anonymous callback locals incorrectly included in top_level in 0.1.14. Loaded skill guidance also differs from current tool guidance. | Next bounded work: align guidance, reduce response volume while preserving evidence, and fix the demonstrated scope-classification defect. [Audit and acceptance](OPENSESSION-HISTORY-AUDIT-2026-09-20.md). |
 | Continuous | Maintain source correctness, freshness, and installation reliability | Reproduce a reported failure, fix its owning boundary, add the smallest meaningful regression and verify the affected native/protocol/platform surface. | Triggered by failures. |
 
 ## Delivery and investment loop
@@ -56,8 +56,20 @@ Formal usage was 1,842,741 tokens plus 261,756 readiness tokens; unaggregated
 engineering cost remains unknown. Both MCP arms chose ordinary tools, and two
 real policy rejections interfered with the CodeFacts attempt. Retain the repair
 and reusable edit-mode runner, preserve the raw costs, and make no tool-savings
-claim from this campaign. No demonstrated product defect justifies another
-feature or model-run cycle now.
+claim from this campaign. That pilot alone supplies no demonstrated retrieval
+defect; the subsequent history audit below supplies new, separate evidence.
+
+The 2026-09-20 audit reviewed one actual OpenSession task family: 129 task files,
+79 with CodeFacts use, 899 executed MCP calls including two maps of a temporary
+upstream checkout. A source-backed path was explicitly used in a review conclusion.
+The same history shows oversized output, retries with lossy manual projection,
+unconsumed pagination and unnecessary fixed overview steps. Six bounded native
+query comparisons reproduce current failures and mixed CodeGraph outcomes; they
+do not measure end-to-end agent token savings. Prioritize these specific fixes
+before another model campaign. Keep CodeFacts for now: CodeGraph helped some
+discovery queries but missed another exact target and retained same-name noise.
+The [history audit](OPENSESSION-HISTORY-AUDIT-2026-09-20.md) separates measured
+findings, loaded-version evidence and proposed completion conditions.
 
 The next model-based campaign requires a named real task, frozen comparator
 versions/configurations, correctness rubric, invocation and time limits, and
