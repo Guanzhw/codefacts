@@ -6,6 +6,7 @@ import test from 'node:test';
 
 import {
   ARMS,
+  armFor,
   assertRunSlotOpen,
   buildSchedule,
   classifyFaults,
@@ -13,6 +14,7 @@ import {
   substantiveReadinessCalls,
   summarizeRows,
 } from './campaign.mjs';
+import { buildRunRequest } from '../runner.mjs';
 
 const tasks = Array.from({ length: 6 }, (_, index) => ({ id: `T${index + 1}`, prompt: `Question ${index + 1}` }));
 
@@ -72,6 +74,38 @@ test('readiness requires a substantive tool rather than CodeFacts map alone', ()
   assert.equal(substantiveReadinessCalls(metrics({ 'mcp_tool_call:codefacts/map': 1 }), 'codefacts'), 0);
   assert.equal(substantiveReadinessCalls(metrics({ 'mcp_tool_call:codefacts/search': 1 }), 'codefacts'), 1);
   assert.equal(substantiveReadinessCalls(metrics({ 'mcp_tool_call:codegraph/codegraph_explore': 1 }), 'codegraph'), 1);
+});
+
+test('Windows repository roots become forward-slash TOML values before runner request construction', () => {
+  const root = 'D:\\WorkSpace\\codefacts\\target\\luna-opensession-20260920-r2\\source';
+  const state = 'D:\\WorkSpace\\codefacts\\target\\luna-opensession-20260920-r2\\states\\cf.sqlite';
+  const ctx = {
+    workRoot: 'D:\\WorkSpace\\codefacts\\target\\luna-opensession-20260920-r2',
+    config: {
+      codefactsBin: 'D:\\WorkSpace\\codefacts\\target\\release\\codefacts.exe',
+      codegraph: { nodeBin: 'C:\\tools\\node.exe', entryJs: 'C:\\tools\\codegraph.js' },
+    },
+  };
+  const requestFor = (arm) => buildRunRequest({
+    task: { id: 'windows-root', root, prompt: 'Inspect source.' },
+    arm,
+    runNumber: 1,
+    timeoutMs: 240_000,
+    codex: { path: 'C:/codex.exe', source: 'test' },
+    execution: { mode: 'readonly', model: 'gpt-5.6-luna', reasoningEffort: 'medium' },
+  });
+
+  const cfRequest = requestFor(armFor(ctx, 'codefacts', root, state));
+  const cfArgsOverride = cfRequest.command.find((value) => value.startsWith('mcp_servers.codefacts.args='));
+  const cfArgs = JSON.parse(cfArgsOverride.slice(cfArgsOverride.indexOf('=') + 1));
+  assert.equal(cfArgs[2], 'D:/WorkSpace/codefacts/target/luna-opensession-20260920-r2/source');
+  assert.equal(cfArgs[4], 'D:/WorkSpace/codefacts/target/luna-opensession-20260920-r2/states/cf.sqlite');
+  assert.equal(cfArgsOverride.includes('\\'), false);
+
+  const cgRequest = requestFor(armFor(ctx, 'codegraph', root, state));
+  const cgCwdOverride = cgRequest.command.find((value) => value.startsWith('mcp_servers.codegraph.cwd='));
+  assert.equal(JSON.parse(cgCwdOverride.slice(cgCwdOverride.indexOf('=') + 1)), 'D:/WorkSpace/codefacts/target/luna-opensession-20260920-r2/source');
+  assert.equal(cgCwdOverride.includes('\\'), false);
 });
 
 test('summary charges every attempt to correct completions and keeps matched-correct differences secondary', () => {

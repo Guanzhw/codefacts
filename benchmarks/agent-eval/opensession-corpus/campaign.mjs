@@ -538,14 +538,14 @@ async function commandReadonly(ctx) {
   process.stdout.write(`${JSON.stringify({ status: 'readonly-ready', frozenAt: freeze.frozenAt, sourceDigest: freeze.inputs.source.digest, codegraphIndexDigest: freeze.inputs.codegraphIndex.digest })}\n`);
 }
 
-function armFor(ctx, armId, root, codefactsState) {
+export function armFor(ctx, armId, root, codefactsState) {
   const common = ['windows.sandbox="elevated"'];
   if (armId === 'ordinary') return { id: armId, configOverrides: common };
   if (armId === 'codefacts') return {
     id: armId,
     configOverrides: [
       `mcp_servers.codefacts.command=${quote(ctx.config.codefactsBin)}`,
-      `mcp_servers.codefacts.args=["mcp","--root","{root}","--state",${quote(codefactsState)}]`,
+      `mcp_servers.codefacts.args=["mcp","--root",${quote(root)},"--state",${quote(codefactsState)}]`,
       'mcp_servers.codefacts.required=true',
       'mcp_servers.codefacts.startup_timeout_sec=30',
       'mcp_servers.codefacts.enabled_tools=["map","search","outline","expand","path"]',
@@ -562,7 +562,7 @@ function armFor(ctx, armId, root, codefactsState) {
     configOverrides: [
       `mcp_servers.codegraph.command=${quote(ctx.config.codegraph.nodeBin)}`,
       `mcp_servers.codegraph.args=["--liftoff-only","--disable-warning=ExperimentalWarning",${quote(ctx.config.codegraph.entryJs)},"serve","--mcp"]`,
-      'mcp_servers.codegraph.cwd="{root}"',
+      `mcp_servers.codegraph.cwd=${quote(root)}`,
       `mcp_servers.codegraph.env={CODEGRAPH_NO_DAEMON="1",CODEGRAPH_TELEMETRY="0",DO_NOT_TRACK="1",CODEGRAPH_NO_DOWNLOAD="1",GIT_CEILING_DIRECTORIES=${quote(ctx.workRoot)}}`,
       'mcp_servers.codegraph.required=true',
       'mcp_servers.codegraph.startup_timeout_sec=30',

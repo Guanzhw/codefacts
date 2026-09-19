@@ -90,6 +90,12 @@ node benchmarks/agent-eval/opensession-corpus/campaign.mjs readiness --arm codeg
 
 The ordinary attempt must complete cleanly. CodeFacts readiness must make at least one `search`, `outline`, `expand`, or `path` call; `map` alone is insufficient. CodeGraph must call `codegraph_explore`. A failed readiness receipt stops subsequent readiness and formal work. Diagnose it from the preserved raw result; do not rerun it in place.
 
+### Superseded first readiness campaign
+
+The first machine-local campaign at `target/luna-opensession-20260920` stopped during readiness and remains preserved as raw evidence. Its ordinary readiness completed with 50,311 tokens. CodeFacts then failed during MCP startup after 238 ms because the harness inserted a resolved Windows root containing backslashes into a TOML quoted array; TOML interpreted those backslashes as invalid escapes. No CodeFacts model task and no formal attempt ran.
+
+The harness now binds the concrete root in `armFor` and converts it to forward slashes before `buildRunRequest` constructs the final `-c` arguments. Recovery uses a new work root, fresh prepare/freeze, and three new readiness attempts. It does not reuse or rewrite the stopped directory. The source commit, six questions, rubric, prompts, model, and decision rules remain unchanged.
+
 ## Formal run and status
 
 The following explicit command starts the remaining attempts in frozen order:
