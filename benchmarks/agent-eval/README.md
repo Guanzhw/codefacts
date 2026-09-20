@@ -22,7 +22,9 @@ comparison of ordinary tools, CodeFacts, and CodeGraph. Its native preparation,
 readiness, formal execution, and manual audit are separate steps.
 Its [completed 36-attempt results](../../docs/LUNA-OPENSESSION-EVAL-2026-09-20.md)
 retain both grading views, all attempt costs, executed tool counts, and the
-limited-maintenance decision. Reuse those records before starting another run.
+original decision alongside the corrected interpretation of the owner's objective:
+better effectiveness while controlling token cost.
+Reuse those records before starting another run.
 
 For an existing reviewed campaign, reuse its evidence before launching models:
 

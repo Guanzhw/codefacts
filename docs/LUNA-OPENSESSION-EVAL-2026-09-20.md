@@ -1,6 +1,32 @@
 # OpenSession real-history evaluation with Luna
 
-Decision: keep CodeFacts in limited maintenance. This campaign does not establish
+## Correction to the interpretation of the owner's objective
+
+The owner's original objective was **better effectiveness while also controlling
+token cost, with effectiveness taking priority**. On 2026-09-20, after this
+campaign, we corrected our interpretation: treating token savings as a necessary
+condition for continued work had overemphasized efficiency. The recommendation is bounded,
+quality-focused investigation and improvement: retain CodeFacts and diagnose the
+observed H05/H06 answer defects. A reproducible gain in correctness, completeness,
+or useful capability can justify proportionate additional tokens. Measure and
+reduce unnecessary token overhead in the same work; at comparable quality,
+prefer the more efficient approach. Do not replace CodeFacts solely because
+CodeGraph costs less.
+
+The existing results do not prove that CodeFacts is more effective: 12/12 passes
+coexist with 9/12 fully correct answers, versus ordinary inspection's 11/12 and
+10/12, and CodeGraph's 11/12 and 11/12. The sample and grading sensitivity require
+an explicit tradeoff rather than a new winner. The [scorecard](EVALUATION.md) and
+[current plan](IMPROVEMENT-PLAN.md) now reflect the original objective explicitly.
+
+All measurements, grades, frozen rules, and the original interpretation below
+are preserved. This is a correction to our investment judgment, not a change in
+the owner's goal, a rerun, or a retrospective change to the experiment's success criteria.
+
+## Original interpretation under the frozen efficiency gate
+
+The original recommendation was to keep CodeFacts in limited maintenance.
+This campaign does not establish
 a material, repeatable advantage over both ordinary source inspection and
 CodeGraph. CodeGraph is the lower-token option in the aggregate, but its failed
 deferred-field diagnosis prevents claiming that it strictly dominates CodeFacts.
@@ -203,7 +229,7 @@ grading versions remain under ignored `target/luna-opensession-20260920*`.
 The committed publication contains no raw private task history. Twenty-two
 harness/runner tests and all six CI jobs passed on the frozen harness revision.
 
-## Investment action
+## Original investment action (superseded by the update above)
 
 Close this campaign. Preserve the bounded-response and correctness fixes already
 implemented, but pause broad feature expansion and token-saving claims. A new

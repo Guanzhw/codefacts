@@ -1,8 +1,14 @@
 # Product value and continuous improvement
 
-CodeFacts earns continued investment by helping agents complete repository tasks
-correctly with less time and token consumption. Measure that outcome against
-ordinary file/search tools and a relevant code-intelligence alternative.
+CodeFacts earns continued investment by improving the correctness, completeness,
+and practical usefulness of agents' repository work while controlling token cost.
+The owner's original objective is better effectiveness with token efficiency
+considered alongside it; effectiveness has priority. On 2026-09-20 we corrected
+an interpretation that had made token savings a prerequisite for further work.
+Measure both quality and cost in every improvement against ordinary file/search
+tools and a relevant code-intelligence alternative. A reproducible quality or
+capability gain can justify proportionate additional tokens; seek to avoid or
+reduce that overhead as part of the same work.
 
 This scorecard separates product value from index speed. The repository-level
 latency and resource runner remains documented in [PERFORMANCE.md](PERFORMANCE.md).
@@ -45,10 +51,19 @@ competitor's strengths or a tool's unsupported cases.
 
 ## Primary outcome
 
-Track **correct task completion rate together with tokens and elapsed time per
-correct completion**. Every task has source-backed acceptance criteria fixed
+Track **correct task completion, complete source-backed answers, critical errors,
+and downstream rework first**. Then report tokens and elapsed time per correct
+completion. Every task has source-backed acceptance criteria fixed
 before running the arms. A material false structural claim fails the task even
 when the response is otherwise plausible or inexpensive.
+
+Report both acceptance passes and fully correct answers, plus the severity and
+kind of missed criteria. Crossing a 3/4 threshold does not prove better overall
+effectiveness than a tool with more complete answers. For edit tasks, acceptance
+also needs the actual patch, relevant tests, and affected behavior. Freeze these
+distinctions before a campaign; do not make a cost saving compensate for a critical
+quality failure in a blended score. When quality differences remain uncertain,
+report the tradeoff rather than using lower token usage to declare a winner.
 
 For each arm, report:
 
@@ -78,10 +93,10 @@ usage as an API bill.
 | Dimension | Measure | Initial improvement target / constraint |
 | --- | --- | --- |
 | Evaluation validity | Required tools connected; source reads permitted; uncontaminated runs; complete usage accounting | Pass the environment preflight before comparing task efficiency. A completed process is not a correct answer. |
-| Task correctness | Acceptance pass rate; unsupported structural claims; citation correctness | No material accuracy regression against baseline. Zero unsupported confirmed edges in the fixed adversarial regression set. |
+| Task correctness | Acceptance pass rate; fully correct answers; critical errors; citation correctness; downstream rework | Primary investment outcome: reproducibly improve correct completion, completeness, or useful capability. Zero unsupported confirmed edges in the fixed adversarial regression set. |
 | Fact quality | Edge precision and recall against labeled source cases, split by language and relation kind; unresolved/heuristic proportions | Improve precision without hiding lost recall. Never count parse support as proof of semantic resolution support. |
-| Task token efficiency | Total tokens; uncached input; output; tokens per correct completion | Target at least 20% lower median task tokens on the intended task mix, with correctness preserved. |
-| Task time efficiency | End-to-end completion time; timeouts; time per correct completion | Target at least 20% lower median completion time, or a demonstrated token advantage without a material time penalty. |
+| Task token efficiency | Total tokens; uncached input; output; tokens per correct completion | Secondary optimization target: at least 20% lower median task tokens at comparable quality. Not a prerequisite for a demonstrated effectiveness gain. |
+| Task time efficiency | End-to-end completion time; timeouts; time per correct completion | Secondary optimization target: at least 20% lower median completion time at comparable quality; retain workload latency constraints. |
 | Multi-turn context | Final and peak request input tokens; compactions; retrieval bytes still resident if directly attributable | Reduce retained context without losing follow-up answer quality. Total processed tokens and occupied context are separate metrics. |
 | Retrieval usefulness | MCP adoption per eligible task; repeated query rate; file rereads; tool-output bytes; relevant evidence returned and used | Diagnose why task outcomes improve or regress. Tool-call count and short output are not standalone success criteria. |
 | Runtime cost | Cold index, no-change/one-file refresh, warm query P50/P95, process memory, SQLite size, startup failures | Track by repository and platform; prevent regressions beyond measurement noise. Include optional LSP startup separately. |
@@ -124,8 +139,11 @@ npm downloads, stars, installs, and synthetic tests are not retained users.
    checks material claims and ambiguous cases. Retain raw output, tool calls,
    provider usage, failures, and run metadata; report missing fields as unknown.
 
-The initial 20% target is a practical investment hurdle. A pilot cannot establish
-a universal percentage. Report confidence intervals over tasks for the larger
+The initial 20% target is an efficiency optimization hurdle, not the sole product
+investment gate. Historical campaigns retain their preregistered decision rules;
+record the correction to our interpretation of the owner's original objective
+separately. A pilot cannot establish a universal percentage. Report confidence
+intervals over tasks for the larger
 campaign and distinguish a promising point estimate from a stable advantage.
 
 Record timing boundaries explicitly: setup runs from install/index start to
@@ -148,8 +166,9 @@ For each proposed change, record one hypothesis and its observed failure case:
 | Validation | Regression fixture plus matched before/after task runs |
 | Decision | Keep, revise, or revert based on measured results |
 
-Prioritize the largest measured loss. For example: fix unsupported target
-binding before expanding transitive impact; reduce repeated evidence payloads
+Prioritize measured effectiveness failures and track the token impact of each
+change. For example: fix unsupported target binding before expanding transitive
+impact; reduce repeated evidence payloads
 when they measurably inflate request context; improve discovery when empty or
 poorly ranked results force repeated searches. Add a workflow only when these
 measurements identify an unmet consumer need.
@@ -162,14 +181,20 @@ Protocol, source-span, and existing release checks remain required independently
 
 ## Investment decisions
 
-- **Continue focused improvement:** quality constraints pass and at least one
-  meaningful efficiency target is met reproducibly; users repeat the workflow.
+- **Continue focused improvement:** a real workflow shows a reproducible gain in
+  correct completion, completeness, reduced rework, or useful capability. Increased
+  token use is acceptable when proportionate to that gain, and avoiding unnecessary
+  cost remains part of the same improvement. At comparable quality, prefer the
+  more efficient approach.
 - **Investigate another bounded cycle:** evidence is incomplete or savings have
-  high variance, but failure analysis identifies a concrete fix. Name the next
-  experiment and its stopping condition.
+  high variance, or quality rankings depend on grading interpretation, but failure
+  analysis identifies a concrete next check. Establish whether the defect belongs
+  to retrieval, source comments, or agent interpretation before changing the tool.
+  Name the next experiment and its stopping condition before running it.
 - **Maintain with limited expansion:** successive matched campaigns show little
-  benefit, an alternative dominates relevant tasks, or maintenance exceeds the
-  time saved. A useful personal tool can remain worthwhile at this level.
+  effectiveness or capability benefit, an alternative matches or improves quality
+  on relevant tasks at lower cost, or maintenance outweighs user benefit. Higher
+  token usage alone does not establish this conclusion.
 - **Prioritize correctness repair:** a confirmed-relationship claim lacks binding
   evidence. Speed gains do not offset this defect.
 
