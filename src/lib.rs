@@ -9,6 +9,7 @@ pub mod graph;
 pub mod indexer;
 pub mod lsp;
 pub mod mcp;
+mod presentation;
 pub mod resolution;
 pub mod service;
 pub mod types;

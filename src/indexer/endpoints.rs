@@ -66,6 +66,7 @@ pub fn extract_endpoints(
                 body: None,
                 documentation: None,
                 exported: None,
+                is_local: false,
             },
             handler_names: route.handler_names,
         });
@@ -305,6 +306,7 @@ mod tests {
             body: None,
             documentation: None,
             exported: Some(true),
+            is_local: false,
         }
     }
 

@@ -18,6 +18,9 @@ use crate::indexer::{IndexOptions, IndexResult, IndexingPipeline};
 use crate::lsp::{self, LspManager, LspMode, SemanticReferenceResult};
 use crate::types::{CodeEdge, CodeNode, EdgeKind, NodeKind};
 
+mod expand;
+pub use expand::ExpandSection;
+
 const DEFAULT_LIMIT: usize = 20;
 const MAX_LIMIT: usize = 50;
 const DEFAULT_CONTEXT_LIMIT: usize = 1;
@@ -151,6 +154,8 @@ struct PageCursor {
     generation: i64,
     offset: usize,
     scope: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    semantic_snapshot: Option<String>,
 }
 
 /// Discovery scope for `search` and `outline`.
@@ -1241,6 +1246,7 @@ impl CodeFacts {
         let mut text = String::new();
         let mut returned_end_line = start_line.saturating_sub(1);
         let mut found_start = false;
+        let mut byte_limit_reached = false;
         for (index, line) in content.split_inclusive('\n').enumerate() {
             let line_number = u32::try_from(index + 1).unwrap_or(u32::MAX);
             if line_number < start_line {
@@ -1251,6 +1257,7 @@ impl CodeFacts {
             }
             found_start = true;
             if text.len().saturating_add(line.len()) > max_bytes {
+                byte_limit_reached = true;
                 if text.is_empty() {
                     let end = line.floor_char_boundary(line.len().min(max_bytes));
                     text.push_str(&line[..end]);
@@ -1279,7 +1286,7 @@ impl CodeFacts {
             "definition_end_line": definition_end_line,
             "text": text,
             "byte_length": byte_length,
-            "truncated": returned_end_line < definition_end_line,
+            "truncated": byte_limit_reached || returned_end_line < definition_end_line,
         }))
     }
 
@@ -1472,6 +1479,7 @@ fn encode_page_cursor(generation: i64, offset: usize, scope: &str) -> Result<Str
         generation,
         offset,
         scope: scope.to_string(),
+        semantic_snapshot: None,
     };
     Ok(hex::encode(serde_json::to_vec(&cursor)?))
 }
@@ -1481,6 +1489,16 @@ fn page_offset(
     offset: usize,
     generation: i64,
     scope: &str,
+) -> Result<PageOffset> {
+    page_offset_with_snapshot(cursor, offset, generation, scope, None)
+}
+
+fn page_offset_with_snapshot(
+    cursor: Option<&str>,
+    offset: usize,
+    generation: i64,
+    scope: &str,
+    semantic_snapshot: Option<&str>,
 ) -> Result<PageOffset> {
     let Some(cursor) = cursor else {
         return Ok(PageOffset::Current(offset));
@@ -1496,10 +1514,10 @@ fn page_offset(
         .map_err(|_| CodeFactsError::Other("cursor is not valid CodeFacts page data".into()))?;
     if cursor.version != PAGE_CURSOR_VERSION || cursor.scope != scope {
         return Err(CodeFactsError::Other(
-            "cursor does not belong to this search or outline request".into(),
+            "cursor does not belong to this request".into(),
         ));
     }
-    if cursor.generation != generation {
+    if cursor.generation != generation || cursor.semantic_snapshot.as_deref() != semantic_snapshot {
         return Ok(PageOffset::Stale);
     }
     Ok(PageOffset::Current(cursor.offset))
@@ -1558,12 +1576,13 @@ fn node_matches_filters(
 
 fn is_local_variable(node: &CodeNode, file_nodes: &[CodeNode]) -> bool {
     node.kind == NodeKind::Variable
-        && file_nodes.iter().any(|enclosing| {
-            matches!(enclosing.kind, NodeKind::Function | NodeKind::Method)
-                && enclosing.id != node.id
-                && enclosing.start_line <= node.start_line
-                && enclosing.end_line >= node.end_line
-        })
+        && (node.is_local
+            || file_nodes.iter().any(|enclosing| {
+                matches!(enclosing.kind, NodeKind::Function | NodeKind::Method)
+                    && enclosing.id != node.id
+                    && enclosing.start_line <= node.start_line
+                    && enclosing.end_line >= node.end_line
+            }))
 }
 
 fn path_matches_prefix(path: &str, prefix: &str) -> bool {
@@ -1631,6 +1650,7 @@ mod tests {
             body,
             documentation: None,
             exported: Some(true),
+            is_local: false,
         }
     }
 

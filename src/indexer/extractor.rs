@@ -290,6 +290,12 @@ impl Extractor {
 
             let name = node_text(&name_capture.node, source_bytes);
             let def_node = &def_capture.node;
+            let is_local = kind == NodeKind::Variable
+                && matches!(
+                    language,
+                    Language::JavaScript | Language::Jsx | Language::TypeScript | Language::Tsx
+                )
+                && has_function_ancestor(def_node);
 
             // 1-based lines (tree-sitter rows are 0-based)
             let start_line = def_node.start_position().row as u32 + 1;
@@ -348,6 +354,7 @@ impl Extractor {
                         body: Some(body),
                         documentation,
                         exported: Some(exported),
+                        is_local,
                     };
                 }
                 continue;
@@ -368,6 +375,7 @@ impl Extractor {
                 body: Some(body),
                 documentation,
                 exported: Some(exported),
+                is_local,
             });
         }
 
@@ -1028,6 +1036,26 @@ fn find_enclosing_node(file_nodes: &[CodeNode], line: u32) -> Option<&CodeNode> 
         }
     }
     best
+}
+
+/// JS/TS callbacks have lexical scope even when they have no symbol name.
+fn has_function_ancestor(node: &tree_sitter::Node) -> bool {
+    let mut current = node.parent();
+    while let Some(parent) = current {
+        if matches!(
+            parent.kind(),
+            "function_declaration"
+                | "generator_function_declaration"
+                | "function_expression"
+                | "generator_function"
+                | "arrow_function"
+                | "method_definition"
+        ) {
+            return true;
+        }
+        current = parent.parent();
+    }
+    false
 }
 
 /// Check if a tree-sitter node is inside an `export_statement` ancestor.

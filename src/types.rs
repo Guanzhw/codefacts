@@ -402,6 +402,9 @@ pub struct CodeNode {
     pub documentation: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub exported: Option<bool>,
+    /// A variable inside a function scope, including unnamed callbacks.
+    #[serde(default)]
+    pub is_local: bool,
 }
 
 // ---------------------------------------------------------------------------
@@ -699,6 +702,7 @@ mod tests {
             body: Some("function hello() {}".to_string()),
             documentation: None,
             exported: Some(true),
+            is_local: false,
         };
 
         let json = serde_json::to_string(&node).unwrap();
@@ -1135,6 +1139,7 @@ mod tests {
             body: None,
             documentation: None,
             exported: None,
+            is_local: false,
         };
 
         let json = serde_json::to_string(&node).unwrap();
@@ -1160,6 +1165,7 @@ mod tests {
             body: Some("fn test() {}".to_string()),
             documentation: Some("/// A test method".to_string()),
             exported: Some(true),
+            is_local: false,
         };
 
         let json = serde_json::to_string(&node).unwrap();
@@ -1186,6 +1192,7 @@ mod tests {
             body: Some("greet() { return 'hello'; }".to_string()),
             documentation: Some("Greeting method".to_string()),
             exported: Some(false),
+            is_local: false,
         };
 
         let json = serde_json::to_string(&node).unwrap();

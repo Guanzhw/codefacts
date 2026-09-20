@@ -241,6 +241,7 @@ test('packed launcher installs the matching optional package and speaks MCP', as
   ], process.env);
   const initialized = await client.request(1, 'initialize');
   assert.equal(initialized.result.serverInfo.name, 'codefacts');
+  assert.equal(initialized.result.serverInfo.version, launcher.PACKAGE_VERSION);
   client.notify('notifications/initialized');
   const tools = await client.request(2, 'tools/list');
   assert.deepEqual(tools.result.tools.map((tool) => tool.name), ['map', 'search', 'outline', 'expand', 'path']);
@@ -250,5 +251,13 @@ test('packed launcher installs the matching optional package and speaks MCP', as
   });
   assert.equal(search.result.isError, false);
   assert.match(search.result.content[0].text, /AuthService/);
+  const markdown = await client.request(4, 'tools/call', {
+    name: 'search',
+    arguments: { query: 'AuthService', format: 'markdown' },
+  });
+  assert.equal(markdown.result.isError, false);
+  assert.equal(markdown.result.structuredContent, undefined);
+  assert.match(markdown.result.content[0].text, /AuthService/);
+  assert.match(markdown.result.content[0].text, /format: markdown/);
   await client.close();
 });

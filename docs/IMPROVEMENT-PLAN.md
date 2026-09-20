@@ -7,11 +7,48 @@ rules; this page owns the active queue and investment decisions.
 
 ## Current priorities
 
+The owner's original objective is better effectiveness while also controlling
+token cost, with effectiveness taking priority. On 2026-09-20 we corrected our
+overemphasis on token savings as an investment prerequisite. Continue bounded
+investigation and improvement of task quality, measuring and limiting token
+overhead in the same work; failure to save tokens alone is not a reason to stop. The completed
+[36-attempt Luna/OpenSession evaluation](LUNA-OPENSESSION-EVAL-2026-09-20.md)
+remains unchanged: CodeFacts passed 12/12, versus 11/12 for each alternative, but
+had 9 fully correct answers versus ordinary inspection's 10 and CodeGraph's 11.
+These mixed, scoring-sensitive results establish neither an overall quality win
+nor a reason to replace CodeFacts merely because CodeGraph uses fewer tokens.
+
+The [H05/H06 follow-up](ANSWER-QUALITY-FOLLOWUP-2026-09-20.md) found that the
+decisive implementation facts were already visible: the errors occurred in the
+answers, with a comment/implementation mismatch in H05. It supplies no new
+ranking or larger-output requirement. The same boundary audit independently
+reproduced and fixed single-line source excerpts falsely reporting
+`truncated=false` after the 4 KiB limit. All 16 native boundary checks now pass,
+with unchanged source excerpts. Subsequent model comparisons need an independent
+task or new failure evidence, frozen quality criteria, and a stopping rule; the
+completed 36-run campaign stays closed.
+Improve correctness and completeness while tracking token cost, reducing repeated
+reads and redundant evidence where that preserves the quality gain. Judge the
+benefit and its cost together, with effectiveness taking priority.
+
+The [Markdown acceptance](MARKDOWN-ACCEPTANCE-2026-09-20.md) adds opt-in text
+presentation for 0.1.15 while keeping compact JSON as default. Complete native
+queries preserve 285 relationship rows with 27.9% fewer encoding-proxy body
+tokens. Four Luna/medium attempts are closed with every cost and failure
+retained; no pair met the frozen strict completeness gate, so there is no
+quality-gated end-to-end savings claim. Both formats exposed long-cursor copy
+errors, supplying a concrete future usability issue without proving that
+Markdown caused it.
+
 | Priority | Work | Evidence and completion condition | Status |
 | --- | --- | --- | --- |
 | 1 | Implement explicit member-query ranking | Native Top-1 improved 7/12 to 10/12 on earlier cases and 9/12 to 12/12 on a third repository; regression tests preserve pagination, filters and context. | Complete; retained in `5a88820`. [Results and cost](MEMBER-RANKING-IMPLEMENTATION-2026-09-13.md). |
-| 2 | Verify usefulness during real repository work | The complete-runtime follow-up ran all three arms; all answers scored 2/4 and no quality-gated savings were established. CodeFacts supplied the complete contract, but the final answer omitted required distinctions. | Complete; limited maintenance retained. [Results](ISSUE1-RUNTIME-RECOVERY-2026-09-13.md). |
-| 3 | Resolve a demonstrated remaining retrieval defect | Container names can collide with document headings; explicit kind filters already exist. Require a concrete failed lookup and independent source-labeled cases before changing default ranking. | Evidence collection only. |
+| 2 | Verify usefulness during real repository work | The earlier diagnosis scored 2/4 in all arms. A new edit-and-test task delivered a real fix with all patches passing 4/4, but both MCP arms made zero formal calls and CodeFacts had execution-policy interference. No retrieval-efficiency gain was established. | Both campaigns closed; limited maintenance retained. [Diagnosis](ISSUE1-RUNTIME-RECOVERY-2026-09-13.md), [edit-and-test pilot](TEMP-CLEANUP-PILOT-2026-09-16.md). |
+| 3 | Improve real-use output and navigation failures | Fixed: callback locals no longer enter top_level; compact MCP responses share hashes/anchors; expand has a 16 KiB page budget and snapshot-bound continuation. Two real expand cases retain equivalent facts with 44.2% / 44.8% fewer response bytes including continuation. | Implemented and verified locally; release/client update pending. Plugin source guidance is updated separately in agent-plugins. [Implementation and acceptance](COMPACT-RESPONSES-2026-09-20.md), [original audit](OPENSESSION-HISTORY-AUDIT-2026-09-20.md). |
+| 4 | Compare real-history workflows with actual tool use | Six source-backed tasks, three arms, two repetitions, all evaluated with Luna/medium. All 24 tool attempts made relevant MCP calls. Initial and adjudicated scores, every attempt's cost, answers, and runtime hashes are retained. | Complete; campaign closed. Investment interpretation corrected to reflect the owner's original effectiveness-and-efficiency objective. [Results and decision](LUNA-OPENSESSION-EVAL-2026-09-20.md), [reusable corpus](../benchmarks/agent-eval/opensession-corpus/README.md). |
+| 5 | Diagnose incomplete or inaccurate task answers | H05/H06 decisive source was already visible; no retrieval defect explains the omissions. Independently reproduced and fixed false completeness metadata for long single-line definitions. Native checks improved 8/16 to 16/16 with identical excerpts; 762 Rust tests passed. | Complete; [diagnosis and repair](ANSWER-QUALITY-FOLLOWUP-2026-09-20.md). End-to-end answer gains remain unmeasured. |
+| 6 | Add optional Markdown and measure output/task cost separately | Five-tool protocol and native continuation unions preserve facts; 774 Rust and 23 npm tests pass. Four Luna attempts retain original scores, actual usage and failures. | Complete for the 0.1.15 release scope; [acceptance and limitations](MARKDOWN-ACCEPTANCE-2026-09-20.md). |
+| Next | Reduce observed cursor-consumption errors | Long cursor copy errors occurred in both JSON and Markdown; investigate shorter or programmatic continuation with native compatibility checks before a separately frozen task test. | Evidence available; no replacement runs or recurring model campaign scheduled. |
 | Continuous | Maintain source correctness, freshness, and installation reliability | Reproduce a reported failure, fix its owning boundary, add the smallest meaningful regression and verify the affected native/protocol/platform surface. | Triggered by failures. |
 
 ## Delivery and investment loop
@@ -48,11 +85,55 @@ response, so the answer omission does not establish a ranking defect. Keep both
 campaigns closed; another model run needs a new independently sourced consumer
 task or changed failure evidence, not a prompt tweak or relaxed scoring.
 
+The subsequent temporary-fixture cleanup pilot met that new-task gate and is
+now closed. All three patches passed four required quality criteria, with 24
+failure/success probes and 162 existing tests per patch. The selected OpenSession
+repair also passed Linux acceptance and was committed on an isolated branch.
+Formal usage was 1,842,741 tokens plus 261,756 readiness tokens; unaggregated
+engineering cost remains unknown. Both MCP arms chose ordinary tools, and two
+real policy rejections interfered with the CodeFacts attempt. Retain the repair
+and reusable edit-mode runner, preserve the raw costs, and make no tool-savings
+claim from this campaign. That pilot alone supplies no demonstrated retrieval
+defect; the subsequent history audit below supplies new, separate evidence.
+
+The 2026-09-20 audit reviewed one actual OpenSession task family: 129 task files,
+79 with CodeFacts use, 899 executed MCP calls including two maps of a temporary
+upstream checkout. A source-backed path was explicitly used in a review conclusion.
+The same history shows oversized output, retries with lossy manual projection,
+unconsumed pagination and unnecessary fixed overview steps. Six bounded native
+query comparisons reproduce current failures and mixed CodeGraph outcomes; they
+do not measure end-to-end agent token savings. Prioritize these specific fixes
+before another model campaign. Keep CodeFacts for now: CodeGraph helped some
+discovery queries but missed another exact target and retained same-name noise.
+The [history audit](OPENSESSION-HISTORY-AUDIT-2026-09-20.md) separates measured
+findings, loaded-version evidence and proposed completion conditions.
+
+The subsequent [compact-response implementation](COMPACT-RESPONSES-2026-09-20.md)
+passed the frozen native cases and preserves evidence across continuation pages.
+The release work would update the separately maintained plugin
+pin/guidance and verify a new client's loaded schema; it remains pending after
+the subsequent Luna investment decision. Further relation-ranking
+changes still require their own correctness evidence. Native byte reductions
+are measured. Real-client comprehension and three-OS CI were then exercised in the
+[four-run client acceptance](CLIENT-ACCEPTANCE-2026-09-20.md): all answers passed
+their four correctness criteria, both compact runs followed actual cursors and
+preserved evidence interpretation, and all six existing CI jobs passed. Compact
+avoided MCP output truncation, but total tokens rose 42.0% and 3.6% in the two
+pairs; elapsed time was mixed. This guided n=1 comparison required a continuation
+page and did not equalize retrieved facts or source reads. Retain the 16 KiB
+initial budget for bounded output, make no end-to-end savings claim, and close
+this campaign without replacement runs. Plugin release/install verification is
+still outstanding.
+
+The two native cases needed two calls instead of one; their recorded cumulative
+tool time did not decrease. Treat 16 KiB as an initial budget, and choose any later
+adjustment by correct-task total cost rather than response size alone.
+
 The next model-based campaign requires a named real task, frozen comparator
 versions/configurations, correctness rubric, invocation and time limits, and
 a concrete decision it can change. Native retrieval checks come first. Raw
-output bytes describe tool behavior; only matched correct task outcomes can
-establish a token-efficiency claim. External adoption and actual maintenance
+output bytes describe tool behavior; matched correct task outcomes are required
+before evaluating a token-efficiency claim. External adoption and actual maintenance
 effort are still needed before broad product investment.
 
 ## Product boundaries and evidence owners

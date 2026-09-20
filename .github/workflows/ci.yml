@@ -33,6 +33,8 @@ jobs:
         run: |
           node npm/scripts/check-release-version.mjs
           node --test npm/test/*.test.mjs
+      - name: Verify agent evaluation accounting and campaign
+        run: node --test benchmarks/agent-eval/runner.test.mjs benchmarks/agent-eval/opensession-corpus/campaign.test.mjs
 
   quality:
     name: Formatting and lints

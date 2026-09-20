@@ -319,6 +319,9 @@ fn build_node_metadata(node: &CodeNode) -> String {
     if let Some(exported) = node.exported {
         map.insert("exported".to_string(), serde_json::Value::from(exported));
     }
+    if node.is_local {
+        map.insert("local".to_string(), serde_json::Value::Bool(true));
+    }
     serde_json::Value::Object(map).to_string()
 }
 
@@ -980,14 +983,15 @@ impl GraphStore {
         }
         if options.top_level {
             query.push_str(
-                " AND (nodes.type <> 'variable' OR NOT EXISTS ( \
+                " AND (nodes.type <> 'variable' OR ( \
+                    coalesce(json_extract(nodes.metadata, '$.local'), 0) = 0 AND NOT EXISTS ( \
                     SELECT 1 FROM nodes enclosing \
                     WHERE enclosing.file_path = nodes.file_path \
                       AND enclosing.type IN ('function', 'method') \
                       AND enclosing.id <> nodes.id \
                       AND enclosing.start_line <= nodes.start_line \
                       AND enclosing.end_line >= nodes.end_line \
-                ))",
+                )))",
             );
         }
         query.push_str(
@@ -1328,6 +1332,7 @@ mod tests {
             body: Some(format!("function {}() {{}}", name)),
             documentation: Some(format!("Docs for {}", name)),
             exported: Some(true),
+            is_local: false,
         }
     }
 
@@ -2405,6 +2410,7 @@ mod tests {
             body: None,
             documentation: None,
             exported: None,
+            is_local: false,
         };
         store.upsert_node(&node).unwrap();
         let got = store.get_node("n1").unwrap().unwrap();

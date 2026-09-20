@@ -1,11 +1,30 @@
 # Agent task evaluation
 
 Development-only collection for the [product scorecard](../../docs/EVALUATION.md).
-The initial runner evaluates a fixed Codex CLI agent (`gpt-5.6-luna`, medium
-reasoning) with ordinary shell reads and configurable MCP arms. The metrics can
-be used for other tools; another agent/provider needs its own usage adapter.
+The runner evaluates a Codex CLI agent with ordinary shell tools and
+configurable MCP arms, for read-only questions or edit-and-test tasks. The
+metrics can be used for other tools; another agent/provider needs its own usage
+adapter. Older manifests retain `gpt-5.6-luna`, medium reasoning and read-only
+execution. New campaigns should explicitly freeze their model, reasoning
+effort and mode identically across arms.
+Both modes disable account apps, memories and skill search, and skip host skill
+discovery to keep account plugin catalogs and prior history out of the task.
+These switches complement the existing plugin switches: disabling plugins
+alone left the account app catalog visible in a Codex 0.154 readiness run.
+Legacy mode/model defaults remain compatible; command arguments now include
+this observed isolation fix.
 
 ## Run a controlled comparison
+
+The [OpenSession history corpus](opensession-corpus/README.md) freezes six
+real-history source questions, source-backed grading criteria, and a Luna
+comparison of ordinary tools, CodeFacts, and CodeGraph. Its native preparation,
+readiness, formal execution, and manual audit are separate steps.
+Its [completed 36-attempt results](../../docs/LUNA-OPENSESSION-EVAL-2026-09-20.md)
+retain both grading views, all attempt costs, executed tool counts, and the
+original decision alongside the corrected interpretation of the owner's objective:
+better effectiveness while controlling token cost.
+Reuse those records before starting another run.
 
 For an existing reviewed campaign, reuse its evidence before launching models:
 
@@ -66,11 +85,74 @@ MCP-first navigation when an MCP is configured. Remove the field for a separate
 natural-choice condition. Preserve non-use as an adoption observation; do not
 attribute savings to a query that never happened.
 
+## Edit-and-test campaigns
+
+Set manifest-level execution fields and an optional task-specific temporary
+directory:
+
+```json
+{
+  "mode": "edit",
+  "model": "gpt-6-astra",
+  "reasoningEffort": "high",
+  "tasks": [{
+    "id": "test-cleanup",
+    "root": "D:/Eval/snapshots/ordinary-run-1",
+    "tempDir": "D:/Eval/temp/ordinary-run-1",
+    "prompt": "The independently sourced development task and allowed scope."
+  }],
+  "arms": [{ "id": "ordinary", "configOverrides": [] }],
+  "runs": 1
+}
+```
+
+`mode` accepts `readonly` (the compatibility default) or `edit`. Edit mode uses
+the `workspace-write` sandbox and permits focused source changes and existing
+build/test commands. Both shell and configured MCP tools remain optional.
+The common prompt prohibits network access, dependency installation, other
+snapshots, user configuration, evaluation answers, external agents, shell
+invocations of CodeFacts/CodeGraph, commits and history rewrites.
+Use a model/reasoning combination supported by the pinned CLI runtime; the
+example is illustrative, not an experiment result or model recommendation.
+
+Create a fresh source snapshot and temporary directory for every arm and
+repetition before invoking the runner. `task.tempDir` must be an absolute path
+to an existing directory; it supplies the child process's `TEMP`, `TMP` and
+`TMPDIR` while preserving its other inherited environment. Only that path is
+recorded, never the inherited environment. The runner does not create/reset
+source snapshots or clean test artifacts. Reusing a modified snapshot changes
+the experiment, so use separate manifests or update frozen per-run paths before
+launching each arm. Record initial source hashes and tool/index preparation
+costs outside the snapshots.
+
+Freeze observable acceptance criteria before model calls. Grade the actual
+patch, independent test results and any repeated-run or failure-path checks
+before comparing usage. The agent's final answer and exit status alone cannot
+establish a correct repair. The existing usage parser and manual review gate
+apply to both modes.
+
+The completed [OpenSession cleanup pilot](../../docs/TEMP-CLEANUP-PILOT-2026-09-16.md)
+uses the frozen [four-required-criteria rubric](temp-cleanup-rubric.md).
+Its [reviewed results](temp-cleanup-results.json) separate passing patches from
+execution interference and natural MCP non-use. This stricter edit-pilot schema
+is separate from the older `summarize.mjs` schema; do not aggregate it through
+the older 3/4 pass threshold. Deterministic acceptance needs no model calls:
+
+```powershell
+node benchmarks/agent-eval/temp-cleanup/acceptance.mjs `
+  D:/Eval/opensession-patched D:/Eval/temp-cleanup-check
+```
+
+Use a disposable checkout at the report's frozen source plus the accepted patch,
+with dependencies and build already prepared, and a fresh output directory.
+
 ## Artifacts and accounting
 
 Each run retains `request.json`, `stdout.jsonl`, `stderr`, `answer.md`,
 `timing.json`, `metrics.json`, and `transcript-tools.json`. Repeated invocation
 allocates another attempt directory instead of overwriting the first attempt.
+`request.json` includes the resolved execution mode, model, reasoning effort,
+sandbox, full CLI arguments and the selected temporary directory.
 Keep raw logs local unless their source contents have been cleared for sharing.
 
 - `turn.completed.usage` supplies cumulative input/output usage. Total tokens
@@ -102,7 +184,8 @@ node benchmarks/agent-eval/runner.mjs `
 node --test benchmarks/agent-eval/runner.test.mjs
 ```
 
-The eight regression cases cover observed accounting and configuration failures.
+The regression cases cover observed accounting and execution configuration
+failures, including a real local child-process temporary-directory check.
 The [pilot rubric](pilot-rubric.md) applies only to its pinned snapshots, and the
 [pilot report](../../docs/EVALUATION-PILOT-2026-09-11.md) records the actual limits
 of the initial experiment. Freeze new rubrics before testing other repositories.
@@ -118,6 +201,13 @@ twenty runs in [cycle-2-freeze.json](cycle-2-freeze.json), with an independent
 the quality improvement, raw-token regressions, one MCP non-use observation,
 engineering overhead, and implemented reversion. Failed answers remain in
 workload cost; a pair only gets quality-gated savings when both answers pass.
+
+The [Markdown format acceptance](../../docs/MARKDOWN-ACCEPTANCE-2026-09-20.md)
+compares compact JSON with optional text-only Markdown on two pinned questions
+using Luna/medium. Its [results](markdown-results.json) retain all four answers,
+strict completeness grades, native byte/encoding counts, provider usage,
+readiness costs, actual calls, and failures. See the frozen
+[rubric](markdown-rubric.md); no pair qualified for a task-savings claim.
 
 The [retrieval diagnosis](../../docs/RETRIEVAL-DIAGNOSIS-2026-09-12.md) replays
 twelve frozen queries without evaluation-model calls. Its

@@ -1,0 +1,320 @@
+{
+  "schema": "codefacts-edit-pilot-reviewed-v1",
+  "campaign": "temp-cleanup-2026-09-16",
+  "status": "closed",
+  "source": {
+    "repository": "Guanzhw/AgentSession",
+    "revision": "420688e01c736b0db709ce3ba5525ef757e0ec5a",
+    "issue": "https://github.com/Guanzhw/AgentSession/issues/1",
+    "scope": "Seven fixtures in test/core.test.mjs and test/codex-provider.test.mjs",
+    "previouslyUsedRepository": true
+  },
+  "configuration": {
+    "mode": "edit",
+    "model": "gpt-6-astra",
+    "reasoningEffort": "high",
+    "cliVersion": "0.154.0-alpha.6.2",
+    "platform": "win32",
+    "node": "v26.5.1",
+    "sandbox": "workspace-write",
+    "windowsSandbox": "elevated",
+    "approvalPolicy": "never",
+    "codefactsVersion": "0.1.14",
+    "codegraphVersion": "1.6.0",
+    "indexState": "warm",
+    "naturalToolChoice": true,
+    "isolatedAppsMemorySkills": true,
+    "frozenAt": "2026-09-15T16:25:36.814Z",
+    "order": [
+      "baseline",
+      "codegraph",
+      "codefacts"
+    ],
+    "attemptsPerArm": 1,
+    "formalTimeoutMs": 720000,
+    "passScore": 4,
+    "runnerSha256": "590dfc17f66fd2e535e96453bd94dd987f28bb5916fa70b801a5870726516dd8",
+    "frozenFileHashes": {
+      "task.txt": "a0b64653a71d052105701f4ba11620b6be1c96b4c13565f98813e1bd1d84d525",
+      "probe-hooks.mjs": "cd98a93a80232f3dbf24ac338df215c3b34ac5d2a00274ae84ad450de29c4e7a",
+      "acceptance.mjs": "203685a8971faa3fefd31ffc36ebac6a625ed235227b74e75b7ea60084746d8c"
+    },
+    "snapshotTrackedFilesVerifiedPerArm": 321
+  },
+  "arms": [
+    {
+      "arm": "baseline",
+      "attempt": 1,
+      "patchId": "patch-b",
+      "patchSha256": "0e9d0761bbed16c446f920d93b5641ae52a2362af1a933668ebbf62b005cee44",
+      "quality": {
+        "criteria": {
+          "Q1": 1,
+          "Q2": 1,
+          "Q3": 1,
+          "Q4": 1
+        },
+        "score": 4,
+        "pass": true,
+        "reasons": {
+          "Q1": "All original assertions, expected data, names and provider calls are preserved. Only the two scoped test files change. Explicit try/finally wraps the seven fixtures and T1 writer setup. XDG restoration remains before owned-directory removal. Both complete files execute 162 tests with no skips or failures.",
+          "Q2": "Fourteen normal probes cover every scoped fixture twice. Each raw record shows exactly one target directory created and successfully removed by an exact owned rmSync call; all sentinels remain unchanged. Both T1 passes record writer close before removal.",
+          "Q3": "All seven assertion-failure probes plus the second runtime probe with XDG absent execute one failing test with the expected sentinel. All owned directories are removed. In-process initial/final XDG records match, including the absent-value case.",
+          "Q4": "The T1 writer-setup probe records injection at sequence 3, successful closure of writer-1 at sequence 4 and exact owned removal at sequence 5. The T2 writeFileSync setup failure preserves its sentinel and removes the exact fixture. Both run as single expected failures."
+        },
+        "windowsProbesPassed": 24,
+        "fullFiles": {
+          "tests": 162,
+          "pass": 162,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        }
+      },
+      "execution": {
+        "completed": true,
+        "rawRunnerStatus": "invalid-environment",
+        "reviewedStatus": "valid-after-independent-manual-audit",
+        "policyRejectedCommandLaunches": 0,
+        "cleanExecutionEligible": true
+      },
+      "usage": {
+        "inputTokens": 522391,
+        "cachedInputTokens": 464000,
+        "uncachedInputTokens": 58391,
+        "outputTokens": 6866,
+        "totalTokens": 529257,
+        "rolloutReconciled": true
+      },
+      "wallTimeMs": 308792,
+      "calls": {
+        "stdoutShellEvents": 15,
+        "transcriptShellAttempts": 15,
+        "formalMcp": 0
+      },
+      "loggedShellOutputBytes": 206184,
+      "evidence": {
+        "metrics": "formal/temp-cleanup/baseline/run-001/metrics.json",
+        "metricsSha256": "9b4b00a84b9e09db149012be3d194b254ab75a0e1dbd1d324ef644490b9d481b",
+        "timing": "formal/temp-cleanup/baseline/run-001/timing.json",
+        "timingSha256": "dcad3997c88d6bab2e7e05456a8b9887d61660b1b25be8ffb36e0f69509a8425",
+        "acceptance": "verification/patch-b/acceptance.json"
+      }
+    },
+    {
+      "arm": "codegraph",
+      "attempt": 1,
+      "patchId": "patch-c",
+      "patchSha256": "b983f620f1ecbbfc08861cf9531d36388d800717a556877e1969abb5905c7a82",
+      "quality": {
+        "criteria": {
+          "Q1": 1,
+          "Q2": 1,
+          "Q3": 1,
+          "Q4": 1
+        },
+        "score": 4,
+        "pass": true,
+        "reasons": {
+          "Q1": "All original assertions, expected data, names and provider calls are preserved. Only the two scoped test files change. A teardown is registered immediately after each owned directory is created. T1 writer is protected by an inner finally; the existing closeDb finally runs before teardown. Both complete files execute 162 tests with no skips or failures.",
+          "Q2": "Fourteen normal probes cover every scoped fixture twice. Each raw record shows exactly one target directory created and successfully removed by an exact owned rmSync call; all sentinels remain unchanged. Both T1 passes record writer close before removal.",
+          "Q3": "All seven assertion-failure probes plus the second runtime probe with XDG absent execute one failing test with the expected sentinel. All owned directories are removed. In-process initial/final XDG records match, including the absent-value case.",
+          "Q4": "The T1 writer-setup probe records injection at sequence 3, successful closure of writer-1 at sequence 4 and exact owned removal at sequence 5. The T2 writeFileSync setup failure preserves its sentinel and removes the exact fixture. Both run as single expected failures."
+        },
+        "windowsProbesPassed": 24,
+        "fullFiles": {
+          "tests": 162,
+          "pass": 162,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        }
+      },
+      "execution": {
+        "completed": true,
+        "rawRunnerStatus": "invalid-environment",
+        "reviewedStatus": "valid-after-manual-audit",
+        "policyRejectedCommandLaunches": 0,
+        "cleanExecutionEligible": true
+      },
+      "usage": {
+        "inputTokens": 565972,
+        "cachedInputTokens": 515200,
+        "uncachedInputTokens": 50772,
+        "outputTokens": 9648,
+        "totalTokens": 575620,
+        "rolloutReconciled": true
+      },
+      "wallTimeMs": 368659,
+      "calls": {
+        "stdoutShellEvents": 14,
+        "transcriptShellAttempts": 14,
+        "formalMcp": 0
+      },
+      "loggedShellOutputBytes": 292346,
+      "evidence": {
+        "metrics": "formal/temp-cleanup/codegraph/run-001/metrics.json",
+        "metricsSha256": "04a1c9aa07d8a4a32fcb46574b0617622567420f48404365db24fd56be0fc741",
+        "timing": "formal/temp-cleanup/codegraph/run-001/timing.json",
+        "timingSha256": "31539eaadf3dc93ecf2ff5317a5340a35cd993ec7fcfe89a6cb3dfcb6fbcd612",
+        "acceptance": "verification/patch-c/acceptance.json"
+      }
+    },
+    {
+      "arm": "codefacts",
+      "attempt": 1,
+      "patchId": "patch-a",
+      "patchSha256": "b983f620f1ecbbfc08861cf9531d36388d800717a556877e1969abb5905c7a82",
+      "quality": {
+        "criteria": {
+          "Q1": 1,
+          "Q2": 1,
+          "Q3": 1,
+          "Q4": 1
+        },
+        "score": 4,
+        "pass": true,
+        "reasons": {
+          "Q1": "All original assertions, expected data, names and provider calls are preserved. Only the two scoped test files change. A teardown is registered immediately after each owned directory is created. T1 writer is protected by an inner finally; the existing closeDb finally runs before teardown. Both complete files execute 162 tests with no skips or failures.",
+          "Q2": "Fourteen normal probes cover every scoped fixture twice. Each raw record shows exactly one target directory created and successfully removed by an exact owned rmSync call; all sentinels remain unchanged. Both T1 passes record writer close before removal.",
+          "Q3": "All seven assertion-failure probes plus the second runtime probe with XDG absent execute one failing test with the expected sentinel. All owned directories are removed. In-process initial/final XDG records match, including the absent-value case.",
+          "Q4": "The T1 writer-setup probe records injection at sequence 3, successful closure of writer-1 at sequence 4 and exact owned removal at sequence 5. The T2 writeFileSync setup failure preserves its sentinel and removes the exact fixture. Both run as single expected failures."
+        },
+        "windowsProbesPassed": 24,
+        "fullFiles": {
+          "tests": 162,
+          "pass": 162,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        }
+      },
+      "execution": {
+        "completed": true,
+        "rawRunnerStatus": "invalid-environment",
+        "reviewedStatus": "environment-interfered",
+        "policyRejectedCommandLaunches": 2,
+        "cleanExecutionEligible": false
+      },
+      "usage": {
+        "inputTokens": 729588,
+        "cachedInputTokens": 680832,
+        "uncachedInputTokens": 48756,
+        "outputTokens": 8276,
+        "totalTokens": 737864,
+        "rolloutReconciled": true
+      },
+      "wallTimeMs": 339517,
+      "calls": {
+        "stdoutShellEvents": 15,
+        "transcriptShellAttempts": 17,
+        "formalMcp": 0
+      },
+      "loggedShellOutputBytes": 279388,
+      "evidence": {
+        "metrics": "formal/temp-cleanup/codefacts/run-001/metrics.json",
+        "metricsSha256": "cde0d56801a2bda7a1a6dc33726e956b9151c06a98e4d883b431b15385437d36",
+        "timing": "formal/temp-cleanup/codefacts/run-001/timing.json",
+        "timingSha256": "a6bd5a67c5f4279f5244da31ba48d3b4be612f93695e4579ea70c60bfdb454a1",
+        "acceptance": "verification/patch-a/acceptance.json"
+      }
+    }
+  ],
+  "comparison": {
+    "cleanThreeArmEfficiencyComparisonAvailable": false,
+    "retrievalBenefitAttributionAvailable": false,
+    "qualityGatedTokenSavings": null,
+    "qualityGatedTimeSavings": null,
+    "reasons": [
+      "Both configured MCP arms made zero formal MCP calls despite passing real query readiness.",
+      "CodeFacts experienced two confirmed command-launch policy rejections; patch acceptance cannot remove this execution interference.",
+      "One natural-choice task and one attempt per arm do not establish a general causal efficiency effect."
+    ]
+  },
+  "accounting": {
+    "formalTotalTokens": 1842741,
+    "cleanReadiness": [
+      {
+        "arm": "baseline",
+        "totalTokens": 31233,
+        "mcpCalls": 0
+      },
+      {
+        "arm": "codegraph",
+        "totalTokens": 61576,
+        "mcpCalls": 1
+      },
+      {
+        "arm": "codefacts",
+        "totalTokens": 60370,
+        "mcpCalls": 1
+      }
+    ],
+    "cleanReadinessTotalTokens": 153179,
+    "excludedReadinessTokens": 108577,
+    "readinessTotalTokens": 261756,
+    "recordedAgentTokensIncludingPreparation": 2104497,
+    "engineeringTokens": null,
+    "engineeringTokensNote": "Controller, reviewer, setup and evaluator engineering usage was not aggregated at this cutoff; recorded agent tokens are not total project cost.",
+    "actualBill": null,
+    "elapsedMeasurement": "Formal process launch to exit, including tool startup and all within-attempt recovery.",
+    "outputMeasurement": "Logged shell output bytes may precede model-visible truncation; not tokens or exact context size."
+  },
+  "review": {
+    "anonymousQualityReview": true,
+    "rawWindowsProbeRecordsReviewed": 72,
+    "criteriaAllRequired": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4"
+    ],
+    "rawFlagsPreserved": true,
+    "retainedInternalRetries": true,
+    "modelReruns": 0,
+    "parserChangedAfterFreeze": false,
+    "qualityEvidenceSha256": "cb6e290a156da9b19443e5eb2a9a8065f736c3a7d8370011c0c711c49e58c366",
+    "executionAuditSha256": "d7bdb5faacfc1012846bc927b7f5b61c269e70d8abb69d7c0d12a1620c6da79f",
+    "baselineAuditSha256": "33e422bd02420b5f6062fd9c797bd2ec5a2bcb2173c8ea90f98bd3ae6d140bc5",
+    "executionAuditNote": "Ordinary and CodeGraph warnings were manually cleared; CodeFacts policy rejections remain substantive. The exact rejecting policy clause is not present in the logs."
+  },
+  "delivery": {
+    "repository": "Guanzhw/AgentSession",
+    "commit": "d4d9ae36e9c8d75bd01e04afdc5f31c6b93fab92",
+    "branch": "codex/test-fixture-cleanup",
+    "selectedPatches": [
+      "patch-a",
+      "patch-c"
+    ],
+    "selectionReason": "A and C are byte-identical. Their early test teardown registration covers setup and assertion failures with smaller changes and less reindentation, while retaining the focused inner writer finally. B is also correct and acceptable; its broader try/finally reindentation adds review churn without a demonstrated correctness gain for this frozen task.",
+    "liveDirtyFilesHashVerified": 48,
+    "liveWorkingTreeUnchanged": true,
+    "patchAppliesToLiveTree": true,
+    "isolatedWorktreeClean": true,
+    "pushed": false,
+    "checks": {
+      "prePush": true,
+      "build": true,
+      "windowsTests": 162,
+      "windowsProbes": 24,
+      "linuxTests": 162,
+      "linuxProbes": 24
+    },
+    "linux": {
+      "node": "v24.16.0",
+      "platform": "linux",
+      "probesPassed": 24,
+      "fullFilesPassed": 162
+    }
+  },
+  "decision": {
+    "investment": "limited-maintenance",
+    "continueThisCampaign": false,
+    "basis": "A real maintenance repair was delivered. This task supplies a natural non-use observation and no queried retrieval defect; no tool-efficiency win was established.",
+    "nextTrigger": "New independently sourced consumer work with an explicit decision, or a reproducible present-source correctness/retrieval/install failure."
+  },
+  "evidenceRoot": "Local ignored target/temp-cleanup-pilot-20260916; paths in this file are relative to that root. Raw transcripts are intentionally kept local."
+}

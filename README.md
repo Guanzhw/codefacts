@@ -60,7 +60,7 @@ Version 1 deliberately exposes exactly five read-only tools:
 | `expand` | One definition with a verified bounded source excerpt, plus callers, callees with explicit confidence, references, related tests, Markdown section text, and optional semantic references. |
 | `path` | A shortest bounded static calls path between confirmed symbols, with optional endpoint file-path disambiguation. |
 
-Every result is bounded, includes file/line/hash evidence, and refreshes the incremental index before answering. Its `freshness` object includes the canonical `repository_root` and fact-store `generation`, so a caller can verify that the facts belong to the intended project. `freshness.status` is `partial` when a source file could not be read, parsed, extracted, or accepted because it exceeded the indexing limit; the accompanying `files_failed` and reason counters make that gap explicit. Successful MCP results keep a compact serialized JSON `TextContent` for older clients and carry the equivalent object in `structuredContent`. A `no_static_path` result never claims that runtime execution is unreachable.
+Every result is bounded, includes file/line/hash evidence, and refreshes the incremental index before answering. Its `freshness` object includes the canonical `repository_root` and fact-store `generation`, so a caller can verify that the facts belong to the intended project. `freshness.status` is `partial` when a source file could not be read, parsed, extracted, or accepted because it exceeded the indexing limit; the accompanying `files_failed` and reason counters make that gap explicit. JSON modes return serialized JSON `TextContent` and an equivalent `structuredContent` object. Opt-in Markdown mode returns one text body. A `no_static_path` result never claims that runtime execution is unreachable.
 
 All five tools accept an optional `repository_root` project directory. It
 selects (and, on first use, indexes) that project's independent external SQLite
@@ -112,11 +112,64 @@ relationships are needed together.
 unresolved import/reference samples. It describes a static-analysis gap; it
 does not establish that a target is absent at runtime.
 
-`expand` always includes the same verified, 4 KiB-bounded definition excerpt
-for its single resolved symbol. Check each relationship's confidence: receiver
+`expand` includes a verified, 4 KiB-bounded definition excerpt
+for its single resolved symbol in the overview (`section: "all"`). Check each relationship's confidence: receiver
 calls without type binding remain heuristic candidates, including when only one
 same-named definition exists. Semantic references retain their separate
 availability/status contract.
+
+### Response formats
+
+All five MCP tools default to `format: "compact"`. File hashes occur once in
+`source_hashes[file_path]`; evidence retains its file, line range, extractor and
+confidence. Null fields and zero refresh counters are omitted; a missing refresh
+counter means zero. Repository identity, generation and freshness status remain.
+Empty result arrays remain explicit.
+
+In an `expand` neighborhood, `definition` is the relationship anchor. Callers
+and inbound references omit the repeated `to`; callees and outbound references
+omit the repeated `from`. The remaining endpoint and call-site evidence keep
+their original field names. A search `context_entries` neighborhood uses its
+own `symbol` as the anchor. `path` retains its ordered-node/edge representation.
+
+Compact `expand` responses are capped at **16 KiB of serialized JSON text**,
+including shared hashes and cursors. `limit` is a per-section maximum; the total
+budget may return fewer entries. A nonempty `next` maps unfinished section names
+to cursors. Continue only the section needed, with the same symbol and optional
+file disambiguator, for example:
+
+```json
+{"symbol":"getRuntimeProtocol","file_path":"src/protocol-runtime.ts","section":"callees","cursor":"<value from next.callees>"}
+```
+
+Selected sections return their facts and the definition, without repeating the
+source excerpt or implying that unrequested sections are empty. Cursors bind
+the repository, symbol, section and index generation. Semantic-reference cursors
+also bind the sorted LSP result; a changed result returns `stale_cursor`.
+Source excerpts still report their own truncation. An oversized ambiguous
+candidate list is explicitly truncated and asks for a file or paged search.
+
+This changes the default MCP output shape. Consumers that need the previous
+nested evidence can request `format: "full"`; `expand` with that format and no
+section/cursor retains the original per-category limit and has no 16 KiB cap.
+The Rust service's existing `expand` method retains its original response.
+
+Use `format: "markdown"` for an agent-readable text response with the same
+compact facts. Repeated fact fields share a table header; nested sections keep
+each definition/context anchor explicit, and multiline source uses code blocks.
+Hashes, confidence, resolution, empty results, truncation and continuation are
+retained. Markdown mode emits only `content[0].text`, with no duplicate
+`structuredContent`; consumers that parse JSON should use `compact` or `full`.
+
+Markdown `expand` uses the same **16 KiB** limit, measured on its actual rendered
+text. Page sizes can therefore differ from JSON. Continue the section named in
+`next` using the returned cursor and `format: "markdown"`. Source excerpts have
+their own 4 KiB limit and explicitly report truncation, including a cut within
+a single line. Read the cited source range when the excerpt is incomplete.
+
+The [Markdown acceptance report](docs/MARKDOWN-ACCEPTANCE-2026-09-20.md)
+records smaller native responses and mixed real Luna task costs. Compact JSON
+remains the default; response-size reductions do not guarantee task savings.
 
 `map.files_with_facts` is the number of indexed files that currently own at
 least one fact, while `map.indexed_files` is every successfully parsed,

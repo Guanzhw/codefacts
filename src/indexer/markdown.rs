@@ -58,6 +58,7 @@ pub fn extract_markdown(file_path: &str, source: &str) -> MarkdownExtraction {
                 body: None,
                 documentation: None,
                 exported: None,
+                is_local: false,
             },
         });
     }

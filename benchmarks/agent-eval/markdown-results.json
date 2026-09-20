@@ -1,0 +1,463 @@
+{
+  "schemaVersion": 1,
+  "sourceRevision": "543e874e697523bf474f494bcf897a17f19587de",
+  "sourceFiles": 446,
+  "sourceManifestSha256": "f622b8597df69ab3a92d04489e89ad12601525f962df88938bb65d7905ec9db9",
+  "sourceAndFrozenInputsUnchangedAfterRuns": true,
+  "candidateBinarySha256": "8086fe0ca13fa2511bbde86c52ba78b92a5f19dace2192c0b8bbe328231df487",
+  "candidateVersion": "0.1.15",
+  "implementationCommit": "73e43185a60282f20796ce6d454bd3380f8137e1",
+  "model": {
+    "mode": "readonly",
+    "model": "gpt-5.6-luna",
+    "reasoningEffort": "medium"
+  },
+  "lsp": "off",
+  "design": {
+    "prompts": [
+      {
+        "id": "protocol-cache-review",
+        "prompt": "我们准备处理这样一个风险：会话的工件或协议内容发生变化，但 usage 统计和会话计数没有变化，reader 可能继续使用旧协议。请审查 src/protocol-runtime.ts 的 getRuntimeProtocol：说明缓存键、命中/失效条件以及 revision 的来源优先级；判断当前快照是否已经覆盖只改变 provider 的协议 revision 的情况，给出有依据的最小修改或验证计划，已经满足的部分不要重复修改。再审查工具返回的直接调用关系：src/router.ts 的 Router.get 是否是本函数的实际调用依赖，为什么？选出一个生产调用者和一个确定的直接被调用者说明影响方向，并找出现有回归测试中应保留或运行的最小组合，写明关键断言。初始 CodeFacts 查询使用 expand(symbol=\"getRuntimeProtocol\", file_path=\"src/protocol-runtime.ts\", limit=30)。"
+      },
+      {
+        "id": "reader-turn-plan",
+        "prompt": "我们要检查 reader 中主会话轮次分隔在时间戳倒退、缺失或混有子会话轮次时是否会乱序或串入子会话内容。请从 src/conversation-view-model.ts 的 deriveConversationView 追踪实际生成 turnBoundaries 的逻辑及它在 reader 准备/渲染流程中的去向：当前顺序由什么决定、哪些 run/event 会被纳入、轮次编号如何分配？判断是否应该通过 timestamp 排序来修复，并给出符合现有行为约束的最小修改或验证计划。另核查工具给出的 add 同名调用候选：本函数的 runIdsWithTask.add 和 seenOthers.add 是否会调用 src/session-history.ts 中的 add？用源码解释，不把名字相同当成确定调用。指出一个生产调用者、一个确定的直接被调用者和应保留或运行的最小回归测试组合，写明关键断言。初始 CodeFacts 查询使用 expand(symbol=\"deriveConversationView\", file_path=\"src/conversation-view-model.ts\", limit=30)。"
+      }
+    ],
+    "commonInstructions": "这是一次只读的代码审查与修改规划任务。只使用当前工作目录的源码、普通本地只读工具和本轮提供的 CodeFacts MCP；不要改文件、安装依赖、联网、启动应用、读取其他会话、其他工作目录或先前评测资料。先用 CodeFacts expand 对指定目标做一次实质查询，symbol/file_path 见任务，limit=30；由本轮工具配置决定输出格式，不主动指定、切换或手写 format。随后可以使用其他 CodeFacts 查询及有针对性的源码读取。若首次 expand 给出 callees 的续页，先读取该部分的下一页，再结合任务判断是否还需要更多；不要为穷举同名候选无限翻页。不能把截断响应称为完整依赖图。最终给出简洁审查结论、带文件:行号的理由和最小验证/修改计划；不需要贴补丁或运行测试。最后附简短证据便签：从本轮工具结果取出目标定义所在文件的完整 source hash；选一条真实生产 caller→目标 和一条确定的目标→callee，注明文件位置及工具置信度；说明是否续页、续了哪个部分，以及是否仍有未读取的继续项。把候选关系与源码证实的调用分开描述。实际 MCP 查询与普通 shell 源码读取合计最多 16 次。最终尽量控制在约 800 中文字以内，另附简短证据便签。",
+    "order": [
+      {
+        "task": "protocol-cache-review",
+        "arm": "compact"
+      },
+      {
+        "task": "protocol-cache-review",
+        "arm": "markdown"
+      },
+      {
+        "task": "reader-turn-plan",
+        "arm": "markdown"
+      },
+      {
+        "task": "reader-turn-plan",
+        "arm": "compact"
+      }
+    ],
+    "maximumFormalRuns": 4,
+    "perRunTimeoutMs": 240000,
+    "grading": "four predeclared binary completeness criteria; original independent grades preserved; no paired 4/4 outcome",
+    "rubricSha256": "9fc56d03f73a67cf5e2ee5f16e1839cfa4152b8c13631dfe9c856daf6a3c945f"
+  },
+  "native": {
+    "encodingProxy": "o200k_base; not provider usage",
+    "fixedQueries": [
+      "map",
+      "search-context",
+      "outline",
+      "dense-protocol",
+      "dense-reader",
+      "ambiguous-resolution",
+      "empty-search",
+      "static-path-uncertainty"
+    ],
+    "formats": {
+      "compact": {
+        "calls": 17,
+        "continuations": 9,
+        "rawLineBytes": 427392,
+        "resultEnvelopeBytes": 426804,
+        "contentTextBytes": 200181,
+        "structuredContentBytes": 200181,
+        "textEncodingProxyTokens": 52416,
+        "envelopeEncodingProxyTokens": 107741
+      },
+      "markdown": {
+        "calls": 16,
+        "continuations": 8,
+        "rawLineBytes": 129279,
+        "resultEnvelopeBytes": 128726,
+        "contentTextBytes": 125843,
+        "structuredContentBytes": 0,
+        "textEncodingProxyTokens": 37777,
+        "envelopeEncodingProxyTokens": 39666
+      }
+    },
+    "fidelity": {
+      "schemaVersion": 1,
+      "verdict": "pass",
+      "candidate": {
+        "version": "0.1.15",
+        "sha256": "8086fe0ca13fa2511bbde86c52ba78b92a5f19dace2192c0b8bbe328231df487",
+        "lsp": "off"
+      },
+      "inputs": {
+        "nativeFormatReport": {
+          "path": "native-format-report.json",
+          "sha256": "23823429d9c3eb3f1a5b49238796817f49f8635624621390bedf4003d9ad0918"
+        },
+        "nativeRawCalls": {
+          "path": "native-format-calls.jsonl",
+          "sha256": "e334144ae92f51f6911a572339f67700f782fd35a07c64744fab49ed44a60949"
+        }
+      },
+      "method": {
+        "compact": "Read every dense expand page from structuredContent, flatten each caller/callee/test/reference record to its complete field map, then compare the union.",
+        "markdown": "Read every rendered Markdown table, flatten its column/value rows, canonicalize field-key order, and compare the continuation-complete union. Verify dense definition source text by exact inclusion and source hashes by complete union membership.",
+        "pagination": "Different 16 KiB rendered-page boundaries are allowed. The audit compares unions and true-to-false completion chains, not ordinal page equality."
+      },
+      "denseCoverage": {
+        "protocol": {
+          "compactPages": 4,
+          "markdownPages": 3,
+          "compactRows": 97,
+          "markdownRows": 97,
+          "canonicalRowsMissingInMarkdown": 0,
+          "canonicalRowsExtraInMarkdown": 0,
+          "sets": {
+            "callers": 10,
+            "callees": 83,
+            "tests": 1,
+            "referencesInbound": 0,
+            "referencesOutbound": 3,
+            "semanticReferenceLocations": 0
+          },
+          "sourceHashValues": 38,
+          "sourceHashValuesMissingInMarkdown": 0,
+          "initialSourceBlockExact": true,
+          "continuation": {
+            "compact": [
+              true,
+              true,
+              true,
+              false
+            ],
+            "markdown": [
+              true,
+              true,
+              false
+            ],
+            "section": "callees"
+          }
+        },
+        "reader": {
+          "compactPages": 7,
+          "markdownPages": 7,
+          "compactRows": 188,
+          "markdownRows": 188,
+          "canonicalRowsMissingInMarkdown": 0,
+          "canonicalRowsExtraInMarkdown": 0,
+          "sets": {
+            "callers": 2,
+            "callees": 182,
+            "tests": 1,
+            "referencesInbound": 0,
+            "referencesOutbound": 3,
+            "semanticReferenceLocations": 0
+          },
+          "sourceHashValues": 31,
+          "sourceHashValuesMissingInMarkdown": 0,
+          "initialSourceBlockExact": true,
+          "continuation": {
+            "compact": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              false
+            ],
+            "markdown": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              false
+            ],
+            "section": "callees"
+          }
+        }
+      },
+      "metadata": {
+        "denseStatus": "Every dense page renders status=ok.",
+        "directionCallsiteConfidence": "All canonical relation fields match: relation kind/direction, resolution, callsite evidence path/start/end/extractor/confidence, and endpoint id/kind/language/name/evidence.",
+        "sourceAndHashes": "The two initial definition source blocks are exact inclusions. All 38 protocol and 31 reader compact source-hash values occur in the corresponding Markdown continuation union.",
+        "truncation": "Every non-final page renders truncated=true with next.callees; each final page renders truncated=false with no next. Markdown uses one fewer protocol continuation page while retaining the complete relation union."
+      },
+      "sentinels": {
+        "ambiguousResolution": "Markdown preserves status=ambiguous, all four candidate rows with confirmed evidence, guidance text, and four source hashes.",
+        "emptySearch": "Markdown preserves the empty results array, query, bounded_by/scope/offset, and freshness.status=fresh.",
+        "staticPathUncertainty": "Markdown preserves status=no_static_path, the runtime-unreachability qualification, confirmed from/to facts and evidence, and both source hashes."
+      },
+      "observedMismatches": [],
+      "scopeLimits": [
+        "This is a bounded native-output audit over the eight paired calls and their required dense continuations; it is not a generic Markdown parser proof.",
+        "It does not establish model effectiveness, provider token savings, or a general Markdown saving percentage.",
+        "Full renderer semantics remain supported by the already-passing native Rust protocol/unit tests and independent answer grading."
+      ]
+    }
+  },
+  "results": [
+    {
+      "task": "protocol-cache-review",
+      "format": "compact",
+      "grade": {
+        "answer": "protocol-B",
+        "criteria": {
+          "1_cache_identity_hit": 0,
+          "2_revision_decision": 1,
+          "3_receiver_aware_direction": 0,
+          "4_minimal_regression_plan": 0
+        },
+        "score": 1,
+        "max_score": 4,
+        "evidence_label_inconsistencies": []
+      },
+      "answer": "结论：`getRuntimeProtocol` 当前已正确覆盖“仅 provider 协议 revision 改变”的失效路径，暂不建议修改函数本身。\n\n- 缓存键为 ``${adapter.id}\\0${sessionId}``（`src/protocol-runtime.ts:108-111`）。命中条件是缓存项 `revision === sessionRevision(...)`；否则重新读取协议并写回缓存（`111-137`）。\n- revision 优先级为：`getProtocolRevision(session.id)`；不存在时用 `getStatsRevision()`；再拼接 `timeUpdated`、`messageCount`、`tokenCount`（`src/protocol-runtime.ts:53-69`）。接口也明确协议 revision 独立于 usage stats（`src/providers/interface.ts:288-320`）。\n- 现有 `test/protocol-artifact-revision.test.mjs:8-36` 已参数化覆盖 v2、paired、native-v3：首次读取只构建一次；revision 从 `artifact-one` 改为 `artifact-two` 后构建次数变为 2、结果 revision 更新，且 `getStatsRevision` 未被调用。最小验证组合就是运行该测试。若新增 provider 的工件源能独立变化，应确认其实现 `getProtocolRevision`（现有 Codex 实现在 `src/providers/codex/adapter.ts:648-650`）；否则仅依赖 stats/session 字段可能遗漏该变化。\n\n`Router.get` 不是实际调用依赖。CodeFacts 将 `protocolCache.get(key)`（`src/protocol-runtime.ts:110`）按同名方法启发式解析为 `Router.get`，置信度为 heuristic/polymorphic；源码显示它只是 `Map.get`。生产调用者可取 `deriveSessionListStats`（CodeFacts static，`src/session-list-stats.ts:206`），它调用本函数获取协议统计；确定直接被调用者为 `sessionRevision`（static，`src/protocol-runtime.ts:108`），负责决定命中或失效。\n\n证据便签：目标文件 source hash：`310d2e8bbd41ac61d52a7744e349a0beff3764ce7f8f1a620eec32d3b8825491`。已续读 `callees` 一页；仍有下一页，但剩余项主要是同名 `get` 候选，未继续穷举。",
+      "providerUsage": {
+        "input_tokens": 402920,
+        "cached_input_tokens": 338688,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3342,
+        "reasoning_output_tokens": 1045
+      },
+      "totalTokens": 406262,
+      "uncachedInputTokens": 64232,
+      "uncachedInputPlusOutput": 67574,
+      "durationMs": 119809,
+      "finalContextInputTokens": 41688,
+      "actualCalls": {
+        "mcp": 2,
+        "shell": 6,
+        "wrapperFailures": 3,
+        "mcpArgumentErrors": 0,
+        "shellNonzeroExits": 0
+      },
+      "bytes": {
+        "mcpResultEnvelopesIncludingErrors": 68336,
+        "mcpTextIncludingErrors": 32115,
+        "structuredContent": 32115,
+        "rawShellOutput": 60569,
+        "deliveredWrapperOutput": 102112
+      },
+      "gates": {
+        "firstRelevantExpand": true,
+        "actualFormat": true,
+        "sameArgumentsExceptFormat": true,
+        "successfulExactContinuation": true,
+        "exactTargetSourceHash": true,
+        "readOnlyScopeReviewed": true,
+        "directionUncertaintyReviewed": true,
+        "confidenceLabelQualification": null
+      },
+      "errors": [],
+      "environmentFailure": false,
+      "usageReconciled": true,
+      "fullyEligible": false
+    },
+    {
+      "task": "protocol-cache-review",
+      "format": "markdown",
+      "grade": {
+        "answer": "protocol-A",
+        "criteria": {
+          "1_cache_identity_hit": 0,
+          "2_revision_decision": 1,
+          "3_receiver_aware_direction": 0,
+          "4_minimal_regression_plan": 1
+        },
+        "score": 2,
+        "max_score": 4,
+        "evidence_label_inconsistencies": []
+      },
+      "answer": "结论：`getRuntimeProtocol` 的缓存设计已覆盖“仅 provider 协议 revision 改变”的场景；无需修改，保留并运行现有回归测试即可。\n\n- 缓存键为 ``${adapter.id}\\0${sessionId}``（`src/protocol-runtime.ts:108-113`）。命中条件是缓存项 `revision` 与本次 `sessionRevision` 完全相等；否则重新调用 `getSessionProtocol` 并覆盖缓存（`110-137`）。\n- revision 优先级为：显式 `capturedRevision`；否则 `adapter.getProtocolRevision(session.id)`；若不存在则 `getStatsRevision()`；最后拼接 `timeUpdated`、`messageCount`、`tokenCount`（`src/protocol-runtime.ts:53-69`）。因此 provider 只改变协议 revision 时，只要实现 `getProtocolRevision`，即可失效缓存；若 provider 不提供该接口且 usage/会话字段不变，则该风险仍存在。\n- 现有 `test/protocol-artifact-revision.test.mjs:7-37` 已覆盖 v2、paired、native-v3：首次读取构建一次，revision 从 `artifact-one` 改为 `artifact-two` 后构建第二次，且 `getStatsRevision` 未被调用（断言 `builds === 2`、revision 更新、`statsReads === 0`）。建议最小运行组合为该测试加 `test/protocol-runtime.test.mjs:64-74` 的基础缓存命中测试。\n\n`Router.get` 不是实际调用依赖。CodeFacts 仅因 `protocolCache.get`（`src/protocol-runtime.ts:110`）按同名方法产生启发式多态候选；源码无 `Router` 导入或实例调用。`Router.get` 只在 `src/router.ts:30-38` 注册路由，实例化发生于 `src/server.ts:43-44`。\n\n证据便签：目标定义源 hash：`src/protocol-runtime.ts` `310d2e8bbd41ac61d52a7744e349a0beff3764ce7f8f1a620eec32d3b8825491`。生产 caller：`src/routes/session-detail.ts:912` → `getRuntimeProtocol`（CodeFacts confirmed）；直接 callee：`src/protocol-runtime.ts:108` → `sessionRevision`（confirmed）。候选关系与源码确认调用已区分。已续读 `callees` 第 31–60 项，仍有下一页，未继续穷举。",
+      "providerUsage": {
+        "input_tokens": 268958,
+        "cached_input_tokens": 196096,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3012,
+        "reasoning_output_tokens": 1111
+      },
+      "totalTokens": 271970,
+      "uncachedInputTokens": 72862,
+      "uncachedInputPlusOutput": 75874,
+      "durationMs": 87489,
+      "finalContextInputTokens": 51569,
+      "actualCalls": {
+        "mcp": 5,
+        "shell": 3,
+        "wrapperFailures": 1,
+        "mcpArgumentErrors": 2,
+        "shellNonzeroExits": 0
+      },
+      "bytes": {
+        "mcpResultEnvelopesIncludingErrors": 41689,
+        "mcpTextIncludingErrors": 40829,
+        "structuredContent": 0,
+        "rawShellOutput": 122756,
+        "deliveredWrapperOutput": 133353
+      },
+      "gates": {
+        "firstRelevantExpand": true,
+        "actualFormat": true,
+        "sameArgumentsExceptFormat": true,
+        "successfulExactContinuation": true,
+        "exactTargetSourceHash": true,
+        "readOnlyScopeReviewed": true,
+        "directionUncertaintyReviewed": true,
+        "confidenceLabelQualification": "Answer says confirmed for caller/callee; relationship evidence label is static and endpoint evidence is confirmed."
+      },
+      "errors": [
+        "cursor is not valid CodeFacts page data",
+        "cursor does not belong to this request"
+      ],
+      "environmentFailure": false,
+      "usageReconciled": true,
+      "fullyEligible": false
+    },
+    {
+      "task": "reader-turn-plan",
+      "format": "markdown",
+      "grade": {
+        "answer": "reader-B",
+        "criteria": {
+          "1_ordering_inclusion": 1,
+          "2_production_direction": 0,
+          "3_receiver_aware_uncertainty": 1,
+          "4_minimal_regression_plan": 1
+        },
+        "score": 3,
+        "max_score": 4,
+        "evidence_label_inconsistencies": []
+      },
+      "answer": "结论：不应按 `timestamp` 排序；当前实现是有意保留协议事件的源顺序，时间戳只作显示字段。\n\n- `deriveTurnBoundaries` 先从 `agentRuns` 选出 `kind === \"session-turn\"` 且 `sessionId === protocol.sessionId` 的 run（`src/conversation-view-model.ts:196-201`）。\n- 随后按 `protocol.events` 原数组顺序遍历，仅纳入同主会话、具 `runId`、匹配上述 run、且 `normalizedKind` 属于 `run.started/completed/failed/cancelled` 的事件（`205-209`）。因此子会话轮次会被排除，缺失或倒退时间戳不会改变顺序。\n- 轮次编号按 run 首次在事件流中出现的顺序分配；同一 run 的后续边界复用编号（`210-223`）。\n- reader 准备流程在 `prepareReader` 中生成 view（`src/routes/session-detail.ts:154-183`），生产路由调用它（`301-320`）；渲染端再按 `turnBoundaries.map(...)` 输出序列（`src/views/session.ts:1891-1926`）。这不是消息正文排序，也不会串入子会话。\n- 工具的 `add` 候选是误配：`runIdsWithTask.add` 和 `seenOthers.add` 的接收者分别是本地 `Set`（`src/conversation-view-model.ts:345-347, 513-524`），不是 `session-history.ts:add`；后者是搜索函数内的局部闭包（`src/session-history.ts:474-494`）。工具关系置信度为 heuristic/polymorphic。\n\n最小计划：保留现有回归测试 `test/conversation-p2b.test.mjs:316-359`，关键断言是源顺序、编号 `[1,1,2,2,3]`、时间戳原样 `[300,100,50,400,null]`，以及 child run 不出现；无需修改或新增排序逻辑。\n\n证据便签：目标文件完整 source hash：`3e3ce065f31b70aee15787841dc4b4b0b17fee9ba9f2f7613ece0515d20e4bcc`。生产 caller：`prepareReader → deriveConversationView`（`session-detail.ts:154-163`，工具 confirmed/static）；确定直接 callee：`deriveConversationView → deriveTurnBoundaries`（`conversation-view-model.ts:600`，confirmed/static）。已续读 `callees` 一页；仍有下一页游标，但未读取，当前结论不依赖它。",
+      "providerUsage": {
+        "input_tokens": 283977,
+        "cached_input_tokens": 240128,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2734,
+        "reasoning_output_tokens": 685
+      },
+      "totalTokens": 286711,
+      "uncachedInputTokens": 43849,
+      "uncachedInputPlusOutput": 46583,
+      "durationMs": 89878,
+      "finalContextInputTokens": 47664,
+      "actualCalls": {
+        "mcp": 3,
+        "shell": 7,
+        "wrapperFailures": 1,
+        "mcpArgumentErrors": 1,
+        "shellNonzeroExits": 1
+      },
+      "bytes": {
+        "mcpResultEnvelopesIncludingErrors": 24112,
+        "mcpTextIncludingErrors": 23549,
+        "structuredContent": 0,
+        "rawShellOutput": 124817,
+        "deliveredWrapperOutput": 126307
+      },
+      "gates": {
+        "firstRelevantExpand": true,
+        "actualFormat": true,
+        "sameArgumentsExceptFormat": true,
+        "successfulExactContinuation": true,
+        "exactTargetSourceHash": true,
+        "readOnlyScopeReviewed": true,
+        "directionUncertaintyReviewed": true,
+        "confidenceLabelQualification": null
+      },
+      "errors": [
+        "cursor is not valid CodeFacts page data"
+      ],
+      "environmentFailure": false,
+      "usageReconciled": true,
+      "fullyEligible": false
+    },
+    {
+      "task": "reader-turn-plan",
+      "format": "compact",
+      "grade": {
+        "answer": "reader-A",
+        "criteria": {
+          "1_ordering_inclusion": 0,
+          "2_production_direction": 0,
+          "3_receiver_aware_uncertainty": 0,
+          "4_minimal_regression_plan": 0
+        },
+        "score": 0,
+        "max_score": 4,
+        "evidence_label_inconsistencies": [
+          "Line 5 displays src/routes/session-detail.ts:154 but links to line 165.",
+          "Line 5 displays src/views/session.ts:1894 but links to line 1909."
+        ]
+      },
+      "answer": "结论：当前逻辑按 `protocol.events` 的源顺序生成并渲染轮次，不应仅因时间戳倒退或缺失而改为排序。\n\n- `deriveTurnBoundaries` 先只登记 `kind === \"session-turn\"` 且 `run.sessionId === protocol.sessionId` 的 runs；事件还必须属于主会话、存在对应 run，且 `normalizedKind` 是四种 `run.*` 边界之一。[src/conversation-view-model.ts:196](D:/WorkSpace/codefacts/target/luna-opensession-20260920-r2/source/src/conversation-view-model.ts:196)\n- 遍历不排序，`displayNumber` 按某个 `runId` 首次在事件流中出现的顺序递增；同一 run 的开始/结束共享编号。结果在 `deriveConversationView` 返回。[src/conversation-view-model.ts:205](D:/WorkSpace/codefacts/target/luna-opensession-20260920-r2/source/src/conversation-view-model.ts:205)\n- `prepareReader` 将其放入 `readerInput.conversationView`，随后视图把 `turnBoundaries` 映射为轮次序列，并置于观察项之前。[src/routes/session-detail.ts:154](D:/WorkSpace/codefacts/target/luna-opensession-20260920-r2/source/src/routes/session-detail.ts:165)、[src/views/session.ts:1894](D:/WorkSpace/codefacts/target/luna-opensession-20260920-r2/source/src/views/session.ts:1909)\n- 现有回归测试已覆盖倒退时间戳、缺失时间戳、子会话 run 和无关事件，并明确断言源顺序；排序会破坏既有约束。[test/conversation-p2b.test.mjs:321](D:/WorkSpace/codefacts/target/luna-opensession-20260920-r2/source/test/conversation-p2b.test.mjs:321)\n\n最小计划：保持实现不变，保留该测试及其关键断言；若要增强，仅补一个“缺失/错误 sessionId 的事件不纳入”断言。\n\n`runIdsWithTask.add` 与 `seenOthers.add` 都是局部 `Set.add`，不是 `session-history.ts` 的 `add` 闭包；后者是搜索结果聚合函数。[src/conversation-view-model.ts:345](D:/WorkSpace/codefacts/target/luna-opensession-20260920-r2/source/src/conversation-view-model.ts:345)、[src/conversation-view-model.ts:513](D:/WorkSpace/codefacts/target/luna-opensession-20260920-r2/source/src/conversation-view-model.ts:513)、[src/session-history.ts:474](D:/WorkSpace/codefacts/target/luna-opensession-20260920-r2/source/src/session-history.ts:474)\n\n证据便签：目标文件完整 hash `3e3ce065f31b70aee15787841dc4b4b0b17fee9ba9f2f7613ece0515d20e4bcc`。生产 caller：`prepareReader → deriveConversationView`，静态置信度；确定直接 callee：`deriveConversationView → deriveTurnBoundaries`，静态置信度。首次 expand 后已读取 `callees` 续页；仍有下一页，offset 48，未读取。",
+      "providerUsage": {
+        "input_tokens": 283223,
+        "cached_input_tokens": 237056,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2681,
+        "reasoning_output_tokens": 865
+      },
+      "totalTokens": 285904,
+      "uncachedInputTokens": 46167,
+      "uncachedInputPlusOutput": 48848,
+      "durationMs": 116501,
+      "finalContextInputTokens": 45114,
+      "actualCalls": {
+        "mcp": 4,
+        "shell": 3,
+        "wrapperFailures": 1,
+        "mcpArgumentErrors": 2,
+        "shellNonzeroExits": 0
+      },
+      "bytes": {
+        "mcpResultEnvelopesIncludingErrors": 67150,
+        "mcpTextIncludingErrors": 31632,
+        "structuredContent": 31554,
+        "rawShellOutput": 43682,
+        "deliveredWrapperOutput": 120010
+      },
+      "gates": {
+        "firstRelevantExpand": true,
+        "actualFormat": true,
+        "sameArgumentsExceptFormat": true,
+        "successfulExactContinuation": true,
+        "exactTargetSourceHash": true,
+        "readOnlyScopeReviewed": true,
+        "directionUncertaintyReviewed": true,
+        "confidenceLabelQualification": null
+      },
+      "errors": [
+        "cursor is not valid CodeFacts page data",
+        "cursor is not valid CodeFacts page data"
+      ],
+      "environmentFailure": false,
+      "usageReconciled": true,
+      "fullyEligible": false
+    }
+  ],
+  "readiness": {
+    "attempts": 1,
+    "totalTokens": 94872,
+    "usage": {
+      "input_tokens": 93591,
+      "cached_input_tokens": 63488,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 1281,
+      "reasoning_output_tokens": 569
+    },
+    "durationMs": 60984,
+    "mcpCalls": 3,
+    "argumentErrors": 1,
+    "scope": "transport readiness; abbreviated answer hash; not a formal quality score"
+  },
+  "formalTotalTokens": 1250847,
+  "allEvaluationTotalTokens": 1345719,
+  "engineeringPreparationTokens": null,
+  "engineeringPreparationNote": "Not aggregated; native collection, implementation, reviews and packaging are separate preparation cost.",
+  "decision": "Ship optional Markdown with compact JSON default. Native output is smaller; no correctness-eligible pair establishes end-to-end task savings. Keep all failures and close these four attempts."
+}

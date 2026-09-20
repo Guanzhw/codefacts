@@ -1,0 +1,314 @@
+{
+  "schema_version": 1,
+  "campaign": "opensession-history-corpus-2026-09-20",
+  "mode": "readonly",
+  "model": "gpt-5.6-luna",
+  "reasoningEffort": "medium",
+  "snapshot": {
+    "repository": "OpenSession",
+    "commit": "543e874e697523bf474f494bcf897a17f19587de"
+  },
+  "selection_limits": [
+    "All six cases come from one related OpenSession task family and are not an independent sample of repositories, users, or providers.",
+    "Three cases were exposed in the history audit or its fixed replays; they must be reported separately from the three new-to-task-evaluation rewrites.",
+    "The corpus intentionally mixes successful navigation, uncertain or negative relationships, and two diagnosis cases; it is not an estimate of population accuracy.",
+    "getRuntimeProtocol, deriveConversationView, and the repaired renderSessions ranking case are excluded from the six tasks."
+  ],
+  "tasks": [
+    {
+      "id": "OS-H01",
+      "title": "Codex reader snapshot boundary",
+      "prompt": "In the frozen source, locate Codex `getSessionReaderSnapshot` and explain how one capture supplies the reader document, inherited context, and v2/v3 protocol snapshots. Trace how the session-detail route invokes it, and decide whether that route-to-Codex relationship is a confirmed static direct call or provider dispatch. This is a read-only investigation; cite source locations.",
+      "category": "known-target-direct-location",
+      "exposure": {
+        "status": "audit-replay-exposed",
+        "detail": "The exact identifier was one of the fixed audit replay queries, and the corresponding CodeGraph exact query missed the definition. Keep this case separate from new-to-task-evaluation aggregate claims."
+      },
+      "provenance": {
+        "thread_id": "01a0576a-98e2-7c31-a265-6d98d5fbff12",
+        "event_id": "exec-dd8fd4ad-59c1-4681-96ba-767794d7b364",
+        "raw_line": 67828,
+        "rewrite": "Expanded the historical exact lookup into a short source-comprehension task without copying user text."
+      },
+      "criteria": [
+        {
+          "id": "H01-C1",
+          "requirement": "Identifies the Codex adapter method as a thin delegate to captureCodexReader.",
+          "evidence": [
+            { "path": "src/providers/codex/adapter.ts", "lines": "627-629", "sha256": "0d48a6206c93381ed3c5eb13cfcf95290d6fcba1a47844e045eed1fb58541207" }
+          ]
+        },
+        {
+          "id": "H01-C2",
+          "requirement": "Explains that captureCodexReader captures the session once, resolves records/messages and memory revision, and derives explicit inherited context only when inherited messages exist.",
+          "evidence": [
+            { "path": "src/providers/codex/adapter.ts", "lines": "434-454", "sha256": "0d48a6206c93381ed3c5eb13cfcf95290d6fcba1a47844e045eed1fb58541207" }
+          ]
+        },
+        {
+          "id": "H01-C3",
+          "requirement": "Explains that the captured object builds finalized v2 and v3 snapshots from the same captured input and revision.",
+          "evidence": [
+            { "path": "src/providers/codex/adapter.ts", "lines": "455-463", "sha256": "0d48a6206c93381ed3c5eb13cfcf95290d6fcba1a47844e045eed1fb58541207" }
+          ]
+        },
+        {
+          "id": "H01-C4",
+          "requirement": "States that session-detail calls the optional ProviderAdapter method; it is provider dispatch at the route boundary, so source supports the Codex runtime implementation but not a statically direct route-to-captureCodexReader edge.",
+          "evidence": [
+            { "path": "src/routes/session-detail.ts", "lines": "287-304", "sha256": "6da323429d2bce956f286384d689fd66cfd3b27fff7174f1cc7d5e6d9828afb3" },
+            { "path": "src/providers/interface.ts", "lines": "310-315", "sha256": "17d09986b7d66aa3974e61829ee3c8998fa49f9e4789dcf25dc4d396830ed896" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OS-H02",
+      "title": "Runtime workbench discovery path",
+      "prompt": "A session's Runtime workbench is blank. Trace the read-only data flow from the session-detail route through server-rendered HTML/evidence to browser initialization, then give the smallest source-backed inspection order for distinguishing missing runtime data, missing markup, and missing client startup. Cite source locations.",
+      "category": "fuzzy-concept-discovery",
+      "exposure": {
+        "status": "history-query-exposed",
+        "detail": "A historical investigation first guessed buildRuntimeWorkbench and received an empty lookup before discovering the actual render entry."
+      },
+      "provenance": {
+        "thread_id": "01a08cc3-75b8-71f2-aaad-022d7c3cf11c",
+        "event_ids": [
+          "exec-92e7f2fc-0ac1-49bf-b2de-84c338c64ef0",
+          "exec-a84f6b5d-c894-44aa-b8ea-96bb399db911"
+        ],
+        "raw_lines": [339, 341],
+        "rewrite": "Turned a failed guessed-name lookup into a concept-first debugging task."
+      },
+      "criteria": [
+        {
+          "id": "H02-C1",
+          "requirement": "Locates the server renderer and explains that it receives RuntimeData and emits the workbench section.",
+          "evidence": [
+            { "path": "src/views/runtime-workbench.ts", "lines": "893-914", "sha256": "9b5c00dadd3bb04870f7bc4968e3edad5766230977c02a90540f97db642bb127" }
+          ]
+        },
+        {
+          "id": "H02-C2",
+          "requirement": "Traces the session-detail route importing the renderer and passing reader.runtime, provider, and session ID into it.",
+          "evidence": [
+            { "path": "src/routes/session-detail.ts", "lines": "17-21", "sha256": "6da323429d2bce956f286384d689fd66cfd3b27fff7174f1cc7d5e6d9828afb3" },
+            { "path": "src/routes/session-detail.ts", "lines": "301-320", "sha256": "6da323429d2bce956f286384d689fd66cfd3b27fff7174f1cc7d5e6d9828afb3" }
+          ]
+        },
+        {
+          "id": "H02-C3",
+          "requirement": "Identifies the rendered data-runtime-root and embedded JSON evidence as the server/client handoff, including the available flag.",
+          "evidence": [
+            { "path": "src/views/runtime-workbench.ts", "lines": "907-913", "sha256": "9b5c00dadd3bb04870f7bc4968e3edad5766230977c02a90540f97db642bb127" }
+          ]
+        },
+        {
+          "id": "H02-C4",
+          "requirement": "Identifies browser startup as initRuntimeWorkbench, which requires the root and parses the evidence JSON, and gives an inspection order consistent with route data, rendered root/evidence, then app bootstrap.",
+          "evidence": [
+            { "path": "src/static/app/runtime-workbench.js", "lines": "1-7", "sha256": "47560659e8e02d7347c588c340e809df5ebe65d09147863f9989af49b4cb52b5" },
+            { "path": "src/static/app.js", "lines": "6-6,738-738", "sha256": "889461acc3f4b652b925c6a5a727b9e457925c8bce08057893cfff76168f6882" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OS-H03",
+      "title": "Pi native v3 construction chain",
+      "prompt": "Trace the frozen source path that produces a native Pi Session Protocol v3 snapshot, from the generic runtime request through the Pi adapter to the shared finalizer. Explain the role of the finalized v2 base and what the finalizer guarantees. This is read-only; cite source locations.",
+      "category": "cross-file-call-chain",
+      "exposure": {
+        "status": "history-answer-exposed",
+        "detail": "The adapter-to-builder-to-finalizer path was returned by a historical static-path query and cited in that review."
+      },
+      "provenance": {
+        "thread_id": "01a0812b-ede9-7ab3-92eb-3e51c0ac0466",
+        "event_ids": [
+          "exec-1c4602ff-b399-4e28-aebf-23fdfd32e193",
+          "exec-b231fc1b-0f29-45cb-9253-34c1b6b59e45"
+        ],
+        "raw_lines": [322, 323],
+        "rewrite": "Preserved the real call-chain question while removing historical answer text."
+      },
+      "criteria": [
+        {
+          "id": "H03-C1",
+          "requirement": "Explains that the generic runtime prefers a provider's native getSessionProtocolV3 accessor and invokes it on a cache miss.",
+          "evidence": [
+            { "path": "src/protocol-runtime.ts", "lines": "180-218", "sha256": "310d2e8bbd41ac61d52a7744e349a0beff3764ce7f8f1a620eec32d3b8825491" }
+          ]
+        },
+        {
+          "id": "H03-C2",
+          "requirement": "Identifies the Pi adapter method delegating to its provider-specific v3 builder.",
+          "evidence": [
+            { "path": "src/providers/pi/adapter.ts", "lines": "224-230", "sha256": "730959d645084b8cd10c2b8b854110959d2e69548bbb8e092829b7562c89f886" }
+          ]
+        },
+        {
+          "id": "H03-C3",
+          "requirement": "Explains that the builder loads the Pi entry, creates a finalized v2 base, and passes session, records, messages, and that base into v3 construction before finalization.",
+          "evidence": [
+            { "path": "src/providers/pi/adapter.ts", "lines": "138-147", "sha256": "730959d645084b8cd10c2b8b854110959d2e69548bbb8e092829b7562c89f886" }
+          ]
+        },
+        {
+          "id": "H03-C4",
+          "requirement": "States that the shared finalizer clones/normalizes v3 domains, forces version 3, records validation/completeness, and freezes the result by default.",
+          "evidence": [
+            { "path": "src/providers/shared/session-protocol-v3.ts", "lines": "338-362", "sha256": "335ed4407ba6cb2c6e29bb761894492c9a35b63b48d3c0862ebb37ba9f747c25" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OS-H04",
+      "title": "OpenCode provider boundary check",
+      "prompt": "A report claims OpenCode Reader sessions are captured through the same JSONL path as Codex. Check that claim against the frozen source. Describe where OpenCode sessions/messages, parts, child-session trees, and v2/v3 protocol snapshots actually come from, and recommend a code change only if the claim reveals a real boundary violation. Cite source locations.",
+      "category": "provider-boundary-negative-relationship",
+      "exposure": {
+        "status": "new-to-task-evaluation",
+        "detail": "Independently rewritten from OpenCode provider work in the same history family; this exact end-to-end claim was not an audit replay task."
+      },
+      "provenance": {
+        "thread_id": "01a07f66-75c8-7b61-bb90-db5802075499",
+        "event_ids": [
+          "exec-5f5fc22a-e534-4063-802c-42b346247091",
+          "exec-ab6d66d8-485c-4955-91b7-aa34c0800b1d"
+        ],
+        "raw_lines": [74, 137],
+        "rewrite": "Combined provider-specific source boundaries into a new negative-relationship task."
+      },
+      "criteria": [
+        {
+          "id": "H04-C1",
+          "requirement": "Rejects the claimed Codex JSONL path and identifies OpenCode's base as createOpenCodeSqliteAdapter over its configured/default opencode.db.",
+          "evidence": [
+            { "path": "src/providers/opencode/adapter.ts", "lines": "15-38", "sha256": "04b6310114df5f2632588c4f9c349e569c5761cb97a628e7d4fcd66c9d47e124" }
+          ]
+        },
+        {
+          "id": "H04-C2",
+          "requirement": "Explains that OpenCode sessions and messages are read from SQLite and message parts are loaded and normalized from the database.",
+          "evidence": [
+            { "path": "src/providers/opencode/sqlite-adapter.ts", "lines": "101-114", "sha256": "9fb3e2bc46ffc63ce5e13751105b4431dbbb6fc70a899c66c18c2cade74b87a8" }
+          ]
+        },
+        {
+          "id": "H04-C3",
+          "requirement": "Explains that buildOpenCodeSessionTree delegates to the shared SQLite tree builder, which recursively loads child sessions and attaches them through task-part IDs while retaining detached children.",
+          "evidence": [
+            { "path": "src/providers/opencode/session-tree.ts", "lines": "37-40", "sha256": "5f791c6e390d7a9bd4df32b42ce46d134889707be19c8f8f43ec24f724892fb7" },
+            { "path": "src/providers/shared/session-tree.ts", "lines": "166-234", "sha256": "8dd81ce6f00a0f81ab85ebf38c3b38a9df1fa64afcebd20451c438575a3be1fd" }
+          ]
+        },
+        {
+          "id": "H04-C4",
+          "requirement": "Explains that OpenCode v2/v3 snapshots are built from the OpenCode tree and DB revision, and concludes that this source does not support changing the provider boundary merely because of the report.",
+          "evidence": [
+            { "path": "src/providers/opencode/adapter.ts", "lines": "40-73", "sha256": "04b6310114df5f2632588c4f9c349e569c5761cb97a628e7d4fcd66c9d47e124" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OS-H05",
+      "title": "Codex child-token ownership diagnosis",
+      "prompt": "Check whether Codex child/background token usage can be deduplicated from the parent using parent_id alone. Explain how the frozen source classifies inherited prefixes, duplicate usage events, and session-owned records, then decide whether a broad parent-based subtraction is warranted. This is read-only; cite source locations.",
+      "category": "provider-boundary-negative-relation",
+      "exposure": {
+        "status": "new-to-task-evaluation",
+        "detail": "The token-ownership theme comes from the root history, but this four-part source task was newly written and was not one of the audit's fixed comparison queries."
+      },
+      "provenance": {
+        "thread_id": "01a0576a-98e2-7c31-a265-6d98d5fbff12",
+        "event_ids": [
+          "exec-f766abd2-3271-4e4b-a54e-7343e11259f2",
+          "exec-d0abeac7-e08e-46aa-a06a-606e22fd0d1e"
+        ],
+        "raw_lines": [48868, 65169],
+        "rewrite": "Converted the original product concern into a bounded source judgment without copying session content."
+      },
+      "criteria": [
+        {
+          "id": "H05-C1",
+          "requirement": "States that parent_id alone is insufficient: parent records are consulted only for a child lacking the explicit task envelope.",
+          "evidence": [
+            { "path": "src/providers/codex/parser.ts", "lines": "307-319", "sha256": "03d81837b151237a69fa83893abb3769d6845e0e0346b258ac946b3d62164e92" }
+          ]
+        },
+        {
+          "id": "H05-C2",
+          "requirement": "Explains that an explicit NEW_TASK envelope ends inherited parent context and that only preceding records are classified inherited for that case.",
+          "evidence": [
+            { "path": "src/providers/codex/parser.ts", "lines": "359-386", "sha256": "03d81837b151237a69fa83893abb3769d6845e0e0346b258ac946b3d62164e92" }
+          ]
+        },
+        {
+          "id": "H05-C3",
+          "requirement": "Explains the legacy fallback conservatively: it requires at least two complete matching leading usage snapshots against the declared parent's transcript before classifying a copied token prefix.",
+          "evidence": [
+            { "path": "src/providers/codex/parser.ts", "lines": "272-305", "sha256": "03d81837b151237a69fa83893abb3769d6845e0e0346b258ac946b3d62164e92" }
+          ]
+        },
+        {
+          "id": "H05-C4",
+          "requirement": "Explains that duplicate usage is identified by the same recorded response ID plus equal snapshot, or by adjacent equal snapshots when there are no conflicting recorded response IDs (cross-format adjacency is one supported case). Downstream usage keeps only records classified session-owned, so broad parent-based subtraction is not source-justified.",
+          "evidence": [
+            { "path": "src/providers/codex/parser.ts", "lines": "321-400", "sha256": "03d81837b151237a69fa83893abb3769d6845e0e0346b258ac946b3d62164e92" },
+            { "path": "src/providers/codex/protocol.ts", "lines": "1602-1612", "sha256": "e26eeb2d3b87d91717e6d146b0ed9ab55be49dc7cc15fc21e3b18d23578641c7" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OS-H06",
+      "title": "Deferred field markup diagnosis",
+      "prompt": "A performance note says every deferred tool or reasoning field still emits both a redundant wrapper and an empty status node. Verify that statement against the frozen server and client source, describe the current markup/loading contract, and give the smallest justified change surface while preserving retry and search behavior. Do not edit files; cite source locations.",
+      "category": "debugging-and-change-planning",
+      "exposure": {
+        "status": "new-to-task-evaluation",
+        "detail": "Derived from a real wrapper-reduction task, but the prompt asks the model to distinguish the frozen snapshot's current state from the earlier report."
+      },
+      "provenance": {
+        "thread_id": "01a0ae4c-8a52-7860-a866-a31bf7affa59",
+        "event_id": "exec-e27687d3-e21d-4423-8374-d6793f79bcd4",
+        "raw_line": 1688,
+        "rewrite": "Recast the historical implementation work as a read-only stale-claim diagnosis."
+      },
+      "criteria": [
+        {
+          "id": "H06-C1",
+          "requirement": "Explains that deferred nonempty fields render an outer progressive container plus a load button carrying field, part, scope, and initial-load state.",
+          "evidence": [
+            { "path": "src/views/components.ts", "lines": "257-281", "sha256": "7587d65c53c6a7224f9ccd13a217f2e6a7a94114941d4c861f34a93dd4d85b42" }
+          ]
+        },
+        {
+          "id": "H06-C2",
+          "requirement": "Identifies reasoning and tool input/output as callers that request deferred initial content, so the wrapper cost applies to those fields.",
+          "evidence": [
+            { "path": "src/views/components.ts", "lines": "757-798", "sha256": "7587d65c53c6a7224f9ccd13a217f2e6a7a94114941d4c861f34a93dd4d85b42" }
+          ]
+        },
+        {
+          "id": "H06-C3",
+          "requirement": "Rejects the empty-status half of the note: initial server markup has no status node, while the client removes prior status at load start and creates status only for stale, empty, or failed outcomes.",
+          "evidence": [
+            { "path": "src/views/components.ts", "lines": "278-281", "sha256": "7587d65c53c6a7224f9ccd13a217f2e6a7a94114941d4c861f34a93dd4d85b42" },
+            { "path": "src/static/app/session-workbench.js", "lines": "29-29,50-65,79-102", "sha256": "e4a7643d63041a5f22c514e2b4aaaaf17c4cc6d547bbcf8f098fd21f436dc214" }
+          ]
+        },
+        {
+          "id": "H06-C4",
+          "requirement": "Either defers wrapper removal pending measured benefit, or limits a proposed removal to the server container markup and the client's closest-progressive contract. In both cases it identifies the coupling and preserves button identity/scope, retry-created status, and search/content-updated behavior; it does not re-fix status handling that is already conditional.",
+          "evidence": [
+            { "path": "src/views/components.ts", "lines": "267-281", "sha256": "7587d65c53c6a7224f9ccd13a217f2e6a7a94114941d4c861f34a93dd4d85b42" },
+            { "path": "src/static/app/session-workbench.js", "lines": "7-29,67-107", "sha256": "e4a7643d63041a5f22c514e2b4aaaaf17c4cc6d547bbcf8f098fd21f436dc214" }
+          ]
+        }
+      ]
+    }
+  ]
+}
