@@ -1246,6 +1246,7 @@ impl CodeFacts {
         let mut text = String::new();
         let mut returned_end_line = start_line.saturating_sub(1);
         let mut found_start = false;
+        let mut byte_limit_reached = false;
         for (index, line) in content.split_inclusive('\n').enumerate() {
             let line_number = u32::try_from(index + 1).unwrap_or(u32::MAX);
             if line_number < start_line {
@@ -1256,6 +1257,7 @@ impl CodeFacts {
             }
             found_start = true;
             if text.len().saturating_add(line.len()) > max_bytes {
+                byte_limit_reached = true;
                 if text.is_empty() {
                     let end = line.floor_char_boundary(line.len().min(max_bytes));
                     text.push_str(&line[..end]);
@@ -1284,7 +1286,7 @@ impl CodeFacts {
             "definition_end_line": definition_end_line,
             "text": text,
             "byte_length": byte_length,
-            "truncated": returned_end_line < definition_end_line,
+            "truncated": byte_limit_reached || returned_end_line < definition_end_line,
         }))
     }
 

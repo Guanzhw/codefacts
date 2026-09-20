@@ -19,6 +19,11 @@ coexist with 9/12 fully correct answers, versus ordinary inspection's 11/12 and
 an explicit tradeoff rather than a new winner. The [scorecard](EVALUATION.md) and
 [current plan](IMPROVEMENT-PLAN.md) now reflect the original objective explicitly.
 
+The subsequent [answer-quality follow-up](ANSWER-QUALITY-FOLLOWUP-2026-09-20.md)
+found complete decisive source in the H05/H06 tool traces. It documents the
+answer errors and an independent source-truncation metadata repair without
+changing this campaign's measurements or grades.
+
 All measurements, grades, frozen rules, and the original interpretation below
 are preserved. This is a correction to our investment judgment, not a change in
 the owner's goal, a rerun, or a retrospective change to the experiment's success criteria.

@@ -18,12 +18,15 @@ had 9 fully correct answers versus ordinary inspection's 10 and CodeGraph's 11.
 These mixed, scoring-sensitive results establish neither an overall quality win
 nor a reason to replace CodeFacts merely because CodeGraph uses fewer tokens.
 
-The next priority is to diagnose the known H05 duplicate-usage and H06 status
-lifecycle omissions using the existing evidence. Determine whether relevant
-implementation facts were missing, obscured by result presentation, contradicted
-by comments, or misinterpreted by the agent. Change CodeFacts only when its own
-boundary is implicated. Any subsequent model comparison must freeze its quality
-criteria and stopping rule first; the completed 36-run campaign stays closed.
+The [H05/H06 follow-up](ANSWER-QUALITY-FOLLOWUP-2026-09-20.md) found that the
+decisive implementation facts were already visible: the errors occurred in the
+answers, with a comment/implementation mismatch in H05. It supplies no new
+ranking or larger-output requirement. The same boundary audit independently
+reproduced and fixed single-line source excerpts falsely reporting
+`truncated=false` after the 4 KiB limit. All 16 native boundary checks now pass,
+with unchanged source excerpts. Subsequent model comparisons need an independent
+task or new failure evidence, frozen quality criteria, and a stopping rule; the
+completed 36-run campaign stays closed.
 Improve correctness and completeness while tracking token cost, reducing repeated
 reads and redundant evidence where that preserves the quality gain. Judge the
 benefit and its cost together, with effectiveness taking priority.
@@ -34,7 +37,8 @@ benefit and its cost together, with effectiveness taking priority.
 | 2 | Verify usefulness during real repository work | The earlier diagnosis scored 2/4 in all arms. A new edit-and-test task delivered a real fix with all patches passing 4/4, but both MCP arms made zero formal calls and CodeFacts had execution-policy interference. No retrieval-efficiency gain was established. | Both campaigns closed; limited maintenance retained. [Diagnosis](ISSUE1-RUNTIME-RECOVERY-2026-09-13.md), [edit-and-test pilot](TEMP-CLEANUP-PILOT-2026-09-16.md). |
 | 3 | Improve real-use output and navigation failures | Fixed: callback locals no longer enter top_level; compact MCP responses share hashes/anchors; expand has a 16 KiB page budget and snapshot-bound continuation. Two real expand cases retain equivalent facts with 44.2% / 44.8% fewer response bytes including continuation. | Implemented and verified locally; release/client update pending. Plugin source guidance is updated separately in agent-plugins. [Implementation and acceptance](COMPACT-RESPONSES-2026-09-20.md), [original audit](OPENSESSION-HISTORY-AUDIT-2026-09-20.md). |
 | 4 | Compare real-history workflows with actual tool use | Six source-backed tasks, three arms, two repetitions, all evaluated with Luna/medium. All 24 tool attempts made relevant MCP calls. Initial and adjudicated scores, every attempt's cost, answers, and runtime hashes are retained. | Complete; campaign closed. Investment interpretation corrected to reflect the owner's original effectiveness-and-efficiency objective. [Results and decision](LUNA-OPENSESSION-EVAL-2026-09-20.md), [reusable corpus](../benchmarks/agent-eval/opensession-corpus/README.md). |
-| Next | Diagnose incomplete or inaccurate task answers | Start from H05/H06 source, actual returned facts, and answers; distinguish a tool defect from misleading source comments or reasoning errors. A future change needs a source-backed quality acceptance case, not a token-saving prerequisite. | Planned; reuse existing evidence before new model runs. |
+| 5 | Diagnose incomplete or inaccurate task answers | H05/H06 decisive source was already visible; no retrieval defect explains the omissions. Independently reproduced and fixed false completeness metadata for long single-line definitions. Native checks improved 8/16 to 16/16 with identical excerpts; 762 Rust tests passed. | Complete; [diagnosis and repair](ANSWER-QUALITY-FOLLOWUP-2026-09-20.md). End-to-end answer gains remain unmeasured. |
+| Next | Validate the next source-backed quality improvement | Start from a new actual failure or independent task with frozen accuracy/completeness criteria. Measure task effect and token/time cost together before keeping a candidate. | Awaiting new consumer evidence; no repeated model campaign is scheduled. |
 | Continuous | Maintain source correctness, freshness, and installation reliability | Reproduce a reported failure, fix its owning boundary, add the smallest meaningful regression and verify the affected native/protocol/platform surface. | Triggered by failures. |
 
 ## Delivery and investment loop

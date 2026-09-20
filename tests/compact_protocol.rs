@@ -218,3 +218,53 @@ fn ambiguous_candidates_also_obey_the_compact_budget() {
         .unwrap()
         .contains("paged search"));
 }
+
+#[test]
+fn source_truncation_is_explicit_even_within_a_single_definition_line() {
+    let root = tempdir().unwrap();
+    let state = tempdir().unwrap();
+    let prefix = "export function deferredState() { const text = \"";
+    let suffix = "\"; return \"stale\"; }";
+    let cases = [
+        ("short", "ok".to_owned(), false),
+        (
+            "exact",
+            "x".repeat(4096 - prefix.len() - suffix.len()),
+            false,
+        ),
+        ("ascii_over", "x".repeat(5000), true),
+        ("unicode_over", "界".repeat(1800), true),
+    ];
+    let mut mcp = Mcp::new(root.path(), &state.path().join("facts.sqlite"));
+    for (name, filler, truncated) in cases {
+        let file = format!("{name}.ts");
+        let source = format!("{prefix}{filler}{suffix}");
+        fs::write(root.path().join(&file), &source).unwrap();
+        for format in ["compact", "full"] {
+            let search = body(&mcp.call(
+                "search",
+                json!({"query":"deferredState", "path_prefix":file, "detail":"context", "format":format}),
+            ));
+            let expand = body(&mcp.call(
+                "expand",
+                json!({"symbol":"deferredState", "file_path":file, "format":format}),
+            ));
+            for excerpt in [&search["context_entries"][0]["source"], &expand["source"]] {
+                assert_eq!(excerpt["status"], "ok");
+                assert_eq!(excerpt["start_line"], 1);
+                assert_eq!(excerpt["end_line"], 1);
+                assert_eq!(excerpt["definition_end_line"], 1);
+                assert_eq!(excerpt["truncated"], truncated, "{name}/{format}");
+                let text = excerpt["text"].as_str().unwrap();
+                assert!(source.starts_with(text));
+                assert!(text.len() <= 4096);
+                assert_eq!(excerpt["byte_length"], text.len());
+                if truncated {
+                    assert!(!text.contains("return \"stale\""));
+                } else {
+                    assert_eq!(text, source);
+                }
+            }
+        }
+    }
+}
