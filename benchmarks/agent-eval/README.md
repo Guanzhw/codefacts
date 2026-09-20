@@ -202,6 +202,13 @@ the quality improvement, raw-token regressions, one MCP non-use observation,
 engineering overhead, and implemented reversion. Failed answers remain in
 workload cost; a pair only gets quality-gated savings when both answers pass.
 
+The [Markdown format acceptance](../../docs/MARKDOWN-ACCEPTANCE-2026-09-20.md)
+compares compact JSON with optional text-only Markdown on two pinned questions
+using Luna/medium. Its [results](markdown-results.json) retain all four answers,
+strict completeness grades, native byte/encoding counts, provider usage,
+readiness costs, actual calls, and failures. See the frozen
+[rubric](markdown-rubric.md); no pair qualified for a task-savings claim.
+
 The [retrieval diagnosis](../../docs/RETRIEVAL-DIAGNOSIS-2026-09-12.md) replays
 twelve frozen queries without evaluation-model calls. Its
 [results](retrieval-replay-results.json) distinguish candidate ranking from

@@ -31,6 +31,15 @@ Improve correctness and completeness while tracking token cost, reducing repeate
 reads and redundant evidence where that preserves the quality gain. Judge the
 benefit and its cost together, with effectiveness taking priority.
 
+The [Markdown acceptance](MARKDOWN-ACCEPTANCE-2026-09-20.md) adds opt-in text
+presentation for 0.1.15 while keeping compact JSON as default. Complete native
+queries preserve 285 relationship rows with 27.9% fewer encoding-proxy body
+tokens. Four Luna/medium attempts are closed with every cost and failure
+retained; no pair met the frozen strict completeness gate, so there is no
+quality-gated end-to-end savings claim. Both formats exposed long-cursor copy
+errors, supplying a concrete future usability issue without proving that
+Markdown caused it.
+
 | Priority | Work | Evidence and completion condition | Status |
 | --- | --- | --- | --- |
 | 1 | Implement explicit member-query ranking | Native Top-1 improved 7/12 to 10/12 on earlier cases and 9/12 to 12/12 on a third repository; regression tests preserve pagination, filters and context. | Complete; retained in `5a88820`. [Results and cost](MEMBER-RANKING-IMPLEMENTATION-2026-09-13.md). |
@@ -38,7 +47,8 @@ benefit and its cost together, with effectiveness taking priority.
 | 3 | Improve real-use output and navigation failures | Fixed: callback locals no longer enter top_level; compact MCP responses share hashes/anchors; expand has a 16 KiB page budget and snapshot-bound continuation. Two real expand cases retain equivalent facts with 44.2% / 44.8% fewer response bytes including continuation. | Implemented and verified locally; release/client update pending. Plugin source guidance is updated separately in agent-plugins. [Implementation and acceptance](COMPACT-RESPONSES-2026-09-20.md), [original audit](OPENSESSION-HISTORY-AUDIT-2026-09-20.md). |
 | 4 | Compare real-history workflows with actual tool use | Six source-backed tasks, three arms, two repetitions, all evaluated with Luna/medium. All 24 tool attempts made relevant MCP calls. Initial and adjudicated scores, every attempt's cost, answers, and runtime hashes are retained. | Complete; campaign closed. Investment interpretation corrected to reflect the owner's original effectiveness-and-efficiency objective. [Results and decision](LUNA-OPENSESSION-EVAL-2026-09-20.md), [reusable corpus](../benchmarks/agent-eval/opensession-corpus/README.md). |
 | 5 | Diagnose incomplete or inaccurate task answers | H05/H06 decisive source was already visible; no retrieval defect explains the omissions. Independently reproduced and fixed false completeness metadata for long single-line definitions. Native checks improved 8/16 to 16/16 with identical excerpts; 762 Rust tests passed. | Complete; [diagnosis and repair](ANSWER-QUALITY-FOLLOWUP-2026-09-20.md). End-to-end answer gains remain unmeasured. |
-| Next | Validate the next source-backed quality improvement | Start from a new actual failure or independent task with frozen accuracy/completeness criteria. Measure task effect and token/time cost together before keeping a candidate. | Awaiting new consumer evidence; no repeated model campaign is scheduled. |
+| 6 | Add optional Markdown and measure output/task cost separately | Five-tool protocol and native continuation unions preserve facts; 774 Rust and 23 npm tests pass. Four Luna attempts retain original scores, actual usage and failures. | Complete for the 0.1.15 release scope; [acceptance and limitations](MARKDOWN-ACCEPTANCE-2026-09-20.md). |
+| Next | Reduce observed cursor-consumption errors | Long cursor copy errors occurred in both JSON and Markdown; investigate shorter or programmatic continuation with native compatibility checks before a separately frozen task test. | Evidence available; no replacement runs or recurring model campaign scheduled. |
 | Continuous | Maintain source correctness, freshness, and installation reliability | Reproduce a reported failure, fix its owning boundary, add the smallest meaningful regression and verify the affected native/protocol/platform surface. | Triggered by failures. |
 
 ## Delivery and investment loop

@@ -167,6 +167,10 @@ text. Page sizes can therefore differ from JSON. Continue the section named in
 their own 4 KiB limit and explicitly report truncation, including a cut within
 a single line. Read the cited source range when the excerpt is incomplete.
 
+The [Markdown acceptance report](docs/MARKDOWN-ACCEPTANCE-2026-09-20.md)
+records smaller native responses and mixed real Luna task costs. Compact JSON
+remains the default; response-size reductions do not guarantee task savings.
+
 `map.files_with_facts` is the number of indexed files that currently own at
 least one fact, while `map.indexed_files` is every successfully parsed,
 supported source file. `map.files_indexed_this_refresh` is only the number
