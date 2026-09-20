@@ -8,6 +8,7 @@ use std::io::{self, BufRead, BufReader, BufWriter, Write};
 use serde_json::{json, Map, Value};
 
 use crate::error::{CodeFactsError, Result};
+use crate::presentation::Format;
 use crate::service::{CodeFactsRegistry, ExpandSection, SearchDetail, SymbolScope};
 use crate::types::NodeKind;
 
@@ -91,7 +92,7 @@ fn handle_request(projects: &mut CodeFactsRegistry, request: Value) -> Option<Va
             "cacheScope": TOOL_LIST_CACHE_SCOPE
         }),
         Some("tools/call") => match call_tool(projects, request.get("params")) {
-            Ok(value) => tool_result(value),
+            Ok(value) => value,
             Err(error) => tool_error(&error.to_string()),
         },
         Some("notifications/initialized") => return None,
@@ -216,12 +217,13 @@ fn call_tool(projects: &mut CodeFactsRegistry, params: Option<&Value>) -> Result
         .cloned()
         .unwrap_or_default();
     let limit = optional_limit(&arguments)?;
-    let compact = match optional_string(&arguments, "format")? {
-        None | Some("compact") => true,
-        Some("full") => false,
+    let format = match optional_string(&arguments, "format")? {
+        None | Some("compact") => Format::Compact,
+        Some("full") => Format::Full,
+        Some("markdown") => Format::Markdown,
         Some(_) => {
             return Err(CodeFactsError::Mcp(
-                "'format' must be 'compact' or 'full'".into(),
+                "'format' must be 'compact', 'full', or 'markdown'".into(),
             ))
         }
     };
@@ -269,22 +271,24 @@ fn call_tool(projects: &mut CodeFactsRegistry, params: Option<&Value>) -> Result
             let section = ExpandSection::parse(section)
                 .ok_or_else(|| CodeFactsError::Mcp("Invalid expand section".into()))?;
             let cursor = optional_string(&arguments, "cursor")?;
-            return if !compact && section == ExpandSection::All && cursor.is_none() {
-                facts.expand(
-                    required_string(&arguments, "symbol")?,
-                    optional_string(&arguments, "file_path")?,
-                    limit,
-                )
-            } else {
-                facts.expand_page(
-                    required_string(&arguments, "symbol")?,
-                    optional_string(&arguments, "file_path")?,
-                    section,
-                    cursor,
-                    limit,
-                    compact,
-                )
-            };
+            let result =
+                if format == Format::Full && section == ExpandSection::All && cursor.is_none() {
+                    facts.expand(
+                        required_string(&arguments, "symbol")?,
+                        optional_string(&arguments, "file_path")?,
+                        limit,
+                    )
+                } else {
+                    facts.expand_page_with_format(
+                        required_string(&arguments, "symbol")?,
+                        optional_string(&arguments, "file_path")?,
+                        section,
+                        cursor,
+                        limit,
+                        format,
+                    )
+                }?;
+            return Ok(tool_result(result, format));
         }
         "path" => facts.path_with_files(
             required_string(&arguments, "from")?,
@@ -295,11 +299,7 @@ fn call_tool(projects: &mut CodeFactsRegistry, params: Option<&Value>) -> Result
         ),
         _ => unreachable!("tool name was validated before project selection"),
     }?;
-    Ok(if compact {
-        crate::presentation::compact(result)
-    } else {
-        result
-    })
+    Ok(tool_result(format.present(result), format))
 }
 
 fn required_string<'a>(arguments: &'a Map<String, Value>, key: &str) -> Result<&'a str> {
@@ -403,12 +403,18 @@ fn optional_context_limit(arguments: &Map<String, Value>) -> Result<Option<usize
         .map_err(|_| CodeFactsError::Mcp("'context_limit' is too large for this platform".into()))
 }
 
-fn tool_result(value: Value) -> Value {
+fn tool_result(value: Value, format: Format) -> Value {
+    let text = format.text(&value);
+    if format == Format::Markdown {
+        return json!({
+            "content": [{ "type": "text", "text": text }],
+            "isError": false,
+        });
+    }
     // MCP clients that do not consume `structuredContent` still need the
     // complete serialized result in TextContent. Keep that compatibility
     // payload compact: pretty-printing repeats structural whitespace without
     // adding any source-backed fact.
-    let text = serde_json::to_string(&value).unwrap_or_else(|_| value.to_string());
     json!({
         "content": [{ "type": "text", "text": text }],
         "structuredContent": value,
@@ -460,13 +466,13 @@ fn tool_definitions() -> Vec<Value> {
 
 fn tool(name: &str, description: &str, mut input_schema: Value) -> Value {
     input_schema["properties"]["format"] = json!({
-        "type": "string", "enum": ["compact", "full"], "default": "compact",
-        "description": "compact shares per-file source_hashes, omits null fields and zero refresh counters, and omits each relationship's repeated anchor (definition or context symbol). Confidence, direction and locations remain explicit. full returns the original nested facts."
+        "type": "string", "enum": ["compact", "full", "markdown"], "default": "compact",
+        "description": "compact returns JSON with shared per-file hashes and relationship anchors. markdown renders the same compact facts as text only, using tables for repeated fields and code blocks for source; it has no structuredContent. Confidence, direction, locations, truncation and continuation remain explicit. full returns the original nested JSON facts."
     });
     if name == "expand" {
         input_schema["properties"]["section"] = json!({
             "type": "string", "enum": ["all", "callers", "callees", "inbound", "outbound", "tests", "semantic"], "default": "all",
-            "description": "all includes definition source and relationship sections. A selected section returns only that part. Compact expand is bounded to 16384 JSON text bytes; next maps remaining section names to cursors. Continue using the same symbol, that section and cursor."
+            "description": "all includes definition source and relationship sections. A selected section returns only that part. Compact and Markdown expand are bounded to 16384 rendered text bytes; next maps remaining section names to cursors. Continue using the same symbol, that section, cursor and format."
         });
         input_schema["properties"]["cursor"] = cursor_schema();
         input_schema["properties"]["limit"] = json!({

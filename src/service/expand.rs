@@ -1,6 +1,7 @@
 //! Snapshot-bound continuation and a total presentation budget for MCP expand.
 
 use super::*;
+use crate::presentation::Format;
 
 const COMPACT_EXPAND_BYTES: usize = 16 * 1024;
 
@@ -74,6 +75,29 @@ impl CodeFacts {
         limit: Option<usize>,
         compact: bool,
     ) -> Result<Value> {
+        self.expand_page_with_format(
+            symbol,
+            file_path,
+            section,
+            cursor,
+            limit,
+            if compact {
+                Format::Compact
+            } else {
+                Format::Full
+            },
+        )
+    }
+
+    pub(crate) fn expand_page_with_format(
+        &self,
+        symbol: &str,
+        file_path: Option<&str>,
+        section: ExpandSection,
+        cursor: Option<&str>,
+        limit: Option<usize>,
+        format: Format,
+    ) -> Result<Value> {
         if section == ExpandSection::All && cursor.is_some() {
             return Err(CodeFactsError::Mcp(
                 "Use the section named in next with its cursor.".into(),
@@ -92,8 +116,8 @@ impl CodeFacts {
                     }
                     SymbolResolution::One(_) => unreachable!(),
                 };
-                return if compact {
-                    bounded_resolution_result(result)
+                return if format != Format::Full {
+                    bounded_resolution_result(result, format)
                 } else {
                     Ok(result)
                 };
@@ -132,8 +156,8 @@ impl CodeFacts {
                     "freshness": freshness, "status": "stale_cursor",
                     "message": "The index or semantic references changed. Restart expand without a cursor.",
                 });
-                return if compact {
-                    bounded_resolution_result(result)
+                return if format != Format::Full {
+                    bounded_resolution_result(result, format)
                 } else {
                     Ok(result)
                 };
@@ -253,16 +277,12 @@ impl CodeFacts {
             }
             result["truncated"] = json!(!next.is_empty());
             result["next"] = Value::Object(next);
-            let mut presented = if compact {
-                crate::presentation::compact(result.clone())
-            } else {
-                result.clone()
-            };
-            if !compact {
+            let mut presented = format.present(result.clone());
+            if format == Format::Full {
                 return Ok(presented);
             }
             presented["max_bytes"] = json!(COMPACT_EXPAND_BYTES);
-            if serde_json::to_vec(&presented)?.len() <= COMPACT_EXPAND_BYTES {
+            if format.text(&presented).len() <= COMPACT_EXPAND_BYTES {
                 if section != ExpandSection::All
                     && pages.iter().any(|page| {
                         page.more
@@ -275,14 +295,14 @@ impl CodeFacts {
                     })
                 {
                     return Err(CodeFactsError::Mcp(
-                        "One fact exceeds the compact response budget; request format=full.".into(),
+                        "One fact exceeds the response text budget; request format=full.".into(),
                     ));
                 }
                 return Ok(presented);
             }
 
             // Trim the largest section first. Re-project to retain only hashes
-            // referenced by this page, and count final escaped JSON bytes.
+            // referenced by this page, and count the selected rendered text.
             let largest = pages
                 .iter_mut()
                 .filter(|page| {
@@ -325,7 +345,7 @@ impl CodeFacts {
                 continue;
             }
             return Err(CodeFactsError::Mcp(
-                "One fact exceeds the compact response budget; request format=full.".into(),
+                "One fact exceeds the response text budget; request format=full.".into(),
             ));
         }
     }
@@ -375,11 +395,11 @@ fn note_semantic_omission(result: &mut Value, count: usize) {
     );
 }
 
-fn bounded_resolution_result(mut result: Value) -> Result<Value> {
+fn bounded_resolution_result(mut result: Value, format: Format) -> Result<Value> {
     loop {
-        let mut presented = crate::presentation::compact(result.clone());
+        let mut presented = format.present(result.clone());
         presented["max_bytes"] = json!(COMPACT_EXPAND_BYTES);
-        if serde_json::to_vec(&presented)?.len() <= COMPACT_EXPAND_BYTES {
+        if format.text(&presented).len() <= COMPACT_EXPAND_BYTES {
             return Ok(presented);
         }
         if let Some(matches) = result.get_mut("matches").and_then(Value::as_array_mut) {
@@ -391,7 +411,7 @@ fn bounded_resolution_result(mut result: Value) -> Result<Value> {
             }
         }
         return Err(CodeFactsError::Mcp(
-            "One fact exceeds the compact response budget; request format=full.".into(),
+            "One fact exceeds the response text budget; request format=full.".into(),
         ));
     }
 }
@@ -399,6 +419,62 @@ fn bounded_resolution_result(mut result: Value) -> Result<Value> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn markdown_budget_and_continuations_preserve_every_call_site() {
+        let root = tempfile::tempdir().unwrap();
+        let state = tempfile::tempdir().unwrap();
+        let mut source = String::from("pub fn entry() {\n");
+        for i in 0..80 {
+            source.push_str(&format!(
+                "  helper_{i:03}_with_a_descriptive_identifier();\n"
+            ));
+        }
+        source.push_str("}\n");
+        for i in 0..80 {
+            source.push_str(&format!(
+                "pub fn helper_{i:03}_with_a_descriptive_identifier() {{}}\n"
+            ));
+        }
+        fs::write(root.path().join("lib.rs"), &source).unwrap();
+        let facts = CodeFacts::open(root.path(), state.path().join("facts.sqlite")).unwrap();
+        let mut section = ExpandSection::All;
+        let mut cursor = None;
+        let mut sites = std::collections::BTreeSet::new();
+        let mut cursors = std::collections::BTreeSet::new();
+        loop {
+            let page = facts
+                .expand_page_with_format(
+                    "entry",
+                    None,
+                    section,
+                    cursor.as_deref(),
+                    Some(50),
+                    Format::Markdown,
+                )
+                .unwrap();
+            let text = Format::Markdown.text(&page);
+            assert!(text.len() <= COMPACT_EXPAND_BYTES);
+            assert_eq!(page["format"], "markdown");
+            for edge in page["callees"].as_array().unwrap() {
+                assert_eq!(edge["evidence"]["confidence"], "static");
+                assert!(text.contains(edge["to"]["id"].as_str().unwrap()));
+                assert!(sites.insert(edge["evidence"]["start_line"].as_u64().unwrap()));
+            }
+            let Some(next) = page["next"]["callees"].as_str() else {
+                break;
+            };
+            assert!(text.contains(next));
+            assert!(cursors.insert(next.to_owned()), "continuation must advance");
+            cursor = Some(next.to_owned());
+            section = ExpandSection::Callees;
+        }
+        assert!(
+            !cursors.is_empty(),
+            "the dense fixture must exercise continuation"
+        );
+        assert_eq!(sites, (2..=81).collect());
+    }
 
     #[test]
     fn semantic_cursor_rejects_changed_results_without_a_source_refresh() {

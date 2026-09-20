@@ -3,6 +3,36 @@
 
 use serde_json::{Map, Value};
 
+mod markdown;
+pub(crate) use markdown::render as markdown;
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub(crate) enum Format {
+    Compact,
+    Full,
+    Markdown,
+}
+
+impl Format {
+    pub(crate) fn present(self, value: Value) -> Value {
+        if self == Self::Full {
+            return value;
+        }
+        let mut value = compact(value);
+        if self == Self::Markdown {
+            value["format"] = Value::from("markdown");
+        }
+        value
+    }
+
+    pub(crate) fn text(self, value: &Value) -> String {
+        match self {
+            Self::Markdown => markdown(value),
+            Self::Compact | Self::Full => value.to_string(),
+        }
+    }
+}
+
 pub(crate) fn compact(mut value: Value) -> Value {
     compact_neighborhood(&mut value);
     if let Some(entries) = value

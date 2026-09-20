@@ -60,7 +60,7 @@ Version 1 deliberately exposes exactly five read-only tools:
 | `expand` | One definition with a verified bounded source excerpt, plus callers, callees with explicit confidence, references, related tests, Markdown section text, and optional semantic references. |
 | `path` | A shortest bounded static calls path between confirmed symbols, with optional endpoint file-path disambiguation. |
 
-Every result is bounded, includes file/line/hash evidence, and refreshes the incremental index before answering. Its `freshness` object includes the canonical `repository_root` and fact-store `generation`, so a caller can verify that the facts belong to the intended project. `freshness.status` is `partial` when a source file could not be read, parsed, extracted, or accepted because it exceeded the indexing limit; the accompanying `files_failed` and reason counters make that gap explicit. Successful MCP results keep a compact serialized JSON `TextContent` for older clients and carry the equivalent object in `structuredContent`. A `no_static_path` result never claims that runtime execution is unreachable.
+Every result is bounded, includes file/line/hash evidence, and refreshes the incremental index before answering. Its `freshness` object includes the canonical `repository_root` and fact-store `generation`, so a caller can verify that the facts belong to the intended project. `freshness.status` is `partial` when a source file could not be read, parsed, extracted, or accepted because it exceeded the indexing limit; the accompanying `files_failed` and reason counters make that gap explicit. JSON modes return serialized JSON `TextContent` and an equivalent `structuredContent` object. Opt-in Markdown mode returns one text body. A `no_static_path` result never claims that runtime execution is unreachable.
 
 All five tools accept an optional `repository_root` project directory. It
 selects (and, on first use, indexes) that project's independent external SQLite
@@ -118,7 +118,7 @@ calls without type binding remain heuristic candidates, including when only one
 same-named definition exists. Semantic references retain their separate
 availability/status contract.
 
-### Compact responses (development version, not yet released)
+### Response formats
 
 All five MCP tools default to `format: "compact"`. File hashes occur once in
 `source_hashes[file_path]`; evidence retains its file, line range, extractor and
@@ -153,6 +153,19 @@ This changes the default MCP output shape. Consumers that need the previous
 nested evidence can request `format: "full"`; `expand` with that format and no
 section/cursor retains the original per-category limit and has no 16 KiB cap.
 The Rust service's existing `expand` method retains its original response.
+
+Use `format: "markdown"` for an agent-readable text response with the same
+compact facts. Repeated fact fields share a table header; nested sections keep
+each definition/context anchor explicit, and multiline source uses code blocks.
+Hashes, confidence, resolution, empty results, truncation and continuation are
+retained. Markdown mode emits only `content[0].text`, with no duplicate
+`structuredContent`; consumers that parse JSON should use `compact` or `full`.
+
+Markdown `expand` uses the same **16 KiB** limit, measured on its actual rendered
+text. Page sizes can therefore differ from JSON. Continue the section named in
+`next` using the returned cursor and `format: "markdown"`. Source excerpts have
+their own 4 KiB limit and explicitly report truncation, including a cut within
+a single line. Read the cited source range when the excerpt is incomplete.
 
 `map.files_with_facts` is the number of indexed files that currently own at
 least one fact, while `map.indexed_files` is every successfully parsed,

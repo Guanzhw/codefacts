@@ -268,3 +268,70 @@ fn source_truncation_is_explicit_even_within_a_single_definition_line() {
         }
     }
 }
+
+#[test]
+fn markdown_is_opt_in_and_preserves_facts_across_the_five_tools() {
+    let root = tempdir().unwrap();
+    let state = tempdir().unwrap();
+    fs::write(root.path().join("lib.ts"), "export function helper() { return 1; }\nexport function entry() { return helper(); }\nexport class Alpha { execute() {} }\nexport class Beta { execute() {} }\nexport function invoke(receiver: any) { receiver.execute(); }\n").unwrap();
+    let mut mcp = Mcp::new(root.path(), &state.path().join("facts.sqlite"));
+    body(&mcp.call("map", json!({})));
+    let queries = [
+        ("map", json!({})),
+        ("search", json!({"query":"invoke", "detail":"context"})),
+        ("search", json!({"query":"helper", "detail":"context"})),
+        ("outline", json!({"file_path":"lib.ts"})),
+        ("expand", json!({"symbol":"invoke", "limit":5})),
+        ("path", json!({"from":"entry", "to":"helper"})),
+        ("expand", json!({"symbol":"missing"})),
+        (
+            "path",
+            json!({"from":"invoke", "to":"execute", "to_file_path":"lib.ts"}),
+        ),
+    ];
+    for (tool, mut arguments) in queries {
+        let mut expected = body(&mcp.call(tool, arguments.clone()));
+        assert_eq!(expected["format"], "compact");
+        expected["format"] = json!("markdown");
+        let singleton_caller = tool == "search" && arguments["query"] == "helper";
+        arguments["format"] = json!("markdown");
+        let response = mcp.call(tool, arguments);
+        assert_eq!(response["isError"], false, "{response}");
+        assert!(response.get("structuredContent").is_none());
+        assert_eq!(response["content"].as_array().unwrap().len(), 1);
+        let text = response["content"][0]["text"].as_str().unwrap();
+        assert!(text.contains("markdown"));
+        assert!(text.contains("freshness"));
+        assert!(text.contains("generation"));
+        if singleton_caller {
+            assert!(text.contains("from.evidence.start_line"));
+            assert!(text.contains("evidence.confidence"));
+            assert!(
+                !text.contains("######"),
+                "relationship ownership must remain explicit"
+            );
+        }
+        if tool == "expand" {
+            assert!(text.len() <= 16_384);
+        }
+        assert_markdown_strings(&expected, text);
+    }
+}
+
+fn assert_markdown_strings(value: &Value, text: &str) {
+    match value {
+        Value::String(value) => assert!(text.contains(value), "missing {value:?} in {text}"),
+        Value::Object(fields) => {
+            for (key, value) in fields {
+                assert!(text.contains(key), "missing field {key} in {text}");
+                assert_markdown_strings(value, text);
+            }
+        }
+        Value::Array(items) => {
+            for item in items {
+                assert_markdown_strings(item, text);
+            }
+        }
+        _ => {}
+    }
+}
