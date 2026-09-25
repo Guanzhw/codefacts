@@ -17,7 +17,10 @@ decoder also accepts v1 JSON-hex cursors for an unchanged request and snapshot.
   install fixture. An intermediate packed-install attempt paired 0.1.16
   metadata with the still-built 0.1.15 local binary and failed its version
   check; rebuilding the 0.1.16 release binary made the focused and full npm
-  runs pass.
+  runs pass. The first macOS CI run exposed a pre-existing test race: two
+  separate refreshes could report 1 ms and 0 ms respectively, and compact
+  omits zero counters. The Markdown equivalence test now excludes only the
+  variable `freshness.duration_ms` field from its cross-call comparison.
 - Real stdio MCP calls on a frozen OpenSession source snapshot completed all
   compact and Markdown continuation chains with no response error. Two dense
   queries returned the same ordered facts as v0.1.15: 10 callers, 83 callees,

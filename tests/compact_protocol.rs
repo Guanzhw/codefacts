@@ -296,6 +296,11 @@ fn markdown_is_opt_in_and_preserves_facts_across_the_five_tools() {
         let mut expected = body(&mcp.call(tool, arguments.clone()));
         assert_eq!(expected["format"], "compact");
         expected["format"] = json!("markdown");
+        // Separate refreshes can cross the 0 ms boundary; compact omits zero counters.
+        expected["freshness"]
+            .as_object_mut()
+            .unwrap()
+            .remove("duration_ms");
         let singleton_caller = tool == "search" && arguments["query"] == "helper";
         arguments["format"] = json!("markdown");
         let response = mcp.call(tool, arguments);
