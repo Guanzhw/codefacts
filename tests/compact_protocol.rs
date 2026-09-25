@@ -108,6 +108,8 @@ fn compact_relations_preserve_all_call_sites_with_bounded_continuations() {
         "budget must trim a dense section"
     );
     let cursor = first["next"]["callees"].as_str().unwrap().to_owned();
+    assert!(cursor.is_ascii());
+    assert!(cursor.len() <= 128, "{} characters", cursor.len());
     let mut page = first;
     let mut sites = BTreeSet::new();
     let mut cursors = BTreeSet::new();
@@ -122,6 +124,7 @@ fn compact_relations_preserve_all_call_sites_with_bounded_continuations() {
         let Some(next) = page["next"]["callees"].as_str() else {
             break;
         };
+        assert!(next.len() <= 128, "{} characters", next.len());
         assert!(cursors.insert(next.to_owned()), "cursor must advance");
         page = body(&mcp.call(
             "expand",

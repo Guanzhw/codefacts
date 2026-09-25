@@ -271,7 +271,7 @@ impl CodeFacts {
                     };
                     next.insert(
                         page.section.as_str().into(),
-                        json!(hex::encode(serde_json::to_vec(&cursor)?)),
+                        json!(encode_page_cursor_value(&cursor)?),
                     );
                 }
             }
@@ -464,7 +464,8 @@ mod tests {
             let Some(next) = page["next"]["callees"].as_str() else {
                 break;
             };
-            assert!(text.contains(next));
+            assert!(next.len() <= 128, "{} characters", next.len());
+            assert!(text.contains(&format!("- callees: {next}\n")));
             assert!(cursors.insert(next.to_owned()), "continuation must advance");
             cursor = Some(next.to_owned());
             section = ExpandSection::Callees;
@@ -478,34 +479,31 @@ mod tests {
 
     #[test]
     fn semantic_cursor_rejects_changed_results_without_a_source_refresh() {
+        let scope = page_scope(&["expand", "repository", "symbol", "semantic"]);
+        let original_snapshot = hex::encode(Sha256::digest(b"original-lsp-result"));
+        let changed_snapshot = hex::encode(Sha256::digest(b"changed-lsp-result"));
         let cursor = PageCursor {
             version: PAGE_CURSOR_VERSION,
             generation: 9,
             offset: 2,
-            scope: "semantic-request".into(),
-            semantic_snapshot: Some("original-lsp-result".into()),
+            scope: scope.clone(),
+            semantic_snapshot: Some(original_snapshot.clone()),
         };
-        let encoded = hex::encode(serde_json::to_vec(&cursor).unwrap());
+        let encoded = encode_page_cursor_value(&cursor).unwrap();
+        assert!(encoded.is_ascii());
+        assert!(encoded.len() <= 128, "{} characters", encoded.len());
         assert!(matches!(
-            page_offset_with_snapshot(
-                Some(&encoded),
-                0,
-                9,
-                "semantic-request",
-                Some("original-lsp-result")
-            )
-            .unwrap(),
+            page_offset_with_snapshot(Some(&encoded), 0, 9, &scope, Some(&original_snapshot))
+                .unwrap(),
             PageOffset::Current(2)
         ));
         assert!(matches!(
-            page_offset_with_snapshot(
-                Some(&encoded),
-                0,
-                9,
-                "semantic-request",
-                Some("changed-lsp-result")
-            )
-            .unwrap(),
+            page_offset_with_snapshot(Some(&encoded), 0, 9, &scope, Some(&changed_snapshot))
+                .unwrap(),
+            PageOffset::Stale
+        ));
+        assert!(matches!(
+            page_offset_with_snapshot(Some(&encoded), 0, 9, &scope, None).unwrap(),
             PageOffset::Stale
         ));
     }

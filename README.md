@@ -146,6 +146,11 @@ Selected sections return their facts and the definition, without repeating the
 source excerpt or implying that unrequested sections are empty. Cursors bind
 the repository, symbol, section and index generation. Semantic-reference cursors
 also bind the sorted LSP result; a changed result returns `stale_cursor`.
+New cursors are at most 128 ASCII characters. Pass them verbatim: JSON clients
+can take `structuredContent.next[section]` directly, while Markdown clients can
+extract the cursor from the matching `next` line in the same programmatic call.
+Avoid retyping opaque cursors in an agent's next tool arguments. Existing v1
+cursors remain accepted while their source and semantic snapshots are current.
 Source excerpts still report their own truncation. An oversized ambiguous
 candidate list is explicitly truncated and asks for a file or paged search.
 

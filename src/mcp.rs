@@ -472,7 +472,7 @@ fn tool(name: &str, description: &str, mut input_schema: Value) -> Value {
     if name == "expand" {
         input_schema["properties"]["section"] = json!({
             "type": "string", "enum": ["all", "callers", "callees", "inbound", "outbound", "tests", "semantic"], "default": "all",
-            "description": "all includes definition source and relationship sections. A selected section returns only that part. Compact and Markdown expand are bounded to 16384 rendered text bytes; next maps remaining section names to cursors. Continue using the same symbol, that section, cursor and format."
+            "description": "all includes definition source and relationship sections. A selected section returns only that part. Compact and Markdown expand are bounded to 16384 rendered text bytes; next maps remaining section names to cursors. Continue with the same symbol, section and format. Pass the cursor verbatim from next; programmable clients should read structuredContent.next[section] for JSON or extract the matching Markdown next line instead of retyping it."
         });
         input_schema["properties"]["cursor"] = cursor_schema();
         input_schema["properties"]["limit"] = json!({
@@ -504,7 +504,7 @@ fn offset_schema() -> Value {
 }
 
 fn cursor_schema() -> Value {
-    json!({ "type": "string", "minLength": 1, "description": "Opaque next_cursor returned by the preceding page; rejects a stale or mismatched snapshot" })
+    json!({ "type": "string", "minLength": 1, "description": "Opaque next_cursor returned by the preceding page. Pass it verbatim from the result object; stale or mismatched snapshots are rejected." })
 }
 
 fn kind_schema() -> Value {
