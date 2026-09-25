@@ -403,6 +403,39 @@ fn pagination_cursors_are_scoped_to_the_selected_project_root() {
     let cursor = first_page["next_cursor"]
         .as_str()
         .expect("first project continuation cursor");
+    assert!(cursor.is_ascii());
+    assert!(cursor.len() <= 128, "{} characters", cursor.len());
+
+    let outline = facts_a
+        .outline_with_page_scope_options(
+            "src/lib.rs",
+            None,
+            SymbolScope::TopLevel,
+            0,
+            None,
+            Some(1),
+        )
+        .expect("first project outline");
+    let outline_cursor = outline["next_cursor"]
+        .as_str()
+        .expect("outline continuation cursor");
+    assert!(outline_cursor.is_ascii());
+    assert!(
+        outline_cursor.len() <= 128,
+        "{} characters",
+        outline_cursor.len()
+    );
+    let outline_next = facts_a
+        .outline_with_page_scope_options(
+            "src/lib.rs",
+            None,
+            SymbolScope::TopLevel,
+            0,
+            Some(outline_cursor),
+            Some(1),
+        )
+        .expect("second outline page");
+    assert_eq!(outline_next["symbols"].as_array().unwrap().len(), 1);
 
     let error = facts_b
         .search_with_page_scope_options(

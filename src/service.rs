@@ -8,6 +8,7 @@ use std::collections::{BTreeMap, HashMap, HashSet, VecDeque};
 use std::fs;
 use std::path::{Component, Path, PathBuf};
 
+use base64::{engine::general_purpose::STANDARD_NO_PAD, Engine as _};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use sha2::{Digest, Sha256};
@@ -146,7 +147,10 @@ pub struct UnresolvedReferenceFact {
     pub evidence: Evidence,
 }
 
-const PAGE_CURSOR_VERSION: u8 = 1;
+const PAGE_CURSOR_VERSION: u8 = 2;
+const LEGACY_PAGE_CURSOR_VERSION: u8 = 1;
+const PAGE_CURSOR_CHECK_BYTES: usize = 8;
+const PAGE_CURSOR_BASE_BYTES: usize = 1 + 8 + 8 + 32;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct PageCursor {
@@ -1481,7 +1485,73 @@ fn encode_page_cursor(generation: i64, offset: usize, scope: &str) -> Result<Str
         scope: scope.to_string(),
         semantic_snapshot: None,
     };
-    Ok(hex::encode(serde_json::to_vec(&cursor)?))
+    encode_page_cursor_value(&cursor)
+}
+
+fn encode_page_cursor_value(cursor: &PageCursor) -> Result<String> {
+    let mut bytes = Vec::with_capacity(PAGE_CURSOR_BASE_BYTES + 32 + PAGE_CURSOR_CHECK_BYTES);
+    bytes.push(PAGE_CURSOR_VERSION);
+    bytes.extend_from_slice(&cursor.generation.to_be_bytes());
+    bytes.extend_from_slice(
+        &u64::try_from(cursor.offset)
+            .map_err(|_| CodeFactsError::Other("cursor offset exceeds u64".into()))?
+            .to_be_bytes(),
+    );
+    let scope = hex::decode(&cursor.scope)
+        .map_err(|_| CodeFactsError::Other("invalid internal cursor scope".into()))?;
+    if scope.len() != 32 {
+        return Err(CodeFactsError::Other(
+            "invalid internal cursor scope".into(),
+        ));
+    }
+    bytes.extend_from_slice(&scope);
+    if let Some(snapshot) = &cursor.semantic_snapshot {
+        let snapshot = hex::decode(snapshot)
+            .map_err(|_| CodeFactsError::Other("invalid internal semantic snapshot".into()))?;
+        if snapshot.len() != 32 {
+            return Err(CodeFactsError::Other(
+                "invalid internal semantic snapshot".into(),
+            ));
+        }
+        bytes.extend_from_slice(&snapshot);
+    }
+    let check = Sha256::digest(&bytes);
+    bytes.extend_from_slice(&check[..PAGE_CURSOR_CHECK_BYTES]);
+    Ok(STANDARD_NO_PAD.encode(bytes))
+}
+
+fn decode_page_cursor(value: &str) -> Result<PageCursor> {
+    let invalid = || CodeFactsError::Other("cursor is not valid CodeFacts page data".into());
+    if let Ok(bytes) = STANDARD_NO_PAD.decode(value) {
+        if bytes.first() == Some(&PAGE_CURSOR_VERSION) {
+            let expected_len = match bytes.len() {
+                len if len == PAGE_CURSOR_BASE_BYTES + PAGE_CURSOR_CHECK_BYTES => len,
+                len if len == PAGE_CURSOR_BASE_BYTES + 32 + PAGE_CURSOR_CHECK_BYTES => len,
+                _ => return Err(invalid()),
+            };
+            let payload = &bytes[..expected_len - PAGE_CURSOR_CHECK_BYTES];
+            let check = Sha256::digest(payload);
+            if check[..PAGE_CURSOR_CHECK_BYTES] != bytes[expected_len - PAGE_CURSOR_CHECK_BYTES..] {
+                return Err(invalid());
+            }
+            let offset = u64::from_be_bytes(bytes[9..17].try_into().expect("fixed cursor size"));
+            return Ok(PageCursor {
+                version: PAGE_CURSOR_VERSION,
+                generation: i64::from_be_bytes(bytes[1..9].try_into().expect("fixed cursor size")),
+                offset: usize::try_from(offset).map_err(|_| invalid())?,
+                scope: hex::encode(&bytes[17..49]),
+                semantic_snapshot: (expected_len
+                    > PAGE_CURSOR_BASE_BYTES + PAGE_CURSOR_CHECK_BYTES)
+                    .then(|| hex::encode(&bytes[49..81])),
+            });
+        }
+    }
+    let bytes = hex::decode(value).map_err(|_| invalid())?;
+    let cursor: PageCursor = serde_json::from_slice(&bytes).map_err(|_| invalid())?;
+    if cursor.version != LEGACY_PAGE_CURSOR_VERSION {
+        return Err(invalid());
+    }
+    Ok(cursor)
 }
 
 fn page_offset(
@@ -1508,11 +1578,8 @@ fn page_offset_with_snapshot(
             "use either cursor or a non-zero offset, not both".into(),
         ));
     }
-    let bytes = hex::decode(cursor)
-        .map_err(|_| CodeFactsError::Other("cursor is not valid CodeFacts page data".into()))?;
-    let cursor: PageCursor = serde_json::from_slice(&bytes)
-        .map_err(|_| CodeFactsError::Other("cursor is not valid CodeFacts page data".into()))?;
-    if cursor.version != PAGE_CURSOR_VERSION || cursor.scope != scope {
+    let cursor = decode_page_cursor(cursor)?;
+    if cursor.scope != scope {
         return Err(CodeFactsError::Other(
             "cursor does not belong to this request".into(),
         ));
@@ -1521,6 +1588,55 @@ fn page_offset_with_snapshot(
         return Ok(PageOffset::Stale);
     }
     Ok(PageOffset::Current(cursor.offset))
+}
+
+#[cfg(test)]
+mod cursor_tests {
+    use super::*;
+
+    #[test]
+    fn short_cursor_round_trips_and_rejects_copy_errors() {
+        let scope = page_scope(&["search", "repository", "needle"]);
+        let encoded = encode_page_cursor(7, 42, &scope).unwrap();
+        assert!(encoded.is_ascii());
+        assert!(encoded.len() <= 128, "{} characters", encoded.len());
+        assert!(encoded
+            .bytes()
+            .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'+' | b'/')));
+        let markdown = crate::presentation::markdown(&json!({ "next_cursor": encoded }));
+        assert!(markdown.contains(&format!("- next_cursor: {encoded}\n")));
+        assert!(matches!(
+            page_offset(Some(&encoded), 0, 7, &scope).unwrap(),
+            PageOffset::Current(42)
+        ));
+
+        assert!(page_offset(Some(&encoded), 1, 7, &scope).is_err());
+        let mut corrupted = encoded.into_bytes();
+        corrupted[20] = if corrupted[20] == b'A' { b'B' } else { b'A' };
+        let corrupted = String::from_utf8(corrupted).unwrap();
+        assert!(page_offset(Some(&corrupted), 0, 7, &scope).is_err());
+    }
+
+    #[test]
+    fn legacy_cursor_remains_valid_on_the_same_snapshot() {
+        let scope = page_scope(&["outline", "repository", "lib.rs"]);
+        let legacy = PageCursor {
+            version: LEGACY_PAGE_CURSOR_VERSION,
+            generation: 5,
+            offset: 3,
+            scope: scope.clone(),
+            semantic_snapshot: None,
+        };
+        let encoded = hex::encode(serde_json::to_vec(&legacy).unwrap());
+        assert!(matches!(
+            page_offset(Some(&encoded), 0, 5, &scope).unwrap(),
+            PageOffset::Current(3)
+        ));
+        assert!(matches!(
+            page_offset(Some(&encoded), 0, 6, &scope).unwrap(),
+            PageOffset::Stale
+        ));
+    }
 }
 
 fn bounded_limit(limit: Option<usize>) -> usize {

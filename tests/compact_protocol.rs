@@ -108,6 +108,8 @@ fn compact_relations_preserve_all_call_sites_with_bounded_continuations() {
         "budget must trim a dense section"
     );
     let cursor = first["next"]["callees"].as_str().unwrap().to_owned();
+    assert!(cursor.is_ascii());
+    assert!(cursor.len() <= 128, "{} characters", cursor.len());
     let mut page = first;
     let mut sites = BTreeSet::new();
     let mut cursors = BTreeSet::new();
@@ -122,6 +124,7 @@ fn compact_relations_preserve_all_call_sites_with_bounded_continuations() {
         let Some(next) = page["next"]["callees"].as_str() else {
             break;
         };
+        assert!(next.len() <= 128, "{} characters", next.len());
         assert!(cursors.insert(next.to_owned()), "cursor must advance");
         page = body(&mcp.call(
             "expand",
@@ -293,6 +296,11 @@ fn markdown_is_opt_in_and_preserves_facts_across_the_five_tools() {
         let mut expected = body(&mcp.call(tool, arguments.clone()));
         assert_eq!(expected["format"], "compact");
         expected["format"] = json!("markdown");
+        // Separate refreshes can cross the 0 ms boundary; compact omits zero counters.
+        expected["freshness"]
+            .as_object_mut()
+            .unwrap()
+            .remove("duration_ms");
         let singleton_caller = tool == "search" && arguments["query"] == "helper";
         arguments["format"] = json!("markdown");
         let response = mcp.call(tool, arguments);
