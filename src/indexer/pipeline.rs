@@ -274,6 +274,26 @@ impl<'a> IndexingPipeline<'a> {
             })
             .collect();
 
+        // Source hashes have been checked. With no successful replacements or
+        // deletions, incremental refresh has no facts or metadata to mutate.
+        // Retain skip/failure counts even when the prior snapshot is partial.
+        if incremental && parsed.is_empty() && removed_paths.is_empty() {
+            return Ok(IndexResult {
+                files_indexed: 0,
+                files_skipped: skip_counts.total(),
+                files_unchanged: skip_counts.unchanged.load(Ordering::Relaxed),
+                files_too_large: skip_counts.too_large.load(Ordering::Relaxed),
+                files_unreadable: skip_counts.unreadable.load(Ordering::Relaxed),
+                files_parse_failed: skip_counts.parse_failed.load(Ordering::Relaxed),
+                files_extract_failed: skip_counts.extract_failed.load(Ordering::Relaxed),
+                files_failed: skip_counts.failures(),
+                nodes_created: 0,
+                edges_created: 0,
+                relationships_rebound: 0,
+                duration_ms: start.elapsed().as_millis(),
+            });
+        }
+
         // ---- Build cross-file node index ----
         // Keep existing nodes owned for the entire pass because `all_nodes`
         // borrows them while extracting edges for changed files.
@@ -1002,6 +1022,10 @@ class Calculator:
             })
             .unwrap();
         assert_eq!(r1.files_indexed, 2);
+        let generation = store.generation().unwrap();
+        let hashes = store.get_file_hashes().unwrap();
+        let nodes = serde_json::to_value(store.get_all_nodes().unwrap()).unwrap();
+        let edges = serde_json::to_value(store.get_all_edges().unwrap()).unwrap();
 
         // Second index — nothing changed, everything skipped
         let r2 = pipeline
@@ -1014,6 +1038,84 @@ class Calculator:
         assert_eq!(r2.files_skipped, 2);
         assert_eq!(r2.files_unchanged, 2);
         assert_eq!(r2.files_failed, 0);
+        assert_eq!(r2.nodes_created, 0);
+        assert_eq!(r2.edges_created, 0);
+        assert_eq!(r2.relationships_rebound, 0);
+        assert_eq!(store.generation().unwrap(), generation);
+        assert_eq!(store.get_file_hashes().unwrap(), hashes);
+        assert_eq!(
+            serde_json::to_value(store.get_all_nodes().unwrap()).unwrap(),
+            nodes
+        );
+        assert_eq!(
+            serde_json::to_value(store.get_all_edges().unwrap()).unwrap(),
+            edges
+        );
+    }
+
+    #[test]
+    fn incremental_refresh_detects_same_size_source_edit_with_restored_mtime() {
+        let tmp = tempfile::tempdir().unwrap();
+        let path = tmp.path().join("target.ts");
+        let original = "export function before() { return 1; }\n";
+        let modified = "export function afterX() { return 2; }\n";
+        assert_eq!(original.len(), modified.len());
+        fs::write(&path, original).unwrap();
+        let store = GraphStore::from_connection(initialize_database(":memory:").unwrap());
+        let pipeline = IndexingPipeline::new(&store);
+        let options = IndexOptions {
+            root_dir: tmp.path().to_path_buf(),
+            incremental: true,
+        };
+        pipeline.index_directory(&options).unwrap();
+        let generation = store.generation().unwrap();
+        let hash = store.get_file_hash("target.ts").unwrap();
+        let modified_time = fs::metadata(&path).unwrap().modified().unwrap();
+
+        fs::write(&path, modified).unwrap();
+        fs::OpenOptions::new()
+            .write(true)
+            .open(&path)
+            .unwrap()
+            .set_times(fs::FileTimes::new().set_modified(modified_time))
+            .unwrap();
+        assert_eq!(
+            fs::metadata(&path).unwrap().modified().unwrap(),
+            modified_time
+        );
+        let result = pipeline.index_directory(&options).unwrap();
+        assert_eq!(result.files_indexed, 1);
+        assert_eq!(result.files_unchanged, 0);
+        assert!(store.generation().unwrap() > generation);
+        assert_ne!(store.get_file_hash("target.ts").unwrap(), hash);
+        let nodes = store.get_nodes_by_file("target.ts").unwrap();
+        assert!(nodes.iter().any(|node| node.name == "afterX"));
+        assert!(!nodes.iter().any(|node| node.name == "before"));
+    }
+
+    #[test]
+    fn empty_required_full_reindex_completes_before_incremental_no_change_exit() {
+        let tmp = tempfile::tempdir().unwrap();
+        let conn = initialize_database(":memory:").unwrap();
+        conn.execute(
+            "UPDATE index_metadata SET value = '1' WHERE key = 'full_reindex_required'",
+            [],
+        )
+        .unwrap();
+        let store = GraphStore::from_connection(conn);
+        let generation = store.generation().unwrap();
+        let pipeline = IndexingPipeline::new(&store);
+        assert!(store.full_reindex_required().unwrap());
+
+        let result = pipeline
+            .index_directory(&IndexOptions {
+                root_dir: tmp.path().to_path_buf(),
+                incremental: true,
+            })
+            .unwrap();
+        assert_eq!(result.files_indexed, 0);
+        assert!(!store.full_reindex_required().unwrap());
+        assert_eq!(store.generation().unwrap(), generation);
     }
 
     #[test]
