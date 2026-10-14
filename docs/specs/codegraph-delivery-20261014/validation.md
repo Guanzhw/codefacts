@@ -1,8 +1,9 @@
 # Native delivery validation
 
 The feature candidate at commit `960932cb3c2aa2d16df686bbfa6c6b312e79ec60`
-passes the frozen correctness and performance checks. Publication and installed
-runtime acceptance are tracked separately in the delivery tasks.
+passes the frozen correctness and performance checks. The v0.1.18 release,
+plugin update, and fresh Windows installed-runtime acceptance are complete;
+their receipts and platform limits are recorded below.
 
 ## Source and workflow evidence
 
@@ -73,3 +74,40 @@ and separately hashed derivative drivers, pinned source/binary receipts, and
 `raw/candidate-018-20261015-bedb7d092ed1/{REPORT.md,comparison.json,completeness.json,full-current-manifest.json}`.
 This measures native tools and source-backed workflows, not general agent
 productivity or token savings.
+
+## v0.1.18 delivery closure
+
+The primary receipts are `publication/final-publication-receipt.json`,
+`installed-018/final-receipt.json`, and `host-018/fresh-host-receipt.json`
+plus `final-root-audit.json` under
+`D:\WorkSpace\codefacts\target\codegraph-delivery-20261014`.
+
+| Requirement | Closure evidence |
+|---|---|
+| Source, launcher, license, platform CI and packages | Final head `afc94f8557a6a567f93346b8d03212aa0ba9d2d4` merged as `b93d6829252b95a4b1591c2d84938999a72484e6`; the three-system source CI run `38599439602` passed as recorded above, and publication run `38602511773` succeeded. The v0.1.18 tag points to `b93d6829252b95a4b1591c2d84938999a72484e6`. Six npm packages report `latest=0.1.18`, matching integrity and provenance; all six registry signatures and six CodeFacts attestations verify. Five actual native binaries from npm match the public GitHub asset digests and downloaded `SHA256SUMS`. |
+| Release and plugin publication | CodeFacts PR [#5](https://github.com/Guanzhw/codefacts/pull/5) merged; the v0.1.18 release has five native binaries and `SHA256SUMS`. Agent plugins PR [#3](https://github.com/Guanzhw/agent-plugins/pull/3) merged at `9ddae1f0f53fc4ff01642e148db3335d11b84d45`; the actual global CLI install and marketplace upgrade succeeded. |
+| Fresh installed runtime | The actual installed rootless Go/Markdown MCP configuration started v0.1.18 and passed seven workflow probes (`map`, `search`, `expand`, `explore`, `impact`, `path`, `outline`). Native child PID 17888 used the Windows binary whose SHA256 matches the public asset; process exit was 0 with empty stderr. The installed cache and fixture remained unchanged. The separate installed-package receipt records 139 isolated runtime checks. |
+| Feature correctness, boundedness and source evidence | The root audit maps all five behavior requirements to source tests, frozen response audits and installed runtime evidence; it records no required work remaining. Runtime source inputs match compiled source commit `960932cb3c2aa2d16df686bbfa6c6b312e79ec60`, with a two-document-only delta afterward. The fresh host exercised all seven advertised workflows. |
+| Frozen performance and delivery run | The complete four-corpus frozen campaign and its results remain the primary performance evidence above. A separate shipped-Windows Go sanity run supplemented it: 20 query samples per case and 30 paired edit samples passed all 13/13 recorded gates in one timed run. It does not replace the full four-corpus campaign. |
+
+Remaining limits and preserved failures: the large GitHub release-binary download
+stalled/timed out, so the five native bytes were independently retrieved from
+npm and checked against public GitHub digests and `SHA256SUMS`; this does not
+claim the direct large GitHub download succeeded. No new on-device macOS or Linux
+runtime session was run; those platforms have CI/protocol and binary digest
+evidence. The complete four-corpus campaign used the local Windows candidate
+built with Rust 1.93.1, while the shipped-binary run was the supplemental single
+Go-corpus sanity check. Existing Go cold wall time and state-disk medians remain
+6.86 s / 183.74 MiB versus v0.1.17 at 4.26 s / 90.72 MiB. An additional
+redundant plugin-add attempt returned Access Denied after the successful
+marketplace upgrade and was not retried. The receipt also preserves an initial
+npm `ETARGET` observation before the registry exposed v0.1.18 and the private
+cache install succeeded.
+
+The shipped interface remains seven MCP tools and ten query CLI names
+(`map`, `search`, `outline`, `expand`, `path`, `node`, `callers`, `callees`,
+`explore`, and `impact`). `mcp` selects the transport, not a query. The optional
+native MCP `--tools explore` profile remains available; the installed plugin
+configuration continues to use the default all-tools profile without that
+flag. Simplifying default MCP guidance to `explore`/`expand`/`impact` is a
+proposal only; it was not implemented as part of v0.1.18.

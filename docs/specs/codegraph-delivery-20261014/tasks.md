@@ -10,11 +10,15 @@
 - [x] Frozen native performance/CodeGraph comparison on all required corpus sizes.
 - [x] Independent implementation review and root final diff inspection.
 - [x] Update guidance, provenance, release documentation and version.
-- [ ] Source/launcher/license/platform CI and package checks.
-- [ ] Publish release and plugin; fresh installed runtime verification.
-- [ ] Requirement-by-requirement completion audit with remaining work explicit.
+- [x] Source/launcher/license/platform CI and package checks.
+- [x] Publish release and plugin; fresh installed runtime verification.
+- [x] Requirement-by-requirement completion audit with remaining work explicit.
 
-The final candidate's source and performance evidence is recorded in
-[validation.md](validation.md). Local source/package/license checks and the
-three-system source CI passed; final release platform checks, publication and
-installed runtime acceptance remain explicit release tasks.
+Closure receipts: `publication/final-publication-receipt.json`,
+`installed-018/final-receipt.json`, and `host-018/fresh-host-receipt.json`
+plus `final-root-audit.json` under
+`D:\WorkSpace\codefacts\target\codegraph-delivery-20261014`.
+Requirement-by-requirement evidence and the remaining limits are recorded in
+[validation.md](validation.md). The installed-runtime acceptance is Windows;
+macOS/Linux runtime sessions and the large direct GitHub binary download remain
+unverified as detailed there.
