@@ -285,17 +285,17 @@ impl CodeFacts {
     pub fn map(&self) -> Result<Value> {
         let freshness = self.refresh()?;
         let stats = self.store.get_stats()?;
-        let nodes = self.store.get_all_nodes()?;
+        let symbol_counts = self.store.get_symbol_counts()?;
         let unresolved_references = self.unresolved_reference_report()?;
         let mut language_symbol_counts = BTreeMap::<String, usize>::new();
         let mut kinds = BTreeMap::<String, usize>::new();
-        let mut indexed_languages = Vec::with_capacity(nodes.len());
-        for node in &nodes {
+        let mut indexed_languages = Vec::with_capacity(symbol_counts.len());
+        for (language, kind, count) in symbol_counts {
             *language_symbol_counts
-                .entry(node.language.as_str().to_string())
-                .or_default() += 1;
-            *kinds.entry(node.kind.as_str().to_string()).or_default() += 1;
-            indexed_languages.push(node.language);
+                .entry(language.as_str().to_string())
+                .or_default() += count;
+            *kinds.entry(kind.as_str().to_string()).or_default() += count;
+            indexed_languages.push(language);
         }
         let language_file_counts = self.store.get_language_file_counts()?;
         let indexed_files = language_file_counts.values().sum::<usize>();
@@ -609,20 +609,28 @@ impl CodeFacts {
                 }));
             }
         };
-        let mut nodes = self.store.get_nodes_by_file(&file_path)?;
-        if let Some(kind) = kind {
-            nodes.retain(|node| node.kind == kind);
-        }
-        self.filter_nodes_by_scope(&mut nodes, symbol_scope)?;
+        let file_nodes = self.store.get_nodes_by_file(&file_path)?;
+        let mut nodes = file_nodes
+            .iter()
+            .filter(|node| {
+                kind.is_none_or(|kind| node.kind == kind)
+                    && (symbol_scope == SymbolScope::All || !is_local_variable(node, &file_nodes))
+            })
+            .collect::<Vec<_>>();
         nodes.sort_by_key(|node| (node.start_line, node.start_column));
         let page_end = offset.saturating_add(limit);
         let truncated = nodes.len() > page_end;
-        let symbols = nodes
-            .iter()
-            .skip(offset)
-            .take(limit)
-            .map(|node| self.symbol_fact(node))
-            .collect::<Result<Vec<_>>>()?;
+        let symbols = if offset < nodes.len() {
+            let source_hash = self.source_hash(&file_path)?;
+            nodes
+                .iter()
+                .skip(offset)
+                .take(limit)
+                .map(|node| Self::symbol_fact_with_source_hash(node, source_hash.clone()))
+                .collect::<Vec<_>>()
+        } else {
+            Vec::new()
+        };
 
         Ok(json!({
             "freshness": freshness,
@@ -1188,7 +1196,14 @@ impl CodeFacts {
     }
 
     fn symbol_fact(&self, node: &CodeNode) -> Result<SymbolFact> {
-        Ok(SymbolFact {
+        Ok(Self::symbol_fact_with_source_hash(
+            node,
+            self.source_hash(&node.file_path)?,
+        ))
+    }
+
+    fn symbol_fact_with_source_hash(node: &CodeNode, source_hash: Option<String>) -> SymbolFact {
+        SymbolFact {
             id: node.id.clone(),
             name: node.name.clone(),
             qualified_name: node.qualified_name.clone(),
@@ -1198,11 +1213,11 @@ impl CodeFacts {
                 file_path: node.file_path.clone(),
                 start_line: node.start_line,
                 end_line: node.end_line,
-                source_hash: self.source_hash(&node.file_path)?,
+                source_hash,
                 extractor: extractor_for(node).to_string(),
                 confidence: confidence_for(node).to_string(),
             },
-        })
+        }
     }
 
     /// Return a definition-only source excerpt whose bytes are verified against

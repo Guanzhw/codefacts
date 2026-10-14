@@ -12,7 +12,7 @@ use rusqlite::{params, params_from_iter, Connection};
 use crate::db::converters::{row_to_code_edge, row_to_code_node};
 use crate::db::schema::initialize_database;
 use crate::error::Result;
-use crate::types::{CodeEdge, CodeNode, UnresolvedRef};
+use crate::types::{CodeEdge, CodeNode, Language, NodeKind, UnresolvedRef};
 
 // ---------------------------------------------------------------------------
 // GraphStats
@@ -1309,6 +1309,27 @@ impl GraphStore {
         })
     }
 
+    /// Count indexed symbols without loading their source bodies or metadata.
+    /// Decode each group exactly as the canonical node converter does.
+    pub fn get_symbol_counts(&self) -> Result<Vec<(Language, NodeKind, usize)>> {
+        let mut statement = self.conn.prepare_cached(
+            "SELECT language, type, COUNT(*) FROM nodes \
+             GROUP BY language, type ORDER BY language, type",
+        )?;
+        let rows = statement.query_map([], |row| {
+            let language: String = row.get(0)?;
+            let kind: String = row.get(1)?;
+            let count: i64 = row.get(2)?;
+            Ok((
+                Language::from_str_loose(&language).unwrap_or(Language::TypeScript),
+                NodeKind::from_str_loose(&kind).unwrap_or(NodeKind::Variable),
+                count as usize,
+            ))
+        })?;
+        rows.collect::<std::result::Result<Vec<_>, _>>()
+            .map_err(Into::into)
+    }
+
     /// Count every indexed source file by its detected language.  Unlike
     /// `GraphStats::files`, this is sourced from `file_hashes`, so a parsed
     /// file with no extracted symbols remains visible to `map`.
@@ -2081,6 +2102,70 @@ mod tests {
         assert_eq!(stats.nodes, 3);
         assert_eq!(stats.edges, 2);
         assert_eq!(stats.files, 2); // a.ts and b.ts
+    }
+
+    #[test]
+    fn symbol_counts_match_node_conversion_and_lsp_language_sets() {
+        let store = setup();
+        assert!(store.get_symbol_counts().unwrap().is_empty());
+        let mut nodes = vec![
+            make_node("ts1", "a", "a.ts", NodeKind::Function, 1),
+            make_node("ts2", "b", "a.ts", NodeKind::Function, 10),
+            make_node("ts3", "c", "a.ts", NodeKind::Class, 20),
+            make_node("go1", "d", "a.go", NodeKind::Function, 1),
+            make_node("go2", "e", "a.go", NodeKind::Function, 10),
+            make_node("go3", "f", "a.go", NodeKind::Class, 20),
+            make_node("alias", "g", "a.go", NodeKind::Property, 30),
+            make_node("legacy", "h", "a.ts", NodeKind::Variable, 30),
+        ];
+        for node in &mut nodes {
+            if node.file_path.ends_with(".go") {
+                node.language = Language::Go;
+            }
+        }
+        store.upsert_nodes(&nodes).unwrap();
+        // Existing converter aliases/defaults remain the query boundary's
+        // interpretation of persisted rows, including grouped counts.
+        store
+            .conn
+            .execute(
+                "UPDATE nodes SET language = 'golang', type = 'field' WHERE id = 'alias'",
+                [],
+            )
+            .unwrap();
+        store
+            .conn
+            .execute(
+                "UPDATE nodes SET language = 'unknown', type = 'unknown' WHERE id = 'legacy'",
+                [],
+            )
+            .unwrap();
+        let full = store.get_all_nodes().unwrap();
+        let groups = store.get_symbol_counts().unwrap();
+        let mut expected = HashMap::new();
+        for node in &full {
+            *expected.entry((node.language, node.kind)).or_insert(0) += 1;
+        }
+        let mut actual = HashMap::new();
+        for (language, kind, count) in &groups {
+            *actual.entry((*language, *kind)).or_insert(0) += count;
+        }
+        assert_eq!(actual, expected);
+        assert_eq!(
+            groups.iter().map(|(_, _, count)| count).sum::<usize>(),
+            full.len()
+        );
+        for mode in [crate::lsp::LspMode::Off, crate::lsp::LspMode::Auto] {
+            let manager = crate::lsp::LspManager::new(mode);
+            assert_eq!(
+                serde_json::to_value(manager.report(full.iter().map(|node| node.language), false))
+                    .unwrap(),
+                serde_json::to_value(
+                    manager.report(groups.iter().map(|(language, _, _)| *language), false)
+                )
+                .unwrap(),
+            );
+        }
     }
 
     // -- get_nodes_by_* queries -------------------------------------------
