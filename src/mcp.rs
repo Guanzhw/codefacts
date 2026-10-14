@@ -1,4 +1,4 @@
-//! Minimal stdio JSON-RPC transport for the five CodeFacts MCP tools.
+//! Stdio JSON-RPC transport for CodeFacts exploration and exact-fact tools.
 //!
 //! The transport writes protocol messages only to stdout. Diagnostics belong on
 //! stderr so an MCP client never receives corrupted JSONL.
@@ -9,7 +9,10 @@ use serde_json::{json, Map, Value};
 
 use crate::error::{CodeFactsError, Result};
 use crate::presentation::Format;
-use crate::service::{CodeFactsRegistry, ExpandSection, SearchDetail, SymbolScope};
+use crate::service::{
+    CodeFactsRegistry, ExpandSection, ExploreOptions, ExploreRead, ImpactOptions, SearchDetail,
+    SymbolScope,
+};
 use crate::types::NodeKind;
 
 const LEGACY_PROTOCOL_VERSION: &str = "2025-11-25";
@@ -26,6 +29,32 @@ const SERVER_INFO_META_KEY: &str = "io.modelcontextprotocol/serverInfo";
 const TOOL_LIST_CACHE_TTL_MS: u64 = 0;
 const TOOL_LIST_CACHE_SCOPE: &str = "private";
 
+#[derive(Clone, Copy, Debug, Default)]
+pub enum ToolProfile {
+    #[default]
+    All,
+    Explore,
+}
+
+impl ToolProfile {
+    pub fn parse(value: &str) -> Option<Self> {
+        match value {
+            "all" => Some(Self::All),
+            "explore" => Some(Self::Explore),
+            _ => None,
+        }
+    }
+
+    fn names(self) -> &'static [&'static str] {
+        match self {
+            Self::All => &[
+                "explore", "impact", "map", "search", "outline", "expand", "path",
+            ],
+            Self::Explore => &["explore"],
+        }
+    }
+}
+
 #[derive(Clone, Copy)]
 enum ProtocolEra {
     Legacy,
@@ -40,6 +69,10 @@ enum ProtocolSelection {
 }
 
 pub fn serve(projects: &mut CodeFactsRegistry) -> Result<()> {
+    serve_with_tools(projects, ToolProfile::All)
+}
+
+pub fn serve_with_tools(projects: &mut CodeFactsRegistry, tools: ToolProfile) -> Result<()> {
     let stdin = io::stdin();
     let stdout = io::stdout();
     let mut output = BufWriter::new(stdout.lock());
@@ -59,14 +92,18 @@ pub fn serve(projects: &mut CodeFactsRegistry) -> Result<()> {
                 continue;
             }
         };
-        if let Some(response) = handle_request(projects, request) {
+        if let Some(response) = handle_request(projects, request, tools) {
             write_json(&mut output, response)?;
         }
     }
     Ok(())
 }
 
-fn handle_request(projects: &mut CodeFactsRegistry, request: Value) -> Option<Value> {
+fn handle_request(
+    projects: &mut CodeFactsRegistry,
+    request: Value,
+    tools: ToolProfile,
+) -> Option<Value> {
     let id = request.get("id").cloned();
     let method = request.get("method").and_then(Value::as_str);
     let protocol = match select_protocol(&request) {
@@ -87,11 +124,11 @@ fn handle_request(projects: &mut CodeFactsRegistry, request: Value) -> Option<Va
             "serverInfo": server_info()
         }),
         Some("tools/list") => json!({
-            "tools": tool_definitions(),
+            "tools": tool_definitions(tools),
             "ttlMs": TOOL_LIST_CACHE_TTL_MS,
             "cacheScope": TOOL_LIST_CACHE_SCOPE
         }),
-        Some("tools/call") => match call_tool(projects, request.get("params")) {
+        Some("tools/call") => match call_tool(projects, request.get("params"), tools) {
             Ok(value) => value,
             Err(error) => tool_error(&error.to_string()),
         },
@@ -206,16 +243,63 @@ fn complete_result(mut result: Value) -> Value {
     result
 }
 
-fn call_tool(projects: &mut CodeFactsRegistry, params: Option<&Value>) -> Result<Value> {
+/// Execute one query with the same validation and presentation as stdio MCP.
+pub fn execute_tool(
+    projects: &mut CodeFactsRegistry,
+    name: &str,
+    arguments: Map<String, Value>,
+) -> Result<Value> {
+    call_tool(
+        projects,
+        Some(&json!({ "name": name, "arguments": arguments })),
+        ToolProfile::All,
+    )
+}
+
+fn call_tool(
+    projects: &mut CodeFactsRegistry,
+    params: Option<&Value>,
+    tools: ToolProfile,
+) -> Result<Value> {
     let params = params
         .and_then(Value::as_object)
         .ok_or_else(|| CodeFactsError::Mcp("tools/call requires object params".into()))?;
     let name = required_string(params, "name")?;
+    if !tools.names().contains(&name) {
+        return Err(CodeFactsError::Mcp(format!(
+            "unknown tool '{name}'; CodeFacts exposes {}",
+            tools.names().join(", ")
+        )));
+    }
     let arguments = params
         .get("arguments")
         .and_then(Value::as_object)
         .cloned()
         .unwrap_or_default();
+    if name == "explore" {
+        let repository_root = optional_string(&arguments, "repository_root")?;
+        let reads = arguments
+            .get("reads")
+            .map(|value| {
+                serde_json::from_value::<Vec<ExploreRead>>(value.clone())
+                    .map_err(|error| CodeFactsError::Mcp(format!("invalid reads: {error}")))
+            })
+            .transpose()?;
+        let text = projects.project(repository_root)?.explore(ExploreOptions {
+            query: optional_string(&arguments, "query")?,
+            path_prefix: optional_string(&arguments, "path_prefix")?,
+            file_path: optional_string(&arguments, "file_path")?,
+            start_line: optional_positive_integer(&arguments, "start_line")?
+                .map(|value| {
+                    u32::try_from(value)
+                        .map_err(|_| CodeFactsError::Mcp("start_line is too large".into()))
+                })
+                .transpose()?,
+            max_bytes: optional_positive_integer(&arguments, "max_bytes")?,
+            reads: reads.as_deref(),
+        })?;
+        return Ok(json!({ "content": [{ "type": "text", "text": text }], "isError": false }));
+    }
     let limit = optional_limit(&arguments)?;
     let format = match optional_string(&arguments, "format")? {
         None | Some("compact") => Format::Compact,
@@ -229,11 +313,6 @@ fn call_tool(projects: &mut CodeFactsRegistry, params: Option<&Value>) -> Result
     };
     let repository_root = optional_string(&arguments, "repository_root")?.map(str::to_owned);
 
-    if !matches!(name, "map" | "search" | "outline" | "expand" | "path") {
-        return Err(CodeFactsError::Mcp(format!(
-            "unknown tool '{name}'; CodeFacts exposes only map, search, outline, expand, and path"
-        )));
-    }
     let facts = projects.project(repository_root.as_deref())?;
 
     let result = match name {
@@ -290,6 +369,12 @@ fn call_tool(projects: &mut CodeFactsRegistry, params: Option<&Value>) -> Result
                 }?;
             return Ok(tool_result(result, format));
         }
+        "impact" => facts.impact(ImpactOptions {
+            symbol: required_string(&arguments, "symbol")?,
+            file_path: optional_string(&arguments, "file_path")?,
+            max_depth: optional_positive_integer(&arguments, "max_depth")?,
+            limit,
+        }),
         "path" => facts.path_with_files(
             required_string(&arguments, "from")?,
             optional_string(&arguments, "from_file_path")?,
@@ -308,6 +393,19 @@ fn required_string<'a>(arguments: &'a Map<String, Value>, key: &str) -> Result<&
         .and_then(Value::as_str)
         .filter(|value| !value.is_empty())
         .ok_or_else(|| CodeFactsError::Mcp(format!("'{key}' must be a non-empty string")))
+}
+
+fn optional_positive_integer(arguments: &Map<String, Value>, key: &str) -> Result<Option<usize>> {
+    let Some(value) = arguments.get(key) else {
+        return Ok(None);
+    };
+    let value = value
+        .as_u64()
+        .filter(|value| *value > 0)
+        .ok_or_else(|| CodeFactsError::Mcp(format!("'{key}' must be a positive integer")))?;
+    usize::try_from(value)
+        .map(Some)
+        .map_err(|_| CodeFactsError::Mcp(format!("'{key}' is too large")))
 }
 
 fn optional_string<'a>(arguments: &'a Map<String, Value>, key: &str) -> Result<Option<&'a str>> {
@@ -454,14 +552,40 @@ fn write_json(output: &mut impl Write, value: Value) -> Result<()> {
     output.flush().map_err(CodeFactsError::Io)
 }
 
-fn tool_definitions() -> Vec<Value> {
+fn tool_definitions(tools: ToolProfile) -> Vec<Value> {
     vec![
+        json!({
+            "name": "explore",
+            "description": "Orient in an unfamiliar repository, locate implementation from behavior/code terms, or read cited source ranges. Omit query for an entry/module map; use query for ranked, hash-verified source previews with exact full-range locators and path_prefix to narrow scope. Previews omit context; use reads to batch up to eight ranges for the source needed to establish behavior. Text-only output includes freshness, locations and omissions within max_bytes. Lexical candidates require judgment. Set repository_root for a rootless server.",
+            "inputSchema": schema(json!({
+                "repository_root": repository_root_schema(),
+                "query": string_schema("Task/behavior description or code terms; omit for repository orientation"),
+                "path_prefix": string_schema("Optional repository-relative file or directory scope"),
+                "file_path": string_schema("Read a known repository-relative source file; omit query/path_prefix"),
+                "start_line": { "type": "integer", "minimum": 1, "description": "Starting line for file_path follow-up, default 1" },
+                "reads": {
+                    "type": "array", "minItems": 1, "maxItems": 8,
+                    "description": "Read repository-relative source ranges together; omit query, path_prefix, file_path and start_line. Ranges starting past EOF are reported unavailable; other ranges remain readable.",
+                    "items": schema(json!({
+                        "file_path": string_schema("Repository-relative source file"),
+                        "start_line": { "type": "integer", "minimum": 1, "description": "First line, default 1" },
+                        "end_line": { "type": "integer", "minimum": 1, "description": "Inclusive last line, clipped to EOF with a notice; omit to read onward within the response budget" }
+                    }), &["file_path"])
+                },
+                "max_bytes": { "type": "integer", "minimum": 2000, "maximum": 32000, "default": 24000, "description": "Total rendered UTF-8 response budget, including source and evidence metadata; not an exact token count" }
+            }), &[]),
+            "annotations": read_only_annotations()
+        }),
+        tool("impact", "Trace bounded static dependents of one confirmed symbol through calls, references, inheritance, implementations and imports; include stored container members. Returns shortest graph-hop distances, witness relationships, test-associated symbols and explicit cutoffs. Use a symbol id or file_path to disambiguate. Results retain extracted static uncertainty and do not establish complete runtime or Go type-system impact.", schema(json!({ "repository_root": repository_root_schema(), "symbol": string_schema("Symbol name or exact symbol id"), "file_path": string_schema("Optional selected-project-relative disambiguator"), "max_depth": { "type": "integer", "minimum": 1, "maximum": 10, "default": 3, "description": "Maximum static graph hops, including container-member transitions" }, "limit": limit_schema(), "format": { "type": "string", "enum": ["compact","full","markdown"] } }), &["symbol"])),
         tool("map", "Repository structure, language mix, and symbol counts. Use for an overview; start with search when a symbol or code term is already known. Set repository_root to select a project.", schema(json!({ "repository_root": repository_root_schema() }), &[])),
         tool("search", "Find source-backed symbols, endpoints, and documentation headings. Start with a known identifier or a short code term; exact symbol names rank first, and FTS words match prefixes joined by AND. For an empty result, shorten to one distinctive term or use ordinary text search to discover an identifier. detail=context includes bounded definition source and direct relationships; use it when investigating behavior to avoid a separate definition read. Narrow with kind/path_prefix/scope. Set repository_root to select a project. Continue pages with next_cursor.", schema(json!({ "query": string_schema("Known identifier or short code terms; FTS requires every word prefix. Full questions and paraphrases may return no matches."), "repository_root": repository_root_schema(), "kind": kind_schema(), "path_prefix": string_schema("Optional selected-project-relative file or directory prefix"), "scope": scope_schema(), "detail": detail_schema(), "context_limit": context_limit_schema(), "cursor": cursor_schema(), "offset": offset_schema(), "limit": limit_schema() }), &["query"])),
         tool("outline", "List indexed symbols or documentation headings in one selected-project-relative file. Set repository_root to select a project for this call. The default top_level scope excludes local variables; pass scope=all for implementation detail. Optionally filter by kind. Continue with next_cursor to keep all pages on one index snapshot; offset is legacy compatibility only.", schema(json!({ "repository_root": repository_root_schema(), "file_path": string_schema("Selected-project-relative file path"), "kind": kind_schema(), "scope": scope_schema(), "cursor": cursor_schema(), "offset": offset_schema(), "limit": limit_schema() }), &["file_path"])),
         tool("expand", "Return one symbol definition, a verified bounded definition-source excerpt, static callers, callees, references, and related tests from one selected project. Set repository_root to select a project for this call. When a user-installed supported LSP is available, include separately labeled semantic reference locations. Use a symbol id or add file_path to disambiguate.", schema(json!({ "repository_root": repository_root_schema(), "symbol": string_schema("Symbol name or exact symbol id"), "file_path": string_schema("Optional selected-project-relative disambiguator"), "limit": limit_schema() }), &["symbol"])),
         tool("path", "Find the shortest bounded static calls path within one selected project. Set repository_root to select that project; static relationships are not merged across projects. Optional file paths disambiguate duplicate names. A missing path never claims runtime unreachability.", schema(json!({ "repository_root": repository_root_schema(), "from": string_schema("Source symbol name or exact id"), "from_file_path": string_schema("Optional selected-project-relative source disambiguator"), "to": string_schema("Target symbol name or exact id"), "to_file_path": string_schema("Optional selected-project-relative target disambiguator"), "limit": limit_schema() }), &["from", "to"])),
     ]
+    .into_iter()
+    .filter(|tool| tools.names().contains(&tool["name"].as_str().expect("tool definition name")))
+    .collect()
 }
 
 fn tool(name: &str, description: &str, mut input_schema: Value) -> Value {
@@ -480,7 +604,11 @@ fn tool(name: &str, description: &str, mut input_schema: Value) -> Value {
             "description": "Maximum entries per section (default 20, max 50); compact output may return fewer to fit the total byte budget."
         });
     }
-    json!({ "name": name, "description": description, "inputSchema": input_schema })
+    json!({ "name": name, "description": description, "inputSchema": input_schema, "annotations": read_only_annotations() })
+}
+
+fn read_only_annotations() -> Value {
+    json!({ "readOnlyHint": true, "destructiveHint": false, "idempotentHint": true, "openWorldHint": false })
 }
 
 fn schema(properties: Value, required: &[&str]) -> Value {

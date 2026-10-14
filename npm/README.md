@@ -44,11 +44,26 @@ npx --yes --prefer-online codefacts@latest mcp --root .
 `--root` is a default project, not a limit on the MCP server. To inspect
 several local projects from one read-only server, start it without `--root` and
 pass an absolute `repository_root` argument to every `map`, `search`,
-`outline`, `expand`, or `path` call. Each selected project gets its own
+`outline`, `expand`, `path`, `explore`, or `impact` call. Each selected project gets its own
 external index and every result reports `freshness.repository_root`.
 
 The launcher supports Windows x64, macOS x64/arm64, and Linux x64/arm64.
-It writes status only to stderr; stdout remains reserved for JSON-RPC.
+It writes status only to stderr; MCP stdout remains reserved for JSON-RPC.
+
+## Direct navigation commands
+
+```sh
+npx --yes codefacts@latest node <symbol> --file <file> --root <repository>
+npx --yes codefacts@latest callers <symbol> --root <repository>
+npx --yes codefacts@latest callees <symbol> --root <repository>
+npx --yes codefacts@latest explore <code-terms> --root <repository>
+npx --yes codefacts@latest impact <symbol> --max-depth 3 --root <repository>
+```
+
+Direct queries default to the current directory, external index state and
+readable Markdown. Use `--format compact` or `--format full` for JSON;
+`explore` returns bounded text. Same-name symbols return disambiguation candidates;
+select an exact ID or add `--file`. Run `<command> --help` for options.
 
 See the [project README](https://github.com/Guanzhw/codefacts#readme) for
 Claude Code and OpenCode configurations, trust model, and manual binary

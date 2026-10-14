@@ -40,6 +40,17 @@
 (method_definition
   name: (property_identifier) @name) @definition.method
 
+; Callable initializers are checked by the extractor, including parentheses.
+(field_definition
+  property: [(property_identifier) (private_property_identifier)] @name
+  value: (_) @value) @definition.callable_field
+
+; Static member assignments supply source owners, not dispatch resolution.
+(assignment_expression
+  left: (member_expression property: (property_identifier) @name) @assignment_target
+  "="
+  right: (_) @value) @definition.callable_assignment
+
 ; ---------------------------------------------------------------------------
 ; Variable declarations (non-function values)
 ; ---------------------------------------------------------------------------

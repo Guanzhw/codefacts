@@ -244,7 +244,11 @@ test('packed launcher installs the matching optional package and speaks MCP', as
   assert.equal(initialized.result.serverInfo.version, launcher.PACKAGE_VERSION);
   client.notify('notifications/initialized');
   const tools = await client.request(2, 'tools/list');
-  assert.deepEqual(tools.result.tools.map((tool) => tool.name), ['map', 'search', 'outline', 'expand', 'path']);
+  assert.deepEqual(tools.result.tools.map((tool) => tool.name), ['explore', 'impact', 'map', 'search', 'outline', 'expand', 'path']);
+  for (const tool of tools.result.tools) {
+    assert.equal(tool.annotations.readOnlyHint, true);
+    assert.equal(tool.annotations.destructiveHint, false);
+  }
   const search = await client.request(3, 'tools/call', {
     name: 'search',
     arguments: { query: 'AuthService' },
@@ -259,5 +263,26 @@ test('packed launcher installs the matching optional package and speaks MCP', as
   assert.equal(markdown.result.structuredContent, undefined);
   assert.match(markdown.result.content[0].text, /AuthService/);
   assert.match(markdown.result.content[0].text, /format: markdown/);
+  const exploration = await client.request(5, 'tools/call', {
+    name: 'explore',
+    arguments: { file_path: 'src/auth/service.ts', max_bytes: 2000 },
+  });
+  assert.equal(exploration.result.isError, false);
+  assert.equal(exploration.result.structuredContent, undefined);
+  const explorationText = exploration.result.content[0].text;
+  assert.ok(Buffer.byteLength(explorationText, 'utf8') <= 2000);
+  assert.match(explorationText, /Freshness: fresh \| generation/);
+  assert.match(explorationText, /src\/auth\/service\.ts:1-/);
+  assert.match(explorationText, /^1: /m);
+  const sourceHash = createHash('sha256').update(await readFile(join(fixtureRoot, 'src/auth/service.ts'))).digest('hex');
+  assert.ok(explorationText.includes(`SHA256: ${sourceHash}`));
+  const impact = await client.request(6, 'tools/call', {
+    name: 'impact',
+    arguments: { symbol: 'AuthService', file_path: 'src/auth/service.ts' },
+  });
+  assert.equal(impact.result.isError, false);
+  assert.match(impact.result.content[0].text, /AuthService/);
+  const nativeNode = commandResult(process.execPath, [installedLauncher, 'node', 'AuthService', '--file', 'src/auth/service.ts', '--root', fixtureRoot, '--state', join(temporaryDirectory, 'state.sqlite'), '--lsp', 'off', '--format', 'full']);
+  assert.equal(JSON.parse(nativeNode.stdout).status, 'ok');
   await client.close();
 });

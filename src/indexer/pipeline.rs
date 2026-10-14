@@ -541,7 +541,7 @@ impl<'a> IndexingPipeline<'a> {
         }
 
         // Endpoint handler references and receiver dispatch with duplicate
-        // definitions are candidate sets. Recreate each source location
+        // definitions are candidate sets. Resolve each source location
         // instead of silently calling one same-named method a static fact.
         for group in candidate_groups.into_values() {
             let Some(template) = group.first() else {
@@ -550,8 +550,6 @@ impl<'a> IndexingPipeline<'a> {
             let Some(target_name) = template.target_name.as_deref() else {
                 continue;
             };
-            deleted.extend(group.iter().cloned());
-
             let candidates = if is_endpoint_candidate(template) {
                 let targets = callable_candidates(template, target_name, &node_index);
                 CandidateSet {
@@ -562,15 +560,34 @@ impl<'a> IndexingPipeline<'a> {
             } else {
                 call_candidates(template, target_name, &node_index)
             };
-            if candidates.targets.is_empty() {
-                inserted.push(unresolved_candidate_edge(
+            let replacements = if candidates.targets.is_empty() {
+                vec![unresolved_candidate_edge(
                     template,
                     target_name,
                     candidates.candidate_count,
                     candidates.resolution,
-                ));
+                )]
             } else {
-                inserted.extend(materialize_candidate_edges(template, candidates));
+                materialize_candidate_edges(template, candidates)
+            };
+            // Reindexed definitions may keep the same binding. Preserve those
+            // occurrences while still resolving new source facts and changes
+            // to candidate targets or uncertainty metadata.
+            let unchanged = group.len() == replacements.len()
+                && group.iter().all(|old| {
+                    replacements.iter().any(|new| {
+                        old.source == new.source
+                            && old.target == new.target
+                            && old.kind == new.kind
+                            && old.file_path == new.file_path
+                            && old.line == new.line
+                            && old.target_name == new.target_name
+                            && old.metadata == new.metadata
+                    })
+                });
+            if !unchanged {
+                deleted.extend(group);
+                inserted.extend(replacements);
             }
         }
 
@@ -1051,6 +1068,134 @@ class Calculator:
             serde_json::to_value(store.get_all_edges().unwrap()).unwrap(),
             edges
         );
+    }
+
+    #[test]
+    fn candidate_rebinding_preserves_unchanged_occurrences_and_updates_targets() {
+        let tmp = tempfile::tempdir().unwrap();
+        fs::write(
+            tmp.path().join("caller.go"),
+            "package main\nfunc run() {\n x.Send()\n x.Send()\n}\n",
+        )
+        .unwrap();
+        let target = "package main\ntype A struct{}\nfunc (a A) Send() {}\n";
+        fs::write(tmp.path().join("target.go"), target).unwrap();
+        let store = GraphStore::from_connection(initialize_database(":memory:").unwrap());
+        let pipeline = IndexingPipeline::new(&store);
+        let options = IndexOptions {
+            root_dir: tmp.path().to_path_buf(),
+            incremental: true,
+        };
+        pipeline.index_directory(&options).unwrap();
+        let before = serde_json::to_value(store.get_all_edges().unwrap()).unwrap();
+        assert_eq!(before.as_array().unwrap().len(), 2);
+        let hashes = store.get_file_hashes().unwrap();
+        let generation = store.generation().unwrap();
+
+        fs::write(
+            tmp.path().join("target.go"),
+            format!("{target}// comment\n"),
+        )
+        .unwrap();
+        let unchanged = pipeline.index_directory(&options).unwrap();
+        assert_eq!(unchanged.files_indexed, 1);
+        assert_eq!(unchanged.relationships_rebound, 0);
+        assert_ne!(hashes, store.get_file_hashes().unwrap());
+        assert_eq!(store.generation().unwrap(), generation + 1);
+        assert_eq!(
+            before,
+            serde_json::to_value(store.get_all_edges().unwrap()).unwrap()
+        );
+
+        fs::write(
+            tmp.path().join("second.go"),
+            "package main\ntype B struct{}\nfunc (b B) Send() {}\n",
+        )
+        .unwrap();
+        let added = pipeline.index_directory(&options).unwrap();
+        assert_eq!(added.relationships_rebound, 2);
+        let edges = store.get_all_edges().unwrap();
+        assert_eq!(edges.len(), 4);
+        assert_eq!(
+            edges
+                .iter()
+                .map(|edge| edge.line)
+                .collect::<HashSet<_>>()
+                .len(),
+            2
+        );
+        assert!(edges
+            .iter()
+            .all(|edge| edge.metadata.as_ref().unwrap()["candidate_count"] == "2"));
+
+        fs::remove_file(tmp.path().join("second.go")).unwrap();
+        assert_eq!(
+            pipeline
+                .index_directory(&options)
+                .unwrap()
+                .relationships_rebound,
+            4
+        );
+        assert_eq!(
+            before,
+            serde_json::to_value(store.get_all_edges().unwrap()).unwrap()
+        );
+
+        fs::write(
+            tmp.path().join("caller.go"),
+            "package main\nfunc run() {\n x.Send()\n x.Send()\n x.Send()\n}\n",
+        )
+        .unwrap();
+        pipeline.index_directory(&options).unwrap();
+        let edges = store.get_all_edges().unwrap();
+        assert_eq!(edges.len(), 3);
+        assert!(edges.iter().all(|edge| {
+            store.get_node(&edge.target).unwrap().unwrap().file_path == "target.go"
+        }));
+    }
+
+    #[test]
+    fn candidate_rebinding_updates_metadata_when_truncated_targets_stay_the_same() {
+        let tmp = tempfile::tempdir().unwrap();
+        fs::write(
+            tmp.path().join("caller.go"),
+            "package main\nfunc run() {\n x.Send()\n}\n",
+        )
+        .unwrap();
+        for i in 0..=MAX_AMBIGUOUS_CALL_TARGETS {
+            fs::write(
+                tmp.path().join(format!("target{i:03}.go")),
+                format!("package main\ntype T{i} struct{{}}\nfunc (t T{i}) Send() {{}}\n"),
+            )
+            .unwrap();
+        }
+        let store = GraphStore::from_connection(initialize_database(":memory:").unwrap());
+        let pipeline = IndexingPipeline::new(&store);
+        let options = IndexOptions {
+            root_dir: tmp.path().to_path_buf(),
+            incremental: true,
+        };
+        pipeline.index_directory(&options).unwrap();
+        let before = store.get_all_edges().unwrap();
+        assert_eq!(before.len(), MAX_AMBIGUOUS_CALL_TARGETS);
+        fs::write(
+            tmp.path().join("zz_added.go"),
+            "package main\ntype Last struct{}\nfunc (t Last) Send() {}\n",
+        )
+        .unwrap();
+        let result = pipeline.index_directory(&options).unwrap();
+        assert_eq!(result.relationships_rebound, MAX_AMBIGUOUS_CALL_TARGETS);
+        let after = store.get_all_edges().unwrap();
+        assert_eq!(
+            before.iter().map(|e| &e.target).collect::<Vec<_>>(),
+            after.iter().map(|e| &e.target).collect::<Vec<_>>()
+        );
+        assert!(after.iter().all(|edge| {
+            let metadata = edge.metadata.as_ref().unwrap();
+            metadata["candidate_count"] == (MAX_AMBIGUOUS_CALL_TARGETS + 2).to_string()
+                && metadata["candidates_truncated"] == "true"
+                && metadata["confidence"] == "heuristic"
+        }));
     }
 
     #[test]

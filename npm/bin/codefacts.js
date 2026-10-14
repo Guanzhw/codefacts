@@ -11,6 +11,15 @@ Usage:
   codefacts --install
   codefacts install
   codefacts mcp [--root <repository>] [--state <external-sqlite-path>]
+  codefacts node <symbol> [--file <file>] [--root <repository>]
+  codefacts callers|callees <symbol> [--file <file>] [--root <repository>]
+  codefacts explore [code-terms] [--root <repository>]
+  codefacts impact <symbol> [--max-depth <1..10>] [--root <repository>]
+  codefacts map|search|outline|expand|path ... [--root <repository>]
+
+Direct queries default to the current directory and readable Markdown output;
+use --format compact or --format full for JSON (explore returns bounded text).
+Run codefacts <command> --help for native query options.
 
 The launcher resolves the matching native npm optional dependency and runs it
 locally. \`install\` interactively configures supported coding agents

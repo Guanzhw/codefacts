@@ -37,7 +37,9 @@ fn definition_kind(capture_name: &str) -> Option<NodeKind> {
         "definition.class" => Some(NodeKind::Class),
         "definition.class_with_heritage" => Some(NodeKind::Class),
         "definition.struct" => Some(NodeKind::Struct),
-        "definition.method" => Some(NodeKind::Method),
+        "definition.method" | "definition.callable_field" | "definition.callable_assignment" => {
+            Some(NodeKind::Method)
+        }
         "definition.interface" => Some(NodeKind::Interface),
         "definition.interface_extends" => Some(NodeKind::Interface),
         "definition.type" => Some(NodeKind::TypeAlias),
@@ -278,6 +280,33 @@ impl Extractor {
                 None => continue,
             };
 
+            let assignment_name = if matches!(
+                capture_name,
+                "definition.callable_field" | "definition.callable_assignment"
+            ) {
+                let value = m
+                    .captures
+                    .iter()
+                    .find(|c| capture_names[c.index as usize] == "value");
+                if !value.is_some_and(|c| is_callable_value(c.node)) {
+                    continue;
+                }
+                if capture_name == "definition.callable_assignment" {
+                    let target = m
+                        .captures
+                        .iter()
+                        .find(|c| capture_names[c.index as usize] == "assignment_target");
+                    match target.and_then(|c| static_member_name(c.node, source_bytes)) {
+                        Some(name) => Some(name),
+                        None => continue,
+                    }
+                } else {
+                    None
+                }
+            } else {
+                None
+            };
+
             // The @name capture gives us the identifier text.
             let name_capture = m
                 .captures
@@ -326,16 +355,24 @@ impl Extractor {
             } else {
                 raw_body
             };
-            let qualified_name = (language == Language::Rust)
-                .then(|| rust_module_path(def_node, source_bytes))
-                .flatten()
-                .map(|module_path| format!("{module_path}.{name}"));
+            let qualified_name = assignment_name.or_else(|| {
+                (language == Language::Rust)
+                    .then(|| rust_module_path(def_node, source_bytes))
+                    .flatten()
+                    .map(|module_path| format!("{module_path}.{name}"))
+            });
 
             // Deduplicate: multiple patterns may capture the same node.
             // When a more specific kind (e.g., Interface) overlaps with a
             // generic one (e.g., TypeAlias) at the same location, prefer the
             // more specific kind.
-            let dedup_key = format!("{}:{}:{}", file_path, name, start_line);
+            let dedup_key = format!(
+                "{}:{}:{}:{}",
+                file_path,
+                name,
+                start_line,
+                def_node.start_position().column
+            );
             if let Some(existing_idx) = seen.get(&dedup_key) {
                 let existing = &nodes[*existing_idx];
                 if is_more_specific_kind(kind, existing.kind) {
@@ -379,6 +416,17 @@ impl Extractor {
             });
         }
 
+        // Preserve familiar IDs for unique definitions. Distinct same-named
+        // owners on one line need their byte column before edges are extracted.
+        let mut id_counts = HashMap::<String, usize>::new();
+        for node in &nodes {
+            *id_counts.entry(node.id.clone()).or_default() += 1;
+        }
+        for node in &mut nodes {
+            if id_counts[&node.id] > 1 {
+                node.id = format!("{}:column={}", node.id, node.start_column);
+            }
+        }
         populate_qualified_names(&mut nodes);
 
         Ok(nodes)
@@ -490,6 +538,40 @@ impl Extractor {
 // Qualified name population
 // ---------------------------------------------------------------------------
 
+/// Only syntax-transparent wrappers preserve a directly assigned callable.
+fn is_callable_value(mut node: tree_sitter::Node<'_>) -> bool {
+    loop {
+        match node.kind() {
+            "arrow_function" | "function_expression" => return true,
+            "parenthesized_expression" | "as_expression" => {
+                let mut cursor = node.walk();
+                let expression = node
+                    .named_children(&mut cursor)
+                    .find(|child| child.kind() != "comment");
+                match expression {
+                    Some(expression) => node = expression,
+                    None => return false,
+                }
+            }
+            _ => return false,
+        }
+    }
+}
+
+/// Preserve a dotted assignment spelling without inferring the receiver's type.
+fn static_member_name(node: tree_sitter::Node<'_>, source: &[u8]) -> Option<String> {
+    match node.kind() {
+        "identifier" => Some(node_text(&node, source)),
+        "member_expression" => {
+            let object = static_member_name(node.child_by_field_name("object")?, source)?;
+            let property = node.child_by_field_name("property")?;
+            (property.kind() == "property_identifier")
+                .then(|| format!("{object}.{}", node_text(&property, source)))
+        }
+        _ => None,
+    }
+}
+
 /// Populate `qualified_name` for Method/Property nodes by finding their
 /// enclosing Class/Interface/Struct/Trait/Enum via line-range containment.
 ///
@@ -500,7 +582,7 @@ impl Extractor {
 pub fn populate_qualified_names(nodes: &mut [CodeNode]) {
     // Build a list of "container" nodes (Class, Interface, Struct, Trait, Enum)
     // with their line ranges for containment testing.
-    let containers: Vec<(String, u32, u32)> = nodes
+    let containers: Vec<(String, u32, u32, u32, u32)> = nodes
         .iter()
         .filter(|n| {
             matches!(
@@ -512,18 +594,35 @@ pub fn populate_qualified_names(nodes: &mut [CodeNode]) {
                     | NodeKind::Enum
             )
         })
-        .map(|n| (n.name.clone(), n.start_line, n.end_line))
+        .map(|n| {
+            (
+                n.name.clone(),
+                n.start_line,
+                n.start_column,
+                n.end_line,
+                n.end_column,
+            )
+        })
         .collect();
 
     for node in nodes.iter_mut() {
         match node.kind {
             NodeKind::Method | NodeKind::Property => {
+                if matches!(node.language, Language::JavaScript | Language::Jsx)
+                    && node.qualified_name.is_some()
+                {
+                    // A static assignment already carries its dotted syntax identity.
+                    continue;
+                }
                 // Find ALL enclosing containers, sorted outermost-first
                 // (largest range first) to build a chained qualified name.
                 let mut enclosing: Vec<(&str, u32)> = containers
                     .iter()
-                    .filter(|(_, start, end)| *start <= node.start_line && node.end_line <= *end)
-                    .map(|(name, start, end)| (name.as_str(), end - start))
+                    .filter(|(_, start, start_column, end, end_column)| {
+                        (*start, *start_column) <= (node.start_line, node.start_column)
+                            && (node.end_line, node.end_column) <= (*end, *end_column)
+                    })
+                    .map(|(name, start, _, end, _)| (name.as_str(), end - start))
                     .collect();
 
                 // Sort by range descending (outermost first)
@@ -568,9 +667,13 @@ fn extract_containment_edges(file_nodes: &[CodeNode], edges: &mut Vec<CodeEdge>)
     for member in &members {
         let mut best: Option<&CodeNode> = None;
         for container in &containers {
-            if container.start_line <= member.start_line
-                && container.end_line >= member.end_line
-                && best.is_none_or(|b| container.start_line > b.start_line)
+            if (container.start_line, container.start_column)
+                <= (member.start_line, member.start_column)
+                && (container.end_line, container.end_column)
+                    >= (member.end_line, member.end_column)
+                && best.is_none_or(|b| {
+                    (container.start_line, container.start_column) > (b.start_line, b.start_column)
+                })
             {
                 best = Some(container);
             }
@@ -674,13 +777,16 @@ fn extract_inheritance_edges(
 
     // TypeScript uses @name for child + @superclass/@superinterface for parent.
     // Other languages use `inheritance.extends` where @name IS the parent name
-    // and the child is found by line-range enclosure.
+    // and the child is found through its actual AST owner.
     if let (Some(name_cap), Some(super_cap)) = (name_capture, super_capture) {
-        let child_name = node_text(&name_cap.node, source_bytes);
         let parent_name = node_text(&super_cap.node, source_bytes);
         let line = super_cap.node.start_position().row as u32 + 1;
 
-        let child_node = resolve_node(&child_name, file_path, file_nodes, node_index);
+        let child_node = find_ast_owner(
+            name_cap.node,
+            file_nodes,
+            &[NodeKind::Class, NodeKind::Interface, NodeKind::Struct],
+        );
         let parent_node = resolve_node(&parent_name, file_path, file_nodes, node_index);
 
         if let Some(child) = child_node {
@@ -700,17 +806,15 @@ fn extract_inheritance_edges(
         }
     } else if let Some(name_cap) = name_capture {
         // inheritance.extends style: @name is the parent type name, find
-        // the enclosing class/struct by line range.
+        // the enclosing class/struct through the captured type's AST owner.
         let parent_name = node_text(&name_cap.node, source_bytes);
         let line = name_cap.node.start_position().row as u32 + 1;
 
-        let enclosing = file_nodes.iter().find(|n| {
-            matches!(
-                n.kind,
-                NodeKind::Class | NodeKind::Interface | NodeKind::Struct
-            ) && n.start_line <= line
-                && n.end_line >= line
-        });
+        let enclosing = find_ast_owner(
+            name_cap.node,
+            file_nodes,
+            &[NodeKind::Class, NodeKind::Interface, NodeKind::Struct],
+        );
 
         if let Some(child) = enclosing {
             let parent_node = resolve_node(&parent_name, file_path, file_nodes, node_index);
@@ -760,10 +864,7 @@ fn extract_implements_edges(
     let interface_name = node_text(&interface_capture.node, source_bytes);
     let line = interface_capture.node.start_position().row as u32 + 1;
 
-    // Find the enclosing class by line range.
-    let enclosing_class = file_nodes
-        .iter()
-        .find(|n| n.kind == NodeKind::Class && n.start_line <= line && n.end_line >= line);
+    let enclosing_class = find_ast_owner(interface_capture.node, file_nodes, &[NodeKind::Class]);
     let enclosing_class = match enclosing_class {
         Some(c) => c,
         None => return,
@@ -783,6 +884,36 @@ fn extract_implements_edges(
         target_name: Some(interface_name),
         metadata: None,
     });
+}
+
+/// Match the captured type/name's actual AST ancestor to its indexed owner.
+/// Both positions use UTF-8 byte columns, including declarations on one line.
+fn find_ast_owner<'a>(
+    captured_node: tree_sitter::Node<'_>,
+    file_nodes: &'a [CodeNode],
+    kinds: &[NodeKind],
+) -> Option<&'a CodeNode> {
+    let mut ancestor = captured_node.parent();
+    while let Some(node) = ancestor {
+        let owner = file_nodes.iter().find(|definition| {
+            kinds.contains(&definition.kind)
+                && (definition.start_line, definition.start_column)
+                    == (
+                        node.start_position().row as u32 + 1,
+                        node.start_position().column as u32,
+                    )
+                && (definition.end_line, definition.end_column)
+                    == (
+                        node.end_position().row as u32 + 1,
+                        node.end_position().column as u32,
+                    )
+        });
+        if owner.is_some() {
+            return owner;
+        }
+        ancestor = node.parent();
+    }
+    None
 }
 
 /// Call edges: caller calls callee.
@@ -823,7 +954,11 @@ fn extract_call_edges(
         .unwrap_or(name_capture);
     let line = call_capture.node.start_position().row as u32 + 1;
 
-    let caller = find_enclosing_node(file_nodes, line);
+    let caller = find_enclosing_node(
+        file_nodes,
+        line,
+        call_capture.node.start_position().column as u32,
+    );
     let callee = resolve_node(&callee_name, file_path, file_nodes, node_index);
 
     let source_id = caller
@@ -887,7 +1022,11 @@ fn extract_constructor_edges(
     let class_name = node_text(&name_capture.node, source_bytes);
     let line = name_capture.node.start_position().row as u32 + 1;
 
-    let caller = find_enclosing_node(file_nodes, line);
+    let caller = find_enclosing_node(
+        file_nodes,
+        line,
+        name_capture.node.start_position().column as u32,
+    );
     let target = resolve_node(&class_name, file_path, file_nodes, node_index);
 
     let source_id = caller
@@ -940,7 +1079,11 @@ fn extract_type_ref_edges(
         return;
     }
 
-    let enclosing = find_enclosing_node(file_nodes, line);
+    let enclosing = find_enclosing_node(
+        file_nodes,
+        line,
+        name_capture.node.start_position().column as u32,
+    );
     let target = resolve_node(&type_name, file_path, file_nodes, node_index);
 
     let source_id = enclosing
@@ -1018,19 +1161,26 @@ fn resolve_node<'a>(
         .or(Some(&candidates[0]))
 }
 
-/// Find the innermost function/method/class that encloses the given 1-based
-/// `line`.
-fn find_enclosing_node(file_nodes: &[CodeNode], line: u32) -> Option<&CodeNode> {
+/// Find the innermost source owner at a 1-based line and 0-based byte column.
+fn find_enclosing_node(file_nodes: &[CodeNode], line: u32, column: u32) -> Option<&CodeNode> {
     let mut best: Option<&CodeNode> = None;
+    let span = |node: &CodeNode| {
+        (
+            node.end_line - node.start_line,
+            i64::from(node.end_column) - i64::from(node.start_column),
+        )
+    };
     for node in file_nodes {
         let is_scope = matches!(
             node.kind,
             NodeKind::Function | NodeKind::Method | NodeKind::Class
         );
-        if is_scope && node.start_line <= line && node.end_line >= line {
+        if is_scope
+            && (node.start_line, node.start_column) <= (line, column)
+            && (line, column) < (node.end_line, node.end_column)
+        {
             // Pick the tightest enclosure (smallest span).
-            if best.is_none_or(|b| (node.end_line - node.start_line) < (b.end_line - b.start_line))
-            {
+            if best.is_none_or(|b| span(node) < span(b)) {
                 best = Some(node);
             }
         }

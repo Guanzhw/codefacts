@@ -4,7 +4,7 @@
 //! `prepare_cached` for automatic statement caching — the Rust equivalent
 //! of the TS version's eagerly-prepared statement map.
 
-use std::collections::{BTreeMap, HashMap};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 
 use rusqlite::types::Value as SqlValue;
 use rusqlite::{params, params_from_iter, Connection};
@@ -12,7 +12,7 @@ use rusqlite::{params, params_from_iter, Connection};
 use crate::db::converters::{row_to_code_edge, row_to_code_node};
 use crate::db::schema::initialize_database;
 use crate::error::Result;
-use crate::types::{CodeEdge, CodeNode, UnresolvedRef};
+use crate::types::{CodeEdge, CodeNode, Language, NodeKind, UnresolvedRef};
 
 // ---------------------------------------------------------------------------
 // GraphStats
@@ -38,6 +38,15 @@ pub struct FtsSearchOptions<'a> {
     pub limit: usize,
 }
 
+/// Canonical indexed-file evidence for impact's import-only file endpoints.
+#[derive(Debug, Clone)]
+pub(crate) struct ImpactFileSnapshot {
+    pub id: String,
+    pub file_path: String,
+    pub source_hash: String,
+    pub language: String,
+}
+
 // ---------------------------------------------------------------------------
 // GraphStore
 // ---------------------------------------------------------------------------
@@ -50,7 +59,7 @@ pub struct FtsSearchOptions<'a> {
 /// TypeScript version's eagerly-prepared statements while being more
 /// ergonomic (no upfront prepare step, no lifetime gymnastics).
 pub struct GraphStore {
-    conn: Connection,
+    pub(super) conn: Connection,
 }
 
 impl std::fmt::Debug for GraphStore {
@@ -64,8 +73,8 @@ impl std::fmt::Debug for GraphStore {
 // ---------------------------------------------------------------------------
 
 const UPSERT_NODE_SQL: &str = "\
-INSERT INTO nodes (id, type, name, qualified_name, file_path, start_line, end_line, language, signature, doc_comment, source_hash, metadata, name_tokens, is_test)
-VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14)
+INSERT INTO nodes (id, type, name, qualified_name, file_path, start_line, end_line, language, signature, doc_comment, source_hash, metadata, name_tokens, is_test, start_column, end_column)
+VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16)
 ON CONFLICT(id) DO UPDATE SET
   type = excluded.type,
   name = excluded.name,
@@ -73,6 +82,8 @@ ON CONFLICT(id) DO UPDATE SET
   file_path = excluded.file_path,
   start_line = excluded.start_line,
   end_line = excluded.end_line,
+  start_column = excluded.start_column,
+  end_column = excluded.end_column,
   language = excluded.language,
   signature = excluded.signature,
   doc_comment = excluded.doc_comment,
@@ -252,7 +263,7 @@ pub fn detect_is_test(name: &str, file_path: &str, language: &str, kind: &str) -
     }
 }
 
-fn detect_is_test_node(node: &CodeNode) -> bool {
+pub(crate) fn detect_is_test_node(node: &CodeNode) -> bool {
     if detect_is_test(
         &node.name,
         &node.file_path,
@@ -552,6 +563,8 @@ impl GraphStore {
             build_node_metadata(node),     // metadata JSON
             name_tokens,                   // pre-split identifier tokens
             is_test as i32,                // is_test flag
+            node.start_column,
+            node.end_column,
         ])?;
         Ok(())
     }
@@ -597,6 +610,8 @@ impl GraphStore {
                     build_node_metadata(node),
                     name_tokens,
                     is_test as i32,
+                    node.start_column,
+                    node.end_column,
                 ])?;
             }
             Ok(())
@@ -659,6 +674,8 @@ impl GraphStore {
                     build_node_metadata(node),
                     name_tokens,
                     is_test as i32,
+                    node.start_column,
+                    node.end_column,
                 ])?;
             }
             let mut ins_edge = store.conn.prepare_cached(UPSERT_EDGE_SQL)?;
@@ -723,6 +740,40 @@ impl GraphStore {
     // -------------------------------------------------------------------
     // Queries — node collections
     // -------------------------------------------------------------------
+
+    /// Hydrate confirmed IDs in SQLite parameter batches of at most 500 keys.
+    /// Missing IDs are absent; duplicates do not duplicate returned nodes.
+    pub fn get_nodes_by_ids(&self, ids: &[String]) -> Result<Vec<CodeNode>> {
+        self.get_nodes_by_keys("id", ids)
+    }
+
+    /// Hydrate complete files, including nested owners and fallback candidates.
+    pub fn get_nodes_by_files(&self, files: &[String]) -> Result<Vec<CodeNode>> {
+        self.get_nodes_by_keys("file_path", files)
+    }
+
+    // Adapted from CodeGraph 1.6.2 getNodesByIds (6560052a6f856855d3f71eee838fd66ccfa4285d).
+    // Use the canonical converter and restore full-store order across batches.
+    fn get_nodes_by_keys(&self, column: &str, keys: &[String]) -> Result<Vec<CodeNode>> {
+        let unique: Vec<_> = keys.iter().collect::<BTreeSet<_>>().into_iter().collect();
+        let mut nodes = Vec::new();
+        for batch in unique.chunks(500) {
+            let placeholders = vec!["?"; batch.len()].join(",");
+            let sql = format!("SELECT * FROM nodes WHERE {column} IN ({placeholders})");
+            let mut stmt = self.conn.prepare_cached(&sql)?;
+            let rows = stmt.query_and_then(params_from_iter(batch.iter()), row_to_code_node)?;
+            nodes.extend(rows.collect::<std::result::Result<Vec<_>, _>>()?);
+        }
+        nodes.sort_by(|a, b| {
+            (&a.file_path, a.start_line, a.start_column, &a.id).cmp(&(
+                &b.file_path,
+                b.start_line,
+                b.start_column,
+                &b.id,
+            ))
+        });
+        Ok(nodes)
+    }
 
     /// Get every node whose `file_path` matches.
     pub fn get_nodes_by_file(&self, file_path: &str) -> Result<Vec<CodeNode>> {
@@ -789,8 +840,11 @@ impl GraphStore {
     pub fn get_in_edges(&self, node_id: &str, edge_type: Option<&str>) -> Result<Vec<CodeEdge>> {
         match edge_type {
             Some(t) => {
+                // The type index can otherwise win without table statistics,
+                // scanning every call in a large graph for one target.
                 let mut stmt = self.conn.prepare_cached(
-                    "SELECT * FROM edges WHERE target_id = ?1 AND type = ?2 \
+                    "SELECT * FROM edges INDEXED BY idx_edges_target \
+                         WHERE target_id = ?1 AND type = ?2 \
                          ORDER BY source_id, type, file_path, line, id",
                 )?;
                 let rows = stmt.query_and_then(params![node_id, t], row_to_code_edge)?;
@@ -856,6 +910,70 @@ impl GraphStore {
             .collect())
     }
 
+    /// Return bounded confirmed impact relationships in canonical edge order:
+    /// incoming static dependencies and optional outgoing container members.
+    /// Endpoints are symbols or, for Imports, canonical indexed-file anchors.
+    /// Heuristic bindings remain outside traversal.
+    /// The caller requests one extra row to detect an edge-work cutoff.
+    pub(crate) fn get_confirmed_impact_edges(
+        &self,
+        node_id: &str,
+        include_members: bool,
+        limit: usize,
+    ) -> Result<Vec<CodeEdge>> {
+        let mut stmt = self.conn.prepare_cached(
+            "SELECT edges.* FROM edges \
+             LEFT JOIN nodes source_nodes ON source_nodes.id = edges.source_id \
+             LEFT JOIN nodes target_nodes ON target_nodes.id = edges.target_id \
+             LEFT JOIN file_hashes source_files ON edges.type = 'imports' \
+               AND substr(edges.source_id, 1, 5) = 'file:' \
+               AND source_files.file_path = substr(edges.source_id, 6) \
+             LEFT JOIN file_hashes target_files ON edges.type = 'imports' \
+               AND substr(edges.target_id, 1, 5) = 'file:' \
+               AND target_files.file_path = substr(edges.target_id, 6) \
+             WHERE ((edges.target_id = ?1 \
+                       AND edges.type IN ('calls', 'references', 'extends', 'implements', 'imports')) \
+                    OR (?2 AND edges.source_id = ?1 AND edges.type = 'contains')) \
+               AND COALESCE(json_extract(edges.properties, '$.confidence'), 'static') <> 'heuristic' \
+               AND (source_nodes.id IS NOT NULL OR source_files.file_path IS NOT NULL) \
+               AND (target_nodes.id IS NOT NULL OR target_files.file_path IS NOT NULL) \
+             ORDER BY edges.source_id, edges.target_id, edges.type, edges.file_path, edges.line, edges.id \
+             LIMIT ?3",
+        )?;
+        let rows = stmt.query_and_then(
+            params![node_id, include_members, limit as i64],
+            row_to_code_edge,
+        )?;
+        rows.collect::<std::result::Result<Vec<_>, _>>()
+            .map_err(Into::into)
+    }
+
+    /// Resolve an exact file endpoint against indexed snapshots, without
+    /// creating a symbol or changing symbol discovery/counts.
+    pub(crate) fn get_impact_file_snapshot(
+        &self,
+        endpoint_id: &str,
+    ) -> Result<Option<ImpactFileSnapshot>> {
+        let Some(file_path) = endpoint_id.strip_prefix("file:") else {
+            return Ok(None);
+        };
+        let mut statement = self.conn.prepare_cached(
+            "SELECT file_path, content_hash, language FROM file_hashes WHERE file_path = ?1",
+        )?;
+        match statement.query_row([file_path], |row| {
+            Ok(ImpactFileSnapshot {
+                id: endpoint_id.to_string(),
+                file_path: row.get(0)?,
+                source_hash: row.get(1)?,
+                language: row.get(2)?,
+            })
+        }) {
+            Ok(snapshot) => Ok(Some(snapshot)),
+            Err(rusqlite::Error::QueryReturnedNoRows) => Ok(None),
+            Err(error) => Err(error.into()),
+        }
+    }
+
     /// Find test symbols directly related to a confirmed symbol.  This keeps
     /// `expand` bounded even in repositories with a very large symbol table.
     pub fn get_related_test_nodes(
@@ -869,15 +987,16 @@ impl GraphStore {
             crate::error::CodeFactsError::Other("test result limit is too large".into())
         })?;
         let mut stmt = self.conn.prepare_cached(
-            "SELECT DISTINCT tests.* FROM nodes tests \
-             WHERE tests.is_test = 1 AND ( \
-               EXISTS (SELECT 1 FROM edges incoming \
-                 WHERE incoming.source_id = tests.id AND incoming.target_id = ?1 \
-                   AND COALESCE(json_extract(incoming.properties, '$.confidence'), 'static') <> 'heuristic') \
-               OR EXISTS (SELECT 1 FROM edges outgoing \
-                 WHERE outgoing.target_id = tests.id AND outgoing.source_id = ?1 \
-                   AND COALESCE(json_extract(outgoing.properties, '$.confidence'), 'static') <> 'heuristic') \
-             ) \
+            // Start with adjacent IDs. CROSS JOIN keeps the selective edge
+            // lookup outside the node lookup, instead of probing every test.
+            "SELECT tests.* FROM ( \
+               SELECT source_id AS node_id FROM edges WHERE target_id = ?1 \
+                 AND COALESCE(json_extract(properties, '$.confidence'), 'static') <> 'heuristic' \
+               UNION \
+               SELECT target_id AS node_id FROM edges WHERE source_id = ?1 \
+                 AND COALESCE(json_extract(properties, '$.confidence'), 'static') <> 'heuristic' \
+             ) adjacent CROSS JOIN nodes tests ON tests.id = adjacent.node_id \
+             WHERE tests.is_test = 1 \
              ORDER BY \
                CASE WHEN instr(lower(tests.name), lower(?2)) > 0 THEN 0 ELSE 1 END, \
                CASE WHEN tests.file_path = ?3 THEN 0 ELSE 1 END, \
@@ -1190,6 +1309,27 @@ impl GraphStore {
         })
     }
 
+    /// Count indexed symbols without loading their source bodies or metadata.
+    /// Decode each group exactly as the canonical node converter does.
+    pub fn get_symbol_counts(&self) -> Result<Vec<(Language, NodeKind, usize)>> {
+        let mut statement = self.conn.prepare_cached(
+            "SELECT language, type, COUNT(*) FROM nodes \
+             GROUP BY language, type ORDER BY language, type",
+        )?;
+        let rows = statement.query_map([], |row| {
+            let language: String = row.get(0)?;
+            let kind: String = row.get(1)?;
+            let count: i64 = row.get(2)?;
+            Ok((
+                Language::from_str_loose(&language).unwrap_or(Language::TypeScript),
+                NodeKind::from_str_loose(&kind).unwrap_or(NodeKind::Variable),
+                count as usize,
+            ))
+        })?;
+        rows.collect::<std::result::Result<Vec<_>, _>>()
+            .map_err(Into::into)
+    }
+
     /// Count every indexed source file by its detected language.  Unlike
     /// `GraphStats::files`, this is sourced from `file_hashes`, so a parsed
     /// file with no extracted symbols remains visible to `map`.
@@ -1314,6 +1454,151 @@ mod tests {
     fn setup() -> GraphStore {
         let conn = initialize_database(":memory:").expect("schema init should succeed on :memory:");
         GraphStore::from_connection(conn)
+    }
+
+    #[test]
+    fn batched_node_hydration_preserves_converter_fields_and_global_order() {
+        let store = setup();
+        let mut nodes = Vec::new();
+        for i in 0..1_107 {
+            let mut node = make_node(
+                &format!("node-{i:04}"),
+                &format!("方法{i}"),
+                &format!("目录/{:04}.ts", 1_106 - i),
+                if i % 2 == 0 {
+                    NodeKind::Method
+                } else {
+                    NodeKind::Function
+                },
+                (i % 7 + 1) as u32,
+            );
+            node.qualified_name = Some(format!("类{}.方法{i}", i % 11));
+            node.body = Some(format!("方法{i}('中文字节')"));
+            node.documentation = (i % 3 != 0).then(|| format!("说明{i}"));
+            node.exported = match i % 3 {
+                0 => None,
+                1 => Some(false),
+                _ => Some(true),
+            };
+            node.is_local = i % 4 == 0;
+            node.start_column = "const 前缀 = 1; ".len() as u32 + (i % 5) as u32;
+            node.end_column = node.start_column + node.body.as_ref().unwrap().len() as u32;
+            nodes.push(node);
+        }
+        // Same-file, same-line ties must preserve byte-column and ID ordering.
+        for i in 0..5 {
+            let mut node = nodes[i].clone();
+            node.file_path = "共享.ts".into();
+            node.id = format!("tie-{i}");
+            node.start_line = 3;
+            node.start_column = if i < 3 { 17 } else { 2 };
+            nodes.push(node);
+        }
+        store.upsert_nodes(&nodes).unwrap();
+        let full = store.get_all_nodes().unwrap();
+        let mut ids: Vec<_> = nodes.iter().rev().map(|n| n.id.clone()).collect();
+        ids.extend(ids[..510].to_vec());
+        ids.extend(["missing-id".into(), "未知".into()]);
+        let mut files: Vec<_> = nodes.iter().rev().map(|n| n.file_path.clone()).collect();
+        files.extend(files[..510].to_vec());
+        files.push("missing-file".into());
+        let as_json = |nodes: &[CodeNode]| serde_json::to_value(nodes).unwrap();
+        assert_eq!(
+            as_json(&store.get_nodes_by_ids(&ids).unwrap()),
+            as_json(&full)
+        );
+        assert_eq!(
+            as_json(&store.get_nodes_by_files(&files).unwrap()),
+            as_json(&full)
+        );
+        for node in &full {
+            assert_eq!(
+                serde_json::to_value(store.get_node(&node.id).unwrap().unwrap()).unwrap(),
+                serde_json::to_value(node).unwrap()
+            );
+        }
+        assert!(store.get_nodes_by_ids(&[]).unwrap().is_empty());
+        assert!(store.get_nodes_by_files(&[]).unwrap().is_empty());
+        assert!(store
+            .get_nodes_by_ids(&["missing-id".into(), "missing-id".into()])
+            .unwrap()
+            .is_empty());
+        assert!(store
+            .get_nodes_by_files(&["missing-file".into()])
+            .unwrap()
+            .is_empty());
+        let selected_ids = vec![
+            nodes[0].id.clone(),
+            nodes[505].id.clone(),
+            nodes[1_106].id.clone(),
+        ];
+        let expected: Vec<_> = full
+            .iter()
+            .filter(|n| selected_ids.contains(&n.id))
+            .cloned()
+            .collect();
+        assert_eq!(
+            as_json(&store.get_nodes_by_ids(&selected_ids).unwrap()),
+            as_json(&expected)
+        );
+    }
+
+    #[test]
+    fn node_byte_columns_round_trip_through_all_write_paths() {
+        let store = setup();
+        let prefix = "const 前缀 = 1; ";
+        let body = "run = () => consume('中文')";
+        let mut node = make_node("column-owner", "run", "columns.ts", NodeKind::Method, 1);
+        node.end_line = 1;
+        node.start_column = prefix.len() as u32;
+        node.end_column = (prefix.len() + body.len()) as u32;
+        node.body = Some(body.into());
+        assert!(node.start_column > prefix.chars().count() as u32);
+
+        let assert_columns = |expected: &CodeNode| {
+            let actual = store.get_node(&expected.id).unwrap().unwrap();
+            assert_eq!(actual.start_column, expected.start_column);
+            assert_eq!(actual.end_column, expected.end_column);
+            let columns: (u32, u32) = store
+                .conn
+                .query_row(
+                    "SELECT start_column, end_column FROM nodes WHERE id = ?1",
+                    [&expected.id],
+                    |row| Ok((row.get(0)?, row.get(1)?)),
+                )
+                .unwrap();
+            assert_eq!(columns, (expected.start_column, expected.end_column));
+        };
+        store.upsert_node(&node).unwrap();
+        assert_columns(&node);
+        node.start_column += 7;
+        node.end_column += 7;
+        store.upsert_node(&node).unwrap();
+        assert_columns(&node);
+
+        let mut sibling = node.clone();
+        sibling.id = "column-sibling".into();
+        sibling.start_column += 30;
+        sibling.end_column += 30;
+        node.start_column += 3;
+        node.end_column += 3;
+        store
+            .upsert_nodes(&[node.clone(), sibling.clone()])
+            .unwrap();
+        assert_columns(&node);
+        assert_columns(&sibling);
+        sibling.start_column += 4;
+        sibling.end_column += 4;
+        store.upsert_nodes(std::slice::from_ref(&sibling)).unwrap();
+        assert_columns(&sibling);
+
+        node.start_column += 2;
+        node.end_column += 2;
+        store
+            .replace_file_data("columns.ts", std::slice::from_ref(&node), &[])
+            .unwrap();
+        assert_columns(&node);
+        assert!(store.get_node(&sibling.id).unwrap().is_none());
     }
 
     /// Build a minimal test node.
@@ -1541,6 +1826,153 @@ mod tests {
     }
 
     #[test]
+    fn related_tests_preserve_ranking_deduplication_and_symbol_fields() {
+        let store = setup();
+        let mut nodes = vec![
+            make_node("prod", "run", "src/run.rs", NodeKind::Function, 1),
+            make_node("same-z", "test_run", "src/run.rs", NodeKind::Function, 20),
+            make_node("same-a", "test_run", "src/run.rs", NodeKind::Function, 20),
+            make_node(
+                "same-early",
+                "test_run",
+                "src/run.rs",
+                NodeKind::Function,
+                20,
+            ),
+            make_node("other-match", "test_run", "a.rs", NodeKind::Function, 1),
+            make_node(
+                "same-other",
+                "test_other",
+                "src/run.rs",
+                NodeKind::Function,
+                2,
+            ),
+            make_node("other-other", "test_other", "z.rs", NodeKind::Function, 1),
+            make_node("heuristic", "test_run", "src/run.rs", NodeKind::Function, 3),
+            make_node("ordinary", "run_other", "a.rs", NodeKind::Function, 2),
+            make_node("unrelated", "test_run", "a.rs", NodeKind::Function, 3),
+        ];
+        for node in &mut nodes {
+            node.language = Language::Rust;
+            node.qualified_name = Some(format!("module::{}", node.name));
+            node.start_column = if node.id == "same-early" { 1 } else { 2 };
+        }
+        store.upsert_nodes(&nodes).unwrap();
+        let mut edges = vec![
+            make_edge("same-z", "prod", EdgeKind::Calls, "src/run.rs", 22),
+            make_edge("same-a", "prod", EdgeKind::Calls, "src/run.rs", 22),
+            make_edge("prod", "same-a", EdgeKind::References, "src/run.rs", 4),
+            make_edge("same-a", "prod", EdgeKind::References, "src/run.rs", 23),
+            make_edge("same-a", "same-a", EdgeKind::Calls, "src/run.rs", 24),
+            make_edge("same-early", "prod", EdgeKind::Calls, "src/run.rs", 22),
+            make_edge("prod", "other-match", EdgeKind::References, "src/run.rs", 5),
+            make_edge("same-other", "prod", EdgeKind::References, "src/run.rs", 3),
+            make_edge("prod", "other-other", EdgeKind::Calls, "src/run.rs", 6),
+            make_edge("ordinary", "prod", EdgeKind::Calls, "a.rs", 3),
+            make_edge("unresolved:test", "prod", EdgeKind::Calls, "missing.rs", 1),
+        ];
+        let mut heuristic = make_edge("heuristic", "prod", EdgeKind::Calls, "src/run.rs", 4);
+        heuristic.metadata = Some(HashMap::from([("confidence".into(), "heuristic".into())]));
+        edges.push(heuristic);
+        store.upsert_edges(&edges).unwrap();
+        let expected = [
+            "same-early",
+            "same-a",
+            "same-z",
+            "other-match",
+            "same-other",
+            "other-other",
+        ]
+        .iter()
+        .map(|id| store.get_node(id).unwrap().unwrap())
+        .collect::<Vec<_>>();
+        for limit in [0, 1, 2, 5, 20] {
+            let actual = store
+                .get_related_test_nodes("prod", "run", "src/run.rs", limit)
+                .unwrap();
+            assert_eq!(
+                serde_json::to_value(&actual).unwrap(),
+                serde_json::to_value(&expected[..limit.min(expected.len())]).unwrap(),
+            );
+        }
+        // A self-edge identifies the test once, including when it also has
+        // both incoming and outgoing relationships to a non-test symbol.
+        let self_related = store
+            .get_related_test_nodes("same-a", "test_run", "src/run.rs", 20)
+            .unwrap();
+        assert_eq!(self_related.len(), 1);
+        assert_eq!(self_related[0].id, "same-a");
+    }
+
+    #[test]
+    fn typed_incoming_edges_preserve_full_facts_and_canonical_order() {
+        let store = setup();
+        store
+            .upsert_nodes(&[
+                make_node("target", "run", "target.ts", NodeKind::Function, 1),
+                make_node("source-a", "a", "source.ts", NodeKind::Function, 1),
+                make_node("source-b", "b", "source.ts", NodeKind::Function, 2),
+            ])
+            .unwrap();
+        let mut heuristic = make_edge("source-a", "target", EdgeKind::Calls, "b.ts", 9);
+        heuristic.target_name = Some("run".into());
+        heuristic.metadata = Some(HashMap::from([
+            ("confidence".into(), "heuristic".into()),
+            ("resolution".into(), "unresolved_receiver".into()),
+        ]));
+        store
+            .upsert_edges(&[
+                make_edge("source-b", "target", EdgeKind::Calls, "a.ts", 1),
+                heuristic,
+                make_edge("source-a", "target", EdgeKind::Calls, "a.ts", 8),
+                make_edge("source-a", "target", EdgeKind::Calls, "a.ts", 3),
+                make_edge("source-a", "target", EdgeKind::References, "a.ts", 2),
+                make_edge(
+                    "unresolved:source",
+                    "target",
+                    EdgeKind::Calls,
+                    "unknown.ts",
+                    1,
+                ),
+                make_edge("source-a", "other-target", EdgeKind::Calls, "a.ts", 1),
+            ])
+            .unwrap();
+        let expected = store
+            .get_in_edges("target", None)
+            .unwrap()
+            .into_iter()
+            .filter(|edge| edge.kind == EdgeKind::Calls)
+            .collect::<Vec<_>>();
+        let actual = store.get_in_edges("target", Some("calls")).unwrap();
+        assert_eq!(
+            serde_json::to_value(&actual).unwrap(),
+            serde_json::to_value(&expected).unwrap()
+        );
+        assert_eq!(
+            actual
+                .iter()
+                .map(|edge| (edge.source.as_str(), edge.file_path.as_str(), edge.line))
+                .collect::<Vec<_>>(),
+            vec![
+                ("source-a", "a.ts", 3),
+                ("source-a", "a.ts", 8),
+                ("source-a", "b.ts", 9),
+                ("source-b", "a.ts", 1),
+                ("unresolved:source", "unknown.ts", 1),
+            ]
+        );
+        assert_eq!(actual[2].target_name.as_deref(), Some("run"));
+        assert_eq!(
+            actual[2].metadata.as_ref().unwrap()["confidence"],
+            "heuristic"
+        );
+        assert_eq!(
+            actual[2].metadata.as_ref().unwrap()["resolution"],
+            "unresolved_receiver"
+        );
+    }
+
+    #[test]
     fn upsert_edge_deduplicates() {
         let store = setup();
         let n1 = make_node("n1", "a", "x.ts", NodeKind::Function, 1);
@@ -1670,6 +2102,70 @@ mod tests {
         assert_eq!(stats.nodes, 3);
         assert_eq!(stats.edges, 2);
         assert_eq!(stats.files, 2); // a.ts and b.ts
+    }
+
+    #[test]
+    fn symbol_counts_match_node_conversion_and_lsp_language_sets() {
+        let store = setup();
+        assert!(store.get_symbol_counts().unwrap().is_empty());
+        let mut nodes = vec![
+            make_node("ts1", "a", "a.ts", NodeKind::Function, 1),
+            make_node("ts2", "b", "a.ts", NodeKind::Function, 10),
+            make_node("ts3", "c", "a.ts", NodeKind::Class, 20),
+            make_node("go1", "d", "a.go", NodeKind::Function, 1),
+            make_node("go2", "e", "a.go", NodeKind::Function, 10),
+            make_node("go3", "f", "a.go", NodeKind::Class, 20),
+            make_node("alias", "g", "a.go", NodeKind::Property, 30),
+            make_node("legacy", "h", "a.ts", NodeKind::Variable, 30),
+        ];
+        for node in &mut nodes {
+            if node.file_path.ends_with(".go") {
+                node.language = Language::Go;
+            }
+        }
+        store.upsert_nodes(&nodes).unwrap();
+        // Existing converter aliases/defaults remain the query boundary's
+        // interpretation of persisted rows, including grouped counts.
+        store
+            .conn
+            .execute(
+                "UPDATE nodes SET language = 'golang', type = 'field' WHERE id = 'alias'",
+                [],
+            )
+            .unwrap();
+        store
+            .conn
+            .execute(
+                "UPDATE nodes SET language = 'unknown', type = 'unknown' WHERE id = 'legacy'",
+                [],
+            )
+            .unwrap();
+        let full = store.get_all_nodes().unwrap();
+        let groups = store.get_symbol_counts().unwrap();
+        let mut expected = HashMap::new();
+        for node in &full {
+            *expected.entry((node.language, node.kind)).or_insert(0) += 1;
+        }
+        let mut actual = HashMap::new();
+        for (language, kind, count) in &groups {
+            *actual.entry((*language, *kind)).or_insert(0) += count;
+        }
+        assert_eq!(actual, expected);
+        assert_eq!(
+            groups.iter().map(|(_, _, count)| count).sum::<usize>(),
+            full.len()
+        );
+        for mode in [crate::lsp::LspMode::Off, crate::lsp::LspMode::Auto] {
+            let manager = crate::lsp::LspManager::new(mode);
+            assert_eq!(
+                serde_json::to_value(manager.report(full.iter().map(|node| node.language), false))
+                    .unwrap(),
+                serde_json::to_value(
+                    manager.report(groups.iter().map(|(language, _, _)| *language), false)
+                )
+                .unwrap(),
+            );
+        }
     }
 
     // -- get_nodes_by_* queries -------------------------------------------

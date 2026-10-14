@@ -9,7 +9,7 @@ use rusqlite::{Connection, OptionalExtension};
 /// complete or changes their meaning even though the SQLite table shape is
 /// unchanged. Existing indexes then make one safe full source pass instead of
 /// silently serving pre-change facts from unchanged file hashes.
-const FACT_EXTRACTION_VERSION: &str = "5";
+const FACT_EXTRACTION_VERSION: &str = "9";
 
 // ---------------------------------------------------------------------------
 // DDL constants — kept as separate strings so each statement can be executed
@@ -567,7 +567,7 @@ mod tests {
         let initial = initialize_database(path).expect("initialize current database");
         initial
             .execute(
-                "UPDATE index_metadata SET value = '1' WHERE key = 'fact_extraction_version'",
+                "UPDATE index_metadata SET value = '6' WHERE key = 'fact_extraction_version'",
                 [],
             )
             .expect("simulate an older fact extractor");
