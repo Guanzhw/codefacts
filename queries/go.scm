@@ -23,7 +23,7 @@
 (type_declaration
   (type_spec
     name: (type_identifier) @name
-    type: (struct_type))) @definition.class
+    type: (struct_type)) @definition.class)
 
 ; ---------------------------------------------------------------------------
 ; Interfaces
@@ -31,21 +31,31 @@
 (type_declaration
   (type_spec
     name: (type_identifier) @name
-    type: (interface_type))) @definition.interface
+    type: (interface_type)) @definition.interface)
 
 ; ---------------------------------------------------------------------------
 ; Type aliases and named types
 ; ---------------------------------------------------------------------------
 (type_declaration
   (type_spec
-    name: (type_identifier) @name)) @definition.type
+    name: (type_identifier) @name) @definition.type)
+
+(type_declaration
+  (type_alias
+    name: (type_identifier) @name) @definition.type)
 
 ; ---------------------------------------------------------------------------
 ; Variables
 ; ---------------------------------------------------------------------------
 (var_declaration
   (var_spec
-    name: (identifier) @name)) @definition.variable
+    name: (identifier) @name) @definition.variable)
+
+; Grouped var declarations hold their specs in a var_spec_list.
+(var_declaration
+  (var_spec_list
+    (var_spec
+      name: (identifier) @name) @definition.variable))
 
 ; Short variable declarations (:=)
 (short_var_declaration
@@ -57,7 +67,7 @@
 ; ---------------------------------------------------------------------------
 (const_declaration
   (const_spec
-    name: (identifier) @name)) @definition.variable
+    name: (identifier) @name) @definition.variable)
 
 ; ---------------------------------------------------------------------------
 ; Function calls
@@ -69,7 +79,8 @@
 ; Method calls: obj.Method()
 (call_expression
   function: (selector_expression
-    field: (field_identifier) @name)) @reference.call
+    operand: (_) @object
+    field: (field_identifier) @method)) @reference.call
 
 ; ---------------------------------------------------------------------------
 ; Imports

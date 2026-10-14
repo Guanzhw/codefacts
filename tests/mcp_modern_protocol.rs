@@ -51,6 +51,7 @@ fn stdio_server_supports_stateless_2026_07_28_requests() {
         json!({"jsonrpc":"2.0", "id":5, "method":"tools/list", "params":modern_params("2099-01-01")}),
         json!({"jsonrpc":"2.0", "id":6, "method":"initialize", "params":{"protocolVersion":"2024-11-05", "capabilities":{}, "clientInfo":{"name":"legacy","version":"1.0.0"}}}),
         json!({"jsonrpc":"2.0", "id":7, "method":"initialize", "params":{"_meta":modern_meta(MODERN_PROTOCOL_VERSION)}}),
+        json!({"jsonrpc":"2.0", "id":8, "method":"tools/call", "params":{"name":"explore", "arguments":{"file_path":"src/lib.rs", "max_bytes":2000}, "_meta":modern_meta(MODERN_PROTOCOL_VERSION)}}),
     ];
     let mut input = child.stdin.take().expect("child stdin");
     for request in requests {
@@ -71,7 +72,7 @@ fn stdio_server_supports_stateless_2026_07_28_requests() {
         .lines()
         .map(|line| serde_json::from_str::<Value>(line).expect("JSON-RPC response"))
         .collect::<Vec<_>>();
-    assert_eq!(responses.len(), 7);
+    assert_eq!(responses.len(), 8);
 
     let discover = &responses[0]["result"];
     assert_eq!(discover["resultType"], "complete");
@@ -93,7 +94,15 @@ fn stdio_server_supports_stateless_2026_07_28_requests() {
     assert_eq!(listed["resultType"], "complete");
     assert_eq!(listed["ttlMs"], 0);
     assert_eq!(listed["cacheScope"], "private");
-    assert_eq!(listed["tools"].as_array().expect("tools").len(), 5);
+    assert_eq!(
+        listed["tools"]
+            .as_array()
+            .expect("tools")
+            .iter()
+            .map(|tool| tool["name"].as_str().unwrap())
+            .collect::<Vec<_>>(),
+        ["explore", "impact", "map", "search", "outline", "expand", "path"]
+    );
     assert_eq!(
         listed["_meta"]["io.modelcontextprotocol/serverInfo"]["name"],
         "codefacts"
@@ -112,4 +121,12 @@ fn stdio_server_supports_stateless_2026_07_28_requests() {
     assert_eq!(responses[5]["result"]["protocolVersion"], "2024-11-05");
     assert!(responses[5]["result"].get("resultType").is_none());
     assert_eq!(responses[6]["error"]["code"], -32601);
+    let exploration = &responses[7]["result"];
+    assert_eq!(exploration["resultType"], "complete");
+    assert_eq!(exploration["isError"], false);
+    assert!(exploration.get("structuredContent").is_none());
+    assert!(exploration["content"][0]["text"]
+        .as_str()
+        .unwrap()
+        .contains("1: pub fn helper() {}"));
 }

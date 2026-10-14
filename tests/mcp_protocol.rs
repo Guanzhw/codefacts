@@ -29,7 +29,7 @@ fn assert_repository_root_identity(actual: &Value, expected: &Path) {
 }
 
 #[test]
-fn stdio_server_exposes_only_the_five_source_backed_workflows() {
+fn stdio_server_exposes_exploration_and_the_five_source_backed_workflows() {
     let repository = tempdir().expect("temporary repository");
     fs::create_dir_all(repository.path().join("src")).expect("source directory");
     fs::write(
@@ -120,7 +120,21 @@ fn stdio_server_exposes_only_the_five_source_backed_workflows() {
         .iter()
         .map(|tool| tool["name"].as_str().expect("tool name"))
         .collect::<Vec<_>>();
-    assert_eq!(names, ["map", "search", "outline", "expand", "path"]);
+    assert_eq!(
+        names,
+        ["explore", "impact", "map", "search", "outline", "expand", "path"]
+    );
+    for tool in tools {
+        assert_eq!(
+            tool["annotations"],
+            json!({
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false
+            })
+        );
+    }
     let search = tools
         .iter()
         .find(|tool| tool["name"] == "search")
@@ -249,6 +263,129 @@ fn stdio_server_exposes_only_the_five_source_backed_workflows() {
 }
 
 #[test]
+fn stdio_exploration_returns_budgeted_verified_source_and_rejects_invalid_arguments() {
+    let repository = tempdir().expect("temporary repository");
+    let state = tempdir().expect("external state");
+    let outside = tempdir().expect("outside source directory");
+    fs::write(
+        outside.path().join("outside.rs"),
+        "pub fn outside_repository() {}\n",
+    )
+    .expect("existing outside source");
+    let escaping_directory = format!(
+        "../{}",
+        outside.path().file_name().unwrap().to_str().unwrap()
+    );
+    fs::create_dir(repository.path().join("src")).expect("source directory");
+    let source =
+        "pub fn reconnect_socket() {\n    // Apply jitter before retrying the connection.\n}\n";
+    fs::write(repository.path().join("src/lib.rs"), source).expect("source fixture");
+    let long_source = (1..=100)
+        .map(|line| format!("// line {line}: 中文 {}\n", "x".repeat(60)))
+        .collect::<String>();
+    fs::write(repository.path().join("src/long.rs"), &long_source).expect("long UTF-8 source");
+    let mut child = Command::new(env!("CARGO_BIN_EXE_codefacts"))
+        .args([
+            "mcp",
+            "--root",
+            repository.path().to_str().unwrap(),
+            "--state",
+            state.path().join("facts.sqlite").to_str().unwrap(),
+        ])
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("start MCP server");
+    let invalid = [
+        json!({"query": true}),
+        json!({"max_bytes": "2000"}),
+        json!({"path_prefix": escaping_directory}),
+        json!({"file_path": format!("{escaping_directory}/outside.rs")}),
+        json!({"file_path": "src/lib.rs", "query": "retry"}),
+        json!({"file_path": "src/lib.rs", "path_prefix": "src"}),
+        json!({"start_line": 1}),
+        json!({"max_bytes": 1999}),
+    ];
+    let mut requests = vec![
+        json!({"jsonrpc":"2.0", "id":1, "method":"initialize", "params":{}}),
+        json!({"jsonrpc":"2.0", "id":2, "method":"tools/call", "params":{"name":"explore", "arguments":{"max_bytes":2000}}}),
+        json!({"jsonrpc":"2.0", "id":3, "method":"tools/call", "params":{"name":"explore", "arguments":{"query":"jitter retry connection", "path_prefix":"src", "max_bytes":2000}}}),
+        json!({"jsonrpc":"2.0", "id":4, "method":"tools/call", "params":{"name":"explore", "arguments":{"file_path":"src/long.rs", "start_line":20, "max_bytes":2000}}}),
+    ];
+    requests.extend(invalid.iter().enumerate().map(|(index, arguments)|
+        json!({"jsonrpc":"2.0", "id":index + 5, "method":"tools/call", "params":{"name":"explore", "arguments":arguments}})));
+    let mut input = child.stdin.take().expect("stdin");
+    for request in requests {
+        writeln!(input, "{request}").expect("write request");
+    }
+    drop(input);
+    let output = child.wait_with_output().expect("server output");
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let responses = String::from_utf8(output.stdout)
+        .expect("UTF-8 output")
+        .lines()
+        .map(|line| serde_json::from_str::<Value>(line).expect("JSON-RPC response"))
+        .collect::<Vec<_>>();
+    assert_eq!(responses.len(), 4 + invalid.len());
+    for response in &responses[1..4] {
+        let result = &response["result"];
+        assert_eq!(result["isError"], false);
+        assert!(result.get("structuredContent").is_none());
+        assert_eq!(result["content"].as_array().unwrap().len(), 1);
+        assert_eq!(result["content"][0]["type"], "text");
+        let text = result["content"][0]["text"]
+            .as_str()
+            .expect("exploration text");
+        assert!(text.len() <= 2000, "{} response bytes", text.len());
+        assert!(text.contains("Freshness: fresh | generation "), "{text}");
+        let root = text
+            .lines()
+            .find_map(|line| line.strip_prefix("Root: "))
+            .expect("root evidence");
+        assert_repository_root_identity(&Value::String(root.into()), repository.path());
+    }
+    let query = responses[2]["result"]["content"][0]["text"]
+        .as_str()
+        .unwrap();
+    assert!(query.contains("src/lib.rs:"), "{query}");
+    assert!(
+        query.contains("2:     // Apply jitter before retrying the connection."),
+        "{query}"
+    );
+    assert!(
+        query.contains(&format!("SHA256: {:x}", Sha256::digest(source.as_bytes()))),
+        "{query}"
+    );
+    let focused = responses[3]["result"]["content"][0]["text"]
+        .as_str()
+        .unwrap();
+    assert!(focused.contains("20: // line 20: 中文"), "{focused}");
+    assert!(!focused.contains("19: // line 19:"));
+    assert!(
+        focused.contains(
+            "excerpt incomplete; continue explore(file_path=\"src/long.rs\", start_line="
+        ),
+        "{focused}"
+    );
+    assert!(focused.contains(&format!(
+        "SHA256: {:x}",
+        Sha256::digest(long_source.as_bytes())
+    )));
+    for response in &responses[4..] {
+        assert_eq!(response["result"]["isError"], true, "{response}");
+        assert!(!response["result"]["content"][0]["text"]
+            .as_str()
+            .unwrap()
+            .is_empty());
+    }
+}
+
+#[test]
 fn stdio_server_indexes_and_queries_multiple_explicit_project_roots() {
     let project_a = tempdir().expect("first project");
     fs::create_dir_all(project_a.path().join("src")).expect("first source directory");
@@ -287,6 +424,9 @@ fn stdio_server_indexes_and_queries_multiple_explicit_project_roots() {
         json!({"jsonrpc":"2.0", "id":9, "method":"tools/call", "params":{"name":"outline", "arguments":{"repository_root":project_b_root, "file_path":"src/lib.rs"}}}),
         json!({"jsonrpc":"2.0", "id":10, "method":"tools/call", "params":{"name":"expand", "arguments":{"repository_root":project_b_root, "symbol":"beta", "file_path":"src/lib.rs"}}}),
         json!({"jsonrpc":"2.0", "id":11, "method":"tools/call", "params":{"name":"path", "arguments":{"repository_root":project_b_root, "from":"entry", "to":"beta"}}}),
+        json!({"jsonrpc":"2.0", "id":12, "method":"tools/call", "params":{"name":"explore", "arguments":{}}}),
+        json!({"jsonrpc":"2.0", "id":13, "method":"tools/call", "params":{"name":"explore", "arguments":{"repository_root":project_a_root, "query":"alpha"}}}),
+        json!({"jsonrpc":"2.0", "id":14, "method":"tools/call", "params":{"name":"explore", "arguments":{"repository_root":project_b_root, "query":"beta"}}}),
     ];
     let mut input = child.stdin.take().expect("MCP stdin");
     for request in requests {
@@ -305,7 +445,7 @@ fn stdio_server_indexes_and_queries_multiple_explicit_project_roots() {
         .lines()
         .map(|line| serde_json::from_str::<Value>(line).expect("JSON-RPC response"))
         .collect::<Vec<_>>();
-    assert_eq!(responses.len(), 11);
+    assert_eq!(responses.len(), 14);
 
     let tools = responses[1]["result"]["tools"]
         .as_array()
@@ -365,6 +505,24 @@ fn stdio_server_indexes_and_queries_multiple_explicit_project_roots() {
         responses[10]["result"]["structuredContent"]["path"][1]["name"],
         "beta"
     );
+    assert_eq!(responses[11]["result"]["isError"], true);
+    assert!(responses[11]["result"]["content"][0]["text"]
+        .as_str()
+        .unwrap()
+        .contains("repository_root"));
+    for (response, project, name) in [
+        (&responses[12], project_a.path(), "alpha"),
+        (&responses[13], project_b.path(), "beta"),
+    ] {
+        assert_eq!(response["result"]["isError"], false);
+        let text = response["result"]["content"][0]["text"].as_str().unwrap();
+        let root = text
+            .lines()
+            .find_map(|line| line.strip_prefix("Root: "))
+            .expect("selected root");
+        assert_repository_root_identity(&Value::String(root.into()), project);
+        assert!(text.contains(&format!("pub fn {name}()")), "{text}");
+    }
 }
 
 #[test]

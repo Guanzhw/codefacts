@@ -1,7 +1,7 @@
 //! Read-only, source-backed CodeFacts workflows.
 //!
 //! This module is intentionally the boundary between the reusable indexing
-//! core and the five MCP tools. It does not edit repositories, start a
+//! core and the read-only MCP tools. It does not edit repositories, start a
 //! watcher, or retain an agent conversation.
 
 use std::collections::{BTreeMap, HashMap, HashSet, VecDeque};
@@ -20,7 +20,11 @@ use crate::lsp::{self, LspManager, LspMode, SemanticReferenceResult};
 use crate::types::{CodeEdge, CodeNode, EdgeKind, NodeKind};
 
 mod expand;
+mod explore;
+mod impact;
 pub use expand::ExpandSection;
+pub use explore::{ExploreOptions, ExploreRead};
+pub use impact::ImpactOptions;
 
 const DEFAULT_LIMIT: usize = 20;
 const MAX_LIMIT: usize = 50;

@@ -50,6 +50,11 @@
 (method_definition
   name: (property_identifier) @name) @definition.method
 
+; The extractor checks that the initializer is callable after transparent wrappers.
+(public_field_definition
+  name: [(property_identifier) (private_property_identifier)] @name
+  value: (_) @value) @definition.callable_field
+
 ; ---------------------------------------------------------------------------
 ; Interface declarations
 ; ---------------------------------------------------------------------------

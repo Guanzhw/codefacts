@@ -1,8 +1,9 @@
 //! CodeFacts — local, source-backed code facts for coding agents.
 //!
-//! The runtime deliberately exposes only the indexing core and the five
-//! read-only MCP workflows. Upstream provenance is recorded in `UPSTREAM.md`.
+//! The runtime exposes the indexing core and read-only exploration/fact
+//! workflows. Upstream provenance is recorded in `UPSTREAM.md`.
 
+pub mod cli;
 pub mod db;
 pub mod error;
 pub mod graph;
@@ -13,3 +14,5 @@ mod presentation;
 pub mod resolution;
 pub mod service;
 pub mod types;
+
+pub use service::{ExploreOptions, ExploreRead};

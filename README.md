@@ -38,7 +38,7 @@ Its philosophy is intentionally narrow:
   not embeddings or generated summaries.
 - **Models reason; tools prove.** CodeFacts supplies evidence and relationships.
   The calling model keeps responsibility for decisions and edits.
-- **Small tools compose better.** Five stable, read-only MCP workflows are
+- **Small tools compose better.** Seven stable, read-only MCP workflows are
   easier to learn, test, and trust than a long catalog of overlapping actions.
 - **Uncertainty is data.** Static analysis does not imply runtime certainty;
   unresolved or heuristic relationships are labeled rather than overstated.
@@ -48,9 +48,30 @@ Its philosophy is intentionally narrow:
   and every response reports fresh evidence rather than silently serving a
   stale index.
 
+## Direct CLI navigation
+
+```sh
+codefacts search CodeFacts --detail context --root /path/to/repository
+codefacts node CodeFacts --file src/service.rs --root /path/to/repository
+codefacts callers <symbol-or-id> --root /path/to/repository
+codefacts callees <symbol-or-id> --root /path/to/repository
+codefacts explore "refresh graph" --root /path/to/repository
+codefacts explore --file src/service.rs --start-line 1 --end-line 80 --root /path/to/repository
+codefacts impact <symbol-or-id> --max-depth 3 --limit 20 --root /path/to/repository
+```
+
+Direct queries default to the current directory and readable Markdown; use
+`--format compact` or `--format full` for JSON. `explore` returns bounded text.
+`node` uses the existing `expand` workflow; `callers` and `callees` select its
+corresponding paged section. `map`, `outline`, `expand`, and `path` also work
+directly. Index state remains outside the repository by default. Exact IDs or
+`--file` disambiguate same-name symbols; a name with multiple matches returns
+the candidates rather than choosing an implementation. Run any command with
+`--help` for its options.
+
 ## MCP surface
 
-Version 1 deliberately exposes exactly five read-only tools:
+The native runtime exposes seven read-only workflows:
 
 | Tool | Purpose |
 | --- | --- |
@@ -59,10 +80,12 @@ Version 1 deliberately exposes exactly five read-only tools:
 | `outline` | Symbols or headings in one file, with optional kind/local-detail filtering and snapshot-bound continuation. |
 | `expand` | One definition with a verified bounded source excerpt, plus callers, callees with explicit confidence, references, related tests, Markdown section text, and optional semantic references. |
 | `path` | A shortest bounded static calls path between confirmed symbols, with optional endpoint file-path disambiguation. |
+| `explore` | Budgeted repository orientation, lexical task-to-source discovery and explicit source-range reads with verified hashes. |
+| `impact` | Bounded transitive static dependents, container members, shortest witness relationships and reachable test-associated symbols. |
 
-Every result is bounded, includes file/line/hash evidence, and refreshes the incremental index before answering. Its `freshness` object includes the canonical `repository_root` and fact-store `generation`, so a caller can verify that the facts belong to the intended project. `freshness.status` is `partial` when a source file could not be read, parsed, extracted, or accepted because it exceeded the indexing limit; the accompanying `files_failed` and reason counters make that gap explicit. JSON modes return serialized JSON `TextContent` and an equivalent `structuredContent` object. Opt-in Markdown mode returns one text body. A `no_static_path` result never claims that runtime execution is unreachable.
+Every result is bounded, includes source/hash evidence, and refreshes the incremental index before answering. Symbols and relationships include source spans. Exact-fact and impact responses have a `freshness` object with the canonical `repository_root` and fact-store `generation`; exploration reports these in its text header. `freshness.status` is `partial` when a source file could not be read, parsed, extracted, or accepted because it exceeded the indexing limit; the accompanying `files_failed` and reason counters make that gap explicit. JSON modes return serialized JSON `TextContent` and an equivalent `structuredContent` object. Opt-in Markdown and exploration return one text body. A `no_static_path` result never claims that runtime execution is unreachable.
 
-All five tools accept an optional `repository_root` project directory. It
+All seven tools accept an optional `repository_root` project directory. It
 selects (and, on first use, indexes) that project's independent external SQLite
 fact store for the current call. A server started with `--root` uses that root
 when the field is omitted; a rootless server requires `repository_root` on
@@ -71,6 +94,31 @@ every call and never guesses from its working directory. File paths such as
 selected project. Results never merge unrelated projects: each response's
 `freshness.repository_root` identifies the source snapshot, and `path` only
 traverses static relationships within that selected project.
+
+`explore` without arguments gives a repository orientation. A `query` selects
+source lexically, including documentation and package manifests, and returns
+bounded source cards and static relationships. `file_path`/`start_line` or a
+`reads` array selects explicit ranges for follow-up. Its `max_bytes` is a total
+UTF-8 response budget from 2,000 through 32,000 bytes (default 24,000), including
+metadata. Read source and hashes are checked against current disk content.
+Lexical matching can miss a paraphrased task; use concrete identifiers or paths.
+
+`impact` selects one confirmed symbol with `symbol` and optional `file_path`.
+It traverses incoming stored calls, references, inheritance, implementations
+and imports, plus outgoing stored members of containers. Every transition is
+one graph hop; `max_depth` is 1 through 10 (default 3). `limit` bounds affected
+entities to 50 (default 20), and edge work is capped at 5,000 occurrences.
+Each affected entry includes distance, an original-direction witness and the
+traversal direction. Import dependencies may reach a `kind: "file"` snapshot
+anchor with a source hash; a snapshot alone supplies no invented line span.
+Use `explore` with `file_path` to read a reached file anchor. File membership
+is traversed only where the index stores that relationship.
+`tests` selects reached test-associated symbols from those same witnesses.
+The traversal flags distinguish exhaustion, depth, node and work cutoffs.
+Heuristic/unresolved bindings are excluded, and static extraction gaps or
+runtime dispatch may omit dependencies. Go uses static Tree-sitter facts;
+unknown receivers retain heuristic confidence. Test association includes
+helpers in test files and does not imply a runnable test list.
 
 `search` accepts optional `kind`, `path_prefix`, `scope`, non-negative
 `offset`, and `detail`. `detail: "facts"` is the compact default. For a single,
@@ -120,7 +168,8 @@ availability/status contract.
 
 ### Response formats
 
-All five MCP tools default to `format: "compact"`. File hashes occur once in
+The exact-fact tools and `impact` default to `format: "compact"`; `explore`
+returns one bounded text body. File hashes occur once in
 `source_hashes[file_path]`; evidence retains its file, line range, extractor and
 confidence. Null fields and zero refresh counters are omitted; a missing refresh
 counter means zero. Repository identity, generation and freshness status remain.
