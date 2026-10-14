@@ -840,8 +840,11 @@ impl GraphStore {
     pub fn get_in_edges(&self, node_id: &str, edge_type: Option<&str>) -> Result<Vec<CodeEdge>> {
         match edge_type {
             Some(t) => {
+                // The type index can otherwise win without table statistics,
+                // scanning every call in a large graph for one target.
                 let mut stmt = self.conn.prepare_cached(
-                    "SELECT * FROM edges WHERE target_id = ?1 AND type = ?2 \
+                    "SELECT * FROM edges INDEXED BY idx_edges_target \
+                         WHERE target_id = ?1 AND type = ?2 \
                          ORDER BY source_id, type, file_path, line, id",
                 )?;
                 let rows = stmt.query_and_then(params![node_id, t], row_to_code_edge)?;
@@ -984,15 +987,16 @@ impl GraphStore {
             crate::error::CodeFactsError::Other("test result limit is too large".into())
         })?;
         let mut stmt = self.conn.prepare_cached(
-            "SELECT DISTINCT tests.* FROM nodes tests \
-             WHERE tests.is_test = 1 AND ( \
-               EXISTS (SELECT 1 FROM edges incoming \
-                 WHERE incoming.source_id = tests.id AND incoming.target_id = ?1 \
-                   AND COALESCE(json_extract(incoming.properties, '$.confidence'), 'static') <> 'heuristic') \
-               OR EXISTS (SELECT 1 FROM edges outgoing \
-                 WHERE outgoing.target_id = tests.id AND outgoing.source_id = ?1 \
-                   AND COALESCE(json_extract(outgoing.properties, '$.confidence'), 'static') <> 'heuristic') \
-             ) \
+            // Start with adjacent IDs. CROSS JOIN keeps the selective edge
+            // lookup outside the node lookup, instead of probing every test.
+            "SELECT tests.* FROM ( \
+               SELECT source_id AS node_id FROM edges WHERE target_id = ?1 \
+                 AND COALESCE(json_extract(properties, '$.confidence'), 'static') <> 'heuristic' \
+               UNION \
+               SELECT target_id AS node_id FROM edges WHERE source_id = ?1 \
+                 AND COALESCE(json_extract(properties, '$.confidence'), 'static') <> 'heuristic' \
+             ) adjacent CROSS JOIN nodes tests ON tests.id = adjacent.node_id \
+             WHERE tests.is_test = 1 \
              ORDER BY \
                CASE WHEN instr(lower(tests.name), lower(?2)) > 0 THEN 0 ELSE 1 END, \
                CASE WHEN tests.file_path = ?3 THEN 0 ELSE 1 END, \
@@ -1798,6 +1802,153 @@ mod tests {
             .unwrap();
         assert_eq!(tests.len(), 1);
         assert_eq!(tests[0].id, "test-related");
+    }
+
+    #[test]
+    fn related_tests_preserve_ranking_deduplication_and_symbol_fields() {
+        let store = setup();
+        let mut nodes = vec![
+            make_node("prod", "run", "src/run.rs", NodeKind::Function, 1),
+            make_node("same-z", "test_run", "src/run.rs", NodeKind::Function, 20),
+            make_node("same-a", "test_run", "src/run.rs", NodeKind::Function, 20),
+            make_node(
+                "same-early",
+                "test_run",
+                "src/run.rs",
+                NodeKind::Function,
+                20,
+            ),
+            make_node("other-match", "test_run", "a.rs", NodeKind::Function, 1),
+            make_node(
+                "same-other",
+                "test_other",
+                "src/run.rs",
+                NodeKind::Function,
+                2,
+            ),
+            make_node("other-other", "test_other", "z.rs", NodeKind::Function, 1),
+            make_node("heuristic", "test_run", "src/run.rs", NodeKind::Function, 3),
+            make_node("ordinary", "run_other", "a.rs", NodeKind::Function, 2),
+            make_node("unrelated", "test_run", "a.rs", NodeKind::Function, 3),
+        ];
+        for node in &mut nodes {
+            node.language = Language::Rust;
+            node.qualified_name = Some(format!("module::{}", node.name));
+            node.start_column = if node.id == "same-early" { 1 } else { 2 };
+        }
+        store.upsert_nodes(&nodes).unwrap();
+        let mut edges = vec![
+            make_edge("same-z", "prod", EdgeKind::Calls, "src/run.rs", 22),
+            make_edge("same-a", "prod", EdgeKind::Calls, "src/run.rs", 22),
+            make_edge("prod", "same-a", EdgeKind::References, "src/run.rs", 4),
+            make_edge("same-a", "prod", EdgeKind::References, "src/run.rs", 23),
+            make_edge("same-a", "same-a", EdgeKind::Calls, "src/run.rs", 24),
+            make_edge("same-early", "prod", EdgeKind::Calls, "src/run.rs", 22),
+            make_edge("prod", "other-match", EdgeKind::References, "src/run.rs", 5),
+            make_edge("same-other", "prod", EdgeKind::References, "src/run.rs", 3),
+            make_edge("prod", "other-other", EdgeKind::Calls, "src/run.rs", 6),
+            make_edge("ordinary", "prod", EdgeKind::Calls, "a.rs", 3),
+            make_edge("unresolved:test", "prod", EdgeKind::Calls, "missing.rs", 1),
+        ];
+        let mut heuristic = make_edge("heuristic", "prod", EdgeKind::Calls, "src/run.rs", 4);
+        heuristic.metadata = Some(HashMap::from([("confidence".into(), "heuristic".into())]));
+        edges.push(heuristic);
+        store.upsert_edges(&edges).unwrap();
+        let expected = [
+            "same-early",
+            "same-a",
+            "same-z",
+            "other-match",
+            "same-other",
+            "other-other",
+        ]
+        .iter()
+        .map(|id| store.get_node(id).unwrap().unwrap())
+        .collect::<Vec<_>>();
+        for limit in [0, 1, 2, 5, 20] {
+            let actual = store
+                .get_related_test_nodes("prod", "run", "src/run.rs", limit)
+                .unwrap();
+            assert_eq!(
+                serde_json::to_value(&actual).unwrap(),
+                serde_json::to_value(&expected[..limit.min(expected.len())]).unwrap(),
+            );
+        }
+        // A self-edge identifies the test once, including when it also has
+        // both incoming and outgoing relationships to a non-test symbol.
+        let self_related = store
+            .get_related_test_nodes("same-a", "test_run", "src/run.rs", 20)
+            .unwrap();
+        assert_eq!(self_related.len(), 1);
+        assert_eq!(self_related[0].id, "same-a");
+    }
+
+    #[test]
+    fn typed_incoming_edges_preserve_full_facts_and_canonical_order() {
+        let store = setup();
+        store
+            .upsert_nodes(&[
+                make_node("target", "run", "target.ts", NodeKind::Function, 1),
+                make_node("source-a", "a", "source.ts", NodeKind::Function, 1),
+                make_node("source-b", "b", "source.ts", NodeKind::Function, 2),
+            ])
+            .unwrap();
+        let mut heuristic = make_edge("source-a", "target", EdgeKind::Calls, "b.ts", 9);
+        heuristic.target_name = Some("run".into());
+        heuristic.metadata = Some(HashMap::from([
+            ("confidence".into(), "heuristic".into()),
+            ("resolution".into(), "unresolved_receiver".into()),
+        ]));
+        store
+            .upsert_edges(&[
+                make_edge("source-b", "target", EdgeKind::Calls, "a.ts", 1),
+                heuristic,
+                make_edge("source-a", "target", EdgeKind::Calls, "a.ts", 8),
+                make_edge("source-a", "target", EdgeKind::Calls, "a.ts", 3),
+                make_edge("source-a", "target", EdgeKind::References, "a.ts", 2),
+                make_edge(
+                    "unresolved:source",
+                    "target",
+                    EdgeKind::Calls,
+                    "unknown.ts",
+                    1,
+                ),
+                make_edge("source-a", "other-target", EdgeKind::Calls, "a.ts", 1),
+            ])
+            .unwrap();
+        let expected = store
+            .get_in_edges("target", None)
+            .unwrap()
+            .into_iter()
+            .filter(|edge| edge.kind == EdgeKind::Calls)
+            .collect::<Vec<_>>();
+        let actual = store.get_in_edges("target", Some("calls")).unwrap();
+        assert_eq!(
+            serde_json::to_value(&actual).unwrap(),
+            serde_json::to_value(&expected).unwrap()
+        );
+        assert_eq!(
+            actual
+                .iter()
+                .map(|edge| (edge.source.as_str(), edge.file_path.as_str(), edge.line))
+                .collect::<Vec<_>>(),
+            vec![
+                ("source-a", "a.ts", 3),
+                ("source-a", "a.ts", 8),
+                ("source-a", "b.ts", 9),
+                ("source-b", "a.ts", 1),
+                ("unresolved:source", "unknown.ts", 1),
+            ]
+        );
+        assert_eq!(actual[2].target_name.as_deref(), Some("run"));
+        assert_eq!(
+            actual[2].metadata.as_ref().unwrap()["confidence"],
+            "heuristic"
+        );
+        assert_eq!(
+            actual[2].metadata.as_ref().unwrap()["resolution"],
+            "unresolved_receiver"
+        );
     }
 
     #[test]
