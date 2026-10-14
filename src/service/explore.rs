@@ -1233,11 +1233,7 @@ fn render_cards(
         retained = index + 1;
     }
     metadata_bytes += omission(retained).len();
-    let allocation = if retained == 0 {
-        0
-    } else {
-        (budget - metadata_bytes) / retained
-    };
+    let allocation = (budget - metadata_bytes).checked_div(retained).unwrap_or(0);
     for (index, (excerpt, _)) in cards.iter().take(retained).enumerate() {
         let source = &sources[&excerpt.path];
         let lines: Vec<_> = source.text.lines().collect();
