@@ -34,7 +34,8 @@ CREATE TABLE IF NOT EXISTS nodes (
   source_hash TEXT,
   metadata TEXT,
   name_tokens TEXT,
-  is_test INTEGER NOT NULL DEFAULT 0
+  is_test INTEGER NOT NULL DEFAULT 0,
+  body_in_signature INTEGER NOT NULL DEFAULT 0
 )";
 
 const CREATE_EDGES: &str = "\
@@ -160,6 +161,7 @@ pub fn initialize_database(db_path: &str) -> rusqlite::Result<Connection> {
     // such databases for one source reindex before serving facts.
     let migrated_edge_evidence = migrate_edge_evidence(&conn)?;
     migrate_edge_location_storage(&conn)?;
+    migrate_node_body_storage(&conn)?;
     migrate_add_name_tokens(&conn)?;
     migrate_add_is_test(&conn)?;
     let migrated_fact_extraction = migrate_fact_extraction_version(&conn)?;
@@ -306,6 +308,23 @@ fn migrate_edge_location_storage(conn: &Connection) -> rusqlite::Result<()> {
     }
     // Both source/type and the occurrence key already start with source_id.
     conn.execute_batch("DROP INDEX IF EXISTS idx_edges_source")?;
+    Ok(())
+}
+
+/// Existing node metadata retains its original body value or absence. New
+/// typed writes explicitly opt into the signature-backed body representation.
+fn migrate_node_body_storage(conn: &Connection) -> rusqlite::Result<()> {
+    let has_body_flag = conn
+        .prepare("PRAGMA table_info(nodes)")?
+        .query_map([], |row| row.get::<_, String>(1))?
+        .collect::<rusqlite::Result<Vec<_>>>()?
+        .iter()
+        .any(|column| column == "body_in_signature");
+    if !has_body_flag {
+        conn.execute_batch(
+            "ALTER TABLE nodes ADD COLUMN body_in_signature INTEGER NOT NULL DEFAULT 0",
+        )?;
+    }
     Ok(())
 }
 
@@ -491,6 +510,7 @@ mod tests {
             "source_hash",
             "metadata",
             "is_test",
+            "body_in_signature",
         ];
         for col in &expected {
             assert!(

@@ -33,6 +33,27 @@ source reparse, mass legacy rewrite or automatic compaction is introduced.
 Existing files may gain reusable free pages without shrinking; measure that
 separately from fresh-state size. Full metadata and query parity remain gates.
 
+The first formal candidate passed disk reduction but missed the Go cold target
+and four warm P95 gates. Preserve that campaign unchanged. Native inspection
+identified a second duplication: every typed node writer stores the full body
+in `signature` and a UTF-8 prefix of at most 4096 bytes in metadata JSON. Across
+the four frozen states, all 48,470 node bodies match that prefix; removing the
+duplicate key saves 9,338,640 raw JSON bytes in Go before SQLite allocation.
+
+Add `nodes.body_in_signature INTEGER NOT NULL DEFAULT 0`. Legacy rows keep
+their metadata body value or absence, including conflicting signatures and
+unknown raw metadata. The shared typed UPSERT sets one on insert and update,
+omits only the duplicate body key, and retains the full signature for FTS. The
+converter borrows the signature and copies only its existing bounded UTF-8
+prefix; NULL and empty text retain their distinct values. No extraction bump,
+legacy rewrite, source reparse or automatic compaction is required. Validate
+all three writers, migration, complete hydrated objects and FTS ordering.
+
+Map aggregates and explicit explore source reads do not hydrate node bodies.
+Their first-campaign warm misses require separate evidence; body normalization
+does not establish their cause or resolution. Retain the original numeric
+gates and verify every path with the replacement candidate.
+
 The task experiment uses a frozen source snapshot and independent gold rubric
 outside the agent's repository. Existing Codex runner usage accounting is
 reused where valid for the pinned runtime. Profile selection is the sole

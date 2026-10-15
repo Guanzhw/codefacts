@@ -16,12 +16,9 @@ use crate::types::{CodeEdge, CodeNode, EdgeKind, Language, NodeKind};
 /// Convert a `rusqlite::Row` from a `SELECT * FROM nodes` query into a
 /// [`CodeNode`].
 ///
-/// The expected column order is:
-/// `id, type, name, file_path, start_line, end_line, start_column,
-///  end_column, language, signature, doc_comment, source_hash, metadata`
-///
-/// The `metadata` column is a JSON string; `body` and `exported` are
-/// extracted from it (matching the TypeScript converter behaviour).
+/// Fields are read by column name. Flagged rows borrow their signature to
+/// restore the same UTF-8 body prefix of at most 4096 bytes; legacy rows keep
+/// their original metadata body value or absence.
 pub fn row_to_code_node(row: &Row<'_>) -> rusqlite::Result<CodeNode> {
     let id: String = row.get("id")?;
     let kind_str: String = row.get("type")?;
@@ -35,16 +32,24 @@ pub fn row_to_code_node(row: &Row<'_>) -> rusqlite::Result<CodeNode> {
     let language_str: String = row.get("language")?;
     let doc_comment: Option<String> = row.get("doc_comment")?;
     let metadata_json: Option<String> = row.get("metadata")?;
+    let body_in_signature: bool = row.get("body_in_signature")?;
 
-    // Parse the metadata JSON to extract body / exported, matching the TS
-    // converter which reads startColumn, endColumn, body, exported from
-    // metadata.
+    // Export/local metadata and legacy body values keep their existing types.
     let meta: HashMap<String, serde_json::Value> = metadata_json
         .as_deref()
         .and_then(|s| serde_json::from_str(s).ok())
         .unwrap_or_default();
 
-    let body = meta.get("body").and_then(|v| v.as_str()).map(String::from);
+    let body = if body_in_signature {
+        let index = row.as_ref().column_index("signature")?;
+        let value = row.get_ref(index)?;
+        let text = value.as_str_or_null().map_err(|error| {
+            rusqlite::Error::FromSqlConversionFailure(index, value.data_type(), Box::new(error))
+        })?;
+        text.map(|text| text[..text.floor_char_boundary(4096)].to_owned())
+    } else {
+        meta.get("body").and_then(|v| v.as_str()).map(String::from)
+    };
 
     let exported = meta.get("exported").and_then(|v| v.as_bool());
 
@@ -94,8 +99,7 @@ pub fn row_to_code_edge(row: &Row<'_>) -> rusqlite::Result<CodeEdge> {
         .and_then(|s| serde_json::from_str(s).ok())
         .unwrap_or_default();
 
-    // Old rows are migrated then rebuilt, but keeping this fallback makes the
-    // converter safe for a diagnostic read during that transition.
+    // Legacy property envelopes can supply missing location values.
     let file_path = if file_path.is_empty() {
         props.get("filePath").cloned().unwrap_or_default()
     } else {

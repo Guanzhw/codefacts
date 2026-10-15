@@ -1,10 +1,13 @@
 use std::{collections::HashMap, fs};
 
 use codefacts::{
-    db::{converters::row_to_code_edge, schema::initialize_database},
+    db::{
+        converters::{row_to_code_edge, row_to_code_node},
+        schema::initialize_database,
+    },
     graph::store::GraphStore,
     indexer::pipeline::{IndexOptions, IndexingPipeline},
-    types::{CodeEdge, EdgeKind},
+    types::{CodeEdge, CodeNode, EdgeKind, Language, NodeKind},
 };
 use rusqlite::{params, types::Value as SqlValue, Connection};
 use serde_json::{json, Value};
@@ -203,11 +206,12 @@ fn v18_storage_upgrade_keeps_facts_fts_hashes_and_generation_without_a_source_pa
     let conn = initialize_database(db.to_str().unwrap()).unwrap();
     conn.execute_batch(
         "ALTER TABLE edges DROP COLUMN location_in_columns;
+         ALTER TABLE nodes DROP COLUMN body_in_signature;
          CREATE INDEX idx_edges_source ON edges(source_id);
          UPDATE index_metadata SET value='42' WHERE key='generation';
          UPDATE index_metadata SET value='0' WHERE key='full_reindex_required';
          INSERT INTO nodes (id,type,name,file_path,start_line,end_line,language,signature,metadata)
-           VALUES ('hello','function','Hello','main.go',2,2,'go','func Hello() {}','{\"body\":\"func Hello() {}\"}');
+           VALUES ('hello','function','Hello','main.go',2,2,'go','func Hello() {}','{\"body\":\"legacy body differs from signature\",\"custom\":{\"nested\":true}}');
          INSERT INTO edges (source_id,target_id,type,file_path,line,target_name,properties)
            VALUES ('hello','hello','calls','main.go',2,'Hello','{\"filePath\":\"custom.ts\",\"line\":\"0099\",\"custom\":\"retained\"}');",
     ).unwrap();
@@ -217,7 +221,7 @@ fn v18_storage_upgrade_keeps_facts_fts_hashes_and_generation_without_a_source_pa
     )
     .unwrap();
     let queries = [
-        "SELECT * FROM nodes ORDER BY id",
+        "SELECT id,type,name,qualified_name,file_path,start_line,end_line,start_column,end_column,language,signature,doc_comment,source_hash,metadata,name_tokens,is_test FROM nodes ORDER BY id",
         "SELECT id,source_id,target_id,type,file_path,line,target_name,properties FROM edges ORDER BY id",
         "SELECT * FROM file_hashes ORDER BY file_path",
         "SELECT * FROM index_metadata ORDER BY key",
@@ -229,6 +233,13 @@ fn v18_storage_upgrade_keeps_facts_fts_hashes_and_generation_without_a_source_pa
             "SELECT *,0 AS location_in_columns FROM edges",
             [],
             row_to_code_edge,
+        )
+        .unwrap();
+    let node_before = conn
+        .query_row(
+            "SELECT *,0 AS body_in_signature FROM nodes",
+            [],
+            row_to_code_node,
         )
         .unwrap();
     drop(conn);
@@ -247,6 +258,11 @@ fn v18_storage_upgrade_keeps_facts_fts_hashes_and_generation_without_a_source_pa
     assert_eq!(result.relationships_rebound, 0);
     assert_eq!(store.generation().unwrap(), 42);
     let edge_after = store.get_all_edges().unwrap().remove(0);
+    let node_after = store.get_all_nodes().unwrap().remove(0);
+    assert_eq!(
+        serde_json::to_value(node_before).unwrap(),
+        serde_json::to_value(node_after).unwrap()
+    );
     assert_eq!(
         serde_json::to_value(edge_before).unwrap(),
         serde_json::to_value(edge_after).unwrap()
@@ -255,6 +271,13 @@ fn v18_storage_upgrade_keeps_facts_fts_hashes_and_generation_without_a_source_pa
     let migrated = Connection::open(&db).unwrap();
     let after: Vec<_> = queries.iter().map(|query| rows(&migrated, query)).collect();
     assert_eq!(before, after);
+    assert_eq!(
+        migrated
+            .query_row("SELECT body_in_signature FROM nodes", [], |row| row
+                .get::<_, i64>(0))
+            .unwrap(),
+        0
+    );
     assert_eq!(
         migrated
             .query_row("SELECT location_in_columns FROM edges", [], |row| row
@@ -272,4 +295,147 @@ fn v18_storage_upgrade_keeps_facts_fts_hashes_and_generation_without_a_source_pa
             .unwrap(),
         0
     );
+}
+
+fn node(id: usize, body: Option<String>) -> CodeNode {
+    CodeNode {
+        id: format!("node-{id}"),
+        name: format!("Function{id}"),
+        qualified_name: Some(format!("Module.Function{id}")),
+        kind: NodeKind::Function,
+        file_path: "src/定义.rs".into(),
+        start_line: id as u32 + 1,
+        end_line: id as u32 + 2,
+        start_column: 3,
+        end_column: 17,
+        language: Language::Rust,
+        body,
+        documentation: Some("kept documentation".into()),
+        exported: Some(false),
+        is_local: true,
+    }
+}
+
+#[test]
+fn every_node_writer_preserves_bounded_bodies_and_full_signatures() {
+    for writer in ["single", "batch", "file"] {
+        let directory = tempdir().unwrap();
+        let db = directory.path().join("facts.sqlite");
+        let store = GraphStore::new(db.to_str().unwrap()).unwrap();
+        let bodies = [
+            None,
+            Some(String::new()),
+            Some("x".repeat(4095)),
+            Some("x".repeat(4096)),
+            Some(format!("{}中{}", "x".repeat(4095), "y".repeat(500_000))),
+            Some("😀".repeat(150_000)),
+        ];
+        let nodes = bodies
+            .into_iter()
+            .enumerate()
+            .map(|(id, body)| node(id, body))
+            .collect::<Vec<_>>();
+        let raw = Connection::open(&db).unwrap();
+        for item in nodes.iter().step_by(2) {
+            raw.execute(
+                "INSERT INTO nodes (id,type,name,file_path,start_line,end_line,language,signature,metadata)
+                 VALUES (?1,'function',?2,?3,1,2,'rust','old signature','{\"body\":\"old body\"}')",
+                params![item.id,item.name,item.file_path],
+            ).unwrap();
+        }
+        match writer {
+            "single" => {
+                for item in &nodes {
+                    store.upsert_node(item).unwrap();
+                }
+            }
+            "batch" => store.upsert_nodes(&nodes).unwrap(),
+            "file" => store
+                .replace_file_data(&nodes[0].file_path, &nodes, &[])
+                .unwrap(),
+            _ => unreachable!(),
+        }
+        for item in nodes {
+            let actual = store.get_node(&item.id).unwrap().unwrap();
+            let mut expected = item.clone();
+            expected.body = item
+                .body
+                .as_ref()
+                .map(|body| body[..body.floor_char_boundary(4096)].to_owned());
+            assert_eq!(
+                serde_json::to_value(actual).unwrap(),
+                serde_json::to_value(expected).unwrap(),
+                "writer {writer} node {}",
+                item.id
+            );
+            let (signature, metadata, flag) = raw
+                .query_row(
+                    "SELECT signature,metadata,body_in_signature FROM nodes WHERE id=?1",
+                    [&item.id],
+                    |row| {
+                        Ok((
+                            row.get::<_, Option<String>>(0)?,
+                            row.get::<_, String>(1)?,
+                            row.get::<_, i64>(2)?,
+                        ))
+                    },
+                )
+                .unwrap();
+            assert_eq!(signature, item.body);
+            assert_eq!(flag, 1);
+            let metadata: Value = serde_json::from_str(&metadata).unwrap();
+            assert!(metadata.get("body").is_none());
+            assert_eq!(metadata["exported"], false);
+            assert_eq!(metadata["local"], true);
+            assert_eq!(metadata["startColumn"], 3);
+            assert_eq!(metadata["endColumn"], 17);
+        }
+    }
+}
+
+#[test]
+fn unflagged_node_metadata_retains_body_values_types_and_unknown_keys() {
+    let conn = initialize_database(":memory:").unwrap();
+    let cases = [
+        (None, None),
+        (Some(json!({})), None),
+        (Some(json!({"body":""})), Some(String::new())),
+        (Some(json!({"body":null})), None),
+        (Some(json!({"body":42})), None),
+        (
+            Some(
+                json!({"body":"metadata wins","body_in_signature":true,"unknown":{"typed":[1,null,false]}}),
+            ),
+            Some("metadata wins".into()),
+        ),
+        (
+            Some(json!({"body":"中".repeat(6000)})),
+            Some("中".repeat(6000)),
+        ),
+    ];
+    for (index, (metadata, expected_body)) in cases.into_iter().enumerate() {
+        let original = metadata.map(|value| value.to_string());
+        conn.execute(
+            "INSERT INTO nodes (id,type,name,file_path,start_line,end_line,language,signature,metadata)
+             VALUES (?1,'function','external','raw.rs',1,2,'rust','different full signature',?2)",
+            params![format!("raw-{index}"),original],
+        ).unwrap();
+        let actual = conn
+            .query_row(
+                "SELECT * FROM nodes WHERE id=?1",
+                [format!("raw-{index}")],
+                row_to_code_node,
+            )
+            .unwrap();
+        assert_eq!(actual.body, expected_body);
+        let (retained, flag) = conn
+            .query_row(
+                "SELECT metadata,body_in_signature FROM nodes WHERE id=?1",
+                [format!("raw-{index}")],
+                |row| Ok((row.get::<_, Option<String>>(0)?, row.get::<_, i64>(1)?)),
+            )
+            .unwrap();
+        assert_eq!(retained, original);
+        assert_eq!(flag, 0);
+    }
 }
