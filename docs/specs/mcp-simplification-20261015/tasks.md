@@ -11,10 +11,10 @@
 - [x] Implement and independently review bounded node-body storage normalization.
 - [x] Verify replacement migration, complete canonical fact/metadata/query parity and source; retain the final strict private-cache ID/order FAIL separately.
 - [x] Freeze native source/binaries/corpora and the separate actual agent-task candidate/rubric/order.
-- [x] Run and audit the isolated final native performance campaign: 56/57, overall FAIL; retain the original cold target and dated engineering exception.
+- [x] Run and independently audit native campaigns: historical CI4 56/57 FAIL; separate public artifact 53/57 FAIL with four explicit dated exceptions; preserve thresholds and all observations.
 - [x] Run actual 7/3/1 agent tasks, blind grading, trace audit and all-attempt token/time accounting: 72 valid completed attempts, 69 accepted, 49 fully correct, zero observed MCP calls; retain exposure/causality limits.
 - [x] Complete first-candidate source/protocol/launcher/license validation.
 - [x] Validate and freeze the changed final candidate after independent source review; verify actual CI4 runtime and documented example.
 - [x] Complete source/platform CI and prepublication release package validation; public artifacts and installed acceptance remain below.
-- [ ] Publish verified runtime and plugin; fresh installed acceptance.
-- [ ] Close requirement-by-requirement with measured costs and limitations.
+- [x] Close actual configured host/plugin acceptance: six npm packages/provenance and isolated runtime passed; plugin 0.2.1/native 0.2.0 passed fresh Codex/Claude host acceptance with the preserved Claude call-count deviation recorded.
+- [x] Close requirement-by-requirement with measured costs, failed numeric gates, explicit artifact-specific exceptions and host boundaries in the delivery record.

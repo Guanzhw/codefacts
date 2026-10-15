@@ -8,16 +8,58 @@ v1 contract; it is not part of the deployed MCP binary.
 For agent task correctness, token efficiency, cross-tool comparisons, and
 continued-investment criteria, use the [product evaluation scorecard](EVALUATION.md).
 
-## v0.2.0 Windows candidate measurements
+## Published v0.2.0 Windows measurements
+
+The actual published Windows executable passed **53 of 57 native gates;
+overall native acceptance remains FAIL**. Go cold process-wall median changed
+from 5,459.0683 to 4,932.4502 ms, an observed **9.6467%** improvement that
+missed the predeclared 10% target by 19.27073 ms. Fresh closed Go SQLite state
+changed from 192,663,552 to 155,963,392 bytes, **19.0488% smaller**.
+The release accepts these four measured performance misses through a separate
+[public-artifact decision](specs/mcp-simplification-20261015/published-release-decision-20261016.md):
+
+| Failed target | Published v0.1.18 | Public v0.2.0 | Ratio | Required ratio |
+| --- | ---: | ---: | ---: | ---: |
+| Go cold process-wall median | 5,459.0683 ms | 4,932.4502 ms | 0.9035333374 | <=0.90 |
+| globset map P95 | 13.0009 ms | 14.3190 ms | 1.1013852887 | <=1.10 |
+| globset outline P95 | 8.0696 ms | 9.4910 ms | 1.1761425597 | <=1.10 |
+| globset search with context P95 | 8.8360 ms | 11.7570 ms | 1.3305794477 | <=1.10 |
+
+The other 53 numerical gates passed: fresh Go disk, the other three cold
+comparisons, four peak-memory comparisons, 36 of 39 warm comparisons, seven
+Go absolute warm-latency checks and both paired-refresh comparisons.
+The three globset P95 regressions are 1.3181, 1.4214 and 2.9210 ms. Their cause
+is unverified; the retained distributions do not establish a noise explanation.
+
+This single public campaign used the same four fixed corpora, three cold
+observations per arm, 20 warm observations per case and paired edit/restore
+method as CI4. OS caches were not purged. All 24 cold sessions, 1,560 warm
+samples, 120 edits and 120 restores completed. Contract/source evidence and
+12 continuation chains passed; six root-dependent full-response cursor hashes
+remained different, with validated cursor facts and actual same-root
+continuation passing separately.
+
+The public executable SHA-256 is
+`fb3cc546ff1f77489f8807c5aba5bfcc932ab34dbb9ea40014558cb56a0d32e7`,
+from official [run 38793433061](https://github.com/Guanzhw/codefacts/actions/runs/38793433061),
+compiled source `b17bbbcc2a03f8822ce12152f20145526eed7fa8`, Rust 1.99.1;
+Cargo's version was not logged. Its bytes differ from CI4. The historical
+CI4 measurements and exception below remain separate. See the
+[delivery record](V020-DELIVERY-2026-10-16.md) for public provenance and
+installed-runtime evidence. Fresh-state size does not establish automatic
+shrinkage of an existing database file.
+
+## Historical CI4 prepublication measurements
 
 The frozen Windows comparison against published v0.1.18 passed **56 of 57
 native gates; overall native acceptance remains FAIL**. Go cold process-wall
 median changed from 5,429.6271 to 4,895.5632 ms, an observed **9.8361%**
 improvement. Its ratio, 0.9016389358, missed the predeclared <=0.90 target by
 8.89881 ms. The fresh, closed Go SQLite database changed from 192,663,552 to
-155,963,392 bytes, **19.05% smaller**. Delivery uses the explicit
+155,963,392 bytes, **19.05% smaller**. That candidate received an explicit
 [Go cold target engineering exception](specs/mcp-simplification-20261015/release-decision-20261016.md);
-the original threshold and failed result remain recorded.
+the original threshold and failed result remain recorded. The exception is
+specific to CI4 and does not authorize the public artifact's four misses.
 
 | Corpus | v0.1.18 cold median ms | Candidate cold median ms | v0.1.18 fresh closed DB bytes | Candidate fresh closed DB bytes |
 | --- | ---: | ---: | ---: | ---: |

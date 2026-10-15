@@ -1,15 +1,21 @@
 # v0.2.0 MCP and storage validation
 
-The candidate provides three default MCP workflows and preserves explicit
-seven-tool/one-tool profiles and direct CLI navigation. Its final Windows
-native campaign passed **56/57 gates, overall FAIL**, with a dated engineering
-exception for the Go cold benefit target. All 72 actual task attempts completed
+CodeFacts v0.2.0 provides three default MCP workflows and preserves explicit
+seven-tool/one-tool profiles and direct CLI navigation. The actual published
+Windows campaign passed **53/57 gates, overall FAIL**, with a separate dated
+decision accepting its missed cold benefit target and three globset warm P95
+targets. Public packages, fresh isolated Windows runtime and actual fresh
+Codex/Claude plugin hosts are verified. See the
+[delivery record](V020-DELIVERY-2026-10-16.md) and
+[public performance decision](specs/mcp-simplification-20261015/published-release-decision-20261016.md).
+
+The historical CI4 candidate campaign below remains **56/57 overall FAIL**,
+with its own artifact-specific cold exception. All 72 actual task attempts completed
 using source commands, with **zero observed CodeFacts MCP calls**; the results
-describe navigation under configured profiles. Publication and fresh installed
-acceptance remain pending. The [release decision](specs/mcp-simplification-20261015/release-decision-20261016.md)
+describe navigation under configured profiles. The [CI4 release decision](specs/mcp-simplification-20261015/release-decision-20261016.md)
 preserves the frozen targets and all failed campaign results.
 
-## Candidate identity and checks
+## Historical CI4 candidate identity and checks
 
 | Material | Identity or observed result |
 | --- | --- |
@@ -25,9 +31,10 @@ preserves the frozen targets and all failed campaign results.
 | Actual Windows runtime | 254 assertions passed across 36 MCP calls and nine CLI calls |
 | Documented metrics example | 47 checks passed on a small Go/Markdown fixture |
 
-The CI run's GitHub and npm publication jobs were skipped. These are
-prepublication artifacts. Final published-binary identity and installed
-runtime/plugin acceptance require separate receipts.
+That CI run's GitHub and npm publication jobs were skipped. These are
+historical prepublication artifacts. The later public-binary identity and
+isolated installation and configured host/plugin acceptance have separate
+receipts in the delivery record.
 
 ## MCP and CLI behavior
 
@@ -109,7 +116,7 @@ mechanism, without a new empirical reproducibility experiment. The private
 IDs are not returned in SourceMatch. Canonical fact and visible-result
 parity does not turn the strict raw-state failure into a pass.
 
-## Native performance
+## Historical CI4 native performance
 
 The final frozen Windows campaign used published v0.1.18 and CI4 on the four
 fixed corpora, three interleaved cold rounds, 20 warm samples and 30 paired
@@ -230,9 +237,26 @@ checks above.
 
 ## Remaining delivery
 
-Public release, fresh installed CLI/MCP checks and actual installed plugin
-configuration remain pending. A public binary can inherit this native
-artifact's measurements only after its SHA-256 identity is verified.
+The [official release](https://github.com/Guanzhw/codefacts/releases/tag/v0.2.0)
+and six npm packages are published. Actual archive SRI, all six registry
+signatures/provenance bundles and the isolated Windows launcher/runtime
+(36 MCP calls, nine CLI calls, 262 checks) passed. The public executable
+differs from CI4 and has its own single **53/57 overall FAIL** campaign and
+[four-exception decision](specs/mcp-simplification-20261015/published-release-decision-20261016.md).
+Its cold improvement is 9.6467%, fresh Go state is 19.0488% smaller, and
+globset map/outline/context-search P95 regressions remain explicit in
+[performance details](PERFORMANCE.md).
+
+Plugin guidance PR #4 and its Claude launcher correction
+[PR #5](https://github.com/Guanzhw/agent-plugins/pull/5) are merged. Plugin
+0.2.1 uses native package 0.2.0. Fresh Codex and Claude hosts exposed the
+three-tool catalog and completed actual source-backed MCP queries through
+the installed plugin and public executable. The
+[delivery record](V020-DELIVERY-2026-10-16.md) records exact host counts,
+the accepted Claude call-count deviation, origins and preservation evidence.
+The independent public post-timing audit passed integrity/correctness and
+exactly recomputed 53/57 FAIL. Historical source, storage and actual72
+outcomes above retain their original scope.
 
 ## Retained primary evidence
 
