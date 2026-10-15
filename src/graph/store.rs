@@ -93,11 +93,12 @@ ON CONFLICT(id) DO UPDATE SET
   is_test = excluded.is_test";
 
 const UPSERT_EDGE_SQL: &str = "\
-INSERT INTO edges (source_id, target_id, type, file_path, line, target_name, properties)
-VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)
+INSERT INTO edges (source_id, target_id, type, file_path, line, target_name, properties, location_in_columns)
+VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, 1)
 ON CONFLICT(source_id, target_id, type, file_path, line) DO UPDATE SET
   target_name = excluded.target_name,
-  properties = excluded.properties";
+  properties = excluded.properties,
+  location_in_columns = excluded.location_in_columns";
 
 const DELETE_EDGES_BY_FILE_SQL: &str = "\
 DELETE FROM edges WHERE file_path = ?1";
@@ -339,20 +340,15 @@ fn build_node_metadata(node: &CodeNode) -> String {
 /// Build the properties JSON for an edge row.
 fn build_edge_properties(edge: &CodeEdge) -> String {
     let mut map = serde_json::Map::new();
-    // Merge any caller-supplied metadata first.
+    // The writer owns canonical location keys. Their values live in columns
+    // and are restored by the converter for these explicitly flagged rows.
     if let Some(ref meta) = edge.metadata {
         for (k, v) in meta {
-            map.insert(k.clone(), serde_json::Value::from(v.as_str()));
+            if k != "filePath" && k != "line" {
+                map.insert(k.clone(), serde_json::Value::from(v.as_str()));
+            }
         }
     }
-    map.insert(
-        "filePath".to_string(),
-        serde_json::Value::from(edge.file_path.as_str()),
-    );
-    map.insert(
-        "line".to_string(),
-        serde_json::Value::from(edge.line.to_string()),
-    );
     serde_json::Value::Object(map).to_string()
 }
 

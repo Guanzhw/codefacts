@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS edges (
   line INTEGER NOT NULL DEFAULT 0,
   target_name TEXT,
   properties TEXT,
+  location_in_columns INTEGER NOT NULL DEFAULT 0,
   FOREIGN KEY (source_id) REFERENCES nodes(id) ON DELETE CASCADE,
   FOREIGN KEY (target_id) REFERENCES nodes(id) ON DELETE CASCADE
 )";
@@ -83,7 +84,6 @@ const CREATE_INDEXES: &[&str] = &[
     "CREATE INDEX IF NOT EXISTS idx_nodes_type ON nodes(type)",
     "CREATE INDEX IF NOT EXISTS idx_nodes_name ON nodes(name)",
     "CREATE INDEX IF NOT EXISTS idx_nodes_is_test ON nodes(is_test) WHERE is_test = 1",
-    "CREATE INDEX IF NOT EXISTS idx_edges_source ON edges(source_id)",
     "CREATE INDEX IF NOT EXISTS idx_edges_source_type ON edges(source_id, type)",
     "CREATE INDEX IF NOT EXISTS idx_edges_target ON edges(target_id)",
     "CREATE INDEX IF NOT EXISTS idx_edges_type ON edges(type)",
@@ -159,6 +159,7 @@ pub fn initialize_database(db_path: &str) -> rusqlite::Result<Connection> {
     // their properties did not retain the original target spelling.  Mark
     // such databases for one source reindex before serving facts.
     let migrated_edge_evidence = migrate_edge_evidence(&conn)?;
+    migrate_edge_location_storage(&conn)?;
     migrate_add_name_tokens(&conn)?;
     migrate_add_is_test(&conn)?;
     let migrated_fact_extraction = migrate_fact_extraction_version(&conn)?;
@@ -289,6 +290,25 @@ fn migrate_edge_evidence(conn: &Connection) -> rusqlite::Result<bool> {
     Ok(migrated)
 }
 
+/// Normalize new writes without changing the meaning or generation of old
+/// rows. Legacy property maps retain their own location keys and presence.
+fn migrate_edge_location_storage(conn: &Connection) -> rusqlite::Result<()> {
+    let has_location_flag = conn
+        .prepare("PRAGMA table_info(edges)")?
+        .query_map([], |row| row.get::<_, String>(1))?
+        .collect::<rusqlite::Result<Vec<_>>>()?
+        .iter()
+        .any(|column| column == "location_in_columns");
+    if !has_location_flag {
+        conn.execute_batch(
+            "ALTER TABLE edges ADD COLUMN location_in_columns INTEGER NOT NULL DEFAULT 0",
+        )?;
+    }
+    // Both source/type and the occurrence key already start with source_id.
+    conn.execute_batch("DROP INDEX IF EXISTS idx_edges_source")?;
+    Ok(())
+}
+
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
@@ -348,7 +368,6 @@ mod tests {
             "idx_nodes_file",
             "idx_nodes_type",
             "idx_nodes_name",
-            "idx_edges_source",
             "idx_edges_source_type",
             "idx_edges_target",
             "idx_edges_type",
@@ -359,6 +378,7 @@ mod tests {
                 "index '{idx}' should exist"
             );
         }
+        assert!(!object_exists(&conn, "index", "idx_edges_source"));
     }
 
     #[test]
@@ -502,6 +522,7 @@ mod tests {
             "line",
             "target_name",
             "properties",
+            "location_in_columns",
         ] {
             assert!(
                 columns.contains(&col.to_string()),

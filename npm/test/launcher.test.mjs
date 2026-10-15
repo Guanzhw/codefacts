@@ -236,6 +236,7 @@ test('packed launcher installs the matching optional package and speaks MCP', as
 
   const client = startMcp(installedLauncher, [
     'mcp',
+    '--tools', 'all',
     '--root', fixtureRoot,
     '--state', join(temporaryDirectory, 'state.sqlite'),
   ], process.env);
@@ -285,4 +286,35 @@ test('packed launcher installs the matching optional package and speaks MCP', as
   const nativeNode = commandResult(process.execPath, [installedLauncher, 'node', 'AuthService', '--file', 'src/auth/service.ts', '--root', fixtureRoot, '--state', join(temporaryDirectory, 'state.sqlite'), '--lsp', 'off', '--format', 'full']);
   assert.equal(JSON.parse(nativeNode.stdout).status, 'ok');
   await client.close();
+
+  for (const profile of [undefined, 'default', 'explore']) {
+    const profileClient = startMcp(installedLauncher, [
+      'mcp',
+      ...(profile ? ['--tools', profile] : []),
+      '--root', fixtureRoot,
+      '--state', join(temporaryDirectory, `state-${profile || 'omitted'}.sqlite`),
+      '--lsp', 'off',
+    ], process.env);
+    const catalog = await profileClient.request(1, 'tools/list');
+    const expected = profile === 'explore' ? ['explore'] : ['explore', 'impact', 'expand'];
+    assert.deepEqual(catalog.result.tools.map((tool) => tool.name), expected);
+    for (const [index, name] of expected.entries()) {
+      const arguments_ = name === 'explore'
+        ? { file_path: 'src/auth/service.ts', max_bytes: 2000 }
+        : { symbol: 'AuthService', file_path: 'src/auth/service.ts' };
+      const answer = await profileClient.request(index + 2, 'tools/call', {
+        name,
+        arguments: arguments_,
+      });
+      assert.equal(answer.result.isError, false);
+      assert.match(answer.result.content[0].text, /AuthService/);
+    }
+    const hiddenSearch = await profileClient.request(expected.length + 2, 'tools/call', {
+      name: 'search',
+      arguments: {},
+    });
+    assert.equal(hiddenSearch.result.isError, true);
+    assert.match(hiddenSearch.result.content[0].text, /unknown tool 'search'/);
+    await profileClient.close();
+  }
 });

@@ -28,6 +28,8 @@ fn stdio_server_supports_stateless_2026_07_28_requests() {
     let mut child = Command::new(env!("CARGO_BIN_EXE_codefacts"))
         .args([
             "mcp",
+            "--tools",
+            "all",
             "--root",
             repository.path().to_str().expect("UTF-8 temp path"),
             "--state",

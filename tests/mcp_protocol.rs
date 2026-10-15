@@ -29,7 +29,7 @@ fn assert_repository_root_identity(actual: &Value, expected: &Path) {
 }
 
 #[test]
-fn stdio_server_exposes_exploration_and_the_five_source_backed_workflows() {
+fn all_profile_exposes_the_seven_source_backed_workflows() {
     let repository = tempdir().expect("temporary repository");
     fs::create_dir_all(repository.path().join("src")).expect("source directory");
     fs::write(
@@ -47,6 +47,8 @@ fn stdio_server_exposes_exploration_and_the_five_source_backed_workflows() {
     let mut child = Command::new(env!("CARGO_BIN_EXE_codefacts"))
         .args([
             "mcp",
+            "--tools",
+            "all",
             "--root",
             repository.path().to_str().expect("UTF-8 temp path"),
             "--state",
@@ -404,7 +406,7 @@ fn stdio_server_indexes_and_queries_multiple_explicit_project_roots() {
     let project_a_root = project_a.path().to_str().expect("UTF-8 first project");
     let project_b_root = project_b.path().to_str().expect("UTF-8 second project");
     let mut child = Command::new(env!("CARGO_BIN_EXE_codefacts"))
-        .arg("mcp")
+        .args(["mcp", "--tools", "all"])
         .env("CODEFACTS_STATE_DIR", state_dir.path())
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())

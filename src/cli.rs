@@ -8,7 +8,8 @@ use std::ffi::OsString;
 use std::path::PathBuf;
 
 const USAGE: &str = "Usage:
-  codefacts mcp [--root <repository>] [--state <external-sqlite-path>] [--lsp <auto|off>]
+  codefacts mcp [--tools <default|all|explore>] [--root <repository>]
+    [--state <external-sqlite-path>] [--lsp <auto|off>]
   codefacts map [options]
   codefacts search <identifier-or-terms> [options]
   codefacts outline <file> [options]
@@ -29,7 +30,8 @@ Query options: --root <repository> (default current directory),
 Search: --kind <kind>, --scope <top_level|all>, --detail <facts|context>,
   --context-limit <1..3>, --path-prefix <path>.
 Outline: --kind <kind>, --scope <top_level|all>.
-MCP exposes map, search, outline, expand, path, explore and impact.
+MCP defaults to explore, expand and impact. --tools all enables all seven workflows;
+--tools explore exposes only explore. Direct queries retain every workflow.
 Index state is stored outside the repository by default.";
 
 pub fn run(arguments: impl IntoIterator<Item = OsString>) -> Result<(), String> {
@@ -52,7 +54,7 @@ pub fn run(arguments: impl IntoIterator<Item = OsString>) -> Result<(), String> 
     let mut root = None;
     let mut state = None;
     let mut lsp = LspMode::Auto;
-    let mut tools = ToolProfile::All;
+    let mut tools = ToolProfile::default();
     let mut fields = Map::new();
     let mut positionals = Vec::new();
     while let Some(argument) = args.next() {
@@ -69,7 +71,7 @@ pub fn run(arguments: impl IntoIterator<Item = OsString>) -> Result<(), String> 
         }
         let value = args.next().ok_or_else(|| {
             if argument == "--tools" {
-                "--tools requires all or explore".into()
+                "--tools requires default, all or explore".into()
             } else {
                 format!("{argument} requires a value")
             }
@@ -83,7 +85,7 @@ pub fn run(arguments: impl IntoIterator<Item = OsString>) -> Result<(), String> 
             }
             "--tools" if tool == "mcp" => {
                 tools = ToolProfile::parse(&value.to_string_lossy())
-                    .ok_or("--tools must be 'all' or 'explore'")?;
+                    .ok_or("--tools must be 'default', 'all' or 'explore'")?;
             }
             flag if tool != "mcp" => {
                 let key = match flag {

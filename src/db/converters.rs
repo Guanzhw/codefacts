@@ -77,7 +77,8 @@ pub fn row_to_code_node(row: &Row<'_>) -> rusqlite::Result<CodeNode> {
 /// [`CodeEdge`].
 ///
 /// The edge table stores location and target spelling in first-class columns.
-/// `properties` remains a compatibility envelope for extractor metadata.
+/// Flagged rows hydrate the writer-owned location keys into their metadata;
+/// legacy property maps retain their original keys and presence.
 pub fn row_to_code_edge(row: &Row<'_>) -> rusqlite::Result<CodeEdge> {
     let source: String = row.get("source_id")?;
     let target: String = row.get("target_id")?;
@@ -86,8 +87,9 @@ pub fn row_to_code_edge(row: &Row<'_>) -> rusqlite::Result<CodeEdge> {
     let line: u32 = row.get("line").unwrap_or(0);
     let target_name: Option<String> = row.get("target_name").unwrap_or(None);
     let properties_json: Option<String> = row.get("properties")?;
+    let location_in_columns: bool = row.get("location_in_columns")?;
 
-    let props: HashMap<String, String> = properties_json
+    let mut props: HashMap<String, String> = properties_json
         .as_deref()
         .and_then(|s| serde_json::from_str(s).ok())
         .unwrap_or_default();
@@ -107,6 +109,10 @@ pub fn row_to_code_edge(row: &Row<'_>) -> rusqlite::Result<CodeEdge> {
 
     let kind = EdgeKind::from_str_loose(&kind_str).unwrap_or(EdgeKind::References);
 
+    if location_in_columns {
+        props.insert("filePath".to_string(), file_path.clone());
+        props.insert("line".to_string(), line.to_string());
+    }
     let metadata = if props.is_empty() { None } else { Some(props) };
 
     Ok(CodeEdge {

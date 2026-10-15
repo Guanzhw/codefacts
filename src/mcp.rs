@@ -32,6 +32,7 @@ const TOOL_LIST_CACHE_SCOPE: &str = "private";
 #[derive(Clone, Copy, Debug, Default)]
 pub enum ToolProfile {
     #[default]
+    Default,
     All,
     Explore,
 }
@@ -39,6 +40,7 @@ pub enum ToolProfile {
 impl ToolProfile {
     pub fn parse(value: &str) -> Option<Self> {
         match value {
+            "default" => Some(Self::Default),
             "all" => Some(Self::All),
             "explore" => Some(Self::Explore),
             _ => None,
@@ -47,6 +49,7 @@ impl ToolProfile {
 
     fn names(self) -> &'static [&'static str] {
         match self {
+            Self::Default => &["explore", "impact", "expand"],
             Self::All => &[
                 "explore", "impact", "map", "search", "outline", "expand", "path",
             ],
@@ -69,7 +72,7 @@ enum ProtocolSelection {
 }
 
 pub fn serve(projects: &mut CodeFactsRegistry) -> Result<()> {
-    serve_with_tools(projects, ToolProfile::All)
+    serve_with_tools(projects, ToolProfile::default())
 }
 
 pub fn serve_with_tools(projects: &mut CodeFactsRegistry, tools: ToolProfile) -> Result<()> {

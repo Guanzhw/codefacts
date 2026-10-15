@@ -7,8 +7,11 @@ use sha2::{Digest, Sha256};
 use tempfile::tempdir;
 
 fn run_server(profile: Option<&str>, requests: Vec<Value>) -> Vec<Value> {
+    let state = tempdir().expect("external state");
     let mut command = Command::new(env!("CARGO_BIN_EXE_codefacts"));
-    command.args(["mcp", "--lsp", "off"]);
+    command
+        .args(["mcp", "--lsp", "off"])
+        .env("CODEFACTS_STATE_DIR", state.path());
     if let Some(profile) = profile {
         command.args(["--tools", profile]);
     }
@@ -120,77 +123,105 @@ fn impact_is_source_backed_and_reports_cutoffs_in_both_protocol_eras() {
 fn profiles_control_catalog_and_calls_in_both_protocol_eras() {
     let repository = tempdir().expect("repository");
     fs::write(repository.path().join("README.md"), "# Profile fixture\n").unwrap();
+    fs::write(
+        repository.path().join("fixture.go"),
+        "package fixture\nfunc sink() {}\nfunc entry() { sink() }\n",
+    )
+    .unwrap();
+    let tools = [
+        "explore", "impact", "map", "search", "outline", "expand", "path",
+    ];
     for modern in [false, true] {
-        for profile in [None, Some("all"), Some("explore")] {
-            let all = profile != Some("explore");
+        for profile in [None, Some("default"), Some("all"), Some("explore")] {
+            let expected: &[&str] = match profile {
+                Some("all") => &tools,
+                Some("explore") => &["explore"],
+                _ => &["explore", "impact", "expand"],
+            };
             let mut requests = vec![request(1, "tools/list", json!({}), modern)];
-            requests.push(request(
-                2,
-                "tools/call",
-                json!({"name":"explore", "arguments":{
-                    "repository_root": repository.path(), "file_path":"README.md"
-                }}),
-                modern,
-            ));
-            for (index, name) in [
-                "map", "search", "outline", "expand", "path", "impact", "invented",
-            ]
-            .iter()
-            .enumerate()
-            {
+            for name in tools.iter().copied().chain(["invented"]) {
                 // A rootless request makes it observable that hidden tools are
                 // rejected before repository selection or argument parsing.
                 requests.push(request(
-                    index + 3,
+                    requests.len() + 1,
                     "tools/call",
                     json!({"name":name, "arguments":{}}),
                     modern,
                 ));
             }
+            for name in expected {
+                let mut arguments = match *name {
+                    "explore" => json!({"file_path":"README.md"}),
+                    "impact" | "expand" => json!({"symbol":"sink","format":"full"}),
+                    "map" => json!({"format":"full"}),
+                    "search" => json!({"query":"sink","format":"full"}),
+                    "outline" => json!({"file_path":"fixture.go","format":"full"}),
+                    "path" => json!({"from":"entry","to":"sink","format":"full"}),
+                    _ => unreachable!(),
+                };
+                arguments["repository_root"] = json!(repository.path());
+                requests.push(request(
+                    requests.len() + 1,
+                    "tools/call",
+                    json!({"name":name,"arguments":arguments}),
+                    modern,
+                ));
+            }
             let responses = run_server(profile, requests);
+            assert_eq!(responses.len(), tools.len() + 2 + expected.len());
             let names: Vec<_> = responses[0]["result"]["tools"]
                 .as_array()
                 .unwrap()
                 .iter()
                 .map(|tool| tool["name"].as_str().unwrap())
                 .collect();
-            assert_eq!(
-                names,
-                if all {
-                    vec![
-                        "explore", "impact", "map", "search", "outline", "expand", "path",
-                    ]
-                } else {
-                    vec!["explore"]
-                }
-            );
+            assert_eq!(names, expected);
             assert_eq!(responses[0]["result"]["ttlMs"], 0);
             assert_eq!(responses[0]["result"]["cacheScope"], "private");
-            assert_eq!(responses[1]["result"]["isError"], false);
-            for (index, name) in [
-                "map", "search", "outline", "expand", "path", "impact", "invented",
-            ]
-            .iter()
-            .enumerate()
-            {
-                let result = &responses[index + 2]["result"];
+            for tool in responses[0]["result"]["tools"].as_array().unwrap() {
+                assert_eq!(tool["annotations"]["readOnlyHint"], true);
+                assert_eq!(tool["annotations"]["destructiveHint"], false);
+            }
+            for (index, name) in tools.iter().copied().chain(["invented"]).enumerate() {
+                let result = &responses[index + 1]["result"];
                 assert_eq!(result["isError"], true);
                 let text = result["content"][0]["text"].as_str().unwrap();
-                if !all || *name == "invented" {
+                if !expected.contains(&name) {
                     assert!(text.contains(&format!("unknown tool '{name}'")), "{text}");
-                    assert!(
-                        text.ends_with(if all {
-                            "explore, impact, map, search, outline, expand, path"
-                        } else {
-                            "explore"
-                        }),
-                        "{text}"
-                    );
+                    assert!(text.ends_with(&expected.join(", ")), "{text}");
                 } else {
-                    assert!(!text.contains("unknown tool"), "{text}");
+                    assert!(text.contains("'repository_root' is required"), "{text}");
                 }
                 if modern {
                     assert_eq!(result["resultType"], "complete");
+                }
+            }
+            for (name, response) in expected.iter().zip(&responses[tools.len() + 2..]) {
+                let result = &response["result"];
+                assert_eq!(result["isError"], false, "{name}: {result}");
+                if modern {
+                    assert_eq!(result["resultType"], "complete");
+                }
+                if *name == "explore" {
+                    assert!(result.get("structuredContent").is_none());
+                    assert!(result["content"][0]["text"]
+                        .as_str()
+                        .unwrap()
+                        .contains("# Profile fixture"));
+                } else {
+                    let facts = &result["structuredContent"];
+                    assert_eq!(facts["freshness"]["status"], "fresh");
+                    assert_eq!(
+                        fs::canonicalize(facts["freshness"]["repository_root"].as_str().unwrap())
+                            .unwrap(),
+                        repository.path().canonicalize().unwrap()
+                    );
+                    match *name {
+                        "impact" => assert_eq!(facts["affected"][0]["symbol"]["name"], "entry"),
+                        "expand" => assert_eq!(facts["callers"][0]["from"]["name"], "entry"),
+                        "path" => assert_eq!(facts["status"], "ok"),
+                        _ => {}
+                    }
                 }
             }
         }
@@ -211,9 +242,9 @@ fn tool_profile_argument_rejects_invalid_and_missing_values() {
         let message = String::from_utf8_lossy(&output.stderr);
         assert!(
             message.contains(if value.is_some() {
-                "--tools must be 'all' or 'explore'"
+                "--tools must be 'default', 'all' or 'explore'"
             } else {
-                "--tools requires all or explore"
+                "--tools requires default, all or explore"
             }),
             "{message}"
         );
