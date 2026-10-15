@@ -26,7 +26,7 @@ documented with `--tools all` as the explicit seven-workflow configuration.
 
 ## Actual task comparison
 
-Freeze the final binary, complete agent runtime, model/effort, source manifests,
+Freeze one experiment candidate binary, complete agent runtime, model/effort, source manifests,
 tasks, independent grading rubrics, common prompt, three configurations and
 execution order before formal calls. Use one binary for all arms; only the
 selected MCP profile varies. Native/MCP parity does not prove agent benefit.
@@ -54,6 +54,18 @@ correct task pairs and the full fixed workload; retain failures and variation.
 No general editing-productivity claim follows from read-only source tasks.
 Resolve reproducible capability or correctness losses before release; report
 stochastic quality/cost tradeoffs without declaring a winner from tokens alone.
+
+Before any formal task attempt, separate this comparison from native performance
+release acceptance. Candidate `425b46b7` from source `f02493d` has passed source,
+fact, protocol, readiness and independent analysis review; its native performance
+result remains 56/57, overall FAIL. It may serve as the single fixed binary for
+all 72 task attempts while the remaining refresh-tail issue is investigated.
+Keep every task, profile, prompt, source, model, scoring rule and attempt cost
+unchanged. Label quantitative results with this experiment candidate; later
+builds require their own measurements even when their facts and schemas agree.
+The existing 57 native release gates remain unchanged. Any diagnostic quiet
+period pauses dispatch after a completed balanced three-slot block, before
+allocating the next slot; immediate failure stops and no-retry rules still apply.
 
 ## Cold indexing and storage
 
