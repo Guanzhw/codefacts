@@ -73,8 +73,8 @@ impl std::fmt::Debug for GraphStore {
 // ---------------------------------------------------------------------------
 
 const UPSERT_NODE_SQL: &str = "\
-INSERT INTO nodes (id, type, name, qualified_name, file_path, start_line, end_line, language, signature, doc_comment, source_hash, metadata, name_tokens, is_test, start_column, end_column)
-VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16)
+INSERT INTO nodes (id, type, name, qualified_name, file_path, start_line, end_line, language, signature, doc_comment, source_hash, metadata, name_tokens, is_test, start_column, end_column, body_in_signature)
+VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, 1)
 ON CONFLICT(id) DO UPDATE SET
   type = excluded.type,
   name = excluded.name,
@@ -90,14 +90,16 @@ ON CONFLICT(id) DO UPDATE SET
   source_hash = excluded.source_hash,
   metadata = excluded.metadata,
   name_tokens = excluded.name_tokens,
-  is_test = excluded.is_test";
+  is_test = excluded.is_test,
+  body_in_signature = excluded.body_in_signature";
 
 const UPSERT_EDGE_SQL: &str = "\
-INSERT INTO edges (source_id, target_id, type, file_path, line, target_name, properties)
-VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)
+INSERT INTO edges (source_id, target_id, type, file_path, line, target_name, properties, location_in_columns)
+VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, 1)
 ON CONFLICT(source_id, target_id, type, file_path, line) DO UPDATE SET
   target_name = excluded.target_name,
-  properties = excluded.properties";
+  properties = excluded.properties,
+  location_in_columns = excluded.location_in_columns";
 
 const DELETE_EDGES_BY_FILE_SQL: &str = "\
 DELETE FROM edges WHERE file_path = ?1";
@@ -306,8 +308,8 @@ fn rust_test_module_scope(qualified_name: Option<&str>) -> bool {
     qualified_name.is_some_and(|name| name.split('.').any(|segment| segment == "tests"))
 }
 
-/// Build the metadata JSON object that the TS version stores alongside
-/// each node row.
+/// Store node metadata alongside its signature-backed body. The converter
+/// restores the same bounded body prefix for explicitly flagged rows.
 fn build_node_metadata(node: &CodeNode) -> String {
     let mut map = serde_json::Map::new();
     map.insert(
@@ -318,15 +320,6 @@ fn build_node_metadata(node: &CodeNode) -> String {
         "endColumn".to_string(),
         serde_json::Value::from(node.end_column),
     );
-    if let Some(ref body) = node.body {
-        // Truncate body to 4 KB to match the TS version's behaviour.
-        let truncated = if body.len() > 4096 {
-            &body[..body.floor_char_boundary(4096)]
-        } else {
-            body.as_str()
-        };
-        map.insert("body".to_string(), serde_json::Value::from(truncated));
-    }
     if let Some(exported) = node.exported {
         map.insert("exported".to_string(), serde_json::Value::from(exported));
     }
@@ -339,20 +332,15 @@ fn build_node_metadata(node: &CodeNode) -> String {
 /// Build the properties JSON for an edge row.
 fn build_edge_properties(edge: &CodeEdge) -> String {
     let mut map = serde_json::Map::new();
-    // Merge any caller-supplied metadata first.
+    // The writer owns canonical location keys. Their values live in columns
+    // and are restored by the converter for these explicitly flagged rows.
     if let Some(ref meta) = edge.metadata {
         for (k, v) in meta {
-            map.insert(k.clone(), serde_json::Value::from(v.as_str()));
+            if k != "filePath" && k != "line" {
+                map.insert(k.clone(), serde_json::Value::from(v.as_str()));
+            }
         }
     }
-    map.insert(
-        "filePath".to_string(),
-        serde_json::Value::from(edge.file_path.as_str()),
-    );
-    map.insert(
-        "line".to_string(),
-        serde_json::Value::from(edge.line.to_string()),
-    );
     serde_json::Value::Object(map).to_string()
 }
 
@@ -2872,19 +2860,19 @@ mod tests {
         assert_eq!(got.qualified_name.as_deref(), Some("MyClass.doWork"));
     }
 
-    // -- node body truncation in metadata ---------------------------------
+    // -- bounded node body hydration -------------------------------------
 
     #[test]
-    fn node_body_longer_than_4kb_is_truncated_in_metadata() {
+    fn node_body_longer_than_4kb_is_bounded_on_read() {
         let store = setup();
         let long_body = "x".repeat(8192);
         let mut node = make_node("n1", "bigFunc", "a.ts", NodeKind::Function, 1);
         node.body = Some(long_body);
         store.upsert_node(&node).unwrap();
 
-        // The node is stored; metadata body is truncated but node itself is fine
         let got = store.get_node("n1").unwrap().unwrap();
         assert_eq!(got.name, "bigFunc");
+        assert_eq!(got.body, Some("x".repeat(4096)));
     }
 
     // -- node without optional fields -------------------------------------

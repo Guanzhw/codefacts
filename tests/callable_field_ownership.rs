@@ -16,12 +16,9 @@ fn extract(source: &str, language: Language) -> (Vec<CodeNode>, Vec<CodeEdge>) {
         tree.root_node().to_sexp()
     );
     let nodes = Extractor::extract_nodes(&tree, "fixture", language, source).unwrap();
-    let mut index: HashMap<String, Vec<CodeNode>> = HashMap::new();
+    let mut index: HashMap<String, Vec<&CodeNode>> = HashMap::new();
     for node in &nodes {
-        index
-            .entry(node.name.clone())
-            .or_default()
-            .push(node.clone());
+        index.entry(node.name.clone()).or_default().push(node);
     }
     let edges =
         Extractor::extract_edges(&tree, "fixture", language, source, &nodes, &index).unwrap();

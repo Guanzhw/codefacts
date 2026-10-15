@@ -41,11 +41,19 @@ its package metadata and SHA-256. It performs no GitHub Release download.
 npx --yes --prefer-online codefacts@latest mcp --root .
 ```
 
+MCP defaults to `explore`, `expand`, and `impact`; `--tools default` selects
+the same profile. Use `mcp --tools all` for all seven workflows, including
+`map`, `search`, `outline`, and `path`, or `mcp --tools explore` for exploration
+alone. Existing MCP configurations that call those four exact-fact tools should
+append `--tools all` and restart the server. Direct CLI commands retain every
+workflow.
+
 `--root` is a default project, not a limit on the MCP server. To inspect
 several local projects from one read-only server, start it without `--root` and
-pass an absolute `repository_root` argument to every `map`, `search`,
-`outline`, `expand`, `path`, `explore`, or `impact` call. Each selected project gets its own
-external index and every result reports `freshness.repository_root`.
+pass an absolute `repository_root` argument to every enabled tool call. Each
+selected project gets its own external index. Exact-fact and impact results
+report `freshness.repository_root`; exploration identifies its root in the text
+header.
 
 The launcher supports Windows x64, macOS x64/arm64, and Linux x64/arm64.
 It writes status only to stderr; MCP stdout remains reserved for JSON-RPC.

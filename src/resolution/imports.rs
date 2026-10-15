@@ -60,8 +60,8 @@ const EXTENSION_PATTERNS: &[&str] = &[
 pub fn resolve_imports(
     edges: &[CodeEdge],
     indexed_files: &HashSet<String>,
-    node_index: &HashMap<String, Vec<CodeNode>>,
-    nodes_by_file: &HashMap<String, Vec<CodeNode>>,
+    node_index: &HashMap<String, Vec<&CodeNode>>,
+    nodes_by_file: &HashMap<String, Vec<&CodeNode>>,
 ) -> ImportResolutionResult {
     let mut resolved_edges = Vec::new();
     let mut unresolved_refs = Vec::new();
@@ -319,7 +319,7 @@ fn resolve_indexed_path(path: &str, indexed_files: &HashSet<String>) -> Option<S
 /// Returns additional edges that connect importers to the ultimate
 /// symbol definitions through re-export chains.
 pub fn resolve_barrel_exports(
-    nodes_by_file: &HashMap<String, Vec<CodeNode>>,
+    nodes_by_file: &HashMap<String, Vec<&CodeNode>>,
     edges: &[CodeEdge],
     indexed_files: &HashSet<String>,
 ) -> Vec<CodeEdge> {
@@ -639,18 +639,18 @@ mod tests {
             .map(|s| s.to_string())
             .collect();
 
-        let mut node_index: HashMap<String, Vec<CodeNode>> = HashMap::new();
+        let mut node_index: HashMap<String, Vec<&CodeNode>> = HashMap::new();
         node_index
             .entry("validate".to_string())
             .or_default()
-            .push(utils_fn.clone());
+            .push(&utils_fn);
         node_index
             .entry("Parser".to_string())
             .or_default()
-            .push(utils_class.clone());
+            .push(&utils_class);
 
-        let mut nodes_by_file: HashMap<String, Vec<CodeNode>> = HashMap::new();
-        nodes_by_file.insert("src/utils.ts".to_string(), vec![utils_fn, utils_class]);
+        let mut nodes_by_file: HashMap<String, Vec<&CodeNode>> = HashMap::new();
+        nodes_by_file.insert("src/utils.ts".to_string(), vec![&utils_fn, &utils_class]);
 
         let result = resolve_imports(&edges, &indexed_files, &node_index, &nodes_by_file);
 
@@ -697,10 +697,10 @@ mod tests {
             .map(|s| s.to_string())
             .collect();
 
-        let node_index: HashMap<String, Vec<CodeNode>> = HashMap::new();
+        let node_index: HashMap<String, Vec<&CodeNode>> = HashMap::new();
 
-        let mut nodes_by_file: HashMap<String, Vec<CodeNode>> = HashMap::new();
-        nodes_by_file.insert("src/utils.ts".to_string(), vec![exported_fn, private_fn]);
+        let mut nodes_by_file: HashMap<String, Vec<&CodeNode>> = HashMap::new();
+        nodes_by_file.insert("src/utils.ts".to_string(), vec![&exported_fn, &private_fn]);
 
         let result = resolve_imports(&edges, &indexed_files, &node_index, &nodes_by_file);
 
@@ -720,8 +720,8 @@ mod tests {
 
         let indexed_files: HashSet<String> =
             ["src/main.ts"].iter().map(|s| s.to_string()).collect();
-        let node_index: HashMap<String, Vec<CodeNode>> = HashMap::new();
-        let nodes_by_file: HashMap<String, Vec<CodeNode>> = HashMap::new();
+        let node_index: HashMap<String, Vec<&CodeNode>> = HashMap::new();
+        let nodes_by_file: HashMap<String, Vec<&CodeNode>> = HashMap::new();
 
         let result = resolve_imports(&edges, &indexed_files, &node_index, &nodes_by_file);
         assert!(result.resolved_edges.is_empty());
@@ -736,8 +736,8 @@ mod tests {
 
         let indexed_files: HashSet<String> =
             ["src/main.ts"].iter().map(|s| s.to_string()).collect();
-        let node_index: HashMap<String, Vec<CodeNode>> = HashMap::new();
-        let nodes_by_file: HashMap<String, Vec<CodeNode>> = HashMap::new();
+        let node_index: HashMap<String, Vec<&CodeNode>> = HashMap::new();
+        let nodes_by_file: HashMap<String, Vec<&CodeNode>> = HashMap::new();
 
         let result = resolve_imports(&edges, &indexed_files, &node_index, &nodes_by_file);
         assert!(result.resolved_edges.is_empty());
@@ -796,14 +796,14 @@ mod tests {
             .map(|s| s.to_string())
             .collect();
 
-        let mut node_index: HashMap<String, Vec<CodeNode>> = HashMap::new();
+        let mut node_index: HashMap<String, Vec<&CodeNode>> = HashMap::new();
         node_index
             .entry("Button".to_string())
             .or_default()
-            .push(button.clone());
+            .push(&button);
 
-        let mut nodes_by_file: HashMap<String, Vec<CodeNode>> = HashMap::new();
-        nodes_by_file.insert("src/components/Button.tsx".to_string(), vec![button]);
+        let mut nodes_by_file: HashMap<String, Vec<&CodeNode>> = HashMap::new();
+        nodes_by_file.insert("src/components/Button.tsx".to_string(), vec![&button]);
 
         let result = resolve_imports(&edges, &indexed_files, &node_index, &nodes_by_file);
 
@@ -828,8 +828,8 @@ mod tests {
             .iter()
             .map(|s| s.to_string())
             .collect();
-        let node_index: HashMap<String, Vec<CodeNode>> = HashMap::new();
-        let nodes_by_file: HashMap<String, Vec<CodeNode>> = HashMap::new();
+        let node_index: HashMap<String, Vec<&CodeNode>> = HashMap::new();
+        let nodes_by_file: HashMap<String, Vec<&CodeNode>> = HashMap::new();
 
         let result = resolve_imports(&edges, &indexed_files, &node_index, &nodes_by_file);
         assert!(result.resolved_edges.is_empty());
@@ -869,8 +869,8 @@ mod tests {
             .map(|s| s.to_string())
             .collect();
 
-        let mut nodes_by_file: HashMap<String, Vec<CodeNode>> = HashMap::new();
-        nodes_by_file.insert("src/utils/helpers.ts".to_string(), vec![helper]);
+        let mut nodes_by_file: HashMap<String, Vec<&CodeNode>> = HashMap::new();
+        nodes_by_file.insert("src/utils/helpers.ts".to_string(), vec![&helper]);
 
         let barrel_edges = resolve_barrel_exports(&nodes_by_file, &[reexport_edge], &indexed_files);
 
@@ -1033,8 +1033,8 @@ mod tests {
         }];
         let indexed_files: HashSet<String> =
             ["a.ts", "b.ts"].iter().map(|s| s.to_string()).collect();
-        let node_index: HashMap<String, Vec<CodeNode>> = HashMap::new();
-        let nodes_by_file: HashMap<String, Vec<CodeNode>> = HashMap::new();
+        let node_index: HashMap<String, Vec<&CodeNode>> = HashMap::new();
+        let nodes_by_file: HashMap<String, Vec<&CodeNode>> = HashMap::new();
 
         let result = resolve_imports(&edges, &indexed_files, &node_index, &nodes_by_file);
         assert!(result.resolved_edges.is_empty());
@@ -1058,9 +1058,12 @@ mod tests {
             .iter()
             .map(|s| s.to_string())
             .collect();
-        let node_index: HashMap<String, Vec<CodeNode>> = HashMap::new();
-        let mut nodes_by_file: HashMap<String, Vec<CodeNode>> = HashMap::new();
-        nodes_by_file.insert("src/lib.ts".to_string(), vec![exported, private1, private2]);
+        let node_index: HashMap<String, Vec<&CodeNode>> = HashMap::new();
+        let mut nodes_by_file: HashMap<String, Vec<&CodeNode>> = HashMap::new();
+        nodes_by_file.insert(
+            "src/lib.ts".to_string(),
+            vec![&exported, &private1, &private2],
+        );
 
         let result = resolve_imports(&edges, &indexed_files, &node_index, &nodes_by_file);
         // Only the exported function should be linked
@@ -1084,10 +1087,10 @@ mod tests {
             .iter()
             .map(|s| s.to_string())
             .collect();
-        let mut node_index: HashMap<String, Vec<CodeNode>> = HashMap::new();
-        node_index.insert("helper".to_string(), vec![elsewhere]);
+        let mut node_index: HashMap<String, Vec<&CodeNode>> = HashMap::new();
+        node_index.insert("helper".to_string(), vec![&elsewhere]);
         // Empty nodes_by_file for the target — forces fallback to node_index
-        let nodes_by_file: HashMap<String, Vec<CodeNode>> = HashMap::new();
+        let nodes_by_file: HashMap<String, Vec<&CodeNode>> = HashMap::new();
 
         let result = resolve_imports(&edges, &indexed_files, &node_index, &nodes_by_file);
         assert_eq!(result.resolved_edges.len(), 1);
@@ -1114,10 +1117,10 @@ mod tests {
             .iter()
             .map(|s| s.to_string())
             .collect();
-        let mut node_index: HashMap<String, Vec<CodeNode>> = HashMap::new();
-        node_index.insert("Button".to_string(), vec![button.clone()]);
-        let mut nodes_by_file: HashMap<String, Vec<CodeNode>> = HashMap::new();
-        nodes_by_file.insert("src/components/Button.tsx".to_string(), vec![button]);
+        let mut node_index: HashMap<String, Vec<&CodeNode>> = HashMap::new();
+        node_index.insert("Button".to_string(), vec![&button]);
+        let mut nodes_by_file: HashMap<String, Vec<&CodeNode>> = HashMap::new();
+        nodes_by_file.insert("src/components/Button.tsx".to_string(), vec![&button]);
 
         let result = resolve_imports(&edges, &indexed_files, &node_index, &nodes_by_file);
         assert_eq!(result.resolved_edges.len(), 1);
@@ -1170,8 +1173,8 @@ mod tests {
             .map(|s| s.to_string())
             .collect();
 
-        let mut nodes_by_file: HashMap<String, Vec<CodeNode>> = HashMap::new();
-        nodes_by_file.insert("src/lib/impl.ts".to_string(), vec![foo, bar, baz]);
+        let mut nodes_by_file: HashMap<String, Vec<&CodeNode>> = HashMap::new();
+        nodes_by_file.insert("src/lib/impl.ts".to_string(), vec![&foo, &bar, &baz]);
 
         let barrel_edges = resolve_barrel_exports(&nodes_by_file, &[reexport_edge], &indexed_files);
 

@@ -71,17 +71,26 @@ the candidates rather than choosing an implementation. Run any command with
 
 ## MCP surface
 
-The native runtime exposes seven read-only workflows:
+MCP defaults to three read-only workflows: `explore` for source discovery and
+reads, `expand` for a confirmed symbol, and `impact` for static dependents.
+`--tools default` selects the same menu. Use `--tools all` to enable all seven
+workflows, or `--tools explore` for exploration alone. Every workflow remains
+available as a direct CLI command.
 
-| Tool | Purpose |
-| --- | --- |
-| `map` | Repository structure, explicit language file/symbol counts, deferred LSP-provider status, and bounded unresolved-reference evidence. |
-| `search` | Indexed symbols, endpoints, and Markdown documentation headings through FTS; optionally narrow by kind, path prefix, or local-detail scope, or request bounded context for the highest-ranked candidates, and continue on one snapshot. |
-| `outline` | Symbols or headings in one file, with optional kind/local-detail filtering and snapshot-bound continuation. |
-| `expand` | One definition with a verified bounded source excerpt, plus callers, callees with explicit confidence, references, related tests, Markdown section text, and optional semantic references. |
-| `path` | A shortest bounded static calls path between confirmed symbols, with optional endpoint file-path disambiguation. |
-| `explore` | Budgeted repository orientation, lexical task-to-source discovery and explicit source-range reads with verified hashes. |
-| `impact` | Bounded transitive static dependents, container members, shortest witness relationships and reachable test-associated symbols. |
+| Tool | MCP profiles | Purpose |
+| --- | --- | --- |
+| `explore` | default, all, explore | Budgeted repository orientation, lexical task-to-source discovery and explicit source-range reads with verified hashes. |
+| `expand` | default, all | One definition with a verified bounded source excerpt, plus callers, callees with explicit confidence, references, related tests, Markdown section text, and optional semantic references. |
+| `impact` | default, all | Bounded transitive static dependents, container members, shortest witness relationships and reachable test-associated symbols. |
+| `map` | all | Repository structure, explicit language file/symbol counts, deferred LSP-provider status, and bounded unresolved-reference evidence. |
+| `search` | all | Indexed symbols, endpoints, and Markdown documentation headings through FTS; optionally narrow by kind, path prefix, or local-detail scope, or request bounded context for the highest-ranked candidates, and continue on one snapshot. |
+| `outline` | all | Symbols or headings in one file, with optional kind/local-detail filtering and snapshot-bound continuation. |
+| `path` | all | A shortest bounded static calls path between confirmed symbols, with optional endpoint file-path disambiguation. |
+
+Configurations that previously used `map`, `search`, `outline`, or `path` over
+MCP should append `--tools all` to their server command. Restart the server so
+the client receives its selected catalog; unavailable tools are rejected on
+calls as well as omitted from discovery.
 
 Every result is bounded, includes source/hash evidence, and refreshes the incremental index before answering. Symbols and relationships include source spans. Exact-fact and impact responses have a `freshness` object with the canonical `repository_root` and fact-store `generation`; exploration reports these in its text header. `freshness.status` is `partial` when a source file could not be read, parsed, extracted, or accepted because it exceeded the indexing limit; the accompanying `files_failed` and reason counters make that gap explicit. JSON modes return serialized JSON `TextContent` and an equivalent `structuredContent` object. Opt-in Markdown and exploration return one text body. A `no_static_path` result never claims that runtime execution is unreachable.
 
@@ -149,9 +158,11 @@ For a successful path, `relationships[i].evidence` is the confirmed static
 call from `path[i]` to `path[i + 1]`; endpoint facts are represented only once
 in `path`.
 
-Start with `search` when a symbol or code term is already known; use `map` when
-the task needs a repository overview. FTS query words are prefix matches joined
-by AND, so use short code terms rather than full questions. If no facts match,
+In the default MCP profile, start with `explore` to orient or locate source,
+then use `expand` or `impact` for a confirmed symbol. With `--tools all` or
+direct CLI, start with `search` when a symbol or code term is already known;
+use `map` when the task needs a repository overview. FTS query words are prefix
+matches joined by AND, so use short code terms rather than full questions. If no facts match,
 shorten to one distinctive term or use ordinary text search to discover an
 identifier. Request `detail: "context"` when the definition and its direct
 relationships are needed together.
@@ -403,8 +414,8 @@ codex mcp add codefacts -- cmd /d /s /c npx --yes --prefer-online codefacts@late
 ```
 
 Then pass the absolute target directory in every tool call, for example
-`map({"repository_root":"D:\\WorkSpace\\OpenSession"})` or
-`search({"repository_root":"D:\\WorkSpace\\OpenSession","query":"ProviderAdapter"})`.
+`explore({"repository_root":"D:\\WorkSpace\\OpenSession"})` or
+`expand({"repository_root":"D:\\WorkSpace\\OpenSession","symbol":"ProviderAdapter"})`.
 The first request for a root builds or refreshes only that project's external
 index; subsequent requests reuse it for the lifetime of the MCP process.
 CodeFacts does not infer a project from the server working directory. The MCP
@@ -428,13 +439,21 @@ The server uses newline-delimited JSON-RPC over stdio. Its SQLite state is exter
 codefacts mcp --root D:\WorkSpace\your-repository
 ```
 
+This starts the default three-tool profile. To retain all seven MCP workflows:
+
+```text
+codefacts mcp --tools all --root D:\WorkSpace\your-repository
+```
+
+Use `--tools explore` for a one-tool server.
+
 To select projects per tool call instead, start without a default root:
 
 ```text
 codefacts mcp
 ```
 
-Each `map`, `search`, `outline`, `expand`, and `path` call must then include an
+Each enabled tool call must then include an
 absolute `repository_root`, such as:
 
 ```json

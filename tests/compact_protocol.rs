@@ -20,6 +20,8 @@ impl Mcp {
         let mut child = Command::new(env!("CARGO_BIN_EXE_codefacts"))
             .args([
                 "mcp",
+                "--tools",
+                "all",
                 "--root",
                 root.to_str().unwrap(),
                 "--state",

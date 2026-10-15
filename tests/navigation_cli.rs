@@ -176,6 +176,7 @@ fn invalid_options_and_mcp_root_constraints_fail_explicitly() {
         &["explore", "--end-line", "3"],
         &["search"],
         &["map", "surplus"],
+        &["map", "--tools", "all"],
     ] {
         let output = fixture.run(args, false);
         assert_eq!(

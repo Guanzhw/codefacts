@@ -344,8 +344,8 @@ impl<'a> IndexingPipeline<'a> {
         );
 
         // ---- Pass 2: extract edges & persist (parallel edge extraction) ----
-        type FileData = (String, Language, String, Vec<CodeNode>, Vec<CodeEdge>);
-        let edge_results: Vec<Result<FileData>> = parsed
+        type FileData<'nodes> = (String, Language, String, &'nodes [CodeNode], Vec<CodeEdge>);
+        let edge_results: Vec<Result<FileData<'_>>> = parsed
             .par_iter()
             .map(|state| {
                 let mut edges = if state.language == Language::Markdown {
@@ -379,14 +379,14 @@ impl<'a> IndexingPipeline<'a> {
                     state.relative_path.clone(),
                     state.language,
                     state.content_hash.clone(),
-                    state.nodes.clone(),
+                    state.nodes.as_slice(),
                     edges,
                 ))
             })
             .collect();
 
         // ---- Collect edge results ----
-        let file_data: Vec<FileData> = edge_results.into_iter().collect::<Result<_>>()?;
+        let file_data: Vec<FileData<'_>> = edge_results.into_iter().collect::<Result<_>>()?;
 
         // ---- Persist to SQLite (sequential — single connection) ----
         // Every mutation, including cleanup and generation metadata, shares
@@ -404,7 +404,7 @@ impl<'a> IndexingPipeline<'a> {
                 let mut nodes_created = 0usize;
                 let mut edges_created = 0usize;
                 for (rel_path, language, content_hash, nodes, edges) in file_data {
-                    store.replace_file_data(&rel_path, &nodes, &edges)?;
+                    store.replace_file_data(&rel_path, nodes, &edges)?;
                     store.upsert_file_hash(&rel_path, &content_hash, language.as_str())?;
                     nodes_created += nodes.len();
                     edges_created += edges.len();
@@ -429,12 +429,12 @@ impl<'a> IndexingPipeline<'a> {
                     store.clear_all_unresolved_refs()?;
                     let current_node_refs = current_nodes.iter().collect::<Vec<_>>();
                     let current_node_index = build_node_index(&current_node_refs);
-                    let mut nodes_by_file: HashMap<String, Vec<CodeNode>> = HashMap::new();
+                    let mut nodes_by_file: HashMap<String, Vec<&CodeNode>> = HashMap::new();
                     for node in &current_nodes {
                         nodes_by_file
                             .entry(node.file_path.clone())
                             .or_default()
-                            .push(node.clone());
+                            .push(node);
                     }
                     let raw_import_edges = store.get_raw_import_edges()?;
                     let resolution_result = resolve_imports(
@@ -614,7 +614,7 @@ impl<'a> IndexingPipeline<'a> {
 fn resolve_target_id(
     name: &str,
     source_file: &str,
-    node_index: &HashMap<String, Vec<CodeNode>>,
+    node_index: &HashMap<String, Vec<&CodeNode>>,
 ) -> String {
     let Some(candidates) = node_index.get(name) else {
         return format!("unresolved:{name}");
@@ -731,7 +731,7 @@ fn materialize_candidate_edges(template: &CodeEdge, candidates: CandidateSet<'_>
 /// rebinding path after later source changes.
 fn resolve_initial_call_candidates(
     edges: Vec<CodeEdge>,
-    node_index: &HashMap<String, Vec<CodeNode>>,
+    node_index: &HashMap<String, Vec<&CodeNode>>,
 ) -> Vec<CodeEdge> {
     let mut resolved = Vec::with_capacity(edges.len());
     for edge in edges {
@@ -763,7 +763,7 @@ fn resolve_initial_call_candidates(
 fn callable_candidates<'a>(
     edge: &CodeEdge,
     target_name: &str,
-    node_index: &'a HashMap<String, Vec<CodeNode>>,
+    node_index: &HashMap<String, Vec<&'a CodeNode>>,
 ) -> Vec<&'a CodeNode> {
     let is_constructor = edge
         .metadata
@@ -774,6 +774,7 @@ fn callable_candidates<'a>(
         .get(target_name)
         .into_iter()
         .flatten()
+        .copied()
         .filter(|node| {
             if is_constructor {
                 matches!(node.kind, NodeKind::Class | NodeKind::Struct)
@@ -801,7 +802,7 @@ fn callable_candidates<'a>(
 fn call_candidates<'a>(
     edge: &CodeEdge,
     target_name: &str,
-    node_index: &'a HashMap<String, Vec<CodeNode>>,
+    node_index: &HashMap<String, Vec<&'a CodeNode>>,
 ) -> CandidateSet<'a> {
     let candidates = callable_candidates(edge, target_name, node_index);
     let is_member_call = edge
@@ -904,13 +905,10 @@ fn collect_files(root: &Path) -> Vec<PathBuf> {
 // ---------------------------------------------------------------------------
 
 /// Build a lookup from symbol name -> all CodeNodes with that name.
-fn build_node_index(nodes: &[&CodeNode]) -> HashMap<String, Vec<CodeNode>> {
-    let mut index: HashMap<String, Vec<CodeNode>> = HashMap::new();
+fn build_node_index<'a>(nodes: &[&'a CodeNode]) -> HashMap<String, Vec<&'a CodeNode>> {
+    let mut index: HashMap<String, Vec<&CodeNode>> = HashMap::new();
     for &node in nodes {
-        index
-            .entry(node.name.clone())
-            .or_default()
-            .push(node.clone());
+        index.entry(node.name.clone()).or_default().push(node);
     }
     index
 }
