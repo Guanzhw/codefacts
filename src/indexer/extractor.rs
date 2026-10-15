@@ -449,7 +449,7 @@ impl Extractor {
         language: Language,
         source_text: &str,
         file_nodes: &[CodeNode],
-        node_index: &HashMap<String, Vec<CodeNode>>,
+        node_index: &HashMap<String, Vec<&CodeNode>>,
     ) -> Result<Vec<CodeEdge>> {
         let query = CodeParser::load_query(language)?;
         let capture_names = query.capture_names();
@@ -763,7 +763,7 @@ fn extract_inheritance_edges(
     file_path: &str,
     source_bytes: &[u8],
     file_nodes: &[CodeNode],
-    node_index: &HashMap<String, Vec<CodeNode>>,
+    node_index: &HashMap<String, Vec<&CodeNode>>,
     edges: &mut Vec<CodeEdge>,
 ) {
     let name_capture = m
@@ -842,7 +842,7 @@ fn extract_implements_edges(
     file_path: &str,
     source_bytes: &[u8],
     file_nodes: &[CodeNode],
-    node_index: &HashMap<String, Vec<CodeNode>>,
+    node_index: &HashMap<String, Vec<&CodeNode>>,
     edges: &mut Vec<CodeEdge>,
 ) {
     // TypeScript uses @interface_name; other languages use @name on
@@ -923,7 +923,7 @@ fn extract_call_edges(
     file_path: &str,
     source_bytes: &[u8],
     file_nodes: &[CodeNode],
-    node_index: &HashMap<String, Vec<CodeNode>>,
+    node_index: &HashMap<String, Vec<&CodeNode>>,
     edges: &mut Vec<CodeEdge>,
 ) {
     // Resolve the callee name: prefer @name, then @method.
@@ -1007,7 +1007,7 @@ fn extract_constructor_edges(
     file_path: &str,
     source_bytes: &[u8],
     file_nodes: &[CodeNode],
-    node_index: &HashMap<String, Vec<CodeNode>>,
+    node_index: &HashMap<String, Vec<&CodeNode>>,
     edges: &mut Vec<CodeEdge>,
 ) {
     let name_capture = m
@@ -1057,7 +1057,7 @@ fn extract_type_ref_edges(
     file_path: &str,
     source_bytes: &[u8],
     file_nodes: &[CodeNode],
-    node_index: &HashMap<String, Vec<CodeNode>>,
+    node_index: &HashMap<String, Vec<&CodeNode>>,
     edges: &mut Vec<CodeEdge>,
 ) {
     let builtins = builtin_types();
@@ -1136,7 +1136,7 @@ fn resolve_node<'a>(
     name: &str,
     file_path: &str,
     file_nodes: &'a [CodeNode],
-    node_index: &'a HashMap<String, Vec<CodeNode>>,
+    node_index: &HashMap<String, Vec<&'a CodeNode>>,
 ) -> Option<&'a CodeNode> {
     // Prefer same-file match.
     let local = file_nodes.iter().find(|n| n.name == name);
@@ -1150,15 +1150,21 @@ fn resolve_node<'a>(
         return None;
     }
     if candidates.len() == 1 {
-        return Some(&candidates[0]);
+        return Some(candidates[0]);
     }
 
     // Prefer exported, then from a different file, then first.
     candidates
         .iter()
+        .copied()
         .find(|n| n.exported == Some(true))
-        .or_else(|| candidates.iter().find(|n| n.file_path != file_path))
-        .or(Some(&candidates[0]))
+        .or_else(|| {
+            candidates
+                .iter()
+                .copied()
+                .find(|n| n.file_path != file_path)
+        })
+        .or(Some(candidates[0]))
 }
 
 /// Find the innermost source owner at a 1-based line and 0-based byte column.
@@ -1422,7 +1428,7 @@ mod tests {
     ) -> Vec<CodeEdge> {
         let parser = CodeParser::new();
         let tree = parser.parse(source, language).expect("parse failed");
-        let node_index: HashMap<String, Vec<CodeNode>> = HashMap::new();
+        let node_index: HashMap<String, Vec<&CodeNode>> = HashMap::new();
         Extractor::extract_edges(&tree, file_path, language, source, file_nodes, &node_index)
             .expect("extract failed")
     }

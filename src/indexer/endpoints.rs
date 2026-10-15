@@ -76,7 +76,7 @@ pub fn extract_endpoints(
 
 pub fn extract_endpoint_edges(
     bindings: &[EndpointBinding],
-    node_index: &HashMap<String, Vec<CodeNode>>,
+    node_index: &HashMap<String, Vec<&CodeNode>>,
 ) -> Vec<CodeEdge> {
     let mut edges = Vec::new();
     for binding in bindings {
@@ -87,6 +87,7 @@ pub fn extract_endpoint_edges(
             };
             let mut targets: Vec<&CodeNode> = candidates
                 .iter()
+                .copied()
                 .filter(|node| matches!(node.kind, NodeKind::Function | NodeKind::Method))
                 .collect();
             targets.sort_by(|left, right| {
@@ -326,9 +327,10 @@ mod tests {
         assert_eq!(bindings.len(), 1);
         assert_eq!(bindings[0].endpoint.name, "GET /users/:id");
 
+        let handler = handler();
         let edges = extract_endpoint_edges(
             &bindings,
-            &HashMap::from([("getUser".to_string(), vec![handler()])]),
+            &HashMap::from([("getUser".to_string(), vec![&handler])]),
         );
         assert_eq!(edges.len(), 1);
         assert_eq!(

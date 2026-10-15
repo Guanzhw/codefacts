@@ -544,7 +544,7 @@ struct McpClient {
 impl McpClient {
     fn start(codefacts_bin: &Path, root: &Path, state: &Path) -> BenchResult<Self> {
         let mut child = Command::new(codefacts_bin)
-            .args(["mcp", "--root"])
+            .args(["mcp", "--tools", "all", "--root"])
             .arg(root)
             .args(["--state"])
             .arg(state)
