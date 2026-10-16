@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.1 — Unreleased
+## 0.2.1 — 2026-10-16
 
 - Restore static type-use references in Go, Rust, Java, C and C++ by fixing
   their per-match query capture contract. Real type uses retain source
@@ -21,6 +21,13 @@
   three/default, seven/all and one/explore MCP profiles and completed 0.2.0
   delivery. Historical experiment and performance results retain their original
   outcomes and evidence boundaries.
+- A follow-up 18-attempt study observed each actual 7/3/1 menu before free
+  tool choice. All answers met the frozen source rubric and all navigation
+  used ordinary source commands, so no optimal MCP menu or product-value gain
+  is established. Restored type facts increased the candidate Go index's
+  fresh disk use by 13.22%; bounded contended-host cold observations and the
+  once-only extraction upgrade cost are retained in the
+  [repair validation](docs/POST-DELIVERY-REPAIR-2026-10-16.md).
 
 ## 0.2.0 — 2026-10-16
 
