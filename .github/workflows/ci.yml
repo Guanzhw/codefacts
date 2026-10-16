@@ -35,6 +35,8 @@ jobs:
           node --test npm/test/*.test.mjs
       - name: Verify agent evaluation accounting and campaign
         run: node --test benchmarks/agent-eval/runner.test.mjs benchmarks/agent-eval/opensession-corpus/campaign.test.mjs
+      - name: Verify task benchmark offline core
+        run: node --test benchmarks/agent-eval/task-benchmark/campaign.test.mjs benchmarks/agent-eval/task-benchmark/collect.test.mjs benchmarks/agent-eval/task-benchmark/dsh-adapter.test.mjs benchmarks/agent-eval/task-benchmark/fetch-corpora.test.mjs benchmarks/agent-eval/task-benchmark/summary.test.mjs benchmarks/agent-eval/task-benchmark/publish.test.mjs benchmarks/agent-eval/task-benchmark/usage-recovery.test.mjs benchmarks/agent-eval/task-benchmark/published-baseline.test.mjs
 
   quality:
     name: Formatting and lints
