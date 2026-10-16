@@ -97,7 +97,10 @@ fn compact_relations_preserve_all_call_sites_with_bounded_continuations() {
     ));
     assert_eq!(full["callees"].as_array().unwrap().len(), 50);
     assert!(full["callees"][0]["from"]["evidence"]["source_hash"].is_string());
-    let first = body(&mcp.call("expand", json!({"symbol":"entry","limit":50})));
+    let first = body(&mcp.call(
+        "expand",
+        json!({"format":"compact","symbol":"entry","limit":50}),
+    ));
     assert_eq!(first["format"], "compact");
     assert_eq!(first["source"]["text"], full["source"]["text"]);
     assert_eq!(
@@ -130,7 +133,7 @@ fn compact_relations_preserve_all_call_sites_with_bounded_continuations() {
         assert!(cursors.insert(next.to_owned()), "cursor must advance");
         page = body(&mcp.call(
             "expand",
-            json!({"symbol":"entry","section":"callees","cursor":next,"limit":7}),
+            json!({"format":"compact","symbol":"entry","section":"callees","cursor":next,"limit":7}),
         ));
         assert!(
             page.get("callers").is_none(),
@@ -144,14 +147,14 @@ fn compact_relations_preserve_all_call_sites_with_bounded_continuations() {
     assert_eq!(sites, (2..=81).collect());
     let wrong_section = mcp.call(
         "expand",
-        json!({"symbol":"entry","section":"callers","cursor":cursor}),
+        json!({"format":"compact","symbol":"entry","section":"callers","cursor":cursor}),
     );
     assert_eq!(wrong_section["isError"], true);
-    let wrong_symbol = mcp.call("expand", json!({"symbol":"helper_000_with_a_descriptive_identifier_for_the_callsite","section":"callees","cursor":cursor}));
+    let wrong_symbol = mcp.call("expand", json!({"format":"compact","symbol":"helper_000_with_a_descriptive_identifier_for_the_callsite","section":"callees","cursor":cursor}));
     assert_eq!(wrong_symbol["isError"], true);
     let other_root = tempdir().unwrap();
     fs::write(other_root.path().join("lib.rs"), &source).unwrap();
-    let wrong_root = mcp.call("expand", json!({"repository_root":other_root.path(),"symbol":"entry","section":"callees","cursor":cursor}));
+    let wrong_root = mcp.call("expand", json!({"format":"compact","repository_root":other_root.path(),"symbol":"entry","section":"callees","cursor":cursor}));
     assert_eq!(wrong_root["isError"], true);
     fs::write(
         root.path().join("lib.rs"),
@@ -160,7 +163,7 @@ fn compact_relations_preserve_all_call_sites_with_bounded_continuations() {
     .unwrap();
     let stale = body(&mcp.call(
         "expand",
-        json!({"symbol":"entry","section":"callees","cursor":cursor}),
+        json!({"format":"compact","symbol":"entry","section":"callees","cursor":cursor}),
     ));
     assert_eq!(stale["status"], "stale_cursor");
     assert_eq!(stale["format"], "compact");
@@ -174,7 +177,7 @@ fn compact_context_and_uncertain_edges_retain_their_own_anchors_and_evidence() {
     fs::write(root.path().join("lib.ts"), "export class Alpha { execute() {} }\nexport class Beta { execute() {} }\nexport function invoke(receiver: any) { receiver.execute(); }\nexport function invokeAgain(receiver: any) { invoke(receiver); }\n").unwrap();
     let mut mcp = Mcp::new(root.path(), &state.path().join("facts.sqlite"));
     let full = body(&mcp.call("expand", json!({"symbol":"invoke","format":"full"})));
-    let compact = body(&mcp.call("expand", json!({"symbol":"invoke"})));
+    let compact = body(&mcp.call("expand", json!({"format":"compact","symbol":"invoke"})));
     let full_edges = full["callees"].as_array().unwrap();
     assert!(!full_edges.is_empty());
     for (original, edge) in full_edges
@@ -188,7 +191,7 @@ fn compact_context_and_uncertain_edges_retain_their_own_anchors_and_evidence() {
     }
     let search = body(&mcp.call(
         "search",
-        json!({"query":"invoke", "detail":"context", "context_limit":2}),
+        json!({"format":"compact","query":"invoke", "detail":"context", "context_limit":2}),
     ));
     for entry in search["context_entries"].as_array().unwrap() {
         let anchor = &entry["symbol"]["id"];
@@ -197,7 +200,7 @@ fn compact_context_and_uncertain_edges_retain_their_own_anchors_and_evidence() {
             assert_ne!(&caller["from"]["id"], anchor);
         }
     }
-    let missing = body(&mcp.call("expand", json!({"symbol":"absent"})));
+    let missing = body(&mcp.call("expand", json!({"format":"compact","symbol":"absent"})));
     assert_eq!(missing["status"], "not_found");
     assert_eq!(missing["format"], "compact");
     let invalid = mcp.call("expand", json!({"symbol":"invoke","format":"brief"}));
@@ -214,7 +217,7 @@ fn ambiguous_candidates_also_obey_the_compact_budget() {
         fs::write(root.path().join(file), "pub fn duplicate() {}\n").unwrap();
     }
     let mut mcp = Mcp::new(root.path(), &state.path().join("facts.sqlite"));
-    let ambiguous = body(&mcp.call("expand", json!({"symbol":"duplicate"})));
+    let ambiguous = body(&mcp.call("expand", json!({"format":"compact","symbol":"duplicate"})));
     assert_eq!(ambiguous["status"], "ambiguous");
     assert_eq!(ambiguous["truncated"], true);
     assert!(ambiguous["matches"].as_array().unwrap().len() < 50);
@@ -271,77 +274,5 @@ fn source_truncation_is_explicit_even_within_a_single_definition_line() {
                 }
             }
         }
-    }
-}
-
-#[test]
-fn markdown_is_opt_in_and_preserves_facts_across_the_five_tools() {
-    let root = tempdir().unwrap();
-    let state = tempdir().unwrap();
-    fs::write(root.path().join("lib.ts"), "export function helper() { return 1; }\nexport function entry() { return helper(); }\nexport class Alpha { execute() {} }\nexport class Beta { execute() {} }\nexport function invoke(receiver: any) { receiver.execute(); }\n").unwrap();
-    let mut mcp = Mcp::new(root.path(), &state.path().join("facts.sqlite"));
-    body(&mcp.call("map", json!({})));
-    let queries = [
-        ("map", json!({})),
-        ("search", json!({"query":"invoke", "detail":"context"})),
-        ("search", json!({"query":"helper", "detail":"context"})),
-        ("outline", json!({"file_path":"lib.ts"})),
-        ("expand", json!({"symbol":"invoke", "limit":5})),
-        ("path", json!({"from":"entry", "to":"helper"})),
-        ("expand", json!({"symbol":"missing"})),
-        (
-            "path",
-            json!({"from":"invoke", "to":"execute", "to_file_path":"lib.ts"}),
-        ),
-    ];
-    for (tool, mut arguments) in queries {
-        let mut expected = body(&mcp.call(tool, arguments.clone()));
-        assert_eq!(expected["format"], "compact");
-        expected["format"] = json!("markdown");
-        // Separate refreshes can cross the 0 ms boundary; compact omits zero counters.
-        expected["freshness"]
-            .as_object_mut()
-            .unwrap()
-            .remove("duration_ms");
-        let singleton_caller = tool == "search" && arguments["query"] == "helper";
-        arguments["format"] = json!("markdown");
-        let response = mcp.call(tool, arguments);
-        assert_eq!(response["isError"], false, "{response}");
-        assert!(response.get("structuredContent").is_none());
-        assert_eq!(response["content"].as_array().unwrap().len(), 1);
-        let text = response["content"][0]["text"].as_str().unwrap();
-        assert!(text.contains("markdown"));
-        assert!(text.contains("freshness"));
-        assert!(text.contains("generation"));
-        if singleton_caller {
-            assert!(text.contains("from.evidence.start_line"));
-            assert!(text.contains("evidence.confidence"));
-            assert!(
-                !text.contains("######"),
-                "relationship ownership must remain explicit"
-            );
-        }
-        if tool == "expand" {
-            assert!(text.len() <= 16_384);
-        }
-        assert_markdown_strings(&expected, text);
-    }
-}
-
-fn assert_markdown_strings(value: &Value, text: &str) {
-    match value {
-        Value::String(value) => assert!(text.contains(value), "missing {value:?} in {text}"),
-        Value::Object(fields) => {
-            for (key, value) in fields {
-                assert!(text.contains(key), "missing field {key} in {text}");
-                assert_markdown_strings(value, text);
-            }
-        }
-        Value::Array(items) => {
-            for item in items {
-                assert_markdown_strings(item, text);
-            }
-        }
-        _ => {}
     }
 }

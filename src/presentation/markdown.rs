@@ -39,7 +39,15 @@ impl Renderer {
     fn object(&mut self, fields: &Map<String, Value>, heading_level: usize) {
         // Emit leaf metadata before child sections so a preceding Markdown
         // heading cannot accidentally make a later sibling look nested.
-        for (name, value) in fields {
+        let mut metadata = fields.iter().collect::<Vec<_>>();
+        metadata.sort_by_key(|(name, _)| match name.as_str() {
+            "repository_root" => 0,
+            "freshness" => 1,
+            "generation" => 2,
+            "status" => 3,
+            _ => 4,
+        });
+        for (name, value) in metadata {
             if let Value::String(text) = value {
                 if text.contains(['\n', '\r']) {
                     self.output.push_str("- ");
@@ -249,7 +257,10 @@ fn child_priority(name: &str) -> u8 {
     match name {
         "definition" | "symbol" => 0,
         "source" => 1,
-        _ => 2,
+        "results" | "symbols" | "path" => 2,
+        "context_entries" => 4,
+        "next" => 5,
+        _ => 3,
     }
 }
 

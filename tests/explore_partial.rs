@@ -69,7 +69,7 @@ fn explore_twice(root: &std::path::Path, budget: usize, modern: bool) -> Vec<Str
             assert!(text.contains(" | generation "));
             assert!(text.contains(&format!("UTF-8 response budget {budget} bytes")));
             assert!(text.contains("fixture.go"));
-            assert!(text.contains(&format!("{:x}", Sha256::digest(SOURCE.as_bytes()))));
+            assert!(!text.contains(&format!("{:x}", Sha256::digest(SOURCE.as_bytes()))));
             assert!(text.contains("func entry() {}"));
             text
         })

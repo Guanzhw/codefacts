@@ -1022,7 +1022,6 @@ fn render_excerpts(
     discovery: bool,
 ) {
     let reserve = 600.min(budget / 4);
-    let mut files = HashSet::new();
     let mut delivered = Vec::<(&str, u32, u32)>::new();
     let mut omitted = Vec::new();
     for (index, excerpt) in excerpts.iter().enumerate() {
@@ -1032,14 +1031,9 @@ fn render_excerpts(
             continue;
         }
         let source = &sources[&excerpt.path];
-        let hash = if files.contains(&excerpt.path) {
-            String::new()
-        } else {
-            format!("SHA256: {}\n", source.hash)
-        };
         let heading = format!(
-            "\n## {}:{}-{} | {}\n{}",
-            excerpt.path, excerpt.start, excerpt.end, excerpt.reason, hash
+            "\n## {}:{}-{} | {}\n",
+            excerpt.path, excerpt.start, excerpt.end, excerpt.reason
         );
         let lines: Vec<_> = source.text.lines().collect();
         let body = (excerpt.start..=excerpt.end)
@@ -1048,7 +1042,6 @@ fn render_excerpts(
         if output.len() + heading.len() + body.len() + reserve <= budget {
             output.push_str(&heading);
             output.push_str(&body);
-            files.insert(excerpt.path.clone());
             delivered.push((&excerpt.path, excerpt.start, excerpt.end));
             continue;
         }
@@ -1064,8 +1057,8 @@ fn render_excerpts(
             let partial_frame = |end: u32| {
                 (
                     format!(
-                        "\n## {}:{}-{} | partial source; full range {}-{}\n{}",
-                        excerpt.path, start, end, excerpt.start, excerpt.end, hash
+                        "\n## {}:{}-{} | partial source; requested range {}-{}\n",
+                        excerpt.path, start, end, excerpt.start, excerpt.end
                     ),
                     format!(
                         "[excerpt incomplete; continue explore(file_path={:?}, start_line={})]\n",
@@ -1075,8 +1068,8 @@ fn render_excerpts(
                 )
             };
             let partial_heading = format!(
-                "\n## {}:{}-{} | partial source; requested range {}-{}\n{}",
-                excerpt.path, start, excerpt.end, excerpt.start, excerpt.end, hash
+                "\n## {}:{}-{} | partial source; requested range {}-{}\n",
+                excerpt.path, start, excerpt.end, excerpt.start, excerpt.end
             );
             let mut partial = String::new();
             for line in start..=excerpt.end {
@@ -1105,8 +1098,8 @@ fn render_excerpts(
                 output.push_str(&prefix);
                 output.push_str(&partial);
                 output.push_str(&continuation);
-                files.insert(excerpt.path.clone());
                 delivered.push((&excerpt.path, start, end));
+                continue;
             } else {
                 let message = format!(
                     "\n{}:{}: line does not fit; read the cited file directly.\n",
@@ -1132,7 +1125,9 @@ fn render_excerpts(
             let _ = writeln!(output, "{locator}");
         }
     }
-    output.push_str("\nSource candidates; relationships retain stated uncertainty. Use reads for exact follow-up ranges.\n");
+    if discovery {
+        output.push_str("\nSource candidates; relationships retain stated uncertainty. Use reads for exact follow-up ranges.\n");
+    }
 }
 
 fn finish(mut output: String, budget: usize) -> String {
@@ -1144,7 +1139,7 @@ fn finish(mut output: String, budget: usize) -> String {
     output
 }
 
-const CARD_FOOTER: &str = "\nPreviews omit context. Use reads for the exact full ranges; relationships retain stated uncertainty.\n";
+const CARD_FOOTER: &str = "\nLexical candidates; symbol ranges cover full owners. [complete] covers the range; [preview] omits context. [source omitted] has no fitting whole line. Use reads for full ranges.\n";
 
 fn card_omission(count: usize) -> String {
     if count == 0 {
@@ -1194,7 +1189,6 @@ fn render_cards(
         ));
     }
     let by_id: HashMap<_, _> = nodes.iter().map(|n| (n.id.as_str(), n)).collect();
-    let mut files = HashSet::new();
     let mut frames = Vec::new();
     for (excerpt, deferred) in &cards {
         let node = excerpt.node_id.as_deref().and_then(|id| by_id.get(id));
@@ -1202,46 +1196,43 @@ fn render_cards(
             || "lexical source range".to_string(),
             |n| format!("{} {}", n.kind.as_str(), n.name),
         );
-        let range = if node.is_some() {
-            "full owner range"
-        } else {
-            "lexical range"
-        };
         let derivation = if excerpt.reason.starts_with("direct static callee at ")
             || excerpt
                 .reason
                 .starts_with("name-matched source candidate at ")
         {
-            excerpt.reason.clone()
+            // node_excerpt appends the target identity for range reads. The
+            // card heading already presents that same typed identity.
+            node.map_or_else(
+                || excerpt.reason.clone(),
+                |n| {
+                    excerpt
+                        .reason
+                        .strip_suffix(&format!("; {} {}", n.kind.as_str(), n.name))
+                        .unwrap_or(&excerpt.reason)
+                        .to_string()
+                },
+            )
         } else {
             let role = if node.is_some_and(|n| detect_is_test_node(n)) {
                 "test"
             } else {
                 source_role(&excerpt.path)
             };
-            format!(
-                "{role}; {}lexical candidate",
-                if *deferred { "deferred " } else { "" }
-            )
+            format!("{role}{}", if *deferred { "; deferred" } else { "" })
         };
         let prefix = format!(
             "\n## {}:{}-{} | {identity}\n",
             excerpt.path, excerpt.start, excerpt.end
         );
-        let mut suffix = format!(
-            "; {range} {}:{}-{}]\n{derivation}\n",
-            excerpt.path, excerpt.start, excerpt.end
-        );
-        if files.insert(excerpt.path.clone()) {
-            let _ = writeln!(suffix, "SHA256: {}", sources[&excerpt.path].hash);
-        }
+        let suffix = format!("] {derivation}\n");
         frames.push((prefix, suffix));
     }
     let omission = |retained: usize| card_omission(cards.len() - retained);
     let mut retained = 0;
     let mut metadata_bytes = output.len() + CARD_FOOTER.len();
     for (index, (prefix, suffix)) in frames.iter().enumerate() {
-        let bytes = prefix.len() + "[locator-only".len() + suffix.len();
+        let bytes = prefix.len() + "[source omitted".len() + suffix.len();
         if metadata_bytes + bytes + omission(index + 1).len() > budget {
             break;
         }
@@ -1254,27 +1245,49 @@ fn render_cards(
         let source = &sources[&excerpt.path];
         let lines: Vec<_> = source.text.lines().collect();
         let focus = best_line(&lines, excerpt.start, excerpt.end, terms);
+        let body = (excerpt.start..=excerpt.end)
+            .map(|line| format!("{line}: {}\n", lines[(line - 1) as usize]))
+            .collect::<String>();
         let mut preview = String::new();
         let mut delivered = Vec::new();
-        for line in [excerpt.start, focus] {
-            if delivered.contains(&line) {
-                continue;
-            }
-            let gap = if delivered.last().is_some_and(|last| line > *last + 1) {
-                "[... source lines omitted ...]\n"
-            } else {
-                ""
-            };
-            let rendered = format!("{line}: {}\n", lines[(line - 1) as usize]);
-            if preview.len() + gap.len() + rendered.len() <= allocation {
-                preview.push_str(gap);
-                preview.push_str(&rendered);
-                delivered.push(line);
+        let complete = body.len() <= allocation;
+        if complete {
+            preview = body;
+        } else {
+            // Keep the identity and strongest lexical evidence first, then
+            // spend the remaining share on surrounding whole source lines.
+            for (index, line) in [excerpt.start, focus]
+                .into_iter()
+                .chain(focus + 1..=excerpt.end)
+                .chain((excerpt.start + 1..focus).rev())
+                .enumerate()
+            {
+                if delivered.contains(&line) {
+                    continue;
+                }
+                let mut candidate_lines = delivered.clone();
+                candidate_lines.push(line);
+                candidate_lines.sort_unstable();
+                let mut candidate = String::new();
+                for (index, &line) in candidate_lines.iter().enumerate() {
+                    if index > 0 && line > candidate_lines[index - 1] + 1 {
+                        candidate.push_str("[... source lines omitted ...]\n");
+                    }
+                    let _ = writeln!(candidate, "{line}: {}", lines[(line - 1) as usize]);
+                }
+                if candidate.len() <= allocation {
+                    preview = candidate;
+                    delivered = candidate_lines;
+                } else if index >= 2 {
+                    break;
+                }
             }
         }
         output.push_str(&frames[index].0);
-        output.push_str(if delivered.is_empty() {
-            "[locator-only"
+        output.push_str(if preview.is_empty() {
+            "[source omitted"
+        } else if complete {
+            "[complete"
         } else {
             "[preview"
         });
@@ -1319,14 +1332,12 @@ mod tests {
         let response = facts
             .explore(ExploreOptions {
                 query: Some("exponential jitter reconnect"),
+                max_bytes: Some(2000),
                 ..Default::default()
             })
             .unwrap();
         assert!(response.contains("entry.ts:2-80"), "{response}");
-        assert!(
-            response.contains("[preview; full owner range entry.ts:2-80]"),
-            "{response}"
-        );
+        assert!(response.contains("[preview] implementation"), "{response}");
         assert!(response.contains("2: export function reconnect() {"));
         assert!(response.contains("3:   // exponential jitter"));
         assert!(!response.contains("79:   return finish();"));
@@ -1388,7 +1399,7 @@ mod tests {
         assert!(output.contains("152: last"));
         assert!(!output.contains("long line of source"));
         assert!(output.contains("a.rs:2-151"));
-        assert_eq!(output.matches("SHA256: hash").count(), 1);
+        assert!(!output.contains("SHA256:"));
         assert!(output.len() <= 2000);
     }
 
@@ -1435,9 +1446,9 @@ mod tests {
         let first_end = continuation + response[continuation..].find('\n').unwrap() + 1;
         assert!(first_end - first_start <= (4000 - "Discovery\n".len() - 600) / 2);
         assert!(response.contains("72: // line 72: 中文 source evidence"));
-        assert!(response.contains("helper.rs:1-3 | implementation\nSHA256: helper-hash"));
+        assert!(response.contains("helper.rs:1-3 | implementation\n"));
         assert!(response.contains("2:     finish();"));
-        assert!(response.contains("entry.rs:1-200"));
+        assert!(response.contains("requested range 1-200"));
         assert!(response.len() <= 4000);
 
         let focused = render(false, true, 200);
@@ -1445,8 +1456,9 @@ mod tests {
             focused.matches("中文 source evidence").count()
                 > response.matches("中文 source evidence").count()
         );
-        assert_eq!(render(true, false, 200), render(false, false, 200));
-        assert_eq!(render(true, true, 3), render(false, true, 3));
+        for (sibling, end) in [(false, 200), (true, 3)] {
+            assert!(render(true, sibling, end).starts_with(&render(false, sibling, end)));
+        }
 
         let mut long_line_sources = sources;
         long_line_sources.get_mut("entry.rs").unwrap().text =
@@ -1521,7 +1533,7 @@ mod tests {
             .unwrap();
         assert!(response.contains("src/retry.ts:1-4"), "{response}");
         assert!(response.contains("2:   // exponential jitter"));
-        assert!(response.contains(&hex::encode(Sha256::digest(implementation.as_bytes()))));
+        assert!(!response.contains(&hex::encode(Sha256::digest(implementation.as_bytes()))));
         assert!(response.contains("tests/retry.test.ts"));
         fs::write(
             root.path().join("src/retry.ts"),
@@ -1594,6 +1606,30 @@ mod tests {
         assert!(response.contains("20: // line 20:"));
         assert!(!response.contains("19: // line 19:"));
         assert!(response.contains("excerpt incomplete"));
+        assert!(!response.contains("SHA256:"));
+        assert!(!response.contains("Not fully returned"));
+        assert!(response.contains("requested range 20-200"));
+        let next = response
+            .split("start_line=")
+            .nth(1)
+            .unwrap()
+            .split(')')
+            .next()
+            .unwrap()
+            .parse::<u32>()
+            .unwrap();
+        let continued = facts
+            .explore(ExploreOptions {
+                reads: Some(&[ExploreRead {
+                    file_path: "lib.rs".into(),
+                    start_line: Some(next),
+                    end_line: Some(next),
+                }]),
+                max_bytes: Some(2000),
+                ..Default::default()
+            })
+            .unwrap();
+        assert!(continued.contains(&format!("{next}: // line {next}: 中文 evidence")));
         let batch = facts
             .explore(ExploreOptions {
                 reads: Some(&[
@@ -1775,10 +1811,11 @@ mod tests {
             2000,
         )
         .unwrap();
-        assert!(response.contains("[preview; full owner range fixture.rs:1-8]"));
-        assert!(response.contains("[preview; full owner range fixture.rs:2-3]"));
-        assert!(response.contains("[preview; lexical range fixture.rs:5-6]"));
-        assert!(response.contains("implementation; deferred lexical candidate"));
+        for range in ["fixture.rs:1-8", "fixture.rs:2-3", "fixture.rs:5-6"] {
+            assert_eq!(response.matches(range).count(), 1);
+        }
+        assert_eq!(response.matches("[complete] implementation").count(), 3);
+        assert!(response.contains("implementation; deferred"));
     }
 
     #[test]
@@ -1794,7 +1831,12 @@ mod tests {
 
     #[test]
     fn cards_show_numbered_first_and_best_lines_with_an_explicit_gap() {
-        let sources = card_source("fixture.rs", "identity\nplain\nplain\nneedle\nneedle\n");
+        let text = format!(
+            "identity\n{}\n{}\nneedle\nneedle\n",
+            "plain".repeat(500),
+            "plain".repeat(500)
+        );
+        let sources = card_source("fixture.rs", &text);
         let mut response = String::new();
         render_cards(
             &mut response,
@@ -1805,9 +1847,9 @@ mod tests {
             2000,
         )
         .unwrap();
-        assert!(response.contains("1: identity\n[... source lines omitted ...]\n4: needle\n"));
+        assert!(response
+            .contains("1: identity\n[... source lines omitted ...]\n4: needle\n5: needle\n"));
         assert!(!response.contains("2: plain"));
-        assert!(!response.contains("5: needle"));
         assert!(!response.contains("complete function"));
     }
 
@@ -1829,7 +1871,7 @@ mod tests {
     }
 
     #[test]
-    fn cards_with_no_matching_line_preview_the_first_line() {
+    fn cards_with_no_matching_line_return_a_complete_fitting_range() {
         let sources = card_source("fixture.rs", "identity\nplain\n");
         let mut response = String::new();
         render_cards(
@@ -1842,7 +1884,8 @@ mod tests {
         )
         .unwrap();
         assert_eq!(response.matches("1: identity\n").count(), 1);
-        assert!(!response.contains("2: plain"));
+        assert!(response.contains("2: plain"));
+        assert!(response.contains("[complete] implementation"));
     }
 
     #[test]
@@ -1860,12 +1903,11 @@ mod tests {
         let returned = response.matches("\n## fixture.rs:").count();
         assert!((1..36).contains(&returned));
         for line in 1..=returned {
-            assert!(
-                response.contains(&format!(
-                    "[locator-only; lexical range fixture.rs:{line}-{line}]"
-                )) || response.contains(&format!(
-                    "[preview; lexical range fixture.rs:{line}-{line}]"
-                ))
+            assert_eq!(
+                response
+                    .matches(&format!("fixture.rs:{line}-{line} |"))
+                    .count(),
+                1
             );
         }
         assert!(!response.contains(&format!("## fixture.rs:{}-{}", returned + 1, returned + 1)));
@@ -1895,7 +1937,7 @@ mod tests {
     }
 
     #[test]
-    fn cards_omit_whole_long_utf8_lines_and_mark_locator_only() {
+    fn cards_omit_whole_long_utf8_lines_and_mark_source_omitted() {
         let text = format!("{}\n", "中文".repeat(1000));
         let sources = card_source("fixture.rs", &text);
         let mut response = String::new();
@@ -1908,7 +1950,7 @@ mod tests {
             2000,
         )
         .unwrap();
-        assert!(response.contains("[locator-only; lexical range fixture.rs:1-1]"));
+        assert!(response.contains("[source omitted] implementation"));
         assert!(!response.contains("1: 中文"));
         assert!(response.len() <= 2000);
     }
@@ -1934,12 +1976,13 @@ mod tests {
         )
         .unwrap();
         assert!(response.contains("1: short\n"));
-        assert!(response.contains("[locator-only; lexical range fixture.rs:2-2]"));
+        assert!(response
+            .contains("fixture.rs:2-2 | lexical source range\n[source omitted] implementation"));
         assert!(!response.contains("2: x"));
     }
 
     #[test]
-    fn cards_declare_the_verified_hash_once_for_each_file() {
+    fn cards_keep_verified_hashes_internal() {
         let sources = card_source("fixture.rs", "first\nsecond\n");
         let mut response = String::new();
         render_cards(
@@ -1957,10 +2000,102 @@ mod tests {
             2000,
         )
         .unwrap();
-        assert_eq!(response.matches("SHA256:").count(), 1);
-        assert!(response.contains(&format!("SHA256: {}\n", sources["fixture.rs"].hash)));
+        assert!(!response.contains("SHA256:"));
+        assert!(!response.contains(&sources["fixture.rs"].hash));
         assert!(response.contains("1: first\n"));
         assert!(response.contains("2: second\n"));
+    }
+
+    #[test]
+    fn cards_spend_removed_metadata_bytes_on_complete_source() {
+        let text = (1..=4)
+            .map(|line| format!("// needle {line}: {}\n", "x".repeat(415)))
+            .collect::<String>();
+        let sources = card_source("fixture.rs", &text);
+        let node = card_node("owner", "needle", "fixture.rs", 1, 4);
+        let mut response = String::new();
+        render_cards(
+            &mut response,
+            card_sequence(
+                vec![card_excerpt("fixture.rs", 1, 4, Some("owner"))],
+                vec![],
+            ),
+            &[node],
+            &["needle".into()],
+            &sources,
+            2000,
+        )
+        .unwrap();
+        assert!(response.contains("[complete] implementation"), "{response}");
+        for (index, line) in text.lines().enumerate() {
+            assert!(response.contains(&format!("{}: {line}\n", index + 1)));
+        }
+        assert_eq!(response.matches("fixture.rs:1-4").count(), 1);
+        assert!(!response.contains(&sources["fixture.rs"].hash));
+        assert!(response.len() <= 2000);
+    }
+
+    #[test]
+    fn card_previews_use_remaining_capacity_and_preserve_utf8_lines() {
+        let text = (1..=200)
+            .map(|line| format!("// needle {line}: {}\n", "中文".repeat(25)))
+            .collect::<String>();
+        let sources = card_source("fixture.rs", &text);
+        for budget in [2000, 4000, 24_000, 32_000] {
+            let mut response = String::new();
+            render_cards(
+                &mut response,
+                card_sequence(vec![card_excerpt("fixture.rs", 1, 200, None)], vec![]),
+                &[],
+                &["needle".into()],
+                &sources,
+                budget,
+            )
+            .unwrap();
+            assert!(response.contains("[preview] implementation"));
+            let returned = response
+                .lines()
+                .filter_map(|line| line.split_once(": "))
+                .filter_map(|(number, source)| {
+                    number.parse::<usize>().ok().map(|line| (line, source))
+                })
+                .collect::<Vec<_>>();
+            assert!(returned.len() > 2, "budget {budget}: {response}");
+            for (line, actual) in returned {
+                assert_eq!(actual, text.lines().nth(line - 1).unwrap());
+            }
+            assert_eq!(response.matches("fixture.rs:1-200").count(), 1);
+            assert!(response.len() <= budget);
+        }
+    }
+
+    #[test]
+    fn source_metadata_like_text_remains_verbatim_in_cards_and_reads() {
+        let text = "SHA256: source-owned hash\n[preview; full owner range fixture.rs:1-2]\n";
+        let sources = card_source("fixture.rs", text);
+        let mut cards = String::new();
+        render_cards(
+            &mut cards,
+            card_sequence(vec![card_excerpt("fixture.rs", 1, 2, None)], vec![]),
+            &[],
+            &[],
+            &sources,
+            2000,
+        )
+        .unwrap();
+        let mut reads = String::new();
+        render_excerpts(
+            &mut reads,
+            vec![card_excerpt("fixture.rs", 1, 2, None)],
+            &sources,
+            2000,
+            false,
+        );
+        for response in [cards, reads] {
+            assert!(response.contains("1: SHA256: source-owned hash\n"));
+            assert!(response.contains("2: [preview; full owner range fixture.rs:1-2]\n"));
+            assert!(!response.contains(&sources["fixture.rs"].hash));
+        }
     }
 
     #[test]
@@ -1969,14 +2104,26 @@ mod tests {
         let mut node = card_node("owner", "[locator-only;owner", path, 1, 2);
         node.kind = NodeKind::Heading;
         let sources = card_source(path, "identity\nneedle\n");
-        for reason in ["direct static callee at lexical candidate/file.rs:1; heading [locator-only;owner", "name-matched source candidate at owner unavailable/file.rs:1; receiver unresolved; heading owner"] {
+        for reason in [
+            "direct static callee at lexical candidate/file.rs:1",
+            "name-matched source candidate at owner unavailable/file.rs:1; receiver unresolved",
+        ] {
             let mut excerpt = card_excerpt(path, 1, 2, Some("owner"));
-            excerpt.reason = reason.into();
+            excerpt.reason = format!("{reason}; heading {}", node.name);
             let mut response = String::new();
-            render_cards(&mut response, card_sequence(vec![excerpt], vec![]), std::slice::from_ref(&node), &["needle".into()], &sources, 2000).unwrap();
+            render_cards(
+                &mut response,
+                card_sequence(vec![excerpt], vec![]),
+                std::slice::from_ref(&node),
+                &["needle".into()],
+                &sources,
+                2000,
+            )
+            .unwrap();
             assert!(response.contains(&format!("## {path}:1-2 | heading [locator-only;owner\n")));
-            assert!(response.contains(&format!("[preview; full owner range {path}:1-2]")));
+            assert!(response.contains("[complete]"));
             assert!(response.contains(reason));
+            assert_eq!(response.matches(&node.name).count(), 1);
         }
     }
 

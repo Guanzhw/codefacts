@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.2 — pending
+
+- MCP queries default to readable Markdown, matching direct CLI queries.
+  Consumers needing JSON or `structuredContent` must request `format: "compact"`
+  or `format: "full"`; those explicit machine formats retain their contracts.
+- Default text removes source fingerprints, repeated symbol endpoints and
+  routine metadata. Source verification, freshness, relationship uncertainty,
+  precise locations, graph cutoffs and section continuations remain available.
+- Exploration prints each candidate locator once and returns complete small
+  definitions when they fit, using the remaining budget for useful source.
+  Partial previews and source omissions remain explicit.
+
 ## 0.2.1 — 2026-10-16
 
 - Restore static type-use references in Go, Rust, Java, C and C++ by fixing

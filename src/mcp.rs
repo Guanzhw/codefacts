@@ -305,9 +305,9 @@ fn call_tool(
     }
     let limit = optional_limit(&arguments)?;
     let format = match optional_string(&arguments, "format")? {
-        None | Some("compact") => Format::Compact,
+        Some("compact") => Format::Compact,
         Some("full") => Format::Full,
-        Some("markdown") => Format::Markdown,
+        None | Some("markdown") => Format::Markdown,
         Some(_) => {
             return Err(CodeFactsError::Mcp(
                 "'format' must be 'compact', 'full', or 'markdown'".into(),
@@ -387,7 +387,7 @@ fn call_tool(
         ),
         _ => unreachable!("tool name was validated before project selection"),
     }?;
-    Ok(tool_result(format.present(result), format))
+    Ok(tool_result(format.present_for(name, result), format))
 }
 
 fn required_string<'a>(arguments: &'a Map<String, Value>, key: &str) -> Result<&'a str> {
@@ -559,7 +559,7 @@ fn tool_definitions(tools: ToolProfile) -> Vec<Value> {
     vec![
         json!({
             "name": "explore",
-            "description": "Orient in an unfamiliar repository, locate implementation from behavior/code terms, or read cited source ranges. Omit query for an entry/module map; use query for ranked, hash-verified source previews with exact full-range locators and path_prefix to narrow scope. Previews omit context; use reads to batch up to eight ranges for the source needed to establish behavior. Text-only output includes freshness, locations and omissions within max_bytes. Lexical candidates require judgment. Set repository_root for a rootless server.",
+            "description": "Orient in an unfamiliar repository, locate implementation from code terms, or read cited source ranges. Omit query for an entry/module map; use query for ranked, source-verified candidates and path_prefix to narrow scope. Complete small definitions are returned when space permits; use reads to batch up to eight ranges when source is incomplete. Text output includes freshness, locations and omissions within max_bytes. Lexical candidates require judgment. Set repository_root for a rootless server.",
             "inputSchema": schema(json!({
                 "repository_root": repository_root_schema(),
                 "query": string_schema("Task/behavior description or code terms; omit for repository orientation"),
@@ -593,8 +593,8 @@ fn tool_definitions(tools: ToolProfile) -> Vec<Value> {
 
 fn tool(name: &str, description: &str, mut input_schema: Value) -> Value {
     input_schema["properties"]["format"] = json!({
-        "type": "string", "enum": ["compact", "full", "markdown"], "default": "compact",
-        "description": "compact returns JSON with shared per-file hashes and relationship anchors. markdown renders the same compact facts as text only, using tables for repeated fields and code blocks for source; it has no structuredContent. Confidence, direction, locations, truncation and continuation remain explicit. full returns the original nested JSON facts."
+        "type": "string", "enum": ["compact", "full", "markdown"], "default": "markdown",
+        "description": "markdown (default) returns readable text with source locations, relationship certainty and continuations. compact returns JSON with shared evidence and anchors; full returns nested JSON facts. Both JSON formats include structuredContent."
     });
     if name == "expand" {
         input_schema["properties"]["section"] = json!({
@@ -604,7 +604,7 @@ fn tool(name: &str, description: &str, mut input_schema: Value) -> Value {
         input_schema["properties"]["cursor"] = cursor_schema();
         input_schema["properties"]["limit"] = json!({
             "type": "integer", "minimum": 1, "maximum": 50,
-            "description": "Maximum entries per section (default 20, max 50); compact output may return fewer to fit the total byte budget."
+            "description": "Maximum entries per section (default 20, max 50); Compact and Markdown may return fewer to fit the total byte budget."
         });
     }
     json!({ "name": name, "description": description, "inputSchema": input_schema, "annotations": read_only_annotations() })

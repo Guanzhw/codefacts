@@ -97,7 +97,17 @@ fn impact_is_source_backed_and_reports_cutoffs_in_both_protocol_eras() {
             assert!(text.contains("TestEntry"));
             if format == "markdown" {
                 assert!(result.get("structuredContent").is_none());
-                assert!(text.contains("witness_direction"));
+                for fact in [
+                    "direction",
+                    "reverse",
+                    "parent",
+                    "witness",
+                    "fixture.go:3",
+                    "test_associated",
+                    "affected_entries",
+                ] {
+                    assert!(text.contains(fact), "missing {fact}: {text}");
+                }
             } else {
                 let facts = &result["structuredContent"];
                 assert_eq!(facts["affected"].as_array().unwrap().len(), 3);
@@ -374,7 +384,7 @@ fn eof_ranges_preserve_available_batch_evidence_in_both_protocol_eras() {
         assert!(text.contains("2: pub fn chosen() {}\n3: // last"), "{text}");
         assert!(text.contains("2: Evidence"), "{text}");
         assert!(
-            text.contains(&hex::encode(Sha256::digest(source.as_bytes()))),
+            !text.contains(&hex::encode(Sha256::digest(source.as_bytes()))),
             "{text}"
         );
         assert!(!text.contains("1: // before"), "{text}");

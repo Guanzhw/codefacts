@@ -341,12 +341,9 @@ fn hydration_keeps_deferred_owner_metadata_at_all_response_budgets() {
             ..Default::default()
         })
         .unwrap();
-    assert!(
-        response.contains("deferred lexical candidate"),
-        "{response}"
-    );
-    assert_eq!(response.matches("SHA256:").count(), 1);
-    assert!(response.contains("full owner range"));
+    assert!(response.contains("implementation; deferred"), "{response}");
+    assert!(!response.contains("SHA256:"));
+    assert!(response.contains("symbol ranges cover full owners"));
 }
 
 #[test]

@@ -252,7 +252,7 @@ test('packed launcher installs the matching optional package and speaks MCP', as
   }
   const search = await client.request(3, 'tools/call', {
     name: 'search',
-    arguments: { query: 'AuthService' },
+    arguments: { query: 'AuthService', format: 'full' },
   });
   assert.equal(search.result.isError, false);
   assert.match(search.result.content[0].text, /AuthService/);
@@ -263,7 +263,7 @@ test('packed launcher installs the matching optional package and speaks MCP', as
   assert.equal(markdown.result.isError, false);
   assert.equal(markdown.result.structuredContent, undefined);
   assert.match(markdown.result.content[0].text, /AuthService/);
-  assert.match(markdown.result.content[0].text, /format: markdown/);
+  assert.doesNotMatch(markdown.result.content[0].text, /format:|source_hash|SHA256:/);
   const exploration = await client.request(5, 'tools/call', {
     name: 'explore',
     arguments: { file_path: 'src/auth/service.ts', max_bytes: 2000 },
@@ -276,10 +276,10 @@ test('packed launcher installs the matching optional package and speaks MCP', as
   assert.match(explorationText, /src\/auth\/service\.ts:1-/);
   assert.match(explorationText, /^1: /m);
   const sourceHash = createHash('sha256').update(await readFile(join(fixtureRoot, 'src/auth/service.ts'))).digest('hex');
-  assert.ok(explorationText.includes(`SHA256: ${sourceHash}`));
+  assert.ok(!explorationText.includes(sourceHash));
   const impact = await client.request(6, 'tools/call', {
     name: 'impact',
-    arguments: { symbol: 'AuthService', file_path: 'src/auth/service.ts' },
+    arguments: { symbol: 'AuthService', file_path: 'src/auth/service.ts', format: 'full' },
   });
   assert.equal(impact.result.isError, false);
   assert.match(impact.result.content[0].text, /AuthService/);
@@ -308,6 +308,7 @@ test('packed launcher installs the matching optional package and speaks MCP', as
       });
       assert.equal(answer.result.isError, false);
       assert.match(answer.result.content[0].text, /AuthService/);
+      assert.equal(answer.result.structuredContent, undefined);
     }
     const hiddenSearch = await profileClient.request(expected.length + 2, 'tools/call', {
       name: 'search',

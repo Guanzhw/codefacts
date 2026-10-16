@@ -63,20 +63,20 @@ fn all_profile_exposes_the_seven_source_backed_workflows() {
     let requests = [
         json!({"jsonrpc":"2.0", "id":1, "method":"initialize", "params":{}}),
         json!({"jsonrpc":"2.0", "id":2, "method":"tools/list"}),
-        json!({"jsonrpc":"2.0", "id":3, "method":"tools/call", "params":{"name":"map", "arguments":{}}}),
-        json!({"jsonrpc":"2.0", "id":4, "method":"tools/call", "params":{"name":"search", "arguments":{"query":"helper"}}}),
-        json!({"jsonrpc":"2.0", "id":5, "method":"tools/call", "params":{"name":"outline", "arguments":{"file_path":"README.md"}}}),
-        json!({"jsonrpc":"2.0", "id":6, "method":"tools/call", "params":{"name":"expand", "arguments":{"symbol":"helper", "file_path":"src/lib.rs"}}}),
-        json!({"jsonrpc":"2.0", "id":7, "method":"tools/call", "params":{"name":"path", "arguments":{"from":"entry", "to":"helper"}}}),
-        json!({"jsonrpc":"2.0", "id":8, "method":"tools/call", "params":{"name":"path", "arguments":{"from":"entry", "from_file_path":"src/lib.rs", "to":"helper", "to_file_path":"src/lib.rs"}}}),
-        json!({"jsonrpc":"2.0", "id":9, "method":"tools/call", "params":{"name":"search", "arguments":{"query":"helper", "kind":"function", "path_prefix":"src", "offset":0, "limit":1}}}),
-        json!({"jsonrpc":"2.0", "id":10, "method":"tools/call", "params":{"name":"outline", "arguments":{"file_path":"README.md", "offset":1, "limit":1}}}),
-        json!({"jsonrpc":"2.0", "id":11, "method":"tools/call", "params":{"name":"search", "arguments":{"query":"helper", "kind":"const"}}}),
-        json!({"jsonrpc":"2.0", "id":12, "method":"tools/call", "params":{"name":"search", "arguments":{"query":"helper", "limit":0}}}),
-        json!({"jsonrpc":"2.0", "id":13, "method":"tools/call", "params":{"name":"search", "arguments":{"query":"helper", "detail":"context", "context_limit":1}}}),
-        json!({"jsonrpc":"2.0", "id":14, "method":"tools/call", "params":{"name":"search", "arguments":{"query":"helper", "detail":"full"}}}),
-        json!({"jsonrpc":"2.0", "id":15, "method":"tools/call", "params":{"name":"search", "arguments":{"query":"helper", "detail":"context", "context_limit":4}}}),
-        json!({"jsonrpc":"2.0", "id":16, "method":"tools/call", "params":{"name":"search", "arguments":{"query":"helper", "context_limit":1}}}),
+        json!({"jsonrpc":"2.0", "id":3, "method":"tools/call", "params":{"name":"map", "arguments":{"format":"full"}}}),
+        json!({"jsonrpc":"2.0", "id":4, "method":"tools/call", "params":{"name":"search", "arguments":{"format":"full","query":"helper"}}}),
+        json!({"jsonrpc":"2.0", "id":5, "method":"tools/call", "params":{"name":"outline", "arguments":{"format":"full","file_path":"README.md"}}}),
+        json!({"jsonrpc":"2.0", "id":6, "method":"tools/call", "params":{"name":"expand", "arguments":{"format":"full","symbol":"helper", "file_path":"src/lib.rs"}}}),
+        json!({"jsonrpc":"2.0", "id":7, "method":"tools/call", "params":{"name":"path", "arguments":{"format":"full","from":"entry", "to":"helper"}}}),
+        json!({"jsonrpc":"2.0", "id":8, "method":"tools/call", "params":{"name":"path", "arguments":{"format":"full","from":"entry", "from_file_path":"src/lib.rs", "to":"helper", "to_file_path":"src/lib.rs"}}}),
+        json!({"jsonrpc":"2.0", "id":9, "method":"tools/call", "params":{"name":"search", "arguments":{"format":"full","query":"helper", "kind":"function", "path_prefix":"src", "offset":0, "limit":1}}}),
+        json!({"jsonrpc":"2.0", "id":10, "method":"tools/call", "params":{"name":"outline", "arguments":{"format":"full","file_path":"README.md", "offset":1, "limit":1}}}),
+        json!({"jsonrpc":"2.0", "id":11, "method":"tools/call", "params":{"name":"search", "arguments":{"format":"full","query":"helper", "kind":"const"}}}),
+        json!({"jsonrpc":"2.0", "id":12, "method":"tools/call", "params":{"name":"search", "arguments":{"format":"full","query":"helper", "limit":0}}}),
+        json!({"jsonrpc":"2.0", "id":13, "method":"tools/call", "params":{"name":"search", "arguments":{"format":"full","query":"helper", "detail":"context", "context_limit":1}}}),
+        json!({"jsonrpc":"2.0", "id":14, "method":"tools/call", "params":{"name":"search", "arguments":{"format":"full","query":"helper", "detail":"full"}}}),
+        json!({"jsonrpc":"2.0", "id":15, "method":"tools/call", "params":{"name":"search", "arguments":{"format":"full","query":"helper", "detail":"context", "context_limit":4}}}),
+        json!({"jsonrpc":"2.0", "id":16, "method":"tools/call", "params":{"name":"search", "arguments":{"format":"full","query":"helper", "context_limit":1}}}),
     ];
     let mut input = child.stdin.take().expect("child stdin");
     for request in requests {
@@ -360,7 +360,7 @@ fn stdio_exploration_returns_budgeted_verified_source_and_rejects_invalid_argume
         "{query}"
     );
     assert!(
-        query.contains(&format!("SHA256: {:x}", Sha256::digest(source.as_bytes()))),
+        !query.contains(&hex::encode(Sha256::digest(source.as_bytes()))),
         "{query}"
     );
     let focused = responses[3]["result"]["content"][0]["text"]
@@ -374,10 +374,7 @@ fn stdio_exploration_returns_budgeted_verified_source_and_rejects_invalid_argume
         ),
         "{focused}"
     );
-    assert!(focused.contains(&format!(
-        "SHA256: {:x}",
-        Sha256::digest(long_source.as_bytes())
-    )));
+    assert!(!focused.contains(&hex::encode(Sha256::digest(long_source.as_bytes()))));
     for response in &responses[4..] {
         assert_eq!(response["result"]["isError"], true, "{response}");
         assert!(!response["result"]["content"][0]["text"]
@@ -417,15 +414,15 @@ fn stdio_server_indexes_and_queries_multiple_explicit_project_roots() {
     let requests = [
         json!({"jsonrpc":"2.0", "id":1, "method":"initialize", "params":{}}),
         json!({"jsonrpc":"2.0", "id":2, "method":"tools/list"}),
-        json!({"jsonrpc":"2.0", "id":3, "method":"tools/call", "params":{"name":"map", "arguments":{}}}),
-        json!({"jsonrpc":"2.0", "id":4, "method":"tools/call", "params":{"name":"map", "arguments":{"repository_root":project_a_root}}}),
-        json!({"jsonrpc":"2.0", "id":5, "method":"tools/call", "params":{"name":"map", "arguments":{"repository_root":project_b_root}}}),
-        json!({"jsonrpc":"2.0", "id":6, "method":"tools/call", "params":{"name":"search", "arguments":{"repository_root":project_a_root, "query":"alpha"}}}),
-        json!({"jsonrpc":"2.0", "id":7, "method":"tools/call", "params":{"name":"search", "arguments":{"repository_root":project_b_root, "query":"beta"}}}),
-        json!({"jsonrpc":"2.0", "id":8, "method":"tools/call", "params":{"name":"search", "arguments":{"repository_root":project_a_root, "query":"beta"}}}),
-        json!({"jsonrpc":"2.0", "id":9, "method":"tools/call", "params":{"name":"outline", "arguments":{"repository_root":project_b_root, "file_path":"src/lib.rs"}}}),
-        json!({"jsonrpc":"2.0", "id":10, "method":"tools/call", "params":{"name":"expand", "arguments":{"repository_root":project_b_root, "symbol":"beta", "file_path":"src/lib.rs"}}}),
-        json!({"jsonrpc":"2.0", "id":11, "method":"tools/call", "params":{"name":"path", "arguments":{"repository_root":project_b_root, "from":"entry", "to":"beta"}}}),
+        json!({"jsonrpc":"2.0", "id":3, "method":"tools/call", "params":{"name":"map", "arguments":{"format":"full"}}}),
+        json!({"jsonrpc":"2.0", "id":4, "method":"tools/call", "params":{"name":"map", "arguments":{"format":"full","repository_root":project_a_root}}}),
+        json!({"jsonrpc":"2.0", "id":5, "method":"tools/call", "params":{"name":"map", "arguments":{"format":"full","repository_root":project_b_root}}}),
+        json!({"jsonrpc":"2.0", "id":6, "method":"tools/call", "params":{"name":"search", "arguments":{"format":"full","repository_root":project_a_root, "query":"alpha"}}}),
+        json!({"jsonrpc":"2.0", "id":7, "method":"tools/call", "params":{"name":"search", "arguments":{"format":"full","repository_root":project_b_root, "query":"beta"}}}),
+        json!({"jsonrpc":"2.0", "id":8, "method":"tools/call", "params":{"name":"search", "arguments":{"format":"full","repository_root":project_a_root, "query":"beta"}}}),
+        json!({"jsonrpc":"2.0", "id":9, "method":"tools/call", "params":{"name":"outline", "arguments":{"format":"full","repository_root":project_b_root, "file_path":"src/lib.rs"}}}),
+        json!({"jsonrpc":"2.0", "id":10, "method":"tools/call", "params":{"name":"expand", "arguments":{"format":"full","repository_root":project_b_root, "symbol":"beta", "file_path":"src/lib.rs"}}}),
+        json!({"jsonrpc":"2.0", "id":11, "method":"tools/call", "params":{"name":"path", "arguments":{"format":"full","repository_root":project_b_root, "from":"entry", "to":"beta"}}}),
         json!({"jsonrpc":"2.0", "id":12, "method":"tools/call", "params":{"name":"explore", "arguments":{}}}),
         json!({"jsonrpc":"2.0", "id":13, "method":"tools/call", "params":{"name":"explore", "arguments":{"repository_root":project_a_root, "query":"alpha"}}}),
         json!({"jsonrpc":"2.0", "id":14, "method":"tools/call", "params":{"name":"explore", "arguments":{"repository_root":project_b_root, "query":"beta"}}}),

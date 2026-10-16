@@ -55,6 +55,22 @@ selected project gets its own external index. Exact-fact and impact results
 report `freshness.repository_root`; exploration identifies its root in the text
 header.
 
+### MCP response formats
+
+MCP calls default to concise, agent-readable Markdown text, matching the direct
+CLI. The default response is in `content[0].text` and has no duplicate
+`structuredContent`; `explore` is always text-only. The presentation omits raw
+source hashes and routine or repeated fields while retaining freshness,
+partial-source reasons, exact locations, uncertainty, relationship direction,
+active cutoffs, and continuation cursors. A small exploration owner is shown
+in full when it fits; otherwise the text marks the preview and omitted lines.
+
+Clients that parse `structuredContent` should pass `format: "compact"` or
+`format: "full"` on structured workflows. These explicit modes preserve their
+existing machine schemas and hash evidence. `explore` remains text-only. For
+example, an `expand` call that needs a structured result should include
+`"format": "compact"` with its usual symbol and section arguments.
+
 The launcher supports Windows x64, macOS x64/arm64, and Linux x64/arm64.
 It writes status only to stderr; MCP stdout remains reserved for JSON-RPC.
 
