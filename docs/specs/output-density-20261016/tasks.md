@@ -8,7 +8,8 @@
 - [x] Validate source positions, uncertainty, budgets, omissions and continuations.
 - [x] Independently compare actual before/after responses and byte costs.
 - [x] Complete appropriate source, protocol, launcher and exact-source CI checks.
-- [ ] Deliver the separately versioned public package and verify actual installed hosts.
+- [x] Publish native 0.2.2, pass the public acceptance receipt, merge plugin PR #6, and pass the targeted installed-home plugin update.
+- [x] Complete the actual installed Codex and Claude host runs with passing final acceptance evidence.
 
-Candidate evidence, coverage gaps and public delivery status are recorded in
+Candidate evidence, coverage gaps and delivery status are recorded in
 [output validation](../../OUTPUT-DESIGN-VALIDATION-2026-10-16.md).
