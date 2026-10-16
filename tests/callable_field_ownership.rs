@@ -337,7 +337,7 @@ fn version_five_unchanged_source_rebuilds_callable_fields_once() {
 }
 
 #[test]
-fn incomplete_version_five_rebuild_keeps_required_marker() {
+fn partial_version_five_rebuild_completes_retained_facts_and_retries_omission() {
     let repository = tempdir().unwrap();
     let state = tempdir().unwrap();
     fs::write(
@@ -359,7 +359,10 @@ fn incomplete_version_five_rebuild_keeps_required_marker() {
     drop(conn);
     fs::write(repository.path().join("invalid.ts"), [0xff, 0xfe]).unwrap();
     let facts = CodeFacts::open(repository.path(), &database).unwrap();
-    facts.refresh().unwrap();
+    let partial = facts.refresh().unwrap();
+    assert_eq!(partial.status, "partial");
+    assert_eq!(partial.files_indexed, 1);
+    assert_eq!(partial.files_unreadable, 1);
     let conn = Connection::open(&database).unwrap();
     let marker: String = conn
         .query_row(
@@ -368,9 +371,18 @@ fn incomplete_version_five_rebuild_keeps_required_marker() {
             |row| row.get(0),
         )
         .unwrap();
-    assert_eq!(marker, "1");
+    assert_eq!(marker, "0");
+    let unchanged = facts.refresh().unwrap();
+    assert_eq!(unchanged.status, "partial");
+    assert_eq!(unchanged.files_indexed, 0);
+    assert_eq!(unchanged.files_unchanged, 1);
+    assert_eq!(unchanged.files_unreadable, 1);
+    assert_eq!(unchanged.generation, partial.generation);
     fs::write(repository.path().join("invalid.ts"), "function valid() {}").unwrap();
-    facts.refresh().unwrap();
+    let recovered = facts.refresh().unwrap();
+    assert_eq!(recovered.files_indexed, 1);
+    assert_eq!(recovered.files_unchanged, 1);
+    assert_eq!(recovered.generation, partial.generation + 1);
     let marker: String = conn
         .query_row(
             "SELECT value FROM index_metadata WHERE key = 'full_reindex_required'",

@@ -882,7 +882,23 @@ impl CodeFacts {
 }
 
 fn header(freshness: &Freshness, budget: usize) -> String {
-    format!("CodeFacts exploration\nRoot: {}\nFreshness: {} | generation {} | UTF-8 response budget {} bytes\n", freshness.repository_root, freshness.status, freshness.generation, budget)
+    let mut output = format!("CodeFacts exploration\nRoot: {}\nFreshness: {} | generation {} | UTF-8 response budget {} bytes\n", freshness.repository_root, freshness.status, freshness.generation, budget);
+    if freshness.status == "partial" {
+        let omitted = freshness.files_too_large
+            + freshness.files_unreadable
+            + freshness.files_parse_failed
+            + freshness.files_extract_failed;
+        writeln!(
+            output,
+            "Index omissions: {omitted} files | too_large={} | unreadable={} | parse_failed={} | extract_failed={}",
+            freshness.files_too_large,
+            freshness.files_unreadable,
+            freshness.files_parse_failed,
+            freshness.files_extract_failed,
+        )
+        .unwrap();
+    }
+    output
 }
 
 fn is_manifest(path: &str) -> bool {

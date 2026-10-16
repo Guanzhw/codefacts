@@ -1,7 +1,11 @@
 # CodeFacts and CodeMapper comparison
 
 This is an evidence snapshot from 2026-07-14, not a general performance
-benchmark or a claim that raw symbol totals are interchangeable. Both tools
+benchmark or a claim that raw symbol totals are interchangeable. Its five-workflow
+surface describes the version tested then; current native 0.2.0 exposes seven MCP
+workflows, defaults to `explore`/`impact`/`expand`, and provides `--tools all` and
+`--tools explore` profiles. See the [current delivery record](V020-DELIVERY-2026-10-16.md) and
+[README MCP surface](../README.md#mcp-surface). Both tools
 were run against local working copies on Windows. CodeFacts used a fresh,
 external SQLite database under the system temporary directory for every cold
 index; none of the repositories under test was modified. Follow-up MCP calls
@@ -92,7 +96,7 @@ CodeFacts now has a verified advantage on this C++ pointer-return case and
 returns its own SQLite-backed evidence with source hash, extractor, and
 confidence. It is not a substitute for CodeMapper in every respect: CodeMapper
 currently offers a larger and more permissive exploration surface, while
-CodeFacts deliberately keeps five bounded read-only MCP tools. For overloaded
+CodeFacts deliberately kept five bounded read-only MCP tools in this comparison. For overloaded
 or prototype-plus-definition symbols, agents should pass the stable symbol IDs
 returned by CodeFacts to `path`; symbol names alone correctly return
 `ambiguous` rather than guessing.
