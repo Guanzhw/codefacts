@@ -1273,8 +1273,8 @@ fn is_type_declaration_name(node: tree_sitter::Node<'_>) -> bool {
         return false;
     }
     match parent.kind() {
-        "type_spec" | "type_alias" | "struct_item" | "enum_item" | "trait_item" | "type_item"
-        | "alias_declaration" => true,
+        "type_spec" | "type_alias" | "struct_item" | "union_item" | "enum_item" | "trait_item"
+        | "type_item" | "associated_type" | "alias_declaration" => true,
         "struct_specifier" | "union_specifier" | "enum_specifier" | "class_specifier" => {
             parent.child_by_field_name("body").is_some()
                 || parent.parent().is_some_and(|declaration| {
@@ -1285,6 +1285,12 @@ fn is_type_declaration_name(node: tree_sitter::Node<'_>) -> bool {
                             | "compound_statement"
                             | "field_declaration_list"
                             | "template_declaration"
+                            | "type_definition"
+                            | "preproc_ifdef"
+                            | "preproc_if"
+                            | "preproc_elif"
+                            | "preproc_elifdef"
+                            | "preproc_else"
                     ) || matches!(declaration.kind(), "declaration" | "field_declaration")
                         && declaration.child_by_field_name("declarator").is_none()
                 })

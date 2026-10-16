@@ -69,6 +69,94 @@ fn declarations_do_not_manufacture_type_uses(language: Language, source: &str) {
     }
 }
 
+#[test_case(Language::C; "c")]
+#[test_case(Language::Cpp; "cpp")]
+fn opaque_typedef_tag_declarations_preserve_forward_facts_without_references(language: Language) {
+    for source in ["typedef struct Foo Foo;\n", "typedef struct Foo *FooPtr;\n"] {
+        let (nodes, edges) = extract(source, language);
+        assert!(
+            nodes
+                .iter()
+                .any(|node| node.name == "Foo" && node.kind == codefacts::types::NodeKind::Class),
+            "{language}: {source}: {nodes:#?}"
+        );
+        assert!(
+            edges.iter().all(|edge| edge.kind != EdgeKind::References),
+            "{language}: {source}: {edges:#?}"
+        );
+    }
+}
+
+#[test_case(Language::C; "c")]
+#[test_case(Language::Cpp; "cpp")]
+fn preprocessor_forward_declarations_preserve_facts_without_references(language: Language) {
+    let source = "#ifndef H\n#define H\nstruct Guarded;\n#endif\n#if 1\nstruct First;\n#elif 0\nstruct Second;\n#else\nstruct Third;\n#endif\n";
+    let (nodes, edges) = extract(source, language);
+    for name in ["Guarded", "First", "Second", "Third"] {
+        assert!(
+            nodes
+                .iter()
+                .any(|node| node.name == name && node.kind == codefacts::types::NodeKind::Class),
+            "{language}: missing {name}: {nodes:#?}"
+        );
+    }
+    assert!(
+        edges.iter().all(|edge| edge.kind != EdgeKind::References),
+        "{language}: {edges:#?}"
+    );
+}
+
+#[test]
+fn rust_union_declaration_name_is_not_a_type_use() {
+    let (nodes, edges) = extract("union U { a: u32 }\n", Language::Rust);
+    assert!(
+        nodes.iter().all(|node| node.name != "U"),
+        "union definition support is unchanged"
+    );
+    assert!(
+        edges.iter().all(|edge| edge.kind != EdgeKind::References),
+        "{edges:#?}"
+    );
+    let (nodes, edges) = extract(
+        "struct Payload {}\nunion U { value: *const Payload }\n",
+        Language::Rust,
+    );
+    let payload = nodes.iter().find(|node| node.name == "Payload").unwrap();
+    let references = edges
+        .iter()
+        .filter(|edge| edge.kind == EdgeKind::References)
+        .collect::<Vec<_>>();
+    assert_eq!(references.len(), 1, "{references:#?}");
+    assert_eq!(references[0].target, payload.id);
+    assert_eq!(references[0].line, 2);
+}
+
+#[test]
+fn rust_associated_type_declaration_does_not_reference_the_implementation_alias() {
+    let (_, edges) = extract(
+        "trait Tr { type Out; }\nimpl Tr for S { type Out = u8; }\nstruct S;\n",
+        Language::Rust,
+    );
+    let references = edges
+        .iter()
+        .filter(|edge| edge.kind == EdgeKind::References)
+        .collect::<Vec<_>>();
+    assert!(
+        references
+            .iter()
+            .all(|edge| edge.target_name.as_deref() != Some("Out")),
+        "{references:#?}"
+    );
+    for name in ["Tr", "S"] {
+        assert!(
+            references
+                .iter()
+                .any(|edge| edge.target_name.as_deref() == Some(name) && edge.line == 2),
+            "real impl type use {name}: {references:#?}"
+        );
+    }
+}
+
 #[test_case(Language::Java, "class Payload {}\nclass Container<@Anno T extends Payload> {}\n"; "java_annotated_parameter")]
 #[test_case(Language::Cpp, "struct Payload {};\ntemplate<typename T = Payload, typename... Ts> struct Container {};\n"; "cpp_default_and_variadic_parameters")]
 #[test_case(Language::Rust, "struct Payload {}\nstruct Container<T = Payload> {}\n"; "rust_default_parameter")]
