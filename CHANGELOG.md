@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.2.1 — Unreleased
+
+- Restore static type-use references in Go, Rust, Java, C and C++ by fixing
+  their per-match query capture contract. Real type uses retain source
+  locations and enclosing owners; declaration names do not create references.
+  Ambiguous types and external short names without indexed identity remain
+  unresolved instead of selecting an arbitrary namesake.
+  The extraction version advances to 10, so existing indexes make one full
+  source pass to replace incomplete facts even when source files are unchanged.
+- Default `explore` text reports partial-index omissions by reason, including
+  too-large, unreadable, parse-failed and extract-failed files, within the
+  existing response byte budget. Unchanged files are not omissions.
+- Partial indexes return to incremental refresh after the forced extraction
+  pass. Unchanged valid files are reused while omitted files are retried.
+  Unverifiable old-version facts are removed atomically before completing a
+  migration, so a persistent oversized file no longer forces every query to
+  rebuild all valid source files.
+- Active distribution and improvement documents describe the shipped
+  three/default, seven/all and one/explore MCP profiles and completed 0.2.0
+  delivery. Historical experiment and performance results retain their original
+  outcomes and evidence boundaries.
+
 ## 0.2.0 — 2026-10-16
 
 - MCP startup exposes `explore`, `impact`, and `expand` by default.

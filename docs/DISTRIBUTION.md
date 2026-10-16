@@ -9,13 +9,18 @@ project's contract.
 ## What users run
 
 ```text
-npx -y codefacts@0.1.16 mcp --root .
+npx -y codefacts@0.2.0 mcp --root .
 ```
 
 The optional `--root` is a default project for existing single-project MCP
-configurations. A rootless `npx -y codefacts@0.1.16 mcp` server accepts an
-explicit `repository_root` in each read-only tool call and creates a separate
-external SQLite state file for each selected project.
+configurations. Native version 0.2.0 starts the `default` profile (`explore`,
+`impact`, `expand`); pass `--tools all` for all seven workflows or
+`--tools explore` for the one-workflow profile. The direct CLI retains all ten
+query names regardless of the MCP profile. See [the v0.2.0 delivery record](V020-DELIVERY-2026-10-16.md)
+for the verified catalogs and [README](../README.md#mcp-surface) for workflow
+details. A rootless `npx -y codefacts@0.2.0 mcp` server accepts an explicit
+`repository_root` in each read-only tool call and creates a separate external
+SQLite state file for each selected project.
 
 For an interactive, user-wide coding-agent installation, use
 `npx --yes --prefer-online codefacts@latest install`. That is intentionally a
@@ -83,7 +88,7 @@ Before creating a tag:
 3. Verify the launcher locally with `node --test npm/test/*.test.mjs` and
    stage a platform package with `node npm/scripts/stage-platform-package.mjs`.
 
-Then create and push a matching tag, for example `v0.1.16`. The workflow audits
+Then create and push a matching tag, for example `v0.2.0`. The workflow audits
 licenses, tests the Rust project, builds all assets, creates the GitHub Release
 with `SHA256SUMS`, publishes all platform npm packages, and publishes the main
 launcher with provenance. A tag must not be considered an online-installable
@@ -105,4 +110,6 @@ mcp-publisher publish
 ```
 
 The MCP Registry is a discovery and standardized-install-metadata service; it
-does not host the executable or turn CodeFacts into a remote SaaS.
+does not host the executable or turn CodeFacts into a remote SaaS. As of
+2026-10-16, successful online read-back of the v0.2.0 Registry listing has not
+been confirmed; npm publication does not establish Registry publication.

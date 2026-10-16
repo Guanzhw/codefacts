@@ -165,17 +165,6 @@ impl<'a> IndexingPipeline<'a> {
         // Pre-fetch all file hashes for incremental checks (before rayon).
         // This avoids touching the non-Sync Connection from parallel threads.
         let stored_hashes = self.store.get_file_hashes()?;
-        let removed_paths: Vec<String> = stored_hashes
-            .keys()
-            .filter(|path| !current_paths.contains(*path))
-            .cloned()
-            .collect();
-        let mut removed_nodes = Vec::new();
-        for path in &removed_paths {
-            removed_nodes.extend(self.store.get_nodes_by_file(path)?);
-        }
-        let removed_path_set: HashSet<&str> = removed_paths.iter().map(String::as_str).collect();
-
         let skip_counts = FileSkipCounts::default();
 
         // ---- Pass 1: parse & extract nodes (parallel via rayon) ----
@@ -274,6 +263,30 @@ impl<'a> IndexingPipeline<'a> {
             })
             .collect();
 
+        let reindexed_paths: HashSet<&str> = parsed
+            .iter()
+            .map(|state| state.relative_path.as_str())
+            .collect();
+        // A full pass establishes the extraction version of every retained
+        // fact. Omitted old files cannot be verified at that version: remove
+        // their facts and hashes atomically with the successful replacements.
+        // Their reported source gaps remain partial and are retried next time
+        // because they have no stored hash. Incremental gaps retain the prior
+        // snapshot under the existing partial-freshness contract.
+        let removed_paths: Vec<String> = stored_hashes
+            .keys()
+            .filter(|path| {
+                !current_paths.contains(*path)
+                    || (!incremental && !reindexed_paths.contains(path.as_str()))
+            })
+            .cloned()
+            .collect();
+        let mut removed_nodes = Vec::new();
+        for path in &removed_paths {
+            removed_nodes.extend(self.store.get_nodes_by_file(path)?);
+        }
+        let removed_path_set: HashSet<&str> = removed_paths.iter().map(String::as_str).collect();
+
         // Source hashes have been checked. With no successful replacements or
         // deletions, incremental refresh has no facts or metadata to mutate.
         // Retain skip/failure counts even when the prior snapshot is partial.
@@ -311,8 +324,6 @@ impl<'a> IndexingPipeline<'a> {
 
         // In incremental mode, include existing nodes from files we didn't re-parse.
         if incremental {
-            let reindexed_paths: std::collections::HashSet<&str> =
-                parsed.iter().map(|s| s.relative_path.as_str()).collect();
             for node in &existing_nodes {
                 if !reindexed_paths.contains(node.file_path.as_str())
                     && !removed_path_set.contains(node.file_path.as_str())
@@ -323,25 +334,24 @@ impl<'a> IndexingPipeline<'a> {
         }
 
         let node_index = build_node_index(&all_nodes);
-        let reindexed_paths: HashSet<&str> = parsed
+        let changed_nodes = removed_nodes
             .iter()
-            .map(|state| state.relative_path.as_str())
-            .collect();
-        let mut changed_target_names: HashSet<String> =
-            removed_nodes.iter().map(|node| node.name.clone()).collect();
-        if incremental {
-            changed_target_names.extend(
+            .chain(
                 existing_nodes
                     .iter()
-                    .filter(|node| reindexed_paths.contains(node.file_path.as_str()))
-                    .map(|node| node.name.clone()),
-            );
+                    .filter(|node| reindexed_paths.contains(node.file_path.as_str())),
+            )
+            .chain(parsed.iter().flat_map(|state| state.nodes.iter()));
+        let mut changed_target_names = HashSet::new();
+        for node in changed_nodes {
+            changed_target_names.insert(node.name.clone());
+            if let Some(qualified) = &node.qualified_name {
+                changed_target_names.insert(qualified.clone());
+                if matches!(node.language, Language::Rust | Language::Cpp) {
+                    changed_target_names.insert(qualified.replace('.', "::"));
+                }
+            }
         }
-        changed_target_names.extend(
-            parsed
-                .iter()
-                .flat_map(|state| state.nodes.iter().map(|node| node.name.clone())),
-        );
 
         // ---- Pass 2: extract edges & persist (parallel edge extraction) ----
         type FileData<'nodes> = (String, Language, String, &'nodes [CodeNode], Vec<CodeEdge>);
@@ -391,9 +401,6 @@ impl<'a> IndexingPipeline<'a> {
         // ---- Persist to SQLite (sequential — single connection) ----
         // Every mutation, including cleanup and generation metadata, shares
         // one store-owned transaction. Failed parsing above never enters it.
-        let full_pass_complete = !incremental
-            && skip_counts.failures() == 0
-            && skip_counts.too_large.load(Ordering::Relaxed) == 0;
         let (files_indexed, nodes_created, edges_created, relationships_rebound) =
             self.store.with_transaction(|store| {
                 for path in &removed_paths {
@@ -456,7 +463,9 @@ impl<'a> IndexingPipeline<'a> {
                     }
                 }
 
-                if full_pass_complete {
+                // All retained files now carry facts from this extraction
+                // version, including when source gaps leave a partial snapshot.
+                if !incremental {
                     store.mark_full_reindex_complete()?;
                 }
                 if changed {
@@ -531,7 +540,23 @@ impl<'a> IndexingPipeline<'a> {
                 continue;
             }
 
-            let target_id = resolve_target_id(target_name, &edge.file_path, &node_index);
+            let target_id = if edge.kind == EdgeKind::References
+                && edge.metadata.as_ref().is_some_and(|metadata| {
+                    metadata
+                        .get("type_reference")
+                        .is_some_and(|value| value == "true")
+                }) {
+                crate::indexer::extractor::resolve_type_reference_target(
+                    target_name,
+                    &edge.file_path,
+                    current_nodes,
+                    &node_index,
+                )
+                .map(|node| node.id.clone())
+                .unwrap_or_else(|| format!("unresolved:{target_name}"))
+            } else {
+                resolve_target_id(target_name, &edge.file_path, &node_index)
+            };
             if target_id != edge.target {
                 deleted.push(edge.clone());
                 let mut rebound_edge = edge;
@@ -1086,7 +1111,15 @@ class Calculator:
         };
         pipeline.index_directory(&options).unwrap();
         let before = serde_json::to_value(store.get_all_edges().unwrap()).unwrap();
-        assert_eq!(before.as_array().unwrap().len(), 2);
+        assert_eq!(
+            store
+                .get_all_edges()
+                .unwrap()
+                .iter()
+                .filter(|edge| edge.kind == EdgeKind::Calls)
+                .count(),
+            2
+        );
         let hashes = store.get_file_hashes().unwrap();
         let generation = store.generation().unwrap();
 
@@ -1112,7 +1145,12 @@ class Calculator:
         .unwrap();
         let added = pipeline.index_directory(&options).unwrap();
         assert_eq!(added.relationships_rebound, 2);
-        let edges = store.get_all_edges().unwrap();
+        let edges = store
+            .get_all_edges()
+            .unwrap()
+            .into_iter()
+            .filter(|edge| edge.kind == EdgeKind::Calls)
+            .collect::<Vec<_>>();
         assert_eq!(edges.len(), 4);
         assert_eq!(
             edges
@@ -1145,7 +1183,12 @@ class Calculator:
         )
         .unwrap();
         pipeline.index_directory(&options).unwrap();
-        let edges = store.get_all_edges().unwrap();
+        let edges = store
+            .get_all_edges()
+            .unwrap()
+            .into_iter()
+            .filter(|edge| edge.kind == EdgeKind::Calls)
+            .collect::<Vec<_>>();
         assert_eq!(edges.len(), 3);
         assert!(edges.iter().all(|edge| {
             store.get_node(&edge.target).unwrap().unwrap().file_path == "target.go"
@@ -1174,7 +1217,12 @@ class Calculator:
             incremental: true,
         };
         pipeline.index_directory(&options).unwrap();
-        let before = store.get_all_edges().unwrap();
+        let before = store
+            .get_all_edges()
+            .unwrap()
+            .into_iter()
+            .filter(|edge| edge.kind == EdgeKind::Calls)
+            .collect::<Vec<_>>();
         assert_eq!(before.len(), MAX_AMBIGUOUS_CALL_TARGETS);
         fs::write(
             tmp.path().join("zz_added.go"),
@@ -1183,7 +1231,12 @@ class Calculator:
         .unwrap();
         let result = pipeline.index_directory(&options).unwrap();
         assert_eq!(result.relationships_rebound, MAX_AMBIGUOUS_CALL_TARGETS);
-        let after = store.get_all_edges().unwrap();
+        let after = store
+            .get_all_edges()
+            .unwrap()
+            .into_iter()
+            .filter(|edge| edge.kind == EdgeKind::Calls)
+            .collect::<Vec<_>>();
         assert_eq!(
             before.iter().map(|e| &e.target).collect::<Vec<_>>(),
             after.iter().map(|e| &e.target).collect::<Vec<_>>()

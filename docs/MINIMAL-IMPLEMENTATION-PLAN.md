@@ -1,5 +1,12 @@
 # Minimal implementation plan
 
+## Historical design snapshot
+
+This document records the earlier five-tool implementation plan. Native 0.2.0
+shipped seven MCP workflows with three enabled by default. Current behavior and
+delivery evidence are in the [delivery record](V020-DELIVERY-2026-10-16.md) and
+[README MCP surface](../README.md#mcp-surface).
+
 ## Goal
 
 Improve the usefulness and honesty of the existing five read-only MCP tools
@@ -19,7 +26,7 @@ All existing calls and result fields remain valid.  The changes are additive;
 clients that do not opt in receive the current behaviour plus any additive
 result fields.
 
-## Implementation status
+## Implementation status (historical plan state)
 
 All four stages are implemented in the current source tree while preserving
 the five-tool MCP surface. The remaining delivery step is a normal release.
@@ -27,7 +34,7 @@ The implementation also hardens the existing `path` contract: `limit` now
 bounds returned path nodes, while a discovered longer path returns
 `path_too_long` with factual endpoint evidence and its length.
 
-### Follow-on correctness and scale hardening
+### Follow-on correctness and scale hardening (historical implementation notes)
 
 The implemented follow-on keeps the same five tools and adds no daemon or
 agent layer:

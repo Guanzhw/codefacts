@@ -138,6 +138,7 @@ fn builtin_types() -> HashSet<&'static str> {
         "uint16",
         "uint32",
         "uint64",
+        "uintptr",
         "float32",
         "float64",
         "complex64",
@@ -316,6 +317,18 @@ impl Extractor {
                 Some(c) => c,
                 None => continue,
             };
+
+            // C/C++ queries also match `struct Existing` in type positions.
+            // Those uses must resolve to a definition, not introduce one.
+            if matches!(language, Language::C | Language::Cpp)
+                && matches!(
+                    def_capture.node.kind(),
+                    "struct_specifier" | "union_specifier" | "enum_specifier" | "class_specifier"
+                )
+                && !is_type_declaration_name(name_capture.node)
+            {
+                continue;
+            }
 
             let name = node_text(&name_capture.node, source_bytes);
             let def_node = &def_capture.node;
@@ -1071,7 +1084,13 @@ fn extract_type_ref_edges(
         None => return,
     };
 
-    let type_name = node_text(&name_capture.node, source_bytes);
+    if is_type_declaration_name(name_capture.node) {
+        return;
+    }
+
+    let Some(type_name) = type_reference_spelling(name_capture.node, source_bytes) else {
+        return;
+    };
     let line = name_capture.node.start_position().row as u32 + 1;
 
     // Skip built-in / primitive type names.
@@ -1079,29 +1098,225 @@ fn extract_type_ref_edges(
         return;
     }
 
-    let enclosing = find_enclosing_node(
+    let enclosing = find_type_reference_owner(
         file_nodes,
         line,
         name_capture.node.start_position().column as u32,
     );
-    let target = resolve_node(&type_name, file_path, file_nodes, node_index);
+    let target = resolve_type_reference_target(&type_name, file_path, file_nodes, node_index);
 
-    let source_id = enclosing
+    let mut source_ids = enclosing
         .map(|e| e.id.clone())
-        .unwrap_or_else(|| format!("file:{}", file_path));
+        .into_iter()
+        .collect::<Vec<_>>();
+    // A typedef's shared base type belongs to every declared alias. The
+    // exact declaration span keeps unrelated same-line aliases separate.
+    if let Some(owner) = enclosing.filter(|owner| owner.kind == NodeKind::TypeAlias) {
+        let mut current = name_capture.node;
+        while let Some(parent) = current.parent() {
+            if parent.kind() == "type_definition" {
+                if parent.child_by_field_name("type") == Some(current) {
+                    source_ids = file_nodes
+                        .iter()
+                        .filter(|node| {
+                            node.kind == NodeKind::TypeAlias
+                                && (
+                                    node.start_line,
+                                    node.start_column,
+                                    node.end_line,
+                                    node.end_column,
+                                ) == (
+                                    owner.start_line,
+                                    owner.start_column,
+                                    owner.end_line,
+                                    owner.end_column,
+                                )
+                        })
+                        .map(|node| node.id.clone())
+                        .collect();
+                }
+                break;
+            }
+            current = parent;
+        }
+    }
+    if source_ids.is_empty() {
+        source_ids.push(format!("file:{}", file_path));
+    }
     let target_id = target
         .map(|target| target.id.clone())
         .unwrap_or_else(|| format!("unresolved:{}", type_name));
 
-    edges.push(CodeEdge {
-        source: source_id,
-        target: target_id,
-        kind: EdgeKind::References,
-        file_path: file_path.to_string(),
-        line,
-        target_name: Some(type_name),
-        metadata: None,
-    });
+    for source_id in source_ids {
+        edges.push(CodeEdge {
+            source: source_id,
+            target: target_id.clone(),
+            kind: EdgeKind::References,
+            file_path: file_path.to_string(),
+            line,
+            target_name: Some(type_name.clone()),
+            metadata: Some(HashMap::from([("type_reference".into(), "true".into())])),
+        });
+    }
+}
+
+/// Preserve explicit qualification; only the terminal type name emits an
+/// occurrence, rather than treating Java package components as type uses.
+fn type_reference_spelling(mut node: tree_sitter::Node<'_>, source: &[u8]) -> Option<String> {
+    while let Some(parent) = node.parent() {
+        let name = match parent.kind() {
+            "qualified_type" | "qualified_identifier" => parent.child_by_field_name("name"),
+            "template_type"
+                if parent
+                    .parent()
+                    .is_some_and(|qualified| qualified.kind() == "qualified_identifier") =>
+            {
+                parent.child_by_field_name("name")
+            }
+            "scoped_type_identifier" => parent
+                .child_by_field_name("name")
+                .or_else(|| parent.named_child(parent.named_child_count() - 1)),
+            _ => break,
+        };
+        if name != Some(node) {
+            return None;
+        }
+        node = parent;
+    }
+    Some(node_text(&node, source))
+}
+
+/// Type positions cannot resolve to value declarations. Qualified spellings
+/// require an indexed qualified identity; a short-name match proves nothing.
+pub(crate) fn resolve_type_reference_target<'a>(
+    name: &str,
+    source_file: &str,
+    file_nodes: &'a [CodeNode],
+    node_index: &HashMap<String, Vec<&'a CodeNode>>,
+) -> Option<&'a CodeNode> {
+    let qualified = name.contains("::") || name.contains('.');
+    let normalized = name.replace("::", ".");
+    let short_name = normalized.rsplit('.').next().unwrap_or(name);
+    let matches_type = |node: &&CodeNode| {
+        matches!(
+            node.kind,
+            NodeKind::Class
+                | NodeKind::Struct
+                | NodeKind::Interface
+                | NodeKind::Trait
+                | NodeKind::Enum
+                | NodeKind::TypeAlias
+        ) && if qualified {
+            node.qualified_name.as_deref() == Some(normalized.as_str())
+        } else {
+            node.name == name
+        }
+    };
+    let mut local = file_nodes
+        .iter()
+        .filter(matches_type)
+        .filter(|node| node.file_path == source_file);
+    if let Some(first) = local.next() {
+        return local.next().is_none().then_some(first);
+    }
+    if !qualified {
+        return None;
+    }
+    let candidates = node_index.get(short_name)?;
+    let mut types = candidates.iter().copied().filter(matches_type);
+    let first = types.next()?;
+    types.next().is_none().then_some(first)
+}
+
+/// Broad type-identifier queries also visit the names that introduce types.
+/// Exclude that declaration occurrence, while retaining distinct recursive uses.
+fn is_type_declaration_name(node: tree_sitter::Node<'_>) -> bool {
+    // Typedef names can sit under pointer, array or function declarators.
+    let mut declarator = node;
+    while let Some(parent) = declarator.parent() {
+        if parent.kind() == "type_definition" {
+            return parent
+                .children_by_field_name("declarator", &mut parent.walk())
+                .any(|child| child == declarator);
+        }
+        if parent.kind().ends_with("_declarator")
+            && (parent.child_by_field_name("declarator") == Some(declarator)
+                || parent.kind() == "parenthesized_declarator"
+                    && parent.named_child(0) == Some(declarator))
+        {
+            declarator = parent;
+        } else {
+            break;
+        }
+    }
+    let Some(parent) = node.parent() else {
+        return false;
+    };
+    match parent.kind() {
+        "type_parameter" => {
+            // Rust names the declaration field. Java has a direct type
+            // identifier after optional annotations; bounds are nested.
+            return match parent.child_by_field_name("name") {
+                Some(name) => name == node,
+                None => node.kind() == "type_identifier",
+            };
+        }
+        "type_parameter_declaration" | "variadic_type_parameter_declaration" => {
+            return parent.named_child(0) == Some(node);
+        }
+        "optional_type_parameter_declaration" => {
+            return parent.child_by_field_name("name") == Some(node);
+        }
+        _ => {}
+    }
+    if parent.child_by_field_name("name") != Some(node) {
+        return false;
+    }
+    match parent.kind() {
+        "type_spec" | "type_alias" | "struct_item" | "enum_item" | "trait_item" | "type_item"
+        | "alias_declaration" => true,
+        "struct_specifier" | "union_specifier" | "enum_specifier" | "class_specifier" => {
+            parent.child_by_field_name("body").is_some()
+                || parent.parent().is_some_and(|declaration| {
+                    matches!(
+                        declaration.kind(),
+                        "translation_unit"
+                            | "declaration_list"
+                            | "compound_statement"
+                            | "field_declaration_list"
+                            | "template_declaration"
+                    ) || matches!(declaration.kind(), "declaration" | "field_declaration")
+                        && declaration.child_by_field_name("declarator").is_none()
+                })
+        }
+        _ => false,
+    }
+}
+
+/// Types can themselves own type uses (fields, variants and alias targets).
+fn find_type_reference_owner(file_nodes: &[CodeNode], line: u32, column: u32) -> Option<&CodeNode> {
+    file_nodes
+        .iter()
+        .filter(|node| {
+            matches!(
+                node.kind,
+                NodeKind::Function
+                    | NodeKind::Method
+                    | NodeKind::Class
+                    | NodeKind::Struct
+                    | NodeKind::Interface
+                    | NodeKind::Trait
+                    | NodeKind::Enum
+                    | NodeKind::TypeAlias
+            ) && (node.start_line, node.start_column) <= (line, column)
+                && (line, column) < (node.end_line, node.end_column)
+        })
+        .min_by_key(|node| {
+            (
+                node.end_line - node.start_line,
+                i64::from(node.end_column) - i64::from(node.start_column),
+            )
+        })
 }
 
 // ---------------------------------------------------------------------------
