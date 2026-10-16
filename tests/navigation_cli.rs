@@ -145,7 +145,7 @@ fn exploration_range_and_default_cwd_return_verified_source() {
     let text = String::from_utf8(output.stdout).unwrap();
     assert!(text.contains("pub fn helper() {}"));
     assert!(!text.contains("pub fn entry()"));
-    assert!(text.contains(&hash), "{text}");
+    assert!(!text.contains(&hash), "{text}");
     assert!(text.len() <= 24_001);
     let output = Command::new(env!("CARGO_BIN_EXE_codefacts"))
         .current_dir(fixture.root.path())
@@ -193,4 +193,32 @@ fn invalid_options_and_mcp_root_constraints_fail_explicitly() {
         .unwrap();
     assert_eq!(output.status.code(), Some(2));
     assert!(String::from_utf8_lossy(&output.stderr).contains("--state requires --root"));
+}
+
+#[test]
+fn default_alias_text_keeps_call_direction_and_locations_without_generated_hashes() {
+    let fixture = Fixture::new();
+    let hash = fixture.json(&["node", "helper"])["definition"]["evidence"]["source_hash"]
+        .as_str()
+        .unwrap()
+        .to_owned();
+    for (args, section, counterpart) in [
+        (&["node", "helper"][..], "callers", "entry"),
+        (&["callers", "helper"][..], "callers", "entry"),
+        (&["callees", "entry"][..], "callees", "helper"),
+    ] {
+        let output = fixture.run(args, false);
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        let text = String::from_utf8(output.stdout).unwrap();
+        for fact in [section, counterpart, "lib.rs:2", "static"] {
+            assert!(text.contains(fact), "missing {fact}: {text}");
+        }
+        assert!(!text.contains(&hash), "{text}");
+        assert!(!text.contains("source_hash"), "{text}");
+        assert!(!text.contains("format:"), "{text}");
+    }
 }

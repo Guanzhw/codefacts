@@ -1,8 +1,8 @@
-//! Compact MCP presentation. Facts and their uncertainty remain unchanged;
-//! shared hashes and relationship anchors are written once per response.
+//! Machine presentation and workflow-aware human views of canonical facts.
 
 use serde_json::{Map, Value};
 
+mod human;
 mod markdown;
 pub(crate) use markdown::render as markdown;
 
@@ -14,15 +14,12 @@ pub(crate) enum Format {
 }
 
 impl Format {
-    pub(crate) fn present(self, value: Value) -> Value {
-        if self == Self::Full {
-            return value;
+    pub(crate) fn present_for(self, workflow: &str, value: Value) -> Value {
+        match self {
+            Self::Full => value,
+            Self::Compact => compact(value),
+            Self::Markdown => human::project(workflow, value),
         }
-        let mut value = compact(value);
-        if self == Self::Markdown {
-            value["format"] = Value::from("markdown");
-        }
-        value
     }
 
     pub(crate) fn text(self, value: &Value) -> String {
@@ -79,6 +76,26 @@ fn compact_neighborhood(value: &mut Value) {
                 }
             }
         }
+    }
+}
+
+fn hide_hashes_and_nulls(value: &mut Value) {
+    match value {
+        Value::Object(fields) => {
+            if fields.contains_key("file_path") {
+                fields.remove("source_hash");
+            }
+            fields.retain(|_, value| !value.is_null());
+            for value in fields.values_mut() {
+                hide_hashes_and_nulls(value);
+            }
+        }
+        Value::Array(values) => {
+            for value in values {
+                hide_hashes_and_nulls(value);
+            }
+        }
+        _ => {}
     }
 }
 

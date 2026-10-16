@@ -277,7 +277,7 @@ impl CodeFacts {
             }
             result["truncated"] = json!(!next.is_empty());
             result["next"] = Value::Object(next);
-            let mut presented = format.present(result.clone());
+            let mut presented = format.present_for("expand", result.clone());
             if format == Format::Full {
                 return Ok(presented);
             }
@@ -397,7 +397,7 @@ fn note_semantic_omission(result: &mut Value, count: usize) {
 
 fn bounded_resolution_result(mut result: Value, format: Format) -> Result<Value> {
     loop {
-        let mut presented = format.present(result.clone());
+        let mut presented = format.present_for("expand", result.clone());
         presented["max_bytes"] = json!(COMPACT_EXPAND_BYTES);
         if format.text(&presented).len() <= COMPACT_EXPAND_BYTES {
             return Ok(presented);
@@ -455,11 +455,18 @@ mod tests {
                 .unwrap();
             let text = Format::Markdown.text(&page);
             assert!(text.len() <= COMPACT_EXPAND_BYTES);
-            assert_eq!(page["format"], "markdown");
             for edge in page["callees"].as_array().unwrap() {
-                assert_eq!(edge["evidence"]["confidence"], "static");
-                assert!(text.contains(edge["to"]["id"].as_str().unwrap()));
-                assert!(sites.insert(edge["evidence"]["start_line"].as_u64().unwrap()));
+                assert_eq!(edge["confidence"], "static");
+                assert!(edge["to"].as_str().unwrap().contains("helper_"));
+                let line = edge["callsite"]
+                    .as_str()
+                    .unwrap()
+                    .rsplit(':')
+                    .next()
+                    .unwrap()
+                    .parse::<u64>()
+                    .unwrap();
+                assert!(sites.insert(line));
             }
             let Some(next) = page["next"]["callees"].as_str() else {
                 break;
@@ -506,5 +513,64 @@ mod tests {
             page_offset_with_snapshot(Some(&encoded), 0, 9, &scope, None).unwrap(),
             PageOffset::Stale
         ));
+    }
+
+    #[test]
+    fn markdown_retains_repeated_target_sites_and_rejects_one_oversized_fact() {
+        let root = tempfile::tempdir().unwrap();
+        let state = tempfile::tempdir().unwrap();
+        let mut source = String::from("pub fn entry() {\n");
+        source.push_str(&"  helper();\n".repeat(80));
+        source.push_str("}\npub fn helper() {}\n");
+        fs::write(root.path().join("lib.rs"), source).unwrap();
+        let facts = CodeFacts::open(root.path(), state.path().join("facts.sqlite")).unwrap();
+        let mut cursor = None;
+        let mut sites = std::collections::BTreeSet::new();
+        loop {
+            let page = facts
+                .expand_page_with_format(
+                    "entry",
+                    None,
+                    ExpandSection::Callees,
+                    cursor.as_deref(),
+                    Some(50),
+                    Format::Markdown,
+                )
+                .unwrap();
+            assert!(Format::Markdown.text(&page).len() <= COMPACT_EXPAND_BYTES);
+            for relationship in page["callees"].as_array().unwrap() {
+                assert_eq!(relationship["to"], "function helper @ lib.rs:83");
+                assert!(sites.insert(relationship["callsite"].as_str().unwrap().to_owned()));
+            }
+            let Some(next) = page["next"]["callees"].as_str() else {
+                break;
+            };
+            assert_ne!(cursor.as_deref(), Some(next));
+            cursor = Some(next.to_owned());
+        }
+        assert_eq!(sites.len(), 80);
+
+        let huge_name = format!("helper_{}", "x".repeat(COMPACT_EXPAND_BYTES));
+        fs::write(
+            root.path().join("lib.rs"),
+            format!("pub fn entry() {{ {huge_name}(); }}\npub fn {huge_name}() {{}}\n"),
+        )
+        .unwrap();
+        let error = facts
+            .expand_page_with_format(
+                "entry",
+                None,
+                ExpandSection::Callees,
+                None,
+                Some(1),
+                Format::Markdown,
+            )
+            .unwrap_err();
+        assert!(
+            error
+                .to_string()
+                .contains("One fact exceeds the response text budget"),
+            "{error}"
+        );
     }
 }

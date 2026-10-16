@@ -179,18 +179,33 @@ availability/status contract.
 
 ### Response formats
 
-The exact-fact tools and `impact` default to `format: "compact"`; `explore`
-returns one bounded text body. File hashes occur once in
-`source_hashes[file_path]`; evidence retains its file, line range, extractor and
-confidence. Null fields and zero refresh counters are omitted; a missing refresh
-counter means zero. Repository identity, generation and freshness status remain.
-Empty result arrays remain explicit.
+MCP calls default to agent-readable Markdown, matching the direct CLI. The
+response is text-only: it appears in `content[0].text` without a duplicate
+`structuredContent`. `explore` is always text-only. The default projection
+states useful facts once and omits raw source hashes, routine counters and
+repeated endpoint or locator fields. It keeps repository identity, freshness
+and generation, partial-source reasons, exact locations, uncertainty and
+relationship direction, active cutoffs, and usable continuation cursors. Small
+exploration owners include complete source when it fits; otherwise the result
+labels the preview and its omitted owner lines. Source hashing and disk
+verification remain internal.
 
-In an `expand` neighborhood, `definition` is the relationship anchor. Callers
-and inbound references omit the repeated `to`; callees and outbound references
-omit the repeated `from`. The remaining endpoint and call-site evidence keep
-their original field names. A search `context_entries` neighborhood uses its
-own `symbol` as the anchor. `path` retains its ordered-node/edge representation.
+Clients that require the previous machine-readable result shapes should request
+`format: "compact"` or `format: "full"` explicitly on structured workflows.
+These modes retain their existing schemas, hash fields and JSON in both
+`content[0].text` and `structuredContent`; `full` retains its complete evidence
+detail. `explore` remains text-only. This changes the omitted-format MCP
+contract, so JSON clients should select their format explicitly.
+
+#### Explicit Compact JSON
+
+In a Compact `expand` neighborhood, `definition` is the relationship anchor.
+Callers and inbound references omit the repeated `to`; callees and outbound
+references omit the repeated `from`. The remaining endpoint and call-site
+evidence keep their original field names. A search `context_entries`
+neighborhood uses its own `symbol` as the anchor. `path` retains its
+ordered-node/edge representation. Shared source hashes remain in
+`source_hashes[file_path]`.
 
 Compact `expand` responses are capped at **16 KiB of serialized JSON text**,
 including shared hashes and cursors. `limit` is a per-section maximum; the total
@@ -199,7 +214,7 @@ to cursors. Continue only the section needed, with the same symbol and optional
 file disambiguator, for example:
 
 ```json
-{"symbol":"getRuntimeProtocol","file_path":"src/protocol-runtime.ts","section":"callees","cursor":"<value from next.callees>"}
+{"symbol":"getRuntimeProtocol","file_path":"src/protocol-runtime.ts","section":"callees","cursor":"<value from next.callees>","format":"compact"}
 ```
 
 Selected sections return their facts and the definition, without repeating the
@@ -214,27 +229,20 @@ cursors remain accepted while their source and semantic snapshots are current.
 Source excerpts still report their own truncation. An oversized ambiguous
 candidate list is explicitly truncated and asks for a file or paged search.
 
-This changes the default MCP output shape. Consumers that need the previous
-nested evidence can request `format: "full"`; `expand` with that format and no
-section/cursor retains the original per-category limit and has no 16 KiB cap.
-The Rust service's existing `expand` method retains its original response.
+`expand` in explicit `full` format, without a section or cursor, retains the
+original per-category limit and has no 16 KiB cap. The Rust service's existing
+`expand` method retains its original response.
 
-Use `format: "markdown"` for an agent-readable text response with the same
-compact facts. Repeated fact fields share a table header; nested sections keep
-each definition/context anchor explicit, and multiline source uses code blocks.
-Hashes, confidence, resolution, empty results, truncation and continuation are
-retained. Markdown mode emits only `content[0].text`, with no duplicate
-`structuredContent`; consumers that parse JSON should use `compact` or `full`.
-
-Markdown `expand` uses the same **16 KiB** limit, measured on its actual rendered
-text. Page sizes can therefore differ from JSON. Continue the section named in
-`next` using the returned cursor and `format: "markdown"`. Source excerpts have
-their own 4 KiB limit and explicitly report truncation, including a cut within
-a single line. Read the cited source range when the excerpt is incomplete.
+Markdown `expand` uses the same **16 KiB** limit, measured on the final rendered
+UTF-8 text. Page sizes can differ from explicit Compact JSON. Continue the
+section named in `next` with the returned cursor; Markdown is the default, or
+request `format: "markdown"` explicitly. Source excerpts have their own 4 KiB
+limit and report truncation, including a cut within a single line. Read the
+cited source range when the excerpt is incomplete.
 
 The [Markdown acceptance report](docs/MARKDOWN-ACCEPTANCE-2026-09-20.md)
-records smaller native responses and mixed real Luna task costs. Compact JSON
-remains the default; response-size reductions do not guarantee task savings.
+records an earlier presentation experiment and its mixed real Luna task costs.
+Text-size reductions alone do not establish model-token or task savings.
 
 `map.files_with_facts` is the number of indexed files that currently own at
 least one fact, while `map.indexed_files` is every successfully parsed,

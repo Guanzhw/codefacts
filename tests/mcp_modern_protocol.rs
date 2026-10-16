@@ -43,7 +43,7 @@ fn stdio_server_supports_stateless_2026_07_28_requests() {
 
     let mut call_params = Map::new();
     call_params.insert("name".into(), Value::String("map".into()));
-    call_params.insert("arguments".into(), json!({}));
+    call_params.insert("arguments".into(), json!({"format":"full"}));
     call_params.insert("_meta".into(), modern_meta(MODERN_PROTOCOL_VERSION));
     let requests = [
         json!({"jsonrpc":"2.0", "id":1, "method":"server/discover", "params":modern_params(MODERN_PROTOCOL_VERSION)}),
