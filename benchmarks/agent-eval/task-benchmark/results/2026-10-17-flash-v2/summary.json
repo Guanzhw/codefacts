@@ -1,0 +1,2296 @@
+{
+  "schemaVersion": 1,
+  "suiteId": "codefacts-agent-investigation-six-v2",
+  "metadata": {
+    "campaignId": "source-investigation-six-v2-flash-20261017",
+    "model": {
+      "provider": "opencode-go",
+      "id": "deepseek-v4.1-flash",
+      "reasoningEffort": "high"
+    },
+    "plannedAttempts": 96,
+    "observedAttempts": 96,
+    "pending": [],
+    "taskScope": "read-only source investigation",
+    "timing": "fresh DSH process launch through exit; index preparation separate",
+    "concurrency": 1,
+    "partialUsageRecoveryEnabled": true,
+    "runtimeVersions": {
+      "dsh": "0.2.0-rc.2",
+      "node": "v26.5.1",
+      "analysisNode": "v26.5.1",
+      "mcpSdk": "1.30.0"
+    },
+    "platform": {
+      "os": "win32",
+      "architecture": "x64"
+    },
+    "sourceCommits": [
+      {
+        "id": "router",
+        "repo": "delvedor/find-my-way",
+        "commit": "c47c38df20e4c983c1d5983fd528b1efd0312524"
+      },
+      {
+        "id": "globset",
+        "repo": "BurntSushi/ripgrep",
+        "commit": "3fce3b5bb0236da2df6d99672afb8a719642eca7"
+      },
+      {
+        "id": "ghcli",
+        "repo": "cli/cli",
+        "commit": "2c153f50dad5bc14d49fa0813b2c35fb0fd05103"
+      }
+    ],
+    "toolVersions": [
+      {
+        "id": "ordinary",
+        "version": null
+      },
+      {
+        "id": "codefacts017",
+        "version": "0.1.7",
+        "artifactKind": "exact-tag source build, Rust1.93.1"
+      },
+      {
+        "id": "codefacts022",
+        "version": "0.2.2",
+        "artifactKind": "exact-tag source build, Rust1.93.1"
+      },
+      {
+        "id": "codegraph",
+        "version": "1.6.2",
+        "sourceCommit": "6560052a6f856855d3f71eee838fd66ccfa4285d"
+      }
+    ],
+    "analysisInputs": [
+      {
+        "name": "collect.mjs",
+        "sha256": "16a72eff1d5d41a557110955070fb5e60975a41f99de0df65b4c20c739d35a9c"
+      },
+      {
+        "name": "summary.mjs",
+        "sha256": "b353695820b4d58cac97aed13f83b12a10a314f5dd5ddb264c793519eb4d9092"
+      },
+      {
+        "name": "usage-recovery.mjs",
+        "sha256": "0261e299a63d738d6fab94e4d9e4e61f345d06cb10944074a7a97f433afcbafb"
+      }
+    ]
+  },
+  "groups": [
+    {
+      "condition": "guided-use",
+      "arm": "ordinary",
+      "attempts": 18,
+      "completed": 18,
+      "failed": 0,
+      "invalidEnvironment": 0,
+      "fullyCorrect": 9,
+      "validTrace": 18,
+      "adherentTrace": 18,
+      "wallMs": {
+        "allAttemptTotal": 699498.3537000001,
+        "median": 35132.97074999995
+      },
+      "setupMsTotal": 0,
+      "tokens": {
+        "authoritativeTotal": 3014603,
+        "authoritativeTotalIsLowerBound": false,
+        "knownExactTotal": 3014603,
+        "knownLowerBoundFromIncomplete": 0,
+        "knownLowerBoundSamples": 0,
+        "uncachedInputLowerBoundFromIncomplete": 0,
+        "outputLowerBoundFromIncomplete": 0,
+        "workloadTotalIsLowerBound": false,
+        "coverage": {
+          "known": 18,
+          "unknown": 0,
+          "total": 18
+        },
+        "meanKnownSampleTotal": 167477.94444444444,
+        "medianKnownSampleTotal": 128977.5,
+        "fullInputTotalKnownOnly": 2940462,
+        "fullInputTotalDefinition": "sum(totalTokens - outputTokens) across exact-usage workload runs; authoritative totalTokens equals all input tokens plus output tokens",
+        "uncachedInputTotalKnownOnly": 393774,
+        "outputTotalKnownOnly": 74141,
+        "cacheReadTotalKnownOnly": null,
+        "cacheWriteTotalKnownOnly": null,
+        "reasoningTotalKnownOnly": null,
+        "costPerCorrect": 334955.8888888889
+      },
+      "nativeActualCalls": 0,
+      "nativeSuccessfulCalls": 0,
+      "nativeAdoptionTasks": 0,
+      "ordinaryActualCalls": 362,
+      "setupAmortizedStageCostEstimateMs": [
+        {
+          "amortizedUses": 1,
+          "estimatedMsPerUse": 35167.739499999945
+        },
+        {
+          "amortizedUses": 10,
+          "estimatedMsPerUse": 35167.739499999945
+        },
+        {
+          "amortizedUses": 100,
+          "estimatedMsPerUse": 35167.739499999945
+        }
+      ]
+    },
+    {
+      "condition": "guided-use",
+      "arm": "codefacts017",
+      "attempts": 18,
+      "completed": 18,
+      "failed": 0,
+      "invalidEnvironment": 0,
+      "fullyCorrect": 9,
+      "validTrace": 18,
+      "adherentTrace": 18,
+      "wallMs": {
+        "allAttemptTotal": 718555.0984999998,
+        "median": 38454.97094999999
+      },
+      "setupMsTotal": 39702.93480000084,
+      "tokens": {
+        "authoritativeTotal": 3357536,
+        "authoritativeTotalIsLowerBound": false,
+        "knownExactTotal": 3357536,
+        "knownLowerBoundFromIncomplete": 0,
+        "knownLowerBoundSamples": 0,
+        "uncachedInputLowerBoundFromIncomplete": 0,
+        "outputLowerBoundFromIncomplete": 0,
+        "workloadTotalIsLowerBound": false,
+        "coverage": {
+          "known": 18,
+          "unknown": 0,
+          "total": 18
+        },
+        "meanKnownSampleTotal": 186529.77777777778,
+        "medianKnownSampleTotal": 176728.5,
+        "fullInputTotalKnownOnly": 3284970,
+        "fullInputTotalDefinition": "sum(totalTokens - outputTokens) across exact-usage workload runs; authoritative totalTokens equals all input tokens plus output tokens",
+        "uncachedInputTotalKnownOnly": 451306,
+        "outputTotalKnownOnly": 72566,
+        "cacheReadTotalKnownOnly": null,
+        "cacheWriteTotalKnownOnly": null,
+        "reasoningTotalKnownOnly": null,
+        "costPerCorrect": 373059.55555555556
+      },
+      "nativeActualCalls": 68,
+      "nativeSuccessfulCalls": 67,
+      "nativeAdoptionTasks": 6,
+      "ordinaryActualCalls": 305,
+      "setupAmortizedStageCostEstimateMs": [
+        {
+          "amortizedUses": 1,
+          "estimatedMsPerUse": 40623.059999999925
+        },
+        {
+          "amortizedUses": 10,
+          "estimatedMsPerUse": 39827.448344999924
+        },
+        {
+          "amortizedUses": 100,
+          "estimatedMsPerUse": 39747.88717949992
+        }
+      ]
+    },
+    {
+      "condition": "guided-use",
+      "arm": "codefacts022",
+      "attempts": 18,
+      "completed": 18,
+      "failed": 0,
+      "invalidEnvironment": 0,
+      "fullyCorrect": 8,
+      "validTrace": 18,
+      "adherentTrace": 17,
+      "wallMs": {
+        "allAttemptTotal": 601800.7557999996,
+        "median": 31985.248249999946
+      },
+      "setupMsTotal": 42054.67340000035,
+      "tokens": {
+        "authoritativeTotal": 2193241,
+        "authoritativeTotalIsLowerBound": false,
+        "knownExactTotal": 2193241,
+        "knownLowerBoundFromIncomplete": 0,
+        "knownLowerBoundSamples": 0,
+        "uncachedInputLowerBoundFromIncomplete": 0,
+        "outputLowerBoundFromIncomplete": 0,
+        "workloadTotalIsLowerBound": false,
+        "coverage": {
+          "known": 18,
+          "unknown": 0,
+          "total": 18
+        },
+        "meanKnownSampleTotal": 121846.72222222222,
+        "medianKnownSampleTotal": 107086.5,
+        "fullInputTotalKnownOnly": 2133298,
+        "fullInputTotalDefinition": "sum(totalTokens - outputTokens) across exact-usage workload runs; authoritative totalTokens equals all input tokens plus output tokens",
+        "uncachedInputTotalKnownOnly": 369330,
+        "outputTotalKnownOnly": 59943,
+        "cacheReadTotalKnownOnly": null,
+        "cacheWriteTotalKnownOnly": null,
+        "reasoningTotalKnownOnly": null,
+        "costPerCorrect": 274155.125
+      },
+      "nativeActualCalls": 26,
+      "nativeSuccessfulCalls": 26,
+      "nativeAdoptionTasks": 6,
+      "ordinaryActualCalls": 254,
+      "setupAmortizedStageCostEstimateMs": [
+        {
+          "amortizedUses": 1,
+          "estimatedMsPerUse": 32480.528600000027
+        },
+        {
+          "amortizedUses": 10,
+          "estimatedMsPerUse": 31754.72522000004
+        },
+        {
+          "amortizedUses": 100,
+          "estimatedMsPerUse": 31682.144882000044
+        }
+      ]
+    },
+    {
+      "condition": "guided-use",
+      "arm": "codegraph",
+      "attempts": 18,
+      "completed": 18,
+      "failed": 0,
+      "invalidEnvironment": 0,
+      "fullyCorrect": 6,
+      "validTrace": 18,
+      "adherentTrace": 18,
+      "wallMs": {
+        "allAttemptTotal": 547910.3559999999,
+        "median": 30274.0484999998
+      },
+      "setupMsTotal": 78404.23789999998,
+      "tokens": {
+        "authoritativeTotal": 2396966,
+        "authoritativeTotalIsLowerBound": false,
+        "knownExactTotal": 2396966,
+        "knownLowerBoundFromIncomplete": 0,
+        "knownLowerBoundSamples": 0,
+        "uncachedInputLowerBoundFromIncomplete": 0,
+        "outputLowerBoundFromIncomplete": 0,
+        "workloadTotalIsLowerBound": false,
+        "coverage": {
+          "known": 18,
+          "unknown": 0,
+          "total": 18
+        },
+        "meanKnownSampleTotal": 133164.77777777778,
+        "medianKnownSampleTotal": 118278,
+        "fullInputTotalKnownOnly": 2342495,
+        "fullInputTotalDefinition": "sum(totalTokens - outputTokens) across exact-usage workload runs; authoritative totalTokens equals all input tokens plus output tokens",
+        "uncachedInputTotalKnownOnly": 435807,
+        "outputTotalKnownOnly": 54471,
+        "cacheReadTotalKnownOnly": null,
+        "cacheWriteTotalKnownOnly": null,
+        "reasoningTotalKnownOnly": null,
+        "costPerCorrect": 399494.3333333333
+      },
+      "nativeActualCalls": 49,
+      "nativeSuccessfulCalls": 49,
+      "nativeAdoptionTasks": 6,
+      "ordinaryActualCalls": 155,
+      "setupAmortizedStageCostEstimateMs": [
+        {
+          "amortizedUses": 1,
+          "estimatedMsPerUse": 33178.41079999972
+        },
+        {
+          "amortizedUses": 10,
+          "estimatedMsPerUse": 30564.484729999793
+        },
+        {
+          "amortizedUses": 100,
+          "estimatedMsPerUse": 30303.0921229998
+        }
+      ]
+    },
+    {
+      "condition": "natural-choice",
+      "arm": "ordinary",
+      "attempts": 6,
+      "completed": 3,
+      "failed": 3,
+      "invalidEnvironment": 0,
+      "fullyCorrect": 2,
+      "validTrace": 6,
+      "adherentTrace": 3,
+      "wallMs": {
+        "allAttemptTotal": 128766.4888999993,
+        "median": 17380.079599999823
+      },
+      "setupMsTotal": 0,
+      "tokens": {
+        "authoritativeTotal": 372896,
+        "authoritativeTotalIsLowerBound": true,
+        "knownExactTotal": 372896,
+        "knownLowerBoundFromIncomplete": 0,
+        "knownLowerBoundSamples": 0,
+        "uncachedInputLowerBoundFromIncomplete": 0,
+        "outputLowerBoundFromIncomplete": 0,
+        "workloadTotalIsLowerBound": true,
+        "coverage": {
+          "known": 3,
+          "unknown": 3,
+          "total": 6
+        },
+        "meanKnownSampleTotal": 124298.66666666667,
+        "medianKnownSampleTotal": 122654,
+        "fullInputTotalKnownOnly": null,
+        "fullInputTotalDefinition": "sum(totalTokens - outputTokens) across exact-usage workload runs; authoritative totalTokens equals all input tokens plus output tokens",
+        "uncachedInputTotalKnownOnly": null,
+        "outputTotalKnownOnly": null,
+        "cacheReadTotalKnownOnly": null,
+        "cacheWriteTotalKnownOnly": null,
+        "reasoningTotalKnownOnly": null,
+        "costPerCorrect": null
+      },
+      "nativeActualCalls": 0,
+      "nativeSuccessfulCalls": 0,
+      "nativeAdoptionTasks": 0,
+      "ordinaryActualCalls": 49,
+      "setupAmortizedStageCostEstimateMs": [
+        {
+          "amortizedUses": 1,
+          "estimatedMsPerUse": 17380.079599999823
+        },
+        {
+          "amortizedUses": 10,
+          "estimatedMsPerUse": 17380.079599999823
+        },
+        {
+          "amortizedUses": 100,
+          "estimatedMsPerUse": 17380.079599999823
+        }
+      ]
+    },
+    {
+      "condition": "natural-choice",
+      "arm": "codefacts017",
+      "attempts": 6,
+      "completed": 6,
+      "failed": 0,
+      "invalidEnvironment": 0,
+      "fullyCorrect": 2,
+      "validTrace": 6,
+      "adherentTrace": 6,
+      "wallMs": {
+        "allAttemptTotal": 224588.50449999934,
+        "median": 33101.14589999989
+      },
+      "setupMsTotal": 12998.443100000266,
+      "tokens": {
+        "authoritativeTotal": 836869,
+        "authoritativeTotalIsLowerBound": false,
+        "knownExactTotal": 836869,
+        "knownLowerBoundFromIncomplete": 0,
+        "knownLowerBoundSamples": 0,
+        "uncachedInputLowerBoundFromIncomplete": 0,
+        "outputLowerBoundFromIncomplete": 0,
+        "workloadTotalIsLowerBound": false,
+        "coverage": {
+          "known": 6,
+          "unknown": 0,
+          "total": 6
+        },
+        "meanKnownSampleTotal": 139478.16666666666,
+        "medianKnownSampleTotal": 125330,
+        "fullInputTotalKnownOnly": 816037,
+        "fullInputTotalDefinition": "sum(totalTokens - outputTokens) across exact-usage workload runs; authoritative totalTokens equals all input tokens plus output tokens",
+        "uncachedInputTotalKnownOnly": 124709,
+        "outputTotalKnownOnly": 20832,
+        "cacheReadTotalKnownOnly": null,
+        "cacheWriteTotalKnownOnly": null,
+        "reasoningTotalKnownOnly": null,
+        "costPerCorrect": 418434.5
+      },
+      "nativeActualCalls": 12,
+      "nativeSuccessfulCalls": 12,
+      "nativeAdoptionTasks": 6,
+      "ordinaryActualCalls": 99,
+      "setupAmortizedStageCostEstimateMs": [
+        {
+          "amortizedUses": 1,
+          "estimatedMsPerUse": 33966.73924999987
+        },
+        {
+          "amortizedUses": 10,
+          "estimatedMsPerUse": 33187.705234999885
+        },
+        {
+          "amortizedUses": 100,
+          "estimatedMsPerUse": 33109.801833499885
+        }
+      ]
+    },
+    {
+      "condition": "natural-choice",
+      "arm": "codefacts022",
+      "attempts": 6,
+      "completed": 6,
+      "failed": 0,
+      "invalidEnvironment": 0,
+      "fullyCorrect": 1,
+      "validTrace": 6,
+      "adherentTrace": 6,
+      "wallMs": {
+        "allAttemptTotal": 279531.8426999999,
+        "median": 39004.40945000015
+      },
+      "setupMsTotal": 13382.797199999448,
+      "tokens": {
+        "authoritativeTotal": 1216935,
+        "authoritativeTotalIsLowerBound": false,
+        "knownExactTotal": 1216935,
+        "knownLowerBoundFromIncomplete": 0,
+        "knownLowerBoundSamples": 0,
+        "uncachedInputLowerBoundFromIncomplete": 0,
+        "outputLowerBoundFromIncomplete": 0,
+        "workloadTotalIsLowerBound": false,
+        "coverage": {
+          "known": 6,
+          "unknown": 0,
+          "total": 6
+        },
+        "meanKnownSampleTotal": 202822.5,
+        "medianKnownSampleTotal": 187681.5,
+        "fullInputTotalKnownOnly": 1195482,
+        "fullInputTotalDefinition": "sum(totalTokens - outputTokens) across exact-usage workload runs; authoritative totalTokens equals all input tokens plus output tokens",
+        "uncachedInputTotalKnownOnly": 157274,
+        "outputTotalKnownOnly": 21453,
+        "cacheReadTotalKnownOnly": null,
+        "cacheWriteTotalKnownOnly": null,
+        "reasoningTotalKnownOnly": null,
+        "costPerCorrect": 1216935
+      },
+      "nativeActualCalls": 5,
+      "nativeSuccessfulCalls": 5,
+      "nativeAdoptionTasks": 5,
+      "ordinaryActualCalls": 119,
+      "setupAmortizedStageCostEstimateMs": [
+        {
+          "amortizedUses": 1,
+          "estimatedMsPerUse": 39815.78729999997
+        },
+        {
+          "amortizedUses": 10,
+          "estimatedMsPerUse": 39085.54723500014
+        },
+        {
+          "amortizedUses": 100,
+          "estimatedMsPerUse": 39012.52322850015
+        }
+      ]
+    },
+    {
+      "condition": "natural-choice",
+      "arm": "codegraph",
+      "attempts": 6,
+      "completed": 6,
+      "failed": 0,
+      "invalidEnvironment": 0,
+      "fullyCorrect": 2,
+      "validTrace": 6,
+      "adherentTrace": 6,
+      "wallMs": {
+        "allAttemptTotal": 204060.0394000006,
+        "median": 29579.53970000008
+      },
+      "setupMsTotal": 25512.576299999375,
+      "tokens": {
+        "authoritativeTotal": 994846,
+        "authoritativeTotalIsLowerBound": false,
+        "knownExactTotal": 994846,
+        "knownLowerBoundFromIncomplete": 0,
+        "knownLowerBoundSamples": 0,
+        "uncachedInputLowerBoundFromIncomplete": 0,
+        "outputLowerBoundFromIncomplete": 0,
+        "workloadTotalIsLowerBound": false,
+        "coverage": {
+          "known": 6,
+          "unknown": 0,
+          "total": 6
+        },
+        "meanKnownSampleTotal": 165807.66666666666,
+        "medianKnownSampleTotal": 169247.5,
+        "fullInputTotalKnownOnly": 977828,
+        "fullInputTotalDefinition": "sum(totalTokens - outputTokens) across exact-usage workload runs; authoritative totalTokens equals all input tokens plus output tokens",
+        "uncachedInputTotalKnownOnly": 163236,
+        "outputTotalKnownOnly": 17018,
+        "cacheReadTotalKnownOnly": 814592,
+        "cacheWriteTotalKnownOnly": null,
+        "reasoningTotalKnownOnly": null,
+        "costPerCorrect": 497423
+      },
+      "nativeActualCalls": 16,
+      "nativeSuccessfulCalls": 16,
+      "nativeAdoptionTasks": 6,
+      "ordinaryActualCalls": 61,
+      "setupAmortizedStageCostEstimateMs": [
+        {
+          "amortizedUses": 1,
+          "estimatedMsPerUse": 32475.579600000056
+        },
+        {
+          "amortizedUses": 10,
+          "estimatedMsPerUse": 29869.143690000077
+        },
+        {
+          "amortizedUses": 100,
+          "estimatedMsPerUse": 29608.50009900008
+        }
+      ]
+    }
+  ],
+  "comparisons": [
+    {
+      "condition": "guided-use",
+      "baselineArm": "ordinary",
+      "candidateArm": "codefacts017",
+      "possiblePairs": 18,
+      "eligiblePairs": 8,
+      "medianTokenDeltaPct": 34.3440761915832,
+      "medianWallDeltaPct": 12.509497849734075,
+      "claimableEffect": true,
+      "eligible": [
+        {
+          "taskId": "ghcli-01",
+          "repetition": 3,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts017",
+          "baselineTotalTokens": 265543,
+          "candidateTotalTokens": 317029,
+          "tokenDeltaPct": 19.38895018885831,
+          "baselineWallMs": 50155.18960000016,
+          "candidateWallMs": 53001.14540000027,
+          "wallDeltaPct": 5.674299753818701
+        },
+        {
+          "taskId": "globset-02",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts017",
+          "baselineTotalTokens": 146045,
+          "candidateTotalTokens": 175723,
+          "tokenDeltaPct": 20.32113389708652,
+          "baselineWallMs": 35072.123300000036,
+          "candidateWallMs": 33922.98810000002,
+          "wallDeltaPct": -3.276491674514659
+        },
+        {
+          "taskId": "globset-02",
+          "repetition": 2,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts017",
+          "baselineTotalTokens": 125337,
+          "candidateTotalTokens": 203312,
+          "tokenDeltaPct": 62.21227570470014,
+          "baselineWallMs": 34381.16069999989,
+          "candidateWallMs": 41032.09169999999,
+          "wallDeltaPct": 19.34469594564945
+        },
+        {
+          "taskId": "globset-02",
+          "repetition": 3,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts017",
+          "baselineTotalTokens": 112463,
+          "candidateTotalTokens": 166858,
+          "tokenDeltaPct": 48.36701848607987,
+          "baselineWallMs": 28640.94700000016,
+          "candidateWallMs": 34517.03339999984,
+          "wallDeltaPct": 20.516383065125776
+        },
+        {
+          "taskId": "router-01",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts017",
+          "baselineTotalTokens": 91335,
+          "candidateTotalTokens": 236686,
+          "tokenDeltaPct": 159.14052663272565,
+          "baselineWallMs": 35954.3183,
+          "candidateWallMs": 44961.0607,
+          "wallDeltaPct": 25.050516393742896
+        },
+        {
+          "taskId": "router-01",
+          "repetition": 2,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts017",
+          "baselineTotalTokens": 110896,
+          "candidateTotalTokens": 258786,
+          "tokenDeltaPct": 133.3591833790218,
+          "baselineWallMs": 31462.5135,
+          "candidateWallMs": 52794.65320000006,
+          "wallDeltaPct": 67.80176574258778
+        },
+        {
+          "taskId": "router-01",
+          "repetition": 3,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts017",
+          "baselineTotalTokens": 162782,
+          "candidateTotalTokens": 177734,
+          "tokenDeltaPct": 9.185290756963305,
+          "baselineWallMs": 46614.8703999999,
+          "candidateWallMs": 39741.57150000008,
+          "wallDeltaPct": -14.744863261487984
+        },
+        {
+          "taskId": "router-02",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts017",
+          "baselineTotalTokens": 179559,
+          "candidateTotalTokens": 172482,
+          "tokenDeltaPct": -3.9413229077907563,
+          "baselineWallMs": 40170.3095,
+          "candidateWallMs": 34470.037899999996,
+          "wallDeltaPct": -14.19026059532852
+        }
+      ],
+      "excluded": [
+        {
+          "taskId": "ghcli-01",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-01",
+          "repetition": 2,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-02",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-02",
+          "repetition": 2,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-02",
+          "repetition": 3,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-01",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-01",
+          "repetition": 2,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-01",
+          "repetition": 3,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "router-02",
+          "repetition": 2,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "router-02",
+          "repetition": 3,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        }
+      ],
+      "exclusionReasonCounts": {
+        "baseline:not-fully-correct": 9,
+        "candidate:not-fully-correct": 9
+      }
+    },
+    {
+      "condition": "guided-use",
+      "baselineArm": "ordinary",
+      "candidateArm": "codefacts022",
+      "possiblePairs": 18,
+      "eligiblePairs": 6,
+      "medianTokenDeltaPct": -30.97301316104768,
+      "medianWallDeltaPct": -24.57848313092305,
+      "claimableEffect": true,
+      "eligible": [
+        {
+          "taskId": "ghcli-01",
+          "repetition": 2,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts022",
+          "baselineTotalTokens": 694413,
+          "candidateTotalTokens": 276035,
+          "tokenDeltaPct": -60.24916008196851,
+          "baselineWallMs": 84337.12030000007,
+          "candidateWallMs": 48284.70830000006,
+          "wallDeltaPct": -42.74797606529136
+        },
+        {
+          "taskId": "globset-02",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts022",
+          "baselineTotalTokens": 146045,
+          "candidateTotalTokens": 113009,
+          "tokenDeltaPct": -22.620425211407447,
+          "baselineWallMs": 35072.123300000036,
+          "candidateWallMs": 27946.05429999996,
+          "wallDeltaPct": -20.31832786126202
+        },
+        {
+          "taskId": "globset-02",
+          "repetition": 3,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts022",
+          "baselineTotalTokens": 112463,
+          "candidateTotalTokens": 153479,
+          "tokenDeltaPct": 36.47066146199194,
+          "baselineWallMs": 28640.94700000016,
+          "candidateWallMs": 31745.847000000067,
+          "wallDeltaPct": 10.840772827797519
+        },
+        {
+          "taskId": "router-01",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts022",
+          "baselineTotalTokens": 91335,
+          "candidateTotalTokens": 101164,
+          "tokenDeltaPct": 10.761482454699722,
+          "baselineWallMs": 35954.3183,
+          "candidateWallMs": 31602.313800000018,
+          "wallDeltaPct": -12.104260922671928
+        },
+        {
+          "taskId": "router-01",
+          "repetition": 2,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts022",
+          "baselineTotalTokens": 110896,
+          "candidateTotalTokens": 60451,
+          "tokenDeltaPct": -45.48856586351175,
+          "baselineWallMs": 31462.5135,
+          "candidateWallMs": 22389.15300000005,
+          "wallDeltaPct": -28.83863840058408
+        },
+        {
+          "taskId": "router-01",
+          "repetition": 3,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts022",
+          "baselineTotalTokens": 162782,
+          "candidateTotalTokens": 98767,
+          "tokenDeltaPct": -39.32560111068791,
+          "baselineWallMs": 46614.8703999999,
+          "candidateWallMs": 32224.649499999825,
+          "wallDeltaPct": -30.870451374246667
+        }
+      ],
+      "excluded": [
+        {
+          "taskId": "ghcli-01",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-01",
+          "repetition": 3,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-02",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-02",
+          "repetition": 2,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-02",
+          "repetition": 3,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-01",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-01",
+          "repetition": 2,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-01",
+          "repetition": 3,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-02",
+          "repetition": 2,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "candidate:not-fully-correct",
+            "candidate:trace-nonadherent"
+          ]
+        },
+        {
+          "taskId": "router-02",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "router-02",
+          "repetition": 2,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "router-02",
+          "repetition": 3,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        }
+      ],
+      "exclusionReasonCounts": {
+        "baseline:not-fully-correct": 9,
+        "candidate:not-fully-correct": 10,
+        "candidate:trace-nonadherent": 1
+      }
+    },
+    {
+      "condition": "guided-use",
+      "baselineArm": "ordinary",
+      "candidateArm": "codegraph",
+      "possiblePairs": 18,
+      "eligiblePairs": 5,
+      "medianTokenDeltaPct": -56.48843238195869,
+      "medianWallDeltaPct": -41.67806715027152,
+      "claimableEffect": true,
+      "eligible": [
+        {
+          "taskId": "ghcli-01",
+          "repetition": 2,
+          "baselineArm": "ordinary",
+          "candidateArm": "codegraph",
+          "baselineTotalTokens": 694413,
+          "candidateTotalTokens": 204857,
+          "tokenDeltaPct": -70.49925620632102,
+          "baselineWallMs": 84337.12030000007,
+          "candidateWallMs": 33013.03420000011,
+          "wallDeltaPct": -60.85586740148622
+        },
+        {
+          "taskId": "globset-02",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codegraph",
+          "baselineTotalTokens": 146045,
+          "candidateTotalTokens": 51779,
+          "tokenDeltaPct": -64.54585915300079,
+          "baselineWallMs": 35072.123300000036,
+          "candidateWallMs": 20454.7402,
+          "wallDeltaPct": -41.67806715027152
+        },
+        {
+          "taskId": "router-01",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codegraph",
+          "baselineTotalTokens": 91335,
+          "candidateTotalTokens": 139208,
+          "tokenDeltaPct": 52.41473695735479,
+          "baselineWallMs": 35954.3183,
+          "candidateWallMs": 32137.656200000012,
+          "wallDeltaPct": -10.615309315988297
+        },
+        {
+          "taskId": "router-01",
+          "repetition": 2,
+          "baselineArm": "ordinary",
+          "candidateArm": "codegraph",
+          "baselineTotalTokens": 110896,
+          "candidateTotalTokens": 86606,
+          "tokenDeltaPct": -21.903404992064633,
+          "baselineWallMs": 31462.5135,
+          "candidateWallMs": 32465.748900000006,
+          "wallDeltaPct": 3.188668953610474
+        },
+        {
+          "taskId": "router-01",
+          "repetition": 3,
+          "baselineArm": "ordinary",
+          "candidateArm": "codegraph",
+          "baselineTotalTokens": 162782,
+          "candidateTotalTokens": 70829,
+          "tokenDeltaPct": -56.48843238195869,
+          "baselineWallMs": 46614.8703999999,
+          "candidateWallMs": 20994.73890000023,
+          "wallDeltaPct": -54.96128441451105
+        }
+      ],
+      "excluded": [
+        {
+          "taskId": "ghcli-01",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codegraph",
+          "reasons": [
+            "baseline:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-01",
+          "repetition": 3,
+          "baselineArm": "ordinary",
+          "candidateArm": "codegraph",
+          "reasons": [
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-02",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codegraph",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-02",
+          "repetition": 2,
+          "baselineArm": "ordinary",
+          "candidateArm": "codegraph",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-02",
+          "repetition": 3,
+          "baselineArm": "ordinary",
+          "candidateArm": "codegraph",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-01",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codegraph",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-01",
+          "repetition": 2,
+          "baselineArm": "ordinary",
+          "candidateArm": "codegraph",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-01",
+          "repetition": 3,
+          "baselineArm": "ordinary",
+          "candidateArm": "codegraph",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-02",
+          "repetition": 2,
+          "baselineArm": "ordinary",
+          "candidateArm": "codegraph",
+          "reasons": [
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-02",
+          "repetition": 3,
+          "baselineArm": "ordinary",
+          "candidateArm": "codegraph",
+          "reasons": [
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "router-02",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codegraph",
+          "reasons": [
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "router-02",
+          "repetition": 2,
+          "baselineArm": "ordinary",
+          "candidateArm": "codegraph",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "router-02",
+          "repetition": 3,
+          "baselineArm": "ordinary",
+          "candidateArm": "codegraph",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        }
+      ],
+      "exclusionReasonCounts": {
+        "baseline:not-fully-correct": 9,
+        "candidate:not-fully-correct": 12
+      }
+    },
+    {
+      "condition": "guided-use",
+      "baselineArm": "codegraph",
+      "candidateArm": "codefacts017",
+      "possiblePairs": 18,
+      "eligiblePairs": 5,
+      "medianTokenDeltaPct": 150.9339394880628,
+      "medianWallDeltaPct": 62.61646500937501,
+      "claimableEffect": true,
+      "eligible": [
+        {
+          "taskId": "ghcli-01",
+          "repetition": 1,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts017",
+          "baselineTotalTokens": 323069,
+          "candidateTotalTokens": 223626,
+          "tokenDeltaPct": -30.7807310512615,
+          "baselineWallMs": 59715.13710000005,
+          "candidateWallMs": 48401.51569999999,
+          "wallDeltaPct": -18.945985807675648
+        },
+        {
+          "taskId": "globset-02",
+          "repetition": 1,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts017",
+          "baselineTotalTokens": 51779,
+          "candidateTotalTokens": 175723,
+          "tokenDeltaPct": 239.3711736418239,
+          "baselineWallMs": 20454.7402,
+          "candidateWallMs": 33922.98810000002,
+          "wallDeltaPct": 65.84414061636438
+        },
+        {
+          "taskId": "router-01",
+          "repetition": 1,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts017",
+          "baselineTotalTokens": 139208,
+          "candidateTotalTokens": 236686,
+          "tokenDeltaPct": 70.02327452445263,
+          "baselineWallMs": 32137.656200000012,
+          "candidateWallMs": 44961.0607,
+          "wallDeltaPct": 39.901492567463535
+        },
+        {
+          "taskId": "router-01",
+          "repetition": 2,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts017",
+          "baselineTotalTokens": 86606,
+          "candidateTotalTokens": 258786,
+          "tokenDeltaPct": 198.80839664688358,
+          "baselineWallMs": 32465.748900000006,
+          "candidateWallMs": 52794.65320000006,
+          "wallDeltaPct": 62.61646500937501
+        },
+        {
+          "taskId": "router-01",
+          "repetition": 3,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts017",
+          "baselineTotalTokens": 70829,
+          "candidateTotalTokens": 177734,
+          "tokenDeltaPct": 150.9339394880628,
+          "baselineWallMs": 20994.73890000023,
+          "candidateWallMs": 39741.57150000008,
+          "wallDeltaPct": 89.2930018767685
+        }
+      ],
+      "excluded": [
+        {
+          "taskId": "ghcli-01",
+          "repetition": 2,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-01",
+          "repetition": 3,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-02",
+          "repetition": 1,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-02",
+          "repetition": 2,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-02",
+          "repetition": 3,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-01",
+          "repetition": 1,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-01",
+          "repetition": 2,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-01",
+          "repetition": 3,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-02",
+          "repetition": 2,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-02",
+          "repetition": 3,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "router-02",
+          "repetition": 1,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "router-02",
+          "repetition": 2,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "router-02",
+          "repetition": 3,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        }
+      ],
+      "exclusionReasonCounts": {
+        "candidate:not-fully-correct": 9,
+        "baseline:not-fully-correct": 12
+      }
+    },
+    {
+      "condition": "guided-use",
+      "baselineArm": "codegraph",
+      "candidateArm": "codefacts022",
+      "possiblePairs": 18,
+      "eligiblePairs": 6,
+      "medianTokenDeltaPct": 6.536995288492893,
+      "medianWallDeltaPct": 17.479037175606532,
+      "claimableEffect": true,
+      "eligible": [
+        {
+          "taskId": "ghcli-01",
+          "repetition": 1,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts022",
+          "baselineTotalTokens": 323069,
+          "candidateTotalTokens": 253056,
+          "tokenDeltaPct": -21.671221937109408,
+          "baselineWallMs": 59715.13710000005,
+          "candidateWallMs": 45117.541299999924,
+          "wallDeltaPct": -24.44538605940857
+        },
+        {
+          "taskId": "ghcli-01",
+          "repetition": 2,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts022",
+          "baselineTotalTokens": 204857,
+          "candidateTotalTokens": 276035,
+          "tokenDeltaPct": 34.74521251409519,
+          "baselineWallMs": 33013.03420000011,
+          "candidateWallMs": 48284.70830000006,
+          "wallDeltaPct": 46.25952891055345
+        },
+        {
+          "taskId": "globset-02",
+          "repetition": 1,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts022",
+          "baselineTotalTokens": 51779,
+          "candidateTotalTokens": 113009,
+          "tokenDeltaPct": 118.25257343710769,
+          "baselineWallMs": 20454.7402,
+          "candidateWallMs": 27946.05429999996,
+          "wallDeltaPct": 36.62385357502589
+        },
+        {
+          "taskId": "router-01",
+          "repetition": 1,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts022",
+          "baselineTotalTokens": 139208,
+          "candidateTotalTokens": 101164,
+          "tokenDeltaPct": -27.32888914430205,
+          "baselineWallMs": 32137.656200000012,
+          "candidateWallMs": 31602.313800000018,
+          "wallDeltaPct": -1.6657792238128244
+        },
+        {
+          "taskId": "router-01",
+          "repetition": 2,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts022",
+          "baselineTotalTokens": 86606,
+          "candidateTotalTokens": 60451,
+          "tokenDeltaPct": -30.19998614414706,
+          "baselineWallMs": 32465.748900000006,
+          "candidateWallMs": 22389.15300000005,
+          "wallDeltaPct": -31.03762038891379
+        },
+        {
+          "taskId": "router-01",
+          "repetition": 3,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts022",
+          "baselineTotalTokens": 70829,
+          "candidateTotalTokens": 98767,
+          "tokenDeltaPct": 39.444295415719544,
+          "baselineWallMs": 20994.73890000023,
+          "candidateWallMs": 32224.649499999825,
+          "wallDeltaPct": 53.4891653260783
+        }
+      ],
+      "excluded": [
+        {
+          "taskId": "ghcli-01",
+          "repetition": 3,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-02",
+          "repetition": 1,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-02",
+          "repetition": 2,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-02",
+          "repetition": 3,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-01",
+          "repetition": 1,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-01",
+          "repetition": 2,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-01",
+          "repetition": 3,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-02",
+          "repetition": 2,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct",
+            "candidate:trace-nonadherent"
+          ]
+        },
+        {
+          "taskId": "globset-02",
+          "repetition": 3,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "router-02",
+          "repetition": 1,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "router-02",
+          "repetition": 2,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "router-02",
+          "repetition": 3,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        }
+      ],
+      "exclusionReasonCounts": {
+        "baseline:not-fully-correct": 12,
+        "candidate:not-fully-correct": 10,
+        "candidate:trace-nonadherent": 1
+      }
+    },
+    {
+      "condition": "guided-use",
+      "baselineArm": "codefacts017",
+      "candidateArm": "codefacts022",
+      "possiblePairs": 18,
+      "eligiblePairs": 6,
+      "medianTokenDeltaPct": -40.05950135902237,
+      "medianWallDeltaPct": -18.266815774459502,
+      "claimableEffect": true,
+      "eligible": [
+        {
+          "taskId": "ghcli-01",
+          "repetition": 1,
+          "baselineArm": "codefacts017",
+          "candidateArm": "codefacts022",
+          "baselineTotalTokens": 223626,
+          "candidateTotalTokens": 253056,
+          "tokenDeltaPct": 13.160365968179022,
+          "baselineWallMs": 48401.51569999999,
+          "candidateWallMs": 45117.541299999924,
+          "wallDeltaPct": -6.784858598963394
+        },
+        {
+          "taskId": "globset-02",
+          "repetition": 1,
+          "baselineArm": "codefacts017",
+          "candidateArm": "codefacts022",
+          "baselineTotalTokens": 175723,
+          "candidateTotalTokens": 113009,
+          "tokenDeltaPct": -35.68912436049919,
+          "baselineWallMs": 33922.98810000002,
+          "candidateWallMs": 27946.05429999996,
+          "wallDeltaPct": -17.619125362367637
+        },
+        {
+          "taskId": "globset-02",
+          "repetition": 3,
+          "baselineArm": "codefacts017",
+          "candidateArm": "codefacts022",
+          "baselineTotalTokens": 166858,
+          "candidateTotalTokens": 153479,
+          "tokenDeltaPct": -8.018195112011405,
+          "baselineWallMs": 34517.03339999984,
+          "candidateWallMs": 31745.847000000067,
+          "wallDeltaPct": -8.028460522333836
+        },
+        {
+          "taskId": "router-01",
+          "repetition": 1,
+          "baselineArm": "codefacts017",
+          "candidateArm": "codefacts022",
+          "baselineTotalTokens": 236686,
+          "candidateTotalTokens": 101164,
+          "tokenDeltaPct": -57.258139475930136,
+          "baselineWallMs": 44961.0607,
+          "candidateWallMs": 31602.313800000018,
+          "wallDeltaPct": -29.71181438341819
+        },
+        {
+          "taskId": "router-01",
+          "repetition": 2,
+          "baselineArm": "codefacts017",
+          "candidateArm": "codefacts022",
+          "baselineTotalTokens": 258786,
+          "candidateTotalTokens": 60451,
+          "tokenDeltaPct": -76.64054469716291,
+          "baselineWallMs": 52794.65320000006,
+          "candidateWallMs": 22389.15300000005,
+          "wallDeltaPct": -57.59200668449505
+        },
+        {
+          "taskId": "router-01",
+          "repetition": 3,
+          "baselineArm": "codefacts017",
+          "candidateArm": "codefacts022",
+          "baselineTotalTokens": 177734,
+          "candidateTotalTokens": 98767,
+          "tokenDeltaPct": -44.42987835754555,
+          "baselineWallMs": 39741.57150000008,
+          "candidateWallMs": 32224.649499999825,
+          "wallDeltaPct": -18.91450618655137
+        }
+      ],
+      "excluded": [
+        {
+          "taskId": "ghcli-01",
+          "repetition": 2,
+          "baselineArm": "codefacts017",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-01",
+          "repetition": 3,
+          "baselineArm": "codefacts017",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-02",
+          "repetition": 1,
+          "baselineArm": "codefacts017",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-02",
+          "repetition": 2,
+          "baselineArm": "codefacts017",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-02",
+          "repetition": 3,
+          "baselineArm": "codefacts017",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-01",
+          "repetition": 1,
+          "baselineArm": "codefacts017",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-01",
+          "repetition": 2,
+          "baselineArm": "codefacts017",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-01",
+          "repetition": 3,
+          "baselineArm": "codefacts017",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-02",
+          "repetition": 2,
+          "baselineArm": "codefacts017",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "candidate:not-fully-correct",
+            "candidate:trace-nonadherent"
+          ]
+        },
+        {
+          "taskId": "router-02",
+          "repetition": 1,
+          "baselineArm": "codefacts017",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "router-02",
+          "repetition": 2,
+          "baselineArm": "codefacts017",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "router-02",
+          "repetition": 3,
+          "baselineArm": "codefacts017",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        }
+      ],
+      "exclusionReasonCounts": {
+        "baseline:not-fully-correct": 9,
+        "candidate:not-fully-correct": 10,
+        "candidate:trace-nonadherent": 1
+      }
+    },
+    {
+      "condition": "natural-choice",
+      "baselineArm": "ordinary",
+      "candidateArm": "codefacts017",
+      "possiblePairs": 6,
+      "eligiblePairs": 0,
+      "medianTokenDeltaPct": null,
+      "medianWallDeltaPct": null,
+      "claimableEffect": false,
+      "eligible": [],
+      "excluded": [
+        {
+          "taskId": "ghcli-01",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:failed",
+            "baseline:not-fully-correct",
+            "baseline:trace-nonadherent",
+            "baseline:unknown-usage"
+          ]
+        },
+        {
+          "taskId": "ghcli-02",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-01",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-02",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "router-01",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:failed",
+            "baseline:not-fully-correct",
+            "baseline:trace-nonadherent",
+            "baseline:unknown-usage"
+          ]
+        },
+        {
+          "taskId": "router-02",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:failed",
+            "baseline:not-fully-correct",
+            "baseline:trace-nonadherent",
+            "baseline:unknown-usage",
+            "candidate:not-fully-correct"
+          ]
+        }
+      ],
+      "exclusionReasonCounts": {
+        "baseline:failed": 3,
+        "baseline:not-fully-correct": 4,
+        "baseline:trace-nonadherent": 3,
+        "baseline:unknown-usage": 3,
+        "candidate:not-fully-correct": 4
+      }
+    },
+    {
+      "condition": "natural-choice",
+      "baselineArm": "ordinary",
+      "candidateArm": "codefacts022",
+      "possiblePairs": 6,
+      "eligiblePairs": 0,
+      "medianTokenDeltaPct": null,
+      "medianWallDeltaPct": null,
+      "claimableEffect": false,
+      "eligible": [],
+      "excluded": [
+        {
+          "taskId": "ghcli-01",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:failed",
+            "baseline:not-fully-correct",
+            "baseline:trace-nonadherent",
+            "baseline:unknown-usage",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-02",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-01",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-02",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "router-01",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:failed",
+            "baseline:not-fully-correct",
+            "baseline:trace-nonadherent",
+            "baseline:unknown-usage"
+          ]
+        },
+        {
+          "taskId": "router-02",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:failed",
+            "baseline:not-fully-correct",
+            "baseline:trace-nonadherent",
+            "baseline:unknown-usage",
+            "candidate:not-fully-correct"
+          ]
+        }
+      ],
+      "exclusionReasonCounts": {
+        "baseline:failed": 3,
+        "baseline:not-fully-correct": 4,
+        "baseline:trace-nonadherent": 3,
+        "baseline:unknown-usage": 3,
+        "candidate:not-fully-correct": 5
+      }
+    },
+    {
+      "condition": "natural-choice",
+      "baselineArm": "ordinary",
+      "candidateArm": "codegraph",
+      "possiblePairs": 6,
+      "eligiblePairs": 1,
+      "medianTokenDeltaPct": 177.84173365727983,
+      "medianWallDeltaPct": 65.2154194513589,
+      "claimableEffect": true,
+      "eligible": [
+        {
+          "taskId": "globset-02",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codegraph",
+          "baselineTotalTokens": 122654,
+          "candidateTotalTokens": 340784,
+          "tokenDeltaPct": 177.84173365727983,
+          "baselineWallMs": 31706.438099999912,
+          "candidateWallMs": 52383.92470000032,
+          "wallDeltaPct": 65.2154194513589
+        }
+      ],
+      "excluded": [
+        {
+          "taskId": "ghcli-01",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codegraph",
+          "reasons": [
+            "baseline:failed",
+            "baseline:not-fully-correct",
+            "baseline:trace-nonadherent",
+            "baseline:unknown-usage",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-02",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codegraph",
+          "reasons": [
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-01",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codegraph",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "router-01",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codegraph",
+          "reasons": [
+            "baseline:failed",
+            "baseline:not-fully-correct",
+            "baseline:trace-nonadherent",
+            "baseline:unknown-usage"
+          ]
+        },
+        {
+          "taskId": "router-02",
+          "repetition": 1,
+          "baselineArm": "ordinary",
+          "candidateArm": "codegraph",
+          "reasons": [
+            "baseline:failed",
+            "baseline:not-fully-correct",
+            "baseline:trace-nonadherent",
+            "baseline:unknown-usage",
+            "candidate:not-fully-correct"
+          ]
+        }
+      ],
+      "exclusionReasonCounts": {
+        "baseline:failed": 3,
+        "baseline:not-fully-correct": 4,
+        "baseline:trace-nonadherent": 3,
+        "baseline:unknown-usage": 3,
+        "candidate:not-fully-correct": 4
+      }
+    },
+    {
+      "condition": "natural-choice",
+      "baselineArm": "codegraph",
+      "candidateArm": "codefacts017",
+      "possiblePairs": 6,
+      "eligiblePairs": 1,
+      "medianTokenDeltaPct": 20.732751752708722,
+      "medianWallDeltaPct": 18.31732844248599,
+      "claimableEffect": true,
+      "eligible": [
+        {
+          "taskId": "router-01",
+          "repetition": 1,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts017",
+          "baselineTotalTokens": 100416,
+          "candidateTotalTokens": 121235,
+          "tokenDeltaPct": 20.732751752708722,
+          "baselineWallMs": 28311.6166000003,
+          "candidateWallMs": 33497.54839999974,
+          "wallDeltaPct": 18.31732844248599
+        }
+      ],
+      "excluded": [
+        {
+          "taskId": "ghcli-01",
+          "repetition": 1,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-02",
+          "repetition": 1,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-01",
+          "repetition": 1,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-02",
+          "repetition": 1,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "router-02",
+          "repetition": 1,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts017",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        }
+      ],
+      "exclusionReasonCounts": {
+        "baseline:not-fully-correct": 4,
+        "candidate:not-fully-correct": 4
+      }
+    },
+    {
+      "condition": "natural-choice",
+      "baselineArm": "codegraph",
+      "candidateArm": "codefacts022",
+      "possiblePairs": 6,
+      "eligiblePairs": 1,
+      "medianTokenDeltaPct": -27.21777405991077,
+      "medianWallDeltaPct": 1.1957748820309977,
+      "claimableEffect": true,
+      "eligible": [
+        {
+          "taskId": "router-01",
+          "repetition": 1,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts022",
+          "baselineTotalTokens": 100416,
+          "candidateTotalTokens": 73085,
+          "tokenDeltaPct": -27.21777405991077,
+          "baselineWallMs": 28311.6166000003,
+          "candidateWallMs": 28650.159800000023,
+          "wallDeltaPct": 1.1957748820309977
+        }
+      ],
+      "excluded": [
+        {
+          "taskId": "ghcli-01",
+          "repetition": 1,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-02",
+          "repetition": 1,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-01",
+          "repetition": 1,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-02",
+          "repetition": 1,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "router-02",
+          "repetition": 1,
+          "baselineArm": "codegraph",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        }
+      ],
+      "exclusionReasonCounts": {
+        "baseline:not-fully-correct": 4,
+        "candidate:not-fully-correct": 5
+      }
+    },
+    {
+      "condition": "natural-choice",
+      "baselineArm": "codefacts017",
+      "candidateArm": "codefacts022",
+      "possiblePairs": 6,
+      "eligiblePairs": 1,
+      "medianTokenDeltaPct": -39.71625355714109,
+      "medianWallDeltaPct": -14.470875725340404,
+      "claimableEffect": true,
+      "eligible": [
+        {
+          "taskId": "router-01",
+          "repetition": 1,
+          "baselineArm": "codefacts017",
+          "candidateArm": "codefacts022",
+          "baselineTotalTokens": 121235,
+          "candidateTotalTokens": 73085,
+          "tokenDeltaPct": -39.71625355714109,
+          "baselineWallMs": 33497.54839999974,
+          "candidateWallMs": 28650.159800000023,
+          "wallDeltaPct": -14.470875725340404
+        }
+      ],
+      "excluded": [
+        {
+          "taskId": "ghcli-01",
+          "repetition": 1,
+          "baselineArm": "codefacts017",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "ghcli-02",
+          "repetition": 1,
+          "baselineArm": "codefacts017",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-01",
+          "repetition": 1,
+          "baselineArm": "codefacts017",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "globset-02",
+          "repetition": 1,
+          "baselineArm": "codefacts017",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        },
+        {
+          "taskId": "router-02",
+          "repetition": 1,
+          "baselineArm": "codefacts017",
+          "candidateArm": "codefacts022",
+          "reasons": [
+            "baseline:not-fully-correct",
+            "candidate:not-fully-correct"
+          ]
+        }
+      ],
+      "exclusionReasonCounts": {
+        "candidate:not-fully-correct": 5,
+        "baseline:not-fully-correct": 4
+      }
+    }
+  ]
+}

@@ -18,6 +18,11 @@ The active implementation queue and investment decisions are maintained in
 [IMPROVEMENT-PLAN.md](IMPROVEMENT-PLAN.md); completed milestones link to their
 frozen cases and measured results.
 
+The [2026-10-17 reviewed source-investigation baseline](../benchmarks/agent-eval/task-benchmark/results/2026-10-17-flash-v2/REPORT.md)
+records 96 attempts across six JavaScript/Rust/Go tasks with ordinary tools,
+source-built CodeFacts 0.1.7/0.2.2 and CodeGraph 1.6.2. It reports correctness
+before efficiency and preserves three upstream failures and their usage gaps.
+
 ## Basis and cross-tool applicability
 
 These are task-outcome metrics, with tool-specific diagnostics underneath:

@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "provenanceNote": "Frozen source receipts record pinned commits and per-file manifests, not upstream archive checksums. Each bootstrap receipt records the downloaded archive SHA-256 and verifies every frozen source file. In the tested Windows environment, Node required --use-system-ca to trust the configured local CA; this uses system roots while keeping normal TLS certificate verification enabled (for example, node --use-system-ca benchmarks/agent-eval/task-benchmark/fetch-corpora.mjs --output ABSOLUTE_NEW_DIRECTORY).",
+  "corpora": [
+    {
+      "id": "router",
+      "repository": "delvedor/find-my-way",
+      "commit": "c47c38df20e4c983c1d5983fd528b1efd0312524",
+      "archiveUrl": "https://codeload.github.com/delvedor/find-my-way/tar.gz/c47c38df20e4c983c1d5983fd528b1efd0312524",
+      "archiveUrlDerived": true,
+      "archiveRoot": "find-my-way-c47c38df20e4c983c1d5983fd528b1efd0312524",
+      "manifest": "manifests/router.json",
+      "frozenManifestSha256": "74f88a330931fc4b85e30d3089b54c03d311b6152aa3fca55f1aad7dc10b3b2f",
+      "canonicalManifestSha256": "74f88a330931fc4b85e30d3089b54c03d311b6152aa3fca55f1aad7dc10b3b2f",
+      "fileCount": 106,
+      "license": "MIT"
+    },
+    {
+      "id": "globset",
+      "repository": "BurntSushi/ripgrep",
+      "commit": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "archiveUrl": "https://codeload.github.com/BurntSushi/ripgrep/tar.gz/3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "archiveUrlDerived": true,
+      "archiveRoot": "ripgrep-3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "manifest": "manifests/globset.json",
+      "frozenManifestSha256": "aee800197c642d5c175b1ea7d1ea0ebf6dd98ee2080e6101c4d0803d8d7e387f",
+      "canonicalManifestSha256": "aee800197c642d5c175b1ea7d1ea0ebf6dd98ee2080e6101c4d0803d8d7e387f",
+      "fileCount": 237,
+      "license": "Unlicense OR MIT"
+    },
+    {
+      "id": "ghcli",
+      "repository": "cli/cli",
+      "commit": "2c153f50dad5bc14d49fa0813b2c35fb0fd05103",
+      "archiveUrl": "https://codeload.github.com/cli/cli/tar.gz/2c153f50dad5bc14d49fa0813b2c35fb0fd05103",
+      "archiveUrlDerived": true,
+      "archiveRoot": "cli-2c153f50dad5bc14d49fa0813b2c35fb0fd05103",
+      "manifest": "manifests/ghcli.json",
+      "frozenManifestSha256": "a29f96db9ffe1e17d532aa7fb70cb5f57937f677a184bed3d06b6192dc3c8a71",
+      "canonicalManifestSha256": "a29f96db9ffe1e17d532aa7fb70cb5f57937f677a184bed3d06b6192dc3c8a71",
+      "fileCount": 1494,
+      "license": "MIT"
+    }
+  ]
+}

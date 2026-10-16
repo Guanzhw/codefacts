@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "source-investigation-v2",
+  "suite": "X:/ABSOLUTE/CODEFACTS/benchmarks/agent-eval/task-benchmark/suites/source-investigation-v2/tasks.json",
+  "oracle": "X:/ABSOLUTE/CODEFACTS/benchmarks/agent-eval/task-benchmark/suites/source-investigation-v2/oracle.json",
+  "evidenceDir": "X:/ABSOLUTE/PRIVATE-CAMPAIGN/evidence",
+  "runtime": {
+    "dshRoot": "X:/ABSOLUTE/EXISTING/dsh",
+    "node": "X:/ABSOLUTE/EXISTING/node.exe",
+    "sdkRoot": "X:/ABSOLUTE/EXISTING/node_modules/@modelcontextprotocol/sdk",
+    "rg": "X:/ABSOLUTE/EXISTING/rg.exe"
+  },
+  "model": {
+    "provider": "opencode-go",
+    "id": "deepseek-v4.1-flash",
+    "reasoningEffort": "high"
+  },
+  "concurrency": 1,
+  "timeoutMs": 600000,
+  "repetitions": { "guided-use": 3, "natural-choice": 1 },
+  "arms": [
+    { "id": "ordinary" },
+    { "id": "codefacts017", "version": "0.1.7", "executable": "X:/ABSOLUTE/EXISTING/source-built-codefacts-0.1.7.exe" },
+    { "id": "codefacts022", "version": "0.2.2", "executable": "X:/ABSOLUTE/EXISTING/source-built-codefacts-0.2.2.exe" },
+    { "id": "codegraph", "version": "1.6.2", "node": "X:/ABSOLUTE/EXISTING/node.exe", "cli": "X:/ABSOLUTE/EXISTING/codegraph/dist/cli.js" }
+  ],
+  "corpora": [
+    {
+      "id": "router",
+      "root": "X:/ABSOLUTE/PRIVATE-CAMPAIGN/bootstrap/corpora/router",
+      "manifestFile": "X:/ABSOLUTE/CODEFACTS/benchmarks/agent-eval/task-benchmark/suites/source-investigation-v1/manifests/router.json",
+      "manifestSha256": "74f88a330931fc4b85e30d3089b54c03d311b6152aa3fca55f1aad7dc10b3b2f"
+    },
+    {
+      "id": "globset",
+      "root": "X:/ABSOLUTE/PRIVATE-CAMPAIGN/bootstrap/corpora/globset",
+      "manifestFile": "X:/ABSOLUTE/CODEFACTS/benchmarks/agent-eval/task-benchmark/suites/source-investigation-v1/manifests/globset.json",
+      "manifestSha256": "aee800197c642d5c175b1ea7d1ea0ebf6dd98ee2080e6101c4d0803d8d7e387f"
+    },
+    {
+      "id": "ghcli",
+      "root": "X:/ABSOLUTE/PRIVATE-CAMPAIGN/bootstrap/corpora/ghcli",
+      "manifestFile": "X:/ABSOLUTE/CODEFACTS/benchmarks/agent-eval/task-benchmark/suites/source-investigation-v1/manifests/ghcli.json",
+      "manifestSha256": "a29f96db9ffe1e17d532aa7fb70cb5f57937f677a184bed3d06b6192dc3c8a71"
+    }
+  ]
+}
