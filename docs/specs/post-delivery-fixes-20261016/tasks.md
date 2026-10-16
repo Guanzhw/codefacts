@@ -14,7 +14,9 @@
 - [x] Freeze the small natural-choice protocol before data, then run and independently grade/audit it.
 - [x] Independently review the final integrated diff and resolve findings.
 - [x] Complete source, protocol, package/license and CI checks.
-- [ ] Deliver reviewable changes with source/binary/evidence identities and actual installed-runtime boundaries.
+- [x] Merge the native 0.2.2 output-density change, pass all six final PR-head CI jobs, and verify the annotated release tag against the merge commit.
+- [x] Complete public 0.2.2 package/release acceptance and merge plugin PR #6; verify the targeted installed-home plugin update.
+- [x] Complete actual Codex/Claude host execution with source and binary identities and a passing final receipt.
 
 Candidate evidence and remaining experiment/publication boundaries are recorded
 in the [repair validation](../../POST-DELIVERY-REPAIR-2026-10-16.md).

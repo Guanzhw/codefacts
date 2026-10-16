@@ -12,10 +12,9 @@
   definitions when they fit, using the remaining budget for useful source.
   Partial previews and source omissions remain explicit.
 - Qualified method and heading labels retain an accepted selector; ambiguous
-  symbols retain exact IDs for follow-up queries. Candidate verification and
-  measured response bytes are recorded in the
+  symbols retain exact IDs for follow-up queries. Implementation and measured
+  response bytes are recorded in the
   [output validation](docs/OUTPUT-DESIGN-VALIDATION-2026-10-16.md).
-  Public packages, release publication and installed-host acceptance are pending.
 
 ## 0.2.1 — 2026-10-16
 

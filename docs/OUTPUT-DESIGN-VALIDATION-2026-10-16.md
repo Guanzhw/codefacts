@@ -1,9 +1,12 @@
 # Output design validation — 2026-10-16
 
-The native 0.2.2 candidate implements the reviewed default presentation contract.
-Independent source review and live CLI/MCP replays confirm the changes below.
-Public 0.2.2 packages, release publication and installed-host acceptance remain
-pending.
+The native 0.2.2 output-density change is merged in
+[PR #10](https://github.com/Guanzhw/codefacts/pull/10). Independent source review and live
+CLI/MCP replays confirm the changes below. Final PR-head CI passed all six jobs,
+and native 0.2.2 public acceptance passed. Plugin PR #6 is merged and its
+targeted home update passed. Actual installed Codex and Claude Code host task
+acceptance passed; the [delivery record](POST-DELIVERY-REPAIR-2026-10-16.md#public-022-release-and-plugin-delivery)
+records the accepted evidence and the earlier setup and analysis failures.
 
 ## Resulting contract
 
@@ -27,8 +30,10 @@ pending.
 
 Evidence is preserved under
 `D:/WorkSpace/codefacts/target/post-delivery-fixes-20261016` (paths below are
-relative to that directory). The candidate receipt records committed source
-`a36d85e2`, a clean source build and native version 0.2.2.
+relative to that directory). The candidate receipt records source `a36d85e2`, a
+clean source build and native version 0.2.2. A source-input proof confirms all
+77 runtime inputs are identical between that candidate and merged source
+`9d2683e`.
 
 | Check | Obtained evidence |
 | --- | --- |
@@ -36,15 +41,21 @@ relative to that directory). The candidate receipt records committed source
 | Independent implementation review | `output-design-review/implementation/REVIEW.md` found one P2 selector issue. `CLOSURE-selector.md` closes it after inspecting the repair and real indexed-fixture regression. |
 | Local Rust suite | `output-density-cargo-tests.log`: 931 tests passed **before** the selector repair; `output-density-presentation/selector-repair/README.md` records the subsequent 17 presentation and 11 protocol/CLI checks passing. |
 | Lints and launcher | Root format and Clippy checks passed; `output-density-clippy.log` and `output-density-npm-tests.log` record Clippy and 23 passing npm tests. |
-| Exact-source CI | [Run 38917633766](https://github.com/Guanzhw/codefacts/actions/runs/38917633766), attempt 1, succeeded on the candidate source: Windows/macOS/Ubuntu tests, Rust MSRV, formatting/lints and Node 18 launcher, all six jobs. Receipts: `output-density-ci-exact{,-jobs}.json`. |
+| Candidate CI | [Run 38917633766](https://github.com/Guanzhw/codefacts/actions/runs/38917633766), attempt 1, succeeded on the candidate source: Windows/macOS/Ubuntu tests, Rust MSRV, formatting/lints and Node 18 launcher, all six jobs. Receipts: `output-density-ci-exact{,-jobs}.json`. |
+| Final PR-head CI and merged source | [Run 38920140544](https://github.com/Guanzhw/codefacts/actions/runs/38920140544), attempt 1, succeeded on PR #10 head `27c18d535c8ab16bd029a33f57bb955823e0c3c9`, with all six jobs passing. PR #10 merged at `9d2683e`; `output-density-runtime-input-proof.json` confirms all 77 runtime inputs match the candidate. |
+| Verified release tag | `output-density-v022-tag-receipt.json` verifies that annotated `v0.2.2` resolves to reviewed merge commit `9d2683e`. |
 | Relationship replay | `output-redundancy-audit/flash-relationships/green-v1/GREEN-REVIEW.md`: 35/35 checks passed within 24 invocations, including aliases, repeated call sites, heuristic resolution, ambiguity, paging and a consumed continuation. |
 | Legacy replay | `output-redundancy-audit/flash-legacy/green-v1/GREEN-REVIEW.md`: 33/33 assertions passed within 24 calls across Map, Search, Outline and Path. Qualified method/heading selectors and exact ambiguity IDs were followable. |
-| Explore replay | `output-redundancy-audit/flash-explore/green-v1/results.json`: 13 checks passed and one was not exercised, within 18 invocations. Actual captures cover orientation, owner cards, batched reads, UTF-8 clipping, source literals and the invalid-budget error. |
-| Public delivery | **Pending:** separately versioned public packages, release and actual installed hosts. |
+| Explore replay | `output-redundancy-audit/flash-explore/green-v1/results.json`: 14 of 15 checks were evidenced within 18 invocations: 13 directly measured checks and one Full-source construction check passed; one no-source branch was not exercised. Captures cover orientation, owner cards, batched reads, UTF-8 clipping, source literals and the invalid-budget error. |
+| Public native release | **Passed:** run 38921162005 attempt 1; six npm packages report 0.2.2 as latest and the receipt records 911 acceptance checks. Windows public and installed artifact identities match; Windows was executed, while the other four native payloads received byte-level verification only. |
+| Plugin source and targeted update | **Passed:** plugin PR #6 merged at `25522b8`; six source files are bound by `installed-preparation/host-output022/source-proof.json`, and the targeted home update passed its preservation checks. |
+| Installed-host task acceptance | **Passed:** the final aggregate receipt records one successful MCP call in each fresh Codex and Claude Code host, with the default three-tool catalog, 388-byte responses, five verified source lines, no generated hash metadata, matching public native binary identity, closed processes, unchanged fixtures and passed scope-preservation checks. Codex used `gpt-6.1-sol`; the Claude Code CLI run used configured model `deepseek-v4-pro[1m]`. An independent review checked both raw host traces, the public binary, current plugin cache files, configuration snapshots and process closure, with no findings. Receipt and review: `installed-preparation/host-output022/evidence/final-host-receipt.json` and `installed-preparation/host-output022/review/REVIEW.md`. The earlier Codex startup failures and initial post-run analysis failure are preserved separately; corrected analysis used the original evidence without rerunning the model. |
 
-Explicit Compact/Full comparisons preserved schemas and facts; the only observed
-raw value differences were `freshness.duration_ms`. Replays reused the same
-fixture roots, used private candidate state and retained baseline evidence.
+Explicit Compact/Full protocol behavior was checked in the other preserved
+replays; this output-density replay did not measure a Full before/after byte
+comparison. The measured raw value differences were `freshness.duration_ms`.
+Replays reused the same fixture roots, used private candidate state and retained
+baseline evidence.
 
 ## Measured response bytes
 

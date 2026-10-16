@@ -208,3 +208,92 @@ overall FAIL, with four explicitly accepted exceptions. Those measurements,
 the prior task outcomes and the original checkout's 22 protected dirty files
 are preserved. New repair measurements answer distinct extraction and upgrade
 questions and do not replace the earlier results.
+
+### Public 0.2.1 cost observation
+
+The separately published-artifact check used public 0.2.0 executable
+`fb3cc546…a0d32e7` and public 0.2.1 executable
+`843234a5…eecc4751` (tag `v0.2.1`, source
+`9bac28da4df990b7f9ade74871381135d0dc7003`, official run 38912410021,
+attempt 1). The isolated acceptance receipt binds the registry-downloaded and
+installed Windows executable to the same SHA-256. These values are distinct
+from the source-built candidate measurements above.
+
+One public 0.2.1 upgrade run indexed 982 files on its first map, then indexed
+zero and reused all 982 files on each of the next two maps; generation remained
+2. Its first-map MCP duration was 11,545.66 ms (11,298 ms returned pipeline
+duration). The existing database allocation remained 192,663,552 bytes.
+Across three fresh, serial AB/BA/AB pairs, public 0.2.1 medians were 7,313.031
+ms first-map time, 7,050 ms pipeline duration, 176,586,752 main-database bytes,
+and 514,519,040 bytes process peak working set. Against public 0.2.0, those
+are +14.33%, +14.06%, +13.22%, and +3.63%, respectively. These are bounded,
+contended observations, not performance gates. The phase validated 68/68 facts
+and 329/329 sampled reference spellings; it does not establish target-resolution
+precision.
+
+The initial pre, after-0.2.0 and post statistics writes failed because the
+output directory was absent. The native upgrade ran once; no timed step or
+native session was repeated. Root authorized one untimed diagnostic plain-byte
+clone of the public 0.2.0 mother; it was the second physical mother copy after
+the measurement copy, was hash-verified byte-identical, and was read with the
+unchanged statistics script without native execution. Its recovered baseline
+supports the pre column only; it is not a measurement-copy observation from
+the pre moment. After-0.2.0 SQL statistics remain unavailable: the 0.2.0 native
+baseline map separately reported zero files indexed and 982 unchanged, and the
+plain main-database hash remained unchanged. Those facts support file-level
+equivalence only, not a recovered SQL snapshot. Post statistics were captured
+directly on the upgraded clone after repairing the output path. Read-only
+analysis and summary failures and their repairs remain in the phase record.
+Final integrity passed, and the independent recomputation confirmed the
+public-artifact binding and reported medians. Source evidence:
+`target/post-delivery-fixes-20261016/public-021/final-receipt.json`,
+`target/post-delivery-fixes-20261016/public-cost-021/REPORT-021.md`,
+`target/post-delivery-fixes-20261016/public-cost-021/receipts/final-integrity.json`,
+and `target/post-delivery-fixes-20261016/review-public-cost/review.md`.
+
+### Public 0.2.2 release and plugin delivery
+
+Native 0.2.2 is publicly released from merged source
+`9d2683e30fbddb2a15c8ceafdc38e9fab3b42066`; tag `v0.2.2` peels to that
+commit, and official run 38921162005 attempt 1 passed. All six npm packages
+report 0.2.2 as `latest`. Six package signatures and attestations passed; the
+five platform-native payloads match the GitHub release API digests and
+downloaded checksum file. Public and installed Windows executable identities
+match (`78f3f64e…927cc0b1`). Runtime execution covered Windows; the other four
+platform payloads were verified as bytes, not executed.
+
+The public acceptance receipt records 911 checks: 262 runtime checks, 34
+changed-behavior checks, and 615 default-output checks. It includes 149 MCP
+calls, 18 direct CLI commands, 14 genuine omitted-format MCP calls, 24 explicit
+machine-format calls, and nine default CLI commands. The tested output cases
+cover complete small owners at three budgets, 171 lines of gap-free traversal
+across 19 pages per protocol era, and ambiguity, cursor, type-reference and
+partial-index regressions. Source evidence is in
+`target/post-delivery-fixes-20261016/public-022/final-receipt.json`.
+
+Plugin PR #6 is merged at `25522b8a64cb5db0e0dc977014ee165041a6122c`.
+The source proof covers six plugin files pinned to native `codefacts@0.2.2`,
+and the targeted Codex/Claude home update passed its preservation checks. Actual
+installed-host acceptance passed for both Codex and Claude. Each actual host
+exposed the three-tool default catalog and made one MCP call. Both responses
+were 388 bytes and verified five source lines with no generated hash metadata;
+the public Windows native hash matched the process observed in each host. Both
+native processes closed, fixtures remained unchanged, and configuration-scope
+preservation checks passed. The final aggregate receipt is
+`target/post-delivery-fixes-20261016/installed-preparation/host-output022/evidence/final-host-receipt.json`.
+
+The first actual Codex startup failed before model or native calls because the
+harness constructed MCP keys with literal quotes. A subsequent read-only
+startup probe also failed before model invocation because the harness added an
+empty CodeFacts entry when none existed. Both were harness setup defects; their
+fixes were limited to child overrides, and the user configuration remained
+unchanged. The subsequent Codex model run completed actual interaction and one
+successful MCP/source/catalog call; its preserved usage is 45,405 input tokens
+(14,848 cached) and 306 output tokens. Its initial post-run harness analysis
+failed a relative-versus-absolute launcher-path assertion. That analysis was
+corrected from preserved raw evidence without another model run, after which
+the final receipt passed. The startup failures and later analysis failure
+remain distinct records. Evidence: `target/post-delivery-fixes-20261016/plugin-final022/merged-pr6.json`,
+`target/post-delivery-fixes-20261016/installed-preparation/host-output022/source-proof.json`,
+`target/post-delivery-fixes-20261016/installed-preparation/host-output022/evidence/plugin-update-receipt.json`,
+and `target/post-delivery-fixes-20261016/installed-preparation/host-output022/evidence/codex-plugin-configured-keys/`.
