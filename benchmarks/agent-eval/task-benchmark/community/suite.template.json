@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "suiteId": "community-four-family-placeholder",
+  "evidenceDir": "/absolute/new/suite-evidence",
+  "lockFile": "/absolute/task-owned-host/community-suite.lock",
+  "models": [
+    {
+      "id": "primary-deepseek",
+      "family": "DeepSeek",
+      "model": { "provider": "REPLACE_WITH_VERIFIED_PROVIDER", "id": "REPLACE_WITH_VERIFIED_DEEPSEEK_MODEL", "reasoningEffort": "REPLACE_WITH_VERIFIED_EFFORT" },
+      "capabilityReceipt": "/absolute/qualified-capabilities/deepseek.json"
+    },
+    {
+      "id": "primary-qwen",
+      "family": "Qwen",
+      "model": { "provider": "REPLACE_WITH_VERIFIED_PROVIDER", "id": "REPLACE_WITH_VERIFIED_QWEN_MODEL", "reasoningEffort": "REPLACE_WITH_VERIFIED_EFFORT" },
+      "capabilityReceipt": "/absolute/qualified-capabilities/qwen.json"
+    },
+    {
+      "id": "primary-gpt6-luna",
+      "family": "GPT6Luna",
+      "model": { "provider": "REPLACE_WITH_VERIFIED_PROVIDER", "id": "REPLACE_WITH_VERIFIED_GPT6_LUNA_MODEL", "reasoningEffort": "REPLACE_WITH_VERIFIED_EFFORT" },
+      "capabilityReceipt": "/absolute/qualified-capabilities/gpt6-luna.json"
+    },
+    {
+      "id": "primary-haiku",
+      "family": "Haiku",
+      "model": { "provider": "REPLACE_WITH_VERIFIED_PROVIDER", "id": "REPLACE_WITH_VERIFIED_HAIKU_MODEL", "reasoningEffort": "REPLACE_WITH_VERIFIED_EFFORT" },
+      "capabilityReceipt": "/absolute/qualified-capabilities/haiku.json"
+    }
+  ],
+  "campaigns": [
+    { "campaignId": "deepseek-context", "modelId": "primary-deepseek", "cohort": "context", "manifestPath": "/absolute/new/deepseek/context/manifest.json", "gradingConfigPath": "/absolute/private/context-grading.json" },
+    { "campaignId": "deepseek-swe", "modelId": "primary-deepseek", "cohort": "swe", "manifestPath": "/absolute/new/deepseek/swe/manifest.json", "gradingConfigPath": "/absolute/private/swe-grading.json" },
+    { "campaignId": "qwen-context", "modelId": "primary-qwen", "cohort": "context", "manifestPath": "/absolute/new/qwen/context/manifest.json", "gradingConfigPath": "/absolute/private/context-grading.json" },
+    { "campaignId": "qwen-swe", "modelId": "primary-qwen", "cohort": "swe", "manifestPath": "/absolute/new/qwen/swe/manifest.json", "gradingConfigPath": "/absolute/private/swe-grading.json" },
+    { "campaignId": "gpt6-luna-context", "modelId": "primary-gpt6-luna", "cohort": "context", "manifestPath": "/absolute/new/gpt6-luna/context/manifest.json", "gradingConfigPath": "/absolute/private/context-grading.json" },
+    { "campaignId": "gpt6-luna-swe", "modelId": "primary-gpt6-luna", "cohort": "swe", "manifestPath": "/absolute/new/gpt6-luna/swe/manifest.json", "gradingConfigPath": "/absolute/private/swe-grading.json" },
+    { "campaignId": "haiku-context", "modelId": "primary-haiku", "cohort": "context", "manifestPath": "/absolute/new/haiku/context/manifest.json", "gradingConfigPath": "/absolute/private/context-grading.json" },
+    { "campaignId": "haiku-swe", "modelId": "primary-haiku", "cohort": "swe", "manifestPath": "/absolute/new/haiku/swe/manifest.json", "gradingConfigPath": "/absolute/private/swe-grading.json" }
+  ],
+  "inputFiles": ["/absolute/private/preregistered-suite-plan.json"]
+}

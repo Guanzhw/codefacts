@@ -1,0 +1,3728 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "contextbench-localization-20261017-v2",
+  "contextStatus": "complete",
+  "sweRepairStatus": "pending",
+  "provenance": {
+    "frameworkCommit": "e70e8ab4cd16c2071427365fc1a6a1caf94ab847",
+    "completionTimeUtc": "2026-10-17T10:24:25.5477131Z",
+    "model": {
+      "provider": "opencode-go",
+      "id": "deepseek-v4.1-flash",
+      "reasoningEffort": "high"
+    },
+    "arms": [
+      {
+        "id": "ordinary"
+      },
+      {
+        "id": "codefacts022",
+        "version": "0.2.2"
+      },
+      {
+        "id": "codegraph",
+        "version": "1.6.2"
+      }
+    ],
+    "officialContextBenchRevision": "1436c28a8eb95496da4ea69ad458b9f8a8eb7d61",
+    "datasetRevision": "c2855792b006af41c67202d33883fb9d46362853",
+    "concurrency": 1,
+    "maxOutputTokens": 32768,
+    "tasks": [
+      {
+        "id": "ctx-cli__cli-5698",
+        "repository": "cli/cli",
+        "baseCommit": "d2683a1370c5f3d97eaa1e4a4a8cfbc32c1293c2",
+        "language": "go",
+        "split": "pilot"
+      },
+      {
+        "id": "ctx-cli__cli-9794",
+        "repository": "cli/cli",
+        "baseCommit": "92ff87c6b77f055b0446430bf8cf65025f2c64a7",
+        "language": "go",
+        "split": "pilot"
+      },
+      {
+        "id": "ctx-cli__cli-3608",
+        "repository": "cli/cli",
+        "baseCommit": "026b07d1cfbf23a3ccb4d4703a2496d65e177fcc",
+        "language": "go",
+        "split": "confirmation_holdout"
+      },
+      {
+        "id": "ctx-nushell__nushell-12901",
+        "repository": "nushell/nushell",
+        "baseCommit": "580c60bb821af25f838edafd8461bb206d3419f3",
+        "language": "rust",
+        "split": "pilot"
+      },
+      {
+        "id": "ctx-clap-rs__clap-2534",
+        "repository": "clap-rs/clap",
+        "baseCommit": "33c305ea6ff6cdda7796e57966374cb40633968f",
+        "language": "rust",
+        "split": "pilot"
+      },
+      {
+        "id": "ctx-clap-rs__clap-4248",
+        "repository": "clap-rs/clap",
+        "baseCommit": "8e510650a98a528d3c016cfdfddbe67ae3a470a5",
+        "language": "rust",
+        "split": "confirmation_holdout"
+      },
+      {
+        "id": "ctx-sveltejs__svelte-12509",
+        "repository": "sveltejs/svelte",
+        "baseCommit": "30b143cef0d5ea17a6edec33496681882eadce34",
+        "language": "javascript",
+        "split": "pilot"
+      },
+      {
+        "id": "ctx-sveltejs__svelte-3394",
+        "repository": "sveltejs/svelte",
+        "baseCommit": "bb9a9efec275084983117adee52718b5a35376b6",
+        "language": "javascript",
+        "split": "pilot"
+      },
+      {
+        "id": "ctx-sveltejs__svelte-10391",
+        "repository": "sveltejs/svelte",
+        "baseCommit": "b6fcc149b87720a431eb636ce291a0c0125b0bae",
+        "language": "javascript",
+        "split": "confirmation_holdout"
+      },
+      {
+        "id": "ctx-vuejs__core-11899",
+        "repository": "vuejs/core",
+        "baseCommit": "d0b513eb463f580e29378e43d112ff6859aa366e",
+        "language": "typescript",
+        "split": "pilot"
+      },
+      {
+        "id": "ctx-mui__material-ui-26807",
+        "repository": "mui/material-ui",
+        "baseCommit": "567e6cf97dce71eba9370e8c13519d206a98ffd2",
+        "language": "typescript",
+        "split": "pilot"
+      },
+      {
+        "id": "ctx-mui__material-ui-34229",
+        "repository": "mui/material",
+        "baseCommit": "fa62bf35e109ede215cb8cbae66ba4d6a30fef60",
+        "language": "typescript",
+        "split": "confirmation_holdout"
+      }
+    ]
+  },
+  "counts": {
+    "planned": 36,
+    "normalModelEnd": 35,
+    "providerOrTaskFailed": 1,
+    "validReferenceAgreement": 28,
+    "invalidFinalJson": 7,
+    "missingDeclarationAfterProviderFailure": 1,
+    "exactUsage": 35,
+    "partialUsage": 1,
+    "modelResamples": 0
+  },
+  "semantics": {
+    "quality": "Official reference-context agreement under adapted read-only localization, not repair success.",
+    "null": "Missing measurement, never zero; exact usage and partial lower bounds are disjoint.",
+    "time": "Workflow includes provider waits and tools. Cold native setup includes initialization/connection/initial indexing. Source preparation, current slot wall and grader intervals overlap; do not add them.",
+    "histories": "Archived setup failures and all invoked grader runs are separate engineering costs, not extra model samples or workflow time.",
+    "comparison": "Fixed assigned arms, pilot and holdout separate; no jointly correct or adopter filtering; known-only quality means retain their own denominator."
+  },
+  "groups": [
+    {
+      "split": "pilot",
+      "arm": "ordinary",
+      "planned": 8,
+      "statuses": {
+        "attempt-completed": 8
+      },
+      "gradeStatuses": {
+        "completed": 7,
+        "invalid-final-json": 1
+      },
+      "validQuality": 7,
+      "quality": {
+        "file": {
+          "coverage": {
+            "mean": 0.23611626468769328,
+            "known": 7,
+            "missing": 1
+          },
+          "precision": {
+            "mean": 0.45476190476190476,
+            "known": 7,
+            "missing": 1
+          }
+        },
+        "symbol": {
+          "coverage": {
+            "mean": 0.0962895872634768,
+            "known": 7,
+            "missing": 1
+          },
+          "precision": {
+            "mean": 0.3101628530199959,
+            "known": 7,
+            "missing": 1
+          }
+        },
+        "span": {
+          "coverage": {
+            "mean": 0.08190442526544692,
+            "known": 7,
+            "missing": 1
+          },
+          "precision": {
+            "mean": 0.35210270454491976,
+            "known": 7,
+            "missing": 1
+          }
+        },
+        "line": {
+          "coverage": {
+            "mean": 0.09290507365382382,
+            "known": 7,
+            "missing": 1
+          },
+          "precision": {
+            "mean": 0.3523484713861283,
+            "known": 7,
+            "missing": 1
+          }
+        }
+      },
+      "usage": {
+        "totalTokens": {
+          "total": 7974318,
+          "knownSum": 7974318,
+          "known": 8,
+          "missing": 0
+        },
+        "inputTokens": {
+          "total": 7752549,
+          "knownSum": 7752549,
+          "known": 8,
+          "missing": 0
+        },
+        "outputTokens": {
+          "total": 221769,
+          "knownSum": 221769,
+          "known": 8,
+          "missing": 0
+        },
+        "uncachedInputTokens": {
+          "total": 703973,
+          "knownSum": 703973,
+          "known": 8,
+          "missing": 0
+        },
+        "cacheReadTokens": {
+          "total": null,
+          "knownSum": 198400,
+          "known": 1,
+          "missing": 7
+        },
+        "cacheWriteTokens": {
+          "total": null,
+          "knownSum": null,
+          "known": 0,
+          "missing": 8
+        }
+      },
+      "partialUsage": {
+        "attempts": 0,
+        "totalTokensLowerBound": null
+      },
+      "observedWorkloadTokenLowerBound": 7974318,
+      "nativeAdoption": {
+        "adopted": 0,
+        "observed": 8,
+        "planned": 8
+      },
+      "calls": {
+        "all": {
+          "total": 332,
+          "knownSum": 332,
+          "known": 8,
+          "missing": 0
+        },
+        "native": {
+          "total": 0,
+          "knownSum": 0,
+          "known": 8,
+          "missing": 0
+        },
+        "allToolErrors": {
+          "total": 7,
+          "knownSum": 7,
+          "known": 8,
+          "missing": 0
+        }
+      },
+      "seconds": {
+        "modelWorkflow": {
+          "total": 1719.1789824,
+          "knownSum": 1719.1789824,
+          "known": 8,
+          "missing": 0
+        },
+        "dshProcess": {
+          "total": 1728.8657588000003,
+          "knownSum": 1728.8657588000003,
+          "known": 8,
+          "missing": 0
+        },
+        "sourcePreparation": {
+          "total": 33.80131079999996,
+          "knownSum": 33.80131079999996,
+          "known": 8,
+          "missing": 0
+        },
+        "currentPreparation": {
+          "total": 49.2818752,
+          "knownSum": 49.2818752,
+          "known": 8,
+          "missing": 0
+        },
+        "coldNativeSetup": {
+          "total": 0,
+          "knownSum": 0,
+          "known": 8,
+          "missing": 0
+        },
+        "currentSlotWall": {
+          "total": 1790.7718360999997,
+          "knownSum": 1790.7718360999997,
+          "known": 8,
+          "missing": 0
+        },
+        "currentGrader": {
+          "total": null,
+          "knownSum": 76.07672520000014,
+          "known": 7,
+          "missing": 1
+        }
+      },
+      "initialIndexBytes": {
+        "total": 0,
+        "knownSum": 0,
+        "known": 8,
+        "missing": 0
+      }
+    },
+    {
+      "split": "pilot",
+      "arm": "codefacts022",
+      "planned": 8,
+      "statuses": {
+        "attempt-completed": 7,
+        "task-failed": 1
+      },
+      "gradeStatuses": {
+        "completed": 4,
+        "invalid-final-json": 3,
+        "missing-final-declaration": 1
+      },
+      "validQuality": 4,
+      "quality": {
+        "file": {
+          "coverage": {
+            "mean": 0.39285714285714285,
+            "known": 4,
+            "missing": 4
+          },
+          "precision": {
+            "mean": 0.4375,
+            "known": 4,
+            "missing": 4
+          }
+        },
+        "symbol": {
+          "coverage": {
+            "mean": 0.10135872530830514,
+            "known": 4,
+            "missing": 4
+          },
+          "precision": {
+            "mean": 0.2541666666666667,
+            "known": 4,
+            "missing": 4
+          }
+        },
+        "span": {
+          "coverage": {
+            "mean": 0.0596007304250879,
+            "known": 4,
+            "missing": 4
+          },
+          "precision": {
+            "mean": 0.15790094835397644,
+            "known": 4,
+            "missing": 4
+          }
+        },
+        "line": {
+          "coverage": {
+            "mean": 0.05449884881748465,
+            "known": 4,
+            "missing": 4
+          },
+          "precision": {
+            "mean": 0.14030147622699385,
+            "known": 4,
+            "missing": 4
+          }
+        }
+      },
+      "usage": {
+        "totalTokens": {
+          "total": null,
+          "knownSum": 8810027,
+          "known": 7,
+          "missing": 1
+        },
+        "inputTokens": {
+          "total": null,
+          "knownSum": 8582933,
+          "known": 7,
+          "missing": 1
+        },
+        "outputTokens": {
+          "total": null,
+          "knownSum": 227094,
+          "known": 7,
+          "missing": 1
+        },
+        "uncachedInputTokens": {
+          "total": null,
+          "knownSum": 436117,
+          "known": 7,
+          "missing": 1
+        },
+        "cacheReadTokens": {
+          "total": null,
+          "knownSum": 7888896,
+          "known": 6,
+          "missing": 2
+        },
+        "cacheWriteTokens": {
+          "total": null,
+          "knownSum": null,
+          "known": 0,
+          "missing": 8
+        }
+      },
+      "partialUsage": {
+        "attempts": 1,
+        "totalTokensLowerBound": 250334
+      },
+      "observedWorkloadTokenLowerBound": 9060361,
+      "nativeAdoption": {
+        "adopted": 5,
+        "observed": 8,
+        "planned": 8
+      },
+      "calls": {
+        "all": {
+          "total": 328,
+          "knownSum": 328,
+          "known": 8,
+          "missing": 0
+        },
+        "native": {
+          "total": 10,
+          "knownSum": 10,
+          "known": 8,
+          "missing": 0
+        },
+        "allToolErrors": {
+          "total": 11,
+          "knownSum": 11,
+          "known": 8,
+          "missing": 0
+        }
+      },
+      "seconds": {
+        "modelWorkflow": {
+          "total": 1877.0199651000005,
+          "knownSum": 1877.0199651000005,
+          "known": 8,
+          "missing": 0
+        },
+        "dshProcess": {
+          "total": 1887.282676900001,
+          "knownSum": 1887.282676900001,
+          "known": 8,
+          "missing": 0
+        },
+        "sourcePreparation": {
+          "total": 242.28139889999946,
+          "knownSum": 242.28139889999946,
+          "known": 8,
+          "missing": 0
+        },
+        "currentPreparation": {
+          "total": 330.88069699999966,
+          "knownSum": 330.88069699999966,
+          "known": 8,
+          "missing": 0
+        },
+        "coldNativeSetup": {
+          "total": 69.01257449999937,
+          "knownSum": 69.01257449999937,
+          "known": 8,
+          "missing": 0
+        },
+        "currentSlotWall": {
+          "total": 2235.8218146999993,
+          "knownSum": 2235.8218146999993,
+          "known": 8,
+          "missing": 0
+        },
+        "currentGrader": {
+          "total": null,
+          "knownSum": 47.9544798,
+          "known": 4,
+          "missing": 4
+        }
+      },
+      "initialIndexBytes": {
+        "total": 659177472,
+        "knownSum": 659177472,
+        "known": 8,
+        "missing": 0
+      }
+    },
+    {
+      "split": "pilot",
+      "arm": "codegraph",
+      "planned": 8,
+      "statuses": {
+        "attempt-completed": 8
+      },
+      "gradeStatuses": {
+        "completed": 8
+      },
+      "validQuality": 8,
+      "quality": {
+        "file": {
+          "coverage": {
+            "mean": 0.3744588744588745,
+            "known": 8,
+            "missing": 0
+          },
+          "precision": {
+            "mean": 0.5666666666666667,
+            "known": 8,
+            "missing": 0
+          }
+        },
+        "symbol": {
+          "coverage": {
+            "mean": 0.09816804562734185,
+            "known": 8,
+            "missing": 0
+          },
+          "precision": {
+            "mean": 0.40327380952380953,
+            "known": 8,
+            "missing": 0
+          }
+        },
+        "span": {
+          "coverage": {
+            "mean": 0.07272791315134633,
+            "known": 8,
+            "missing": 0
+          },
+          "precision": {
+            "mean": 0.31337643660928977,
+            "known": 8,
+            "missing": 0
+          }
+        },
+        "line": {
+          "coverage": {
+            "mean": 0.07040673031746944,
+            "known": 8,
+            "missing": 0
+          },
+          "precision": {
+            "mean": 0.3106277422097302,
+            "known": 8,
+            "missing": 0
+          }
+        }
+      },
+      "usage": {
+        "totalTokens": {
+          "total": 9235934,
+          "knownSum": 9235934,
+          "known": 8,
+          "missing": 0
+        },
+        "inputTokens": {
+          "total": 8988663,
+          "knownSum": 8988663,
+          "known": 8,
+          "missing": 0
+        },
+        "outputTokens": {
+          "total": 247271,
+          "knownSum": 247271,
+          "known": 8,
+          "missing": 0
+        },
+        "uncachedInputTokens": {
+          "total": 610935,
+          "knownSum": 610935,
+          "known": 8,
+          "missing": 0
+        },
+        "cacheReadTokens": {
+          "total": null,
+          "knownSum": null,
+          "known": 0,
+          "missing": 8
+        },
+        "cacheWriteTokens": {
+          "total": null,
+          "knownSum": null,
+          "known": 0,
+          "missing": 8
+        }
+      },
+      "partialUsage": {
+        "attempts": 0,
+        "totalTokensLowerBound": null
+      },
+      "observedWorkloadTokenLowerBound": 9235934,
+      "nativeAdoption": {
+        "adopted": 8,
+        "observed": 8,
+        "planned": 8
+      },
+      "calls": {
+        "all": {
+          "total": 303,
+          "knownSum": 303,
+          "known": 8,
+          "missing": 0
+        },
+        "native": {
+          "total": 32,
+          "knownSum": 32,
+          "known": 8,
+          "missing": 0
+        },
+        "allToolErrors": {
+          "total": 5,
+          "knownSum": 5,
+          "known": 8,
+          "missing": 0
+        }
+      },
+      "seconds": {
+        "modelWorkflow": {
+          "total": 1749.3141656999992,
+          "knownSum": 1749.3141656999992,
+          "known": 8,
+          "missing": 0
+        },
+        "dshProcess": {
+          "total": 1773.8041999999996,
+          "knownSum": 1773.8041999999996,
+          "known": 8,
+          "missing": 0
+        },
+        "sourcePreparation": {
+          "total": 51.73554279999989,
+          "knownSum": 51.73554279999989,
+          "known": 8,
+          "missing": 0
+        },
+        "currentPreparation": {
+          "total": 175.50261240000063,
+          "knownSum": 175.50261240000063,
+          "known": 8,
+          "missing": 0
+        },
+        "coldNativeSetup": {
+          "total": 105.81283420000015,
+          "knownSum": 105.81283420000015,
+          "known": 8,
+          "missing": 0
+        },
+        "currentSlotWall": {
+          "total": 1963.3790075000004,
+          "knownSum": 1963.3790075000004,
+          "known": 8,
+          "missing": 0
+        },
+        "currentGrader": {
+          "total": 74.17831290000001,
+          "knownSum": 74.17831290000001,
+          "known": 8,
+          "missing": 0
+        }
+      },
+      "initialIndexBytes": {
+        "total": 541890344,
+        "knownSum": 541890344,
+        "known": 8,
+        "missing": 0
+      }
+    },
+    {
+      "split": "confirmation_holdout",
+      "arm": "ordinary",
+      "planned": 4,
+      "statuses": {
+        "attempt-completed": 4
+      },
+      "gradeStatuses": {
+        "completed": 4
+      },
+      "validQuality": 4,
+      "quality": {
+        "file": {
+          "coverage": {
+            "mean": 0.675,
+            "known": 4,
+            "missing": 0
+          },
+          "precision": {
+            "mean": 0.7125,
+            "known": 4,
+            "missing": 0
+          }
+        },
+        "symbol": {
+          "coverage": {
+            "mean": 0.5681372549019609,
+            "known": 4,
+            "missing": 0
+          },
+          "precision": {
+            "mean": 0.5441287878787879,
+            "known": 4,
+            "missing": 0
+          }
+        },
+        "span": {
+          "coverage": {
+            "mean": 0.4087705596037897,
+            "known": 4,
+            "missing": 0
+          },
+          "precision": {
+            "mean": 0.4723197286310277,
+            "known": 4,
+            "missing": 0
+          }
+        },
+        "line": {
+          "coverage": {
+            "mean": 0.41372098568262455,
+            "known": 4,
+            "missing": 0
+          },
+          "precision": {
+            "mean": 0.4733838150507872,
+            "known": 4,
+            "missing": 0
+          }
+        }
+      },
+      "usage": {
+        "totalTokens": {
+          "total": 3753164,
+          "knownSum": 3753164,
+          "known": 4,
+          "missing": 0
+        },
+        "inputTokens": {
+          "total": 3658446,
+          "knownSum": 3658446,
+          "known": 4,
+          "missing": 0
+        },
+        "outputTokens": {
+          "total": 94718,
+          "knownSum": 94718,
+          "known": 4,
+          "missing": 0
+        },
+        "uncachedInputTokens": {
+          "total": 298634,
+          "knownSum": 298634,
+          "known": 4,
+          "missing": 0
+        },
+        "cacheReadTokens": {
+          "total": null,
+          "knownSum": 830208,
+          "known": 1,
+          "missing": 3
+        },
+        "cacheWriteTokens": {
+          "total": null,
+          "knownSum": null,
+          "known": 0,
+          "missing": 4
+        }
+      },
+      "partialUsage": {
+        "attempts": 0,
+        "totalTokensLowerBound": null
+      },
+      "observedWorkloadTokenLowerBound": 3753164,
+      "nativeAdoption": {
+        "adopted": 0,
+        "observed": 4,
+        "planned": 4
+      },
+      "calls": {
+        "all": {
+          "total": 173,
+          "knownSum": 173,
+          "known": 4,
+          "missing": 0
+        },
+        "native": {
+          "total": 0,
+          "knownSum": 0,
+          "known": 4,
+          "missing": 0
+        },
+        "allToolErrors": {
+          "total": 7,
+          "knownSum": 7,
+          "known": 4,
+          "missing": 0
+        }
+      },
+      "seconds": {
+        "modelWorkflow": {
+          "total": 849.3486267999999,
+          "knownSum": 849.3486267999999,
+          "known": 4,
+          "missing": 0
+        },
+        "dshProcess": {
+          "total": 853.3968749,
+          "knownSum": 853.3968749,
+          "known": 4,
+          "missing": 0
+        },
+        "sourcePreparation": {
+          "total": 16.63743370000017,
+          "knownSum": 16.63743370000017,
+          "known": 4,
+          "missing": 0
+        },
+        "currentPreparation": {
+          "total": 27.041238400000207,
+          "knownSum": 27.041238400000207,
+          "known": 4,
+          "missing": 0
+        },
+        "coldNativeSetup": {
+          "total": 0,
+          "knownSum": 0,
+          "known": 4,
+          "missing": 0
+        },
+        "currentSlotWall": {
+          "total": 887.6525312000001,
+          "knownSum": 887.6525312000001,
+          "known": 4,
+          "missing": 0
+        },
+        "currentGrader": {
+          "total": 51.175714999999855,
+          "knownSum": 51.175714999999855,
+          "known": 4,
+          "missing": 0
+        }
+      },
+      "initialIndexBytes": {
+        "total": 0,
+        "knownSum": 0,
+        "known": 4,
+        "missing": 0
+      }
+    },
+    {
+      "split": "confirmation_holdout",
+      "arm": "codefacts022",
+      "planned": 4,
+      "statuses": {
+        "attempt-completed": 4
+      },
+      "gradeStatuses": {
+        "completed": 4
+      },
+      "validQuality": 4,
+      "quality": {
+        "file": {
+          "coverage": {
+            "mean": 0.675,
+            "known": 4,
+            "missing": 0
+          },
+          "precision": {
+            "mean": 0.8125,
+            "known": 4,
+            "missing": 0
+          }
+        },
+        "symbol": {
+          "coverage": {
+            "mean": 0.582843137254902,
+            "known": 4,
+            "missing": 0
+          },
+          "precision": {
+            "mean": 0.6138888888888889,
+            "known": 4,
+            "missing": 0
+          }
+        },
+        "span": {
+          "coverage": {
+            "mean": 0.4376106753489349,
+            "known": 4,
+            "missing": 0
+          },
+          "precision": {
+            "mean": 0.4736434411948034,
+            "known": 4,
+            "missing": 0
+          }
+        },
+        "line": {
+          "coverage": {
+            "mean": 0.4418859445195487,
+            "known": 4,
+            "missing": 0
+          },
+          "precision": {
+            "mean": 0.4840786045984823,
+            "known": 4,
+            "missing": 0
+          }
+        }
+      },
+      "usage": {
+        "totalTokens": {
+          "total": 3128212,
+          "knownSum": 3128212,
+          "known": 4,
+          "missing": 0
+        },
+        "inputTokens": {
+          "total": 3037094,
+          "knownSum": 3037094,
+          "known": 4,
+          "missing": 0
+        },
+        "outputTokens": {
+          "total": 91118,
+          "knownSum": 91118,
+          "known": 4,
+          "missing": 0
+        },
+        "uncachedInputTokens": {
+          "total": 234662,
+          "knownSum": 234662,
+          "known": 4,
+          "missing": 0
+        },
+        "cacheReadTokens": {
+          "total": 2802432,
+          "knownSum": 2802432,
+          "known": 4,
+          "missing": 0
+        },
+        "cacheWriteTokens": {
+          "total": null,
+          "knownSum": null,
+          "known": 0,
+          "missing": 4
+        }
+      },
+      "partialUsage": {
+        "attempts": 0,
+        "totalTokensLowerBound": null
+      },
+      "observedWorkloadTokenLowerBound": 3128212,
+      "nativeAdoption": {
+        "adopted": 4,
+        "observed": 4,
+        "planned": 4
+      },
+      "calls": {
+        "all": {
+          "total": 149,
+          "knownSum": 149,
+          "known": 4,
+          "missing": 0
+        },
+        "native": {
+          "total": 7,
+          "knownSum": 7,
+          "known": 4,
+          "missing": 0
+        },
+        "allToolErrors": {
+          "total": 9,
+          "knownSum": 9,
+          "known": 4,
+          "missing": 0
+        }
+      },
+      "seconds": {
+        "modelWorkflow": {
+          "total": 722.0242182999998,
+          "knownSum": 722.0242182999998,
+          "known": 4,
+          "missing": 0
+        },
+        "dshProcess": {
+          "total": 726.3882557,
+          "knownSum": 726.3882557,
+          "known": 4,
+          "missing": 0
+        },
+        "sourcePreparation": {
+          "total": 29.342500899999987,
+          "knownSum": 29.342500899999987,
+          "known": 4,
+          "missing": 0
+        },
+        "currentPreparation": {
+          "total": 85.46085820000002,
+          "knownSum": 85.46085820000002,
+          "known": 4,
+          "missing": 0
+        },
+        "coldNativeSetup": {
+          "total": 48.128735400000004,
+          "knownSum": 48.128735400000004,
+          "known": 4,
+          "missing": 0
+        },
+        "currentSlotWall": {
+          "total": 818.5631432999999,
+          "knownSum": 818.5631432999999,
+          "known": 4,
+          "missing": 0
+        },
+        "currentGrader": {
+          "total": 45.25053289999999,
+          "knownSum": 45.25053289999999,
+          "known": 4,
+          "missing": 0
+        }
+      },
+      "initialIndexBytes": {
+        "total": 338837504,
+        "knownSum": 338837504,
+        "known": 4,
+        "missing": 0
+      }
+    },
+    {
+      "split": "confirmation_holdout",
+      "arm": "codegraph",
+      "planned": 4,
+      "statuses": {
+        "attempt-completed": 4
+      },
+      "gradeStatuses": {
+        "completed": 1,
+        "invalid-final-json": 3
+      },
+      "validQuality": 1,
+      "quality": {
+        "file": {
+          "coverage": {
+            "mean": 0.5,
+            "known": 1,
+            "missing": 3
+          },
+          "precision": {
+            "mean": 0.6,
+            "known": 1,
+            "missing": 3
+          }
+        },
+        "symbol": {
+          "coverage": {
+            "mean": 0.6470588235294118,
+            "known": 1,
+            "missing": 3
+          },
+          "precision": {
+            "mean": 0.21568627450980393,
+            "known": 1,
+            "missing": 3
+          }
+        },
+        "span": {
+          "coverage": {
+            "mean": 0.35305798252581416,
+            "known": 1,
+            "missing": 3
+          },
+          "precision": {
+            "mean": 0.1046559538524928,
+            "known": 1,
+            "missing": 3
+          }
+        },
+        "line": {
+          "coverage": {
+            "mean": 0.5,
+            "known": 1,
+            "missing": 3
+          },
+          "precision": {
+            "mean": 0.1054481546572935,
+            "known": 1,
+            "missing": 3
+          }
+        }
+      },
+      "usage": {
+        "totalTokens": {
+          "total": 2861535,
+          "knownSum": 2861535,
+          "known": 4,
+          "missing": 0
+        },
+        "inputTokens": {
+          "total": 2782953,
+          "knownSum": 2782953,
+          "known": 4,
+          "missing": 0
+        },
+        "outputTokens": {
+          "total": 78582,
+          "knownSum": 78582,
+          "known": 4,
+          "missing": 0
+        },
+        "uncachedInputTokens": {
+          "total": 222697,
+          "knownSum": 222697,
+          "known": 4,
+          "missing": 0
+        },
+        "cacheReadTokens": {
+          "total": null,
+          "knownSum": 156032,
+          "known": 1,
+          "missing": 3
+        },
+        "cacheWriteTokens": {
+          "total": null,
+          "knownSum": null,
+          "known": 0,
+          "missing": 4
+        }
+      },
+      "partialUsage": {
+        "attempts": 0,
+        "totalTokensLowerBound": null
+      },
+      "observedWorkloadTokenLowerBound": 2861535,
+      "nativeAdoption": {
+        "adopted": 4,
+        "observed": 4,
+        "planned": 4
+      },
+      "calls": {
+        "all": {
+          "total": 133,
+          "knownSum": 133,
+          "known": 4,
+          "missing": 0
+        },
+        "native": {
+          "total": 11,
+          "knownSum": 11,
+          "known": 4,
+          "missing": 0
+        },
+        "allToolErrors": {
+          "total": 5,
+          "knownSum": 5,
+          "known": 4,
+          "missing": 0
+        }
+      },
+      "seconds": {
+        "modelWorkflow": {
+          "total": 644.6590078000002,
+          "knownSum": 644.6590078000002,
+          "known": 4,
+          "missing": 0
+        },
+        "dshProcess": {
+          "total": 655.6705743,
+          "knownSum": 655.6705743,
+          "known": 4,
+          "missing": 0
+        },
+        "sourcePreparation": {
+          "total": 20.905865699999897,
+          "knownSum": 20.905865699999897,
+          "known": 4,
+          "missing": 0
+        },
+        "currentPreparation": {
+          "total": 89.54874020000008,
+          "knownSum": 89.54874020000008,
+          "known": 4,
+          "missing": 0
+        },
+        "coldNativeSetup": {
+          "total": 55.552479799999915,
+          "knownSum": 55.552479799999915,
+          "known": 4,
+          "missing": 0
+        },
+        "currentSlotWall": {
+          "total": 755.7719097000002,
+          "knownSum": 755.7719097000002,
+          "known": 4,
+          "missing": 0
+        },
+        "currentGrader": {
+          "total": null,
+          "knownSum": 7.8193652,
+          "known": 1,
+          "missing": 3
+        }
+      },
+      "initialIndexBytes": {
+        "total": 408621972,
+        "knownSum": 408621972,
+        "known": 4,
+        "missing": 0
+      }
+    }
+  ],
+  "attempts": [
+    {
+      "id": "ctx-cli__cli-5698-ordinary",
+      "taskId": "ctx-cli__cli-5698",
+      "language": "go",
+      "split": "pilot",
+      "arm": "ordinary",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 0,
+          "precision": 0
+        },
+        "symbol": {
+          "coverage": 0,
+          "precision": 0
+        },
+        "span": {
+          "coverage": 0,
+          "precision": 0
+        },
+        "line": {
+          "coverage": 0,
+          "precision": 0
+        }
+      },
+      "nativeAdopted": false,
+      "calls": {
+        "all": 30,
+        "native": 0,
+        "allToolErrors": 1
+      },
+      "exactUsage": {
+        "totalTokens": 561843,
+        "inputTokens": 539358,
+        "outputTokens": 22485,
+        "uncachedInputTokens": 58206,
+        "cacheReadTokens": null,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 169.12939369999998,
+        "dshProcess": 170.30919219999998,
+        "sourcePreparation": 0.8532388999999967,
+        "currentPreparation": 1.493383600000001,
+        "coldNativeSetup": 0,
+        "currentSlotWall": 172.4295161,
+        "currentGrader": 13.5350826
+      },
+      "initialIndexBytes": 0
+    },
+    {
+      "id": "ctx-cli__cli-5698-codefacts022",
+      "taskId": "ctx-cli__cli-5698",
+      "language": "go",
+      "split": "pilot",
+      "arm": "codefacts022",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 0,
+          "precision": 0
+        },
+        "symbol": {
+          "coverage": 0,
+          "precision": 0
+        },
+        "span": {
+          "coverage": 0,
+          "precision": 0
+        },
+        "line": {
+          "coverage": 0,
+          "precision": 0
+        }
+      },
+      "nativeAdopted": false,
+      "calls": {
+        "all": 34,
+        "native": 0,
+        "allToolErrors": 2
+      },
+      "exactUsage": {
+        "totalTokens": 478622,
+        "inputTokens": 457838,
+        "outputTokens": 20784,
+        "uncachedInputTokens": 42606,
+        "cacheReadTokens": 415232,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 140.63159860000002,
+        "dshProcess": 141.88143690000004,
+        "sourcePreparation": 0.9380166000000026,
+        "currentPreparation": 3.856833699999988,
+        "coldNativeSetup": 2.6994010999999882,
+        "currentSlotWall": 146.06186469999997,
+        "currentGrader": 17.96001009999999
+      },
+      "initialIndexBytes": 45916160
+    },
+    {
+      "id": "ctx-cli__cli-5698-codegraph",
+      "taskId": "ctx-cli__cli-5698",
+      "language": "go",
+      "split": "pilot",
+      "arm": "codegraph",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 0,
+          "precision": 0
+        },
+        "symbol": {
+          "coverage": 0,
+          "precision": 0
+        },
+        "span": {
+          "coverage": 0,
+          "precision": 0
+        },
+        "line": {
+          "coverage": 0,
+          "precision": 0
+        }
+      },
+      "nativeAdopted": true,
+      "calls": {
+        "all": 29,
+        "native": 1,
+        "allToolErrors": 0
+      },
+      "exactUsage": {
+        "totalTokens": 565468,
+        "inputTokens": 544814,
+        "outputTokens": 20654,
+        "uncachedInputTokens": 34094,
+        "cacheReadTokens": null,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 122.4765747,
+        "dshProcess": 124.88661080000003,
+        "sourcePreparation": 0.5178800000000047,
+        "currentPreparation": 6.314912299999968,
+        "coldNativeSetup": 5.575247800000012,
+        "currentSlotWall": 131.4300173,
+        "currentGrader": 10.423359199999991
+      },
+      "initialIndexBytes": 27676901
+    },
+    {
+      "id": "ctx-cli__cli-9794-codefacts022",
+      "taskId": "ctx-cli__cli-9794",
+      "language": "go",
+      "split": "pilot",
+      "arm": "codefacts022",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 0.14285714285714285,
+          "precision": 0.5
+        },
+        "symbol": {
+          "coverage": 0.02040816326530612,
+          "precision": 0.2
+        },
+        "span": {
+          "coverage": 0.0054672339155097775,
+          "precision": 0.06480867064808671
+        },
+        "line": {
+          "coverage": 0.005942733657482442,
+          "precision": 0.06748466257668712
+        }
+      },
+      "nativeAdopted": false,
+      "calls": {
+        "all": 24,
+        "native": 0,
+        "allToolErrors": 0
+      },
+      "exactUsage": {
+        "totalTokens": 264042,
+        "inputTokens": 247864,
+        "outputTokens": 16178,
+        "uncachedInputTokens": 31032,
+        "cacheReadTokens": 216832,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 116.56908429999999,
+        "dshProcess": 118.21461920000007,
+        "sourcePreparation": 1.4436329000000843,
+        "currentPreparation": 7.647211800000048,
+        "coldNativeSetup": 5.813201099999947,
+        "currentSlotWall": 126.23367900000001,
+        "currentGrader": 3.482472899999993
+      },
+      "initialIndexBytes": 93593600
+    },
+    {
+      "id": "ctx-cli__cli-9794-codegraph",
+      "taskId": "ctx-cli__cli-9794",
+      "language": "go",
+      "split": "pilot",
+      "arm": "codegraph",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 0.2857142857142857,
+          "precision": 0.6666666666666666
+        },
+        "symbol": {
+          "coverage": 0.04081632653061224,
+          "precision": 0.3333333333333333
+        },
+        "span": {
+          "coverage": 0.021850276160620987,
+          "precision": 0.21681170153675244
+        },
+        "line": {
+          "coverage": 0.021609940572663425,
+          "precision": 0.20725388601036268
+        }
+      },
+      "nativeAdopted": true,
+      "calls": {
+        "all": 10,
+        "native": 4,
+        "allToolErrors": 0
+      },
+      "exactUsage": {
+        "totalTokens": 173345,
+        "inputTokens": 171274,
+        "outputTokens": 2071,
+        "uncachedInputTokens": 39562,
+        "cacheReadTokens": null,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 29.213537099999996,
+        "dshProcess": 32.01429100000001,
+        "sourcePreparation": 1.7084650999999995,
+        "currentPreparation": 12.1271664,
+        "coldNativeSetup": 9.9740288,
+        "currentSlotWall": 44.5829899,
+        "currentGrader": 2.2891387000000103
+      },
+      "initialIndexBytes": 45666533
+    },
+    {
+      "id": "ctx-cli__cli-9794-ordinary",
+      "taskId": "ctx-cli__cli-9794",
+      "language": "go",
+      "split": "pilot",
+      "arm": "ordinary",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 0.14285714285714285,
+          "precision": 0.5
+        },
+        "symbol": {
+          "coverage": 0.02040816326530612,
+          "precision": 0.3333333333333333
+        },
+        "span": {
+          "coverage": 0.02336169577548888,
+          "precision": 0.48024549290372076
+        },
+        "line": {
+          "coverage": 0.018368449486763912,
+          "precision": 0.4594594594594595
+        }
+      },
+      "nativeAdopted": false,
+      "calls": {
+        "all": 14,
+        "native": 0,
+        "allToolErrors": 0
+      },
+      "exactUsage": {
+        "totalTokens": 55029,
+        "inputTokens": 47647,
+        "outputTokens": 7382,
+        "uncachedInputTokens": 14367,
+        "cacheReadTokens": null,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 55.96900290000001,
+        "dshProcess": 57.396145000000004,
+        "sourcePreparation": 0.954196299999996,
+        "currentPreparation": 1.417440699999999,
+        "coldNativeSetup": 0,
+        "currentSlotWall": 59.184230500000005,
+        "currentGrader": 2.8657476000000024
+      },
+      "initialIndexBytes": 0
+    },
+    {
+      "id": "ctx-nushell__nushell-12901-codegraph",
+      "taskId": "ctx-nushell__nushell-12901",
+      "language": "rust",
+      "split": "pilot",
+      "arm": "codegraph",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 0.2,
+          "precision": 0.2
+        },
+        "symbol": {
+          "coverage": 0.02040816326530612,
+          "precision": 0.14285714285714285
+        },
+        "span": {
+          "coverage": 0,
+          "precision": 0
+        },
+        "line": {
+          "coverage": 0,
+          "precision": 0
+        }
+      },
+      "nativeAdopted": true,
+      "calls": {
+        "all": 19,
+        "native": 5,
+        "allToolErrors": 0
+      },
+      "exactUsage": {
+        "totalTokens": 400455,
+        "inputTokens": 389371,
+        "outputTokens": 11084,
+        "uncachedInputTokens": 45051,
+        "cacheReadTokens": null,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 79.3461288,
+        "dshProcess": 82.6867263,
+        "sourcePreparation": 3.479435899999997,
+        "currentPreparation": 22.174411899999992,
+        "coldNativeSetup": 17.916738100000018,
+        "currentSlotWall": 105.49555550000001,
+        "currentGrader": 4.982713900000031
+      },
+      "initialIndexBytes": 84697317
+    },
+    {
+      "id": "ctx-nushell__nushell-12901-ordinary",
+      "taskId": "ctx-nushell__nushell-12901",
+      "language": "rust",
+      "split": "pilot",
+      "arm": "ordinary",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 0.2,
+          "precision": 0.2
+        },
+        "symbol": {
+          "coverage": 0.02040816326530612,
+          "precision": 0.14285714285714285
+        },
+        "span": {
+          "coverage": 0,
+          "precision": 0
+        },
+        "line": {
+          "coverage": 0,
+          "precision": 0
+        }
+      },
+      "nativeAdopted": false,
+      "calls": {
+        "all": 59,
+        "native": 0,
+        "allToolErrors": 2
+      },
+      "exactUsage": {
+        "totalTokens": 1476885,
+        "inputTokens": 1448811,
+        "outputTokens": 28074,
+        "uncachedInputTokens": 119659,
+        "cacheReadTokens": null,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 184.12765889999997,
+        "dshProcess": 185.50084460000002,
+        "sourcePreparation": 1.5084053999999887,
+        "currentPreparation": 2.1849909000000043,
+        "coldNativeSetup": 0,
+        "currentSlotWall": 188.2863826,
+        "currentGrader": 12.219684200000017
+      },
+      "initialIndexBytes": 0
+    },
+    {
+      "id": "ctx-nushell__nushell-12901-codefacts022",
+      "taskId": "ctx-nushell__nushell-12901",
+      "language": "rust",
+      "split": "pilot",
+      "arm": "codefacts022",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "invalid-final-json",
+      "qualityAvailable": false,
+      "referenceAgreement": {
+        "file": {
+          "coverage": null,
+          "precision": null
+        },
+        "symbol": {
+          "coverage": null,
+          "precision": null
+        },
+        "span": {
+          "coverage": null,
+          "precision": null
+        },
+        "line": {
+          "coverage": null,
+          "precision": null
+        }
+      },
+      "nativeAdopted": true,
+      "calls": {
+        "all": 56,
+        "native": 2,
+        "allToolErrors": 1
+      },
+      "exactUsage": {
+        "totalTokens": 1427600,
+        "inputTokens": 1394864,
+        "outputTokens": 32736,
+        "uncachedInputTokens": 82864,
+        "cacheReadTokens": 1312000,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 262.1322893000001,
+        "dshProcess": 263.59076560000005,
+        "sourcePreparation": 1.4741596000000137,
+        "currentPreparation": 11.785600799999957,
+        "coldNativeSetup": 9.772307099999976,
+        "currentSlotWall": 275.9524495,
+        "currentGrader": null
+      },
+      "initialIndexBytes": 111734784
+    },
+    {
+      "id": "ctx-clap-rs__clap-2534-ordinary",
+      "taskId": "ctx-clap-rs__clap-2534",
+      "language": "rust",
+      "split": "pilot",
+      "arm": "ordinary",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "invalid-final-json",
+      "qualityAvailable": false,
+      "referenceAgreement": {
+        "file": {
+          "coverage": null,
+          "precision": null
+        },
+        "symbol": {
+          "coverage": null,
+          "precision": null
+        },
+        "span": {
+          "coverage": null,
+          "precision": null
+        },
+        "line": {
+          "coverage": null,
+          "precision": null
+        }
+      },
+      "nativeAdopted": false,
+      "calls": {
+        "all": 31,
+        "native": 0,
+        "allToolErrors": 1
+      },
+      "exactUsage": {
+        "totalTokens": 525864,
+        "inputTokens": 500180,
+        "outputTokens": 25684,
+        "uncachedInputTokens": 111444,
+        "cacheReadTokens": null,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 231.33676879999996,
+        "dshProcess": 232.56444919999993,
+        "sourcePreparation": 0.5428844999999274,
+        "currentPreparation": 0.8566001999999863,
+        "coldNativeSetup": 0,
+        "currentSlotWall": 233.72337930000003,
+        "currentGrader": null
+      },
+      "initialIndexBytes": 0
+    },
+    {
+      "id": "ctx-clap-rs__clap-2534-codefacts022",
+      "taskId": "ctx-clap-rs__clap-2534",
+      "language": "rust",
+      "split": "pilot",
+      "arm": "codefacts022",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 1,
+          "precision": 0.5
+        },
+        "symbol": {
+          "coverage": 0.09090909090909091,
+          "precision": 0.4
+        },
+        "span": {
+          "coverage": 0.057786797692800686,
+          "precision": 0.30773606370875994
+        },
+        "line": {
+          "coverage": 0.0549645390070922,
+          "precision": 0.2421875
+        }
+      },
+      "nativeAdopted": true,
+      "calls": {
+        "all": 34,
+        "native": 1,
+        "allToolErrors": 6
+      },
+      "exactUsage": {
+        "totalTokens": 311020,
+        "inputTokens": 289096,
+        "outputTokens": 21924,
+        "uncachedInputTokens": 31176,
+        "cacheReadTokens": null,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 121.41763260000002,
+        "dshProcess": 122.76657929999999,
+        "sourcePreparation": 0.4645531000000192,
+        "currentPreparation": 2.0080964000000385,
+        "coldNativeSetup": 1.377625900000101,
+        "currentSlotWall": 124.92840139999997,
+        "currentGrader": 6.175012799999967
+      },
+      "initialIndexBytes": 15130624
+    },
+    {
+      "id": "ctx-clap-rs__clap-2534-codegraph",
+      "taskId": "ctx-clap-rs__clap-2534",
+      "language": "rust",
+      "split": "pilot",
+      "arm": "codegraph",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 1,
+          "precision": 1
+        },
+        "symbol": {
+          "coverage": 0.09090909090909091,
+          "precision": 1
+        },
+        "span": {
+          "coverage": 0.12524033326212347,
+          "precision": 0.6852717708942139
+        },
+        "line": {
+          "coverage": 0.12943262411347517,
+          "precision": 0.6697247706422018
+        }
+      },
+      "nativeAdopted": true,
+      "calls": {
+        "all": 24,
+        "native": 1,
+        "allToolErrors": 3
+      },
+      "exactUsage": {
+        "totalTokens": 443581,
+        "inputTokens": 409799,
+        "outputTokens": 33782,
+        "uncachedInputTokens": 57415,
+        "cacheReadTokens": null,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 277.1374827999999,
+        "dshProcess": 279.90613950000005,
+        "sourcePreparation": 0.3074254999998957,
+        "currentPreparation": 4.198902900000103,
+        "coldNativeSetup": 3.7899209000000265,
+        "currentSlotWall": 284.2178448000001,
+        "currentGrader": 2.8165554999999585
+      },
+      "initialIndexBytes": 9343205
+    },
+    {
+      "id": "ctx-sveltejs__svelte-12509-codefacts022",
+      "taskId": "ctx-sveltejs__svelte-12509",
+      "language": "javascript",
+      "split": "pilot",
+      "arm": "codefacts022",
+      "status": "task-failed",
+      "outcome": "provider-or-task-failed",
+      "providerCallSucceeded": false,
+      "generationCutoff": false,
+      "gradeStatus": "missing-final-declaration",
+      "qualityAvailable": false,
+      "referenceAgreement": {
+        "file": {
+          "coverage": null,
+          "precision": null
+        },
+        "symbol": {
+          "coverage": null,
+          "precision": null
+        },
+        "span": {
+          "coverage": null,
+          "precision": null
+        },
+        "line": {
+          "coverage": null,
+          "precision": null
+        }
+      },
+      "nativeAdopted": true,
+      "calls": {
+        "all": 29,
+        "native": 1,
+        "allToolErrors": 2
+      },
+      "exactUsage": null,
+      "knownLowerBound": {
+        "totalTokens": 250334,
+        "uncachedInputTokens": 42230,
+        "outputTokens": 5224
+      },
+      "seconds": {
+        "modelWorkflow": 113.46778060000017,
+        "dshProcess": 114.72573190000001,
+        "sourcePreparation": 38.909168199999954,
+        "currentPreparation": 52.363657499999974,
+        "coldNativeSetup": 7.472977799999994,
+        "currentSlotWall": 170.8756725000001,
+        "currentGrader": null
+      },
+      "initialIndexBytes": 80814080
+    },
+    {
+      "id": "ctx-sveltejs__svelte-12509-codegraph",
+      "taskId": "ctx-sveltejs__svelte-12509",
+      "language": "javascript",
+      "split": "pilot",
+      "arm": "codegraph",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 0.09090909090909091,
+          "precision": 0.2
+        },
+        "symbol": {
+          "coverage": 0.03125,
+          "precision": 0.16666666666666666
+        },
+        "span": {
+          "coverage": 0.02046142208774584,
+          "precision": 0.18361805634121506
+        },
+        "line": {
+          "coverage": 0.017755231452124286,
+          "precision": 0.20588235294117646
+        }
+      },
+      "nativeAdopted": true,
+      "calls": {
+        "all": 62,
+        "native": 3,
+        "allToolErrors": 1
+      },
+      "exactUsage": {
+        "totalTokens": 1716656,
+        "inputTokens": 1664918,
+        "outputTokens": 51738,
+        "uncachedInputTokens": 66070,
+        "cacheReadTokens": null,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 284.4462619,
+        "dshProcess": 287.9811102,
+        "sourcePreparation": 6.9214879000000655,
+        "currentPreparation": 26.12205689999997,
+        "coldNativeSetup": 15.57686499999999,
+        "currentSlotWall": 316.8735423000001,
+        "currentGrader": 16.21766080000001
+      },
+      "initialIndexBytes": 60154085
+    },
+    {
+      "id": "ctx-sveltejs__svelte-12509-ordinary",
+      "taskId": "ctx-sveltejs__svelte-12509",
+      "language": "javascript",
+      "split": "pilot",
+      "arm": "ordinary",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 0.09090909090909091,
+          "precision": 0.3333333333333333
+        },
+        "symbol": {
+          "coverage": 0.03125,
+          "precision": 0.2727272727272727
+        },
+        "span": {
+          "coverage": 0.02962682803832577,
+          "precision": 0.46497823506133756
+        },
+        "line": {
+          "coverage": 0.024096385542168676,
+          "precision": 0.46060606060606063
+        }
+      },
+      "nativeAdopted": false,
+      "calls": {
+        "all": 86,
+        "native": 0,
+        "allToolErrors": 1
+      },
+      "exactUsage": {
+        "totalTokens": 2596641,
+        "inputTokens": 2519972,
+        "outputTokens": 76669,
+        "uncachedInputTokens": 141220,
+        "cacheReadTokens": null,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 570.0904201,
+        "dshProcess": 571.2066984000002,
+        "sourcePreparation": 5.814568599999882,
+        "currentPreparation": 8.69809179999982,
+        "coldNativeSetup": 0,
+        "currentSlotWall": 583.2311564,
+        "currentGrader": 20.476327500000014
+      },
+      "initialIndexBytes": 0
+    },
+    {
+      "id": "ctx-sveltejs__svelte-3394-codegraph",
+      "taskId": "ctx-sveltejs__svelte-3394",
+      "language": "javascript",
+      "split": "pilot",
+      "arm": "codegraph",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 0.2857142857142857,
+          "precision": 0.6666666666666666
+        },
+        "symbol": {
+          "coverage": 0.23529411764705882,
+          "precision": 0.3333333333333333
+        },
+        "span": {
+          "coverage": 0.13156469951272334,
+          "precision": 0.11440677966101695
+        },
+        "line": {
+          "coverage": 0.11877394636015326,
+          "precision": 0.11439114391143912
+        }
+      },
+      "nativeAdopted": true,
+      "calls": {
+        "all": 92,
+        "native": 12,
+        "allToolErrors": 0
+      },
+      "exactUsage": {
+        "totalTokens": 4546687,
+        "inputTokens": 4483994,
+        "outputTokens": 62693,
+        "uncachedInputTokens": 188442,
+        "cacheReadTokens": null,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 497.0436028999998,
+        "dshProcess": 500.9029806999997,
+        "sourcePreparation": 15.487122700000182,
+        "currentPreparation": 30.598612900000067,
+        "coldNativeSetup": 13.161572200000286,
+        "currentSlotWall": 532.9469870000001,
+        "currentGrader": 12.21691399999999
+      },
+      "initialIndexBytes": 20693221
+    },
+    {
+      "id": "ctx-sveltejs__svelte-3394-ordinary",
+      "taskId": "ctx-sveltejs__svelte-3394",
+      "language": "javascript",
+      "split": "pilot",
+      "arm": "ordinary",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 0.2857142857142857,
+          "precision": 0.4
+        },
+        "symbol": {
+          "coverage": 0.23529411764705882,
+          "precision": 0.2222222222222222
+        },
+        "span": {
+          "coverage": 0.13156469951272334,
+          "precision": 0.13068029040064533
+        },
+        "line": {
+          "coverage": 0.11877394636015326,
+          "precision": 0.1297071129707113
+        }
+      },
+      "nativeAdopted": false,
+      "calls": {
+        "all": 77,
+        "native": 0,
+        "allToolErrors": 1
+      },
+      "exactUsage": {
+        "totalTokens": 2487516,
+        "inputTokens": 2445637,
+        "outputTokens": 41879,
+        "uncachedInputTokens": 229445,
+        "cacheReadTokens": null,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 366.58239849999967,
+        "dshProcess": 367.77938260000013,
+        "sourcePreparation": 2.740466899999883,
+        "currentPreparation": 3.9933261000001803,
+        "coldNativeSetup": 0,
+        "currentSlotWall": 372.78822500000007,
+        "currentGrader": 15.18423270000005
+      },
+      "initialIndexBytes": 0
+    },
+    {
+      "id": "ctx-sveltejs__svelte-3394-codefacts022",
+      "taskId": "ctx-sveltejs__svelte-3394",
+      "language": "javascript",
+      "split": "pilot",
+      "arm": "codefacts022",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 0.42857142857142855,
+          "precision": 0.75
+        },
+        "symbol": {
+          "coverage": 0.29411764705882354,
+          "precision": 0.4166666666666667
+        },
+        "span": {
+          "coverage": 0.17514889009204115,
+          "precision": 0.25905905905905907
+        },
+        "line": {
+          "coverage": 0.15708812260536398,
+          "precision": 0.25153374233128833
+        }
+      },
+      "nativeAdopted": true,
+      "calls": {
+        "all": 117,
+        "native": 3,
+        "allToolErrors": 0
+      },
+      "exactUsage": {
+        "totalTokens": 5658403,
+        "inputTokens": 5574332,
+        "outputTokens": 84071,
+        "uncachedInputTokens": 160700,
+        "cacheReadTokens": 5413632,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 777.6711961999997,
+        "dshProcess": 778.8160091000004,
+        "sourcePreparation": 1.889406299999915,
+        "currentPreparation": 6.024433000000194,
+        "coldNativeSetup": 2.7420143999997526,
+        "currentSlotWall": 786.1687105000001,
+        "currentGrader": 20.336984000000054
+      },
+      "initialIndexBytes": 28401664
+    },
+    {
+      "id": "ctx-vuejs__core-11899-ordinary",
+      "taskId": "ctx-vuejs__core-11899",
+      "language": "typescript",
+      "split": "pilot",
+      "arm": "ordinary",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 0.3333333333333333,
+          "precision": 1
+        },
+        "symbol": {
+          "coverage": 0.16666666666666666,
+          "precision": 1
+        },
+        "span": {
+          "coverage": 0.03218319665789881,
+          "precision": 1
+        },
+        "line": {
+          "coverage": 0.03177966101694915,
+          "precision": 1
+        }
+      },
+      "nativeAdopted": false,
+      "calls": {
+        "all": 24,
+        "native": 0,
+        "allToolErrors": 0
+      },
+      "exactUsage": {
+        "totalTokens": 236320,
+        "inputTokens": 219807,
+        "outputTokens": 16513,
+        "uncachedInputTokens": 21407,
+        "cacheReadTokens": 198400,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 92.5864598000003,
+        "dshProcess": 93.6947379999999,
+        "sourcePreparation": 1.5457386000002735,
+        "currentPreparation": 2.219897200000007,
+        "coldNativeSetup": 0,
+        "currentSlotWall": 96.34277009999985,
+        "currentGrader": 4.412720600000001
+      },
+      "initialIndexBytes": 0
+    },
+    {
+      "id": "ctx-vuejs__core-11899-codefacts022",
+      "taskId": "ctx-vuejs__core-11899",
+      "language": "typescript",
+      "split": "pilot",
+      "arm": "codefacts022",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "invalid-final-json",
+      "qualityAvailable": false,
+      "referenceAgreement": {
+        "file": {
+          "coverage": null,
+          "precision": null
+        },
+        "symbol": {
+          "coverage": null,
+          "precision": null
+        },
+        "span": {
+          "coverage": null,
+          "precision": null
+        },
+        "line": {
+          "coverage": null,
+          "precision": null
+        }
+      },
+      "nativeAdopted": true,
+      "calls": {
+        "all": 26,
+        "native": 3,
+        "allToolErrors": 0
+      },
+      "exactUsage": {
+        "totalTokens": 627042,
+        "inputTokens": 579309,
+        "outputTokens": 47733,
+        "uncachedInputTokens": 76653,
+        "cacheReadTokens": 502656,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 314.7159488000004,
+        "dshProcess": 315.7923832,
+        "sourcePreparation": 0.5754339000000619,
+        "currentPreparation": 4.8664265999998895,
+        "coldNativeSetup": 4.162549299999606,
+        "currentSlotWall": 320.85507689999974,
+        "currentGrader": null
+      },
+      "initialIndexBytes": 88506368
+    },
+    {
+      "id": "ctx-vuejs__core-11899-codegraph",
+      "taskId": "ctx-vuejs__core-11899",
+      "language": "typescript",
+      "split": "pilot",
+      "arm": "codegraph",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 0.3333333333333333,
+          "precision": 1
+        },
+        "symbol": {
+          "coverage": 0.16666666666666666,
+          "precision": 1
+        },
+        "span": {
+          "coverage": 0.03218319665789881,
+          "precision": 1
+        },
+        "line": {
+          "coverage": 0.03177966101694915,
+          "precision": 1
+        }
+      },
+      "nativeAdopted": true,
+      "calls": {
+        "all": 27,
+        "native": 1,
+        "allToolErrors": 0
+      },
+      "exactUsage": {
+        "totalTokens": 500235,
+        "inputTokens": 447542,
+        "outputTokens": 52693,
+        "uncachedInputTokens": 81718,
+        "cacheReadTokens": null,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 340.27409449999965,
+        "dshProcess": 342.38129449999985,
+        "sourcePreparation": 0.38337459999974816,
+        "currentPreparation": 7.683294100000523,
+        "coldNativeSetup": 7.187627299999818,
+        "currentSlotWall": 350.2091184,
+        "currentGrader": 5.439764500000049
+      },
+      "initialIndexBytes": 44626149
+    },
+    {
+      "id": "ctx-mui__material-ui-26807-codefacts022",
+      "taskId": "ctx-mui__material-ui-26807",
+      "language": "typescript",
+      "split": "pilot",
+      "arm": "codefacts022",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "invalid-final-json",
+      "qualityAvailable": false,
+      "referenceAgreement": {
+        "file": {
+          "coverage": null,
+          "precision": null
+        },
+        "symbol": {
+          "coverage": null,
+          "precision": null
+        },
+        "span": {
+          "coverage": null,
+          "precision": null
+        },
+        "line": {
+          "coverage": null,
+          "precision": null
+        }
+      },
+      "nativeAdopted": false,
+      "calls": {
+        "all": 8,
+        "native": 0,
+        "allToolErrors": 0
+      },
+      "exactUsage": {
+        "totalTokens": 43298,
+        "inputTokens": 39630,
+        "outputTokens": 3668,
+        "uncachedInputTokens": 11086,
+        "cacheReadTokens": 28544,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 30.4144347000001,
+        "dshProcess": 31.495151700000278,
+        "sourcePreparation": 196.58702829999942,
+        "currentPreparation": 242.32843719999957,
+        "coldNativeSetup": 34.97249780000001,
+        "currentSlotWall": 284.7459601999996,
+        "currentGrader": null
+      },
+      "initialIndexBytes": 195080192
+    },
+    {
+      "id": "ctx-mui__material-ui-26807-codegraph",
+      "taskId": "ctx-mui__material-ui-26807",
+      "language": "typescript",
+      "split": "pilot",
+      "arm": "codegraph",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 0.8,
+          "precision": 0.8
+        },
+        "symbol": {
+          "coverage": 0.2,
+          "precision": 0.25
+        },
+        "span": {
+          "coverage": 0.2505233775296581,
+          "precision": 0.3069031844411199
+        },
+        "line": {
+          "coverage": 0.24390243902439024,
+          "precision": 0.28776978417266186
+        }
+      },
+      "nativeAdopted": true,
+      "calls": {
+        "all": 40,
+        "native": 5,
+        "allToolErrors": 1
+      },
+      "exactUsage": {
+        "totalTokens": 889507,
+        "inputTokens": 876951,
+        "outputTokens": 12556,
+        "uncachedInputTokens": 98583,
+        "cacheReadTokens": null,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 119.376483,
+        "dshProcess": 123.04504700000001,
+        "sourcePreparation": 22.9303511,
+        "currentPreparation": 66.283255,
+        "coldNativeSetup": 32.6308341,
+        "currentSlotWall": 197.6229523,
+        "currentGrader": 19.79220629999996
+      },
+      "initialIndexBytes": 249032933
+    },
+    {
+      "id": "ctx-mui__material-ui-26807-ordinary",
+      "taskId": "ctx-mui__material-ui-26807",
+      "language": "typescript",
+      "split": "pilot",
+      "arm": "ordinary",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 0.6,
+          "precision": 0.75
+        },
+        "symbol": {
+          "coverage": 0.2,
+          "precision": 0.2
+        },
+        "span": {
+          "coverage": 0.35659455687369157,
+          "precision": 0.38881491344873503
+        },
+        "line": {
+          "coverage": 0.4573170731707317,
+          "precision": 0.4166666666666667
+        }
+      },
+      "nativeAdopted": false,
+      "calls": {
+        "all": 11,
+        "native": 0,
+        "allToolErrors": 1
+      },
+      "exactUsage": {
+        "totalTokens": 34220,
+        "inputTokens": 31137,
+        "outputTokens": 3083,
+        "uncachedInputTokens": 8225,
+        "cacheReadTokens": null,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 49.356879699999965,
+        "dshProcess": 50.4143088,
+        "sourcePreparation": 19.841811600000014,
+        "currentPreparation": 28.418144700000003,
+        "coldNativeSetup": 0,
+        "currentSlotWall": 84.78617609999998,
+        "currentGrader": 7.3829300000000515
+      },
+      "initialIndexBytes": 0
+    },
+    {
+      "id": "ctx-cli__cli-3608-codegraph",
+      "taskId": "ctx-cli__cli-3608",
+      "language": "go",
+      "split": "confirmation_holdout",
+      "arm": "codegraph",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "invalid-final-json",
+      "qualityAvailable": false,
+      "referenceAgreement": {
+        "file": {
+          "coverage": null,
+          "precision": null
+        },
+        "symbol": {
+          "coverage": null,
+          "precision": null
+        },
+        "span": {
+          "coverage": null,
+          "precision": null
+        },
+        "line": {
+          "coverage": null,
+          "precision": null
+        }
+      },
+      "nativeAdopted": true,
+      "calls": {
+        "all": 13,
+        "native": 1,
+        "allToolErrors": 0
+      },
+      "exactUsage": {
+        "totalTokens": 190028,
+        "inputTokens": 180093,
+        "outputTokens": 9935,
+        "uncachedInputTokens": 24061,
+        "cacheReadTokens": 156032,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 55.437241500000006,
+        "dshProcess": 57.520679799999996,
+        "sourcePreparation": 0.5231553999999996,
+        "currentPreparation": 4.2072708,
+        "coldNativeSetup": 3.5804781999999995,
+        "currentSlotWall": 61.924272,
+        "currentGrader": null
+      },
+      "initialIndexBytes": 17846501
+    },
+    {
+      "id": "ctx-cli__cli-3608-ordinary",
+      "taskId": "ctx-cli__cli-3608",
+      "language": "go",
+      "split": "confirmation_holdout",
+      "arm": "ordinary",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 1,
+          "precision": 0.75
+        },
+        "symbol": {
+          "coverage": 0.8333333333333334,
+          "precision": 0.625
+        },
+        "span": {
+          "coverage": 0.8805409466566492,
+          "precision": 0.22877220378684365
+        },
+        "line": {
+          "coverage": 0.75,
+          "precision": 0.1493212669683258
+        }
+      },
+      "nativeAdopted": false,
+      "calls": {
+        "all": 28,
+        "native": 0,
+        "allToolErrors": 0
+      },
+      "exactUsage": {
+        "totalTokens": 550659,
+        "inputTokens": 523415,
+        "outputTokens": 27244,
+        "uncachedInputTokens": 45847,
+        "cacheReadTokens": null,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 209.18498060000002,
+        "dshProcess": 210.1844608,
+        "sourcePreparation": 0.18739929999999003,
+        "currentPreparation": 0.2820771999999997,
+        "coldNativeSetup": 0,
+        "currentSlotWall": 210.5674675,
+        "currentGrader": 7.092348999999929
+      },
+      "initialIndexBytes": 0
+    },
+    {
+      "id": "ctx-cli__cli-3608-codefacts022",
+      "taskId": "ctx-cli__cli-3608",
+      "language": "go",
+      "split": "confirmation_holdout",
+      "arm": "codefacts022",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 1,
+          "precision": 0.75
+        },
+        "symbol": {
+          "coverage": 0.8333333333333334,
+          "precision": 0.8333333333333334
+        },
+        "span": {
+          "coverage": 0.9196093163035312,
+          "precision": 0.14428857715430862
+        },
+        "line": {
+          "coverage": 0.7727272727272727,
+          "precision": 0.10493827160493827
+        }
+      },
+      "nativeAdopted": true,
+      "calls": {
+        "all": 11,
+        "native": 1,
+        "allToolErrors": 1
+      },
+      "exactUsage": {
+        "totalTokens": 98591,
+        "inputTokens": 94720,
+        "outputTokens": 3871,
+        "uncachedInputTokens": 21248,
+        "cacheReadTokens": 73472,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 35.718944900000004,
+        "dshProcess": 36.82559130000003,
+        "sourcePreparation": 0.15714649999997346,
+        "currentPreparation": 1.1747543000000296,
+        "coldNativeSetup": 0.9354589999999735,
+        "currentSlotWall": 38.088741299999995,
+        "currentGrader": 4.196943099999917
+      },
+      "initialIndexBytes": 26095616
+    },
+    {
+      "id": "ctx-clap-rs__clap-4248-ordinary",
+      "taskId": "ctx-clap-rs__clap-4248",
+      "language": "rust",
+      "split": "confirmation_holdout",
+      "arm": "ordinary",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 0.5,
+          "precision": 0.6
+        },
+        "symbol": {
+          "coverage": 0.7058823529411765,
+          "precision": 0.21818181818181817
+        },
+        "span": {
+          "coverage": 0.39813343923749006,
+          "precision": 0.12130195414120637
+        },
+        "line": {
+          "coverage": 0.5583333333333333,
+          "precision": 0.12226277372262774
+        }
+      },
+      "nativeAdopted": false,
+      "calls": {
+        "all": 38,
+        "native": 0,
+        "allToolErrors": 0
+      },
+      "exactUsage": {
+        "totalTokens": 922794,
+        "inputTokens": 901117,
+        "outputTokens": 21677,
+        "uncachedInputTokens": 70909,
+        "cacheReadTokens": 830208,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 170.57431069999998,
+        "dshProcess": 171.5805024,
+        "sourcePreparation": 0.5085243999999948,
+        "currentPreparation": 0.8180913000000292,
+        "coldNativeSetup": 0,
+        "currentSlotWall": 172.69385490000005,
+        "currentGrader": 13.009049299999955
+      },
+      "initialIndexBytes": 0
+    },
+    {
+      "id": "ctx-clap-rs__clap-4248-codefacts022",
+      "taskId": "ctx-clap-rs__clap-4248",
+      "language": "rust",
+      "split": "confirmation_holdout",
+      "arm": "codefacts022",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 0.5,
+          "precision": 1
+        },
+        "symbol": {
+          "coverage": 0.7647058823529411,
+          "precision": 0.28888888888888886
+        },
+        "span": {
+          "coverage": 0.3810563939634631,
+          "precision": 0.14500528940607527
+        },
+        "line": {
+          "coverage": 0.55,
+          "precision": 0.15137614678899083
+        }
+      },
+      "nativeAdopted": true,
+      "calls": {
+        "all": 32,
+        "native": 4,
+        "allToolErrors": 0
+      },
+      "exactUsage": {
+        "totalTokens": 677759,
+        "inputTokens": 652670,
+        "outputTokens": 25089,
+        "uncachedInputTokens": 68478,
+        "cacheReadTokens": 584192,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 189.50210720000004,
+        "dshProcess": 190.58128650000003,
+        "sourcePreparation": 0.3620263999999734,
+        "currentPreparation": 1.8124859999999754,
+        "coldNativeSetup": 1.3738516999999992,
+        "currentSlotWall": 192.46994200000003,
+        "currentGrader": 8.559764100000029
+      },
+      "initialIndexBytes": 25006080
+    },
+    {
+      "id": "ctx-clap-rs__clap-4248-codegraph",
+      "taskId": "ctx-clap-rs__clap-4248",
+      "language": "rust",
+      "split": "confirmation_holdout",
+      "arm": "codegraph",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 0.5,
+          "precision": 0.6
+        },
+        "symbol": {
+          "coverage": 0.6470588235294118,
+          "precision": 0.21568627450980393
+        },
+        "span": {
+          "coverage": 0.35305798252581416,
+          "precision": 0.1046559538524928
+        },
+        "line": {
+          "coverage": 0.5,
+          "precision": 0.1054481546572935
+        }
+      },
+      "nativeAdopted": true,
+      "calls": {
+        "all": 28,
+        "native": 4,
+        "allToolErrors": 0
+      },
+      "exactUsage": {
+        "totalTokens": 453083,
+        "inputTokens": 441888,
+        "outputTokens": 11195,
+        "uncachedInputTokens": 52640,
+        "cacheReadTokens": null,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 89.86254090000003,
+        "dshProcess": 91.89741969999997,
+        "sourcePreparation": 0.1272062000000151,
+        "currentPreparation": 3.1706755999999587,
+        "coldNativeSetup": 2.9778900999999607,
+        "currentSlotWall": 95.13544000000006,
+        "currentGrader": 7.8193652
+      },
+      "initialIndexBytes": 17670373
+    },
+    {
+      "id": "ctx-sveltejs__svelte-10391-codefacts022",
+      "taskId": "ctx-sveltejs__svelte-10391",
+      "language": "javascript",
+      "split": "confirmation_holdout",
+      "arm": "codefacts022",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 0.2,
+          "precision": 1
+        },
+        "symbol": {
+          "coverage": 0.4,
+          "precision": 1
+        },
+        "span": {
+          "coverage": 0.05667639207896207,
+          "precision": 1
+        },
+        "line": {
+          "coverage": 0.05175292153589316,
+          "precision": 1
+        }
+      },
+      "nativeAdopted": true,
+      "calls": {
+        "all": 63,
+        "native": 1,
+        "allToolErrors": 5
+      },
+      "exactUsage": {
+        "totalTokens": 1554619,
+        "inputTokens": 1522746,
+        "outputTokens": 31873,
+        "uncachedInputTokens": 81850,
+        "cacheReadTokens": 1440896,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 274.9262089999999,
+        "dshProcess": 276.02021899999994,
+        "sourcePreparation": 18.040175200000057,
+        "currentPreparation": 25.14705700000003,
+        "coldNativeSetup": 4.159554200000013,
+        "currentSlotWall": 302.6584628999999,
+        "currentGrader": 16.567046300000044
+      },
+      "initialIndexBytes": 65777664
+    },
+    {
+      "id": "ctx-sveltejs__svelte-10391-codegraph",
+      "taskId": "ctx-sveltejs__svelte-10391",
+      "language": "javascript",
+      "split": "confirmation_holdout",
+      "arm": "codegraph",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "invalid-final-json",
+      "qualityAvailable": false,
+      "referenceAgreement": {
+        "file": {
+          "coverage": null,
+          "precision": null
+        },
+        "symbol": {
+          "coverage": null,
+          "precision": null
+        },
+        "span": {
+          "coverage": null,
+          "precision": null
+        },
+        "line": {
+          "coverage": null,
+          "precision": null
+        }
+      },
+      "nativeAdopted": true,
+      "calls": {
+        "all": 47,
+        "native": 2,
+        "allToolErrors": 4
+      },
+      "exactUsage": {
+        "totalTokens": 872629,
+        "inputTokens": 850148,
+        "outputTokens": 22481,
+        "uncachedInputTokens": 57316,
+        "cacheReadTokens": null,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 217.30380930000007,
+        "dshProcess": 220.17907000000005,
+        "sourcePreparation": 2.4641469999998806,
+        "currentPreparation": 12.133676600000122,
+        "coldNativeSetup": 8.343947399999946,
+        "currentSlotWall": 233.7173252000001,
+        "currentGrader": null
+      },
+      "initialIndexBytes": 48984293
+    },
+    {
+      "id": "ctx-sveltejs__svelte-10391-ordinary",
+      "taskId": "ctx-sveltejs__svelte-10391",
+      "language": "javascript",
+      "split": "confirmation_holdout",
+      "arm": "ordinary",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 0.2,
+          "precision": 1
+        },
+        "symbol": {
+          "coverage": 0.4,
+          "precision": 1
+        },
+        "span": {
+          "coverage": 0.05667639207896207,
+          "precision": 1
+        },
+        "line": {
+          "coverage": 0.05175292153589316,
+          "precision": 1
+        }
+      },
+      "nativeAdopted": false,
+      "calls": {
+        "all": 87,
+        "native": 0,
+        "allToolErrors": 6
+      },
+      "exactUsage": {
+        "totalTokens": 2131144,
+        "inputTokens": 2092363,
+        "outputTokens": 38781,
+        "uncachedInputTokens": 153803,
+        "cacheReadTokens": null,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 389.56758089999994,
+        "dshProcess": 390.5753639,
+        "sourcePreparation": 2.4308653000001796,
+        "currentPreparation": 3.8104940000001806,
+        "coldNativeSetup": 0,
+        "currentSlotWall": 395.82685750000013,
+        "currentGrader": 14.19583169999998
+      },
+      "initialIndexBytes": 0
+    },
+    {
+      "id": "ctx-mui__material-ui-34229-codegraph",
+      "taskId": "ctx-mui__material-ui-34229",
+      "language": "typescript",
+      "split": "confirmation_holdout",
+      "arm": "codegraph",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "invalid-final-json",
+      "qualityAvailable": false,
+      "referenceAgreement": {
+        "file": {
+          "coverage": null,
+          "precision": null
+        },
+        "symbol": {
+          "coverage": null,
+          "precision": null
+        },
+        "span": {
+          "coverage": null,
+          "precision": null
+        },
+        "line": {
+          "coverage": null,
+          "precision": null
+        }
+      },
+      "nativeAdopted": true,
+      "calls": {
+        "all": 45,
+        "native": 4,
+        "allToolErrors": 1
+      },
+      "exactUsage": {
+        "totalTokens": 1345795,
+        "inputTokens": 1310824,
+        "outputTokens": 34971,
+        "uncachedInputTokens": 88680,
+        "cacheReadTokens": null,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 282.05541610000006,
+        "dshProcess": 286.0734048,
+        "sourcePreparation": 17.791357100000003,
+        "currentPreparation": 70.0371172,
+        "coldNativeSetup": 40.650164100000005,
+        "currentSlotWall": 364.9948725,
+        "currentGrader": null
+      },
+      "initialIndexBytes": 324120805
+    },
+    {
+      "id": "ctx-mui__material-ui-34229-ordinary",
+      "taskId": "ctx-mui__material-ui-34229",
+      "language": "typescript",
+      "split": "confirmation_holdout",
+      "arm": "ordinary",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 1,
+          "precision": 0.5
+        },
+        "symbol": {
+          "coverage": 0.3333333333333333,
+          "precision": 0.3333333333333333
+        },
+        "span": {
+          "coverage": 0.29973146044205745,
+          "precision": 0.5392047565960609
+        },
+        "line": {
+          "coverage": 0.2947976878612717,
+          "precision": 0.6219512195121951
+        }
+      },
+      "nativeAdopted": false,
+      "calls": {
+        "all": 20,
+        "native": 0,
+        "allToolErrors": 1
+      },
+      "exactUsage": {
+        "totalTokens": 148567,
+        "inputTokens": 141551,
+        "outputTokens": 7016,
+        "uncachedInputTokens": 28075,
+        "cacheReadTokens": null,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 80.02175459999998,
+        "dshProcess": 81.0565478,
+        "sourcePreparation": 13.510644700000004,
+        "currentPreparation": 22.130575899999997,
+        "coldNativeSetup": 0,
+        "currentSlotWall": 108.56435129999998,
+        "currentGrader": 16.878484999999987
+      },
+      "initialIndexBytes": 0
+    },
+    {
+      "id": "ctx-mui__material-ui-34229-codefacts022",
+      "taskId": "ctx-mui__material-ui-34229",
+      "language": "typescript",
+      "split": "confirmation_holdout",
+      "arm": "codefacts022",
+      "status": "attempt-completed",
+      "outcome": "completed",
+      "providerCallSucceeded": true,
+      "generationCutoff": false,
+      "gradeStatus": "completed",
+      "qualityAvailable": true,
+      "referenceAgreement": {
+        "file": {
+          "coverage": 1,
+          "precision": 0.5
+        },
+        "symbol": {
+          "coverage": 0.3333333333333333,
+          "precision": 0.3333333333333333
+        },
+        "span": {
+          "coverage": 0.3931005990497831,
+          "precision": 0.6052798982188295
+        },
+        "line": {
+          "coverage": 0.3930635838150289,
+          "precision": 0.68
+        }
+      },
+      "nativeAdopted": true,
+      "calls": {
+        "all": 43,
+        "native": 1,
+        "allToolErrors": 3
+      },
+      "exactUsage": {
+        "totalTokens": 797243,
+        "inputTokens": 766958,
+        "outputTokens": 30285,
+        "uncachedInputTokens": 63086,
+        "cacheReadTokens": 703872,
+        "cacheWriteTokens": null
+      },
+      "knownLowerBound": null,
+      "seconds": {
+        "modelWorkflow": 221.87695719999994,
+        "dshProcess": 222.96115889999993,
+        "sourcePreparation": 10.783152799999982,
+        "currentPreparation": 57.32656089999998,
+        "coldNativeSetup": 41.65987050000002,
+        "currentSlotWall": 285.3459971,
+        "currentGrader": 15.9267794
+      },
+      "initialIndexBytes": 221958144
+    }
+  ],
+  "history": {
+    "setupFailures": [
+      {
+        "slot": "ctx-mui__material-ui-26807-codegraph",
+        "split": "pilot",
+        "arm": "codegraph",
+        "phase": "native CodeGraph init before DSH",
+        "kind": "native-init-UV_HANDLE_CLOSING",
+        "exitCode": 3221226505,
+        "failedSetupWallSeconds": 29.822118499999867,
+        "modelStarted": false,
+        "retriedUnderSameConfiguration": true
+      },
+      {
+        "slot": "ctx-mui__material-ui-34229-codegraph",
+        "split": "confirmation_holdout",
+        "arm": "codegraph",
+        "phase": "native CodeGraph init before DSH",
+        "kind": "native-init-UV_HANDLE_CLOSING",
+        "exitCode": 3221226505,
+        "failedSetupWallSeconds": 229.69663639999996,
+        "modelStarted": false,
+        "retriedUnderSameConfiguration": true
+      }
+    ],
+    "setupRetries": 2,
+    "setupRetryOutcome": "Both succeeded with unchanged pinned runtime and inputs",
+    "modelFailures": [
+      {
+        "slot": "ctx-sveltejs__svelte-12509-codefacts022",
+        "split": "pilot",
+        "arm": "codefacts022",
+        "kind": "provider-or-task-failed",
+        "providerCallSucceeded": false
+      }
+    ],
+    "graderRuns": [
+      {
+        "slot": "ctx-cli__cli-5698-ordinary",
+        "split": "pilot",
+        "arm": "ordinary",
+        "run": "grade-run-0001",
+        "status": "failed",
+        "isCurrent": false,
+        "invoked": true,
+        "seconds": 6.250478000000003,
+        "exitCode": 1
+      },
+      {
+        "slot": "ctx-cli__cli-5698-ordinary",
+        "split": "pilot",
+        "arm": "ordinary",
+        "run": "grade-run-0002",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 13.5350826,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-cli__cli-5698-codefacts022",
+        "split": "pilot",
+        "arm": "codefacts022",
+        "run": "grade-run-0001",
+        "status": "failed",
+        "isCurrent": false,
+        "invoked": true,
+        "seconds": 5.280531499999925,
+        "exitCode": 1
+      },
+      {
+        "slot": "ctx-cli__cli-5698-codefacts022",
+        "split": "pilot",
+        "arm": "codefacts022",
+        "run": "grade-run-0002",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 17.96001009999999,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-cli__cli-5698-codegraph",
+        "split": "pilot",
+        "arm": "codegraph",
+        "run": "grade-run-0001",
+        "status": "failed",
+        "isCurrent": false,
+        "invoked": true,
+        "seconds": 5.8277600999999555,
+        "exitCode": 1
+      },
+      {
+        "slot": "ctx-cli__cli-5698-codegraph",
+        "split": "pilot",
+        "arm": "codegraph",
+        "run": "grade-run-0002",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 10.423359199999991,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-cli__cli-9794-codefacts022",
+        "split": "pilot",
+        "arm": "codefacts022",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 3.482472899999993,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-cli__cli-9794-codegraph",
+        "split": "pilot",
+        "arm": "codegraph",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 2.2891387000000103,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-cli__cli-9794-ordinary",
+        "split": "pilot",
+        "arm": "ordinary",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 2.8657476000000024,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-nushell__nushell-12901-codegraph",
+        "split": "pilot",
+        "arm": "codegraph",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 4.982713900000031,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-nushell__nushell-12901-ordinary",
+        "split": "pilot",
+        "arm": "ordinary",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 12.219684200000017,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-nushell__nushell-12901-codefacts022",
+        "split": "pilot",
+        "arm": "codefacts022",
+        "run": "grade-run-0001",
+        "status": "invalid-final-json",
+        "isCurrent": true,
+        "invoked": false,
+        "seconds": null,
+        "exitCode": null
+      },
+      {
+        "slot": "ctx-clap-rs__clap-2534-ordinary",
+        "split": "pilot",
+        "arm": "ordinary",
+        "run": "grade-run-0001",
+        "status": "invalid-final-json",
+        "isCurrent": true,
+        "invoked": false,
+        "seconds": null,
+        "exitCode": null
+      },
+      {
+        "slot": "ctx-clap-rs__clap-2534-codefacts022",
+        "split": "pilot",
+        "arm": "codefacts022",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 6.175012799999967,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-clap-rs__clap-2534-codegraph",
+        "split": "pilot",
+        "arm": "codegraph",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 2.8165554999999585,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-sveltejs__svelte-12509-codefacts022",
+        "split": "pilot",
+        "arm": "codefacts022",
+        "run": "grade-run-0001",
+        "status": "missing-final-declaration",
+        "isCurrent": true,
+        "invoked": false,
+        "seconds": null,
+        "exitCode": null
+      },
+      {
+        "slot": "ctx-sveltejs__svelte-12509-codegraph",
+        "split": "pilot",
+        "arm": "codegraph",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 16.21766080000001,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-sveltejs__svelte-12509-ordinary",
+        "split": "pilot",
+        "arm": "ordinary",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 20.476327500000014,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-sveltejs__svelte-3394-codegraph",
+        "split": "pilot",
+        "arm": "codegraph",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 12.21691399999999,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-sveltejs__svelte-3394-ordinary",
+        "split": "pilot",
+        "arm": "ordinary",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 15.18423270000005,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-sveltejs__svelte-3394-codefacts022",
+        "split": "pilot",
+        "arm": "codefacts022",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 20.336984000000054,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-vuejs__core-11899-ordinary",
+        "split": "pilot",
+        "arm": "ordinary",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 4.412720600000001,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-vuejs__core-11899-codefacts022",
+        "split": "pilot",
+        "arm": "codefacts022",
+        "run": "grade-run-0001",
+        "status": "invalid-final-json",
+        "isCurrent": true,
+        "invoked": false,
+        "seconds": null,
+        "exitCode": null
+      },
+      {
+        "slot": "ctx-vuejs__core-11899-codegraph",
+        "split": "pilot",
+        "arm": "codegraph",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 5.439764500000049,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-mui__material-ui-26807-codefacts022",
+        "split": "pilot",
+        "arm": "codefacts022",
+        "run": "grade-run-0001",
+        "status": "invalid-final-json",
+        "isCurrent": true,
+        "invoked": false,
+        "seconds": null,
+        "exitCode": null
+      },
+      {
+        "slot": "ctx-mui__material-ui-26807-codegraph",
+        "split": "pilot",
+        "arm": "codegraph",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 19.79220629999996,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-mui__material-ui-26807-ordinary",
+        "split": "pilot",
+        "arm": "ordinary",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 7.3829300000000515,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-cli__cli-3608-codegraph",
+        "split": "confirmation_holdout",
+        "arm": "codegraph",
+        "run": "grade-run-0001",
+        "status": "invalid-final-json",
+        "isCurrent": true,
+        "invoked": false,
+        "seconds": null,
+        "exitCode": null
+      },
+      {
+        "slot": "ctx-cli__cli-3608-ordinary",
+        "split": "confirmation_holdout",
+        "arm": "ordinary",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 7.092348999999929,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-cli__cli-3608-codefacts022",
+        "split": "confirmation_holdout",
+        "arm": "codefacts022",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 4.196943099999917,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-clap-rs__clap-4248-ordinary",
+        "split": "confirmation_holdout",
+        "arm": "ordinary",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 13.009049299999955,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-clap-rs__clap-4248-codefacts022",
+        "split": "confirmation_holdout",
+        "arm": "codefacts022",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 8.559764100000029,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-clap-rs__clap-4248-codegraph",
+        "split": "confirmation_holdout",
+        "arm": "codegraph",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 7.8193652,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-sveltejs__svelte-10391-codefacts022",
+        "split": "confirmation_holdout",
+        "arm": "codefacts022",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 16.567046300000044,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-sveltejs__svelte-10391-codegraph",
+        "split": "confirmation_holdout",
+        "arm": "codegraph",
+        "run": "grade-run-0001",
+        "status": "invalid-final-json",
+        "isCurrent": true,
+        "invoked": false,
+        "seconds": null,
+        "exitCode": null
+      },
+      {
+        "slot": "ctx-sveltejs__svelte-10391-ordinary",
+        "split": "confirmation_holdout",
+        "arm": "ordinary",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 14.19583169999998,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-mui__material-ui-34229-codegraph",
+        "split": "confirmation_holdout",
+        "arm": "codegraph",
+        "run": "grade-run-0001",
+        "status": "invalid-final-json",
+        "isCurrent": true,
+        "invoked": false,
+        "seconds": null,
+        "exitCode": null
+      },
+      {
+        "slot": "ctx-mui__material-ui-34229-ordinary",
+        "split": "confirmation_holdout",
+        "arm": "ordinary",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 16.878484999999987,
+        "exitCode": 0
+      },
+      {
+        "slot": "ctx-mui__material-ui-34229-codefacts022",
+        "split": "confirmation_holdout",
+        "arm": "codefacts022",
+        "run": "grade-run-0001",
+        "status": "completed",
+        "isCurrent": true,
+        "invoked": true,
+        "seconds": 15.9267794,
+        "exitCode": 0
+      }
+    ],
+    "gradingBySplit": [
+      {
+        "split": "pilot",
+        "invoked": 22,
+        "completed": 19,
+        "failed": 3,
+        "retries": 3,
+        "notInvoked": 5,
+        "durationSecondsKnownSum": 215.56828750000003,
+        "durationMissing": 0
+      },
+      {
+        "split": "confirmation_holdout",
+        "invoked": 9,
+        "completed": 9,
+        "failed": 0,
+        "retries": 0,
+        "notInvoked": 3,
+        "durationSecondsKnownSum": 104.24561309999984,
+        "durationMissing": 0
+      }
+    ]
+  }
+}

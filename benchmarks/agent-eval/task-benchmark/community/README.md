@@ -1,0 +1,197 @@
+# Community task benchmark
+
+Compare ordinary source tools, CodeFacts 0.2.2, and CodeGraph 1.6.2 within each
+declared DSH model, then compare those paired tool effects across model families.
+Every model runs all three arms on the same fixed tasks. Each attempt uses
+32,768 output tokens per generation and a 20-minute execution timeout. Native
+navigation is optional; there is no campaign token budget.
+
+Each `(model, task, arm)` starts a fresh DSH process and session with its own
+DSH_HOME, source directory and cold index. A session exposes only its assigned
+arm's menu. Histories, answers, patches and writable state are independent.
+The completed single-DeepSeek Context campaign remains historical evidence.
+The new four-family, two-cohort matrix plans 288 separate attempts; its model
+routes and effective effort settings must pass capability checks and be frozen
+before formal attempts. Models are selected by availability, rather than task
+scores. Pilot and confirmation remain separate, including across models.
+
+The two cohorts answer different questions:
+
+| Cohort | Task | Primary quality measurement |
+| --- | --- | --- |
+| ContextBench | Read-only issue localization | Official file, symbol, span and line coverage/precision on explicitly declared regions |
+| SWE-bench Multilingual | Edit, test and submit a repair | Official per-instance `resolved` |
+
+ContextBench uses an **adapted read-only protocol**. Actual exposed source also
+feeds official trajectory metrics. Empty model patches cannot consume the
+reference patch; EditLoc is unavailable. These results do not reproduce the
+original complete-repair ContextBench protocol.
+
+Each cohort has two pilot tasks and one confirmation task per language, across
+Go, Rust, JavaScript and TypeScript. Report pilot and confirmation separately.
+Four confirmation tasks per cohort support descriptive comparisons. The
+selection file and all failed or unavailable attempts remain in the report.
+The new matrix reuses the historical Context tasks, including its already
+observed confirmation subset. Those runs measure replication across models;
+they do not provide a new unseen holdout.
+
+## Prepare
+
+1. Obtain the original datasets and pinned official scorer trees listed in
+   [the design](../../../../docs/specs/community-benchmark-20261017/design.md).
+   Verify the downloaded files against their official release metadata.
+2. Reuse the preregistered 24 tasks in `selection-fixed-24.json`, in their fixed
+   order, with the data export command below. Seed, rule and ranks record the
+   original selection provenance; subsequent runs do not draw a new sample.
+3. Use `downloadCommunitySources` from `prepare.mjs` to inspect and export the
+   fixed GitHub archives. Preserve source bytes, modes and symlink targets.
+   Preserve the dataset's `mui/material` repository identity in public inputs;
+   its source-fetch alias is `mui/material-ui`. Resolve that alias only at the
+   archive acquisition boundary, while retaining the selected base commit and
+   recording the actual archive URL in the source manifest.
+4. On this Windows host, `runtime.symlinkStrategy="wsl-lx"`, `runtime.wsl` and
+   `runtime.wslDistro` enable real Linux symlink creation and Git operations
+   through WSL. Windows native tools still run on the same source tree. Windows
+   source readers cannot follow LX symlinks; report this platform limitation.
+5. Prepare separate private Context grading clones with `prepareCommunitySlot`
+   using the ordinary arm. Record the actual synthetic commit and source
+   manifest. These clones stay outside the model attempt and archive trees.
+   `runtime.contextSourceMode="hardlink"` shares immutable file bytes for
+   read-only localization; Git metadata and indexes stay private. Repair
+   attempts always copy independent bytes.
+   Read-only model attempts can use `runtime.contextGitMode="boundary-only"`
+   to avoid creating source commits for every arm. Official grading bases and
+   repair attempts retain full Git repositories.
+6. Prepare SWE images and run official gold/empty controls for each admitted
+   repair task. The agent image removes embedded upstream history, evaluator
+   material and task build artifacts. Retain the original image for grading.
+
+The benchmark uses Docker and Python only for its evaluation environment.
+CodeFacts itself remains a native local binary.
+
+### Export the fixed datasets
+
+Use Python with `pyarrow==26.0.0`. The `datasets` entries in
+`selection-fixed-24.json` record each official HF dataset, immutable revision,
+original file path, byte length and checksum. Obtain the files from
+`https://huggingface.co/datasets/{dataset}/resolve/{revision}/{path}` in private
+operator storage. The exporter verifies the original file checksums before
+decoding and fails on mismatched bytes. Its paths must be absolute and `--out`
+must name a new directory.
+
+```powershell
+python community/export-fixed-selection.py --context-parquet C:\eval\original\context.parquet --swe-parquet C:\eval\original\swe.parquet --out C:\eval\export-24
+```
+
+Run from `benchmarks/agent-eval/task-benchmark`. The result contains:
+
+- `public-tasks.jsonl`: 24 issue inputs with the original repository identity,
+  source commit, language and split, in fixed order.
+- `private-grading/`: all original official fields for 12 SWE records and 12
+  Context records, the 12-row Context Parquet with the original table schema,
+  and field checks. Keep these gold-bearing files outside model/tool roots and
+  version control. Point future grader configs to these private output paths.
+
+The exporter preserves every official SWE field. It copies selected Context
+rows using the original Parquet schema, rather than synthesizing a grading
+schema. Only the public file is suitable for model input. Existing frozen
+exports remain separate from a fresh export.
+
+The promoted exporter was checked against the original exports: all fields of
+24 public rows, both 12-row private JSONL exports, all 24 field checks, and the
+Context Parquet schema (including metadata) and 12 rows were equal. This
+verifies data reconstruction; environment admission and model measurements
+remain separate checks.
+
+### Prepare a new operator installation
+
+Follow [OPERATOR.md](OPERATOR.md) for the exact recorded environment versions,
+source acquisition, private native-Linux Context baselines, image admission,
+and manifest/grading templates. `operator.mjs` defaults to a read-only plan;
+`--execute` explicitly downloads sources or writes a new validated manifest.
+The source downloader and manifest builder reuse the existing runner APIs.
+Use a new campaign identity for a new installation and freeze.
+
+SWE requires every original and sanitized image's immutable identity,
+source-isolation recipe, and official gold/empty controls before admitting
+that task. Data export and Context completion do not establish SWE readiness.
+Preserve each task's actual control status and unavailable measurements.
+These operator materials remain evaluation dependencies.
+
+## Freeze and run
+
+The operator manifest supplies absolute runtime paths, the three arms, 12 tasks
+for one cohort (or all 24), and `evaluation.inputFiles`, `upstreamRoots` and
+`runtimeFiles`. Include the original data, grading config, full official scorer
+trees, environment receipts, and the complete shared SDK `node_modules` tree:
+dependencies such as Ajv can be hoisted outside the SDK package itself.
+
+```powershell
+node community/campaign.mjs --manifest C:\eval\manifest.json --mode freeze
+node community/campaign.mjs --manifest C:\eval\manifest.json --mode run --split pilot
+node community/grade-campaign.mjs --manifest C:\eval\manifest.json --config C:\eval\grading.json --split pilot
+node community/summary.mjs --evidence C:\eval\campaign
+```
+
+Commands above run from `benchmarks/agent-eval/task-benchmark`. Review the pilot
+before running `--split confirmation_holdout`. A configuration change requires
+a new campaign identity; it cannot reuse the previous freeze. `--slot ID` runs
+one allocated slot. A failed grading retry requires `--retry` and creates a new
+directory, preserving the earlier failure.
+
+`grade-campaign.mjs` also exports `createSlotGrader` for the runner's `grade`
+callback. Its operator config contains:
+
+```json
+{
+  "grading": {
+    "context": {
+      "python": "/task/context-venv/bin/python",
+      "officialRoot": "C:/eval/ContextBench",
+      "datasetPath": "C:/eval/context.parquet",
+      "repoCache": "C:/eval/context-worktrees"
+    },
+    "swe": {
+      "python": "/task/swe-venv/bin/python",
+      "officialRoot": "C:/eval/SWE-bench",
+      "datasetPath": "C:/eval/private-swe.jsonl"
+    }
+  },
+  "contextBases": {
+    "ctx-INSTANCE": {
+      "repoRoot": "C:/eval/private-base/source",
+      "gradingCommit": "ACTUAL_PRIVATE_COMMIT",
+      "sourceManifestPath": "C:/eval/source-manifest.json"
+    }
+  }
+}
+```
+
+Official scoring runs in task-local WSL environments. Windows drive paths are
+translated to `/mnt/...`; WSL launches use `--exec`. Model SWE `source_exec`
+commands run in network-disabled containers with a writable source mount and
+a nested read-only `.git` mount; the runner owns their deadlines and cleanup.
+The official SWE grader uses the pinned upstream harness's own default network
+and `SYS_ADMIN` settings. Current Context grading creates native Linux temporary
+directories itself; the historical output/temp symlink workaround is unnecessary
+for new campaigns.
+
+## Evidence and interpretation
+
+Keep the raw DSH headers, catalogs, calls, results and provider usage. Startup
+probes are distinct from successful provider calls. Missing cache fields and
+failed-call usage stay unavailable; known lower bounds are retained. A
+generation cutoff is a task failure with partial output, rather than an answer.
+
+Source ranges count as explored only when actual returned source lines can be
+verified. Owner locators alone do not imply that the owner body was read.
+Truncated line fragments and ambiguous output remain explicit diagnostics.
+
+Report all planned attempts, valid quality reports, model failures, grading
+failures and missing measurements. Separate source preparation, index time and
+disk, model time, grading time, and actual native adoption. Compare resources
+over the fixed task pairs; do not select only jointly correct attempts for the
+headline. Provider tokens are not a monetary cost estimate.
+
+The previous six-question benchmark and its frozen executor modules remain an
+independent regression experiment.
