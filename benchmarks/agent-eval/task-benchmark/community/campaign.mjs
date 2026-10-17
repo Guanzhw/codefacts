@@ -122,7 +122,6 @@ function verifySelections(manifest) {
 }
 export function assertFrozen(manifest, frozen, pins) {
   if (hash(manifest) !== frozen.manifestHash || JSON.stringify(pins) !== JSON.stringify(frozen.pins)) throw new Error('Frozen campaign inputs drifted');
-  for (const task of manifest.tasks) verifySource(task.sourceRoot, sourceEntries(task), { exact: true });
 }
 export function freezeCampaign(manifestPath, { pinCollector = collectPins } = {}) {
   const manifest = validateManifest(json(absolute(manifestPath, 'manifest')));

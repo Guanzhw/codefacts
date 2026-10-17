@@ -102,9 +102,11 @@ test('frozen input boundary: operator config edits stop grading before child exe
   await assert.rejects(grader(f.input()), /drifted|frozen campaign input/); assert.equal(f.calls.length, 0);
 });
 
-test('frozen input boundary: pristine source drift stops grading', async t => {
+test('source boundary: the selected pristine source is checked before trace extraction or official grading', async t => {
   const f = fixture(t), grader = f.grader(); fs.writeFileSync(path.join(f.task.sourceRoot, 'x.js'), 'changed\n');
+  fs.writeFileSync(path.join(f.dir, 'bridge', '0001-response.json'), 'invalid trace JSON');
   await assert.rejects(grader(f.input()), /Source byte drift/); assert.equal(f.calls.length, 0);
+  assert.equal(fs.readdirSync(f.dir).some(name => name.startsWith('grade-run-')), false);
 });
 
 test('resume boundary: completed grade reuses only identical provenance and report bytes', async t => {

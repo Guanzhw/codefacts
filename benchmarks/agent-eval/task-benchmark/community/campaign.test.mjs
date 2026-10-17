@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { hash } from '../rpc.mjs';
-import { ARMS, COMMON, REPAIR, validateManifest, buildSchedule, buildPrompt, freezeCampaign, assertFrozen, collectPins, auditAttempt, runSlot, startSandbox } from './campaign.mjs';
+import { ARMS, COMMON, REPAIR, validateManifest, buildSchedule, buildPrompt, freezeCampaign, assertFrozen, collectPins, auditAttempt, runSlot, startSandbox, executeCampaign } from './campaign.mjs';
 
 function fixture(t) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'community-campaign-')); t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
@@ -80,6 +80,23 @@ test('freeze is immutable and source/selection drift fails before dispatch', t =
   fs.writeFileSync(path.join(task.sourceRoot, 'file.txt'), 'source\n');
   const selection = JSON.parse(fs.readFileSync(manifest.selectionFile)); selection.selections[0].base_commit = 'b'.repeat(40); fs.writeFileSync(manifest.selectionFile, JSON.stringify(selection));
   assert.throws(() => freezeCampaign(file, { pinCollector: pins }), /preregistered/);
+});
+test('real preparation checks the selected source; unrelated drift waits until that task or explicit freeze', async t => {
+  const { manifest, file } = fixture(t);
+  manifest.runtime.contextGitMode = 'boundary-only';
+  fs.writeFileSync(file, JSON.stringify(manifest));
+  const frozen = freezeCampaign(file, { pinCollector: pins });
+  const first = frozen.schedule.find(slot => slot.cohort === 'context' && slot.arm === 'ordinary');
+  const second = frozen.schedule.find(slot => slot.cohort === 'context' && slot.arm === 'ordinary' && slot.taskId !== first.taskId);
+  const unused = manifest.tasks.find(task => task.id === second.taskId);
+  fs.writeFileSync(path.join(unused.sourceRoot, 'file.txt'), 'changed\n');
+  let modelCalls = 0;
+  const dependencies = { pinCollector: pins, runDshAttempt: async () => { modelCalls++; return receipt(first); } };
+  assert.equal((await executeCampaign(file, 'run', first.id, dependencies)).slots, 1);
+  assert.equal(modelCalls, 1);
+  await assert.rejects(executeCampaign(file, 'run', second.id, dependencies), /Source byte drift/);
+  assert.equal(modelCalls, 1);
+  assert.throws(() => freezeCampaign(file, { pinCollector: pins }), /Source byte drift/);
 });
 test('freeze pins complete official/runtime trees and dataset bytes, including cjs/mjs/native modules', t => {
   const { manifest, file, dir } = fixture(t);

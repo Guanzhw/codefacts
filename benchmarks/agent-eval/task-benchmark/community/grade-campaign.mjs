@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { assertFrozen, collectPins } from './campaign.mjs';
 import { extractTrace } from './trace.mjs';
 import { runOfficialGrade } from './grade.mjs';
+import { verifyCommunitySource } from './prepare.mjs';
 import { hash, writeJson } from '../rpc.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -55,6 +56,7 @@ export function createSlotGrader({ manifest, frozen, config, configPath, retry =
       if (typeof meta.bridgeEvidenceDir !== 'string' || !path.isAbsolute(meta.bridgeEvidenceDir)) {
         throw new Error('Context attempt must record its actual bridge evidence directory');
       }
+      verifyCommunitySource(task.sourceRoot, json(task.manifestFile).entries);
       const trace = extractTrace({ root: task.sourceRoot, bridgeDir: meta.bridgeEvidenceDir,
         task: { instanceId: task.instanceId, repo: task.repo, baseCommit: task.baseCommit }, answer: receipt.answer });
       prediction = trace.prediction;
