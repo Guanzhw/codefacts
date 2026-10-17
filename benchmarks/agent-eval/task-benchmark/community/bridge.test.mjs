@@ -28,7 +28,7 @@ const sdk = loadSdk(config.sdkRoot);
 const source = [
   { name: 'source_read', description: 'VERBATIM read description', inputSchema: { type: 'object', properties: { file_path: { type: 'string' }, start_line: { type: 'integer' }, end_line: { type: 'integer' }, delay_ms: { type: 'integer' } }, required: ['file_path'], additionalProperties: false } },
   ...['source_search', 'source_list'].map(name => ({ name, description: 'VERBATIM ' + name, inputSchema: { type: 'object', properties: {}, additionalProperties: false } })),
-  { name: 'native_query', description: '原生 unknown catalog', catalog_extension: { exact: true }, annotations: { readOnlyHint: true, unknown_hint: 'keep' }, inputSchema: { type: 'object', properties: { fail: { type: 'boolean' } }, additionalProperties: false } },
+  { name: 'native_query', description: config.nativeDescription ?? '原生 unknown catalog', catalog_extension: config.catalogExtension ?? { exact: true }, annotations: { readOnlyHint: true, unknown_hint: 'keep' }, inputSchema: { type: 'object', properties: { fail: { type: 'boolean' } }, additionalProperties: false } },
 ];
 const server = new sdk.Server({ name: 'fixture-inner', version: '1' }, { capabilities: { tools: {} }, instructions: 'INNER instructions exactly\\n含中文' });
 server.setRequestHandler(sdk.ListToolsRequestSchema, async () => ({ tools: source }));
@@ -108,6 +108,43 @@ test('inner catalog, unknown payload fields, instructions and safe environment s
   assert.equal(records(f.config, 'exposures.jsonl').length, 1);
   await outer.close();
   assert.equal(fs.readFileSync(path.join(f.tmp, 'inner-closed'), 'utf8'), 'closed');
+});
+
+test('reconnecting in the same evidence directory keeps only the current raw catalog and preserves history', { skip: !enabled }, async t => {
+  const f = fixture(t), first = await f.create();
+  const wireFile = path.join(f.config.evidenceDir, 'inner', 'native-wire.jsonl');
+  assert.equal(first.tools.length, 4 + repairTools.length);
+  await first.callTool({ name: 'native_query', arguments: {} });
+  await first.close();
+  const history = fs.readFileSync(wireFile);
+  assert.ok(history.length > history.toString('utf8').length, 'history includes multibyte UTF-8');
+
+  const innerConfig = JSON.parse(fs.readFileSync(f.config.innerConfig, 'utf8'));
+  innerConfig.nativeDescription = '第二轮 current native catalog';
+  innerConfig.catalogExtension = { exact: ['second', '界'] };
+  fs.writeFileSync(f.config.innerConfig, JSON.stringify(innerConfig));
+  const second = await f.create();
+  assert.equal(second.tools.length, 4 + repairTools.length);
+  const currentWire = records({ evidenceDir: path.dirname(wireFile) }, 'native-wire.jsonl');
+  const menus = currentWire.filter(record => record.direction === 'response' && record.message.result?.tools).map(record => record.message.result.tools);
+  assert.equal(menus.length, 2);
+  assert.deepEqual(second.tools, [...menus[1], ...repairTools]);
+  assert.equal(second.tools[3].description, innerConfig.nativeDescription);
+  assert.deepEqual(second.tools[3].catalog_extension, innerConfig.catalogExtension);
+  assert.equal(second.tools[3].annotations.unknown_hint, 'keep');
+  const metadata = JSON.parse(fs.readFileSync(path.join(f.config.evidenceDir, 'bridge-metadata.json'), 'utf8'));
+  assert.equal(metadata.inner.instructions, 'INNER instructions exactly\n含中文');
+  assert.deepEqual(metadata.tools, second.tools);
+  assert.deepEqual(currentWire.filter(record => record.direction === 'request' && record.message.method === 'initialize').map(record => record.message.id), [0, 0]);
+  assert.deepEqual(currentWire.filter(record => record.direction === 'request' && record.message.method === 'tools/list').map(record => record.message.id), [1, 1]);
+  const payload = await second.callTool({ name: 'native_query', arguments: {} });
+  assert.equal(payload.content[0].text, 'opaque exact native payload');
+  assert.deepEqual(payload.unknown_result, { exact: ['keep'] });
+  const edited = await second.callTool({ name: 'source_edit', arguments: { file_path: 'sample.js', old_text: 'const two = 2;', new_text: 'const two = 3;' } });
+  assert.equal(edited.isError, undefined);
+  assert.match((await second.callTool({ name: 'source_read', arguments: { file_path: 'sample.js' } })).content[0].text, /two = 3/);
+  await second.close();
+  assert.deepEqual(fs.readFileSync(wireFile).subarray(0, history.length), history);
 });
 
 test('unique UTF-8 edits, new files, deletion and exact byte/version receipts', { skip: !enabled }, async t => {

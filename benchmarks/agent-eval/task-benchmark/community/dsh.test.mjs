@@ -31,9 +31,24 @@ test('generation allowance is audited on every request alongside route and tool 
     assert.equal(result.headerAudit, false);
     assert.equal(result.answer, '');
   }
-  const rows = turn(); rows.splice(2, 0, header({}, [{ name: 'persistent_bash' }]));
-  assert.equal(summarizeDshEvents(rows, selection, () => observed).headerAudit, false);
+  for (const name of ['persistent_bash', 'read_image', 'working_directory']) {
+    const rows = turn(); rows.splice(2, 0, header({}, [{ name }]));
+    assert.equal(summarizeDshEvents(rows, selection, () => observed).headerAudit, false);
+  }
   assert.equal(summarizeDshEvents([], selection, () => undefined).headerAudit, false);
+});
+
+test('a completed turn without an active tool catalog retains cost but cannot export an answer', () => {
+  for (const missing of [false, true]) {
+    const rows = turn();
+    rows[1] = header({}, []);
+    if (missing) delete rows[1].data.header.tools;
+    const result = summarizeDshEvents(rows, selection, () => observed);
+    assert.equal(result.headerAudit, false);
+    assert.equal(result.answer, '');
+    assert.equal(result.partialOutput, 'Inspected source answer.');
+    assert.deepEqual(result.exactTurnUsage, observed);
+  }
 });
 
 test('max-tokens preserves partial output and billed tokens without a completed answer', () => {
@@ -126,10 +141,11 @@ test('execution failures, interruptions and pending tools cannot become final an
   assert.equal(summarizeDshEvents(pendingTool, selection, () => observed).answer, '');
 });
 
-test('minimal overlay preserves the frozen adapter tool boundary', () => {
+test('community overlay disables native tools added by SDK 0.2.1', () => {
   const options = { attemptDir: '/attempt', root: '/repo', ...selection, nodeCommand: 'node' };
   const rows = makeDshOverlay({ ...options, bridgeEntry: '/bridge.mjs', bridgeConfig: '/arm.json' });
-  for (const id of ['llm-deepseek', 'persistent-bash', 'persistent-pwsh', 'llm-retry', 'session-title', 'mcp-resources']) {
+  for (const id of ['llm-deepseek', 'persistent-bash', 'persistent-pwsh', 'llm-retry', 'session-title', 'mcp-resources',
+    'tool-fs', 'tool-working-directory']) {
     assert.equal(rows.find(row => row.id === id).disabled, true);
   }
   const mcp = rows.at(-1).insert.at(-1).config;

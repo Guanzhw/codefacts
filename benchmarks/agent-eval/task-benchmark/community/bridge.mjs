@@ -77,9 +77,9 @@ function result(text, metadata = {}, isError = false) {
 
 // connectNative records the actual wire before SDK response-schema normalization.
 // Recover catalog pages there so even unknown tool fields survive this outer hop.
-function rawCatalog(evidenceDir) {
+function rawCatalog(wireFile, startByte) {
   const requests = new Set(), tools = [];
-  for (const line of fs.readFileSync(path.join(evidenceDir, 'native-wire.jsonl'), 'utf8').trim().split('\n')) {
+  for (const line of fs.readFileSync(wireFile).subarray(startByte).toString('utf8').trim().split('\n')) {
     const { direction, message } = JSON.parse(line);
     if (direction === 'request' && message.method === 'tools/list') requests.add(message.id);
     if (direction === 'response' && requests.has(message.id) && message.result?.tools) tools.push(...message.result.tools);
@@ -254,9 +254,13 @@ export async function createBridge(input, { sdk, signal, execWaitMs = EXEC_WAIT_
   signal?.addEventListener('abort', abort, { once: true });
   try {
     signal?.throwIfAborted();
+    // Wire evidence is append-only; RPC IDs restart on every connection.
+    // Slice at the byte boundary before this connection, retaining prior receipts.
+    const innerWire = path.join(innerEvidence, 'native-wire.jsonl');
+    const innerWireStart = fs.existsSync(innerWire) ? fs.statSync(innerWire).size : 0;
     inner = await connectNative(sdk, { command: config.nodeCommand, args: [config.innerBridgeEntry, '--config', config.innerConfig], cwd: root, env: {} }, innerEvidence, signal);
     signal?.throwIfAborted();
-    const innerTools = rawCatalog(innerEvidence);
+    const innerTools = rawCatalog(innerWire, innerWireStart);
     if (innerTools.length !== inner.tools.length || innerTools.some((tool, i) => tool.name !== inner.tools[i].name)) throw new Error('Inner wire catalog does not match initialized catalog');
     const forwards = new Set(innerTools.map(tool => tool.name));
     if (repairTools.some(tool => forwards.has(tool.name))) throw new Error('Inner catalog collides with repair tools');

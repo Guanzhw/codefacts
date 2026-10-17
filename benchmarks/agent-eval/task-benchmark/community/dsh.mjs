@@ -5,12 +5,20 @@ import { spawn } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { performance } from 'node:perf_hooks';
 import { pathToFileURL } from 'node:url';
-import { makeDshOverlay } from '../dsh-adapter.mjs';
+import { makeDshOverlay as makeBaseDshOverlay } from '../dsh-adapter.mjs';
 import { recoverKnownUsage } from '../usage-recovery.mjs';
 
-export { makeDshOverlay };
-// dsh-llm-pi-ai 0.2.0-rc.2 declares this output capability default. The
-// explicit initialize.maxTokens below is a per-request generation allowance.
+/** Keep the community tool boundary across the 0.2.0 and 0.2.1 SDK profiles. */
+export function makeDshOverlay(options) {
+  return [
+    // sdk-minimal 0.2.1 adds these native tool producers. Cordis skips
+    // unmatched patch IDs, so the same overlay also supports 0.2.0.
+    { id: 'tool-fs', disabled: true },
+    { id: 'tool-working-directory', disabled: true },
+    ...makeBaseDshOverlay(options),
+  ];
+}
+// Keep the protocol's per-request generation allowance across SDK versions.
 export const DEFAULT_MAX_OUTPUT_TOKENS = 32768;
 
 /** Export final text only from a successfully completed, audited SDK turn. */
@@ -25,7 +33,7 @@ export function summarizeDshEvents(events, { provider, model, reasoningEffort,
   const headerAudit = headers.length > 0 && headers.every(({ header }) =>
     header.config.provider === provider && header.config.model === model &&
     header.config.reasoningEffort === reasoningEffort && header.config.maxTokens === maxOutputTokens &&
-    (header.tools ?? []).every(tool => tool.name.startsWith('mcp__repo__')));
+    header.tools?.length > 0 && header.tools.every(tool => tool.name.startsWith('mcp__repo__')));
   const lastMessage = turn.filter(event => event.type === 'assistant/message').at(-1);
   const content = lastMessage?.data.message.content ?? [];
   const text = content.filter(block => block.type === 'text').map(block => block.text).join('');

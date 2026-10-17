@@ -3,7 +3,11 @@
   "ripgrep": "15.1.0",
   "dsh": {
     "package": "@deepseek-ai/dsh",
-    "version": "0.2.0-rc.2"
+    "version": "0.2.1-rc.2",
+    "contextCampaignVersion": "0.2.0-rc.2",
+    "provider": "opencode-go",
+    "model": "deepseek-v4.1-flash",
+    "backendRevision": null
   },
   "sdk": {
     "package": "@modelcontextprotocol/sdk",
