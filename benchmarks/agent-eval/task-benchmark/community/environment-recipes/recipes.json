@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "scope": "Nine historical recipes; portable files statically checked only",
+  "scope": "Ten historical recipes; portable files statically checked only",
   "identityNote": "Registry config digests and locally loaded historical image IDs are recorded separately; equality is not asserted. Use an acquired immutable local original config ID as OFFICIAL_IMAGE after inventory/source checks.",
   "recipes": [
     {
@@ -12,7 +12,7 @@
       "registryConfigDigest": "sha256:b9669f9d8e5d3cc152f7b3aa4c8fba581135b09056e30d7d3fc8e9100cb2c84f",
       "historicalRecipeBase": "swebench/sweb.eval.x86_64.caddyserver_1776_caddy-4774@sha256:5e05db230cb2569207d3b4ca641f959ed0553bd6f2e75e3bf46cc898064bb46b",
       "historicalModelImageId": "sha256:002d00444884510e2bf583c5bbe0f0724316403cdbd8a7a17ed681c1ec8625ac",
-      "sourceImageCanonicalComparison": "pending: complete canonical file-by-file comparison not recorded",
+      "sourceImageCanonicalComparison": "Verified historical original HEAD and actual checkout against canonical manifest:345 files, bytes and normalized executable modes match",
       "originalControls": "gold resolved true; empty resolved false; infra_failure false",
       "status": "candidate-runtime-tested"
     },
@@ -90,7 +90,7 @@
       "registryConfigDigest": "sha256:0983ece7324e9c339264a15748f88231f1bdf0e8b6e56a441021c01b38de7b18",
       "historicalRecipeBase": "sha256:ff0254522e5379681e31a0868aeeeaa24f86bc400f0b8a809288ed7e62cf0134",
       "historicalModelImageId": "sha256:c4bedffb877ae84acfda2cc282647f911e7c0178e8401629bfc04b185b4a9652",
-      "sourceImageCanonicalComparison": "pending: complete canonical file-by-file comparison not recorded",
+      "sourceImageCanonicalComparison": "Verified historical HEAD, pristine filesystem and canonical manifest pairwise:178 files, bytes and normalized executable modes match",
       "originalControls": "gold resolved true; empty resolved false; infra_failure false",
       "status": "candidate-runtime-tested"
     },
@@ -119,13 +119,22 @@
       "sourceImageCanonicalComparison": "recorded in per-task private admission evidence",
       "originalControls": "gold resolved true; empty resolved false; infra_failure false",
       "status": "candidate-runtime-tested"
+    },
+    {
+      "instanceId": "preactjs__preact-3010",
+      "recipe": "node/preact-3010.Dockerfile",
+      "officialGradingTag": "swebench/sweb.eval.x86_64.preactjs_1776_preact-3010:latest",
+      "registryTagDigest": "sha256:e8aa1e355221d42235e7beb1d83c902b1ca9f40112af090d4d87e60b3f69366d",
+      "registryPlatformManifestDigest": "sha256:0ffd05a07312d1d4b10895b433a044502b6a40cd9a7048eaa532bb4134548823",
+      "registryConfigDigest": "sha256:60796b2577082e0a00bcbc9c4569a1a950dd8f55cc42f47b615be2453525180e",
+      "historicalRecipeBase": "sha256:39e5ae8acbb64efb29f6a08f296bc6bbf4d508ffce1f98a3871084afa0d62951",
+      "historicalModelImageId": "sha256:5a3ca2e4f5f34805cffdca592cc34c4552035308a6fc780bac5a6728bfeb8c11",
+      "sourceImageCanonicalComparison": "303 canonical Git HEAD blobs/modes match; embedded workingtree package-lock setup drift removed during sanitation",
+      "originalControls": "gold resolved true; empty resolved false; infra_failure false",
+      "status": "candidate-runtime-tested"
     }
   ],
   "pending": [
-    {
-      "instanceId": "preactjs__preact-3010",
-      "status": "final USER1000:1000 model-image real-sandbox verification pending; recipe not exported"
-    },
     {
       "instanceId": "facebook__docusaurus-9183",
       "status": "original image not loaded; recipe not exported"
@@ -136,7 +145,7 @@
     }
   ],
   "exportVerification": {
-    "dockerfiles": "Only FROM parameterized; reverse transformation matched all nine historical recipes",
+    "dockerfiles": "Nine recipes only parameterize FROM; Preact3010 additionally composes the actual config-only HOME and USER instructions after unchanged sanitation. Static reverse comparison and config equivalence checked.",
     "vueInputs": "Sanitizer and dependency directory list copied unchanged",
     "portableRuntime": "Not executed"
   }

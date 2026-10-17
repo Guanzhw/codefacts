@@ -1,8 +1,11 @@
 # SWE model-image recipes
 
-These nine recipes preserve the sanitation instructions actually used in the
-historical local environment. Each Dockerfile replaces only its immutable
-`FROM` value with the required `OFFICIAL_IMAGE` build argument. Vue's sanitizer
+These ten recipes preserve the sanitation instructions actually used in the
+historical local environment. Nine Dockerfiles replace only their immutable
+`FROM` value with the required `OFFICIAL_IMAGE` build argument. Preact3010 also
+composes its actual config-only `ENV HOME=/home/nonroot` and `USER 1000:1000`
+instructions after unchanged sanitation; its historical followup had identical
+rootfs layers. Vue's sanitizer
 and dependency directory list are byte-for-byte copies. The portable recipes
 have received static checks; they have not been built or run in this export.
 
@@ -43,9 +46,9 @@ the original official `record.image`; model `sandboxes[instance_id].image`
 uses the newly verified sanitized config ID. Save acquisition, original/source
 inventory, recipe hashes, build output and model identity in a private runtime
 receipt. Verify acquired source bytes and modes against canonical source
-before claiming source equivalence. Caddy4774 and Axios5085 historical complete
-canonical file-by-file comparisons remain pending; Git cleanliness does not
-complete that check.
+before claiming source equivalence. Historical Caddy4774 (345 files) and
+Axios5085 (178 files) original HEAD and filesystem inventories now match
+canonical bytes and normalized modes.
 
 For Go/Rust recipes, replace `-f` with the row's recipe path and use that
 recipe's parent directory as the build context. For Vue use
@@ -60,7 +63,7 @@ contains recipe inputs only. Docker ARG receives an acquired immutable local
 | --- | --- |
 | Go: Caddy4774/5995, Terraform35543 | Removes embedded `/testbed`, task Go compilation cache and root startup; retains compiler, GCC, Git and downloaded third-party module cache. |
 | Rust: Tokio6603, Coreutils6690, Nushell12901 | Removes embedded `/testbed` including task `target`, and root startup. Tokio also removes its observed temporary compilation probe. Preserves Rust/Cargo, registry and Nushell's third-party reedline Git dependency. Login PATH fragment exposes the installed Cargo toolchain to `bash -lc`. |
-| Node: Axios5085, Preact3562 | Keeps only `/testbed/node_modules` and toolchain/browser dependencies; removes embedded project files and each recipe's observed startup/cache artifacts. Declares one dependency VOLUME. |
+| Node: Axios5085, Preact3562/3010 | Keeps only `/testbed/node_modules` and toolchain/browser dependencies; removes embedded project files and each recipe's observed startup/cache artifacts. Declares one dependency VOLUME. |
 | Vue11899 | Keeps exactly 17 inventoried node_modules trees, their ancestor directories and third-party pnpm layout; removes other project files, compiler-sfc dist, Git, logs, history and V8 cache; replaces shell startup with inert comments. Declares 17 dependency VOLUMEs. |
 
 Prepare canonical source through existing `prepareCommunitySlot` using an
@@ -85,21 +88,22 @@ Official grading uses its own upstream resource/network behavior.
 ## Historical observations and fresh validation
 
 These are scopes actually exercised on the historical images, rather than
-results of the exported parameterized Dockerfiles. All nine original-image
+results of the exported parameterized Dockerfiles. All ten original-image
 positive/negative controls recorded `gold resolved=true`, `empty resolved=false`
 and no infrastructure failure. Caddy4774's controls were checked separately
 from its compile-only model validation.
 
 | Instance | Historical model check and result |
 | --- | --- |
-| Caddy4774 | `go test -run ^$ ./modules/caddyhttp/reverseproxy`: compile-only, passed; historical 2CPU/2GiB/512 PIDs. Normal/timeout cleanup checks also passed. Full canonical source/image comparison pending. |
+| Caddy4774 | `go test -run ^$ ./modules/caddyhttp/reverseproxy`: compile-only, passed; historical 2CPU/2GiB/512 PIDs. Normal/timeout cleanup checks also passed. Canonical source/image byte and mode comparison passed. |
 | Caddy5995 | `GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local GOMAXPROCS=4 go test -count=1 -v ./caddyconfig/caddyfile ./modules/caddyhttp/rewrite`: 21 cases passed. |
 | Terraform35543 | `GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local GOMAXPROCS=4 go test -count=1 -v ./internal/terraform -run ^TestContext2Validate_ -timeout 240s`: 81 cases passed. |
 | Tokio6603 | `timeout 600s cargo test --offline -j4 -p tokio --features full --test sync_mpsc`: 88 passed at historical512 PIDs. Separate all-target metadata check lacked addr2line0.25.1. |
 | Coreutils6690 | `timeout 600s cargo test --offline --locked -j4 -p uu_cp --lib`: 4 passed. |
 | Nushell12901 | `timeout 600s cargo test --offline --locked -j4 -p nu-engine -p nu-protocol --lib`: 59 passed. |
 | Preact3562 | `npm run build`, `npm run test:mocha`, `npm run test:ts`, `npm run test:karma -- --grep=test/browser/render.test.js`: build passed, Mocha29 passed, TypeScript16 passed/2pending, browser67 completed at1024 PIDs. Old512-task run hit EAGAIN. |
-| Axios5085 | `npm run test:mocha`:96 passed,4 failed: HTTP400 expectation, Unix socket ENOTSUP on Windows bind, HTTPS timeout, external DNS while offline. Normal/timeout cleanup passed. Full canonical source/image comparison pending. |
+| Preact3010 | Same four standard npm commands as3562: build passed, Mocha29 passed, TypeScript16 passed/2pending, browser65 completed at1024 PIDs with USER1000:1000 and HOME=/home/nonroot. Babel reported an unwritable cache and disabled caching; commands still passed. Earlier root-user npm failures remain historical evidence. |
+| Axios5085 | `npm run test:mocha`:96 passed,4 failed: HTTP400 expectation, Unix socket ENOTSUP on Windows bind, HTTPS timeout, external DNS while offline. Normal/timeout cleanup passed. Canonical source/image byte and mode comparison passed. |
 | Vue11899 | `pnpm exec vitest run -c vitest.unit.config.ts packages/reactivity/__tests__/effect.spec.ts --maxWorkers=4 --minWorkers=1` and `pnpm check`: 70 pristine reactivity tests and full repository TypeScript noEmit passed. Fresh Windows bind slot verified all17 volumes and automatic host mountpoints, with owned cleanup. |
 
 Run the corresponding scoped checks on each newly built image through the
@@ -110,8 +114,7 @@ existing `swe-images.template.json` with actual new inventory, source comparison
 isolation and private original-image control receipts; then set
 `workspaceVerified` only from those new checks and freeze a new campaign.
 
-Preact3010 is excluded while its final USER1000:1000 image awaits its exact-image
-real sandbox gate. Both Docusaurus images were not loaded at this snapshot.
+Both Docusaurus images were not loaded at this recipe snapshot.
 Their pending entries in `recipes.json` carry no ready claim. Keep private
 controls, selected grading records, evaluator reports and host configuration
 outside this public recipe directory.

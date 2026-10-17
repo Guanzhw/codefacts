@@ -43,6 +43,11 @@ runtime and declared upstream trees. A fresh dependency resolution can differ
 from the historical runtime even at the same top-level versions; report a new
 runtime identity. No historical npm transitive lock is supplied here.
 
+The completed Context campaign used DSH 0.2.0-rc.2; the current installation is
+0.2.1-rc.2. Preserve each campaign's actual runtime identity. The Go route uses
+`deepseek-v4.1-flash`; its remote backend revision is unavailable, so the
+DeepSeek 1017 revision is not asserted.
+
 ## Export, acquire sources and build private Context baselines
 
 First use `export-fixed-selection.py` as described in README. Copy
@@ -95,7 +100,7 @@ The failed preparation and successful fresh retry were both retained.
 ## Model images and official grading images
 
 Acquire original images and build the model images using the
-[sanitation recipes](environment-recipes/README.md). Nine historical recipes
+[sanitation recipes](environment-recipes/README.md). Ten historical recipes
 are available with portable build commands and their actual validation scopes;
 the portable exports have received static checks only. Supply the resulting
 verified local images to the operator. For each SWE task retain an inventory with original official
