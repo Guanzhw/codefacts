@@ -69,7 +69,7 @@ if (args[1] === 'sources') {
   const manifest = {
     schemaVersion: 1, campaignId: config.campaignId,
     evidenceDir: path.join(setupDir, 'campaign'), selectionFile,
-    runtime: config.runtime, model: { provider: 'opencode-go', id: 'deepseek-v4.1-flash', reasoningEffort: 'high' },
+    runtime: config.runtime, model: config.model,
     concurrency: 1, timeoutMs: 1200000, maxOutputTokens: 32768,
     arms: config.arms, tasks,
     evaluation: {

@@ -4,6 +4,7 @@ import { spawn } from 'node:child_process';
 import { performance } from 'node:perf_hooks';
 import { fileURLToPath } from 'node:url';
 import { runDshAttempt } from './dsh.mjs';
+import { createWslLease } from './wsl-lease.mjs';
 import { hash, writeJson } from '../rpc.mjs';
 import { verifyCommunitySource as verifySource } from './prepare.mjs';
 
@@ -30,7 +31,11 @@ export function validateManifest(input) {
     }
   }
   if (input.concurrency !== 1 || input.timeoutMs !== 1200000 || input.maxOutputTokens !== 32768) throw new Error('Require serial concurrency=1, timeoutMs=1200000, maxOutputTokens=32768');
-  if (input.model?.provider !== 'opencode-go' || input.model?.id !== 'deepseek-v4.1-flash' || input.model?.reasoningEffort !== 'high') throw new Error('Unexpected preregistered model');
+  // DSH SDK efforts are adapter-owned identifiers. Route capability checks and
+  // each request's header audit verify the declared selection at runtime.
+  for (const key of ['provider', 'id', 'reasoningEffort']) {
+    if (typeof input.model?.[key] !== 'string' || !input.model[key].trim()) throw new Error(`model.${key} must be a nonempty string`);
+  }
   if (JSON.stringify(input.arms?.map(row => row.id)) !== JSON.stringify(ARMS)) throw new Error('Three ordered arms required');
   for (const arm of input.arms) {
     if (arm.id === 'codefacts022') absolute(arm.executable, 'arm.executable');
@@ -161,11 +166,12 @@ function linuxPath(value) {
   if (/^[A-Za-z]:[\\/]/.test(value)) return `/mnt/${value[0].toLowerCase()}/${value.slice(3).replaceAll('\\', '/')}`;
   throw new Error('Docker bind source must be an absolute Windows drive path');
 }
-export async function startSandbox(manifest, task, root, slot, dir, run = command) {
+export async function startSandbox(manifest, task, root, slot, dir, run = command, leaseFactory = createWslLease) {
   const name = `cf-community-${hash(`${manifest.campaignId}/${slot.id}`).slice(0, 24)}`;
   const prefix = ['-d', manifest.runtime.wslDistro ?? 'Ubuntu', '-u', 'root', '--exec', 'docker'];
   const execute = args => run(manifest.runtime.wsl, [...prefix, ...args]);
-  const cleanup = async () => {
+  const lease = await leaseFactory(manifest.runtime, path.join(dir, 'wsl-lease.json'));
+  const removeContainer = async () => {
     const removed = await execute(['rm', '-fv', name]);
     const present = await execute(['ps', '-a', '--filter', `name=^/${name}$`, '--format', '{{.Names}}']);
     const receipt = { name, removed, verification: present, absent: present.code === 0 && !present.stdout.trim() };
@@ -173,16 +179,31 @@ export async function startSandbox(manifest, task, root, slot, dir, run = comman
     if (removed.code !== 0 || !receipt.absent) throw new Error(`Owned sandbox cleanup failed: ${name}`);
     return receipt;
   };
-  const started = await execute(['run', '-d', '--pull', 'never', '--name', name, '--network', 'none', '--memory', '6g', '--cpus', '4', '--pids-limit', '1024',
-    '--cap-drop', 'ALL', '--security-opt', 'no-new-privileges:true',
-    '--mount', `type=bind,source=${linuxPath(root)},target=/testbed`,
-    // Host Git later collects the patch. Its private configuration, hooks, index,
-    // and objects must remain outside the model's writable command boundary.
-    '--mount', `type=bind,source=${linuxPath(path.join(root, '.git'))},target=/testbed/.git,readonly`,
-    '--env', 'GIT_OPTIONAL_LOCKS=0', '--workdir', '/testbed', task.sandbox.image, 'sleep', 'infinity']);
-  writeJson(path.join(dir, 'sandbox-start.json'), { name, image: task.sandbox.image, result: started });
-  if (started.code !== 0) {
-    const startup = new Error(`Sandbox startup failed: ${started.stderr}`);
+  const cleanup = async () => {
+    const errors = []; let receipt;
+    try { lease.assertAlive(); } catch (error) { errors.push(error); }
+    try { receipt = await removeContainer(); } catch (error) { errors.push(error); }
+    // Even a failed container removal must release the foreground client, while
+    // preserving both failures for the infrastructure outcome.
+    try { await lease.close(); } catch (error) { if (!errors.some(previous => previous.message === error.message)) errors.push(error); }
+    if (errors.length === 1) throw errors[0];
+    if (errors.length) throw new AggregateError(errors, errors.map(error => error.message).join('; '));
+    return receipt;
+  };
+  try {
+    lease.assertAlive();
+    const started = await execute(['run', '-d', '--pull', 'never', '--name', name, '--network', 'none', '--memory', '6g', '--cpus', '4', '--pids-limit', '1024',
+      '--cap-drop', 'ALL', '--security-opt', 'no-new-privileges:true',
+      '--mount', `type=bind,source=${linuxPath(root)},target=/testbed`,
+      // Host Git later collects the patch. Its private configuration, hooks, index,
+      // and objects must remain outside the model's writable command boundary.
+      '--mount', `type=bind,source=${linuxPath(path.join(root, '.git'))},target=/testbed/.git,readonly`,
+      '--env', 'GIT_OPTIONAL_LOCKS=0', '--env', 'CARGO_TARGET_DIR=/tmp/codefacts-cargo-target',
+      '--workdir', '/testbed', task.sandbox.image, 'sleep', 'infinity']);
+    writeJson(path.join(dir, 'sandbox-start.json'), { name, image: task.sandbox.image, result: started });
+    if (started.code !== 0) throw new Error(`Sandbox startup failed: ${started.stderr}`);
+    lease.assertAlive();
+  } catch (startup) {
     try { await cleanup(); }
     catch (error) { throw new AggregateError([startup, error], `${startup.message}; ${error.message}`); }
     throw startup;

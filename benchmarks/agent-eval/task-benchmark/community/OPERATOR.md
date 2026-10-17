@@ -44,9 +44,65 @@ from the historical runtime even at the same top-level versions; report a new
 runtime identity. No historical npm transitive lock is supplied here.
 
 The completed Context campaign used DSH 0.2.0-rc.2; the current installation is
-0.2.1-rc.2. Preserve each campaign's actual runtime identity. The Go route uses
-`deepseek-v4.1-flash`; its remote backend revision is unavailable, so the
-DeepSeek 1017 revision is not asserted.
+0.2.1-rc.2. Preserve each campaign's actual runtime identity. The historical Go
+route uses `deepseek-v4.1-flash`; its remote backend revision is unavailable, so
+the DeepSeek 1017 revision is not asserted. New operator configs explicitly
+declare `model.provider`, `model.id` and `model.reasoningEffort`. Validate each
+route with actual tool calls before freezing the multi-model suite. Effort
+identifiers belong to the adapter; matching names across models do not
+establish equal inference compute.
+
+## Multi-model suite
+
+Create one operator config for each model and cohort, using explicit model
+fields and a new setup directory for each campaign. The new suite targets four
+families and both cohorts: eight campaigns, 288 independent model attempts.
+Use the same task snapshots, native arm versions, runtime and effective grading
+policy within each cohort. Context-specific materialization flags can be present
+in the shared runtime for both cohorts; repair preparation ignores them.
+
+Before freezing, validate each declared route on a synthetic repository using
+each arm's actual menu. Preserve model tool-usage errors as observations;
+capability checks establish transport and permissions, rather than rank models
+or select models that use one product well. Record the qualified routes and
+their evidence in the private files referenced by `suite.template.json`.
+
+Fill the suite template with those eight manifest paths and grading configs.
+The suite owns a shared host lock, task-block model rotation, and a separate
+pilot gate for each cohort. For example:
+
+```powershell
+node community/suite.mjs --suite C:\eval\suite.json --mode plan
+node community/suite.mjs --suite C:\eval\suite.json --mode freeze
+node community/suite.mjs --suite C:\eval\suite.json --mode run --cohort context --split pilot
+```
+
+Review the complete pilot for all four models, then use the exported
+`buildPilotReviewCandidate(suitePath, cohort)` function to obtain the evidence
+binding. Save the reviewed receipt with `status="root-reviewed-pilot"` and
+`approvedBy="root"`; retain the complete binding and review findings. Pass its
+absolute path to the holdout phase:
+
+```powershell
+node community/suite.mjs --suite C:\eval\suite.json --mode run --cohort context --split confirmation_holdout --pilot-review C:\eval\context-pilot-review.json
+```
+
+Use the same phase sequence for `--cohort swe`. Each model/task/arm creates its
+own process, session, home, source and index. Resuming checks existing evidence
+and completed official reports, without sending an existing attempt's prompt
+again. Infrastructure and grading failures stop the phase for explicit repair;
+missing or malformed Context declarations remain missing quality outcomes.
+
+SWE sandboxes hold a foreground WSL client through container removal and release
+it by closing stdin. This keeps the distro available during Windows-side model
+and native-tool work. The operator must keep other heavy jobs quiescent and
+verify sufficient disk headroom before running the formal suite.
+
+New model containers set `CARGO_TARGET_DIR=/tmp/codefacts-cargo-target` so Rust
+build output belongs to the attempt's disposable container. Its cache is private
+to that attempt and removed with the container. Validate the standard scoped
+Rust commands with this setting before suite admission; preserve source, patch,
+index measurements, command output and grading evidence.
 
 ## Export, acquire sources and build private Context baselines
 

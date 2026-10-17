@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ARMS } from './campaign.mjs';
+import { hash } from '../rpc.mjs';
 
 const json = file => JSON.parse(fs.readFileSync(file, 'utf8'));
 const number = value => typeof value === 'number' && Number.isFinite(value);
@@ -27,7 +28,7 @@ export function summarizeAttempt(slot, task, meta = null, receipt = null) {
   const nativeCalls = toolCalls.filter(call => nativeNames.some(name => call.name === `mcp__repo__${name}`));
   const toolErrors = (receipt?.toolResults ?? []).filter(result => result.message?.isError === true || result.isError === true).length;
   const grade = meta?.grade ?? { status: 'pending', resolved: null, metrics: null };
-  const resolved = grade.status === 'completed' && typeof grade.resolved === 'boolean' ? grade.resolved : null;
+  const resolved = task.cohort === 'swe' && grade.status === 'completed' && typeof grade.resolved === 'boolean' ? grade.resolved : null;
   const prompted = receipt?.timings?.promptedAtMs, ended = receipt?.timings?.turnEndedAtMs;
   return { slotId: slot.id, taskId: task.id, instanceId: task.instanceId, cohort: task.cohort, language: task.language, split: task.split, arm: slot.arm,
     status: meta?.status ?? 'not-started', outcome: meta?.audit?.outcome ?? null, receiptStatus: receipt?.status ?? null,
@@ -47,12 +48,15 @@ export function summarizeAttempt(slot, task, meta = null, receipt = null) {
 
 const RESOURCES = ['totalTokens', 'inputTokens', 'outputTokens', 'uncachedInputTokens', 'cacheReadTokens', 'cacheWriteTokens', 'dshDurationMs', 'modelTurnMs', 'gradeDurationMs', 'slotWallMs', 'preparationAndSandboxMs', 'sourcePreparationMs', 'indexDurationMs', 'indexDiskBytes', 'toolCalls', 'toolErrors', 'nativeCalls'];
 function aggregate(rows) {
+  const resolvedApplicable = rows[0]?.cohort === 'swe';
   const resolved = rows.filter(row => typeof row.resolved === 'boolean');
   const metricKeys = [...new Set(rows.flatMap(row => Object.keys(flattenMetrics(row.metrics))))].sort();
   return { planned: rows.length, statuses: Object.fromEntries([...new Set(rows.map(row => row.status))].sort().map(status => [status, rows.filter(row => row.status === status).length])),
-    resolvedApplicable: rows[0]?.cohort === 'swe',
-    resolved: resolved.length === rows.length ? resolved.filter(row => row.resolved).length : null,
-    knownResolved: resolved.filter(row => row.resolved).length, knownUnresolved: resolved.filter(row => !row.resolved).length, missingResolved: rows.length - resolved.length,
+    resolvedApplicable,
+    resolved: resolvedApplicable && resolved.length === rows.length ? resolved.filter(row => row.resolved).length : null,
+    knownResolved: resolvedApplicable ? resolved.filter(row => row.resolved).length : null,
+    knownUnresolved: resolvedApplicable ? resolved.filter(row => !row.resolved).length : null,
+    missingResolved: resolvedApplicable ? rows.length - resolved.length : null,
     resources: Object.fromEntries(RESOURCES.map(key => [key, availability(rows.map(row => row[key]))])),
     nativeAdoption: { known: rows.filter(row => row.nativeAdopted !== null).length, adopted: rows.filter(row => row.nativeAdopted === true).length },
     validContextMetrics: { valid: rows.filter(row => row.gradeStatus === 'completed' && row.metrics !== null).length, all: rows.length },
@@ -74,12 +78,12 @@ function paired(rows, arm, taskIds) {
   };
   return { arm, plannedTaskPairs: taskIds.length,
     correctnessApplicable: rows[0]?.cohort === 'swe',
-    correctness: { gradedPairs: correctness.length, missingPairs: taskIds.length - correctness.length,
+    correctness: rows[0]?.cohort === 'swe' ? { gradedPairs: correctness.length, missingPairs: taskIds.length - correctness.length,
       ordinaryCorrect: correctness.filter(([base]) => base.resolved).length, armCorrect: correctness.filter(([, treatment]) => treatment.resolved).length,
       gained: correctness.filter(([base, treatment]) => !base.resolved && treatment.resolved).length,
       lost: correctness.filter(([base, treatment]) => base.resolved && !treatment.resolved).length,
       bothCorrect: correctness.filter(([base, treatment]) => base.resolved && treatment.resolved).length,
-      bothIncorrect: correctness.filter(([base, treatment]) => !base.resolved && !treatment.resolved).length },
+      bothIncorrect: correctness.filter(([base, treatment]) => !base.resolved && !treatment.resolved).length } : null,
     resources: Object.fromEntries(RESOURCES.map(key => [key, difference(row => row?.[key])])),
     contextMetrics: Object.fromEntries(contextKeys.map(key => [key, difference(row => flattenMetrics(row?.metrics)[key])])) };
 }
@@ -99,7 +103,7 @@ export function summarizeCampaign(frozen, attempts) {
       arms: Object.fromEntries(ARMS.map(arm => [arm, aggregate(selected.filter(row => row.arm === arm))])),
       paired: ARMS.filter(arm => arm !== 'ordinary').map(arm => paired(selected, arm, taskIds)) });
   }
-  return { schemaVersion: 1, campaignId: frozen.campaignId, plannedAttempts: rows.length, attempts: rows, groups,
+  return { schemaVersion: 1, campaignId: frozen.campaignId, model: frozen.manifest.model, freezeHash: hash(frozen), plannedAttempts: rows.length, attempts: rows, groups,
     interpretation: [
       'Descriptive fixed-task results, one attempt per task and arm; four holdout tasks per cohort do not establish a robust ranking or a general productivity effect.',
       'ContextBench uses an adapted read-only localization protocol, with gold patch/context withheld from the agent. Official metric code is retained; evaluator patch input is sanitized as recorded by its adapter.',

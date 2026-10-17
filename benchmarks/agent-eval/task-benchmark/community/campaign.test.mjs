@@ -34,6 +34,7 @@ function fixture(t) {
   return { dir, manifest, file, task: tasks[0] };
 }
 const pins = (manifest, file) => [{ path: file, sha256: hash(fs.readFileSync(file)) }];
+const fakeLease = async () => ({ assertAlive() {}, async close() {} });
 function receipt(slot, overrides = {}) {
   const native = slot.arm === 'codefacts022' ? ['codefacts_explore', 'codefacts_expand', 'codefacts_impact'] : slot.arm === 'codegraph' ? ['codegraph_explore'] : [];
   return { status: 'attempt-completed', providerCallSucceeded: true, didInitialize: true, didPrompt: true, protocolError: null, headerAudit: true,
@@ -51,8 +52,46 @@ function fakePrepare() {
 test('manifest fixes 24 preregistered tasks and three arms; no total token budget', t => {
   const { manifest } = fixture(t); assert.equal(validateManifest(manifest), manifest);
   assert.throws(() => validateManifest({ ...manifest, concurrency: 2 }), /serial/);
+  assert.throws(() => validateManifest({ ...manifest, timeoutMs: 600000 }), /timeoutMs/);
   assert.throws(() => validateManifest({ ...manifest, maxOutputTokens: 100 }), /maxOutputTokens/);
   assert.throws(() => validateManifest({ ...manifest, tasks: manifest.tasks.slice(1) }), /24/);
+  assert.throws(() => validateManifest({ ...manifest, arms: manifest.arms.slice(0, 2) }), /Three ordered arms/);
+  assert.throws(() => validateManifest({ ...manifest, arms: [...manifest.arms].reverse() }), /Three ordered arms/);
+});
+test('every campaign explicitly declares its route and adapter-owned effort', t => {
+  const { manifest } = fixture(t);
+  for (const model of [undefined, null, {}, 'opencode-go/deepseek-v4.1-flash']) {
+    assert.throws(() => validateManifest({ ...manifest, model }), /model.provider must be a nonempty string/);
+  }
+  for (const key of ['provider', 'id', 'reasoningEffort']) for (const value of [undefined, null, '', ' \t', 1, [], {}]) {
+    assert.throws(() => validateManifest({ ...manifest, model: { ...manifest.model, [key]: value } }), new RegExp(`model.${key} must be a nonempty string`));
+  }
+  const model = { provider: 'fixture-provider', id: 'fixture-other-family', reasoningEffort: 'off' };
+  assert.equal(validateManifest({ ...manifest, model }).model, model);
+  const declared = { ...model, reasoningEffort: 'adapter-owned-effort' };
+  assert.equal(validateManifest({ ...manifest, model: declared }).model.reasoningEffort, 'adapter-owned-effort');
+});
+test('switching a complete cohort model preserves all task-arm pairs and dispatch settings', async t => {
+  const { manifest, file } = fixture(t);
+  manifest.tasks = manifest.tasks.filter(task => task.cohort === 'context');
+  const expected = buildSchedule(manifest.tasks);
+  manifest.model = { provider: 'fixture-provider', id: 'fixture-other-family', reasoningEffort: 'off' };
+  fs.writeFileSync(file, JSON.stringify(manifest));
+  const frozen = freezeCampaign(file, { pinCollector: pins });
+  assert.deepEqual(frozen.schedule, expected);
+  assert.equal(frozen.schedule.length, 36);
+  assert.equal(new Set(frozen.schedule.map(slot => slot.id)).size, 36);
+  for (const task of manifest.tasks) assert.deepEqual(frozen.schedule.filter(slot => slot.taskId === task.id).map(slot => slot.arm).sort(), [...ARMS].sort());
+  const seen = [];
+  for (const slot of frozen.schedule) await runSlot(manifest, frozen, slot, { prepareCommunitySlot: fakePrepare(), runDshAttempt: async options => {
+    seen.push({ provider: options.provider, model: options.model, effort: options.reasoningEffort, attemptDir: options.attemptDir, root: options.root });
+    assert.equal(options.timeoutMs, 1200000); assert.equal(options.maxOutputTokens, 32768);
+    return receipt(slot);
+  } });
+  assert.equal(seen.length, 36);
+  assert.equal(new Set(seen.map(row => row.attemptDir)).size, 36);
+  assert.equal(new Set(seen.map(row => row.root)).size, 36);
+  assert.ok(seen.every(row => row.provider === 'fixture-provider' && row.model === 'fixture-other-family' && row.effort === 'off'));
 });
 test('a complete 12-task context cohort freezes independently of SWE sandbox readiness', t => {
   const { manifest, file } = fixture(t);
@@ -177,7 +216,7 @@ test('Docker sandbox uses no network/pull, constrained mount, fixed exec launche
   const { manifest, dir } = fixture(t), calls = [], task = manifest.tasks[12];
   const sandbox = await startSandbox(manifest, task, 'D:\\attempt\\source', { id: 'slot' }, dir, async (command, args) => {
     calls.push({ command, args }); return { code: 0, stdout: '', stderr: '' };
-  });
+  }, fakeLease);
   await sandbox.cleanup();
   assert.deepEqual(calls[1].args.slice(6), ['rm', '-fv', JSON.parse(fs.readFileSync(path.join(dir, 'sandbox-start.json'))).name]);
   for (const call of calls) assert.deepEqual(call.args.slice(0, 6), ['-d', 'Ubuntu', '-u', 'root', '--exec', 'docker']);
@@ -201,7 +240,7 @@ test('owned cleanup rejects removal failure, failed absence query, and a remaini
         if (operation === 'ps' && failure === 'query') return { code: 1, stdout: '', stderr: 'fixture WSL failure' };
         if (operation === 'ps' && failure === 'present') return { code: 0, stdout: 'owned-container\n', stderr: '' };
         return { code: 0, stdout: '', stderr: '' };
-      });
+      }, fakeLease);
       await assert.rejects(sandbox.cleanup(), /Owned sandbox cleanup failed/);
       const receipt = JSON.parse(fs.readFileSync(path.join(dir, 'sandbox-cleanup.json')));
       assert.equal(receipt.removed.code, failure === 'remove' ? 1 : 0);
@@ -215,8 +254,53 @@ test('failed startup retains the startup error when cleanup also fails', async t
   const { manifest, dir } = fixture(t);
   await assert.rejects(startSandbox(manifest, manifest.tasks[12], 'D:/attempt/source', { id: 'failed-start' }, dir,
     async (command, args) => args[6] === 'ps' ? { code: 0, stdout: '', stderr: '' }
-      : { code: 1, stdout: '', stderr: args[6] === 'run' ? 'image is missing' : 'No such container' }),
+      : { code: 1, stdout: '', stderr: args[6] === 'run' ? 'image is missing' : 'No such container' }, fakeLease),
   error => error instanceof AggregateError && /image is missing/.test(error.message)
     && error.errors.length === 2 && /Owned sandbox cleanup failed/.test(error.errors[1].message));
   assert.match(JSON.parse(fs.readFileSync(path.join(dir, 'sandbox-start.json'))).result.stderr, /image is missing/);
+});
+
+test('sandbox holds its lease through owned cleanup and closes it after startup or cleanup failure', async t => {
+  for (const failure of [null, 'startup', 'cleanup']) await t.test(failure ?? 'success', async t => {
+    const { manifest, dir } = fixture(t), events = [];
+    const leaseFactory = async () => {
+      events.push('ready');
+      return { assertAlive() {}, close: async () => { events.push('lease-close'); } };
+    };
+    const run = async (_command, args) => {
+      const operation = args[6]; events.push(operation);
+      return { code: operation === (failure === 'startup' ? 'run' : failure === 'cleanup' ? 'rm' : null) ? 1 : 0, stdout: '', stderr: 'fixture failure' };
+    };
+    if (failure === 'startup') await assert.rejects(startSandbox(manifest, manifest.tasks[12], 'D:/attempt/source', { id: 'startup' }, dir, run, leaseFactory), /Sandbox startup failed/);
+    else {
+      const sandbox = await startSandbox(manifest, manifest.tasks[12], 'D:/attempt/source', { id: 'cleanup' }, dir, run, leaseFactory);
+      assert.deepEqual(events, ['ready', 'run']);
+      if (failure) await assert.rejects(sandbox.cleanup(), /Owned sandbox cleanup failed/);
+      else await sandbox.cleanup();
+    }
+    assert.deepEqual(events, ['ready', 'run', 'rm', 'ps', 'lease-close']);
+  });
+});
+
+test('lease startup failure prevents Docker dispatch and an early exit still removes the owned container', async t => {
+  const { manifest, dir } = fixture(t), events = [];
+  const run = async (_command, args) => { events.push(args[6]); return { code: 0, stdout: '', stderr: '' }; };
+  await assert.rejects(startSandbox(manifest, manifest.tasks[12], 'D:/attempt/source', { id: 'lease-startup' }, dir, run,
+    async () => { throw new Error('lease readiness timed out'); }), /lease readiness timed out/);
+  assert.deepEqual(events, []);
+  let exited = false;
+  const sandbox = await startSandbox(manifest, manifest.tasks[12], 'D:/attempt/source', { id: 'early-exit' }, dir, run,
+    async () => ({ assertAlive() { if (exited) throw new Error('lease exited before release'); }, async close() { events.push('lease-close'); throw new Error('lease exited before release'); } }));
+  exited = true;
+  await assert.rejects(sandbox.cleanup(), /lease exited before release/);
+  assert.deepEqual(events, ['run', 'rm', 'ps', 'lease-close']);
+});
+
+test('container cleanup failure and lease release failure are both retained', async t => {
+  const { manifest, dir } = fixture(t);
+  const sandbox = await startSandbox(manifest, manifest.tasks[12], 'D:/attempt/source', { id: 'two-cleanup-failures' }, dir,
+    async (_command, args) => ({ code: args[6] === 'rm' ? 1 : 0, stdout: '', stderr: 'fixture' }),
+    async () => ({ assertAlive() {}, async close() { throw new Error('lease release failed'); } }));
+  await assert.rejects(sandbox.cleanup(), error => error instanceof AggregateError && error.errors.length === 2
+    && /Owned sandbox cleanup failed/.test(error.errors[0].message) && /lease release failed/.test(error.errors[1].message));
 });

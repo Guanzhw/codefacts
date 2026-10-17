@@ -1,9 +1,19 @@
 # Community task benchmark
 
-Compare ordinary source tools, CodeFacts 0.2.2, and CodeGraph 1.6.2 using the
-same DSH `opencode-go/deepseek-v4.1-flash`, high reasoning, and 32,768 output
-tokens per generation. Native navigation is optional. There is no campaign
-token budget; each attempt has a 20-minute execution timeout.
+Compare ordinary source tools, CodeFacts 0.2.2, and CodeGraph 1.6.2 within each
+declared DSH model, then compare those paired tool effects across model families.
+Every model runs all three arms on the same fixed tasks. Each attempt uses
+32,768 output tokens per generation and a 20-minute execution timeout. Native
+navigation is optional; there is no campaign token budget.
+
+Each `(model, task, arm)` starts a fresh DSH process and session with its own
+DSH_HOME, source directory and cold index. A session exposes only its assigned
+arm's menu. Histories, answers, patches and writable state are independent.
+The completed single-DeepSeek Context campaign remains historical evidence.
+The new four-family, two-cohort matrix plans 288 separate attempts; its model
+routes and effective effort settings must pass capability checks and be frozen
+before formal attempts. Models are selected by availability, rather than task
+scores. Pilot and confirmation remain separate, including across models.
 
 The two cohorts answer different questions:
 

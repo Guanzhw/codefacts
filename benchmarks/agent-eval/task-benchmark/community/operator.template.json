@@ -6,6 +6,11 @@
   "sourceEvidenceDir": "/absolute/new/source-evidence",
   "setupDir": "/absolute/new/campaign-setup",
   "gradingConfigFile": "/absolute/private/grading.json",
+  "model": {
+    "provider": "opencode-go",
+    "id": "deepseek-v4.1-flash",
+    "reasoningEffort": "high"
+  },
   "runtime": {
     "dshRoot": "/absolute/dsh-package",
     "node": "/absolute/node",
