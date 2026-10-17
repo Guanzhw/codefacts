@@ -31,6 +31,9 @@ Each cohort has two pilot tasks and one confirmation task per language, across
 Go, Rust, JavaScript and TypeScript. Report pilot and confirmation separately.
 Four confirmation tasks per cohort support descriptive comparisons. The
 selection file and all failed or unavailable attempts remain in the report.
+The new matrix reuses the historical Context tasks, including its already
+observed confirmation subset. Those runs measure replication across models;
+they do not provide a new unseen holdout.
 
 ## Prepare
 

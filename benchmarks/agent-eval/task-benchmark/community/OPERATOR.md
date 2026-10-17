@@ -156,7 +156,7 @@ The failed preparation and successful fresh retry were both retained.
 ## Model images and official grading images
 
 Acquire original images and build the model images using the
-[sanitation recipes](environment-recipes/README.md). Ten historical recipes
+[sanitation recipes](environment-recipes/README.md). Twelve historical recipes
 are available with portable build commands and their actual validation scopes;
 the portable exports have received static checks only. Supply the resulting
 verified local images to the operator. For each SWE task retain an inventory with original official
@@ -176,8 +176,9 @@ The model image must contain its language toolchain and offline dependencies,
 with embedded task history, gold/evaluator files and task build products
 removed. Retain the original image for official grading. Inspect each image's
 actual contents and validate its own recipe. All 12 per-task entries and controls are required for a full SWE cohort.
-Missing, failed and unexecuted controls remain explicit. This delivery does not
-claim that all SWE images or controls are ready.
+All twelve historical image pairs have recorded local admission evidence,
+including original-image gold and empty controls. Each new installation must
+run its own checks and retain missing, failed and unexecuted controls explicitly.
 
 Model `source_exec` containers run with network disabled and no Docker socket
 or provider credentials, with 4 CPUs, 6 GiB RAM and a 1024-process/thread limit

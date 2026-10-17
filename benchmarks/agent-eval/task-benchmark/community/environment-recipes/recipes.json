@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "scope": "Ten historical recipes; portable files statically checked only",
+  "scope": "Twelve historical recipes; portable files statically checked only",
   "identityNote": "Registry config digests and locally loaded historical image IDs are recorded separately; equality is not asserted. Use an acquired immutable local original config ID as OFFICIAL_IMAGE after inventory/source checks.",
   "recipes": [
     {
@@ -132,21 +132,39 @@
       "sourceImageCanonicalComparison": "303 canonical Git HEAD blobs/modes match; embedded workingtree package-lock setup drift removed during sanitation",
       "originalControls": "gold resolved true; empty resolved false; infra_failure false",
       "status": "candidate-runtime-tested"
-    }
-  ],
-  "pending": [
+    },
     {
       "instanceId": "facebook__docusaurus-9183",
-      "status": "original image not loaded; recipe not exported"
+      "recipe": "docusaurus/9183/Dockerfile",
+      "officialGradingTag": "swebench/sweb.eval.x86_64.facebook_1776_docusaurus-9183:latest",
+      "registryTagDigest": "sha256:39613108947e31ae391740b6345098378cabc846973abb59d6e2bcb93aca38a3",
+      "registryPlatformManifestDigest": "sha256:ea9211f31b1f9d0e6808c8eaa98992b2d92d2aa4bcda930d7c34f83970fd91c5",
+      "registryConfigDigest": "sha256:86052b53b86dc3430773f30bc67e123102aa9cb5e6fa9910be1d9fdef0d7b7e2",
+      "historicalRecipeBase": "sha256:ea9211f31b1f9d0e6808c8eaa98992b2d92d2aa4bcda930d7c34f83970fd91c5",
+      "historicalModelImageId": "sha256:bb4e88a09e48f23249fd29bd3911fed56b592defaa59a8a14c623b9f59502b49",
+      "sourceImageCanonicalComparison": "3078 canonical Git HEAD entries match; original worktree only adds Corepack packageManager metadata; fresh canonical source remains unchanged with auto-pin disabled",
+      "originalControls": "gold resolved true; empty resolved false; infra_failure false",
+      "status": "candidate-runtime-tested"
     },
     {
       "instanceId": "facebook__docusaurus-10130",
-      "status": "original image not loaded; recipe not exported"
+      "recipe": "docusaurus/10130/Dockerfile",
+      "officialGradingTag": "swebench/sweb.eval.x86_64.facebook_1776_docusaurus-10130:latest",
+      "registryTagDigest": "sha256:e48084f281e6363e77c1cbde079d6f54ee26e94250e79370eef4ac92cb616542",
+      "registryPlatformManifestDigest": "sha256:e6174c1366d0a83b1d5498cf0c4c4d0e2affd3521cfc39b4572b26f6470d7bdb",
+      "registryConfigDigest": "sha256:b794add5f6d861573f08718a931a38b7c301b09d8ae83d5dcf5f52a17e961237",
+      "historicalRecipeBase": "sha256:e6174c1366d0a83b1d5498cf0c4c4d0e2affd3521cfc39b4572b26f6470d7bdb",
+      "historicalModelImageId": "sha256:0a33ba363abb486ccd48409cff4bbad23ee12faeeb96c33084171596becd01f5",
+      "sourceImageCanonicalComparison": "3145 canonical Git HEAD entries match; original worktree only adds Corepack packageManager metadata; fresh canonical source remains unchanged with auto-pin disabled",
+      "originalControls": "gold resolved true; empty resolved false; infra_failure false",
+      "status": "candidate-runtime-tested"
     }
   ],
+  "pending": [],
   "exportVerification": {
-    "dockerfiles": "Nine recipes only parameterize FROM; Preact3010 additionally composes the actual config-only HOME and USER instructions after unchanged sanitation. Static reverse comparison and config equivalence checked.",
+    "dockerfiles": "Eleven recipes only parameterize FROM; Preact3010 additionally composes the actual config-only HOME and USER instructions after unchanged sanitation. Static reverse comparison and config equivalence checked.",
     "vueInputs": "Sanitizer and dependency directory list copied unchanged",
-    "portableRuntime": "Not executed"
+    "portableRuntime": "Not executed",
+    "docusaurusInputs": "Both sanitizers and32-directory dependency lists copied unchanged; COREPACK_ENABLE_AUTO_PIN=0 and32VOLUMEs retained per instance"
   }
 }
