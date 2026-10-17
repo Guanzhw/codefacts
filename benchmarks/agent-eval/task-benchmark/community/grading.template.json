@@ -1,0 +1,21 @@
+{
+  "grading": {
+    "officialEntry": "/absolute/worktree/benchmarks/agent-eval/task-benchmark/community/official.py",
+    "context": {
+      "python": "/absolute/linux/context-venv/bin/python",
+      "officialRoot": "/absolute/pinned/ContextBench",
+      "datasetPath": "/absolute/private/original-context.parquet",
+      "repoCache": "/absolute/linux/private/context-cache",
+      "timeoutMs": 1800000
+    },
+    "swe": {
+      "python": "/absolute/linux/swe-venv/bin/python",
+      "officialRoot": "/absolute/pinned/SWE-bench",
+      "datasetPath": "/absolute/private/export-24/private-grading/private-selected-swe-records.jsonl",
+      "timeoutMs": 1800000,
+      "timeoutSeconds": 1200,
+      "maxWorkers": 1
+    }
+  },
+  "contextBases": {}
+}

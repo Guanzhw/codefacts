@@ -27,10 +27,15 @@ selection file and all failed or unavailable attempts remain in the report.
 1. Obtain the original datasets and pinned official scorer trees listed in
    [the design](../../../../docs/specs/community-benchmark-20261017/design.md).
    Verify the downloaded files against their official release metadata.
-2. Freeze the deterministic selection before inspecting model outcomes. Export
-   only issue text, repository identity and base commit to model inputs.
+2. Reuse the preregistered 24 tasks in `selection-fixed-24.json`, in their fixed
+   order, with the data export command below. Seed, rule and ranks record the
+   original selection provenance; subsequent runs do not draw a new sample.
 3. Use `downloadCommunitySources` from `prepare.mjs` to inspect and export the
    fixed GitHub archives. Preserve source bytes, modes and symlink targets.
+   Preserve the dataset's `mui/material` repository identity in public inputs;
+   its source-fetch alias is `mui/material-ui`. Resolve that alias only at the
+   archive acquisition boundary, while retaining the selected base commit and
+   recording the actual archive URL in the source manifest.
 4. On this Windows host, `runtime.symlinkStrategy="wsl-lx"`, `runtime.wsl` and
    `runtime.wslDistro` enable real Linux symlink creation and Git operations
    through WSL. Windows native tools still run on the same source tree. Windows
@@ -50,6 +55,55 @@ selection file and all failed or unavailable attempts remain in the report.
 
 The benchmark uses Docker and Python only for its evaluation environment.
 CodeFacts itself remains a native local binary.
+
+### Export the fixed datasets
+
+Use Python with `pyarrow==26.0.0`. The `datasets` entries in
+`selection-fixed-24.json` record each official HF dataset, immutable revision,
+original file path, byte length and checksum. Obtain the files from
+`https://huggingface.co/datasets/{dataset}/resolve/{revision}/{path}` in private
+operator storage. The exporter verifies the original file checksums before
+decoding and fails on mismatched bytes. Its paths must be absolute and `--out`
+must name a new directory.
+
+```powershell
+python community/export-fixed-selection.py --context-parquet C:\eval\original\context.parquet --swe-parquet C:\eval\original\swe.parquet --out C:\eval\export-24
+```
+
+Run from `benchmarks/agent-eval/task-benchmark`. The result contains:
+
+- `public-tasks.jsonl`: 24 issue inputs with the original repository identity,
+  source commit, language and split, in fixed order.
+- `private-grading/`: all original official fields for 12 SWE records and 12
+  Context records, the 12-row Context Parquet with the original table schema,
+  and field checks. Keep these gold-bearing files outside model/tool roots and
+  version control. Point future grader configs to these private output paths.
+
+The exporter preserves every official SWE field. It copies selected Context
+rows using the original Parquet schema, rather than synthesizing a grading
+schema. Only the public file is suitable for model input. Existing frozen
+exports remain separate from a fresh export.
+
+The promoted exporter was checked against the original exports: all fields of
+24 public rows, both 12-row private JSONL exports, all 24 field checks, and the
+Context Parquet schema (including metadata) and 12 rows were equal. This
+verifies data reconstruction; environment admission and model measurements
+remain separate checks.
+
+### Prepare a new operator installation
+
+Follow [OPERATOR.md](OPERATOR.md) for the exact recorded environment versions,
+source acquisition, private native-Linux Context baselines, image admission,
+and manifest/grading templates. `operator.mjs` defaults to a read-only plan;
+`--execute` explicitly downloads sources or writes a new validated manifest.
+The source downloader and manifest builder reuse the existing runner APIs.
+Use a new campaign identity for a new installation and freeze.
+
+SWE requires every original and sanitized image's immutable identity,
+source-isolation recipe, and official gold/empty controls before admitting
+that task. Data export and Context completion do not establish SWE readiness.
+Preserve each task's actual control status and unavailable measurements.
+These operator materials remain evaluation dependencies.
 
 ## Freeze and run
 
@@ -101,9 +155,13 @@ callback. Its operator config contains:
 ```
 
 Official scoring runs in task-local WSL environments. Windows drive paths are
-translated to `/mnt/...`; WSL launches use `--exec`. SWE commands run in a
-network-disabled container with a writable source mount and a nested read-only
-`.git` mount. The runner owns container deadlines and cleanup.
+translated to `/mnt/...`; WSL launches use `--exec`. Model SWE `source_exec`
+commands run in network-disabled containers with a writable source mount and
+a nested read-only `.git` mount; the runner owns their deadlines and cleanup.
+The official SWE grader uses the pinned upstream harness's own default network
+and `SYS_ADMIN` settings. Current Context grading creates native Linux temporary
+directories itself; the historical output/temp symlink workaround is unnecessary
+for new campaigns.
 
 ## Evidence and interpretation
 

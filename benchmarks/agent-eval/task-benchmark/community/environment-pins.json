@@ -1,0 +1,30 @@
+{
+  "node": "26.5.1",
+  "ripgrep": "15.1.0",
+  "dsh": {
+    "package": "@deepseek-ai/dsh",
+    "version": "0.2.0-rc.2"
+  },
+  "sdk": {
+    "package": "@modelcontextprotocol/sdk",
+    "version": "1.30.0"
+  },
+  "codefacts": "0.2.2",
+  "codegraph": {
+    "package": "@colbymchenry/codegraph-win32-x64",
+    "version": "1.6.2"
+  },
+  "context": {
+    "python": "3.11.15",
+    "upstream": "https://github.com/EuniAI/ContextBench",
+    "revision": "1436c28a8eb95496da4ea69ad458b9f8a8eb7d61",
+    "requirements": "context-requirements.txt"
+  },
+  "swe": {
+    "python": "3.12.13",
+    "upstream": "https://github.com/SWE-bench/SWE-bench",
+    "revision": "02e7a74ffd0b707aab73d203fe87bdc7c76afc8e",
+    "requirements": "swe-requirements.txt",
+    "install": "Install the pinned upstream editable with --no-deps after exact requirements"
+  }
+}
