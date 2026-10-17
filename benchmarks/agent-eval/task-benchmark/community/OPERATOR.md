@@ -94,8 +94,11 @@ The failed preparation and successful fresh retry were both retained.
 
 ## Model images and official grading images
 
-Supply preloaded images externally; these helpers never download or build
-Docker images. For each SWE task retain an inventory with original official
+Acquire original images and build the model images using the
+[sanitation recipes](environment-recipes/README.md). Nine historical recipes
+are available with portable build commands and their actual validation scopes;
+the portable exports have received static checks only. Supply the resulting
+verified local images to the operator. For each SWE task retain an inventory with original official
 record.image tag, registry manifest digest, local image/config identity,
 sanitized model image ID, isolation recipe, source-equivalence check and gold
 and empty official control reports. The runner's `sandboxes[instance_id]` entry
@@ -111,8 +114,7 @@ sanitized IDs and `workspaceVerified` into the operator config's `sandboxes`.
 The model image must contain its language toolchain and offline dependencies,
 with embedded task history, gold/evaluator files and task build products
 removed. Retain the original image for official grading. Inspect each image's
-actual contents; the historical Caddy cleanup recipe cannot certify other
-images. All 12 per-task entries and controls are required for a full SWE cohort.
+actual contents and validate its own recipe. All 12 per-task entries and controls are required for a full SWE cohort.
 Missing, failed and unexecuted controls remain explicit. This delivery does not
 claim that all SWE images or controls are ready.
 

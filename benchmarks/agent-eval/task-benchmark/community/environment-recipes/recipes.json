@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "scope": "Nine historical recipes; portable files statically checked only",
+  "identityNote": "Registry config digests and locally loaded historical image IDs are recorded separately; equality is not asserted. Use an acquired immutable local original config ID as OFFICIAL_IMAGE after inventory/source checks.",
+  "recipes": [
+    {
+      "instanceId": "caddyserver__caddy-4774",
+      "recipe": "go/caddy-4774.Dockerfile",
+      "officialGradingTag": "swebench/sweb.eval.x86_64.caddyserver_1776_caddy-4774:latest",
+      "registryTagDigest": "sha256:6bb2b27fcf73cc42fef88f73e24dd0277c6327efb438ec87c9071b6bf6a8dc98",
+      "registryPlatformManifestDigest": "sha256:f1559c2f158f4f967531a1b57ed2a845c40a3d8ddb820b9e5bd56947c096d244",
+      "registryConfigDigest": "sha256:b9669f9d8e5d3cc152f7b3aa4c8fba581135b09056e30d7d3fc8e9100cb2c84f",
+      "historicalRecipeBase": "swebench/sweb.eval.x86_64.caddyserver_1776_caddy-4774@sha256:5e05db230cb2569207d3b4ca641f959ed0553bd6f2e75e3bf46cc898064bb46b",
+      "historicalModelImageId": "sha256:002d00444884510e2bf583c5bbe0f0724316403cdbd8a7a17ed681c1ec8625ac",
+      "sourceImageCanonicalComparison": "pending: complete canonical file-by-file comparison not recorded",
+      "originalControls": "gold resolved true; empty resolved false; infra_failure false",
+      "status": "candidate-runtime-tested"
+    },
+    {
+      "instanceId": "caddyserver__caddy-5995",
+      "recipe": "go/caddy-5995.Dockerfile",
+      "officialGradingTag": "swebench/sweb.eval.x86_64.caddyserver_1776_caddy-5995:latest",
+      "registryTagDigest": "sha256:570a67c63f18b18874b912cb7e48c74ee21905acd333c2baefde3e9d036c45d7",
+      "registryPlatformManifestDigest": "sha256:27efcf350038653acd2c7e23f9d0f8d69ef4e2a01ad3ee45f7cd6faa3adf0018",
+      "registryConfigDigest": "sha256:e13cfefb64b4fdadbdcbd75a2f307e648d251282ab276a23cd474d2d0d9230f1",
+      "historicalRecipeBase": "sha256:633a07a0a7cc2493f284f15437d8a5ae8cdfede4ee132b2b8cee0757e8686ebd",
+      "historicalModelImageId": "sha256:6db505869ac078319fb4f74006a6f807e976061856ca731d2b4ba68c80124619",
+      "sourceImageCanonicalComparison": "recorded in per-task private admission evidence",
+      "originalControls": "gold resolved true; empty resolved false; infra_failure false",
+      "status": "candidate-runtime-tested"
+    },
+    {
+      "instanceId": "hashicorp__terraform-35543",
+      "recipe": "go/terraform-35543.Dockerfile",
+      "officialGradingTag": "swebench/sweb.eval.x86_64.hashicorp_1776_terraform-35543:latest",
+      "registryTagDigest": "sha256:6dcd1a4c4abeb2c7a6b9829bccef31faaa6dfea17c089c2d7eac232dd9ed8693",
+      "registryPlatformManifestDigest": "sha256:57ddad71c2bc85a20fb9e353e0012aec6ef747fd4e1744a30f20804b70acf1b6",
+      "registryConfigDigest": "sha256:5e3f3e0a7e88ec77c59032f2151dc78a795230781fd7c51376233370ffce9af5",
+      "historicalRecipeBase": "sha256:9ec587d7c26aef82d75509534d2d82f42333fb0c885295c72e638e03437798f4",
+      "historicalModelImageId": "sha256:7c1f32ab99a540fef6d2f1608e6e7f6c309bd35a4599c2bd47f201025f7198ce",
+      "sourceImageCanonicalComparison": "recorded in per-task private admission evidence",
+      "originalControls": "gold resolved true; empty resolved false; infra_failure false",
+      "status": "candidate-runtime-tested"
+    },
+    {
+      "instanceId": "tokio-rs__tokio-6603",
+      "recipe": "rust/tokio-6603.Dockerfile",
+      "officialGradingTag": "swebench/sweb.eval.x86_64.tokio-rs_1776_tokio-6603:latest",
+      "registryTagDigest": "sha256:2998f5726864d57a6a1e759ed42fed6b27c8260e1debe14fd85746367199332d",
+      "registryPlatformManifestDigest": "sha256:a7ae228c119303e7d21ba25b1a247bfe63eb894d576d04afb687fea86dd6a549",
+      "registryConfigDigest": "sha256:da095b46997ebfc19d8952c5ebeab8d555c8e84a03ac5fc1b146023c4a6b5f1e",
+      "historicalRecipeBase": "sha256:654ebce2ee622139b6978c7bbdef9902130ee5a9272fa18f9d2d980d632ef6d5",
+      "historicalModelImageId": "sha256:cc84c33cab5db4e7d68301b28bc5a434426340e89ebb7e1b40ca6d8d9b66bb9f",
+      "sourceImageCanonicalComparison": "recorded in per-task private admission evidence",
+      "originalControls": "gold resolved true; empty resolved false; infra_failure false",
+      "status": "candidate-runtime-tested"
+    },
+    {
+      "instanceId": "uutils__coreutils-6690",
+      "recipe": "rust/coreutils-6690.Dockerfile",
+      "officialGradingTag": "swebench/sweb.eval.x86_64.uutils_1776_coreutils-6690:latest",
+      "registryTagDigest": "sha256:a5fbd1d8b22816625f7ea6f150df1f77c645d22e6ac2b25804848b48c5e4aa41",
+      "registryPlatformManifestDigest": "sha256:e7db820822cc1d1dd6a6a124e7840cef20bc143f452c240c85a54b85bdf3493e",
+      "registryConfigDigest": "sha256:b80c8b83eef47fc662a764b77878fc0bfe7dc8c271ad09ae4d59f4736e273719",
+      "historicalRecipeBase": "sha256:a6e4198577999b7c0818e5942b2b9ba204fd3101d6138da61809f960c2c52725",
+      "historicalModelImageId": "sha256:6392adb07871834cf2b979bdca69837d99c46933f910389e8695ea136d85f928",
+      "sourceImageCanonicalComparison": "recorded in per-task private admission evidence",
+      "originalControls": "gold resolved true; empty resolved false; infra_failure false",
+      "status": "candidate-runtime-tested"
+    },
+    {
+      "instanceId": "nushell__nushell-12901",
+      "recipe": "rust/nushell-12901.Dockerfile",
+      "officialGradingTag": "swebench/sweb.eval.x86_64.nushell_1776_nushell-12901:latest",
+      "registryTagDigest": "sha256:c9b82f636f527e4611614106d118d85c9754b27c36a5df4c440c6c4f5fbe7ef7",
+      "registryPlatformManifestDigest": "sha256:f05f334607d3ea982999f15fbf27a26ea56903eb688a6f84e53b4821401ff322",
+      "registryConfigDigest": "sha256:4026eee559723ed93a93b91342c9cacfdd4dc2545f22cdf21aeeb3a6eb760c6c",
+      "historicalRecipeBase": "sha256:f64a4b567d5ec1ac15246fbb931e29b0fa5dd4b522f2613abcb2a785b7da422e",
+      "historicalModelImageId": "sha256:84e1c851b5d1dd108d1dd548c932e241012d2909640f4eae91bca7aa156679b3",
+      "sourceImageCanonicalComparison": "recorded in per-task private admission evidence",
+      "originalControls": "gold resolved true; empty resolved false; infra_failure false",
+      "status": "candidate-runtime-tested"
+    },
+    {
+      "instanceId": "axios__axios-5085",
+      "recipe": "node/axios-5085.Dockerfile",
+      "officialGradingTag": "swebench/sweb.eval.x86_64.axios_1776_axios-5085:latest",
+      "registryTagDigest": "sha256:d0a38e17c8f11e41c3d71b46c532db321f732a27e80d57c798e38913da195def",
+      "registryPlatformManifestDigest": "sha256:924c1bac3251b62b23a0db0692f7ed0759b1397e164982eedf12096a11393927",
+      "registryConfigDigest": "sha256:0983ece7324e9c339264a15748f88231f1bdf0e8b6e56a441021c01b38de7b18",
+      "historicalRecipeBase": "sha256:ff0254522e5379681e31a0868aeeeaa24f86bc400f0b8a809288ed7e62cf0134",
+      "historicalModelImageId": "sha256:c4bedffb877ae84acfda2cc282647f911e7c0178e8401629bfc04b185b4a9652",
+      "sourceImageCanonicalComparison": "pending: complete canonical file-by-file comparison not recorded",
+      "originalControls": "gold resolved true; empty resolved false; infra_failure false",
+      "status": "candidate-runtime-tested"
+    },
+    {
+      "instanceId": "preactjs__preact-3562",
+      "recipe": "node/preact-3562.Dockerfile",
+      "officialGradingTag": "swebench/sweb.eval.x86_64.preactjs_1776_preact-3562:latest",
+      "registryTagDigest": "sha256:97b558985eb5688efafd8f2d7c99a4e290856af429f79163415a10ffd1798eda",
+      "registryPlatformManifestDigest": "sha256:d007ec55602bf6a425a9063e26075fc40a9e7747e478572712b83da10131958f",
+      "registryConfigDigest": "sha256:66e35db6ed67519bc7f62b028da63293ce81e54773d243dcb736561aac53ea0a",
+      "historicalRecipeBase": "sha256:a55a9ec61dbf62ab25d04fef466a7b459e3664ab1034c355bb3071d126904902",
+      "historicalModelImageId": "sha256:e9cc030a7a72aa7da2af1c0a638274764e91de197f5a444f06af99076dfdd5fc",
+      "sourceImageCanonicalComparison": "recorded in per-task private admission evidence",
+      "originalControls": "gold resolved true; empty resolved false; infra_failure false",
+      "status": "candidate-runtime-tested"
+    },
+    {
+      "instanceId": "vuejs__core-11899",
+      "recipe": "vue/core-11899/Dockerfile",
+      "officialGradingTag": "swebench/sweb.eval.x86_64.vuejs_1776_core-11899:latest",
+      "registryTagDigest": "sha256:478044c8261c7214865d88a687053b35e1935acd186b4ac7ae0d16af57826311",
+      "registryPlatformManifestDigest": "sha256:a199b55342e4f19881c07b7b1b9c3e930240233948a0c3515bebd000ce117e0c",
+      "registryConfigDigest": "sha256:9583bff913979a362060d6485ef3b5b694a7396c496814b6d2cfd1bc07347394",
+      "historicalRecipeBase": "sha256:e8ddabef559607b102161208fb845cfe249350d3d8626ae3a791a844113ebae3",
+      "historicalModelImageId": "sha256:8ba454617b031fc479dca74220ac0f352791ef673866ebe3002d8f68e44ecd6c",
+      "sourceImageCanonicalComparison": "recorded in per-task private admission evidence",
+      "originalControls": "gold resolved true; empty resolved false; infra_failure false",
+      "status": "candidate-runtime-tested"
+    }
+  ],
+  "pending": [
+    {
+      "instanceId": "preactjs__preact-3010",
+      "status": "final USER1000:1000 model-image real-sandbox verification pending; recipe not exported"
+    },
+    {
+      "instanceId": "facebook__docusaurus-9183",
+      "status": "original image not loaded; recipe not exported"
+    },
+    {
+      "instanceId": "facebook__docusaurus-10130",
+      "status": "original image not loaded; recipe not exported"
+    }
+  ],
+  "exportVerification": {
+    "dockerfiles": "Only FROM parameterized; reverse transformation matched all nine historical recipes",
+    "vueInputs": "Sanitizer and dependency directory list copied unchanged",
+    "portableRuntime": "Not executed"
+  }
+}
