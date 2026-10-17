@@ -69,7 +69,7 @@ export function buildPrompt(task) {
   const shared = 'Choose ordinary source tools or provided code-navigation tools whenever useful. Native navigation is optional. Use only the tools exposed in this session. Repository paths are relative to the supplied snapshot.';
   return task.cohort === 'context'
     ? `${shared}\nThis is an adapted ContextBench read-only localization task. Inspect the issue and identify the source regions needed to resolve it. Return a final JSON object only: {"regions":[{"file_path":"relative/path","start_line":1,"end_line":1}],"rationale":"explanation"}. Use inclusive, positive line numbers and only source regions you inspected.\n\nIssue:\n${task.prompt}`
-    : `${shared}\nResolve the issue by editing the supplied repository. You may run tests using source_exec and source_poll in the isolated sandbox. The sandbox has no network, 4 CPUs and 6 GiB RAM, with installed dependencies. Its Windows-backed workspace does not support Unix-domain socket files. Submit your actual source changes; the evaluator collects the Git diff including new files. End with a concise description of the fix and tests run.\n\nIssue:\n${task.prompt}`;
+    : `${shared}\nResolve the issue by editing the supplied repository. You may run tests using source_exec and source_poll in the isolated sandbox. The sandbox has no network, 4 CPUs, 6 GiB RAM and a 512-process/thread limit, with installed dependencies. Its Windows-backed workspace does not support Unix-domain socket files. Submit your actual source changes; the evaluator collects the Git diff including new files. End with a concise description of the fix and tests run.\n\nIssue:\n${task.prompt}`;
 }
 
 function walkFiles(root, accept, target, excludedDirectories = new Set()) {
