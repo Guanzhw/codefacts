@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { assertFrozen, collectPins } from './campaign.mjs';
 import { extractTrace } from './trace.mjs';
@@ -31,6 +32,61 @@ function allocate(dir) {
     try { fs.mkdirSync(outputDir); return { outputDir, index }; }
     catch (error) { if (error.code !== 'EEXIST') throw error; }
   }
+}
+
+async function runDockerCommand(command, args) {
+  const child = spawn(command, args, { windowsHide: true, shell: false, stdio: ['ignore', 'pipe', 'pipe'] });
+  let stdout = '', stderr = '', timedOut = false;
+  child.stdout.on('data', bytes => { stdout += bytes; });
+  child.stderr.on('data', bytes => { stderr += bytes; });
+  const timer = setTimeout(() => { timedOut = true; child.kill(); }, 30000);
+  try {
+    const code = await new Promise((resolve, reject) => { child.once('error', reject); child.once('close', resolve); });
+    return { code, stdout, stderr, timedOut };
+  } finally { clearTimeout(timer); }
+}
+
+/** The pinned official harness owns this exact per-instance/run container name. */
+export async function cleanupOfficialSweContainer({ runtime, instanceId, runId, outputDir }, run = runDockerCommand) {
+  const name = `sweb.eval.${instanceId.toLowerCase()}.${runId}`;
+  const prefix = ['-d', runtime.wslDistro ?? runtime.distribution ?? 'Ubuntu', '-u', 'root', '--exec', 'docker'];
+  const operations = [], receipt = { name, status: 'failed', absent: false, operations };
+  const execute = async args => {
+    const result = await run(runtime.wsl, [...prefix, ...args]);
+    operations.push({ args, ...result });
+    if (result.code !== 0 || result.timedOut) throw new Error(`Official container cleanup command failed: docker ${args.join(' ')}`);
+    return result;
+  };
+  const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const query = async () => {
+    const result = await execute(['ps', '-a', '--no-trunc', '--filter', `name=^/${escaped}$`, '--format', '{{.ID}}\t{{.Names}}']);
+    const rows = result.stdout.trim() ? result.stdout.trim().split(/\r?\n/).map(line => line.split('\t')) : [];
+    if (rows.length > 1 || rows.some(([id, actual]) => !/^[a-f0-9]{64}$/.test(id) || actual !== name)) {
+      throw new Error('Official container cleanup ownership query mismatch');
+    }
+    return rows[0]?.[0] ?? null;
+  };
+  try {
+    const id = await query();
+    if (id) {
+      const inspected = JSON.parse((await execute(['container', 'inspect', id])).stdout);
+      if (inspected.length !== 1 || inspected[0].Id !== id || inspected[0].Name !== `/${name}`) {
+        throw new Error('Official container inspect ownership mismatch');
+      }
+      receipt.container = inspected[0];
+      await execute(['rm', '-fv', id]);
+    }
+    if (await query()) throw new Error('Owned official container remains after cleanup');
+    receipt.absent = true;
+    for (const mount of receipt.container?.Mounts ?? []) {
+      if (mount.Type !== 'volume') continue;
+      const result = await execute(['volume', 'ls', '--filter', `name=${mount.Name}`, '--format', '{{.Name}}']);
+      if (result.stdout.trim().split(/\r?\n/).includes(mount.Name)) throw new Error(`Owned official anonymous volume remains: ${mount.Name}`);
+    }
+    receipt.status = 'completed';
+  } catch (error) { receipt.error = error.stack ?? error.message; }
+  exclusive(path.join(outputDir, 'official-container-cleanup.json'), receipt);
+  return receipt;
 }
 
 /** A runSlot grade callback. It uses pristine baseline bytes for trace mapping. */
@@ -108,7 +164,7 @@ export function createSlotGrader({ manifest, frozen, config, configPath, retry =
     const officialConfigPath = path.join(outputDir, 'official-config.json');
     exclusive(officialConfigPath, officialConfig);
     const officialEntry = config.grading.officialEntry ?? path.join(HERE, 'official.py');
-    let result;
+    let result, cleanup;
     try {
       result = await (dependencies.runOfficialGrade ?? runOfficialGrade)({ kind: task.cohort,
         command: manifest.runtime.wsl,
@@ -118,8 +174,13 @@ export function createSlotGrader({ manifest, frozen, config, configPath, retry =
         timeoutMs: settings.timeoutMs ?? 30 * 60 * 1000 });
     } catch (error) {
       result = { status: 'failed', resolved: null, metrics: null, error: error.stack ?? error.message };
+    } finally {
+      if (task.cohort === 'swe') cleanup = await cleanupOfficialSweContainer({ runtime: manifest.runtime,
+        instanceId: task.instanceId, runId: officialConfig.runId, outputDir }, dependencies.runGraderDocker);
     }
-    const grade = { ...result, ...common };
+    if (cleanup?.status === 'failed') result = { ...result, graderResult: result, status: 'failed',
+      resolved: null, metrics: null, cleanupError: cleanup.error };
+    const grade = { ...result, ...common, ...(cleanup ? { cleanup } : {}) };
     exclusive(path.join(outputDir, 'grade.json'), grade);
     return grade;
   };

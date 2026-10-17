@@ -24,6 +24,7 @@ from pathlib import Path
 import re
 import sys
 import subprocess
+import tempfile
 import traceback
 
 
@@ -173,38 +174,50 @@ def grade_context(config, root, output, source):
     identity = context_source_identity(config, prediction, gold, local_repo)
     write_json(output / "source-identity.json", identity)
     cache = absolute(config["repoCache"], "repoCache")
-    os.environ["CONTEXTBENCH_TMP_ROOT"] = str(output / "temp")
-    # Upstream turns repo_url into a worktree directory component. A Windows
-    # absolute path repeats the whole evidence prefix and can exceed Git's
-    # GIT_DIR limit. Resolve the clone once, then use its relative local identity.
-    os.chdir(local_repo)
-    prediction = copy.deepcopy(prediction)
-    prediction["repo_url"] = "."
-    # Upstream fetches origin even when the commit already exists locally.
-    # Bind that fetch to this private clone so grading stays offline.
-    count = int(os.environ.get("GIT_CONFIG_COUNT", "0"))
-    os.environ[f"GIT_CONFIG_KEY_{count}"] = "remote.origin.url"
-    os.environ[f"GIT_CONFIG_VALUE_{count}"] = str(local_repo)
-    os.environ["GIT_CONFIG_COUNT"] = str(count + 1)
-    safe_gold = without_reference_patch(gold)
-    if (prediction.get("model_patch") or "").strip():
-        raise ValueError("The adapted read-only localization protocol requires an empty model_patch")
-    official_result = evaluation.evaluate_instance(instance_id, safe_gold, prediction, str(cache))
-    if official_result.get("error"):
-        write_json(output / "context-error.json", official_result)
-        raise RuntimeError(f"Official ContextBench evaluation failed: {official_result['error']}")
-    worktree = evaluation.checkout(".", prediction["commit"], str(cache), verbose=False)
-    worktree_identity = context_source_identity(config, prediction, gold, Path(worktree).resolve())
-    write_json(output / "scored-source-identity.json", worktree_identity)
-    official_result.pop("editloc", None)
-    result = {"kind": "context", "instance_id": instance_id, "officialResult": official_result,
-              "official": source, "sourceIdentity": identity,
-              "semantics": {"protocol": "adapted-readonly-localization",
-                            "localization": "Official final metrics on model-declared localization regions",
-                            "explored": "Official trajectory metrics on actual source exposures",
-                            "editloc": "unavailable-readonly-protocol",
-                            "referencePatchFallback": "disabled-on-a-copy-of-gold"}}
-    write_json(output / "result.json", result)
+    with tempfile.TemporaryDirectory(prefix="codefacts-contextbench-") as temporary:
+        temporary_root = Path(temporary)
+        temporary_stat = temporary_root.stat()
+        os.environ["CONTEXTBENCH_TMP_ROOT"] = str(temporary_root)
+        write_json(output / "worktree-environment.json", {
+            "temporaryRoot": str(temporary_root),
+            "effectiveUid": os.geteuid() if os.name == "posix" else None,
+            "temporaryRootUid": temporary_stat.st_uid,
+            "temporaryRootMode": oct(temporary_stat.st_mode & 0o777),
+            "temporaryRootDevice": temporary_stat.st_dev,
+            "outputDir": str(output),
+            "outputDevice": output.stat().st_dev,
+        })
+        # Upstream turns repo_url into a worktree directory component. A Windows
+        # absolute path repeats the whole evidence prefix and can exceed Git's
+        # GIT_DIR limit. Resolve the clone once, then use its relative local identity.
+        os.chdir(local_repo)
+        prediction = copy.deepcopy(prediction)
+        prediction["repo_url"] = "."
+        # Upstream fetches origin even when the commit already exists locally.
+        # Bind that fetch to this private clone so grading stays offline.
+        count = int(os.environ.get("GIT_CONFIG_COUNT", "0"))
+        os.environ[f"GIT_CONFIG_KEY_{count}"] = "remote.origin.url"
+        os.environ[f"GIT_CONFIG_VALUE_{count}"] = str(local_repo)
+        os.environ["GIT_CONFIG_COUNT"] = str(count + 1)
+        safe_gold = without_reference_patch(gold)
+        if (prediction.get("model_patch") or "").strip():
+            raise ValueError("The adapted read-only localization protocol requires an empty model_patch")
+        official_result = evaluation.evaluate_instance(instance_id, safe_gold, prediction, str(cache))
+        if official_result.get("error"):
+            write_json(output / "context-error.json", official_result)
+            raise RuntimeError(f"Official ContextBench evaluation failed: {official_result['error']}")
+        worktree = evaluation.checkout(".", prediction["commit"], str(cache), verbose=False)
+        worktree_identity = context_source_identity(config, prediction, gold, Path(worktree).resolve())
+        write_json(output / "scored-source-identity.json", worktree_identity)
+        official_result.pop("editloc", None)
+        result = {"kind": "context", "instance_id": instance_id, "officialResult": official_result,
+                  "official": source, "sourceIdentity": identity,
+                  "semantics": {"protocol": "adapted-readonly-localization",
+                                "localization": "Official final metrics on model-declared localization regions",
+                                "explored": "Official trajectory metrics on actual source exposures",
+                                "editloc": "unavailable-readonly-protocol",
+                                "referencePatchFallback": "disabled-on-a-copy-of-gold"}}
+        write_json(output / "result.json", result)
 
 
 def grade_swe(config, root, output, source):

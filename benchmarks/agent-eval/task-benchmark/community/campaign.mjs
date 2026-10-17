@@ -69,7 +69,7 @@ export function buildPrompt(task) {
   const shared = 'Choose ordinary source tools or provided code-navigation tools whenever useful. Native navigation is optional. Use only the tools exposed in this session. Repository paths are relative to the supplied snapshot.';
   return task.cohort === 'context'
     ? `${shared}\nThis is an adapted ContextBench read-only localization task. Inspect the issue and identify the source regions needed to resolve it. Return a final JSON object only: {"regions":[{"file_path":"relative/path","start_line":1,"end_line":1}],"rationale":"explanation"}. Use inclusive, positive line numbers and only source regions you inspected.\n\nIssue:\n${task.prompt}`
-    : `${shared}\nResolve the issue by editing the supplied repository. You may run tests using source_exec and source_poll in the isolated sandbox. Submit your actual source changes; the evaluator collects the Git diff including new files. End with a concise description of the fix and tests run.\n\nIssue:\n${task.prompt}`;
+    : `${shared}\nResolve the issue by editing the supplied repository. You may run tests using source_exec and source_poll in the isolated sandbox. The sandbox has no network, 4 CPUs and 6 GiB RAM, with installed dependencies. Its Windows-backed workspace does not support Unix-domain socket files. Submit your actual source changes; the evaluator collects the Git diff including new files. End with a concise description of the fix and tests run.\n\nIssue:\n${task.prompt}`;
 }
 
 function walkFiles(root, accept, target, excludedDirectories = new Set()) {
@@ -166,11 +166,11 @@ export async function startSandbox(manifest, task, root, slot, dir, run = comman
   const prefix = ['-d', manifest.runtime.wslDistro ?? 'Ubuntu', '-u', 'root', '--exec', 'docker'];
   const execute = args => run(manifest.runtime.wsl, [...prefix, ...args]);
   const cleanup = async () => {
-    const removed = await execute(['rm', '-f', name]);
+    const removed = await execute(['rm', '-fv', name]);
     const present = await execute(['ps', '-a', '--filter', `name=^/${name}$`, '--format', '{{.Names}}']);
     const receipt = { name, removed, verification: present, absent: present.code === 0 && !present.stdout.trim() };
     writeJson(path.join(dir, 'sandbox-cleanup.json'), receipt);
-    if (!receipt.absent) throw new Error(`Owned sandbox still exists: ${name}`);
+    if (removed.code !== 0 || !receipt.absent) throw new Error(`Owned sandbox cleanup failed: ${name}`);
     return receipt;
   };
   const started = await execute(['run', '-d', '--pull', 'never', '--name', name, '--network', 'none', '--memory', '6g', '--cpus', '4', '--pids-limit', '512',
@@ -181,7 +181,12 @@ export async function startSandbox(manifest, task, root, slot, dir, run = comman
     '--mount', `type=bind,source=${linuxPath(path.join(root, '.git'))},target=/testbed/.git,readonly`,
     '--env', 'GIT_OPTIONAL_LOCKS=0', '--workdir', '/testbed', task.sandbox.image, 'sleep', 'infinity']);
   writeJson(path.join(dir, 'sandbox-start.json'), { name, image: task.sandbox.image, result: started });
-  if (started.code !== 0) { await cleanup(); throw new Error(`Sandbox startup failed: ${started.stderr}`); }
+  if (started.code !== 0) {
+    const startup = new Error(`Sandbox startup failed: ${started.stderr}`);
+    try { await cleanup(); }
+    catch (error) { throw new AggregateError([startup, error], `${startup.message}; ${error.message}`); }
+    throw startup;
+  }
   return { config: { command: manifest.runtime.wsl, argsPrefix: [...prefix, 'exec', '--workdir', '/testbed', name, 'bash', '-lc'], cwd: root }, cleanup };
 }
 
@@ -226,7 +231,8 @@ export async function runSlot(manifest, frozen, slot, dependencies = {}) {
     if (task.cohort === 'context') verifySource(prepared.root, prepared.entries, { exact: true });
     else {
       // Stop every command in the owned sandbox before collecting a stable diff.
-      meta.sandboxCleanup = await sandbox.cleanup(); sandbox = null;
+      const owned = sandbox; sandbox = null;
+      meta.sandboxCleanup = await owned.cleanup();
       const collect = dependencies.collectPatch ?? (await import('./prepare.mjs')).collectPatch;
       const journal = path.join(dir, 'bridge', 'edits.jsonl');
       const createdPaths = fs.existsSync(journal) ? fs.readFileSync(journal, 'utf8').split(/\r?\n/).filter(Boolean).map(line => JSON.parse(line)).filter(row => row.operation === 'create').map(row => row.file_path) : [];

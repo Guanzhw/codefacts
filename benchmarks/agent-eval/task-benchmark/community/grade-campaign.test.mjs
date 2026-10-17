@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { hash, writeJson } from '../rpc.mjs';
 import { runOfficialGrade } from './grade.mjs';
-import { createSlotGrader, gradeCampaign, toLinuxPath } from './grade-campaign.mjs';
+import { createSlotGrader, gradeCampaign, toLinuxPath, cleanupOfficialSweContainer } from './grade-campaign.mjs';
 
 function fixture(t, cohort = 'context', modelStatus = 'attempt-completed') {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'grade-campaign-'));
@@ -35,6 +35,7 @@ function fixture(t, cohort = 'context', modelStatus = 'attempt-completed') {
   fs.writeFileSync(meta.patchPath, 'actual model diff\n'); writeJson(meta.receiptPath, receipt); writeJson(path.join(dir, 'slot-meta.json'), meta);
   const calls = [];
   const dependencies = { pinCollector: () => pins.map(pin => ({ ...pin, sha256: hash(fs.readFileSync(pin.path)) })),
+    runGraderDocker: async () => ({ code: 0, stdout: '', stderr: '' }),
     runOfficialGrade: async options => {
       calls.push(options);
       const report = cohort === 'swe' ? { [task.instanceId]: { resolved: false } } : { kind: 'context', instance_id: task.instanceId,
@@ -155,4 +156,73 @@ test('campaign integration: task failures remain in denominator and slot metadat
   const meta = JSON.parse(fs.readFileSync(path.join(f.dir, 'slot-meta.json')));
   assert.equal(meta.status, 'task-failed'); assert.equal(meta.grade.status, 'completed');
   assert.equal(fs.existsSync(path.join(f.root, 'dispatch.lock')), false);
+});
+
+function cleanupFixture(t, responses) {
+  const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), 'official-cleanup-'));
+  t.after(() => fs.rmSync(outputDir, { recursive: true, force: true }));
+  const calls = [], id = 'a'.repeat(64), name = 'sweb.eval.org__repo-1.unique-run';
+  return { id, name, calls, outputDir, options: { runtime: { wsl: 'wsl.exe', wslDistro: 'Ubuntu' }, instanceId: 'ORG__REPO-1', runId: 'unique-run', outputDir },
+    run: async (command, args) => { calls.push({ command, args }); const next = responses.shift(); assert.ok(next, 'unexpected cleanup command'); return { code: 0, stdout: '', stderr: '', ...next }; } };
+}
+
+test('official cleanup: already-removed container requires successful zero-match queries and no rm', async t => {
+  const f = cleanupFixture(t, [{}, {}]), receipt = await cleanupOfficialSweContainer(f.options, f.run);
+  assert.equal(receipt.status, 'completed'); assert.equal(receipt.absent, true); assert.equal(f.calls.length, 2);
+  assert.ok(f.calls.every(call => call.args[6] === 'ps'));
+  assert.ok(f.calls[0].args.includes('name=^/sweb\\.eval\\.org__repo-1\\.unique-run$'));
+});
+
+test('official cleanup: captures exact container identity, removes its volumes, and verifies absence', async t => {
+  const id = 'a'.repeat(64), name = 'sweb.eval.org__repo-1.unique-run', volume = 'b'.repeat(64);
+  const f = cleanupFixture(t, [{ stdout: `${id}\t${name}\n` },
+    { stdout: JSON.stringify([{ Id: id, Name: `/${name}`, Mounts: [{ Type: 'volume', Name: volume }] }]) }, {}, {}, {}]);
+  const receipt = await cleanupOfficialSweContainer(f.options, f.run);
+  assert.equal(receipt.status, 'completed'); assert.equal(receipt.absent, true);
+  assert.deepEqual(f.calls[2].args.slice(6), ['rm', '-fv', id]);
+  assert.deepEqual(f.calls[4].args.slice(6), ['volume', 'ls', '--filter', `name=${volume}`, '--format', '{{.Name}}']);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(f.outputDir, 'official-container-cleanup.json'))).container.Id, id);
+});
+
+test('official cleanup: failed Docker query is unavailable cleanup, never successful absence', async t => {
+  const f = cleanupFixture(t, [{ code: 1, stderr: 'daemon unavailable' }]);
+  const receipt = await cleanupOfficialSweContainer(f.options, f.run);
+  assert.equal(receipt.status, 'failed'); assert.equal(receipt.absent, false); assert.equal(f.calls.length, 1);
+});
+
+test('official cleanup: mismatched identity is preserved without removing another container', async t => {
+  const f = cleanupFixture(t, [{ stdout: `${'a'.repeat(64)}\tunrelated-container\n` }]);
+  const receipt = await cleanupOfficialSweContainer(f.options, f.run);
+  assert.equal(receipt.status, 'failed'); assert.match(receipt.error, /ownership query mismatch/); assert.equal(f.calls.length, 1);
+});
+
+test('official cleanup: nonzero rm and retained volumes both remain explicit failures', async t => {
+  for (const failure of ['rm', 'volume']) {
+    const id = 'a'.repeat(64), name = 'sweb.eval.org__repo-1.unique-run', volume = 'b'.repeat(64);
+    const responses = [{ stdout: `${id}\t${name}\n` }, { stdout: JSON.stringify([{ Id: id, Name: `/${name}`, Mounts: [{ Type: 'volume', Name: volume }] }]) },
+      failure === 'rm' ? { code: 1, stderr: 'rm failed' } : {}, {}, { stdout: `${volume}\n` }];
+    const f = cleanupFixture(t, responses), receipt = await cleanupOfficialSweContainer(f.options, f.run);
+    assert.equal(receipt.status, 'failed'); assert.match(receipt.error, failure === 'rm' ? /command failed/ : /volume remains/);
+  }
+});
+
+test('SWE grader finally: timeout outcome still receives verified container cleanup', async t => {
+  const f = fixture(t, 'swe'), operations = [];
+  f.dependencies.runOfficialGrade = async () => ({ status: 'timed-out', resolved: null, metrics: null, receipt: { timedOut: true } });
+  f.dependencies.runGraderDocker = async (_, args) => { operations.push(args); return { code: 0, stdout: '', stderr: '' }; };
+  const grade = await f.grader()(f.input());
+  assert.equal(grade.status, 'timed-out'); assert.equal(grade.resolved, null);
+  assert.equal(grade.cleanup.status, 'completed'); assert.equal(operations.length, 2);
+});
+
+test('SWE grader finally: cleanup failure clears success while preserving actual grader/report', async t => {
+  const f = fixture(t, 'swe');
+  f.dependencies.runOfficialGrade = options => runOfficialGrade({ ...options, command: process.execPath, args: ['-e',
+    `require('node:fs').writeFileSync(${JSON.stringify(options.resultPath)}, ${JSON.stringify(JSON.stringify({ [f.task.instanceId]: { resolved: true } }))})`] });
+  f.dependencies.runGraderDocker = async () => ({ code: 1, stdout: '', stderr: 'daemon unavailable' });
+  const grade = await f.grader()(f.input());
+  assert.equal(grade.status, 'failed'); assert.equal(grade.resolved, null);
+  assert.equal(grade.graderResult.status, 'completed'); assert.equal(grade.graderResult.resolved, true);
+  assert.equal(JSON.parse(fs.readFileSync(grade.receipt.resultPath))[f.task.instanceId].resolved, true);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(grade.outputDir, 'grader-receipt.json'))).resolved, true);
 });

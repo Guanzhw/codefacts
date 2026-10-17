@@ -145,6 +145,18 @@ test('SWE teardown runs before collecting new-file patch and also after DSH fail
   await assert.rejects(runSlot(manifest, frozen, next, { ...dependencies, runDshAttempt: async () => { throw new Error('transport broken'); } }), /transport broken/);
   assert.deepEqual(events, ['cleanup']);
 });
+test('a failed pre-patch teardown preserves its error and runs once', async t => {
+  const { manifest, file } = fixture(t), frozen = freezeCampaign(file, { pinCollector: pins });
+  const slot = frozen.schedule.find(row => row.cohort === 'swe'); let cleanups = 0;
+  await assert.rejects(runSlot(manifest, frozen, slot, {
+    prepareCommunitySlot: fakePrepare(), runDshAttempt: async () => receipt(slot),
+    startSandbox: async () => ({ config: {}, cleanup: async () => { cleanups++; throw new Error('owned removal failed'); } }),
+    collectPatch: async () => { throw new Error('must not collect an unstable patch'); },
+  }), /owned removal failed/);
+  assert.equal(cleanups, 1);
+  const meta = JSON.parse(fs.readFileSync(path.join(manifest.evidenceDir, 'attempts', slot.id, 'slot-meta.json')));
+  assert.equal(meta.status, 'infrastructure-failed'); assert.match(meta.error, /owned removal failed/);
+});
 test('official grading failure remains distinct from a completed DSH attempt', async t => {
   const { manifest, file } = fixture(t), frozen = freezeCampaign(file, { pinCollector: pins }), slot = frozen.schedule[0];
   const meta = await runSlot(manifest, frozen, slot, { prepareCommunitySlot: fakePrepare(), runDshAttempt: async () => receipt(slot), pinCollector: pins, grade: async () => { throw new Error('grader missing'); } });
@@ -166,6 +178,7 @@ test('Docker sandbox uses no network/pull, constrained mount, fixed exec launche
     calls.push({ command, args }); return { code: 0, stdout: '', stderr: '' };
   });
   await sandbox.cleanup();
+  assert.deepEqual(calls[1].args.slice(6), ['rm', '-fv', JSON.parse(fs.readFileSync(path.join(dir, 'sandbox-start.json'))).name]);
   for (const call of calls) assert.deepEqual(call.args.slice(0, 6), ['-d', 'Ubuntu', '-u', 'root', '--exec', 'docker']);
   assert.deepEqual(sandbox.config.argsPrefix.slice(0, 6), ['-d', 'Ubuntu', '-u', 'root', '--exec', 'docker']);
   assert.ok(calls[0].args.includes('none')); assert.ok(calls[0].args.includes('never')); assert.ok(calls[0].args.includes('type=bind,source=/mnt/d/attempt/source,target=/testbed'));
@@ -173,4 +186,35 @@ test('Docker sandbox uses no network/pull, constrained mount, fixed exec launche
   assert.ok(calls[0].args.includes('type=bind,source=/mnt/d/attempt/source/.git,target=/testbed/.git,readonly'));
   assert.ok(calls[0].args.includes('GIT_OPTIONAL_LOCKS=0'));
   assert.deepEqual(sandbox.config.argsPrefix.slice(-2), ['bash', '-lc']); assert.equal(calls.length, 3);
+});
+
+
+test('owned cleanup rejects removal failure, failed absence query, and a remaining container', async t => {
+  for (const failure of ['remove', 'query', 'present']) {
+    await t.test(failure, async t => {
+      const { manifest, dir } = fixture(t), task = manifest.tasks[12];
+      const sandbox = await startSandbox(manifest, task, 'D:/attempt/source', { id: `cleanup-${failure}` }, dir, async (command, args) => {
+        const operation = args[6];
+        if (operation === 'rm' && failure === 'remove') return { code: 1, stdout: '', stderr: 'fixture daemon failure' };
+        if (operation === 'ps' && failure === 'query') return { code: 1, stdout: '', stderr: 'fixture WSL failure' };
+        if (operation === 'ps' && failure === 'present') return { code: 0, stdout: 'owned-container\n', stderr: '' };
+        return { code: 0, stdout: '', stderr: '' };
+      });
+      await assert.rejects(sandbox.cleanup(), /Owned sandbox cleanup failed/);
+      const receipt = JSON.parse(fs.readFileSync(path.join(dir, 'sandbox-cleanup.json')));
+      assert.equal(receipt.removed.code, failure === 'remove' ? 1 : 0);
+      assert.equal(receipt.verification.code, failure === 'query' ? 1 : 0);
+      assert.equal(receipt.absent, failure === 'remove');
+    });
+  }
+});
+
+test('failed startup retains the startup error when cleanup also fails', async t => {
+  const { manifest, dir } = fixture(t);
+  await assert.rejects(startSandbox(manifest, manifest.tasks[12], 'D:/attempt/source', { id: 'failed-start' }, dir,
+    async (command, args) => args[6] === 'ps' ? { code: 0, stdout: '', stderr: '' }
+      : { code: 1, stdout: '', stderr: args[6] === 'run' ? 'image is missing' : 'No such container' }),
+  error => error instanceof AggregateError && /image is missing/.test(error.message)
+    && error.errors.length === 2 && /Owned sandbox cleanup failed/.test(error.errors[1].message));
+  assert.match(JSON.parse(fs.readFileSync(path.join(dir, 'sandbox-start.json'))).result.stderr, /image is missing/);
 });
