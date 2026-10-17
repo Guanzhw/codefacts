@@ -117,7 +117,11 @@ Missing, failed and unexecuted controls remain explicit. This delivery does not
 claim that all SWE images or controls are ready.
 
 Model `source_exec` containers run with network disabled and no Docker socket
-or provider credentials. The pinned official SWE harness has its own default
+or provider credentials, with 4 CPUs, 6 GiB RAM and a 1024-process/thread limit
+shared by all three arms. Preflight found that Preact's unchanged parallel build
+needs more than 512 tasks on this host; it passed at 1024 with about 2 GiB peak
+memory and no OOM. This adjustment preceded the SWE freeze and model attempts.
+The pinned official SWE harness has its own default
 network and `SYS_ADMIN` behavior; do not describe official grading as offline
 or as sharing the model sandbox policy.
 

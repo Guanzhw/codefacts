@@ -71,6 +71,7 @@ test('prompts share optional navigation and preserve cohort task contract', t =>
   const { manifest } = fixture(t), context = buildPrompt(manifest.tasks[0]), swe = buildPrompt(manifest.tasks[12]);
   assert.match(context, /Native navigation is optional/); assert.match(context, /final JSON object only/); assert.match(context, /"regions"/);
   assert.match(swe, /actual source changes/); assert.match(swe, /source_exec/); assert.doesNotMatch(swe, /final JSON object only/);
+  assert.match(swe, /4 CPUs, 6 GiB RAM and a 1024-process\/thread limit/);
 });
 test('freeze is immutable and source/selection drift fails before dispatch', t => {
   const { manifest, file, task } = fixture(t), frozen = freezeCampaign(file, { pinCollector: pins });
@@ -182,6 +183,7 @@ test('Docker sandbox uses no network/pull, constrained mount, fixed exec launche
   for (const call of calls) assert.deepEqual(call.args.slice(0, 6), ['-d', 'Ubuntu', '-u', 'root', '--exec', 'docker']);
   assert.deepEqual(sandbox.config.argsPrefix.slice(0, 6), ['-d', 'Ubuntu', '-u', 'root', '--exec', 'docker']);
   assert.ok(calls[0].args.includes('none')); assert.ok(calls[0].args.includes('never')); assert.ok(calls[0].args.includes('type=bind,source=/mnt/d/attempt/source,target=/testbed'));
+  assert.equal(calls[0].args[calls[0].args.indexOf('--pids-limit') + 1], '1024');
   assert.deepEqual(calls[0].args.slice(calls[0].args.indexOf('--cap-drop'), calls[0].args.indexOf('--cap-drop') + 4), ['--cap-drop', 'ALL', '--security-opt', 'no-new-privileges:true']);
   assert.ok(calls[0].args.includes('type=bind,source=/mnt/d/attempt/source/.git,target=/testbed/.git,readonly'));
   assert.ok(calls[0].args.includes('GIT_OPTIONAL_LOCKS=0'));
