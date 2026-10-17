@@ -121,3 +121,68 @@ test('Python boundary: mismatched official source fails before importing grader 
   assert.equal(result.status, 0, result.stderr ?? result.error?.message);
   assert.match(result.stdout, /source mismatch rejected/);
 });
+
+test('Python source identity: preserves file, directory and dangling links; rejects escapes and swaps',
+  { skip: process.platform === 'win32' && !process.env.COMMUNITY_SYMLINK_PYTHON
+    ? 'Set COMMUNITY_SYMLINK_PYTHON to a task-local WSL interpreter for Linux symlink validation' : false }, () => {
+    const toLinux = value => value.replace(/^([A-Za-z]):[\\/]/, (_, drive) => `/mnt/${drive.toLowerCase()}/`).replaceAll('\\', '/');
+    const script = fileURLToPath(new URL('./official.py', import.meta.url));
+    const source = `import runpy,types,tempfile,pathlib,subprocess,hashlib,json,os
+m=runpy.run_path(${JSON.stringify(process.platform === 'win32' ? toLinux(script) : script)})
+destination=${JSON.stringify(process.env.COMMUNITY_SYMLINK_EVIDENCE ?? '')}
+temporary=None
+if destination:
+ base=pathlib.Path(destination);base.mkdir(parents=True)
+else:
+ temporary=tempfile.TemporaryDirectory(prefix='community-symlinks-');base=pathlib.Path(temporary.name)
+root=base/'source';root.mkdir();(root/'package').mkdir()
+regular=root/'package/source.py';regular.write_bytes(b'def target():\\n    return 1\\n')
+targets={'file-link':'package/source.py','directory-link':'package','dangling-link':'missing/inside'}
+for file,target in targets.items():os.symlink(target,root/file)
+subprocess.run(['git','init','-q',str(root)],check=True)
+subprocess.run(['git','add','--force','--all'],cwd=root,check=True)
+subprocess.run(['git','-c','user.name=CodeFacts Test','-c','user.email=test@localhost','commit','-qm','symlink fixture'],cwd=root,check=True)
+head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip()
+entries=[{'path':'package/source.py','bytes':len(regular.read_bytes()),'sha256':hashlib.sha256(regular.read_bytes()).hexdigest()}]
+for file,target in targets.items():
+ content=target.encode('utf-8');entries.append({'path':file,'target':target,'mode':'120000','bytes':len(content),'sha256':hashlib.sha256(content).hexdigest()})
+manifest={'instanceId':'symlink-fixture','baseCommit':'original-fixture-base','archiveSha256':'f'*64,'entries':entries}
+manifest_path=base/'manifest.json';manifest_path.write_text(json.dumps(manifest))
+config={'sourceManifestPath':str(manifest_path)};prediction={'instance_id':'symlink-fixture','commit':head};gold=types.SimpleNamespace(commit='original-fixture-base')
+def check():return m['context_source_identity'](config,prediction,gold,root)
+accepted=check();assert accepted['sourceFiles']==4
+checks={'acceptedFileDirectoryAndDanglingLinks':True}
+def reject(name,expected):
+ try:check()
+ except ValueError as error:
+  assert expected in str(error),(name,str(error));checks[name]=str(error)
+ else:raise AssertionError(name+' was accepted')
+directory=root/'directory-link';directory.unlink();os.symlink('../outside',directory)
+reject('escapingDirectoryLink','escapes private clone')
+directory.unlink();os.symlink('package/.',directory)
+reject('changedInternalLinkTarget','target differs')
+directory.unlink();os.symlink('package',directory)
+regular.unlink();(root/'replacement.py').write_bytes(b'def target():\\n    return 1\\n');os.symlink('../replacement.py',regular)
+reject('regularReplacedByLink','regular entry replaced by a link')
+regular.unlink();regular.write_bytes((root/'replacement.py').read_bytes());(root/'replacement.py').unlink()
+file_link=root/'file-link';file_link.unlink();file_link.write_text('package/source.py')
+reject('linkReplacedByRegularTargetText','link replaced by a regular entry')
+file_link.unlink();os.symlink('package/source.py',file_link)
+os.symlink('package',root/'undeclared-directory-link')
+reject('undeclaredDirectoryLink','inventory differs')
+(root/'undeclared-directory-link').unlink()
+entries[1]['sha256']='0'*64;manifest_path.write_text(json.dumps(manifest))
+reject('linkTargetBytesHashMismatch','bytes differ')
+entries[1]['sha256']=hashlib.sha256(targets['file-link'].encode('utf-8')).hexdigest();manifest_path.write_text(json.dumps(manifest))
+check()
+(base/'receipt.json').write_text(json.dumps({'fixture':'actual-private-git-linux-symlinks','checks':checks,'sourceIdentity':accepted},indent=2))
+print(json.dumps({'passed':list(checks),'evidence':str(base)}))
+if temporary:temporary.cleanup()
+`;
+    const linux = process.platform === 'win32';
+    const result = spawnSync(linux ? 'wsl.exe' : (process.env.COMMUNITY_SYMLINK_PYTHON ?? 'python'),
+      linux ? ['-d', 'Ubuntu', '--', process.env.COMMUNITY_SYMLINK_PYTHON, '-B', '-c', source] : ['-B', '-c', source],
+      { encoding: 'utf8', timeout: 60_000 });
+    assert.equal(result.status, 0, result.stderr ?? result.error?.message);
+    assert.match(result.stdout, /acceptedFileDirectoryAndDanglingLinks/);
+  });

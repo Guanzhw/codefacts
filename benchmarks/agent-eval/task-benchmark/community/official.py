@@ -112,9 +112,19 @@ def context_source_identity(config, prediction, gold, root):
     expected = set()
     for entry in manifest["entries"]:
         file = root / entry["path"]
-        if not file.resolve().is_relative_to(root) or file.is_symlink():
+        if not file.resolve().is_relative_to(root):
             raise ValueError("Archive source manifest path escapes private clone")
-        content = file.read_bytes()
+        if "target" in entry:
+            if not file.is_symlink():
+                raise ValueError(f"Archive source link replaced by a regular entry: {entry['path']}")
+            target = os.readlink(file)
+            if target != entry["target"]:
+                raise ValueError(f"Archive source link target differs from baseline: {entry['path']}")
+            content = target.encode("utf-8")
+        else:
+            if file.is_symlink():
+                raise ValueError(f"Archive source regular entry replaced by a link: {entry['path']}")
+            content = file.read_bytes()
         if len(content) != entry["bytes"] or hashlib.sha256(content).hexdigest() != entry["sha256"]:
             raise ValueError(f"Archive source bytes differ from baseline: {entry['path']}")
         expected.add(entry["path"].replace("\\", "/"))
@@ -122,6 +132,11 @@ def context_source_identity(config, prediction, gold, root):
     for directory, subdirectories, files in os.walk(root):
         if Path(directory) == root and ".git" in subdirectories:
             subdirectories.remove(".git")
+        for name in list(subdirectories):
+            candidate = Path(directory) / name
+            if candidate.is_symlink():
+                actual.add(candidate.relative_to(root).as_posix())
+                subdirectories.remove(name)
         for file in files:
             if Path(directory) == root and file == ".git":
                 continue

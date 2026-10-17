@@ -39,6 +39,9 @@ jobs:
         run: node --test benchmarks/agent-eval/task-benchmark/campaign.test.mjs benchmarks/agent-eval/task-benchmark/collect.test.mjs benchmarks/agent-eval/task-benchmark/dsh-adapter.test.mjs benchmarks/agent-eval/task-benchmark/fetch-corpora.test.mjs benchmarks/agent-eval/task-benchmark/summary.test.mjs benchmarks/agent-eval/task-benchmark/publish.test.mjs benchmarks/agent-eval/task-benchmark/usage-recovery.test.mjs benchmarks/agent-eval/task-benchmark/published-baseline.test.mjs
       - name: Install isolated community benchmark protocol fixtures
         run: npm install --prefix "${{ runner.temp }}/codefacts-benchmark-sdk" --ignore-scripts --no-audit --no-fund --package-lock=false @modelcontextprotocol/sdk@1.30.0 ajv@8.20.0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
       - name: Verify community task benchmark
         env:
           TASK_BENCHMARK_SDK_ROOT: ${{ runner.temp }}/codefacts-benchmark-sdk/node_modules/@modelcontextprotocol/sdk

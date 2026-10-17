@@ -270,34 +270,50 @@ function logicalBytes(root) {
   return fs.readdirSync(root).reduce((sum, file) => sum + logicalBytes(path.join(root, file)), 0);
 }
 
-/** Fresh attempt: exact base bytes, a synthetic private Git commit, independent index. */
+/** Fresh attempt: exact base bytes, a private Git boundary, independent native index. */
 export async function prepareCommunitySlot({ task, arm, runtime, dir, timeoutMs = 180_000 }) {
   const started = performance.now(), manifestFile = task.manifestFile ?? path.join(path.dirname(task.sourceRoot), 'manifest.json');
   const manifest = JSON.parse(fs.readFileSync(manifestFile, 'utf8')), entries = manifest.entries;
   if (manifest.repo !== task.repo || manifest.baseCommit !== task.baseCommit || manifest.instanceId !== task.instanceId || hash(entries) !== manifest.digest) throw new Error('Community source identity mismatch');
   verifyCommunitySource(task.sourceRoot, entries);
   fs.mkdirSync(dir, { recursive: true }); const root = path.join(dir, 'source'); fs.mkdirSync(root);
+  const sourceMaterialization = task.cohort === 'context' && runtime.contextSourceMode === 'hardlink' ? 'read-only-hardlinks' : 'independent-copy';
+  const gitMode = task.cohort === 'context' && runtime.contextGitMode === 'boundary-only' ? 'boundary-only' : 'synthetic-commit';
   for (const row of entries) {
     const file = path.join(root, row.path); fs.mkdirSync(path.dirname(file), { recursive: true });
-    if (row.target === undefined) fs.copyFileSync(path.join(task.sourceRoot, row.path), file, fs.constants.COPYFILE_EXCL);
+    if (row.target === undefined) {
+      if (sourceMaterialization === 'read-only-hardlinks') fs.linkSync(path.join(task.sourceRoot, row.path), file);
+      else fs.copyFileSync(path.join(task.sourceRoot, row.path), file, fs.constants.COPYFILE_EXCL);
+    }
   }
   const sourceRepresentation = await createSourceLinks(root, entries.filter(row => row.target !== undefined), runtime);
+  if (gitMode === 'boundary-only' && sourceRepresentation.gitStrategy) sourceRepresentation.gitStrategy = 'boundary-only';
   verifyCommunitySource(root, entries);
   const setupDir = path.join(dir, 'setup'), hooks = path.join(dir, 'disabled-hooks'); fs.mkdirSync(setupDir); fs.mkdirSync(hooks);
   const gitReceipts = [];
-  if (process.platform === 'win32' && runtime.symlinkStrategy === 'wsl-lx') writeJson(path.join(dir, 'git-runtime.json'), { wsl: runtime.wsl, wslDistro: runtime.wslDistro ?? 'Ubuntu' });
-  const git = async args => { const receipt = await gitCommand(root, args, timeoutMs); gitReceipts.push(receipt); return receipt; };
-  await git(['-c', 'init.templateDir=', 'init', '--initial-branch=benchmark']);
-  const hooksPath = process.platform === 'win32' && runtime.symlinkStrategy === 'wsl-lx' ? linuxPath(hooks) : hooks;
-  for (const [key, value] of Object.entries({ 'core.hooksPath': hooksPath, 'core.autocrlf': 'false', 'core.safecrlf': 'false', 'core.symlinks': 'true', 'core.filemode': 'false', 'commit.gpgSign': 'false', 'user.name': 'Community benchmark', 'user.email': 'benchmark@invalid' })) await git(['config', key, value]);
-  fs.mkdirSync(path.join(root, '.git', 'info'), { recursive: true });
-  fs.writeFileSync(path.join(root, '.git', 'info', 'attributes'), '* -text -filter -ident -working-tree-encoding\n');
-  fs.writeFileSync(path.join(root, '.git', 'info', 'exclude'), '.codegraph*\n.code-graph*\n');
-  await git(['add', '--force', '--all', '--', ...patchPaths]);
-  const executable = entries.filter(row => row.mode === '100755').map(row => row.path);
-  for (let i = 0; i < executable.length; i += 100) await git(['update-index', '--chmod=+x', '--', ...executable.slice(i, i + 100)]);
-  await git(['-c', 'core.hooksPath=' + hooksPath, 'commit', '--allow-empty', '--no-verify', '-m', 'Synthetic source-only benchmark baseline']);
-  const baselineCommit = (await git(['rev-parse', 'HEAD'])).stdout.trim(); writeJson(path.join(setupDir, 'git-baseline.json'), { upstream: { repo: task.repo, baseCommit: task.baseCommit }, syntheticCommit: baselineCommit, receipts: gitReceipts });
+  let baselineCommit = null;
+  if (gitMode === 'boundary-only') {
+    // Read-only Context needs a repository discovery boundary, without hashing
+    // every file again into Git objects or creating a per-attempt Git index.
+    for (const name of ['objects', 'refs/heads', 'hooks']) fs.mkdirSync(path.join(root, '.git', name), { recursive: true });
+    fs.writeFileSync(path.join(root, '.git', 'HEAD'), 'ref: refs/heads/benchmark\n');
+    fs.writeFileSync(path.join(root, '.git', 'config'), `[core]\n repositoryformatversion = 0\n bare = false\n hooksPath = ${JSON.stringify(hooks.replaceAll('\\', '/'))}\n`);
+  } else {
+    if (process.platform === 'win32' && runtime.symlinkStrategy === 'wsl-lx') writeJson(path.join(dir, 'git-runtime.json'), { wsl: runtime.wsl, wslDistro: runtime.wslDistro ?? 'Ubuntu' });
+    const git = async args => { const receipt = await gitCommand(root, args, timeoutMs); gitReceipts.push(receipt); return receipt; };
+    await git(['-c', 'init.templateDir=', 'init', '--initial-branch=benchmark']);
+    const hooksPath = process.platform === 'win32' && runtime.symlinkStrategy === 'wsl-lx' ? linuxPath(hooks) : hooks;
+    for (const [key, value] of Object.entries({ 'core.hooksPath': hooksPath, 'core.autocrlf': 'false', 'core.safecrlf': 'false', 'core.symlinks': 'true', 'core.filemode': 'false', 'commit.gpgSign': 'false', 'user.name': 'Community benchmark', 'user.email': 'benchmark@invalid' })) await git(['config', key, value]);
+    fs.mkdirSync(path.join(root, '.git', 'info'), { recursive: true });
+    fs.writeFileSync(path.join(root, '.git', 'info', 'attributes'), '* -text -filter -ident -working-tree-encoding\n');
+    fs.writeFileSync(path.join(root, '.git', 'info', 'exclude'), '.codegraph*\n.code-graph*\n');
+    await git(['add', '--force', '--all', '--', ...patchPaths]);
+    const executable = entries.filter(row => row.mode === '100755').map(row => row.path);
+    for (let i = 0; i < executable.length; i += 100) await git(['update-index', '--chmod=+x', '--', ...executable.slice(i, i + 100)]);
+    await git(['-c', 'core.hooksPath=' + hooksPath, 'commit', '--allow-empty', '--no-verify', '-m', 'Synthetic source-only benchmark baseline']);
+    baselineCommit = (await git(['rev-parse', 'HEAD'])).stdout.trim();
+  }
+  writeJson(path.join(setupDir, 'git-baseline.json'), { mode: gitMode, upstream: { repo: task.repo, baseCommit: task.baseCommit }, syntheticCommit: baselineCommit, receipts: gitReceipts });
   const sourcePreparationMs = performance.now() - started, indexStarted = performance.now(), state = path.join(dir, 'state.sqlite'), native = nativeConfig(arm, root, state);
   let nativeReceipt = null;
   if (arm.id === 'codegraph') {
@@ -309,17 +325,20 @@ export async function prepareCommunitySlot({ task, arm, runtime, dir, timeoutMs 
     try {
       assertNativeVersion(client.metadata, arm); nativeReceipt = { ...nativeReceipt, metadata: client.metadata };
       if (arm.id !== 'codegraph') {
-        const wire = {}, result = await client.callTool({ name: 'map', arguments: arm.id === 'codefacts022' ? { format: 'full' } : {} }, wire);
-        writeJson(path.join(setupDir, 'map.json'), { result, wire }); if (result.isError) throw new Error('CodeFacts setup map failed');
+        // Cold indexing follows the campaign's preparation allowance rather
+        // than the frozen read-only bridge's 60-second warm-query deadline.
+        // connectNative still records the complete request/response wire log.
+        const result = await client.client.callTool({ name: 'map', arguments: arm.id === 'codefacts022' ? { format: 'full' } : {} }, undefined, { timeout: timeoutMs });
+        writeJson(path.join(setupDir, 'map.json'), { result }); if (result.isError) throw new Error('CodeFacts setup map failed');
       }
     } finally { await client.close(); }
   }
   const indexDurationMs = native ? performance.now() - indexStarted : 0;
   verifyCommunitySource(task.sourceRoot, entries); verifyCommunitySource(root, entries);
-  if ((await collectPatch(root)).length) throw new Error('Native setup changed baseline source');
+  if (gitMode !== 'boundary-only' && (await collectPatch(root)).length) throw new Error('Native setup changed baseline source');
   const sourceIdentity = { repo: task.repo, baseCommit: task.baseCommit, instanceId: task.instanceId, manifestFile, manifestSha256: hash(fs.readFileSync(manifestFile)), sourceHash: manifest.digest, syntheticCommit: baselineCommit };
   const indexDiskBytes = arm.id === 'codegraph' ? fs.readdirSync(root).filter(name => /^\.code-?graph/.test(name)).reduce((sum, name) => sum + logicalBytes(path.join(root, name)), 0) : [state, `${state}-wal`, `${state}-shm`].reduce((sum, file) => sum + logicalBytes(file), 0);
-  const setup = { durationMs: performance.now() - started, sourcePreparationMs, indexDurationMs, indexDiskBytes, sourceFiles: entries.length, sourceIdentity, sourceRepresentation, native: nativeReceipt, indexPolicy: arm.id === 'codegraph' ? 'Private generated .codegraph state excluded from patch; hooks disabled' : 'External SQLite state; hooks disabled' };
+  const setup = { durationMs: performance.now() - started, sourcePreparationMs, indexDurationMs, indexDiskBytes, sourceFiles: entries.length, sourceIdentity, sourceRepresentation, sourceMaterialization, gitMode, native: nativeReceipt, indexPolicy: arm.id === 'codegraph' ? 'Private generated .codegraph state excluded from patch; hooks disabled' : 'External SQLite state; hooks disabled' };
   writeJson(path.join(dir, 'setup.json'), setup);
   const bridgeConfig = path.join(dir, 'bridge-config.json'); writeJson(bridgeConfig, { root, evidenceDir: path.join(dir, 'inner-bridge'), rgCommand: runtime.rg, sdkRoot: runtime.sdkRoot, arm: arm.id, native });
   return { root, setup, bridgeConfig, sourceIdentity, sourceHash: manifest.digest, entries };

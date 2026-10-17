@@ -56,6 +56,44 @@ test('incomplete turns retain settled usage when the whole-turn SDK fold is unav
   assert.deepEqual(result.knownUsageLowerBound, observed);
 });
 
+// Fixture fold recognizes a valid accounting lifecycle and sums distinct
+// settled requests. Duplicate representations invalidate an exact turn fold.
+function fixtureUsageFold(events) {
+  if (events[0]?.type !== 'turn/start' || events.at(-1)?.type !== 'turn/end') return undefined;
+  const samples = [];
+  let open = false, settled = false;
+  for (const item of events.slice(1, -1)) {
+    if (item.type === 'step/start') { if (open) return undefined; open = true; settled = false; }
+    else if (['assistant/message', 'assistant/attempt'].includes(item.type)) {
+      if (!open || settled) return undefined;
+      const usage = item.data.usage ?? item.data.stream.find(record => record.chunk?.type === 'usage')?.chunk.usage;
+      if (!usage) return undefined;
+      samples.push(usage); settled = true;
+    } else if (item.type === 'step/end') { if (!open || !settled) return undefined; open = false; }
+  }
+  if (open || !samples.length) return undefined;
+  const sum = key => samples.reduce((total, usage) => total + usage[key], 0);
+  return { uncachedInputTokens: sum('inputTokens'), outputTokens: sum('outputTokens'), totalTokens: sum('totalTokens') };
+}
+
+test('recovery counts duplicate settlements once and observed retry requests separately', () => {
+  const attempt = () => event('assistant/attempt', { turn: 0, step: 0, stream: [
+    { type: 'chunk', chunk: { type: 'usage', usage: { inputTokens: 5, outputTokens: 2, totalTokens: 107 } } },
+  ] });
+  const rows = turn().slice(0, -1); rows.splice(3, 0, attempt());
+  const duplicate = summarizeDshEvents(rows, selection, fixtureUsageFold);
+  assert.equal(duplicate.derivedTurnUsage, null);
+  assert.equal(duplicate.knownUsageLowerBound.totalTokens, 107);
+  assert.equal(duplicate.usageRecovery.provenance.requests.length, 1);
+  assert.deepEqual(duplicate.usageRecovery.provenance.requests[0].settlementEventIndices, [3, 4]);
+  const retried = turn().slice(0, -1);
+  retried.splice(3, 0, attempt(), event('llm/retry', { turn: 0, step: 0 }),
+    event('llm/retry-started', { turn: 0, step: 0 }));
+  const retry = summarizeDshEvents(retried, selection, fixtureUsageFold);
+  assert.equal(retry.knownUsageLowerBound.totalTokens, 214);
+  assert.deepEqual(retry.usageRecovery.provenance.requests.map(request => request.attempt), [0, 1]);
+});
+
 test('failed settlements do not manufacture exact usage or erase known consumption', () => {
   const rows = turn('error');
   rows.splice(-1, 0, event('step/start', { turn: 0, step: 1 }),
@@ -102,7 +140,7 @@ test('minimal overlay preserves the frozen adapter tool boundary', () => {
   assert.throws(() => makeDshOverlay({ ...options, bridgeEntry: '/bridge' }), /supplied together/);
 });
 
-function fakeSdk(directory) {
+function fakeSdk(directory, { terminalDelayMs = 0, shutdownDelayMs = 0 } = {}) {
   const installRoot = path.join(directory, 'sdk');
   const meter = path.join(installRoot, 'node_modules/@deepseek-ai/dsh-token-meter/lib/types');
   fs.mkdirSync(meter, { recursive: true });
@@ -126,9 +164,9 @@ function fakeSdk(directory) {
         event('turn/start', { turn: 0 });
         event('request/header', { header: { config, tools: [{ name: 'mcp__repo__source_read' }] } });
         event('assistant/message', { turn: 0, step: 0, message: { content: [{ type: 'text', text: 'SDK fixture answer.' }] }, stream: [] });
-        event('turn/end', { turn: 0, reason: { kind: 'completed' } });
+        setTimeout(() => event('turn/end', { turn: 0, reason: { kind: 'completed' } }), ${terminalDelayMs});
       } else if (request.method === 'shutdown') {
-        process.stdout.write(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: {} }) + '\\n', () => process.exit(0));
+        setTimeout(() => process.stdout.write(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: {} }) + '\\n', () => process.exit(0)), ${shutdownDelayMs});
       }
     });
   `);
@@ -165,4 +203,20 @@ test('SDK process receives the configured allowance and startup probe is explici
   }
   await assert.rejects(runDshAttempt({ ...options, attemptDir: path.join(directory, 'invalid'), maxOutputTokens: 0 }), /positive safe integer/);
   assert.equal(fs.existsSync(path.join(directory, 'invalid')), false);
+});
+
+test('terminal event ends the task deadline while bounded SDK shutdown finishes later', async t => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'codefacts-community-dsh-shutdown-'));
+  t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
+  const previous = process.env.OPENCODE_API_KEY;
+  process.env.OPENCODE_API_KEY = 'fixture-secret';
+  t.after(() => { if (previous === undefined) delete process.env.OPENCODE_API_KEY; else process.env.OPENCODE_API_KEY = previous; });
+  const timeoutMs = 1500;
+  const receipt = await runDshAttempt({ installRoot: fakeSdk(directory, { terminalDelayMs: 100, shutdownDelayMs: 2000 }),
+    root: directory, attemptDir: path.join(directory, 'attempt'), prompt: 'Fixture answer.', timeoutMs });
+  assert.ok(receipt.timings.turnEndedAtMs < timeoutMs);
+  assert.ok(receipt.durationMs > timeoutMs);
+  assert.equal(receipt.timedOut, false);
+  assert.equal(receipt.status, 'attempt-completed');
+  assert.equal(receipt.answer, 'SDK fixture answer.');
 });

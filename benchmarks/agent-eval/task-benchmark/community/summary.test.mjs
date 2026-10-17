@@ -17,6 +17,18 @@ test('exact input derives from exact total minus output without inventing cache 
   const row = summarizeAttempt({ id: 'slot', arm: 'ordinary' }, { id: 'task' }, {}, { exactTurnUsage: { uncachedInputTokens: 270, outputTokens: 3209, totalTokens: 3479 } });
   assert.equal(row.inputTokens, 270); assert.equal(row.cacheReadTokens, null); assert.equal(row.cacheWriteTokens, null);
 });
+test('official grading receipt and slot wall clocks remain distinct and missing times stay null', () => {
+  const slot = { id: 'slot', arm: 'ordinary' }, task = { id: 'task', cohort: 'swe' };
+  const row = summarizeAttempt(slot, task, { slotWallMs: 1700, grade: { status: 'completed', resolved: false, receipt: { durationMs: 600 } } }, { durationMs: 1000 });
+  assert.equal(row.gradeDurationMs, 600); assert.equal(row.slotWallMs, 1700); assert.equal(row.dshDurationMs, 1000);
+  const missing = summarizeAttempt(slot, task, { grade: { status: 'pending', durationMs: 999 } });
+  assert.equal(missing.gradeDurationMs, null); assert.equal(missing.slotWallMs, null);
+  const frozen = { campaignId: 'test', manifest: { tasks: [{ ...task, split: 'pilot' }] }, schedule: buildSchedule([{ ...task, split: 'pilot' }]) };
+  const summary = summarizeCampaign(frozen, [{ slotId: frozen.schedule[0].id, meta: { slotWallMs: 1700, grade: { status: 'completed', resolved: false, receipt: { durationMs: 600 } } } }]);
+  assert.equal(summary.groups[0].arms.ordinary.resources.gradeDurationMs.total, 600);
+  assert.equal(summary.groups[0].arms.ordinary.resources.slotWallMs.total, 1700);
+  assert.equal(summary.groups[0].arms.codefacts022.resources.gradeDurationMs.total, null);
+});
 test('all scheduled attempts remain visible, cohort and split remain separate, paired resources include incorrect tasks', () => {
   const tasks = ['context', 'swe'].flatMap(cohort => ['pilot', 'confirmation_holdout'].flatMap(split => [0, 1].map(i => ({ id: `${cohort}-${split}-${i}`, cohort, split, instanceId: `issue-${i}`, language: 'go' }))));
   const frozen = { campaignId: 'test', manifest: { tasks }, schedule: buildSchedule(tasks) };

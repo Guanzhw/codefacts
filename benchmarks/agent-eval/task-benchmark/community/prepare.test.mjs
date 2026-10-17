@@ -85,3 +85,48 @@ test('source verification reports unexpected source and byte drift', () => {
     fs.unlinkSync(path.join(dir, 'two')); fs.writeFileSync(path.join(dir, 'one'), 'y'); assert.throws(() => verifyCommunitySource(dir, entries), /byte drift/);
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });
+
+test('read-only Context can share immutable bytes while repair sources remain independent', async t => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'community-materialize-'));
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  const sourceRoot = path.join(dir, 'snapshot', 'source'); fs.mkdirSync(sourceRoot, { recursive: true });
+  const original = 'immutable source\n'; fs.writeFileSync(path.join(sourceRoot, 'x.txt'), original);
+  const entries = [{ path: 'x.txt', bytes: Buffer.byteLength(original), sha256: hash(original), mode: '100644' }];
+  const task = { instanceId: 'fixture', repo: 'fixture/repo', baseCommit: 'a'.repeat(40), sourceRoot };
+  writeJson(path.join(dir, 'snapshot', 'manifest.json'), { ...task, entries, digest: hash(entries) });
+  const runtime = { sdkRoot: dir, rg: 'rg', contextSourceMode: 'hardlink' };
+  const context = await prepareCommunitySlot({ task: { ...task, cohort: 'context' }, arm: { id: 'ordinary' }, runtime, dir: path.join(dir, 'context') });
+  assert.equal(context.setup.sourceMaterialization, 'read-only-hardlinks');
+  assert.ok(fs.statSync(path.join(sourceRoot, 'x.txt')).nlink >= 2);
+  const repair = await prepareCommunitySlot({ task: { ...task, cohort: 'swe' }, arm: { id: 'ordinary' }, runtime, dir: path.join(dir, 'repair') });
+  assert.equal(repair.setup.sourceMaterialization, 'independent-copy');
+  fs.writeFileSync(path.join(repair.root, 'x.txt'), 'actual repair\n');
+  assert.equal(fs.readFileSync(path.join(sourceRoot, 'x.txt'), 'utf8'), original);
+  assert.equal(fs.readFileSync(path.join(context.root, 'x.txt'), 'utf8'), original);
+});
+
+test('explicit Context boundary mode creates no Git commit, index or objects; SWE keeps real Git', async t => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'community-git-boundary-'));
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  const sourceRoot = path.join(dir, 'snapshot', 'source'); fs.mkdirSync(sourceRoot, { recursive: true });
+  const content = 'export function example() { return 1; }\n'; fs.writeFileSync(path.join(sourceRoot, 'example.js'), content);
+  const entries = [{ path: 'example.js', bytes: Buffer.byteLength(content), sha256: hash(content), mode: '100644' }];
+  const task = { instanceId: 'boundary-fixture', repo: 'fixture/repo', baseCommit: 'a'.repeat(40), sourceRoot };
+  writeJson(path.join(dir, 'snapshot', 'manifest.json'), { ...task, entries, digest: hash(entries) });
+  const runtime = { sdkRoot: dir, rg: 'rg', contextSourceMode: 'hardlink', contextGitMode: 'boundary-only' };
+  const context = await prepareCommunitySlot({ task: { ...task, cohort: 'context' }, arm: { id: 'ordinary' }, runtime, dir: path.join(dir, 'context') });
+  assert.equal(context.setup.gitMode, 'boundary-only'); assert.equal(context.sourceIdentity.syntheticCommit, null);
+  assert.equal(fs.existsSync(path.join(context.root, '.git', 'index')), false);
+  assert.deepEqual(fs.readdirSync(path.join(context.root, '.git', 'objects')), []);
+  assert.notEqual(spawnSync('git', ['rev-parse', '--verify', 'HEAD'], { cwd: context.root }).status, 0);
+  assert.equal(spawnSync('git', ['rev-parse', '--show-toplevel'], { cwd: context.root, encoding: 'utf8' }).stdout.trim().replaceAll('\\', '/'), context.root.replaceAll('\\', '/'));
+  const configuredHooks = spawnSync('git', ['config', 'core.hooksPath'], { cwd: context.root, encoding: 'utf8' });
+  assert.equal(configuredHooks.status, 0); assert.deepEqual(fs.readdirSync(configuredHooks.stdout.trim()), []);
+  verifyCommunitySource(sourceRoot, entries); verifyCommunitySource(context.root, entries);
+  const repair = await prepareCommunitySlot({ task: { ...task, cohort: 'swe' }, arm: { id: 'ordinary' }, runtime, dir: path.join(dir, 'repair') });
+  assert.equal(repair.setup.gitMode, 'synthetic-commit'); assert.match(repair.sourceIdentity.syntheticCommit, /^[a-f0-9]{40}$/);
+  fs.writeFileSync(path.join(repair.root, 'example.js'), content.replace('return 1', 'return 2'));
+  fs.writeFileSync(path.join(repair.root, 'new.js'), 'export const added = true;\n');
+  const patch = await collectPatch(repair.root); assert.match(patch, /return 2/); assert.match(patch, /new file mode/);
+  assert.equal(fs.readFileSync(path.join(sourceRoot, 'example.js'), 'utf8'), content);
+});

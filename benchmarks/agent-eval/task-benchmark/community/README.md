@@ -38,6 +38,12 @@ selection file and all failed or unavailable attempts remain in the report.
 5. Prepare separate private Context grading clones with `prepareCommunitySlot`
    using the ordinary arm. Record the actual synthetic commit and source
    manifest. These clones stay outside the model attempt and archive trees.
+   `runtime.contextSourceMode="hardlink"` shares immutable file bytes for
+   read-only localization; Git metadata and indexes stay private. Repair
+   attempts always copy independent bytes.
+   Read-only model attempts can use `runtime.contextGitMode="boundary-only"`
+   to avoid creating source commits for every arm. Official grading bases and
+   repair attempts retain full Git repositories.
 6. Prepare SWE images and run official gold/empty controls for each admitted
    repair task. The agent image removes embedded upstream history, evaluator
    material and task build artifacts. Retain the original image for grading.

@@ -6,36 +6,12 @@ import { randomUUID } from 'node:crypto';
 import { performance } from 'node:perf_hooks';
 import { pathToFileURL } from 'node:url';
 import { makeDshOverlay } from '../dsh-adapter.mjs';
+import { recoverKnownUsage } from '../usage-recovery.mjs';
 
 export { makeDshOverlay };
 // dsh-llm-pi-ai 0.2.0-rc.2 declares this output capability default. The
 // explicit initialize.maxTokens below is a per-request generation allowance.
 export const DEFAULT_MAX_OUTPUT_TOKENS = 32768;
-
-function requestUsageLowerBound(turn, deriveTurnTokenUsage) {
-  const attempts = [];
-  for (const event of turn) {
-    if (!['assistant/message', 'assistant/attempt'].includes(event.type)) continue;
-    const { turn: turnId, step } = event.data;
-    // Ask the SDK's own fold to normalize one durable settled request. A later
-    // missing or synthetic-zero settlement must not erase earlier billed work.
-    const usage = deriveTurnTokenUsage([
-      { type: 'turn/start', data: { turn: turnId } },
-      { type: 'step/start', data: { turn: turnId, step } }, event,
-      { type: 'step/end', data: { turn: turnId, step } },
-      { type: 'turn/end', data: { turn: turnId, reason: { kind: 'completed' } } },
-    ]);
-    if (usage) attempts.push(usage);
-  }
-  if (!attempts.length) return null;
-  const sum = key => attempts.reduce((total, usage) => total + usage[key], 0);
-  const totalTokens = sum('totalTokens');
-  if (!Number.isSafeInteger(totalTokens)) return null;
-  return Object.fromEntries(['uncachedInputTokens', 'outputTokens', 'totalTokens',
-    'cacheReadTokens', 'cacheWriteTokens', 'reasoningTokens']
-    .filter(key => attempts.every(usage => usage[key] !== undefined))
-    .map(key => [key, sum(key)]));
-}
 
 /** Export final text only from a successfully completed, audited SDK turn. */
 export function summarizeDshEvents(events, { provider, model, reasoningEffort,
@@ -63,7 +39,8 @@ export function summarizeDshEvents(events, { provider, model, reasoningEffort,
     event.data.stream.some(record => record.type === 'chunk' && record.chunk.type === 'usage' &&
       record.chunk.usage.totalTokens === 0));
   const exactTurnUsage = completed && !executionFailed && !failedAttemptZeroUsage ? derived ?? null : null;
-  const knownUsageLowerBound = derived ?? requestUsageLowerBound(turn, deriveTurnTokenUsage);
+  const recovery = derived === undefined || failedAttemptZeroUsage ? recoverKnownUsage(turn, deriveTurnTokenUsage) : null;
+  const knownUsageLowerBound = recovery ? recovery.knownUsageLowerBound : derived ?? null;
   return { turnEnd, answer, completed, generationCutoff, partialOutput: answer ? '' : text,
     headerAudit, actualRequestHeaders: headers,
     catalogs: headers.map(({ header }) => header.tools ?? []),
@@ -76,6 +53,8 @@ export function summarizeDshEvents(events, { provider, model, reasoningEffort,
       stream: event.data.stream,
     })),
     exactTurnUsage, derivedTurnUsage: derived ?? null, knownUsageLowerBound, failedAttemptZeroUsage,
+    usageRecovery: recovery ? { method: recovery.method, closedThroughStep: recovery.closedThroughStep,
+      provenance: recovery.provenance } : null,
     usageAvailability: exactTurnUsage ? 'exact-provider-turn-usage' :
       knownUsageLowerBound?.totalTokens > 0 ? 'known-lower-bound' : 'unavailable',
   };
@@ -155,7 +134,7 @@ export async function runDshAttempt({ installRoot, nodeCommand = process.execPat
       if (frame.params.sessionId !== sessionId) { protocolError = 'Unexpected foreign session event'; stop(); return; }
       const event = frame.params.event;
       events.push(event); fs.writeSync(eventLog, scrub(JSON.stringify(event)) + '\n');
-      if (event.type === 'turn/end') { turnEndedAtMs = elapsed(); stop(); }
+      if (event.type === 'turn/end') { turnEndedAtMs = elapsed(); clearTimeout(timer); stop(); }
     }
     if (frame.method?.startsWith('subagent.')) { protocolError = 'Unexpected subagent event'; stop(); }
   });

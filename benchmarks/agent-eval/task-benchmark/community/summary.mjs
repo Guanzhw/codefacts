@@ -37,6 +37,7 @@ export function summarizeAttempt(slot, task, meta = null, receipt = null) {
     uncachedInputTokens: nullable(usage?.uncachedInputTokens), cacheReadTokens: nullable(usage?.cacheReadTokens), cacheWriteTokens: nullable(usage?.cacheWriteTokens),
     knownUsageLowerBound: receipt?.knownUsageLowerBound ?? null,
     dshDurationMs: nullable(receipt?.durationMs), modelTurnMs: number(prompted) && number(ended) ? ended - prompted : null,
+    gradeDurationMs: nullable(meta?.grade?.receipt?.durationMs), slotWallMs: nullable(meta?.slotWallMs),
     preparationAndSandboxMs: nullable(meta?.preparationAndSandboxMs), sourcePreparationMs: nullable(meta?.setup?.sourcePreparationMs),
     indexDurationMs: nullable(meta?.setup?.indexDurationMs), indexDiskBytes: nullable(meta?.setup?.indexDiskBytes),
     toolCalls: receipt ? toolCalls.length : null, toolErrors: receipt ? toolErrors : null, nativeCalls: receipt ? nativeCalls.length : null,
@@ -44,7 +45,7 @@ export function summarizeAttempt(slot, task, meta = null, receipt = null) {
     patchPath: meta?.patchPath ?? null, error: meta?.error ?? null };
 }
 
-const RESOURCES = ['totalTokens', 'inputTokens', 'outputTokens', 'uncachedInputTokens', 'cacheReadTokens', 'cacheWriteTokens', 'dshDurationMs', 'modelTurnMs', 'preparationAndSandboxMs', 'sourcePreparationMs', 'indexDurationMs', 'indexDiskBytes', 'toolCalls', 'toolErrors', 'nativeCalls'];
+const RESOURCES = ['totalTokens', 'inputTokens', 'outputTokens', 'uncachedInputTokens', 'cacheReadTokens', 'cacheWriteTokens', 'dshDurationMs', 'modelTurnMs', 'gradeDurationMs', 'slotWallMs', 'preparationAndSandboxMs', 'sourcePreparationMs', 'indexDurationMs', 'indexDiskBytes', 'toolCalls', 'toolErrors', 'nativeCalls'];
 function aggregate(rows) {
   const resolved = rows.filter(row => typeof row.resolved === 'boolean');
   const metricKeys = [...new Set(rows.flatMap(row => Object.keys(flattenMetrics(row.metrics))))].sort();
@@ -108,6 +109,7 @@ export function summarizeCampaign(frozen, attempts) {
       'Token totals are provider usage, not monetary cost. Unknown usage remains null; known lower bounds are retained per attempt.',
       'Context metric means describe only the explicitly counted valid reports; invalid or missing localization declarations remain missing quality, so valid-report means are not whole-cohort quality estimates.',
       'Serial DSH duration, model-turn time, source/index preparation, and sandbox preparation are separate; grader duration is outside scored timing.',
+      'Grade duration comes from the official grader receipt. Slot wall time covers the runner attempt including an injected grader when used; grading performed externally later is outside that slot clock.',
     ] };
 }
 
