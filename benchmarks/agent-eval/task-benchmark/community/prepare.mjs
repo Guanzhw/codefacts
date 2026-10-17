@@ -303,14 +303,14 @@ export async function prepareCommunitySlot({ task, arm, runtime, dir, timeoutMs 
     const git = async args => { const receipt = await gitCommand(root, args, timeoutMs); gitReceipts.push(receipt); return receipt; };
     await git(['-c', 'init.templateDir=', 'init', '--initial-branch=benchmark']);
     const hooksPath = process.platform === 'win32' && runtime.symlinkStrategy === 'wsl-lx' ? linuxPath(hooks) : hooks;
-    for (const [key, value] of Object.entries({ 'core.hooksPath': hooksPath, 'core.autocrlf': 'false', 'core.safecrlf': 'false', 'core.symlinks': 'true', 'core.filemode': 'false', 'commit.gpgSign': 'false', 'user.name': 'Community benchmark', 'user.email': 'benchmark@invalid' })) await git(['config', key, value]);
+    for (const [key, value] of Object.entries({ 'core.hooksPath': hooksPath, 'core.autocrlf': 'false', 'core.safecrlf': 'false', 'core.symlinks': 'true', 'core.filemode': 'false', 'commit.gpgSign': 'false', 'gc.auto': '0', 'maintenance.auto': 'false', 'user.name': 'Community benchmark', 'user.email': 'benchmark@invalid' })) await git(['config', key, value]);
     fs.mkdirSync(path.join(root, '.git', 'info'), { recursive: true });
     fs.writeFileSync(path.join(root, '.git', 'info', 'attributes'), '* -text -filter -ident -working-tree-encoding\n');
     fs.writeFileSync(path.join(root, '.git', 'info', 'exclude'), '.codegraph*\n.code-graph*\n');
     await git(['add', '--force', '--all', '--', ...patchPaths]);
     const executable = entries.filter(row => row.mode === '100755').map(row => row.path);
     for (let i = 0; i < executable.length; i += 100) await git(['update-index', '--chmod=+x', '--', ...executable.slice(i, i + 100)]);
-    await git(['-c', 'core.hooksPath=' + hooksPath, 'commit', '--allow-empty', '--no-verify', '-m', 'Synthetic source-only benchmark baseline']);
+    await git(['-c', 'core.hooksPath=' + hooksPath, 'commit', '--quiet', '--allow-empty', '--no-verify', '-m', 'Synthetic source-only benchmark baseline']);
     baselineCommit = (await git(['rev-parse', 'HEAD'])).stdout.trim();
   }
   writeJson(path.join(setupDir, 'git-baseline.json'), { mode: gitMode, upstream: { repo: task.repo, baseCommit: task.baseCommit }, syntheticCommit: baselineCommit, receipts: gitReceipts });
