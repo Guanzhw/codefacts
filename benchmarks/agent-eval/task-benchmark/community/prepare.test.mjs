@@ -119,7 +119,7 @@ test('explicit Context boundary mode creates no Git commit, index or objects; SW
   assert.equal(fs.existsSync(path.join(context.root, '.git', 'index')), false);
   assert.deepEqual(fs.readdirSync(path.join(context.root, '.git', 'objects')), []);
   assert.notEqual(spawnSync('git', ['rev-parse', '--verify', 'HEAD'], { cwd: context.root }).status, 0);
-  assert.equal(spawnSync('git', ['rev-parse', '--show-toplevel'], { cwd: context.root, encoding: 'utf8' }).stdout.trim().replaceAll('\\', '/'), fs.realpathSync(context.root).replaceAll('\\', '/'));
+  assert.equal(spawnSync('git', ['rev-parse', '--show-toplevel'], { cwd: context.root, encoding: 'utf8' }).stdout.trim().replaceAll('\\', '/'), fs.realpathSync.native(context.root).replaceAll('\\', '/'));
   const configuredHooks = spawnSync('git', ['config', 'core.hooksPath'], { cwd: context.root, encoding: 'utf8' });
   assert.equal(configuredHooks.status, 0); assert.deepEqual(fs.readdirSync(configuredHooks.stdout.trim()), []);
   verifyCommunitySource(sourceRoot, entries); verifyCommunitySource(context.root, entries);
