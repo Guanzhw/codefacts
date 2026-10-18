@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "kind": "timing-regime-public-arithmetic",
+  "suiteId": "community-four-family-fixed24-20261017-v1",
+  "sources": {
+    "report": "f15facf4772582db05dbd2013a3d5133a63d4670c78e606b8b78c78ff19e367f",
+    "summary": "14cafd0cd7ce19543a624c2f749daf6b4866864567391df2ccaa170b10312f12",
+    "selection": "2c24e94d2fd05042359693d8b6fc219d8ee59bf66a34f4ca55fca3f2ef86c17e",
+    "producer": "274b786d8cb7f1cb540ff7327daadd1e2dd7f5de11086ff79ad6d3e41b7fd1c7",
+    "timing-inventory": "e08b553f217e80205eb349edfcc3d4cc77daed650118c5561cd5b0d9c36a7f67"
+  },
+  "files": {
+    "adapted.json": "59aaf2768a66ba6624211f6327ab2c68c34641c0fa9bdade653426e5d8601405",
+    "PRIMARY.zh-CN.md": "126caa6d0a19b399646fa9b39ab39b2ab6ddb0ae63e9a4eb8a579c8c00f72dfc",
+    "adapter.mjs": "6a5fa1f547702cf1a4b89cbf274aeda261a89c16832465e2542c29c0b9d5248c",
+    "formatter.mjs": "57256d3b6b88f79275e196f42b7134c5ef6eddc3f91270401b5f790acabeb24a",
+    "verify.mjs": "ef05f53a6d09f8fa30e0ae765fcdbe8b80ff163422da8e5990d459ee27010d1b",
+    "producer-core.mjs": "1bee6d49481aea7c879ce72f501796dba190939312cd1a654e52b727f954ac64",
+    "common.mjs": "040ae6efc56cbcf33416a4d7822d1ac58b77c6547f5835143cf5ad6e7d68da74",
+    "statistics.mjs": "f830ed67f287ba1eade1d5f41bc114afb2cd2c12e295f41d142edc5a425997f9",
+    "METHODS.md": "a7dce64bc9e744c30bf81e9cb80ea819160a03fdf618c338a283fc87cc52ba9e"
+  },
+  "claim": "offline-arithmetic-reproduction-of-root-accepted-closed-inputs"
+}

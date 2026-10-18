@@ -1,0 +1,90 @@
+{
+  "kind": "context",
+  "instance_id": "clap-rs__clap-2534",
+  "officialResult": {
+    "instance_id": "clap-rs__clap-2534",
+    "num_steps": 4,
+    "final": {
+      "file": {
+        "coverage": 1,
+        "precision": 1,
+        "intersection": 1,
+        "gold_size": 1,
+        "pred_size": 1
+      },
+      "symbol": {
+        "coverage": 0.13636363636363635,
+        "precision": 1,
+        "intersection": 3,
+        "gold_size": 22,
+        "pred_size": 3
+      },
+      "span": {
+        "coverage": 0.07535782952360606,
+        "precision": 0.9985845718329794,
+        "intersection": 1411,
+        "gold_size": 18724,
+        "pred_size": 1413
+      },
+      "line": {
+        "coverage": 0.06560283687943262,
+        "precision": 0.9736842105263158,
+        "intersection": 37,
+        "gold_size": 564,
+        "pred_size": 38
+      }
+    },
+    "trajectory": {
+      "steps": [
+        {
+          "step": 1,
+          "coverage": {
+            "file": 1,
+            "symbol": 0.36363636363636365,
+            "span": 0.043527024140140994,
+            "line": 0.02304964539007092
+          }
+        },
+        {
+          "step": 2,
+          "coverage": {
+            "file": 1,
+            "symbol": 0.5454545454545454,
+            "span": 0.2763832514419996,
+            "line": 0.2429078014184397
+          }
+        },
+        {
+          "step": 3,
+          "coverage": {
+            "file": 1,
+            "symbol": 0.5454545454545454,
+            "span": 0.391743217261269,
+            "line": 0.3670212765957447
+          }
+        },
+        {
+          "step": 4,
+          "coverage": {
+            "file": 1,
+            "symbol": 0.5454545454545454,
+            "span": 0.40263832514419995,
+            "line": 0.375886524822695
+          }
+        }
+      ],
+      "auc_coverage": {
+        "file": 1,
+        "symbol": 0.5,
+        "span": 0.27857295449690234,
+        "line": 0.25221631205673756
+      },
+      "redundancy": {
+        "file": 0.33333333333333337,
+        "symbol": 0.14035087719298245,
+        "span": 0.08144722965847329,
+        "line": 0.04923076923076919
+      }
+    }
+  }
+}

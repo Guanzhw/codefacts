@@ -1,0 +1,254 @@
+[
+  {
+    "instance_id": "clap-rs__clap-2534",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "9e83a909fa26538bd6fbbf9babb5904827ca0be4",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "src/build/app/mod.rs",
+            "src/build/arg/mod.rs",
+            "src/output/help.rs",
+            "src/output/usage.rs",
+            "src/parse/parser.rs",
+            "src/parse/validator.rs"
+          ],
+          "spans": {
+            "src/build/app/mod.rs": [
+              {
+                "start": 96,
+                "end": 96
+              },
+              {
+                "start": 220,
+                "end": 220
+              },
+              {
+                "start": 225,
+                "end": 225
+              },
+              {
+                "start": 230,
+                "end": 230
+              },
+              {
+                "start": 1054,
+                "end": 1055
+              },
+              {
+                "start": 1064,
+                "end": 1064
+              },
+              {
+                "start": 1070,
+                "end": 1070
+              },
+              {
+                "start": 1073,
+                "end": 1074
+              },
+              {
+                "start": 1080,
+                "end": 1080
+              },
+              {
+                "start": 1083,
+                "end": 1083
+              },
+              {
+                "start": 2850,
+                "end": 2850
+              }
+            ],
+            "src/build/arg/mod.rs": [
+              {
+                "start": 118,
+                "end": 118
+              },
+              {
+                "start": 155,
+                "end": 156
+              },
+              {
+                "start": 4587,
+                "end": 4588
+              },
+              {
+                "start": 5006,
+                "end": 5006
+              }
+            ],
+            "src/output/help.rs": [
+              {
+                "start": 112,
+                "end": 112
+              },
+              {
+                "start": 117,
+                "end": 117
+              },
+              {
+                "start": 122,
+                "end": 122
+              },
+              {
+                "start": 176,
+                "end": 176
+              },
+              {
+                "start": 184,
+                "end": 184
+              },
+              {
+                "start": 202,
+                "end": 202
+              },
+              {
+                "start": 213,
+                "end": 213
+              },
+              {
+                "start": 531,
+                "end": 531
+              },
+              {
+                "start": 793,
+                "end": 793
+              },
+              {
+                "start": 799,
+                "end": 799
+              },
+              {
+                "start": 805,
+                "end": 805
+              },
+              {
+                "start": 814,
+                "end": 814
+              },
+              {
+                "start": 871,
+                "end": 872
+              },
+              {
+                "start": 1090,
+                "end": 1092
+              }
+            ],
+            "src/output/usage.rs": [
+              {
+                "start": 74,
+                "end": 74
+              },
+              {
+                "start": 109,
+                "end": 109
+              },
+              {
+                "start": 223,
+                "end": 223
+              },
+              {
+                "start": 257,
+                "end": 257
+              },
+              {
+                "start": 291,
+                "end": 291
+              },
+              {
+                "start": 318,
+                "end": 318
+              },
+              {
+                "start": 340,
+                "end": 340
+              }
+            ],
+            "src/parse/parser.rs": [
+              {
+                "start": 1245,
+                "end": 1245
+              },
+              {
+                "start": 1882,
+                "end": 1882
+              }
+            ],
+            "src/parse/validator.rs": [
+              {
+                "start": 115,
+                "end": 115
+              },
+              {
+                "start": 687,
+                "end": 687
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/help.rs"
+          ],
+          "spans": {
+            "src/output/help.rs": [
+              {
+                "start": 100,
+                "end": 230
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/help.rs"
+          ],
+          "spans": {
+            "src/output/help.rs": [
+              {
+                "start": 780,
+                "end": 900
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/help.rs"
+          ],
+          "spans": {
+            "src/output/help.rs": [
+              {
+                "start": 1085,
+                "end": 1110
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "src/output/help.rs"
+      ],
+      "pred_spans": {
+        "src/output/help.rs": [
+          {
+            "start": 809,
+            "end": 815
+          },
+          {
+            "start": 859,
+            "end": 880
+          },
+          {
+            "start": 1090,
+            "end": 1098
+          }
+        ]
+      }
+    }
+  }
+]

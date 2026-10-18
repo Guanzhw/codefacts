@@ -1,0 +1,7 @@
+[
+  {
+    "instance_id": "axios__axios-5085",
+    "model_name_or_path": "qwen-swe-ordinary",
+    "model_patch": "diff --git a/lib/core/AxiosHeaders.js b/lib/core/AxiosHeaders.js\nindex 9d56538..5451948 100644\n--- a/lib/core/AxiosHeaders.js\n+++ b/lib/core/AxiosHeaders.js\n@@ -15,7 +15,7 @@ function normalizeValue(value) {\n     return value;\n   }\n \n-  return String(value);\n+  return utils.isArray(value) ? value.map(normalizeValue) : String(value);\n }\n \n function parseTokens(str) {\n@@ -102,11 +102,7 @@ Object.assign(AxiosHeaders.prototype, {\n         return;\n       }\n \n-      if (utils.isArray(_value)) {\n-        _value = _value.map(normalizeValue);\n-      } else {\n-        _value = normalizeValue(_value);\n-      }\n+      _value = normalizeValue(_value);\n \n       self[key || _header] = _value;\n     }\n"
+  }
+]

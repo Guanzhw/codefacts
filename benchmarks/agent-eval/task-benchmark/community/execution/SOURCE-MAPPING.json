@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "historicalSources": [
+    {
+      "sourceSha256": "c9eb2096872a2eee02fc40e825529dc78f41193a3129e24e5d2b64cc91842242",
+      "portablePath": "accounted-suite-controller-v1/controller.mjs",
+      "portableSha256": "a231d12e10c8ee5f24bde7b04bc74201f3cea5f56a60876fa129a29775ec0c4a",
+      "changed": true,
+      "sourceId": "execution/accounted-suite-controller-v1/controller.mjs"
+    },
+    {
+      "sourceSha256": "52ee86b22c6bd3300c7d4a70e2631f825d6a04b66f87729df62f5d68e8ea04ac",
+      "portablePath": "accounted-suite-controller-v1/build-sidecar.mjs",
+      "portableSha256": "07268c6a4475957014a6a842a6d80ef2a34d423c1be96c7155d35283d1d7c984",
+      "changed": true,
+      "sourceId": "execution/accounted-suite-controller-v1/build-sidecar.mjs"
+    },
+    {
+      "sourceSha256": "96aac86f6eb71d811bdb380afe3854ec957c3f63f909826bbdc93cac068f707b",
+      "portablePath": "parallel-suite-controller-v2/controller.mjs",
+      "portableSha256": "5a40d5db1ec603114e777c7d57ff07b0bc41e1da47df8db7c2ffb9d25b655677",
+      "changed": true,
+      "sourceId": "execution/parallel-suite-controller-v2/controller.mjs"
+    },
+    {
+      "sourceSha256": "b17ef8f5ad17fdb05a40a709852eebf01cf2261bbf5a441a524252a721eb0a9c",
+      "portablePath": "parallel-suite-controller-v2/scheduler.mjs",
+      "portableSha256": "b17ef8f5ad17fdb05a40a709852eebf01cf2261bbf5a441a524252a721eb0a9c",
+      "changed": false,
+      "sourceId": "execution/parallel-suite-controller-v2/scheduler.mjs"
+    },
+    {
+      "sourceSha256": "635dcc87331242f1396c5239b9f90c996bddd9cb25ed21c28346dd34e2388d8c",
+      "portablePath": "parallel-suite-controller-v2/worker-process.mjs",
+      "portableSha256": "635dcc87331242f1396c5239b9f90c996bddd9cb25ed21c28346dd34e2388d8c",
+      "changed": false,
+      "sourceId": "execution/parallel-suite-controller-v2/worker-process.mjs"
+    },
+    {
+      "sourceSha256": "3cb420ce447f1811cfb8dbf306ae268508f20ee589885f6e39f35e48e31dd8ab",
+      "portablePath": "parallel-suite-controller-v2/scheduler.test.mjs",
+      "portableSha256": "3cb420ce447f1811cfb8dbf306ae268508f20ee589885f6e39f35e48e31dd8ab",
+      "changed": false,
+      "sourceId": "execution/parallel-suite-controller-v2/scheduler.test.mjs"
+    },
+    {
+      "sourceSha256": "fa2ec3b748372277a1efcd4de63c6ce947efc4bb0ed97b357dac93b16624da8a",
+      "portablePath": "parallel-suite-controller-v2/worker-process.test.mjs",
+      "portableSha256": "fa2ec3b748372277a1efcd4de63c6ce947efc4bb0ed97b357dac93b16624da8a",
+      "changed": false,
+      "sourceId": "execution/parallel-suite-controller-v2/worker-process.test.mjs"
+    },
+    {
+      "sourceSha256": "ac6ef7082bbc9ed083cb2f3ccc5939d0197204a9127ca4311a31a06944e0fafb",
+      "portablePath": "rolling-suite-controller-v3/controller.mjs",
+      "portableSha256": "d2bd25538612d918935438df6af3e479fbc3b0df60255b3e8f1b2b99a11ba4ad",
+      "changed": true,
+      "sourceId": "execution/rolling-suite-controller-v3/controller.mjs"
+    },
+    {
+      "sourceSha256": "1e7256cd5677bfb0a39e83ef73329152640c187903b0ebc54707a91db92de1f9",
+      "portablePath": "rolling-suite-controller-v3/scheduler.mjs",
+      "portableSha256": "1e7256cd5677bfb0a39e83ef73329152640c187903b0ebc54707a91db92de1f9",
+      "changed": false,
+      "sourceId": "execution/rolling-suite-controller-v3/scheduler.mjs"
+    },
+    {
+      "sourceSha256": "edb42a774c8b97fb69289341907b3673d7364a417350fe6b765523bf4cd1d31a",
+      "portablePath": "rolling-suite-controller-v3/worker-process.mjs",
+      "portableSha256": "edb42a774c8b97fb69289341907b3673d7364a417350fe6b765523bf4cd1d31a",
+      "changed": false,
+      "sourceId": "execution/rolling-suite-controller-v3/worker-process.mjs"
+    },
+    {
+      "sourceSha256": "1a00de343bdf60da285a114e94300ab63760e3363b4751269a94e42a7cc8d76a",
+      "portablePath": "rolling-suite-controller-v3/receipts.mjs",
+      "portableSha256": "1a00de343bdf60da285a114e94300ab63760e3363b4751269a94e42a7cc8d76a",
+      "changed": false,
+      "sourceId": "execution/rolling-suite-controller-v3/receipts.mjs"
+    },
+    {
+      "sourceSha256": "180aea65a167a6b6f11158e2da4a4d5f5961c7c220855cb5fc7bf5639492b32c",
+      "portablePath": "rolling-suite-controller-v3/offline.test.mjs",
+      "portableSha256": "180aea65a167a6b6f11158e2da4a4d5f5961c7c220855cb5fc7bf5639492b32c",
+      "changed": false,
+      "sourceId": "execution/rolling-suite-controller-v3/offline.test.mjs"
+    },
+    {
+      "sourceSha256": "68bf838f99c5089d6465a297af7193e5a179985307f292d8998c38ee4cf49437",
+      "portablePath": "guard.mjs",
+      "portableSha256": "e356dfe6990d79f8a2f195bb638a43b3fc6bee59ff958cc5bbc4ab0480dee825",
+      "changed": true,
+      "sourceId": "preflight/phase-runner/run-phase.mjs"
+    }
+  ],
+  "privateDerivation": {
+    "originalMappingSha256": "7a7c97980bf26f5d42ef8b8a2eef44f35ba5c33a369ebbb3c240f7680c16b586",
+    "originalPatchSha256": "b226508bbe3196893461d5a4cb615c52c63a303ba315373a03c27ec2a6d41e00",
+    "historicalOriginalBytes": "not-distributed; hashes retained as provenance assertions, not freshly verified historical originals"
+  }
+}

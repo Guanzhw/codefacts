@@ -1,0 +1,1453 @@
+[
+  {
+    "instance_id": "vuejs__core-11899",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "980858792775e23b8fbf79019d7ca79d5d8e30e1",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "changelogs/CHANGELOG-3.0.md",
+            "changelogs/CHANGELOG-3.2.md",
+            "packages/compiler-core/src/errors.ts",
+            "packages/compiler-core/src/options.ts",
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts",
+            "packages/compiler-sfc/src/compileScript.ts",
+            "packages/compiler-sfc/src/compileStyle.ts",
+            "packages/compiler-sfc/src/compileTemplate.ts",
+            "packages/compiler-sfc/src/parse.ts",
+            "packages/compiler-sfc/src/script/normalScript.ts",
+            "packages/compiler-sfc/src/style/cssVars.ts",
+            "packages/compiler-sfc/src/style/pluginScoped.ts",
+            "packages/compiler-sfc/src/style/pluginTrim.ts",
+            "packages/compiler-ssr/src/ssrCodegenTransform.ts",
+            "packages/runtime-core/src/components/Teleport.ts",
+            "packages/runtime-core/src/renderer.ts",
+            "packages/runtime-dom/src/helpers/useCssModule.ts",
+            "packages/runtime-dom/src/helpers/useCssVars.ts",
+            "packages/shared/src/escapeHtml.ts"
+          ],
+          "spans": {
+            "changelogs/CHANGELOG-3.0.md": [
+              {
+                "start": 269,
+                "end": 269
+              },
+              {
+                "start": 272,
+                "end": 272
+              }
+            ],
+            "changelogs/CHANGELOG-3.2.md": [
+              {
+                "start": 424,
+                "end": 424
+              },
+              {
+                "start": 431,
+                "end": 432
+              }
+            ],
+            "packages/compiler-core/src/errors.ts": [
+              {
+                "start": 24,
+                "end": 36
+              },
+              {
+                "start": 40,
+                "end": 40
+              },
+              {
+                "start": 58,
+                "end": 70
+              }
+            ],
+            "packages/compiler-core/src/options.ts": [
+              {
+                "start": 214,
+                "end": 214
+              },
+              {
+                "start": 217,
+                "end": 227
+              }
+            ],
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts": [
+              {
+                "start": 8,
+                "end": 26
+              }
+            ],
+            "packages/compiler-sfc/src/compileScript.ts": [
+              {
+                "start": 154,
+                "end": 154
+              },
+              {
+                "start": 177,
+                "end": 189
+              },
+              {
+                "start": 210,
+                "end": 210
+              },
+              {
+                "start": 213,
+                "end": 221
+              }
+            ],
+            "packages/compiler-sfc/src/compileStyle.ts": [
+              {
+                "start": 20,
+                "end": 37
+              },
+              {
+                "start": 43,
+                "end": 52
+              },
+              {
+                "start": 54,
+                "end": 60
+              },
+              {
+                "start": 62,
+                "end": 69
+              },
+              {
+                "start": 89,
+                "end": 89
+              },
+              {
+                "start": 126,
+                "end": 136
+              },
+              {
+                "start": 222,
+                "end": 222
+              },
+              {
+                "start": 228,
+                "end": 240
+              }
+            ],
+            "packages/compiler-sfc/src/compileTemplate.ts": [
+              {
+                "start": 162,
+                "end": 162
+              },
+              {
+                "start": 171,
+                "end": 183
+              }
+            ],
+            "packages/compiler-sfc/src/parse.ts": [
+              {
+                "start": 24,
+                "end": 32
+              },
+              {
+                "start": 119,
+                "end": 119
+              },
+              {
+                "start": 121,
+                "end": 136
+              }
+            ],
+            "packages/compiler-sfc/src/script/normalScript.ts": [
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 13,
+                "end": 24
+              }
+            ],
+            "packages/compiler-sfc/src/style/cssVars.ts": [
+              {
+                "start": 17,
+                "end": 29
+              },
+              {
+                "start": 47,
+                "end": 56
+              },
+              {
+                "start": 60,
+                "end": 69
+              },
+              {
+                "start": 87,
+                "end": 99
+              },
+              {
+                "start": 125,
+                "end": 128
+              },
+              {
+                "start": 130,
+                "end": 142
+              },
+              {
+                "start": 160,
+                "end": 172
+              }
+            ],
+            "packages/compiler-sfc/src/style/pluginScoped.ts": [
+              {
+                "start": 14,
+                "end": 14
+              },
+              {
+                "start": 19,
+                "end": 32
+              }
+            ],
+            "packages/compiler-sfc/src/style/pluginTrim.ts": [
+              {
+                "start": 3,
+                "end": 15
+              }
+            ],
+            "packages/compiler-ssr/src/ssrCodegenTransform.ts": [
+              {
+                "start": 38,
+                "end": 38
+              },
+              {
+                "start": 44,
+                "end": 53
+              },
+              {
+                "start": 154,
+                "end": 154
+              },
+              {
+                "start": 158,
+                "end": 170
+              }
+            ],
+            "packages/runtime-core/src/components/Teleport.ts": [
+              {
+                "start": 364,
+                "end": 364
+              },
+              {
+                "start": 411,
+                "end": 418
+              }
+            ],
+            "packages/runtime-core/src/renderer.ts": [
+              {
+                "start": 341,
+                "end": 341
+              },
+              {
+                "start": 362,
+                "end": 371
+              }
+            ],
+            "packages/runtime-dom/src/helpers/useCssModule.ts": [
+              {
+                "start": 4,
+                "end": 16
+              }
+            ],
+            "packages/runtime-dom/src/helpers/useCssVars.ts": [
+              {
+                "start": 19,
+                "end": 32
+              }
+            ],
+            "packages/shared/src/escapeHtml.ts": [
+              {
+                "start": 50,
+                "end": 52
+              },
+              {
+                "start": 57,
+                "end": 64
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/__tests__/__snapshots__/compileScript.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/__snapshots__/cssVars.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript.spec.ts",
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts",
+            "packages/compiler-sfc/__tests__/compileTemplate.spec.ts",
+            "packages/compiler-sfc/__tests__/cssVars.spec.ts",
+            "packages/compiler-sfc/__tests__/rewriteDefault.spec.ts",
+            "packages/compiler-sfc/src/compileScript.ts",
+            "packages/compiler-sfc/src/rewriteDefault.ts",
+            "packages/compiler-sfc/src/style/cssVars.ts",
+            "packages/compiler-sfc/src/style/preprocessors.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/__tests__/__snapshots__/compileScript.spec.ts.snap": [
+              {
+                "start": 746,
+                "end": 747
+              }
+            ],
+            "packages/compiler-sfc/__tests__/__snapshots__/cssVars.spec.ts.snap": [
+              {
+                "start": 18,
+                "end": 18
+              },
+              {
+                "start": 52,
+                "end": 52
+              }
+            ],
+            "packages/compiler-sfc/__tests__/compileScript.spec.ts": [
+              {
+                "start": 216,
+                "end": 216
+              },
+              {
+                "start": 220,
+                "end": 220
+              }
+            ],
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts": [
+              {
+                "start": 225,
+                "end": 226
+              },
+              {
+                "start": 228,
+                "end": 228
+              }
+            ],
+            "packages/compiler-sfc/__tests__/compileTemplate.spec.ts": [
+              {
+                "start": 29,
+                "end": 29
+              }
+            ],
+            "packages/compiler-sfc/__tests__/cssVars.spec.ts": [
+              {
+                "start": 152,
+                "end": 152
+              },
+              {
+                "start": 173,
+                "end": 173
+              },
+              {
+                "start": 177,
+                "end": 177
+              },
+              {
+                "start": 180,
+                "end": 180
+              }
+            ],
+            "packages/compiler-sfc/__tests__/rewriteDefault.spec.ts": [
+              {
+                "start": 62,
+                "end": 62
+              },
+              {
+                "start": 82,
+                "end": 82
+              },
+              {
+                "start": 207,
+                "end": 207
+              },
+              {
+                "start": 220,
+                "end": 220
+              },
+              {
+                "start": 232,
+                "end": 232
+              },
+              {
+                "start": 257,
+                "end": 257
+              },
+              {
+                "start": 271,
+                "end": 271
+              },
+              {
+                "start": 284,
+                "end": 284
+              }
+            ],
+            "packages/compiler-sfc/src/compileScript.ts": [
+              {
+                "start": 213,
+                "end": 213
+              }
+            ],
+            "packages/compiler-sfc/src/rewriteDefault.ts": [
+              {
+                "start": 38,
+                "end": 38
+              }
+            ],
+            "packages/compiler-sfc/src/style/cssVars.ts": [
+              {
+                "start": 64,
+                "end": 65
+              }
+            ],
+            "packages/compiler-sfc/src/style/preprocessors.ts": [
+              {
+                "start": 102,
+                "end": 102
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/src/style/pluginScoped.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/src/style/pluginScoped.ts": [
+              {
+                "start": 1,
+                "end": 120
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts": [
+              {
+                "start": 1,
+                "end": 300
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/src/style/pluginScoped.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/src/style/pluginScoped.ts": [
+              {
+                "start": 120,
+                "end": 290
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/src/style/cssVars.ts",
+            "packages/compiler-sfc/src/style/preprocessors.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/src/style/cssVars.ts": [
+              {
+                "start": 64,
+                "end": 65
+              }
+            ],
+            "packages/compiler-sfc/src/style/preprocessors.ts": [
+              {
+                "start": 102,
+                "end": 102
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts": [
+              {
+                "start": 44,
+                "end": 44
+              },
+              {
+                "start": 226,
+                "end": 226
+              },
+              {
+                "start": 228,
+                "end": 228
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/src/style/pluginScoped.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/src/style/pluginScoped.ts": [
+              {
+                "start": 83,
+                "end": 83
+              },
+              {
+                "start": 127,
+                "end": 127
+              },
+              {
+                "start": 234,
+                "end": 235
+              },
+              {
+                "start": 241,
+                "end": 241
+              },
+              {
+                "start": 245,
+                "end": 245
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/src/style/pluginScoped.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/src/style/pluginScoped.ts": [
+              {
+                "start": 21,
+                "end": 21
+              },
+              {
+                "start": 70,
+                "end": 70
+              },
+              {
+                "start": 91,
+                "end": 91
+              },
+              {
+                "start": 96,
+                "end": 96
+              },
+              {
+                "start": 138,
+                "end": 138
+              },
+              {
+                "start": 156,
+                "end": 156
+              },
+              {
+                "start": 168,
+                "end": 168
+              },
+              {
+                "start": 254,
+                "end": 254
+              },
+              {
+                "start": 285,
+                "end": 285
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/__tests__/__snapshots__/compileScript.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/__snapshots__/cssVars.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript.spec.ts",
+            "packages/compiler-sfc/__tests__/compileScript/__snapshots__/definePropsDestructure.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript/definePropsDestructure.spec.ts",
+            "packages/compiler-sfc/__tests__/compileScript/resolveType.spec.ts",
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts",
+            "packages/compiler-sfc/__tests__/cssVars.spec.ts",
+            "packages/compiler-sfc/__tests__/parse.spec.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/__tests__/__snapshots__/compileScript.spec.ts.snap": [
+              {
+                "start": 228,
+                "end": 228
+              },
+              {
+                "start": 263,
+                "end": 263
+              },
+              {
+                "start": 318,
+                "end": 318
+              },
+              {
+                "start": 395,
+                "end": 395
+              },
+              {
+                "start": 419,
+                "end": 419
+              },
+              {
+                "start": 443,
+                "end": 443
+              },
+              {
+                "start": 472,
+                "end": 472
+              },
+              {
+                "start": 498,
+                "end": 498
+              },
+              {
+                "start": 942,
+                "end": 942
+              }
+            ],
+            "packages/compiler-sfc/__tests__/__snapshots__/cssVars.spec.ts.snap": [
+              {
+                "start": 129,
+                "end": 129
+              }
+            ],
+            "packages/compiler-sfc/__tests__/compileScript.spec.ts": [
+              {
+                "start": 515,
+                "end": 515
+              },
+              {
+                "start": 777,
+                "end": 777
+              },
+              {
+                "start": 784,
+                "end": 784
+              },
+              {
+                "start": 795,
+                "end": 795
+              },
+              {
+                "start": 799,
+                "end": 799
+              },
+              {
+                "start": 821,
+                "end": 821
+              },
+              {
+                "start": 840,
+                "end": 840
+              }
+            ],
+            "packages/compiler-sfc/__tests__/compileScript/__snapshots__/definePropsDestructure.spec.ts.snap": [
+              {
+                "start": 256,
+                "end": 256
+              }
+            ],
+            "packages/compiler-sfc/__tests__/compileScript/definePropsDestructure.spec.ts": [
+              {
+                "start": 50,
+                "end": 50
+              },
+              {
+                "start": 364,
+                "end": 364
+              },
+              {
+                "start": 370,
+                "end": 370
+              }
+            ],
+            "packages/compiler-sfc/__tests__/compileScript/resolveType.spec.ts": [
+              {
+                "start": 306,
+                "end": 307
+              },
+              {
+                "start": 599,
+                "end": 599
+              },
+              {
+                "start": 618,
+                "end": 618
+              },
+              {
+                "start": 637,
+                "end": 637
+              },
+              {
+                "start": 915,
+                "end": 915
+              },
+              {
+                "start": 917,
+                "end": 917
+              }
+            ],
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts": [
+              {
+                "start": 44,
+                "end": 44
+              },
+              {
+                "start": 217,
+                "end": 217
+              },
+              {
+                "start": 219,
+                "end": 219
+              },
+              {
+                "start": 226,
+                "end": 226
+              },
+              {
+                "start": 228,
+                "end": 228
+              }
+            ],
+            "packages/compiler-sfc/__tests__/cssVars.spec.ts": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "packages/compiler-sfc/__tests__/parse.spec.ts": [
+              {
+                "start": 36,
+                "end": 36
+              },
+              {
+                "start": 263,
+                "end": 263
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/__tests__/parse.spec.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/__tests__/parse.spec.ts": [
+              {
+                "start": 1,
+                "end": 80
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts": [
+              {
+                "start": 300,
+                "end": 420
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/src/style/pluginScoped.ts"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "CHANGELOG.md"
+          ],
+          "spans": {
+            "CHANGELOG.md": [
+              {
+                "start": 6,
+                "end": 6
+              },
+              {
+                "start": 109,
+                "end": 109
+              },
+              {
+                "start": 320,
+                "end": 320
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/src/compileScript.ts",
+            "packages/compiler-sfc/src/compileStyle.ts",
+            "packages/compiler-sfc/src/compileTemplate.ts",
+            "packages/compiler-sfc/src/parse.ts",
+            "packages/compiler-sfc/src/style/pluginScoped.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/src/compileScript.ts": [
+              {
+                "start": 876,
+                "end": 876
+              }
+            ],
+            "packages/compiler-sfc/src/compileStyle.ts": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 24,
+                "end": 24
+              },
+              {
+                "start": 95,
+                "end": 95
+              },
+              {
+                "start": 119,
+                "end": 120
+              }
+            ],
+            "packages/compiler-sfc/src/compileTemplate.ts": [
+              {
+                "start": 52,
+                "end": 52
+              },
+              {
+                "start": 165,
+                "end": 165
+              },
+              {
+                "start": 239,
+                "end": 239
+              }
+            ],
+            "packages/compiler-sfc/src/parse.ts": [
+              {
+                "start": 67,
+                "end": 67
+              },
+              {
+                "start": 299,
+                "end": 299
+              },
+              {
+                "start": 349,
+                "end": 350
+              }
+            ],
+            "packages/compiler-sfc/src/style/pluginScoped.ts": [
+              {
+                "start": 14,
+                "end": 14
+              },
+              {
+                "start": 19,
+                "end": 19
+              },
+              {
+                "start": 289,
+                "end": 290
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "CHANGELOG.md"
+          ],
+          "spans": {
+            "CHANGELOG.md": [
+              {
+                "start": 1,
+                "end": 80
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            ".git-blame-ignore-revs",
+            ".github/FUNDING.yml",
+            ".github/ISSUE_TEMPLATE/bug_report.yml",
+            ".github/ISSUE_TEMPLATE/config.yml",
+            ".github/bug-repro-guidelines.md",
+            ".github/commit-convention.md",
+            ".github/contributing.md",
+            ".github/git-branch-workflow.excalidraw",
+            ".github/git-branch-workflow.png",
+            ".github/issue-workflow.png",
+            ".github/maintenance.md",
+            ".github/renovate.json5",
+            ".github/workflows/autofix.yml",
+            ".github/workflows/canary-minor.yml",
+            ".github/workflows/canary.yml",
+            ".github/workflows/ci.yml",
+            ".github/workflows/close-cant-reproduce-issues.yml",
+            ".github/workflows/ecosystem-ci-trigger.yml",
+            ".github/workflows/lock-closed-issues.yml",
+            ".github/workflows/release.yml",
+            ".github/workflows/size-data.yml",
+            ".github/workflows/size-report.yml",
+            ".github/workflows/test.yml",
+            ".gitignore",
+            ".node-version",
+            ".prettierignore",
+            ".prettierrc",
+            ".vscode/extensions.json",
+            ".vscode/launch.json",
+            ".vscode/settings.json",
+            "BACKERS.md",
+            "CHANGELOG.md",
+            "FUNDING.json",
+            "LICENSE",
+            "README.md",
+            "SECURITY.md",
+            "changelogs/CHANGELOG-3.0.md",
+            "changelogs/CHANGELOG-3.1.md",
+            "changelogs/CHANGELOG-3.2.md",
+            "changelogs/CHANGELOG-3.3.md",
+            "changelogs/CHANGELOG-3.4.md",
+            "eslint.config.js",
+            "netlify.toml",
+            "package.json",
+            "packages-private/dts-built-test/README.md",
+            "packages-private/dts-built-test/package.json",
+            "packages-private/dts-built-test/src/index.ts",
+            "packages-private/dts-built-test/tsconfig.json",
+            "packages-private/dts-test/README.md",
+            "packages-private/dts-test/appDirective.test-d.ts",
+            "packages-private/dts-test/appUse.test-d.ts",
+            "packages-private/dts-test/built.test-d.ts",
+            "packages-private/dts-test/compiler.test-d.ts",
+            "packages-private/dts-test/component.test-d.ts",
+            "packages-private/dts-test/componentInstance.test-d.tsx",
+            "packages-private/dts-test/componentTypeExtensions.test-d.tsx",
+            "packages-private/dts-test/defineComponent.test-d.tsx",
+            "packages-private/dts-test/defineCustomElement.test-d.ts",
+            "packages-private/dts-test/directives.test-d.ts",
+            "packages-private/dts-test/extractProps.test-d.ts",
+            "packages-private/dts-test/functionalComponent.test-d.tsx",
+            "packages-private/dts-test/h.test-d.ts",
+            "packages-private/dts-test/inject.test-d.ts",
+            "packages-private/dts-test/package.json",
+            "packages-private/dts-test/reactivity.test-d.ts",
+            "packages-private/dts-test/ref.test-d.ts",
+            "packages-private/dts-test/setupHelpers.test-d.ts",
+            "packages-private/dts-test/tsconfig.test.json",
+            "packages-private/dts-test/tsx.test-d.tsx",
+            "packages-private/dts-test/utils.d.ts",
+            "packages-private/dts-test/watch.test-d.ts",
+            "packages-private/sfc-playground/README.md",
+            "packages-private/sfc-playground/index.html",
+            "packages-private/sfc-playground/package.json",
+            "packages-private/sfc-playground/public/logo.svg",
+            "packages-private/sfc-playground/src/App.vue",
+            "packages-private/sfc-playground/src/Header.vue",
+            "packages-private/sfc-playground/src/VersionSelect.vue",
+            "packages-private/sfc-playground/src/download/download.ts",
+            "packages-private/sfc-playground/src/download/template/README.md",
+            "packages-private/sfc-playground/src/download/template/index.html",
+            "packages-private/sfc-playground/src/download/template/main.js",
+            "packages-private/sfc-playground/src/download/template/package.json",
+            "packages-private/sfc-playground/src/download/template/vite.config.js",
+            "packages-private/sfc-playground/src/icons/Copy.vue",
+            "packages-private/sfc-playground/src/icons/Download.vue",
+            "packages-private/sfc-playground/src/icons/GitHub.vue",
+            "packages-private/sfc-playground/src/icons/Moon.vue",
+            "packages-private/sfc-playground/src/icons/Reload.vue",
+            "packages-private/sfc-playground/src/icons/Share.vue",
+            "packages-private/sfc-playground/src/icons/Sun.vue",
+            "packages-private/sfc-playground/src/main.ts",
+            "packages-private/sfc-playground/src/vue-dev-proxy-prod.ts",
+            "packages-private/sfc-playground/src/vue-dev-proxy.ts",
+            "packages-private/sfc-playground/src/vue-server-renderer-dev-proxy.ts",
+            "packages-private/sfc-playground/vercel.json",
+            "packages-private/sfc-playground/vite.config.ts",
+            "packages-private/template-explorer/README.md",
+            "packages-private/template-explorer/_redirects",
+            "packages-private/template-explorer/index.html",
+            "packages-private/template-explorer/local.html",
+            "packages-private/template-explorer/package.json",
+            "packages-private/template-explorer/src/index.ts",
+            "packages-private/template-explorer/src/options.ts",
+            "packages-private/template-explorer/src/theme.ts",
+            "packages-private/template-explorer/style.css",
+            "packages-private/tsconfig.json",
+            "packages-private/vite-debug/App.vue",
+            "packages-private/vite-debug/README.md",
+            "packages-private/vite-debug/index.html",
+            "packages-private/vite-debug/main.ts",
+            "packages-private/vite-debug/package.json",
+            "packages-private/vite-debug/tsconfig.json",
+            "packages-private/vite-debug/vite.config.ts",
+            "packages/compiler-core/__tests__/__snapshots__/codegen.spec.ts.snap",
+            "packages/compiler-core/__tests__/__snapshots__/compile.spec.ts.snap",
+            "packages/compiler-core/__tests__/__snapshots__/parse.spec.ts.snap",
+            "packages/compiler-core/__tests__/__snapshots__/scopeId.spec.ts.snap",
+            "packages/compiler-core/__tests__/codegen.spec.ts",
+            "packages/compiler-core/__tests__/compile.spec.ts",
+            "packages/compiler-core/__tests__/parse.spec.ts",
+            "packages/compiler-core/__tests__/scopeId.spec.ts",
+            "packages/compiler-core/__tests__/testUtils.ts",
+            "packages/compiler-core/__tests__/transform.spec.ts",
+            "packages/compiler-core/__tests__/transforms/__snapshots__/cacheStatic.spec.ts.snap",
+            "packages/compiler-core/__tests__/transforms/__snapshots__/transformElement.spec.ts.snap",
+            "packages/compiler-core/__tests__/transforms/__snapshots__/transformExpressions.spec.ts.snap",
+            "packages/compiler-core/__tests__/transforms/__snapshots__/transformText.spec.ts.snap",
+            "packages/compiler-core/__tests__/transforms/__snapshots__/vFor.spec.ts.snap",
+            "packages/compiler-core/__tests__/transforms/__snapshots__/vIf.spec.ts.snap",
+            "packages/compiler-core/__tests__/transforms/__snapshots__/vMemo.spec.ts.snap",
+            "packages/compiler-core/__tests__/transforms/__snapshots__/vModel.spec.ts.snap",
+            "packages/compiler-core/__tests__/transforms/__snapshots__/vOnce.spec.ts.snap",
+            "packages/compiler-core/__tests__/transforms/__snapshots__/vSlot.spec.ts.snap",
+            "packages/compiler-core/__tests__/transforms/cacheStatic.spec.ts",
+            "packages/compiler-core/__tests__/transforms/noopDirectiveTransform.spec.ts",
+            "packages/compiler-core/__tests__/transforms/transformElement.spec.ts",
+            "packages/compiler-core/__tests__/transforms/transformExpressions.spec.ts",
+            "packages/compiler-core/__tests__/transforms/transformSlotOutlet.spec.ts",
+            "packages/compiler-core/__tests__/transforms/transformText.spec.ts",
+            "packages/compiler-core/__tests__/transforms/vBind.spec.ts",
+            "packages/compiler-core/__tests__/transforms/vFor.spec.ts",
+            "packages/compiler-core/__tests__/transforms/vIf.spec.ts",
+            "packages/compiler-core/__tests__/transforms/vMemo.spec.ts",
+            "packages/compiler-core/__tests__/transforms/vModel.spec.ts",
+            "packages/compiler-core/__tests__/transforms/vOn.spec.ts",
+            "packages/compiler-core/__tests__/transforms/vOnce.spec.ts",
+            "packages/compiler-core/__tests__/transforms/vSlot.spec.ts",
+            "packages/compiler-core/__tests__/utils.spec.ts",
+            "packages/compiler-core/src/utils.ts",
+            "packages/compiler-core/src/validateExpression.ts",
+            "packages/compiler-sfc/LICENSE",
+            "packages/compiler-sfc/README.md",
+            "packages/compiler-sfc/__tests__/__snapshots__/compileScript.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/__snapshots__/compileTemplate.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/__snapshots__/cssVars.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/__snapshots__/templateTransformAssetUrl.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/__snapshots__/templateTransformSrcset.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript.spec.ts",
+            "packages/compiler-sfc/__tests__/compileScript/__snapshots__/defineEmits.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript/__snapshots__/defineExpose.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript/__snapshots__/defineModel.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript/__snapshots__/defineOptions.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript/__snapshots__/defineProps.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript/__snapshots__/definePropsDestructure.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript/__snapshots__/defineSlots.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript/__snapshots__/hoistStatic.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript/__snapshots__/importUsageCheck.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript/defineEmits.spec.ts",
+            "packages/compiler-sfc/__tests__/compileScript/defineExpose.spec.ts",
+            "packages/compiler-sfc/__tests__/compileScript/defineModel.spec.ts",
+            "packages/compiler-sfc/__tests__/compileScript/defineOptions.spec.ts",
+            "packages/compiler-sfc/__tests__/compileScript/defineProps.spec.ts",
+            "packages/compiler-sfc/__tests__/compileScript/definePropsDestructure.spec.ts",
+            "packages/compiler-sfc/__tests__/compileScript/defineSlots.spec.ts",
+            "packages/compiler-sfc/__tests__/compileScript/hoistStatic.spec.ts",
+            "packages/compiler-sfc/__tests__/compileScript/importUsageCheck.spec.ts",
+            "packages/compiler-sfc/__tests__/compileScript/resolveType.spec.ts",
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts",
+            "packages/compiler-sfc/__tests__/compileTemplate.spec.ts",
+            "packages/compiler-sfc/__tests__/cssVars.spec.ts",
+            "packages/compiler-sfc/__tests__/fixture/import.scss",
+            "packages/compiler-sfc/__tests__/parse.spec.ts",
+            "packages/compiler-sfc/__tests__/rewriteDefault.spec.ts",
+            "packages/compiler-sfc/__tests__/templateTransformAssetUrl.spec.ts",
+            "packages/compiler-sfc/__tests__/templateTransformSrcset.spec.ts",
+            "packages/compiler-sfc/__tests__/templateUtils.spec.ts",
+            "packages/compiler-sfc/__tests__/utils.ts",
+            "packages/compiler-sfc/package.json",
+            "packages/compiler-sfc/src/cache.ts",
+            "packages/compiler-sfc/src/warn.ts",
+            "packages/compiler-ssr/__tests__/ssrComponent.spec.ts",
+            "packages/compiler-ssr/__tests__/ssrElement.spec.ts",
+            "packages/compiler-ssr/__tests__/ssrFallthroughAttrs.spec.ts",
+            "packages/compiler-ssr/__tests__/ssrInjectCssVars.spec.ts",
+            "packages/compiler-ssr/__tests__/ssrPortal.spec.ts",
+            "packages/compiler-ssr/__tests__/ssrScopeId.spec.ts",
+            "packages/compiler-ssr/__tests__/ssrSlotOutlet.spec.ts",
+            "packages/compiler-ssr/__tests__/ssrSuspense.spec.ts",
+            "packages/compiler-ssr/__tests__/ssrText.spec.ts",
+            "packages/compiler-ssr/__tests__/ssrTransition.spec.ts",
+            "packages/compiler-ssr/__tests__/ssrTransitionGroup.spec.ts",
+            "packages/compiler-ssr/__tests__/ssrVFor.spec.ts",
+            "packages/compiler-ssr/__tests__/ssrVIf.spec.ts",
+            "packages/compiler-ssr/__tests__/ssrVModel.spec.ts",
+            "packages/compiler-ssr/__tests__/ssrVShow.spec.ts",
+            "packages/compiler-ssr/__tests__/utils.ts",
+            "packages/global.d.ts",
+            "packages/reactivity/LICENSE",
+            "packages/reactivity/__benchmarks__/computed.bench.ts",
+            "packages/reactivity/__benchmarks__/effect.bench.ts",
+            "packages/reactivity/__benchmarks__/reactiveArray.bench.ts",
+            "packages/reactivity/__benchmarks__/reactiveMap.bench.ts",
+            "packages/reactivity/__benchmarks__/reactiveObject.bench.ts",
+            "packages/reactivity/__benchmarks__/ref.bench.ts",
+            "packages/reactivity/__tests__/collections/Map.spec.ts",
+            "packages/reactivity/__tests__/collections/Set.spec.ts",
+            "packages/reactivity/__tests__/collections/WeakMap.spec.ts",
+            "packages/reactivity/__tests__/collections/WeakSet.spec.ts",
+            "packages/reactivity/__tests__/collections/shallowReadonly.spec.ts",
+            "packages/reactivity/__tests__/computed.spec.ts",
+            "packages/reactivity/__tests__/effect.spec.ts",
+            "packages/reactivity/__tests__/effectScope.spec.ts",
+            "packages/reactivity/__tests__/gc.spec.ts",
+            "packages/reactivity/__tests__/reactive.spec.ts",
+            "packages/reactivity/__tests__/reactiveArray.spec.ts",
+            "packages/reactivity/__tests__/readonly.spec.ts",
+            "packages/reactivity/__tests__/ref.spec.ts",
+            "packages/reactivity/__tests__/shallowReactive.spec.ts",
+            "packages/reactivity/__tests__/shallowReadonly.spec.ts",
+            "packages/reactivity/__tests__/watch.spec.ts",
+            "packages/reactivity/index.js",
+            "packages/runtime-core/LICENSE",
+            "packages/runtime-core/__tests__/apiAsyncComponent.spec.ts",
+            "packages/runtime-core/__tests__/apiCreateApp.spec.ts",
+            "packages/runtime-core/__tests__/apiExpose.spec.ts",
+            "packages/runtime-core/__tests__/apiInject.spec.ts",
+            "packages/runtime-core/__tests__/apiLifecycle.spec.ts",
+            "packages/runtime-core/__tests__/apiOptions.spec.ts",
+            "packages/runtime-core/__tests__/apiSetupContext.spec.ts",
+            "packages/runtime-core/__tests__/apiSetupHelpers.spec.ts",
+            "packages/runtime-core/__tests__/apiWatch.bench.ts",
+            "packages/runtime-core/__tests__/apiWatch.spec.ts",
+            "packages/runtime-core/__tests__/componentEmits.spec.ts",
+            "packages/runtime-core/__tests__/componentProps.spec.ts",
+            "packages/runtime-core/__tests__/componentPublicInstance.spec.ts",
+            "packages/runtime-core/__tests__/componentSlots.spec.ts",
+            "packages/runtime-core/__tests__/components/BaseTransition.spec.ts",
+            "packages/runtime-core/__tests__/components/KeepAlive.spec.ts",
+            "packages/runtime-core/__tests__/components/Suspense.spec.ts",
+            "packages/runtime-core/__tests__/components/Teleport.spec.ts",
+            "packages/runtime-core/__tests__/directives.spec.ts",
+            "packages/runtime-core/__tests__/errorHandling.spec.ts",
+            "packages/runtime-core/__tests__/h.spec.ts",
+            "packages/runtime-core/__tests__/helpers/createSlots.spec.ts",
+            "packages/runtime-core/__tests__/helpers/renderList.spec.ts",
+            "packages/runtime-core/__tests__/helpers/renderSlot.spec.ts",
+            "packages/runtime-core/__tests__/helpers/resolveAssets.spec.ts",
+            "packages/runtime-core/__tests__/helpers/toHandlers.spec.ts",
+            "packages/runtime-core/__tests__/helpers/useId.spec.ts",
+            "packages/runtime-core/__tests__/helpers/useModel.spec.ts",
+            "packages/runtime-core/__tests__/helpers/useTemplateRef.spec.ts",
+            "packages/runtime-core/__tests__/helpers/withMemo.spec.ts",
+            "packages/runtime-core/__tests__/hmr.spec.ts",
+            "packages/runtime-core/__tests__/hydration.spec.ts",
+            "packages/runtime-core/__tests__/misc.spec.ts",
+            "packages/runtime-core/__tests__/rendererAttrsFallthrough.spec.ts",
+            "packages/runtime-core/__tests__/rendererChildren.spec.ts",
+            "packages/runtime-core/__tests__/rendererComponent.spec.ts",
+            "packages/runtime-core/__tests__/rendererElement.spec.ts",
+            "packages/runtime-core/__tests__/rendererFragment.spec.ts",
+            "packages/runtime-core/__tests__/rendererOptimizedMode.spec.ts",
+            "packages/runtime-core/__tests__/rendererTemplateRef.spec.ts",
+            "packages/runtime-core/__tests__/scheduler.spec.ts",
+            "packages/runtime-core/__tests__/scopeId.spec.ts",
+            "packages/runtime-core/__tests__/vnode.spec.ts",
+            "packages/runtime-core/__tests__/vnodeHooks.spec.ts",
+            "packages/runtime-core/index.js",
+            "packages/runtime-core/src/profiling.ts",
+            "packages/runtime-core/src/renderer.ts",
+            "packages/runtime-core/src/rendererTemplateRef.ts",
+            "packages/runtime-core/src/scheduler.ts",
+            "packages/runtime-core/src/vnode.ts",
+            "packages/runtime-core/src/warning.ts",
+            "packages/runtime-core/types/globalComponents.d.ts",
+            "packages/runtime-core/types/scriptSetupHelpers.d.ts",
+            "packages/vue-compat/LICENSE",
+            "packages/vue-compat/README.md",
+            "packages/vue-compat/__tests__/compiler.spec.ts",
+            "packages/vue-compat/__tests__/componentAsync.spec.ts",
+            "packages/vue-compat/__tests__/componentFunctional.spec.ts",
+            "packages/vue-compat/__tests__/componentVModel.spec.ts",
+            "packages/vue-compat/__tests__/filters.spec.ts",
+            "packages/vue-compat/__tests__/global.spec.ts",
+            "packages/vue-compat/__tests__/globalConfig.spec.ts",
+            "packages/vue-compat/__tests__/instance.spec.ts",
+            "packages/vue-compat/__tests__/misc.spec.ts",
+            "packages/vue-compat/__tests__/options.spec.ts",
+            "packages/vue-compat/__tests__/renderFn.spec.ts",
+            "packages/vue-compat/__tests__/utils.ts",
+            "packages/vue-compat/index.js",
+            "packages/vue-compat/package.json",
+            "packages/vue-compat/src/createCompatVue.ts",
+            "packages/vue-compat/src/dev.ts",
+            "packages/vue-compat/src/esm-index.ts",
+            "packages/vue-compat/src/esm-runtime.ts",
+            "packages/vue-compat/src/index.ts",
+            "packages/vue-compat/src/runtime.ts",
+            "pnpm-lock.yaml",
+            "pnpm-workspace.yaml",
+            "rollup.config.js",
+            "rollup.dts.config.js",
+            "scripts/aliases.js",
+            "scripts/build.js",
+            "scripts/dev.js",
+            "scripts/inline-enums.js",
+            "scripts/pre-dev-sfc.js",
+            "scripts/release.js",
+            "scripts/setup-vitest.ts",
+            "scripts/size-report.js",
+            "scripts/usage-size.js",
+            "scripts/utils.js",
+            "scripts/verify-commit.js",
+            "scripts/verify-treeshaking.js",
+            "tsconfig.build.json",
+            "tsconfig.json",
+            "vitest.config.ts",
+            "vitest.e2e.config.ts",
+            "vitest.unit.config.ts",
+            "vitest.workspace.ts"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/src/compileStyle.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/src/compileStyle.ts": [
+              {
+                "start": 80,
+                "end": 180
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "CHANGELOG.md",
+            "changelogs/CHANGELOG-3.4.md",
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts"
+          ],
+          "spans": {
+            "CHANGELOG.md": [
+              {
+                "start": 6,
+                "end": 6
+              }
+            ],
+            "changelogs/CHANGELOG-3.4.md": [
+              {
+                "start": 290,
+                "end": 290
+              }
+            ],
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts": [
+              {
+                "start": 177,
+                "end": 177
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/src/compileScript.ts",
+            "packages/compiler-sfc/src/rewriteDefault.ts",
+            "packages/compiler-sfc/src/style/cssVars.ts",
+            "packages/compiler-sfc/src/style/pluginScoped.ts",
+            "packages/compiler-sfc/src/style/pluginTrim.ts",
+            "packages/compiler-sfc/src/style/preprocessors.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/src/compileScript.ts": [
+              {
+                "start": 213,
+                "end": 213
+              }
+            ],
+            "packages/compiler-sfc/src/rewriteDefault.ts": [
+              {
+                "start": 38,
+                "end": 38
+              }
+            ],
+            "packages/compiler-sfc/src/style/cssVars.ts": [
+              {
+                "start": 64,
+                "end": 65
+              }
+            ],
+            "packages/compiler-sfc/src/style/pluginScoped.ts": [
+              {
+                "start": 74,
+                "end": 74
+              }
+            ],
+            "packages/compiler-sfc/src/style/pluginTrim.ts": [
+              {
+                "start": 8,
+                "end": 8
+              }
+            ],
+            "packages/compiler-sfc/src/style/preprocessors.ts": [
+              {
+                "start": 102,
+                "end": 102
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/src/style/pluginTrim.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/src/style/pluginTrim.ts": [
+              {
+                "start": 1,
+                "end": 18
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/src/style/pluginScoped.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/src/style/pluginScoped.ts": [
+              {
+                "start": 91,
+                "end": 91
+              },
+              {
+                "start": 96,
+                "end": 96
+              },
+              {
+                "start": 168,
+                "end": 168
+              },
+              {
+                "start": 254,
+                "end": 254
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "pnpm-lock.yaml"
+          ],
+          "spans": {
+            "pnpm-lock.yaml": [
+              {
+                "start": 1,
+                "end": 30
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-core/src/codegen.ts"
+          ],
+          "spans": {
+            "packages/compiler-core/src/codegen.ts": [
+              {
+                "start": 1000,
+                "end": 1001
+              },
+              {
+                "start": 1005,
+                "end": 1005
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-core/src/codegen.ts",
+            "packages/compiler-sfc/src/style/pluginScoped.ts",
+            "packages/runtime-core/src/helpers/renderSlot.ts"
+          ],
+          "spans": {
+            "packages/compiler-core/src/codegen.ts": [
+              {
+                "start": 611,
+                "end": 611
+              }
+            ],
+            "packages/compiler-sfc/src/style/pluginScoped.ts": [
+              {
+                "start": 234,
+                "end": 234
+              }
+            ],
+            "packages/runtime-core/src/helpers/renderSlot.ts": [
+              {
+                "start": 104,
+                "end": 104
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/src/style/pluginScoped.ts",
+            "packages/compiler-sfc/src/warn.ts",
+            "packages/reactivity/__tests__/reactiveArray.spec.ts",
+            "packages/reactivity/src/arrayInstrumentations.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/src/style/pluginScoped.ts": [
+              {
+                "start": 96,
+                "end": 227
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "packages/compiler-sfc/src/style/pluginScoped.ts"
+      ],
+      "pred_spans": {
+        "packages/compiler-sfc/src/style/pluginScoped.ts": [
+          {
+            "start": 234,
+            "end": 248
+          }
+        ]
+      }
+    }
+  }
+]

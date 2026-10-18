@@ -1,0 +1,13 @@
+{
+  "declarationStatus": "valid",
+  "requests": 5,
+  "responses": 5,
+  "failedResponses": 0,
+  "locatorOnlyResponses": 0,
+  "unmappedByReason": {
+    "source-line-mismatch-or-truncated": {
+      "count": 8,
+      "bytes": 0
+    }
+  }
+}

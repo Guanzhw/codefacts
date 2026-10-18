@@ -1,0 +1,7 @@
+[
+  {
+    "instance_id": "facebook__docusaurus-10130",
+    "model_name_or_path": "deepseek-swe-codegraph",
+    "model_patch": "diff --git a/packages/docusaurus/src/server/brokenLinks.ts b/packages/docusaurus/src/server/brokenLinks.ts\nindex 9e940f7..0f0dac5 100644\n--- a/packages/docusaurus/src/server/brokenLinks.ts\n+++ b/packages/docusaurus/src/server/brokenLinks.ts\n@@ -124,8 +124,18 @@ function createBrokenLinksHelper({\n     if (hash === '') {\n       return false;\n     }\n+    // Depending on the site configuration (trailingSlash), the target page may\n+    // be registered with or without a trailing slash. Similarly, the link may\n+    // contain an encoded pathname. We normalize the pathname so that a valid\n+    // page is not reported as broken just because of a trailing slash mismatch.\n+    // See https://github.com/facebook/docusaurus/pull/10130\n     const targetPage =\n-      collectedLinks.get(pathname) || collectedLinks.get(decodeURI(pathname));\n+      collectedLinks.get(pathname) ||\n+      collectedLinks.get(decodeURI(pathname)) ||\n+      collectedLinks.get(addTrailingSlash(pathname)) ||\n+      collectedLinks.get(removeTrailingSlash(pathname)) ||\n+      collectedLinks.get(decodeURI(addTrailingSlash(pathname))) ||\n+      collectedLinks.get(decodeURI(removeTrailingSlash(pathname)));\n     // link with anchor to a page that does not exist (or did not collect any\n     // link/anchor) is considered as a broken anchor\n     if (!targetPage) {\n"
+  }
+]

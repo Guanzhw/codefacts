@@ -1,0 +1,162 @@
+{
+  "kind": "context",
+  "instance_id": "mui__material-ui-34229",
+  "officialResult": {
+    "instance_id": "mui__material-ui-34229",
+    "num_steps": 12,
+    "final": {
+      "file": {
+        "coverage": 1,
+        "precision": 0.2,
+        "intersection": 1,
+        "gold_size": 1,
+        "pred_size": 5
+      },
+      "symbol": {
+        "coverage": 0.5555555555555556,
+        "precision": 0.3333333333333333,
+        "intersection": 5,
+        "gold_size": 9,
+        "pred_size": 15
+      },
+      "span": {
+        "coverage": 0.8120223094401983,
+        "precision": 0.34998219373219375,
+        "intersection": 3931,
+        "gold_size": 4841,
+        "pred_size": 11232
+      },
+      "line": {
+        "coverage": 0.7861271676300579,
+        "precision": 0.3617021276595745,
+        "intersection": 136,
+        "gold_size": 173,
+        "pred_size": 376
+      }
+    },
+    "trajectory": {
+      "steps": [
+        {
+          "step": 1,
+          "coverage": {
+            "file": 1,
+            "symbol": 0.1111111111111111,
+            "span": 0.06527576946911795,
+            "line": 0.07514450867052024
+          }
+        },
+        {
+          "step": 2,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.39186118570543277,
+            "line": 0.4161849710982659
+          }
+        },
+        {
+          "step": 3,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.9058045858293741,
+            "line": 0.8959537572254336
+          }
+        },
+        {
+          "step": 4,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 1,
+            "line": 1
+          }
+        },
+        {
+          "step": 5,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 1,
+            "line": 1
+          }
+        },
+        {
+          "step": 6,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 1,
+            "line": 1
+          }
+        },
+        {
+          "step": 7,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 1,
+            "line": 1
+          }
+        },
+        {
+          "step": 8,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 1,
+            "line": 1
+          }
+        },
+        {
+          "step": 9,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 1,
+            "line": 1
+          }
+        },
+        {
+          "step": 10,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 1,
+            "line": 1
+          }
+        },
+        {
+          "step": 11,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 1,
+            "line": 1
+          }
+        },
+        {
+          "step": 12,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 1,
+            "line": 1
+          }
+        }
+      ],
+      "auc_coverage": {
+        "file": 1,
+        "symbol": 0.9259259259259259,
+        "span": 0.8635784617503269,
+        "line": 0.865606936416185
+      },
+      "redundancy": {
+        "file": 0.32258064516129037,
+        "symbol": 0.17355371900826444,
+        "span": 0.08347951018226163,
+        "line": 0.07412653446647777
+      }
+    }
+  }
+}

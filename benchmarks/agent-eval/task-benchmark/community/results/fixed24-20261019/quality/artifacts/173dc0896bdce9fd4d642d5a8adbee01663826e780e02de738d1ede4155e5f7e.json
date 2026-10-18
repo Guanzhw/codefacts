@@ -1,0 +1,1896 @@
+[
+  {
+    "instance_id": "clap-rs__clap-4248",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "baaee3d5105b66b8c3a3141f57013b58959a9fdd",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            ".clippy.toml",
+            ".github/FUNDING.yml",
+            ".github/ISSUE_TEMPLATE/bug_report.yml",
+            ".github/ISSUE_TEMPLATE/config.yml",
+            ".github/ISSUE_TEMPLATE/feature_request.yml",
+            ".github/PULL_REQUEST_TEMPLATE.md",
+            ".github/dependabot.yml",
+            ".github/settings.yml",
+            ".github/workflows/audit.yml",
+            ".github/workflows/ci.yml",
+            ".github/workflows/committed.yml",
+            ".github/workflows/post-release.yml",
+            ".github/workflows/pre-commit.yml",
+            ".github/workflows/release-notes.py",
+            ".github/workflows/rust-next.yml",
+            ".github/workflows/spelling.yml",
+            ".gitignore",
+            ".pre-commit-config.yaml",
+            "CHANGELOG.md",
+            "CONTRIBUTING.md",
+            "Cargo.lock",
+            "Cargo.toml",
+            "LICENSE-APACHE",
+            "LICENSE-MIT",
+            "Makefile",
+            "README.md",
+            "assets/clap.png",
+            "clap_bench/Cargo.toml",
+            "clap_bench/benches/01_default.rs",
+            "clap_bench/benches/02_simple.rs",
+            "clap_bench/benches/03_complex.rs",
+            "clap_bench/benches/04_new_help.rs",
+            "clap_bench/benches/05_ripgrep.rs",
+            "clap_bench/benches/06_rustup.rs",
+            "clap_bench/src/lib.rs",
+            "clap_complete/CHANGELOG.md",
+            "clap_complete/CONTRIBUTING.md",
+            "clap_complete/Cargo.toml",
+            "clap_complete/LICENSE-APACHE",
+            "clap_complete/LICENSE-MIT",
+            "clap_complete/README.md",
+            "clap_complete/examples/completion-derive.rs",
+            "clap_complete/examples/completion.rs",
+            "clap_complete/examples/dynamic.rs",
+            "clap_complete/src/dynamic.rs",
+            "clap_complete/src/generator/mod.rs",
+            "clap_complete/src/generator/utils.rs",
+            "clap_complete/src/lib.rs",
+            "clap_complete/src/macros.rs",
+            "clap_complete/src/shells/bash.rs",
+            "clap_complete/src/shells/elvish.rs",
+            "clap_complete/src/shells/fish.rs",
+            "clap_complete/src/shells/mod.rs",
+            "clap_complete/src/shells/powershell.rs",
+            "clap_complete/src/shells/shell.rs",
+            "clap_complete/src/shells/zsh.rs",
+            "clap_complete/tests/bash.rs",
+            "clap_complete/tests/common.rs",
+            "clap_complete/tests/dynamic.rs",
+            "clap_complete/tests/elvish.rs",
+            "clap_complete/tests/examples.rs",
+            "clap_complete/tests/fish.rs",
+            "clap_complete/tests/general.rs",
+            "clap_complete/tests/powershell.rs",
+            "clap_complete/tests/snapshots/aliases.bash",
+            "clap_complete/tests/snapshots/aliases.elvish",
+            "clap_complete/tests/snapshots/aliases.fish",
+            "clap_complete/tests/snapshots/aliases.ps1",
+            "clap_complete/tests/snapshots/aliases.zsh",
+            "clap_complete/tests/snapshots/basic.bash",
+            "clap_complete/tests/snapshots/basic.elvish",
+            "clap_complete/tests/snapshots/basic.fish",
+            "clap_complete/tests/snapshots/basic.ps1",
+            "clap_complete/tests/snapshots/basic.zsh",
+            "clap_complete/tests/snapshots/feature_sample.bash",
+            "clap_complete/tests/snapshots/feature_sample.elvish",
+            "clap_complete/tests/snapshots/feature_sample.fish",
+            "clap_complete/tests/snapshots/feature_sample.ps1",
+            "clap_complete/tests/snapshots/feature_sample.zsh",
+            "clap_complete/tests/snapshots/quoting.bash",
+            "clap_complete/tests/snapshots/quoting.elvish",
+            "clap_complete/tests/snapshots/quoting.fish",
+            "clap_complete/tests/snapshots/quoting.ps1",
+            "clap_complete/tests/snapshots/quoting.zsh",
+            "clap_complete/tests/snapshots/register_minimal.bash",
+            "clap_complete/tests/snapshots/special_commands.bash",
+            "clap_complete/tests/snapshots/special_commands.elvish",
+            "clap_complete/tests/snapshots/special_commands.fish",
+            "clap_complete/tests/snapshots/special_commands.ps1",
+            "clap_complete/tests/snapshots/special_commands.zsh",
+            "clap_complete/tests/snapshots/sub_subcommands.bash",
+            "clap_complete/tests/snapshots/sub_subcommands.elvish",
+            "clap_complete/tests/snapshots/sub_subcommands.fish",
+            "clap_complete/tests/snapshots/sub_subcommands.ps1",
+            "clap_complete/tests/snapshots/sub_subcommands.zsh",
+            "clap_complete/tests/snapshots/value_hint.bash",
+            "clap_complete/tests/snapshots/value_hint.elvish",
+            "clap_complete/tests/snapshots/value_hint.fish",
+            "clap_complete/tests/snapshots/value_hint.ps1",
+            "clap_complete/tests/snapshots/value_hint.zsh",
+            "clap_complete/tests/zsh.rs",
+            "clap_complete_fig/CHANGELOG.md",
+            "clap_complete_fig/Cargo.toml",
+            "clap_complete_fig/LICENSE-APACHE",
+            "clap_complete_fig/LICENSE-MIT",
+            "clap_complete_fig/README.md",
+            "clap_complete_fig/examples/fig_completion.rs",
+            "clap_complete_fig/src/fig.rs",
+            "clap_complete_fig/src/lib.rs",
+            "clap_complete_fig/tests/common.rs",
+            "clap_complete_fig/tests/fig.rs",
+            "clap_complete_fig/tests/snapshots/aliases.fig.js",
+            "clap_complete_fig/tests/snapshots/basic.fig.js",
+            "clap_complete_fig/tests/snapshots/feature_sample.fig.js",
+            "clap_complete_fig/tests/snapshots/quoting.fig.js",
+            "clap_complete_fig/tests/snapshots/special_commands.fig.js",
+            "clap_complete_fig/tests/snapshots/sub_subcommands.fig.js",
+            "clap_complete_fig/tests/snapshots/value_hint.fig.js",
+            "clap_derive/CONTRIBUTING.md",
+            "clap_derive/Cargo.toml",
+            "clap_derive/LICENSE-APACHE",
+            "clap_derive/LICENSE-MIT",
+            "clap_derive/README.md",
+            "clap_derive/src/attr.rs",
+            "clap_derive/src/derives/args.rs",
+            "clap_derive/src/derives/into_app.rs",
+            "clap_derive/src/derives/mod.rs",
+            "clap_derive/src/derives/parser.rs",
+            "clap_derive/src/derives/subcommand.rs",
+            "clap_derive/src/derives/value_enum.rs",
+            "clap_derive/src/dummies.rs",
+            "clap_derive/src/item.rs",
+            "clap_derive/src/lib.rs",
+            "clap_derive/src/utils/doc_comments.rs",
+            "clap_derive/src/utils/mod.rs",
+            "clap_derive/src/utils/spanned.rs",
+            "clap_derive/src/utils/ty.rs",
+            "clap_lex/CHANGELOG.md",
+            "clap_lex/CONTRIBUTING.md",
+            "clap_lex/Cargo.toml",
+            "clap_lex/LICENSE-APACHE",
+            "clap_lex/LICENSE-MIT",
+            "clap_lex/README.md",
+            "clap_lex/src/lib.rs",
+            "clap_lex/tests/lexer.rs",
+            "clap_lex/tests/parsed.rs",
+            "clap_lex/tests/shorts.rs",
+            "clap_mangen/CHANGELOG.md",
+            "clap_mangen/CONTRIBUTING.md",
+            "clap_mangen/Cargo.toml",
+            "clap_mangen/LICENSE-APACHE",
+            "clap_mangen/LICENSE-MIT",
+            "clap_mangen/README.md",
+            "clap_mangen/examples/man.rs",
+            "clap_mangen/src/lib.rs",
+            "clap_mangen/src/render.rs",
+            "clap_mangen/tests/common.rs",
+            "clap_mangen/tests/roff.rs",
+            "clap_mangen/tests/snapshots/aliases.bash.roff",
+            "clap_mangen/tests/snapshots/basic.bash.roff",
+            "clap_mangen/tests/snapshots/feature_sample.bash.roff",
+            "clap_mangen/tests/snapshots/hidden_option.bash.roff",
+            "clap_mangen/tests/snapshots/possible_values.bash.roff",
+            "clap_mangen/tests/snapshots/quoting.bash.roff",
+            "clap_mangen/tests/snapshots/special_commands.bash.roff",
+            "clap_mangen/tests/snapshots/sub_subcommands.bash.roff",
+            "clap_mangen/tests/snapshots/value_env.bash.roff",
+            "clap_mangen/tests/snapshots/value_hint.bash.roff",
+            "committed.toml",
+            "examples/cargo-example-derive.md",
+            "examples/cargo-example-derive.rs",
+            "examples/cargo-example.md",
+            "examples/cargo-example.rs",
+            "examples/demo.md",
+            "examples/demo.rs",
+            "examples/derive_ref/augment_args.rs",
+            "examples/derive_ref/augment_subcommands.rs",
+            "examples/derive_ref/flatten_hand_args.rs",
+            "examples/derive_ref/hand_subcommand.rs",
+            "examples/derive_ref/interop_tests.md",
+            "examples/escaped-positional-derive.md",
+            "examples/escaped-positional-derive.rs",
+            "examples/escaped-positional.md",
+            "examples/escaped-positional.rs",
+            "examples/find.md",
+            "examples/find.rs",
+            "examples/git-derive.md",
+            "examples/git-derive.rs",
+            "examples/git.md",
+            "examples/git.rs",
+            "examples/multicall-busybox.md",
+            "examples/multicall-busybox.rs",
+            "examples/multicall-hostname.md",
+            "examples/multicall-hostname.rs",
+            "examples/pacman.md",
+            "examples/pacman.rs",
+            "examples/repl.rs",
+            "examples/tutorial_builder/01_quick.md",
+            "examples/tutorial_builder/01_quick.rs",
+            "examples/tutorial_builder/02_app_settings.md",
+            "examples/tutorial_builder/02_app_settings.rs",
+            "examples/tutorial_builder/02_apps.md",
+            "examples/tutorial_builder/02_apps.rs",
+            "examples/tutorial_builder/02_crate.md",
+            "examples/tutorial_builder/02_crate.rs",
+            "examples/tutorial_builder/03_01_flag_bool.md",
+            "examples/tutorial_builder/03_01_flag_bool.rs",
+            "examples/tutorial_builder/03_01_flag_count.md",
+            "examples/tutorial_builder/03_01_flag_count.rs",
+            "examples/tutorial_builder/03_02_option.md",
+            "examples/tutorial_builder/03_02_option.rs",
+            "examples/tutorial_builder/03_02_option_mult.md",
+            "examples/tutorial_builder/03_02_option_mult.rs",
+            "examples/tutorial_builder/03_03_positional.md",
+            "examples/tutorial_builder/03_03_positional.rs",
+            "examples/tutorial_builder/03_03_positional_mult.md",
+            "examples/tutorial_builder/03_03_positional_mult.rs",
+            "examples/tutorial_builder/03_04_subcommands.md",
+            "examples/tutorial_builder/03_04_subcommands.rs",
+            "examples/tutorial_builder/03_05_default_values.md",
+            "examples/tutorial_builder/03_05_default_values.rs",
+            "examples/tutorial_builder/04_01_enum.md",
+            "examples/tutorial_builder/04_01_enum.rs",
+            "examples/tutorial_builder/04_01_possible.md",
+            "examples/tutorial_builder/04_01_possible.rs",
+            "examples/tutorial_builder/04_02_parse.md",
+            "examples/tutorial_builder/04_02_parse.rs",
+            "examples/tutorial_builder/04_02_validate.md",
+            "examples/tutorial_builder/04_02_validate.rs",
+            "examples/tutorial_builder/04_03_relations.md",
+            "examples/tutorial_builder/04_03_relations.rs",
+            "examples/tutorial_builder/04_04_custom.md",
+            "examples/tutorial_builder/04_04_custom.rs",
+            "examples/tutorial_builder/05_01_assert.rs",
+            "examples/tutorial_derive/01_quick.md",
+            "examples/tutorial_derive/01_quick.rs",
+            "examples/tutorial_derive/03_04_subcommands_alt.rs",
+            "examples/tutorial_derive/03_05_default_values.md",
+            "examples/tutorial_derive/03_05_default_values.rs",
+            "examples/tutorial_derive/04_01_enum.md",
+            "examples/tutorial_derive/04_01_enum.rs",
+            "examples/tutorial_derive/04_02_parse.md",
+            "examples/tutorial_derive/04_02_parse.rs",
+            "examples/tutorial_derive/04_02_validate.md",
+            "examples/tutorial_derive/04_02_validate.rs",
+            "examples/tutorial_derive/04_03_relations.md",
+            "examples/tutorial_derive/04_03_relations.rs",
+            "examples/tutorial_derive/04_04_custom.md",
+            "examples/tutorial_derive/04_04_custom.rs",
+            "examples/tutorial_derive/05_01_assert.rs",
+            "examples/typed-derive.md",
+            "examples/typed-derive.rs",
+            "release.toml",
+            "src/_cookbook/cargo_example.rs",
+            "src/_cookbook/cargo_example_derive.rs",
+            "src/_cookbook/escaped_positional.rs",
+            "src/_cookbook/escaped_positional_derive.rs",
+            "src/_cookbook/find.rs",
+            "src/_cookbook/git.rs",
+            "src/_cookbook/git_derive.rs",
+            "src/_cookbook/mod.rs",
+            "src/_cookbook/multicall_busybox.rs",
+            "src/_cookbook/multicall_hostname.rs",
+            "src/_cookbook/pacman.rs",
+            "src/_cookbook/repl.rs",
+            "src/_cookbook/typed_derive.rs",
+            "src/_derive/_tutorial.rs",
+            "src/_derive/mod.rs",
+            "src/_faq.rs",
+            "src/_features.rs",
+            "src/_tutorial.rs",
+            "src/bin/stdio-fixture.rs",
+            "src/builder/action.rs",
+            "src/builder/app_settings.rs",
+            "src/builder/arg.rs",
+            "src/builder/arg_group.rs",
+            "src/builder/arg_predicate.rs",
+            "src/builder/arg_settings.rs",
+            "src/builder/command.rs",
+            "src/builder/debug_asserts.rs",
+            "src/builder/mod.rs",
+            "src/builder/os_str.rs",
+            "src/builder/possible_value.rs",
+            "src/builder/range.rs",
+            "src/builder/resettable.rs",
+            "src/builder/str.rs",
+            "src/builder/styled_str.rs",
+            "src/builder/tests.rs",
+            "src/builder/value_hint.rs",
+            "src/builder/value_parser.rs",
+            "src/derive.rs",
+            "src/error/context.rs",
+            "src/error/format.rs",
+            "src/error/kind.rs",
+            "src/error/mod.rs",
+            "src/lib.rs",
+            "src/macros.rs",
+            "src/mkeymap.rs",
+            "src/output/fmt.rs",
+            "src/output/help.rs",
+            "src/output/help_template.rs",
+            "src/output/mod.rs",
+            "src/output/textwrap/core.rs",
+            "src/output/textwrap/mod.rs",
+            "src/output/textwrap/word_separators.rs",
+            "src/output/textwrap/wrap_algorithms.rs",
+            "src/output/usage.rs",
+            "src/parser/arg_matcher.rs",
+            "src/parser/error.rs",
+            "src/parser/features/mod.rs",
+            "src/parser/features/suggestions.rs",
+            "src/parser/matches/any_value.rs",
+            "src/parser/matches/arg_matches.rs",
+            "src/parser/matches/matched_arg.rs",
+            "src/parser/matches/mod.rs",
+            "src/parser/matches/value_source.rs",
+            "src/parser/mod.rs",
+            "src/parser/parser.rs",
+            "src/parser/validator.rs",
+            "src/util/color.rs",
+            "src/util/flat_map.rs",
+            "src/util/flat_set.rs",
+            "src/util/graph.rs",
+            "src/util/id.rs",
+            "src/util/mod.rs",
+            "src/util/str_to_bool.rs",
+            "tests/builder/action.rs",
+            "tests/builder/app_settings.rs",
+            "tests/builder/arg_aliases.rs",
+            "tests/builder/arg_aliases_short.rs",
+            "tests/builder/arg_matches.rs",
+            "tests/builder/borrowed.rs",
+            "tests/builder/cargo.rs",
+            "tests/builder/command.rs",
+            "tests/builder/conflicts.rs",
+            "tests/builder/default_missing_vals.rs",
+            "tests/builder/default_vals.rs",
+            "tests/builder/delimiters.rs",
+            "tests/builder/derive_order.rs",
+            "tests/builder/display_order.rs",
+            "tests/builder/double_require.rs",
+            "tests/builder/empty_values.rs",
+            "tests/builder/env.rs",
+            "tests/builder/error.rs",
+            "tests/builder/flag_subcommands.rs",
+            "tests/builder/flags.rs",
+            "tests/builder/global_args.rs",
+            "tests/builder/grouped_values.rs",
+            "tests/builder/groups.rs",
+            "tests/builder/help.rs",
+            "tests/builder/help_env.rs",
+            "tests/builder/hidden_args.rs",
+            "tests/builder/ignore_errors.rs",
+            "tests/builder/indices.rs",
+            "tests/builder/main.rs",
+            "tests/builder/multiple_occurrences.rs",
+            "tests/builder/multiple_values.rs",
+            "tests/builder/opts.rs",
+            "tests/builder/positionals.rs",
+            "tests/builder/posix_compatible.rs",
+            "tests/builder/possible_values.rs",
+            "tests/builder/propagate_globals.rs",
+            "tests/builder/require.rs",
+            "tests/builder/subcommands.rs",
+            "tests/builder/template_help.rs",
+            "tests/builder/tests.rs",
+            "tests/builder/unicode.rs",
+            "tests/builder/unique_args.rs",
+            "tests/builder/utf16.rs",
+            "tests/builder/utf8.rs",
+            "tests/builder/utils.rs",
+            "tests/builder/version.rs",
+            "tests/derive/app_name.rs",
+            "tests/derive/arguments.rs",
+            "tests/derive/author_version_about.rs",
+            "tests/derive/basic.rs",
+            "tests/derive/boxed.rs",
+            "tests/derive/custom_string_parsers.rs",
+            "tests/derive/default_value.rs",
+            "tests/derive/deny_warnings.rs",
+            "tests/derive/doc_comments_help.rs",
+            "tests/derive/explicit_name_no_renaming.rs",
+            "tests/derive/flags.rs",
+            "tests/derive/flatten.rs",
+            "tests/derive/generic.rs",
+            "tests/derive/groups.rs",
+            "tests/derive/help.rs",
+            "tests/derive/issues.rs",
+            "tests/derive/macros.rs",
+            "tests/derive/main.rs",
+            "tests/derive/naming.rs",
+            "tests/derive/nested_subcommands.rs",
+            "tests/derive/non_literal_attributes.rs",
+            "tests/derive/options.rs",
+            "tests/derive/privacy.rs",
+            "tests/derive/raw_bool_literal.rs",
+            "tests/derive/raw_idents.rs",
+            "tests/derive/rename_all_env.rs",
+            "tests/derive/skip.rs",
+            "tests/derive/subcommands.rs",
+            "tests/derive/type_alias_regressions.rs",
+            "tests/derive/utf8.rs",
+            "tests/derive/utils.rs",
+            "tests/derive/value_enum.rs",
+            "tests/derive_ui.rs",
+            "tests/derive_ui/bool_value_enum.rs",
+            "tests/derive_ui/bool_value_enum.stderr",
+            "tests/derive_ui/clap_empty_attr.rs",
+            "tests/derive_ui/clap_empty_attr.stderr",
+            "tests/derive_ui/default_value_t_invalid.rs",
+            "tests/derive_ui/default_value_t_invalid.stderr",
+            "tests/derive_ui/default_values_t_invalid.rs",
+            "tests/derive_ui/default_values_t_invalid.stderr",
+            "tests/derive_ui/enum_flatten.rs",
+            "tests/derive_ui/enum_flatten.stderr",
+            "tests/derive_ui/enum_variant_not_args.rs",
+            "tests/derive_ui/enum_variant_not_args.stderr",
+            "tests/derive_ui/external_subcommand_misuse.rs",
+            "tests/derive_ui/external_subcommand_misuse.stderr",
+            "tests/derive_ui/external_subcommand_wrong_type.rs",
+            "tests/derive_ui/external_subcommand_wrong_type.stderr",
+            "tests/derive_ui/flatten_and_methods.rs",
+            "tests/derive_ui/flatten_and_methods.stderr",
+            "tests/derive_ui/flatten_enum_in_struct.rs",
+            "tests/derive_ui/flatten_enum_in_struct.stderr",
+            "tests/derive_ui/flatten_struct_in_enum.rs",
+            "tests/derive_ui/flatten_struct_in_enum.stderr",
+            "tests/derive_ui/multiple_external_subcommand.rs",
+            "tests/derive_ui/multiple_external_subcommand.stderr",
+            "tests/derive_ui/non_existent_attr.rs",
+            "tests/derive_ui/non_existent_attr.stderr",
+            "tests/derive_ui/rename_all_wrong_casing.rs",
+            "tests/derive_ui/rename_all_wrong_casing.stderr",
+            "tests/derive_ui/skip_flatten.rs",
+            "tests/derive_ui/skip_flatten.stderr",
+            "tests/derive_ui/skip_subcommand.rs",
+            "tests/derive_ui/skip_subcommand.stderr",
+            "tests/derive_ui/skip_with_other_options.rs",
+            "tests/derive_ui/skip_with_other_options.stderr",
+            "tests/derive_ui/skip_without_default.rs",
+            "tests/derive_ui/skip_without_default.stderr",
+            "tests/derive_ui/struct_subcommand.rs",
+            "tests/derive_ui/struct_subcommand.stderr",
+            "tests/derive_ui/subcommand_and_flatten.rs",
+            "tests/derive_ui/subcommand_and_flatten.stderr",
+            "tests/derive_ui/subcommand_and_methods.rs",
+            "tests/derive_ui/subcommand_and_methods.stderr",
+            "tests/derive_ui/subcommand_on_struct.rs",
+            "tests/derive_ui/subcommand_on_struct.stderr",
+            "tests/derive_ui/subcommand_opt_opt.rs",
+            "tests/derive_ui/subcommand_opt_opt.stderr",
+            "tests/derive_ui/subcommand_opt_vec.rs",
+            "tests/derive_ui/subcommand_opt_vec.stderr",
+            "tests/derive_ui/tuple_struct.rs",
+            "tests/derive_ui/tuple_struct.stderr",
+            "tests/derive_ui/value_enum_non_unit.rs",
+            "tests/derive_ui/value_enum_non_unit.stderr",
+            "tests/derive_ui/value_enum_on_struct.rs",
+            "tests/derive_ui/value_enum_on_struct.stderr",
+            "tests/examples.rs",
+            "tests/macros.rs",
+            "tests/ui.rs",
+            "tests/ui/V_flag_stdout.toml",
+            "tests/ui/arg_required_else_help_stderr.toml",
+            "tests/ui/error_stderr.toml",
+            "tests/ui/h_flag_stdout.toml",
+            "tests/ui/help_cmd_stdout.toml",
+            "tests/ui/help_flag_stdout.toml",
+            "tests/ui/version_flag_stdout.toml",
+            "typos.toml"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "src/builder/styled_str.rs"
+          ],
+          "spans": {
+            "src/builder/styled_str.rs": [
+              {
+                "start": 1,
+                "end": 200
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/styled_str.rs"
+          ],
+          "spans": {
+            "src/builder/styled_str.rs": [
+              {
+                "start": 185,
+                "end": 315
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/fmt.rs"
+          ],
+          "spans": {
+            "src/output/fmt.rs": [
+              {
+                "start": 1,
+                "end": 91
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/mod.rs"
+          ],
+          "spans": {
+            "src/output/mod.rs": [
+              {
+                "start": 1,
+                "end": 23
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/error/format.rs"
+          ],
+          "spans": {
+            "src/error/format.rs": [
+              {
+                "start": 1,
+                "end": 240
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs",
+            "src/error/mod.rs",
+            "src/macros.rs",
+            "src/output/fmt.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 24,
+                "end": 24
+              },
+              {
+                "start": 731,
+                "end": 731
+              },
+              {
+                "start": 758,
+                "end": 758
+              }
+            ],
+            "src/error/mod.rs": [
+              {
+                "start": 21,
+                "end": 21
+              },
+              {
+                "start": 194,
+                "end": 194
+              }
+            ],
+            "src/macros.rs": [
+              {
+                "start": 655,
+                "end": 655
+              }
+            ],
+            "src/output/fmt.rs": [
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 18,
+                "end": 18
+              },
+              {
+                "start": 20,
+                "end": 20
+              },
+              {
+                "start": 34,
+                "end": 34
+              },
+              {
+                "start": 77,
+                "end": 77
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "clap_mangen/src/lib.rs",
+            "src/builder/command.rs",
+            "src/output/help.rs",
+            "src/output/help_template.rs"
+          ],
+          "spans": {
+            "clap_mangen/src/lib.rs": [
+              {
+                "start": 227,
+                "end": 227
+              }
+            ],
+            "src/builder/command.rs": [
+              {
+                "start": 723,
+                "end": 723
+              },
+              {
+                "start": 778,
+                "end": 778
+              },
+              {
+                "start": 834,
+                "end": 834
+              },
+              {
+                "start": 872,
+                "end": 872
+              },
+              {
+                "start": 876,
+                "end": 876
+              },
+              {
+                "start": 4487,
+                "end": 4487
+              }
+            ],
+            "src/output/help.rs": [
+              {
+                "start": 9,
+                "end": 9
+              }
+            ],
+            "src/output/help_template.rs": [
+              {
+                "start": 37,
+                "end": 37
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 690,
+                "end": 900
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/error/mod.rs"
+          ],
+          "spans": {
+            "src/error/mod.rs": [
+              {
+                "start": 1,
+                "end": 260
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/error/kind.rs",
+            "src/error/mod.rs"
+          ],
+          "spans": {
+            "src/error/kind.rs": [
+              {
+                "start": 346,
+                "end": 346
+              }
+            ],
+            "src/error/mod.rs": [
+              {
+                "start": 638,
+                "end": 638
+              },
+              {
+                "start": 673,
+                "end": 673
+              },
+              {
+                "start": 687,
+                "end": 687
+              },
+              {
+                "start": 692,
+                "end": 692
+              },
+              {
+                "start": 707,
+                "end": 707
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/error/mod.rs"
+          ],
+          "spans": {
+            "src/error/mod.rs": [
+              {
+                "start": 625,
+                "end": 760
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/help_template.rs"
+          ],
+          "spans": {
+            "src/output/help_template.rs": [
+              {
+                "start": 1,
+                "end": 120
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/help.rs"
+          ],
+          "spans": {
+            "src/output/help.rs": [
+              {
+                "start": 1,
+                "end": 43
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/mod.rs"
+          ],
+          "spans": {
+            "src/builder/mod.rs": [
+              {
+                "start": 36,
+                "end": 36
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/macros.rs"
+          ],
+          "spans": {
+            "src/macros.rs": [
+              {
+                "start": 630,
+                "end": 663
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/usage.rs"
+          ],
+          "spans": {
+            "src/output/usage.rs": [
+              {
+                "start": 36,
+                "end": 36
+              },
+              {
+                "start": 48,
+                "end": 48
+              },
+              {
+                "start": 190,
+                "end": 190
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 4460,
+                "end": 4520
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/error/context.rs"
+          ],
+          "spans": {
+            "src/error/context.rs": [
+              {
+                "start": 81,
+                "end": 81
+              },
+              {
+                "start": 93,
+                "end": 93
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/util/color.rs"
+          ],
+          "spans": {
+            "src/util/color.rs": [
+              {
+                "start": 1,
+                "end": 60
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs",
+            "src/error/mod.rs",
+            "src/output/fmt.rs",
+            "src/parser/parser.rs",
+            "src/parser/validator.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 731,
+                "end": 731
+              },
+              {
+                "start": 758,
+                "end": 758
+              },
+              {
+                "start": 873,
+                "end": 873
+              },
+              {
+                "start": 876,
+                "end": 876
+              },
+              {
+                "start": 4487,
+                "end": 4487
+              },
+              {
+                "start": 4489,
+                "end": 4489
+              },
+              {
+                "start": 4503,
+                "end": 4503
+              }
+            ],
+            "src/error/mod.rs": [
+              {
+                "start": 94,
+                "end": 94
+              },
+              {
+                "start": 149,
+                "end": 149
+              }
+            ],
+            "src/output/fmt.rs": [
+              {
+                "start": 47,
+                "end": 47
+              },
+              {
+                "start": 62,
+                "end": 62
+              },
+              {
+                "start": 86,
+                "end": 86
+              }
+            ],
+            "src/parser/parser.rs": [
+              {
+                "start": 1552,
+                "end": 1552
+              },
+              {
+                "start": 1557,
+                "end": 1557
+              }
+            ],
+            "src/parser/validator.rs": [
+              {
+                "start": 61,
+                "end": 61
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/parser/parser.rs"
+          ],
+          "spans": {
+            "src/parser/parser.rs": [
+              {
+                "start": 1540,
+                "end": 1570
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/parser/validator.rs"
+          ],
+          "spans": {
+            "src/parser/validator.rs": [
+              {
+                "start": 50,
+                "end": 75
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "CHANGELOG.md",
+            "CONTRIBUTING.md",
+            "Cargo.lock",
+            "clap_bench/benches/05_ripgrep.rs",
+            "clap_complete/tests/common.rs",
+            "clap_complete/tests/snapshots/quoting.bash",
+            "clap_complete/tests/snapshots/quoting.elvish",
+            "clap_complete/tests/snapshots/quoting.fish",
+            "clap_complete/tests/snapshots/quoting.ps1",
+            "clap_complete/tests/snapshots/quoting.zsh",
+            "clap_complete_fig/tests/common.rs",
+            "clap_complete_fig/tests/snapshots/quoting.fig.js",
+            "clap_mangen/tests/common.rs",
+            "clap_mangen/tests/snapshots/quoting.bash.roff",
+            "src/builder/command.rs",
+            "src/parser/parser.rs",
+            "tests/derive/macros.rs"
+          ],
+          "spans": {
+            "CHANGELOG.md": [
+              {
+                "start": 464,
+                "end": 465
+              },
+              {
+                "start": 1156,
+                "end": 1156
+              },
+              {
+                "start": 1192,
+                "end": 1192
+              },
+              {
+                "start": 1220,
+                "end": 1220
+              },
+              {
+                "start": 1281,
+                "end": 1281
+              }
+            ],
+            "CONTRIBUTING.md": [
+              {
+                "start": 40,
+                "end": 40
+              }
+            ],
+            "Cargo.lock": [
+              {
+                "start": 827,
+                "end": 827
+              },
+              {
+                "start": 1183,
+                "end": 1183
+              }
+            ],
+            "clap_bench/benches/05_ripgrep.rs": [
+              {
+                "start": 351,
+                "end": 351
+              },
+              {
+                "start": 555,
+                "end": 555
+              },
+              {
+                "start": 557,
+                "end": 557
+              }
+            ],
+            "clap_complete/tests/common.rs": [
+              {
+                "start": 109,
+                "end": 110
+              },
+              {
+                "start": 121,
+                "end": 121
+              }
+            ],
+            "clap_complete/tests/snapshots/quoting.bash": [
+              {
+                "start": 27,
+                "end": 28
+              },
+              {
+                "start": 43,
+                "end": 43
+              },
+              {
+                "start": 112,
+                "end": 112
+              },
+              {
+                "start": 141,
+                "end": 141
+              },
+              {
+                "start": 210,
+                "end": 210
+              }
+            ],
+            "clap_complete/tests/snapshots/quoting.elvish": [
+              {
+                "start": 26,
+                "end": 26
+              },
+              {
+                "start": 36,
+                "end": 36
+              },
+              {
+                "start": 59,
+                "end": 59
+              },
+              {
+                "start": 69,
+                "end": 69
+              },
+              {
+                "start": 82,
+                "end": 82
+              }
+            ],
+            "clap_complete/tests/snapshots/quoting.fish": [
+              {
+                "start": 6,
+                "end": 6
+              },
+              {
+                "start": 14,
+                "end": 14
+              },
+              {
+                "start": 21,
+                "end": 28
+              }
+            ],
+            "clap_complete/tests/snapshots/quoting.ps1": [
+              {
+                "start": 29,
+                "end": 29
+              },
+              {
+                "start": 39,
+                "end": 39
+              },
+              {
+                "start": 68,
+                "end": 68
+              },
+              {
+                "start": 79,
+                "end": 79
+              },
+              {
+                "start": 98,
+                "end": 98
+              }
+            ],
+            "clap_complete/tests/snapshots/quoting.zsh": [
+              {
+                "start": 23,
+                "end": 23
+              },
+              {
+                "start": 67,
+                "end": 67
+              },
+              {
+                "start": 105,
+                "end": 105
+              },
+              {
+                "start": 130,
+                "end": 130
+              },
+              {
+                "start": 175,
+                "end": 176
+              },
+              {
+                "start": 178,
+                "end": 178
+              },
+              {
+                "start": 180,
+                "end": 181
+              },
+              {
+                "start": 183,
+                "end": 183
+              },
+              {
+                "start": 203,
+                "end": 203
+              }
+            ],
+            "clap_complete_fig/tests/common.rs": [
+              {
+                "start": 107,
+                "end": 108
+              },
+              {
+                "start": 119,
+                "end": 119
+              }
+            ],
+            "clap_complete_fig/tests/snapshots/quoting.fig.js": [
+              {
+                "start": 56,
+                "end": 56
+              },
+              {
+                "start": 90,
+                "end": 90
+              },
+              {
+                "start": 122,
+                "end": 122
+              }
+            ],
+            "clap_mangen/tests/common.rs": [
+              {
+                "start": 105,
+                "end": 106
+              },
+              {
+                "start": 117,
+                "end": 117
+              }
+            ],
+            "clap_mangen/tests/snapshots/quoting.bash.roff": [
+              {
+                "start": 7,
+                "end": 7
+              },
+              {
+                "start": 26,
+                "end": 26
+              },
+              {
+                "start": 51,
+                "end": 51
+              }
+            ],
+            "src/builder/command.rs": [
+              {
+                "start": 820,
+                "end": 820
+              },
+              {
+                "start": 833,
+                "end": 833
+              },
+              {
+                "start": 844,
+                "end": 844
+              },
+              {
+                "start": 857,
+                "end": 857
+              }
+            ],
+            "src/parser/parser.rs": [
+              {
+                "start": 1338,
+                "end": 1338
+              },
+              {
+                "start": 1342,
+                "end": 1342
+              },
+              {
+                "start": 1346,
+                "end": 1346
+              }
+            ],
+            "tests/derive/macros.rs": [
+              {
+                "start": 18,
+                "end": 18
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 1,
+                "end": 40
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 4248,
+                "end": 4248
+              },
+              {
+                "start": 4539,
+                "end": 4539
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 4240,
+                "end": 4280
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 4530,
+                "end": 4560
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs",
+            "src/builder/styled_str.rs",
+            "src/error/mod.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 468,
+                "end": 468
+              }
+            ],
+            "src/builder/styled_str.rs": [
+              {
+                "start": 46,
+                "end": 46
+              }
+            ],
+            "src/error/mod.rs": [
+              {
+                "start": 274,
+                "end": 274
+              },
+              {
+                "start": 278,
+                "end": 278
+              },
+              {
+                "start": 286,
+                "end": 286
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/mod.rs"
+          ],
+          "spans": {
+            "src/builder/mod.rs": [
+              {
+                "start": 18,
+                "end": 50
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/error/mod.rs"
+          ],
+          "spans": {
+            "src/error/mod.rs": [
+              {
+                "start": 274,
+                "end": 274
+              },
+              {
+                "start": 278,
+                "end": 278
+              },
+              {
+                "start": 286,
+                "end": 286
+              },
+              {
+                "start": 583,
+                "end": 583
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "Cargo.toml",
+            "clap_bench/Cargo.toml",
+            "clap_complete/Cargo.toml",
+            "clap_complete_fig/Cargo.toml",
+            "clap_derive/Cargo.toml",
+            "clap_lex/Cargo.toml",
+            "clap_mangen/Cargo.toml"
+          ],
+          "spans": {
+            "Cargo.toml": [
+              {
+                "start": 38,
+                "end": 38
+              },
+              {
+                "start": 43,
+                "end": 43
+              },
+              {
+                "start": 56,
+                "end": 56
+              },
+              {
+                "start": 70,
+                "end": 70
+              },
+              {
+                "start": 85,
+                "end": 85
+              },
+              {
+                "start": 99,
+                "end": 100
+              },
+              {
+                "start": 110,
+                "end": 110
+              },
+              {
+                "start": 119,
+                "end": 119
+              },
+              {
+                "start": 123,
+                "end": 123
+              },
+              {
+                "start": 127,
+                "end": 127
+              },
+              {
+                "start": 131,
+                "end": 131
+              },
+              {
+                "start": 135,
+                "end": 135
+              },
+              {
+                "start": 139,
+                "end": 139
+              },
+              {
+                "start": 143,
+                "end": 143
+              },
+              {
+                "start": 147,
+                "end": 147
+              },
+              {
+                "start": 160,
+                "end": 160
+              },
+              {
+                "start": 165,
+                "end": 165
+              },
+              {
+                "start": 174,
+                "end": 174
+              },
+              {
+                "start": 179,
+                "end": 179
+              },
+              {
+                "start": 184,
+                "end": 184
+              },
+              {
+                "start": 189,
+                "end": 189
+              },
+              {
+                "start": 194,
+                "end": 194
+              },
+              {
+                "start": 199,
+                "end": 199
+              },
+              {
+                "start": 204,
+                "end": 204
+              },
+              {
+                "start": 209,
+                "end": 209
+              },
+              {
+                "start": 214,
+                "end": 214
+              },
+              {
+                "start": 219,
+                "end": 219
+              },
+              {
+                "start": 224,
+                "end": 224
+              },
+              {
+                "start": 229,
+                "end": 229
+              },
+              {
+                "start": 234,
+                "end": 234
+              },
+              {
+                "start": 239,
+                "end": 239
+              },
+              {
+                "start": 244,
+                "end": 244
+              },
+              {
+                "start": 249,
+                "end": 249
+              },
+              {
+                "start": 254,
+                "end": 254
+              },
+              {
+                "start": 260,
+                "end": 260
+              },
+              {
+                "start": 265,
+                "end": 265
+              },
+              {
+                "start": 270,
+                "end": 270
+              },
+              {
+                "start": 275,
+                "end": 275
+              },
+              {
+                "start": 280,
+                "end": 280
+              },
+              {
+                "start": 285,
+                "end": 285
+              },
+              {
+                "start": 290,
+                "end": 290
+              },
+              {
+                "start": 295,
+                "end": 295
+              },
+              {
+                "start": 300,
+                "end": 300
+              },
+              {
+                "start": 305,
+                "end": 305
+              },
+              {
+                "start": 310,
+                "end": 310
+              },
+              {
+                "start": 315,
+                "end": 315
+              },
+              {
+                "start": 320,
+                "end": 320
+              },
+              {
+                "start": 325,
+                "end": 325
+              },
+              {
+                "start": 330,
+                "end": 330
+              },
+              {
+                "start": 335,
+                "end": 335
+              },
+              {
+                "start": 340,
+                "end": 340
+              },
+              {
+                "start": 345,
+                "end": 345
+              },
+              {
+                "start": 350,
+                "end": 350
+              },
+              {
+                "start": 356,
+                "end": 356
+              },
+              {
+                "start": 361,
+                "end": 361
+              },
+              {
+                "start": 366,
+                "end": 366
+              },
+              {
+                "start": 371,
+                "end": 371
+              }
+            ],
+            "clap_bench/Cargo.toml": [
+              {
+                "start": 14,
+                "end": 14
+              }
+            ],
+            "clap_complete/Cargo.toml": [
+              {
+                "start": 43,
+                "end": 43
+              },
+              {
+                "start": 46,
+                "end": 46
+              },
+              {
+                "start": 52,
+                "end": 52
+              },
+              {
+                "start": 54,
+                "end": 55
+              },
+              {
+                "start": 59,
+                "end": 59
+              },
+              {
+                "start": 61,
+                "end": 61
+              }
+            ],
+            "clap_complete_fig/Cargo.toml": [
+              {
+                "start": 42,
+                "end": 42
+              },
+              {
+                "start": 46,
+                "end": 47
+              }
+            ],
+            "clap_derive/Cargo.toml": [
+              {
+                "start": 43,
+                "end": 43
+              },
+              {
+                "start": 49,
+                "end": 49
+              }
+            ],
+            "clap_lex/Cargo.toml": [
+              {
+                "start": 41,
+                "end": 41
+              }
+            ],
+            "clap_mangen/Cargo.toml": [
+              {
+                "start": 44,
+                "end": 44
+              },
+              {
+                "start": 47,
+                "end": 48
+              },
+              {
+                "start": 50,
+                "end": 50
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/lib.rs"
+          ],
+          "spans": {
+            "src/lib.rs": [
+              {
+                "start": 100,
+                "end": 104
+              },
+              {
+                "start": 106,
+                "end": 106
+              },
+              {
+                "start": 110,
+                "end": 110
+              },
+              {
+                "start": 119,
+                "end": 119
+              },
+              {
+                "start": 123,
+                "end": 123
+              },
+              {
+                "start": 140,
+                "end": 140
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "Cargo.toml"
+          ],
+          "spans": {
+            "Cargo.toml": [
+              {
+                "start": 56,
+                "end": 78
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/usage.rs"
+          ],
+          "spans": {
+            "src/output/usage.rs": [
+              {
+                "start": 28,
+                "end": 60
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "Cargo.toml",
+        "src/builder/command.rs",
+        "src/builder/mod.rs",
+        "src/builder/styled_str.rs",
+        "src/error/format.rs",
+        "src/error/mod.rs",
+        "src/macros.rs",
+        "src/output/fmt.rs",
+        "src/output/help.rs",
+        "src/output/mod.rs",
+        "src/output/usage.rs",
+        "src/parser/parser.rs",
+        "src/parser/validator.rs",
+        "src/util/color.rs"
+      ],
+      "pred_spans": {
+        "Cargo.toml": [
+          {
+            "start": 56,
+            "end": 75
+          }
+        ],
+        "src/builder/command.rs": [
+          {
+            "start": 11,
+            "end": 29
+          },
+          {
+            "start": 711,
+            "end": 812
+          },
+          {
+            "start": 814,
+            "end": 883
+          },
+          {
+            "start": 4482,
+            "end": 4513
+          }
+        ],
+        "src/builder/mod.rs": [
+          {
+            "start": 25,
+            "end": 37
+          }
+        ],
+        "src/builder/styled_str.rs": [
+          {
+            "start": 1,
+            "end": 57
+          },
+          {
+            "start": 166,
+            "end": 231
+          },
+          {
+            "start": 281,
+            "end": 315
+          }
+        ],
+        "src/error/format.rs": [
+          {
+            "start": 15,
+            "end": 76
+          }
+        ],
+        "src/error/mod.rs": [
+          {
+            "start": 19,
+            "end": 26
+          },
+          {
+            "start": 141,
+            "end": 196
+          },
+          {
+            "start": 638,
+            "end": 717
+          }
+        ],
+        "src/macros.rs": [
+          {
+            "start": 646,
+            "end": 658
+          }
+        ],
+        "src/output/fmt.rs": [
+          {
+            "start": 1,
+            "end": 91
+          }
+        ],
+        "src/output/help.rs": [
+          {
+            "start": 1,
+            "end": 43
+          }
+        ],
+        "src/output/mod.rs": [
+          {
+            "start": 1,
+            "end": 23
+          }
+        ],
+        "src/output/usage.rs": [
+          {
+            "start": 34,
+            "end": 60
+          }
+        ],
+        "src/parser/parser.rs": [
+          {
+            "start": 1551,
+            "end": 1559
+          }
+        ],
+        "src/parser/validator.rs": [
+          {
+            "start": 55,
+            "end": 64
+          }
+        ],
+        "src/util/color.rs": [
+          {
+            "start": 1,
+            "end": 21
+          }
+        ]
+      }
+    }
+  }
+]

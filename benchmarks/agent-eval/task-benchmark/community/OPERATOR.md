@@ -104,6 +104,22 @@ to that attempt and removed with the container. Validate the standard scoped
 Rust commands with this setting before suite admission; preserve source, patch,
 index measurements, command output and grading evidence.
 
+The reporting-compatible fixed24 repeat follows the [repeat recipe](reporting/fixed24-repeat-recipe-v1/RECIPE.md):
+Context144 serial, SWE pilot46 serial plus50 V2 waves, and SWE confirmation48
+V3 rolling. Create new campaigns, freezes, sessions and evidence roots, and
+obtain the independent owner approvals required by that protocol.
+
+The [fixed24 report](results/fixed24-20261019/REPORT.zh-CN.md) records the delivered
+results. The [numeric verification recipe](reporting/README.md) checks the
+[committed numeric bundle](results/fixed24-20261019/numeric/manifest.json) against
+its independently retained manifest hash. Follow the
+[quality replay recipe](reporting/quality-replay-sibling-infra-v1/recipe.md) for the
+[quality sibling](results/fixed24-20261019/quality/manifest.json).
+
+Read the [representative validation status](results/fixed24-20261019/replay/README.md)
+before SWE replay: the selected local image did not match the pinned manifest,
+and descriptor-ID image stores are not supported by the current checker.
+
 ## Export, acquire sources and build private Context baselines
 
 First use `export-fixed-selection.py` as described in README. Copy

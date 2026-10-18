@@ -1,0 +1,1301 @@
+[
+  {
+    "instance_id": "sveltejs__svelte-3394",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "798bb3f0da7f547eef007718b14a18d1c0d94e2f",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "src/compiler/compile/Component.ts",
+            "src/compiler/compile/nodes/shared/Expression.ts",
+            "src/compiler/compile/render_dom/index.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/index.ts",
+            "src/compiler/compile/render_dom/wrappers/InlineComponent/index.ts",
+            "src/compiler/compile/render_dom/wrappers/Window.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/bind_this.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 811,
+                "end": 811
+              },
+              {
+                "start": 815,
+                "end": 815
+              },
+              {
+                "start": 827,
+                "end": 827
+              },
+              {
+                "start": 830,
+                "end": 830
+              },
+              {
+                "start": 842,
+                "end": 842
+              }
+            ],
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 348,
+                "end": 348
+              },
+              {
+                "start": 433,
+                "end": 433
+              },
+              {
+                "start": 461,
+                "end": 461
+              }
+            ],
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 83,
+                "end": 83
+              },
+              {
+                "start": 85,
+                "end": 85
+              },
+              {
+                "start": 88,
+                "end": 88
+              },
+              {
+                "start": 193,
+                "end": 193
+              },
+              {
+                "start": 211,
+                "end": 211
+              },
+              {
+                "start": 225,
+                "end": 225
+              },
+              {
+                "start": 235,
+                "end": 235
+              },
+              {
+                "start": 264,
+                "end": 264
+              },
+              {
+                "start": 284,
+                "end": 284
+              },
+              {
+                "start": 346,
+                "end": 346
+              },
+              {
+                "start": 393,
+                "end": 393
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Element/index.ts": [
+              {
+                "start": 484,
+                "end": 484
+              },
+              {
+                "start": 697,
+                "end": 697
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/InlineComponent/index.ts": [
+              {
+                "start": 321,
+                "end": 321
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Window.ts": [
+              {
+                "start": 129,
+                "end": 129
+              },
+              {
+                "start": 173,
+                "end": 173
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/shared/bind_this.ts": [
+              {
+                "start": 27,
+                "end": 27
+              },
+              {
+                "start": 34,
+                "end": 34
+              },
+              {
+                "start": 38,
+                "end": 38
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts",
+            "src/compiler/compile/create_module.ts",
+            "src/compiler/compile/css/Selector.ts",
+            "src/compiler/compile/css/Stylesheet.ts",
+            "src/compiler/compile/css/gather_possible_values.ts",
+            "src/compiler/compile/index.ts",
+            "src/compiler/compile/nodes/Action.ts",
+            "src/compiler/compile/nodes/Animation.ts",
+            "src/compiler/compile/nodes/Attribute.ts",
+            "src/compiler/compile/nodes/AwaitBlock.ts",
+            "src/compiler/compile/nodes/Binding.ts",
+            "src/compiler/compile/nodes/Body.ts",
+            "src/compiler/compile/nodes/CatchBlock.ts",
+            "src/compiler/compile/nodes/Class.ts",
+            "src/compiler/compile/nodes/Comment.ts",
+            "src/compiler/compile/nodes/DebugTag.ts",
+            "src/compiler/compile/nodes/EachBlock.ts",
+            "src/compiler/compile/nodes/Element.ts",
+            "src/compiler/compile/nodes/ElseBlock.ts",
+            "src/compiler/compile/nodes/EventHandler.ts",
+            "src/compiler/compile/nodes/Fragment.ts",
+            "src/compiler/compile/nodes/Head.ts",
+            "src/compiler/compile/nodes/IfBlock.ts",
+            "src/compiler/compile/nodes/InlineComponent.ts",
+            "src/compiler/compile/nodes/Let.ts",
+            "src/compiler/compile/nodes/MustacheTag.ts",
+            "src/compiler/compile/nodes/Options.ts",
+            "src/compiler/compile/nodes/PendingBlock.ts",
+            "src/compiler/compile/nodes/RawMustacheTag.ts",
+            "src/compiler/compile/nodes/Slot.ts",
+            "src/compiler/compile/nodes/Text.ts",
+            "src/compiler/compile/nodes/ThenBlock.ts",
+            "src/compiler/compile/nodes/Title.ts",
+            "src/compiler/compile/nodes/Transition.ts",
+            "src/compiler/compile/nodes/Window.ts",
+            "src/compiler/compile/nodes/interfaces.ts",
+            "src/compiler/compile/nodes/shared/AbstractBlock.ts",
+            "src/compiler/compile/nodes/shared/Expression.ts",
+            "src/compiler/compile/nodes/shared/Node.ts",
+            "src/compiler/compile/nodes/shared/Tag.ts",
+            "src/compiler/compile/nodes/shared/TemplateScope.ts",
+            "src/compiler/compile/nodes/shared/map_children.ts",
+            "src/compiler/compile/render_dom/Block.ts",
+            "src/compiler/compile/render_dom/Renderer.ts",
+            "src/compiler/compile/render_dom/index.ts",
+            "src/compiler/compile/render_dom/wrappers/AwaitBlock.ts",
+            "src/compiler/compile/render_dom/wrappers/Body.ts",
+            "src/compiler/compile/render_dom/wrappers/DebugTag.ts",
+            "src/compiler/compile/render_dom/wrappers/EachBlock.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/Attribute.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/Binding.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/StyleAttribute.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/fix_attribute_casing.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/index.ts",
+            "src/compiler/compile/render_dom/wrappers/Fragment.ts",
+            "src/compiler/compile/render_dom/wrappers/Head.ts",
+            "src/compiler/compile/render_dom/wrappers/IfBlock.ts",
+            "src/compiler/compile/render_dom/wrappers/InlineComponent/index.ts",
+            "src/compiler/compile/render_dom/wrappers/MustacheTag.ts",
+            "src/compiler/compile/render_dom/wrappers/RawMustacheTag.ts",
+            "src/compiler/compile/render_dom/wrappers/Slot.ts",
+            "src/compiler/compile/render_dom/wrappers/Text.ts",
+            "src/compiler/compile/render_dom/wrappers/Title.ts",
+            "src/compiler/compile/render_dom/wrappers/Window.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/Tag.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/Wrapper.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/add_actions.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/add_event_handlers.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/bind_this.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/create_debugging_comment.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/get_context_merger.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts",
+            "src/compiler/compile/render_ssr/Renderer.ts",
+            "src/compiler/compile/render_ssr/handlers/AwaitBlock.ts",
+            "src/compiler/compile/render_ssr/handlers/Comment.ts",
+            "src/compiler/compile/render_ssr/handlers/DebugTag.ts",
+            "src/compiler/compile/render_ssr/handlers/EachBlock.ts",
+            "src/compiler/compile/render_ssr/handlers/Element.ts",
+            "src/compiler/compile/render_ssr/handlers/Head.ts",
+            "src/compiler/compile/render_ssr/handlers/HtmlTag.ts",
+            "src/compiler/compile/render_ssr/handlers/IfBlock.ts",
+            "src/compiler/compile/render_ssr/handlers/InlineComponent.ts",
+            "src/compiler/compile/render_ssr/handlers/Slot.ts",
+            "src/compiler/compile/render_ssr/handlers/Tag.ts",
+            "src/compiler/compile/render_ssr/handlers/Text.ts",
+            "src/compiler/compile/render_ssr/handlers/Title.ts",
+            "src/compiler/compile/render_ssr/handlers/shared/get_slot_scope.ts",
+            "src/compiler/compile/render_ssr/index.ts",
+            "src/compiler/compile/utils/CodeBuilder.ts",
+            "src/compiler/compile/utils/__test__.ts",
+            "src/compiler/compile/utils/add_to_set.ts",
+            "src/compiler/compile/utils/deindent.ts",
+            "src/compiler/compile/utils/flatten_reference.ts",
+            "src/compiler/compile/utils/get_name_from_filename.ts",
+            "src/compiler/compile/utils/get_object.ts",
+            "src/compiler/compile/utils/get_slot_data.ts",
+            "src/compiler/compile/utils/scope.ts",
+            "src/compiler/compile/utils/snip.ts",
+            "src/compiler/compile/utils/stringify.ts",
+            "src/compiler/compile/utils/stringify_attribute.ts",
+            "src/compiler/compile/utils/stringify_props.ts",
+            "src/compiler/compile/utils/tail.ts",
+            "src/compiler/compile/utils/unwrap_parens.ts"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "src/compiler/compile/nodes/shared/Expression.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 300,
+                "end": 480
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/index.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 170,
+                "end": 250
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 805,
+                "end": 845
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/runtime/internal/Component.ts",
+            "src/runtime/internal/utils.ts",
+            "src/runtime/store/index.ts"
+          ],
+          "spans": {
+            "src/runtime/internal/Component.ts": [
+              {
+                "start": 64,
+                "end": 64
+              },
+              {
+                "start": 107,
+                "end": 107
+              }
+            ],
+            "src/runtime/internal/utils.ts": [
+              {
+                "start": 37,
+                "end": 37
+              }
+            ],
+            "src/runtime/store/index.ts": [
+              {
+                "start": 1,
+                "end": 1
+              },
+              {
+                "start": 69,
+                "end": 69
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/index.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 140,
+                "end": 170
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/runtime/internal/utils.ts"
+          ],
+          "spans": {
+            "src/runtime/internal/utils.ts": [
+              {
+                "start": 30,
+                "end": 50
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/runtime/internal/Component.ts"
+          ],
+          "spans": {
+            "src/runtime/internal/Component.ts": [
+              {
+                "start": 60,
+                "end": 120
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts",
+            "src/compiler/compile/index.ts",
+            "src/compiler/compile/render_dom/index.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 31,
+                "end": 31
+              },
+              {
+                "start": 1293,
+                "end": 1293
+              },
+              {
+                "start": 1372,
+                "end": 1372
+              },
+              {
+                "start": 1396,
+                "end": 1396
+              }
+            ],
+            "src/compiler/compile/index.ts": [
+              {
+                "start": 21,
+                "end": 21
+              }
+            ],
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 96,
+                "end": 96
+              },
+              {
+                "start": 454,
+                "end": 454
+              },
+              {
+                "start": 493,
+                "end": 493
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/nodes/shared/Expression.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 1,
+                "end": 140
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/nodes/shared/Expression.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 140,
+                "end": 200
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/utils/flatten_reference.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/utils/flatten_reference.ts": [
+              {
+                "start": 1,
+                "end": 31
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/utils/get_object.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/utils/get_object.ts": [
+              {
+                "start": 1,
+                "end": 8
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/utils/nodes_match.ts"
+          ],
+          "spans": {
+            "src/compiler/utils/nodes_match.ts": [
+              {
+                "start": 1,
+                "end": 1
+              },
+              {
+                "start": 8,
+                "end": 8
+              },
+              {
+                "start": 23,
+                "end": 23
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts",
+            "src/compiler/compile/nodes/Binding.ts",
+            "src/compiler/compile/nodes/shared/Expression.ts",
+            "src/compiler/compile/render_dom/index.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/Binding.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts",
+            "src/compiler/compile/utils/flatten_reference.ts",
+            "src/compiler/interfaces.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 208,
+                "end": 208
+              },
+              {
+                "start": 368,
+                "end": 368
+              },
+              {
+                "start": 699,
+                "end": 699
+              },
+              {
+                "start": 760,
+                "end": 760
+              },
+              {
+                "start": 1161,
+                "end": 1161
+              },
+              {
+                "start": 1164,
+                "end": 1164
+              }
+            ],
+            "src/compiler/compile/nodes/Binding.ts": [
+              {
+                "start": 53,
+                "end": 53
+              },
+              {
+                "start": 63,
+                "end": 63
+              }
+            ],
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 186,
+                "end": 186
+              },
+              {
+                "start": 192,
+                "end": 192
+              }
+            ],
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 368,
+                "end": 368
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Element/Binding.ts": [
+              {
+                "start": 216,
+                "end": 216
+              },
+              {
+                "start": 218,
+                "end": 218
+              },
+              {
+                "start": 220,
+                "end": 220
+              },
+              {
+                "start": 223,
+                "end": 223
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "src/compiler/compile/utils/flatten_reference.ts": [
+              {
+                "start": 30,
+                "end": 30
+              }
+            ],
+            "src/compiler/interfaces.ts": [
+              {
+                "start": 125,
+                "end": 125
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts": [
+              {
+                "start": 1,
+                "end": 10
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 735,
+                "end": 775
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/index.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 355,
+                "end": 380
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/index.ts",
+            "src/compiler/compile/render_dom/wrappers/DebugTag.ts",
+            "src/compiler/compile/render_dom/wrappers/EachBlock.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/Attribute.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/Binding.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/StyleAttribute.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/index.ts",
+            "src/compiler/compile/render_dom/wrappers/InlineComponent/index.ts",
+            "src/compiler/compile/render_dom/wrappers/Slot.ts",
+            "src/compiler/compile/render_dom/wrappers/Title.ts",
+            "src/compiler/compile/render_dom/wrappers/Window.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/Tag.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/add_actions.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 370,
+                "end": 370
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/DebugTag.ts": [
+              {
+                "start": 51,
+                "end": 51
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/EachBlock.ts": [
+              {
+                "start": 451,
+                "end": 451
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Element/Attribute.ts": [
+              {
+                "start": 155,
+                "end": 155
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Element/Binding.ts": [
+              {
+                "start": 102,
+                "end": 102
+              },
+              {
+                "start": 105,
+                "end": 105
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Element/StyleAttribute.ts": [
+              {
+                "start": 49,
+                "end": 49
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Element/index.ts": [
+              {
+                "start": 580,
+                "end": 580
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/InlineComponent/index.ts": [
+              {
+                "start": 192,
+                "end": 192
+              },
+              {
+                "start": 220,
+                "end": 220
+              },
+              {
+                "start": 235,
+                "end": 235
+              },
+              {
+                "start": 245,
+                "end": 245
+              },
+              {
+                "start": 275,
+                "end": 275
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Slot.ts": [
+              {
+                "start": 171,
+                "end": 171
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Title.ts": [
+              {
+                "start": 79,
+                "end": 79
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Window.ts": [
+              {
+                "start": 145,
+                "end": 145
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/shared/Tag.ts": [
+              {
+                "start": 32,
+                "end": 32
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/shared/add_actions.ts": [
+              {
+                "start": 35,
+                "end": 35
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/wrappers/EachBlock.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/wrappers/EachBlock.ts": [
+              {
+                "start": 435,
+                "end": 470
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 1150,
+                "end": 1180
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 99,
+                "end": 99
+              },
+              {
+                "start": 537,
+                "end": 537
+              },
+              {
+                "start": 554,
+                "end": 554
+              },
+              {
+                "start": 604,
+                "end": 604
+              },
+              {
+                "start": 665,
+                "end": 665
+              },
+              {
+                "start": 996,
+                "end": 996
+              },
+              {
+                "start": 998,
+                "end": 998
+              },
+              {
+                "start": 1004,
+                "end": 1004
+              },
+              {
+                "start": 1018,
+                "end": 1018
+              },
+              {
+                "start": 1021,
+                "end": 1021
+              },
+              {
+                "start": 1024,
+                "end": 1024
+              },
+              {
+                "start": 1041,
+                "end": 1041
+              },
+              {
+                "start": 1050,
+                "end": 1050
+              },
+              {
+                "start": 1057,
+                "end": 1057
+              },
+              {
+                "start": 1068,
+                "end": 1068
+              },
+              {
+                "start": 1070,
+                "end": 1070
+              },
+              {
+                "start": 1075,
+                "end": 1075
+              },
+              {
+                "start": 1081,
+                "end": 1081
+              },
+              {
+                "start": 1083,
+                "end": 1085
+              },
+              {
+                "start": 1090,
+                "end": 1090
+              },
+              {
+                "start": 1108,
+                "end": 1108
+              },
+              {
+                "start": 1112,
+                "end": 1112
+              },
+              {
+                "start": 1114,
+                "end": 1115
+              },
+              {
+                "start": 1245,
+                "end": 1245
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 994,
+                "end": 1030
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/nodes/Attribute.ts",
+            "src/compiler/compile/nodes/shared/Expression.ts",
+            "src/compiler/compile/render_dom/wrappers/AwaitBlock.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/StyleAttribute.ts",
+            "src/compiler/compile/render_dom/wrappers/InlineComponent/index.ts",
+            "src/compiler/compile/render_dom/wrappers/Slot.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/Tag.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/add_actions.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/nodes/Attribute.ts": [
+              {
+                "start": 78,
+                "end": 78
+              },
+              {
+                "start": 83,
+                "end": 83
+              }
+            ],
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 210,
+                "end": 210
+              },
+              {
+                "start": 216,
+                "end": 216
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/AwaitBlock.ts": [
+              {
+                "start": 185,
+                "end": 185
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Element/StyleAttribute.ts": [
+              {
+                "start": 26,
+                "end": 26
+              },
+              {
+                "start": 176,
+                "end": 176
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/InlineComponent/index.ts": [
+              {
+                "start": 165,
+                "end": 165
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Slot.ts": [
+              {
+                "start": 86,
+                "end": 86
+              },
+              {
+                "start": 89,
+                "end": 89
+              },
+              {
+                "start": 92,
+                "end": 93
+              },
+              {
+                "start": 164,
+                "end": 164
+              },
+              {
+                "start": 168,
+                "end": 168
+              },
+              {
+                "start": 171,
+                "end": 172
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/shared/Tag.ts": [
+              {
+                "start": 21,
+                "end": 21
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/shared/add_actions.ts": [
+              {
+                "start": 18,
+                "end": 18
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/nodes/shared/Expression.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 198,
+                "end": 225
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/wrappers/shared/Tag.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/wrappers/shared/Tag.ts": [
+              {
+                "start": 15,
+                "end": 40
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "test/runtime/samples/transition-js-events-in-out/_config.js",
+            "test/runtime/samples/transition-js-events/_config.js"
+          ],
+          "spans": {
+            "test/runtime/samples/transition-js-events-in-out/_config.js": [
+              {
+                "start": 26,
+                "end": 26
+              },
+              {
+                "start": 51,
+                "end": 51
+              },
+              {
+                "start": 60,
+                "end": 60
+              }
+            ],
+            "test/runtime/samples/transition-js-events/_config.js": [
+              {
+                "start": 25,
+                "end": 25
+              },
+              {
+                "start": 50,
+                "end": 50
+              },
+              {
+                "start": 59,
+                "end": 59
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/index.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 209,
+                "end": 210
+              },
+              {
+                "start": 261,
+                "end": 261
+              },
+              {
+                "start": 266,
+                "end": 266
+              },
+              {
+                "start": 298,
+                "end": 298
+              },
+              {
+                "start": 352,
+                "end": 352
+              },
+              {
+                "start": 392,
+                "end": 392
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/index.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 290,
+                "end": 356
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 174,
+                "end": 175
+              },
+              {
+                "start": 177,
+                "end": 177
+              },
+              {
+                "start": 180,
+                "end": 180
+              },
+              {
+                "start": 623,
+                "end": 623
+              },
+              {
+                "start": 715,
+                "end": 715
+              },
+              {
+                "start": 724,
+                "end": 725
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 700,
+                "end": 734
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 1030,
+                "end": 1125
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "test/runtime/samples/array-literal-spread-deopt/main.svelte",
+            "test/runtime/samples/binding-input-checkbox-deep-contextual-b/main.svelte",
+            "test/runtime/samples/binding-input-checkbox-deep-contextual/main.svelte",
+            "test/runtime/samples/binding-input-text-deep-computed-dynamic/main.svelte",
+            "test/runtime/samples/binding-input-text-deep-computed/main.svelte",
+            "test/runtime/samples/binding-input-text-deep-contextual-computed-dynamic/main.svelte",
+            "test/runtime/samples/binding-input-text-deep-contextual/main.svelte",
+            "test/runtime/samples/binding-input-text-deep/main.svelte",
+            "test/runtime/samples/binding-store-deep/main.svelte",
+            "test/runtime/samples/component-binding-deep-b/main.svelte",
+            "test/runtime/samples/component-binding-deep/main.svelte",
+            "test/runtime/samples/component-binding-each-nested/main.svelte",
+            "test/runtime/samples/component-binding-each-object/main.svelte",
+            "test/runtime/samples/component-binding-nested/main.svelte",
+            "test/runtime/samples/component-nested-deep/main.svelte",
+            "test/runtime/samples/component-nested-deeper/main.svelte",
+            "test/runtime/samples/component-slot-nested-component/main.svelte",
+            "test/runtime/samples/component-slot-nested-in-element/main.svelte",
+            "test/runtime/samples/component-slot-nested/main.svelte",
+            "test/runtime/samples/component-template-inline-mutation/main.svelte",
+            "test/runtime/samples/component-yield-nested-if/main.svelte",
+            "test/runtime/samples/destructuring-assignment-array/main.svelte",
+            "test/runtime/samples/each-block-array-literal/main.svelte",
+            "test/runtime/samples/each-block-destructured-array-sparse/main.svelte",
+            "test/runtime/samples/each-block-destructured-array/main.svelte",
+            "test/runtime/samples/each-block-destructured-object-binding/main.svelte",
+            "test/runtime/samples/each-block-destructured-object-rest/main.svelte",
+            "test/runtime/samples/each-block-destructured-object/main.svelte",
+            "test/runtime/samples/each-block-keyed-nested/main.svelte",
+            "test/runtime/samples/each-block-keyed-object-identity/main.svelte",
+            "test/runtime/samples/each-blocks-nested-b/main.svelte",
+            "test/runtime/samples/each-blocks-nested/main.svelte",
+            "test/runtime/samples/if-block-outro-nested-else/main.svelte",
+            "test/runtime/samples/immutable-nested/main.svelte",
+            "test/runtime/samples/mutation-tracking-across-sibling-scopes/main.svelte",
+            "test/runtime/samples/names-deconflicted-nested/main.svelte",
+            "test/runtime/samples/nested-transition-detach-each/main.svelte",
+            "test/runtime/samples/nested-transition-detach-if-false/main.svelte",
+            "test/runtime/samples/nested-transition-if-block-not-remounted/main.svelte",
+            "test/runtime/samples/ondestroy-deep/main.svelte",
+            "test/runtime/samples/onmount-fires-when-ready-nested/main.svelte",
+            "test/runtime/samples/reactive-value-mutate-const/main.svelte",
+            "test/runtime/samples/reactive-value-mutate/main.svelte",
+            "test/runtime/samples/select-bind-array/main.svelte",
+            "test/runtime/samples/select-bind-in-array/main.svelte",
+            "test/runtime/samples/select-one-way-bind-object/main.svelte",
+            "test/runtime/samples/svg-foreignobject-namespace/main.svelte",
+            "test/runtime/samples/transition-js-intro-skipped-by-default-nested/main.svelte",
+            "test/runtime/samples/transition-js-local-nested-await/main.svelte",
+            "test/runtime/samples/transition-js-local-nested-component/main.svelte",
+            "test/runtime/samples/transition-js-local-nested-each-keyed/main.svelte",
+            "test/runtime/samples/transition-js-local-nested-each/main.svelte",
+            "test/runtime/samples/transition-js-local-nested-if/main.svelte",
+            "test/runtime/samples/transition-js-nested-await/main.svelte",
+            "test/runtime/samples/transition-js-nested-component/main.svelte",
+            "test/runtime/samples/transition-js-nested-each-delete/main.svelte",
+            "test/runtime/samples/transition-js-nested-each-keyed-2/main.svelte",
+            "test/runtime/samples/transition-js-nested-each-keyed/main.svelte",
+            "test/runtime/samples/transition-js-nested-each/main.svelte",
+            "test/runtime/samples/transition-js-nested-if/main.svelte",
+            "test/runtime/samples/transition-js-nested-intro/main.svelte"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/index.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 256,
+                "end": 282
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 845,
+                "end": 880
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "src/compiler/compile/Component.ts",
+        "src/compiler/compile/nodes/shared/Expression.ts",
+        "src/compiler/compile/render_dom/index.ts",
+        "src/runtime/internal/utils.ts"
+      ],
+      "pred_spans": {
+        "src/compiler/compile/Component.ts": [
+          {
+            "start": 746,
+            "end": 762
+          },
+          {
+            "start": 811,
+            "end": 843
+          },
+          {
+            "start": 1161,
+            "end": 1167
+          }
+        ],
+        "src/compiler/compile/nodes/shared/Expression.ts": [
+          {
+            "start": 169,
+            "end": 195
+          }
+        ],
+        "src/compiler/compile/render_dom/index.ts": [
+          {
+            "start": 175,
+            "end": 193
+          },
+          {
+            "start": 364,
+            "end": 370
+          }
+        ],
+        "src/runtime/internal/utils.ts": [
+          {
+            "start": 37,
+            "end": 39
+          }
+        ]
+      }
+    }
+  }
+]

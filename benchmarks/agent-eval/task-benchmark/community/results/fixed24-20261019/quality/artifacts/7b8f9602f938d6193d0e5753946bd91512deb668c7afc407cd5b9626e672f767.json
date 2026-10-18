@@ -1,0 +1,275 @@
+[
+  {
+    "instance_id": "cli__cli-3608",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "ffc897e622bf3bfe556f07605804184c36f18e71",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "api/queries_repo.go",
+            "internal/ghrepo/repo.go",
+            "pkg/cmd/repo/fork/fork.go",
+            "pkg/iostreams/iostreams.go"
+          ],
+          "spans": {
+            "api/queries_repo.go": [
+              {
+                "start": 15,
+                "end": 49
+              },
+              {
+                "start": 301,
+                "end": 338
+              }
+            ],
+            "internal/ghrepo/repo.go": [
+              {
+                "start": 1,
+                "end": 138
+              }
+            ],
+            "pkg/cmd/repo/fork/fork.go": [
+              {
+                "start": 22,
+                "end": 308
+              }
+            ],
+            "pkg/iostreams/iostreams.go": [
+              {
+                "start": 96,
+                "end": 140
+              },
+              {
+                "start": 194,
+                "end": 227
+              },
+              {
+                "start": 251,
+                "end": 259
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "api/client.go",
+            "api/queries_repo.go",
+            "api/queries_user.go",
+            "pkg/cmd/repo/create/http.go",
+            "pkg/cmd/repo/list/http.go",
+            "pkg/cmd/repo/list/list.go"
+          ],
+          "spans": {
+            "api/client.go": [
+              {
+                "start": 35,
+                "end": 44
+              },
+              {
+                "start": 107,
+                "end": 115
+              },
+              {
+                "start": 166,
+                "end": 200
+              }
+            ],
+            "api/queries_repo.go": [
+              {
+                "start": 15,
+                "end": 137
+              },
+              {
+                "start": 196,
+                "end": 202
+              },
+              {
+                "start": 292,
+                "end": 386
+              },
+              {
+                "start": 931,
+                "end": 950
+              }
+            ],
+            "api/queries_user.go": [
+              {
+                "start": 1,
+                "end": 27
+              }
+            ],
+            "pkg/cmd/repo/create/http.go": [
+              {
+                "start": 1,
+                "end": 145
+              }
+            ],
+            "pkg/cmd/repo/list/http.go": [
+              {
+                "start": 1,
+                "end": 235
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/repo/create/create_test.go",
+            "pkg/cmd/repo/create/http.go"
+          ],
+          "spans": {
+            "pkg/cmd/repo/create/create_test.go": [
+              {
+                "start": 274,
+                "end": 274
+              },
+              {
+                "start": 335,
+                "end": 335
+              }
+            ],
+            "pkg/cmd/repo/create/http.go": [
+              {
+                "start": 38,
+                "end": 38
+              },
+              {
+                "start": 45,
+                "end": 45
+              },
+              {
+                "start": 127,
+                "end": 127
+              },
+              {
+                "start": 136,
+                "end": 136
+              },
+              {
+                "start": 139,
+                "end": 139
+              },
+              {
+                "start": 143,
+                "end": 144
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "api/queries_repo.go",
+            "pkg/cmd/pr/create/create.go",
+            "pkg/cmd/repo/fork/fork.go"
+          ],
+          "spans": {
+            "api/queries_repo.go": [
+              {
+                "start": 314,
+                "end": 315
+              }
+            ],
+            "pkg/cmd/pr/create/create.go": [
+              {
+                "start": 667,
+                "end": 667
+              },
+              {
+                "start": 677,
+                "end": 677
+              },
+              {
+                "start": 682,
+                "end": 682
+              },
+              {
+                "start": 727,
+                "end": 727
+              }
+            ],
+            "pkg/cmd/repo/fork/fork.go": [
+              {
+                "start": 172,
+                "end": 172
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/pr/create/create.go"
+          ],
+          "spans": {
+            "pkg/cmd/pr/create/create.go": [
+              {
+                "start": 660,
+                "end": 690
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/repo/fork/fork.go"
+          ],
+          "spans": {
+            "pkg/cmd/repo/fork/fork.go": [
+              {
+                "start": 1,
+                "end": 24
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "api/queries_repo.go"
+          ],
+          "spans": {
+            "api/queries_repo.go": [
+              {
+                "start": 1,
+                "end": 15
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "api/queries_repo.go",
+        "pkg/cmd/pr/create/create.go",
+        "pkg/cmd/repo/fork/fork.go"
+      ],
+      "pred_spans": {
+        "api/queries_repo.go": [
+          {
+            "start": 314,
+            "end": 335
+          }
+        ],
+        "pkg/cmd/pr/create/create.go": [
+          {
+            "start": 672,
+            "end": 683
+          }
+        ],
+        "pkg/cmd/repo/fork/fork.go": [
+          {
+            "start": 25,
+            "end": 40
+          },
+          {
+            "start": 110,
+            "end": 114
+          },
+          {
+            "start": 169,
+            "end": 177
+          }
+        ]
+      }
+    }
+  }
+]

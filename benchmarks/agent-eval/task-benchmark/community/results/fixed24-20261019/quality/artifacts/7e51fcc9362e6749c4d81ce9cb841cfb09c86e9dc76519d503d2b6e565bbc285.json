@@ -1,0 +1,796 @@
+[
+  {
+    "instance_id": "sveltejs__svelte-12509",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "9cc5a45cb1135b68b7ee0d39d43d820bcf0e8545",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "packages/svelte/src/compiler/errors.js",
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js",
+            "packages/svelte/src/compiler/phases/3-transform/types.d.ts",
+            "packages/svelte/src/compiler/types/css.d.ts",
+            "packages/svelte/src/compiler/types/index.d.ts",
+            "packages/svelte/src/compiler/validate-options.js",
+            "sites/svelte-5-preview/src/lib/workers/bundler/plugins/replace.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/errors.js": [
+              {
+                "start": 493,
+                "end": 510
+              },
+              {
+                "start": 610,
+                "end": 618
+              },
+              {
+                "start": 638,
+                "end": 646
+              },
+              {
+                "start": 963,
+                "end": 971
+              },
+              {
+                "start": 1011,
+                "end": 1019
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js": [
+              {
+                "start": 358,
+                "end": 432
+              }
+            ],
+            "packages/svelte/src/compiler/phases/3-transform/types.d.ts": [
+              {
+                "start": 1,
+                "end": 10
+              }
+            ],
+            "packages/svelte/src/compiler/types/css.d.ts": [
+              {
+                "start": 1,
+                "end": 155
+              }
+            ],
+            "packages/svelte/src/compiler/types/index.d.ts": [
+              {
+                "start": 54,
+                "end": 65
+              },
+              {
+                "start": 110,
+                "end": 116
+              },
+              {
+                "start": 184,
+                "end": 250
+              }
+            ],
+            "packages/svelte/src/compiler/validate-options.js": [
+              {
+                "start": 8,
+                "end": 47
+              },
+              {
+                "start": 223,
+                "end": 323
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/svelte/messages/compile-errors/style.md",
+            "packages/svelte/src/compiler/errors.js",
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-combinator/_config.js",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-declaration/_config.js",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/_config.js",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-modifier/_config.js",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-multiple/_config.js",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-3/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-4/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-5/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-6/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-2/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-3/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-4/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-5/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-6/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-list/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector/errors.json"
+          ],
+          "spans": {
+            "packages/svelte/messages/compile-errors/style.md": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 13,
+                "end": 13
+              },
+              {
+                "start": 17,
+                "end": 17
+              },
+              {
+                "start": 21,
+                "end": 21
+              },
+              {
+                "start": 25,
+                "end": 25
+              },
+              {
+                "start": 29,
+                "end": 29
+              },
+              {
+                "start": 33,
+                "end": 33
+              },
+              {
+                "start": 37,
+                "end": 37
+              }
+            ],
+            "packages/svelte/src/compiler/errors.js": [
+              {
+                "start": 442,
+                "end": 443
+              },
+              {
+                "start": 451,
+                "end": 452
+              },
+              {
+                "start": 460,
+                "end": 461
+              },
+              {
+                "start": 469,
+                "end": 470
+              },
+              {
+                "start": 478,
+                "end": 479
+              },
+              {
+                "start": 487,
+                "end": 488
+              },
+              {
+                "start": 496,
+                "end": 497
+              },
+              {
+                "start": 505,
+                "end": 506
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js": [
+              {
+                "start": 117,
+                "end": 117
+              },
+              {
+                "start": 124,
+                "end": 124
+              },
+              {
+                "start": 130,
+                "end": 130
+              },
+              {
+                "start": 136,
+                "end": 136
+              },
+              {
+                "start": 151,
+                "end": 151
+              },
+              {
+                "start": 160,
+                "end": 160
+              },
+              {
+                "start": 176,
+                "end": 176
+              },
+              {
+                "start": 191,
+                "end": 191
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-combinator/_config.js": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-declaration/_config.js": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/_config.js": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-modifier/_config.js": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-multiple/_config.js": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/errors.json": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-3/errors.json": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-4/errors.json": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-5/errors.json": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-6/errors.json": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement/errors.json": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-2/errors.json": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-3/errors.json": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-4/errors.json": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-5/errors.json": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-6/errors.json": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-list/errors.json": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector/errors.json": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/1-parse/read/style.js",
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js",
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js",
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-warn.js",
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js",
+            "packages/svelte/src/compiler/types/css.d.ts"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/1-parse/read/style.js": [
+              {
+                "start": 121,
+                "end": 121
+              },
+              {
+                "start": 186,
+                "end": 187
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js": [
+              {
+                "start": 24,
+                "end": 24
+              },
+              {
+                "start": 52,
+                "end": 52
+              },
+              {
+                "start": 56,
+                "end": 56
+              },
+              {
+                "start": 67,
+                "end": 67
+              },
+              {
+                "start": 79,
+                "end": 79
+              },
+              {
+                "start": 89,
+                "end": 89
+              },
+              {
+                "start": 106,
+                "end": 106
+              },
+              {
+                "start": 115,
+                "end": 115
+              },
+              {
+                "start": 144,
+                "end": 144
+              },
+              {
+                "start": 159,
+                "end": 159
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js": [
+              {
+                "start": 47,
+                "end": 48
+              },
+              {
+                "start": 65,
+                "end": 65
+              },
+              {
+                "start": 114,
+                "end": 114
+              },
+              {
+                "start": 176,
+                "end": 176
+              },
+              {
+                "start": 188,
+                "end": 188
+              },
+              {
+                "start": 201,
+                "end": 201
+              },
+              {
+                "start": 214,
+                "end": 214
+              },
+              {
+                "start": 240,
+                "end": 241
+              },
+              {
+                "start": 263,
+                "end": 263
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-warn.js": [
+              {
+                "start": 36,
+                "end": 36
+              }
+            ],
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js": [
+              {
+                "start": 140,
+                "end": 140
+              },
+              {
+                "start": 227,
+                "end": 227
+              },
+              {
+                "start": 301,
+                "end": 301
+              }
+            ],
+            "packages/svelte/src/compiler/types/css.d.ts": [
+              {
+                "start": 36,
+                "end": 36
+              },
+              {
+                "start": 60,
+                "end": 60
+              },
+              {
+                "start": 62,
+                "end": 62
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js": [
+              {
+                "start": 1,
+                "end": 213
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js": [
+              {
+                "start": 1,
+                "end": 300
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/1-parse/read/style.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/1-parse/read/style.js": [
+              {
+                "start": 1,
+                "end": 220
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-3/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-3/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-4/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-4/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-5/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-5/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-6/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-6/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-2/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-2/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-3/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-3/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-4/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-4/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-5/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-5/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-6/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-6/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-list/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-list/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector/input.svelte"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement/input.svelte": [
+              {
+                "start": 1,
+                "end": 5
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/input.svelte": [
+              {
+                "start": 1,
+                "end": 10
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-3/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-3/input.svelte": [
+              {
+                "start": 1,
+                "end": 8
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-4/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-4/input.svelte": [
+              {
+                "start": 1,
+                "end": 5
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/messages/compile-errors/style.md",
+            "packages/svelte/src/compiler/errors.js",
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/_config.js",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-3/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement/errors.json"
+          ],
+          "spans": {
+            "packages/svelte/messages/compile-errors/style.md": [
+              {
+                "start": 25,
+                "end": 25
+              },
+              {
+                "start": 29,
+                "end": 29
+              }
+            ],
+            "packages/svelte/src/compiler/errors.js": [
+              {
+                "start": 478,
+                "end": 479
+              },
+              {
+                "start": 487,
+                "end": 488
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js": [
+              {
+                "start": 151,
+                "end": 151
+              },
+              {
+                "start": 160,
+                "end": 160
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/_config.js": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/errors.json": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-3/errors.json": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement/errors.json": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js": [
+              {
+                "start": 1,
+                "end": 80
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-warn.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-warn.js": [
+              {
+                "start": 1,
+                "end": 42
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js",
+            "packages/svelte/src/compiler/phases/2-analyze/index.js",
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js": [
+              {
+                "start": 228,
+                "end": 229
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/index.js": [
+              {
+                "start": 581,
+                "end": 581
+              }
+            ],
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js": [
+              {
+                "start": 232,
+                "end": 232
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/1-parse/read/style.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/1-parse/read/style.js": [
+              {
+                "start": 220,
+                "end": 460
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js": [
+              {
+                "start": 100,
+                "end": 280
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/messages/compile-errors/style.md"
+          ],
+          "spans": {
+            "packages/svelte/messages/compile-errors/style.md": [
+              {
+                "start": 1,
+                "end": 40
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js": [
+              {
+                "start": 280,
+                "end": 460
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js": [
+              {
+                "start": 297,
+                "end": 340
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/errors.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/errors.js": [
+              {
+                "start": 440,
+                "end": 508
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [],
+      "pred_spans": {}
+    }
+  }
+]

@@ -1,2 +1,10 @@
 # Keep frozen benchmark producers and byte-bound evidence identical on checkout.
 benchmarks/agent-eval/task-benchmark/** text eol=lf
+benchmarks/agent-eval/task-benchmark/community/reporting/README.md -text
+benchmarks/agent-eval/task-benchmark/community/reporting/cold-disk-appendix-infra-v2/README.md -text
+benchmarks/agent-eval/task-benchmark/community/reporting/fixed24-repeat-recipe-v1/RECIPE.md -text
+benchmarks/agent-eval/task-benchmark/community/reporting/fixed24-repeat-recipe-v1/timing-inventory.draft.json -text
+benchmarks/agent-eval/task-benchmark/community/reporting/measurement-producers-v1/LICENSE -text
+benchmarks/agent-eval/task-benchmark/community/reporting/timing-regime-reporting-infra-v2/METHODS.md -text
+benchmarks/agent-eval/task-benchmark/community/reporting/timing-regime-reporting-infra-v2/README.md -text
+benchmarks/agent-eval/task-benchmark/community/results/fixed24-20261019/** -text

@@ -195,3 +195,20 @@ headline. Provider tokens are not a monetary cost estimate.
 
 The previous six-question benchmark and its frozen executor modules remain an
 independent regression experiment.
+
+## Reporting source and fixed24 repeats
+
+See the [reporting source](reporting/README.md) for the delivered producers and
+source inventories, and the [fixed24 repeat recipe](reporting/fixed24-repeat-recipe-v1/RECIPE.md)
+for campaign closure, measurement, publication and quality replay gates.
+
+The [fixed24 report](results/fixed24-20261019/REPORT.zh-CN.md) links the delivered
+results and evidence. Verify the [numeric bundle](results/fixed24-20261019/numeric/manifest.json)
+using the [offline verification recipe](reporting/README.md).
+See the [quality bundle](results/fixed24-20261019/quality/manifest.json) and its
+[verification and replay recipe](reporting/quality-replay-sibling-infra-v1/recipe.md).
+
+The [representative replay receipt](results/fixed24-20261019/replay/README.md)
+distinguishes the successful Context replay from the unexecuted SWE replay.
+The current image checker covers config-ID semantics; containerd descriptor-ID
+support remains a benchmark infrastructure limitation.

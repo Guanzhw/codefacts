@@ -1,0 +1,405 @@
+[
+  {
+    "instance_id": "clap-rs__clap-4248",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "baaee3d5105b66b8c3a3141f57013b58959a9fdd",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "clap_mangen/src/lib.rs",
+            "src/builder/str.rs",
+            "src/builder/styled_str.rs",
+            "src/error/mod.rs",
+            "src/output/help_template.rs",
+            "src/output/usage.rs",
+            "src/parser/error.rs"
+          ],
+          "spans": {
+            "src/builder/str.rs": [
+              {
+                "start": 1,
+                "end": 70
+              },
+              {
+                "start": 93,
+                "end": 167
+              },
+              {
+                "start": 203,
+                "end": 217
+              }
+            ],
+            "src/builder/styled_str.rs": [
+              {
+                "start": 1,
+                "end": 18
+              },
+              {
+                "start": 22,
+                "end": 132
+              },
+              {
+                "start": 139,
+                "end": 162
+              },
+              {
+                "start": 239,
+                "end": 249
+              },
+              {
+                "start": 255,
+                "end": 315
+              }
+            ],
+            "src/error/mod.rs": [
+              {
+                "start": 271,
+                "end": 339
+              }
+            ],
+            "src/output/help_template.rs": [
+              {
+                "start": 16,
+                "end": 69
+              }
+            ],
+            "src/output/usage.rs": [
+              {
+                "start": 70,
+                "end": 127
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs",
+            "src/builder/styled_str.rs",
+            "src/error/format.rs",
+            "src/error/mod.rs",
+            "src/util/color.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 68,
+                "end": 112
+              },
+              {
+                "start": 720,
+                "end": 736
+              },
+              {
+                "start": 869,
+                "end": 877
+              },
+              {
+                "start": 4484,
+                "end": 4504
+              }
+            ],
+            "src/builder/styled_str.rs": [
+              {
+                "start": 164,
+                "end": 231
+              }
+            ],
+            "src/error/format.rs": [
+              {
+                "start": 13,
+                "end": 22
+              },
+              {
+                "start": 25,
+                "end": 84
+              }
+            ],
+            "src/error/mod.rs": [
+              {
+                "start": 113,
+                "end": 142
+              },
+              {
+                "start": 184,
+                "end": 199
+              },
+              {
+                "start": 213,
+                "end": 264
+              },
+              {
+                "start": 613,
+                "end": 666
+              },
+              {
+                "start": 671,
+                "end": 731
+              }
+            ],
+            "src/util/color.rs": [
+              {
+                "start": 1,
+                "end": 62
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/styled_str.rs"
+          ],
+          "spans": {
+            "src/builder/styled_str.rs": [
+              {
+                "start": 1,
+                "end": 30
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/styled_str.rs"
+          ],
+          "spans": {
+            "src/builder/styled_str.rs": [
+              {
+                "start": 130,
+                "end": 170
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/fmt.rs"
+          ],
+          "spans": {
+            "src/output/fmt.rs": [
+              {
+                "start": 1,
+                "end": 91
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/arg.rs",
+            "src/builder/command.rs",
+            "src/error/mod.rs",
+            "src/output/help.rs",
+            "src/output/help_template.rs"
+          ],
+          "spans": {
+            "src/builder/arg.rs": [
+              {
+                "start": 4164,
+                "end": 4164
+              }
+            ],
+            "src/builder/command.rs": [
+              {
+                "start": 723,
+                "end": 723
+              },
+              {
+                "start": 729,
+                "end": 729
+              },
+              {
+                "start": 750,
+                "end": 750
+              },
+              {
+                "start": 756,
+                "end": 756
+              },
+              {
+                "start": 773,
+                "end": 773
+              },
+              {
+                "start": 783,
+                "end": 783
+              },
+              {
+                "start": 809,
+                "end": 809
+              },
+              {
+                "start": 834,
+                "end": 834
+              },
+              {
+                "start": 858,
+                "end": 858
+              },
+              {
+                "start": 872,
+                "end": 872
+              },
+              {
+                "start": 876,
+                "end": 876
+              },
+              {
+                "start": 4498,
+                "end": 4498
+              },
+              {
+                "start": 4539,
+                "end": 4539
+              }
+            ],
+            "src/error/mod.rs": [
+              {
+                "start": 147,
+                "end": 147
+              },
+              {
+                "start": 187,
+                "end": 187
+              },
+              {
+                "start": 638,
+                "end": 638
+              },
+              {
+                "start": 707,
+                "end": 707
+              }
+            ],
+            "src/output/help.rs": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 29,
+                "end": 29
+              }
+            ],
+            "src/output/help_template.rs": [
+              {
+                "start": 37,
+                "end": 37
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 700,
+                "end": 900
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/error/mod.rs"
+          ],
+          "spans": {
+            "src/error/mod.rs": [
+              {
+                "start": 140,
+                "end": 200
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/help.rs"
+          ],
+          "spans": {
+            "src/output/help.rs": [
+              {
+                "start": 1,
+                "end": 40
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "src/builder/command.rs",
+        "src/builder/styled_str.rs",
+        "src/error/format.rs",
+        "src/error/mod.rs",
+        "src/output/fmt.rs",
+        "src/output/help.rs"
+      ],
+      "pred_spans": {
+        "src/builder/command.rs": [
+          {
+            "start": 711,
+            "end": 812
+          },
+          {
+            "start": 862,
+            "end": 882
+          },
+          {
+            "start": 4487,
+            "end": 4501
+          }
+        ],
+        "src/builder/styled_str.rs": [
+          {
+            "start": 185,
+            "end": 224
+          },
+          {
+            "start": 281,
+            "end": 290
+          }
+        ],
+        "src/error/format.rs": [
+          {
+            "start": 15,
+            "end": 81
+          }
+        ],
+        "src/error/mod.rs": [
+          {
+            "start": 154,
+            "end": 196
+          },
+          {
+            "start": 638,
+            "end": 645
+          },
+          {
+            "start": 673,
+            "end": 684
+          },
+          {
+            "start": 707,
+            "end": 716
+          }
+        ],
+        "src/output/fmt.rs": [
+          {
+            "start": 1,
+            "end": 91
+          }
+        ],
+        "src/output/help.rs": [
+          {
+            "start": 9,
+            "end": 40
+          }
+        ]
+      }
+    }
+  }
+]

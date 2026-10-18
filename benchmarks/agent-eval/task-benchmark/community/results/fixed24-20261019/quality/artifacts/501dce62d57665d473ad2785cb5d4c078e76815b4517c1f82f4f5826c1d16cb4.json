@@ -1,0 +1,7 @@
+[
+  {
+    "instance_id": "nushell__nushell-12901",
+    "model_name_or_path": "qwen-swe-codegraph",
+    "model_patch": ""
+  }
+]

@@ -1,0 +1,2053 @@
+{
+  "schemaVersion": 1,
+  "kind": "project-benchmark-public-source-lineage",
+  "frameworkRevision": "ec1c7f7d788db8244388e200f5849de3b1564b21",
+  "acceptedToolkitMappingSha256": "c0019d20ebc19fb03199398d543ffaae01e4829b41575e73f364676eb9cac347",
+  "acceptedToolkitLineage": [
+    {
+      "original": null,
+      "packaged": "toolkit/README.md",
+      "originalSha256": null,
+      "packagedSha256": "9c0247d1894a93dc66cadb7e4990105efc58aae3de4251a1ee97878e7c2fd49e",
+      "change": "new-document"
+    },
+    {
+      "original": "reports/cold-disk-appendix-infra-v2/appendix.mjs",
+      "packaged": "toolkit/cold-disk-appendix-infra-v2/appendix.mjs",
+      "originalSha256": "de624afbe6f947e9ff99bffe3492d97b5e3eb99eec7c9dbfe167604418ed2493",
+      "packagedSha256": "de624afbe6f947e9ff99bffe3492d97b5e3eb99eec7c9dbfe167604418ed2493",
+      "change": "byte-identical"
+    },
+    {
+      "original": "reports/cold-disk-appendix-infra-v2/export.mjs",
+      "packaged": "toolkit/cold-disk-appendix-infra-v2/export.mjs",
+      "originalSha256": "5a905b2ff70aae0b462258ac80561197217f22c59e213f2aecbc8e31d101ddba",
+      "packagedSha256": "5a905b2ff70aae0b462258ac80561197217f22c59e213f2aecbc8e31d101ddba",
+      "change": "byte-identical"
+    },
+    {
+      "original": "reports/cold-disk-appendix-infra-v2/README.md",
+      "packaged": "toolkit/cold-disk-appendix-infra-v2/README.md",
+      "originalSha256": "80ec9469551b7be484b4dd5d3a1fc8d6e053b28700b6196216f8d274c9a3d4ac",
+      "packagedSha256": "6ec76e696c4f75b3218f43b98ef858e5fbf4b7f9b46187a359b8bcc2e78d070a",
+      "change": "packaging-only-change"
+    },
+    {
+      "original": "reports/cold-disk-appendix-infra-v2/synthetic-tests.mjs",
+      "packaged": "toolkit/cold-disk-appendix-infra-v2/synthetic-tests.mjs",
+      "originalSha256": "f2b4d103ad16e61892d9d4ab75fbf9e6b7e98fba7691bd7fb1374ebd93084769",
+      "packagedSha256": "f2b4d103ad16e61892d9d4ab75fbf9e6b7e98fba7691bd7fb1374ebd93084769",
+      "change": "byte-identical"
+    },
+    {
+      "original": "reports/final-aggregate-generator-infra-v2/aggregate.mjs",
+      "packaged": "toolkit/final-aggregate-generator-infra-v2/aggregate.mjs",
+      "originalSha256": "0dd4b180a9e0016a95e3e8548f0db548ef1d6c0fd7c0654a469744a7f7307ae2",
+      "packagedSha256": "0dd4b180a9e0016a95e3e8548f0db548ef1d6c0fd7c0654a469744a7f7307ae2",
+      "change": "byte-identical"
+    },
+    {
+      "original": "reports/final-aggregate-generator-infra-v2/infra-closure.mjs",
+      "packaged": "toolkit/final-aggregate-generator-infra-v2/infra-closure.mjs",
+      "originalSha256": "a093131e51520ca20be6449465ec87651073b3f5bfccd289781c307fabe6dc46",
+      "packagedSha256": "a093131e51520ca20be6449465ec87651073b3f5bfccd289781c307fabe6dc46",
+      "change": "byte-identical"
+    },
+    {
+      "original": "reports/public-results-infra-v1/common.mjs",
+      "packaged": "toolkit/public-results-infra-v1/common.mjs",
+      "originalSha256": "5a63764c07a453ad13433a2ffcb8b47fcdec5ab86640b1298a5b4be1ee765d92",
+      "packagedSha256": "5a63764c07a453ad13433a2ffcb8b47fcdec5ab86640b1298a5b4be1ee765d92",
+      "change": "byte-identical"
+    },
+    {
+      "original": "reports/public-results-infra-v1/export.mjs",
+      "packaged": "toolkit/public-results-infra-v1/export.mjs",
+      "originalSha256": "b9ed20f9c9aaf92abb0f20bcd07563ff9bab98f2e08d6a282011edc9de6187f6",
+      "packagedSha256": "b9ed20f9c9aaf92abb0f20bcd07563ff9bab98f2e08d6a282011edc9de6187f6",
+      "change": "byte-identical"
+    },
+    {
+      "original": "reports/public-results-infra-v1/METHODS.md",
+      "packaged": "toolkit/public-results-infra-v1/METHODS.md",
+      "originalSha256": "50b74446fa189ae0039366e23b79a18f429a711da1d5154efdc140717bb481f2",
+      "packagedSha256": "50b74446fa189ae0039366e23b79a18f429a711da1d5154efdc140717bb481f2",
+      "change": "byte-identical"
+    },
+    {
+      "original": "reports/public-results-infra-v1/statistics.mjs",
+      "packaged": "toolkit/public-results-infra-v1/statistics.mjs",
+      "originalSha256": "f830ed67f287ba1eade1d5f41bc114afb2cd2c12e295f41d142edc5a425997f9",
+      "packagedSha256": "f830ed67f287ba1eade1d5f41bc114afb2cd2c12e295f41d142edc5a425997f9",
+      "change": "byte-identical"
+    },
+    {
+      "original": "reports/public-results-infra-v1/synthetic-fixture.mjs",
+      "packaged": "toolkit/public-results-infra-v1/synthetic-fixture.mjs",
+      "originalSha256": "a6c134eaaa66cb8b608ee427128dfce1006223d8c83c25971d00c3b1bc70a469",
+      "packagedSha256": "4752dd2cc4117ab2c2a57aca642299cc8d7325c017b900f8e9f34995afebc88b",
+      "change": "packaging-only-change"
+    },
+    {
+      "original": "reports/public-results-infra-v1/verify.mjs",
+      "packaged": "toolkit/public-results-infra-v1/verify.mjs",
+      "originalSha256": "7e144edb995b05b4479cbf9742a5e21471ed188c5eda997a441eeb8e994a987c",
+      "packagedSha256": "7e144edb995b05b4479cbf9742a5e21471ed188c5eda997a441eeb8e994a987c",
+      "change": "byte-identical"
+    },
+    {
+      "original": "reports/timing-regime-reporting-infra-v2/adapter.mjs",
+      "packaged": "toolkit/timing-regime-reporting-infra-v2/adapter.mjs",
+      "originalSha256": "6a5fa1f547702cf1a4b89cbf274aeda261a89c16832465e2542c29c0b9d5248c",
+      "packagedSha256": "6a5fa1f547702cf1a4b89cbf274aeda261a89c16832465e2542c29c0b9d5248c",
+      "change": "byte-identical"
+    },
+    {
+      "original": "reports/timing-regime-reporting-infra-v2/export.mjs",
+      "packaged": "toolkit/timing-regime-reporting-infra-v2/export.mjs",
+      "originalSha256": "0a35b0861de7b5918512dbe06b3f0b48e7f9210df4dca1957c64009b7ce64192",
+      "packagedSha256": "0a35b0861de7b5918512dbe06b3f0b48e7f9210df4dca1957c64009b7ce64192",
+      "change": "byte-identical"
+    },
+    {
+      "original": "reports/timing-regime-reporting-infra-v2/formatter.mjs",
+      "packaged": "toolkit/timing-regime-reporting-infra-v2/formatter.mjs",
+      "originalSha256": "f22ddfc9db0f08538621bcc789575c48e91bff67bdbd2720f1dd2e5b654324db",
+      "packagedSha256": "f22ddfc9db0f08538621bcc789575c48e91bff67bdbd2720f1dd2e5b654324db",
+      "change": "byte-identical"
+    },
+    {
+      "original": "reports/timing-regime-reporting-infra-v2/METHODS.md",
+      "packaged": "toolkit/timing-regime-reporting-infra-v2/METHODS.md",
+      "originalSha256": "a7dce64bc9e744c30bf81e9cb80ea819160a03fdf618c338a283fc87cc52ba9e",
+      "packagedSha256": "a7dce64bc9e744c30bf81e9cb80ea819160a03fdf618c338a283fc87cc52ba9e",
+      "change": "byte-identical"
+    },
+    {
+      "original": "reports/timing-regime-reporting-infra-v2/provenance.mjs",
+      "packaged": "toolkit/timing-regime-reporting-infra-v2/provenance.mjs",
+      "originalSha256": "79553f78db6e62959f4ab135193a9c6f7799031c2d6c2e613d812c924cb46971",
+      "packagedSha256": "79553f78db6e62959f4ab135193a9c6f7799031c2d6c2e613d812c924cb46971",
+      "change": "byte-identical"
+    },
+    {
+      "original": "reports/timing-regime-reporting-infra-v2/README.md",
+      "packaged": "toolkit/timing-regime-reporting-infra-v2/README.md",
+      "originalSha256": "6c300e0ad4a2166af42d45487ba417f8cbf07608e36bca73c1faf5f0336e1625",
+      "packagedSha256": "48a4048352c1f8e442d9d49a908a2323c58080e896b2784b5a61111cb3754dcb",
+      "change": "packaging-only-change"
+    },
+    {
+      "original": "reports/timing-regime-reporting-infra-v2/rolling-fixture.mjs",
+      "packaged": "toolkit/timing-regime-reporting-infra-v2/rolling-fixture.mjs",
+      "originalSha256": "90354f23b4eb4433ad33992687053df0f05715bbbe41e54c9476e145853334ae",
+      "packagedSha256": "90354f23b4eb4433ad33992687053df0f05715bbbe41e54c9476e145853334ae",
+      "change": "byte-identical"
+    },
+    {
+      "original": "reports/timing-regime-reporting-infra-v2/rolling-provenance.mjs",
+      "packaged": "toolkit/timing-regime-reporting-infra-v2/rolling-provenance.mjs",
+      "originalSha256": "4461161da65830149a6bd4406542f875a8ea88644e934c0086e00a1f44c2a53c",
+      "packagedSha256": "4461161da65830149a6bd4406542f875a8ea88644e934c0086e00a1f44c2a53c",
+      "change": "byte-identical"
+    },
+    {
+      "original": "reports/timing-regime-reporting-infra-v2/synthetic-tests.mjs",
+      "packaged": "toolkit/timing-regime-reporting-infra-v2/synthetic-tests.mjs",
+      "originalSha256": "e1ac137a5319cb9a83aa9cba166b6514cafff8ca5ff130af93b3e0accf846e1e",
+      "packagedSha256": "98e0cff8d72eedc127f7070ed21d384f6e6bc3c2409e20ba8722ed70c29edb80",
+      "change": "packaging-only-change"
+    },
+    {
+      "original": "reports/timing-regime-reporting-infra-v2/verify.mjs",
+      "packaged": "toolkit/timing-regime-reporting-infra-v2/verify.mjs",
+      "originalSha256": "ef05f53a6d09f8fa30e0ae765fcdbe8b80ff163422da8e5990d459ee27010d1b",
+      "packagedSha256": "ef05f53a6d09f8fa30e0ae765fcdbe8b80ff163422da8e5990d459ee27010d1b",
+      "change": "byte-identical"
+    }
+  ],
+  "files": [
+    {
+      "sourceId": "delivery-staging/results-toolkit-v1/toolkit/README.md",
+      "sourceSha256": "9c0247d1894a93dc66cadb7e4990105efc58aae3de4251a1ee97878e7c2fd49e",
+      "publicPath": "reporting/README.md",
+      "publicSha256": "9a8a265fdb44d611b4df27085da5b4125b116caa4045810198d2660b8e7502ec",
+      "transformation": "byte-identical",
+      "v1PublicSha256": "9c0247d1894a93dc66cadb7e4990105efc58aae3de4251a1ee97878e7c2fd49e",
+      "v2Transformation": "documentation-only reporting README path/link/scope correction",
+      "v2PublicPath": "reporting/README.md",
+      "v2PublicSha256": "f5ac086b9bca3c7cc7d74624f6695e4c4441b2a359d5251950bd7a104910001e",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/README.md",
+        "sourceSha256": "f5ac086b9bca3c7cc7d74624f6695e4c4441b2a359d5251950bd7a104910001e",
+        "change": "documentation only: actual accepted producer hash, execution deployment, recipe/producer navigation and precise validation scope"
+      },
+      "v3PublicSha256": "2479df86e80f70adb1847dc6b0292180051f17a2053dfedc4088fef78aa83658",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/README.md",
+        "sourceSha256": "2479df86e80f70adb1847dc6b0292180051f17a2053dfedc4088fef78aa83658",
+        "change": "documentation only: new explicit newline choice, source test and precise source-vs-actual validation boundary"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/results-toolkit-v1/toolkit/cold-disk-appendix-infra-v2/appendix.mjs",
+      "sourceSha256": "de624afbe6f947e9ff99bffe3492d97b5e3eb99eec7c9dbfe167604418ed2493",
+      "publicPath": "reporting/cold-disk-appendix-infra-v2/appendix.mjs",
+      "publicSha256": "de624afbe6f947e9ff99bffe3492d97b5e3eb99eec7c9dbfe167604418ed2493",
+      "transformation": "byte-identical",
+      "v2PublicPath": "reporting/cold-disk-appendix-infra-v2/appendix.mjs",
+      "v2PublicSha256": "de624afbe6f947e9ff99bffe3492d97b5e3eb99eec7c9dbfe167604418ed2493",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/cold-disk-appendix-infra-v2/appendix.mjs",
+        "sourceSha256": "de624afbe6f947e9ff99bffe3492d97b5e3eb99eec7c9dbfe167604418ed2493",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "de624afbe6f947e9ff99bffe3492d97b5e3eb99eec7c9dbfe167604418ed2493",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/cold-disk-appendix-infra-v2/appendix.mjs",
+        "sourceSha256": "de624afbe6f947e9ff99bffe3492d97b5e3eb99eec7c9dbfe167604418ed2493",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/results-toolkit-v1/toolkit/cold-disk-appendix-infra-v2/export.mjs",
+      "sourceSha256": "5a905b2ff70aae0b462258ac80561197217f22c59e213f2aecbc8e31d101ddba",
+      "publicPath": "reporting/cold-disk-appendix-infra-v2/export.mjs",
+      "publicSha256": "5a905b2ff70aae0b462258ac80561197217f22c59e213f2aecbc8e31d101ddba",
+      "transformation": "byte-identical",
+      "v2PublicPath": "reporting/cold-disk-appendix-infra-v2/export.mjs",
+      "v2PublicSha256": "5a905b2ff70aae0b462258ac80561197217f22c59e213f2aecbc8e31d101ddba",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/cold-disk-appendix-infra-v2/export.mjs",
+        "sourceSha256": "5a905b2ff70aae0b462258ac80561197217f22c59e213f2aecbc8e31d101ddba",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "5a905b2ff70aae0b462258ac80561197217f22c59e213f2aecbc8e31d101ddba",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/cold-disk-appendix-infra-v2/export.mjs",
+        "sourceSha256": "5a905b2ff70aae0b462258ac80561197217f22c59e213f2aecbc8e31d101ddba",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/results-toolkit-v1/toolkit/cold-disk-appendix-infra-v2/README.md",
+      "sourceSha256": "6ec76e696c4f75b3218f43b98ef858e5fbf4b7f9b46187a359b8bcc2e78d070a",
+      "publicPath": "reporting/cold-disk-appendix-infra-v2/README.md",
+      "publicSha256": "6ec76e696c4f75b3218f43b98ef858e5fbf4b7f9b46187a359b8bcc2e78d070a",
+      "transformation": "byte-identical",
+      "v2PublicPath": "reporting/cold-disk-appendix-infra-v2/README.md",
+      "v2PublicSha256": "6ec76e696c4f75b3218f43b98ef858e5fbf4b7f9b46187a359b8bcc2e78d070a",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/cold-disk-appendix-infra-v2/README.md",
+        "sourceSha256": "6ec76e696c4f75b3218f43b98ef858e5fbf4b7f9b46187a359b8bcc2e78d070a",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "6ec76e696c4f75b3218f43b98ef858e5fbf4b7f9b46187a359b8bcc2e78d070a",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/cold-disk-appendix-infra-v2/README.md",
+        "sourceSha256": "6ec76e696c4f75b3218f43b98ef858e5fbf4b7f9b46187a359b8bcc2e78d070a",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/results-toolkit-v1/toolkit/cold-disk-appendix-infra-v2/synthetic-tests.mjs",
+      "sourceSha256": "f2b4d103ad16e61892d9d4ab75fbf9e6b7e98fba7691bd7fb1374ebd93084769",
+      "publicPath": "reporting/cold-disk-appendix-infra-v2/synthetic-tests.mjs",
+      "publicSha256": "f2b4d103ad16e61892d9d4ab75fbf9e6b7e98fba7691bd7fb1374ebd93084769",
+      "transformation": "byte-identical",
+      "v2PublicPath": "reporting/cold-disk-appendix-infra-v2/synthetic-tests.mjs",
+      "v2PublicSha256": "f2b4d103ad16e61892d9d4ab75fbf9e6b7e98fba7691bd7fb1374ebd93084769",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/cold-disk-appendix-infra-v2/synthetic-tests.mjs",
+        "sourceSha256": "f2b4d103ad16e61892d9d4ab75fbf9e6b7e98fba7691bd7fb1374ebd93084769",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "f2b4d103ad16e61892d9d4ab75fbf9e6b7e98fba7691bd7fb1374ebd93084769",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/cold-disk-appendix-infra-v2/synthetic-tests.mjs",
+        "sourceSha256": "f2b4d103ad16e61892d9d4ab75fbf9e6b7e98fba7691bd7fb1374ebd93084769",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/results-toolkit-v1/toolkit/final-aggregate-generator-infra-v2/aggregate.mjs",
+      "sourceSha256": "0dd4b180a9e0016a95e3e8548f0db548ef1d6c0fd7c0654a469744a7f7307ae2",
+      "publicPath": "reporting/final-aggregate-generator-infra-v2/aggregate.mjs",
+      "publicSha256": "274b786d8cb7f1cb540ff7327daadd1e2dd7f5de11086ff79ad6d3e41b7fd1c7",
+      "transformation": "byte-identical",
+      "v2PublicPath": "reporting/final-aggregate-generator-infra-v2/aggregate.mjs",
+      "v2PublicSha256": "0dd4b180a9e0016a95e3e8548f0db548ef1d6c0fd7c0654a469744a7f7307ae2",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/final-aggregate-generator-infra-v2/aggregate.mjs",
+        "sourceSha256": "274b786d8cb7f1cb540ff7327daadd1e2dd7f5de11086ff79ad6d3e41b7fd1c7",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "274b786d8cb7f1cb540ff7327daadd1e2dd7f5de11086ff79ad6d3e41b7fd1c7",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/final-aggregate-generator-infra-v2/aggregate.mjs",
+        "sourceSha256": "274b786d8cb7f1cb540ff7327daadd1e2dd7f5de11086ff79ad6d3e41b7fd1c7",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/results-toolkit-v1/toolkit/final-aggregate-generator-infra-v2/infra-closure.mjs",
+      "sourceSha256": "a093131e51520ca20be6449465ec87651073b3f5bfccd289781c307fabe6dc46",
+      "publicPath": "reporting/final-aggregate-generator-infra-v2/infra-closure.mjs",
+      "publicSha256": "a093131e51520ca20be6449465ec87651073b3f5bfccd289781c307fabe6dc46",
+      "transformation": "byte-identical",
+      "v2PublicPath": "reporting/final-aggregate-generator-infra-v2/infra-closure.mjs",
+      "v2PublicSha256": "a093131e51520ca20be6449465ec87651073b3f5bfccd289781c307fabe6dc46",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/final-aggregate-generator-infra-v2/infra-closure.mjs",
+        "sourceSha256": "a093131e51520ca20be6449465ec87651073b3f5bfccd289781c307fabe6dc46",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "a093131e51520ca20be6449465ec87651073b3f5bfccd289781c307fabe6dc46",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/final-aggregate-generator-infra-v2/infra-closure.mjs",
+        "sourceSha256": "a093131e51520ca20be6449465ec87651073b3f5bfccd289781c307fabe6dc46",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/results-toolkit-v1/toolkit/public-results-infra-v1/common.mjs",
+      "sourceSha256": "5a63764c07a453ad13433a2ffcb8b47fcdec5ab86640b1298a5b4be1ee765d92",
+      "publicPath": "reporting/public-results-infra-v1/common.mjs",
+      "publicSha256": "040ae6efc56cbcf33416a4d7822d1ac58b77c6547f5835143cf5ad6e7d68da74",
+      "transformation": "byte-identical",
+      "v2PublicPath": "reporting/public-results-infra-v1/common.mjs",
+      "v2PublicSha256": "5a63764c07a453ad13433a2ffcb8b47fcdec5ab86640b1298a5b4be1ee765d92",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/public-results-infra-v1/common.mjs",
+        "sourceSha256": "040ae6efc56cbcf33416a4d7822d1ac58b77c6547f5835143cf5ad6e7d68da74",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "040ae6efc56cbcf33416a4d7822d1ac58b77c6547f5835143cf5ad6e7d68da74",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/public-results-infra-v1/common.mjs",
+        "sourceSha256": "040ae6efc56cbcf33416a4d7822d1ac58b77c6547f5835143cf5ad6e7d68da74",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/results-toolkit-v1/toolkit/public-results-infra-v1/export.mjs",
+      "sourceSha256": "b9ed20f9c9aaf92abb0f20bcd07563ff9bab98f2e08d6a282011edc9de6187f6",
+      "publicPath": "reporting/public-results-infra-v1/export.mjs",
+      "publicSha256": "b9ed20f9c9aaf92abb0f20bcd07563ff9bab98f2e08d6a282011edc9de6187f6",
+      "transformation": "byte-identical",
+      "v2PublicPath": "reporting/public-results-infra-v1/export.mjs",
+      "v2PublicSha256": "b9ed20f9c9aaf92abb0f20bcd07563ff9bab98f2e08d6a282011edc9de6187f6",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/public-results-infra-v1/export.mjs",
+        "sourceSha256": "b9ed20f9c9aaf92abb0f20bcd07563ff9bab98f2e08d6a282011edc9de6187f6",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "b9ed20f9c9aaf92abb0f20bcd07563ff9bab98f2e08d6a282011edc9de6187f6",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/public-results-infra-v1/export.mjs",
+        "sourceSha256": "b9ed20f9c9aaf92abb0f20bcd07563ff9bab98f2e08d6a282011edc9de6187f6",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/results-toolkit-v1/toolkit/public-results-infra-v1/METHODS.md",
+      "sourceSha256": "50b74446fa189ae0039366e23b79a18f429a711da1d5154efdc140717bb481f2",
+      "publicPath": "reporting/public-results-infra-v1/METHODS.md",
+      "publicSha256": "50b74446fa189ae0039366e23b79a18f429a711da1d5154efdc140717bb481f2",
+      "transformation": "byte-identical",
+      "v2PublicPath": "reporting/public-results-infra-v1/METHODS.md",
+      "v2PublicSha256": "50b74446fa189ae0039366e23b79a18f429a711da1d5154efdc140717bb481f2",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/public-results-infra-v1/METHODS.md",
+        "sourceSha256": "50b74446fa189ae0039366e23b79a18f429a711da1d5154efdc140717bb481f2",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "50b74446fa189ae0039366e23b79a18f429a711da1d5154efdc140717bb481f2",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/public-results-infra-v1/METHODS.md",
+        "sourceSha256": "50b74446fa189ae0039366e23b79a18f429a711da1d5154efdc140717bb481f2",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/results-toolkit-v1/toolkit/public-results-infra-v1/statistics.mjs",
+      "sourceSha256": "f830ed67f287ba1eade1d5f41bc114afb2cd2c12e295f41d142edc5a425997f9",
+      "publicPath": "reporting/public-results-infra-v1/statistics.mjs",
+      "publicSha256": "f830ed67f287ba1eade1d5f41bc114afb2cd2c12e295f41d142edc5a425997f9",
+      "transformation": "byte-identical",
+      "v2PublicPath": "reporting/public-results-infra-v1/statistics.mjs",
+      "v2PublicSha256": "f830ed67f287ba1eade1d5f41bc114afb2cd2c12e295f41d142edc5a425997f9",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/public-results-infra-v1/statistics.mjs",
+        "sourceSha256": "f830ed67f287ba1eade1d5f41bc114afb2cd2c12e295f41d142edc5a425997f9",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "f830ed67f287ba1eade1d5f41bc114afb2cd2c12e295f41d142edc5a425997f9",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/public-results-infra-v1/statistics.mjs",
+        "sourceSha256": "f830ed67f287ba1eade1d5f41bc114afb2cd2c12e295f41d142edc5a425997f9",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/results-toolkit-v1/toolkit/public-results-infra-v1/synthetic-fixture.mjs",
+      "sourceSha256": "4752dd2cc4117ab2c2a57aca642299cc8d7325c017b900f8e9f34995afebc88b",
+      "publicPath": "reporting/public-results-infra-v1/synthetic-fixture.mjs",
+      "publicSha256": "4752dd2cc4117ab2c2a57aca642299cc8d7325c017b900f8e9f34995afebc88b",
+      "transformation": "byte-identical",
+      "v2PublicPath": "reporting/public-results-infra-v1/synthetic-fixture.mjs",
+      "v2PublicSha256": "4752dd2cc4117ab2c2a57aca642299cc8d7325c017b900f8e9f34995afebc88b",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/public-results-infra-v1/synthetic-fixture.mjs",
+        "sourceSha256": "4752dd2cc4117ab2c2a57aca642299cc8d7325c017b900f8e9f34995afebc88b",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "4752dd2cc4117ab2c2a57aca642299cc8d7325c017b900f8e9f34995afebc88b",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/public-results-infra-v1/synthetic-fixture.mjs",
+        "sourceSha256": "4752dd2cc4117ab2c2a57aca642299cc8d7325c017b900f8e9f34995afebc88b",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/results-toolkit-v1/toolkit/public-results-infra-v1/verify.mjs",
+      "sourceSha256": "7e144edb995b05b4479cbf9742a5e21471ed188c5eda997a441eeb8e994a987c",
+      "publicPath": "reporting/public-results-infra-v1/verify.mjs",
+      "publicSha256": "7e144edb995b05b4479cbf9742a5e21471ed188c5eda997a441eeb8e994a987c",
+      "transformation": "byte-identical",
+      "v2PublicPath": "reporting/public-results-infra-v1/verify.mjs",
+      "v2PublicSha256": "7e144edb995b05b4479cbf9742a5e21471ed188c5eda997a441eeb8e994a987c",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/public-results-infra-v1/verify.mjs",
+        "sourceSha256": "7e144edb995b05b4479cbf9742a5e21471ed188c5eda997a441eeb8e994a987c",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "7e144edb995b05b4479cbf9742a5e21471ed188c5eda997a441eeb8e994a987c",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/public-results-infra-v1/verify.mjs",
+        "sourceSha256": "7e144edb995b05b4479cbf9742a5e21471ed188c5eda997a441eeb8e994a987c",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/results-toolkit-v1/toolkit/timing-regime-reporting-infra-v2/adapter.mjs",
+      "sourceSha256": "6a5fa1f547702cf1a4b89cbf274aeda261a89c16832465e2542c29c0b9d5248c",
+      "publicPath": "reporting/timing-regime-reporting-infra-v2/adapter.mjs",
+      "publicSha256": "6a5fa1f547702cf1a4b89cbf274aeda261a89c16832465e2542c29c0b9d5248c",
+      "transformation": "byte-identical",
+      "v2PublicPath": "reporting/timing-regime-reporting-infra-v2/adapter.mjs",
+      "v2PublicSha256": "6a5fa1f547702cf1a4b89cbf274aeda261a89c16832465e2542c29c0b9d5248c",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/timing-regime-reporting-infra-v2/adapter.mjs",
+        "sourceSha256": "6a5fa1f547702cf1a4b89cbf274aeda261a89c16832465e2542c29c0b9d5248c",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "6a5fa1f547702cf1a4b89cbf274aeda261a89c16832465e2542c29c0b9d5248c",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/timing-regime-reporting-infra-v2/adapter.mjs",
+        "sourceSha256": "6a5fa1f547702cf1a4b89cbf274aeda261a89c16832465e2542c29c0b9d5248c",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/results-toolkit-v1/toolkit/timing-regime-reporting-infra-v2/export.mjs",
+      "sourceSha256": "0a35b0861de7b5918512dbe06b3f0b48e7f9210df4dca1957c64009b7ce64192",
+      "publicPath": "reporting/timing-regime-reporting-infra-v2/export.mjs",
+      "publicSha256": "0a35b0861de7b5918512dbe06b3f0b48e7f9210df4dca1957c64009b7ce64192",
+      "transformation": "byte-identical",
+      "v2PublicPath": "reporting/timing-regime-reporting-infra-v2/export.mjs",
+      "v2PublicSha256": "0a35b0861de7b5918512dbe06b3f0b48e7f9210df4dca1957c64009b7ce64192",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/timing-regime-reporting-infra-v2/export.mjs",
+        "sourceSha256": "0a35b0861de7b5918512dbe06b3f0b48e7f9210df4dca1957c64009b7ce64192",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "0a35b0861de7b5918512dbe06b3f0b48e7f9210df4dca1957c64009b7ce64192",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/timing-regime-reporting-infra-v2/export.mjs",
+        "sourceSha256": "0a35b0861de7b5918512dbe06b3f0b48e7f9210df4dca1957c64009b7ce64192",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/results-toolkit-v1/toolkit/timing-regime-reporting-infra-v2/formatter.mjs",
+      "sourceSha256": "f22ddfc9db0f08538621bcc789575c48e91bff67bdbd2720f1dd2e5b654324db",
+      "publicPath": "reporting/timing-regime-reporting-infra-v2/formatter.mjs",
+      "publicSha256": "57256d3b6b88f79275e196f42b7134c5ef6eddc3f91270401b5f790acabeb24a",
+      "transformation": "byte-identical",
+      "v2PublicPath": "reporting/timing-regime-reporting-infra-v2/formatter.mjs",
+      "v2PublicSha256": "f22ddfc9db0f08538621bcc789575c48e91bff67bdbd2720f1dd2e5b654324db",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/timing-regime-reporting-infra-v2/formatter.mjs",
+        "sourceSha256": "f22ddfc9db0f08538621bcc789575c48e91bff67bdbd2720f1dd2e5b654324db",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "f22ddfc9db0f08538621bcc789575c48e91bff67bdbd2720f1dd2e5b654324db",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/timing-regime-reporting-infra-v2/formatter.mjs",
+        "sourceSha256": "f22ddfc9db0f08538621bcc789575c48e91bff67bdbd2720f1dd2e5b654324db",
+        "change": "byte-identical"
+      },
+      "v7PublicSha256": "f22ddfc9db0f08538621bcc789575c48e91bff67bdbd2720f1dd2e5b654324db",
+      "v8AssemblyInput": {
+        "sourceId": "reviews/final288-reporting-assembly-20261019/formatter-label-candidate/formatter.mjs",
+        "sourceSha256": "57256d3b6b88f79275e196f42b7134c5ef6eddc3f91270401b5f790acabeb24a",
+        "change": "byte-identical formatter candidate copy"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/results-toolkit-v1/toolkit/timing-regime-reporting-infra-v2/METHODS.md",
+      "sourceSha256": "a7dce64bc9e744c30bf81e9cb80ea819160a03fdf618c338a283fc87cc52ba9e",
+      "publicPath": "reporting/timing-regime-reporting-infra-v2/METHODS.md",
+      "publicSha256": "a7dce64bc9e744c30bf81e9cb80ea819160a03fdf618c338a283fc87cc52ba9e",
+      "transformation": "byte-identical",
+      "v2PublicPath": "reporting/timing-regime-reporting-infra-v2/METHODS.md",
+      "v2PublicSha256": "a7dce64bc9e744c30bf81e9cb80ea819160a03fdf618c338a283fc87cc52ba9e",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/timing-regime-reporting-infra-v2/METHODS.md",
+        "sourceSha256": "a7dce64bc9e744c30bf81e9cb80ea819160a03fdf618c338a283fc87cc52ba9e",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "a7dce64bc9e744c30bf81e9cb80ea819160a03fdf618c338a283fc87cc52ba9e",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/timing-regime-reporting-infra-v2/METHODS.md",
+        "sourceSha256": "a7dce64bc9e744c30bf81e9cb80ea819160a03fdf618c338a283fc87cc52ba9e",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/results-toolkit-v1/toolkit/timing-regime-reporting-infra-v2/provenance.mjs",
+      "sourceSha256": "79553f78db6e62959f4ab135193a9c6f7799031c2d6c2e613d812c924cb46971",
+      "publicPath": "reporting/timing-regime-reporting-infra-v2/provenance.mjs",
+      "publicSha256": "79553f78db6e62959f4ab135193a9c6f7799031c2d6c2e613d812c924cb46971",
+      "transformation": "byte-identical",
+      "v2PublicPath": "reporting/timing-regime-reporting-infra-v2/provenance.mjs",
+      "v2PublicSha256": "79553f78db6e62959f4ab135193a9c6f7799031c2d6c2e613d812c924cb46971",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/timing-regime-reporting-infra-v2/provenance.mjs",
+        "sourceSha256": "79553f78db6e62959f4ab135193a9c6f7799031c2d6c2e613d812c924cb46971",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "79553f78db6e62959f4ab135193a9c6f7799031c2d6c2e613d812c924cb46971",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/timing-regime-reporting-infra-v2/provenance.mjs",
+        "sourceSha256": "79553f78db6e62959f4ab135193a9c6f7799031c2d6c2e613d812c924cb46971",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/results-toolkit-v1/toolkit/timing-regime-reporting-infra-v2/README.md",
+      "sourceSha256": "48a4048352c1f8e442d9d49a908a2323c58080e896b2784b5a61111cb3754dcb",
+      "publicPath": "reporting/timing-regime-reporting-infra-v2/README.md",
+      "publicSha256": "48a4048352c1f8e442d9d49a908a2323c58080e896b2784b5a61111cb3754dcb",
+      "transformation": "byte-identical",
+      "v2PublicPath": "reporting/timing-regime-reporting-infra-v2/README.md",
+      "v2PublicSha256": "48a4048352c1f8e442d9d49a908a2323c58080e896b2784b5a61111cb3754dcb",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/timing-regime-reporting-infra-v2/README.md",
+        "sourceSha256": "48a4048352c1f8e442d9d49a908a2323c58080e896b2784b5a61111cb3754dcb",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "48a4048352c1f8e442d9d49a908a2323c58080e896b2784b5a61111cb3754dcb",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/timing-regime-reporting-infra-v2/README.md",
+        "sourceSha256": "48a4048352c1f8e442d9d49a908a2323c58080e896b2784b5a61111cb3754dcb",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/results-toolkit-v1/toolkit/timing-regime-reporting-infra-v2/rolling-fixture.mjs",
+      "sourceSha256": "90354f23b4eb4433ad33992687053df0f05715bbbe41e54c9476e145853334ae",
+      "publicPath": "reporting/timing-regime-reporting-infra-v2/rolling-fixture.mjs",
+      "publicSha256": "90354f23b4eb4433ad33992687053df0f05715bbbe41e54c9476e145853334ae",
+      "transformation": "byte-identical",
+      "v2PublicPath": "reporting/timing-regime-reporting-infra-v2/rolling-fixture.mjs",
+      "v2PublicSha256": "90354f23b4eb4433ad33992687053df0f05715bbbe41e54c9476e145853334ae",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/timing-regime-reporting-infra-v2/rolling-fixture.mjs",
+        "sourceSha256": "90354f23b4eb4433ad33992687053df0f05715bbbe41e54c9476e145853334ae",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "90354f23b4eb4433ad33992687053df0f05715bbbe41e54c9476e145853334ae",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/timing-regime-reporting-infra-v2/rolling-fixture.mjs",
+        "sourceSha256": "90354f23b4eb4433ad33992687053df0f05715bbbe41e54c9476e145853334ae",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/results-toolkit-v1/toolkit/timing-regime-reporting-infra-v2/rolling-provenance.mjs",
+      "sourceSha256": "4461161da65830149a6bd4406542f875a8ea88644e934c0086e00a1f44c2a53c",
+      "publicPath": "reporting/timing-regime-reporting-infra-v2/rolling-provenance.mjs",
+      "publicSha256": "4461161da65830149a6bd4406542f875a8ea88644e934c0086e00a1f44c2a53c",
+      "transformation": "byte-identical",
+      "v2PublicPath": "reporting/timing-regime-reporting-infra-v2/rolling-provenance.mjs",
+      "v2PublicSha256": "4461161da65830149a6bd4406542f875a8ea88644e934c0086e00a1f44c2a53c",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/timing-regime-reporting-infra-v2/rolling-provenance.mjs",
+        "sourceSha256": "4461161da65830149a6bd4406542f875a8ea88644e934c0086e00a1f44c2a53c",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "4461161da65830149a6bd4406542f875a8ea88644e934c0086e00a1f44c2a53c",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/timing-regime-reporting-infra-v2/rolling-provenance.mjs",
+        "sourceSha256": "4461161da65830149a6bd4406542f875a8ea88644e934c0086e00a1f44c2a53c",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/results-toolkit-v1/toolkit/timing-regime-reporting-infra-v2/synthetic-tests.mjs",
+      "sourceSha256": "98e0cff8d72eedc127f7070ed21d384f6e6bc3c2409e20ba8722ed70c29edb80",
+      "publicPath": "reporting/timing-regime-reporting-infra-v2/synthetic-tests.mjs",
+      "publicSha256": "98e0cff8d72eedc127f7070ed21d384f6e6bc3c2409e20ba8722ed70c29edb80",
+      "transformation": "byte-identical",
+      "v2PublicPath": "reporting/timing-regime-reporting-infra-v2/synthetic-tests.mjs",
+      "v2PublicSha256": "98e0cff8d72eedc127f7070ed21d384f6e6bc3c2409e20ba8722ed70c29edb80",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/timing-regime-reporting-infra-v2/synthetic-tests.mjs",
+        "sourceSha256": "98e0cff8d72eedc127f7070ed21d384f6e6bc3c2409e20ba8722ed70c29edb80",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "98e0cff8d72eedc127f7070ed21d384f6e6bc3c2409e20ba8722ed70c29edb80",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/timing-regime-reporting-infra-v2/synthetic-tests.mjs",
+        "sourceSha256": "98e0cff8d72eedc127f7070ed21d384f6e6bc3c2409e20ba8722ed70c29edb80",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/results-toolkit-v1/toolkit/timing-regime-reporting-infra-v2/verify.mjs",
+      "sourceSha256": "ef05f53a6d09f8fa30e0ae765fcdbe8b80ff163422da8e5990d459ee27010d1b",
+      "publicPath": "reporting/timing-regime-reporting-infra-v2/verify.mjs",
+      "publicSha256": "ef05f53a6d09f8fa30e0ae765fcdbe8b80ff163422da8e5990d459ee27010d1b",
+      "transformation": "byte-identical",
+      "v2PublicPath": "reporting/timing-regime-reporting-infra-v2/verify.mjs",
+      "v2PublicSha256": "ef05f53a6d09f8fa30e0ae765fcdbe8b80ff163422da8e5990d459ee27010d1b",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/timing-regime-reporting-infra-v2/verify.mjs",
+        "sourceSha256": "ef05f53a6d09f8fa30e0ae765fcdbe8b80ff163422da8e5990d459ee27010d1b",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "ef05f53a6d09f8fa30e0ae765fcdbe8b80ff163422da8e5990d459ee27010d1b",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/timing-regime-reporting-infra-v2/verify.mjs",
+        "sourceSha256": "ef05f53a6d09f8fa30e0ae765fcdbe8b80ff163422da8e5990d459ee27010d1b",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/parallel-control-source-v1/accounted-suite-controller-v1/build-sidecar.mjs",
+      "sourceSha256": "07268c6a4475957014a6a842a6d80ef2a34d423c1be96c7155d35283d1d7c984",
+      "publicPath": "execution/accounted-suite-controller-v1/build-sidecar.mjs",
+      "publicSha256": "07268c6a4475957014a6a842a6d80ef2a34d423c1be96c7155d35283d1d7c984",
+      "transformation": "byte-identical",
+      "v2PublicPath": "controllers/accounted-suite-controller-v1/build-sidecar.mjs",
+      "v2PublicSha256": "07268c6a4475957014a6a842a6d80ef2a34d423c1be96c7155d35283d1d7c984",
+      "v3AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v2/controllers/accounted-suite-controller-v1/build-sidecar.mjs",
+        "sourceSha256": "07268c6a4475957014a6a842a6d80ef2a34d423c1be96c7155d35283d1d7c984",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "07268c6a4475957014a6a842a6d80ef2a34d423c1be96c7155d35283d1d7c984",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/execution/accounted-suite-controller-v1/build-sidecar.mjs",
+        "sourceSha256": "07268c6a4475957014a6a842a6d80ef2a34d423c1be96c7155d35283d1d7c984",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/parallel-control-source-v1/accounted-suite-controller-v1/controller.mjs",
+      "sourceSha256": "a231d12e10c8ee5f24bde7b04bc74201f3cea5f56a60876fa129a29775ec0c4a",
+      "publicPath": "execution/accounted-suite-controller-v1/controller.mjs",
+      "publicSha256": "a231d12e10c8ee5f24bde7b04bc74201f3cea5f56a60876fa129a29775ec0c4a",
+      "transformation": "byte-identical",
+      "v2PublicPath": "controllers/accounted-suite-controller-v1/controller.mjs",
+      "v2PublicSha256": "a231d12e10c8ee5f24bde7b04bc74201f3cea5f56a60876fa129a29775ec0c4a",
+      "v3AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v2/controllers/accounted-suite-controller-v1/controller.mjs",
+        "sourceSha256": "a231d12e10c8ee5f24bde7b04bc74201f3cea5f56a60876fa129a29775ec0c4a",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "a231d12e10c8ee5f24bde7b04bc74201f3cea5f56a60876fa129a29775ec0c4a",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/execution/accounted-suite-controller-v1/controller.mjs",
+        "sourceSha256": "a231d12e10c8ee5f24bde7b04bc74201f3cea5f56a60876fa129a29775ec0c4a",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/parallel-control-source-v1/config.mjs",
+      "sourceSha256": "254d184514c75349721ed8555bc8717e9e7b708cd15c536d9935246893ebab7a",
+      "publicPath": "execution/config.mjs",
+      "publicSha256": "254d184514c75349721ed8555bc8717e9e7b708cd15c536d9935246893ebab7a",
+      "transformation": "byte-identical",
+      "v2PublicPath": "controllers/config.mjs",
+      "v2PublicSha256": "254d184514c75349721ed8555bc8717e9e7b708cd15c536d9935246893ebab7a",
+      "v3AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v2/controllers/config.mjs",
+        "sourceSha256": "254d184514c75349721ed8555bc8717e9e7b708cd15c536d9935246893ebab7a",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "254d184514c75349721ed8555bc8717e9e7b708cd15c536d9935246893ebab7a",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/execution/config.mjs",
+        "sourceSha256": "254d184514c75349721ed8555bc8717e9e7b708cd15c536d9935246893ebab7a",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/parallel-control-source-v1/controller.template.json",
+      "sourceSha256": "b290b3028282d0a11d00aab5e2ed98daa6cc1cb35827e09fbe873696ab0f4b2c",
+      "publicPath": "execution/controller.template.json",
+      "publicSha256": "4d864e969857dc6aa6b03bfb017d0c415118005d50fd8f313b2bd5684dd74556",
+      "transformation": "replace illustrative Windows drive paths with explicit config-relative native paths",
+      "v2PublicPath": "controllers/controller.template.json",
+      "v2PublicSha256": "4d864e969857dc6aa6b03bfb017d0c415118005d50fd8f313b2bd5684dd74556",
+      "v3AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v2/controllers/controller.template.json",
+        "sourceSha256": "4d864e969857dc6aa6b03bfb017d0c415118005d50fd8f313b2bd5684dd74556",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "4d864e969857dc6aa6b03bfb017d0c415118005d50fd8f313b2bd5684dd74556",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/execution/controller.template.json",
+        "sourceSha256": "4d864e969857dc6aa6b03bfb017d0c415118005d50fd8f313b2bd5684dd74556",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/parallel-control-source-v1/guard.mjs",
+      "sourceSha256": "e356dfe6990d79f8a2f195bb638a43b3fc6bee59ff958cc5bbc4ab0480dee825",
+      "publicPath": "execution/guard.mjs",
+      "publicSha256": "e356dfe6990d79f8a2f195bb638a43b3fc6bee59ff958cc5bbc4ab0480dee825",
+      "transformation": "byte-identical",
+      "v2PublicPath": "controllers/guard.mjs",
+      "v2PublicSha256": "e356dfe6990d79f8a2f195bb638a43b3fc6bee59ff958cc5bbc4ab0480dee825",
+      "v3AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v2/controllers/guard.mjs",
+        "sourceSha256": "e356dfe6990d79f8a2f195bb638a43b3fc6bee59ff958cc5bbc4ab0480dee825",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "e356dfe6990d79f8a2f195bb638a43b3fc6bee59ff958cc5bbc4ab0480dee825",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/execution/guard.mjs",
+        "sourceSha256": "e356dfe6990d79f8a2f195bb638a43b3fc6bee59ff958cc5bbc4ab0480dee825",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/parallel-control-source-v1/parallel-suite-controller-v2/controller.mjs",
+      "sourceSha256": "5a40d5db1ec603114e777c7d57ff07b0bc41e1da47df8db7c2ffb9d25b655677",
+      "publicPath": "execution/parallel-suite-controller-v2/controller.mjs",
+      "publicSha256": "5a40d5db1ec603114e777c7d57ff07b0bc41e1da47df8db7c2ffb9d25b655677",
+      "transformation": "byte-identical",
+      "v2PublicPath": "controllers/parallel-suite-controller-v2/controller.mjs",
+      "v2PublicSha256": "5a40d5db1ec603114e777c7d57ff07b0bc41e1da47df8db7c2ffb9d25b655677",
+      "v3AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v2/controllers/parallel-suite-controller-v2/controller.mjs",
+        "sourceSha256": "5a40d5db1ec603114e777c7d57ff07b0bc41e1da47df8db7c2ffb9d25b655677",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "5a40d5db1ec603114e777c7d57ff07b0bc41e1da47df8db7c2ffb9d25b655677",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/execution/parallel-suite-controller-v2/controller.mjs",
+        "sourceSha256": "5a40d5db1ec603114e777c7d57ff07b0bc41e1da47df8db7c2ffb9d25b655677",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/parallel-control-source-v1/parallel-suite-controller-v2/scheduler.mjs",
+      "sourceSha256": "b17ef8f5ad17fdb05a40a709852eebf01cf2261bbf5a441a524252a721eb0a9c",
+      "publicPath": "execution/parallel-suite-controller-v2/scheduler.mjs",
+      "publicSha256": "b17ef8f5ad17fdb05a40a709852eebf01cf2261bbf5a441a524252a721eb0a9c",
+      "transformation": "byte-identical",
+      "v2PublicPath": "controllers/parallel-suite-controller-v2/scheduler.mjs",
+      "v2PublicSha256": "b17ef8f5ad17fdb05a40a709852eebf01cf2261bbf5a441a524252a721eb0a9c",
+      "v3AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v2/controllers/parallel-suite-controller-v2/scheduler.mjs",
+        "sourceSha256": "b17ef8f5ad17fdb05a40a709852eebf01cf2261bbf5a441a524252a721eb0a9c",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "b17ef8f5ad17fdb05a40a709852eebf01cf2261bbf5a441a524252a721eb0a9c",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/execution/parallel-suite-controller-v2/scheduler.mjs",
+        "sourceSha256": "b17ef8f5ad17fdb05a40a709852eebf01cf2261bbf5a441a524252a721eb0a9c",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/parallel-control-source-v1/parallel-suite-controller-v2/scheduler.test.mjs",
+      "sourceSha256": "3cb420ce447f1811cfb8dbf306ae268508f20ee589885f6e39f35e48e31dd8ab",
+      "publicPath": "execution/parallel-suite-controller-v2/scheduler.test.mjs",
+      "publicSha256": "3cb420ce447f1811cfb8dbf306ae268508f20ee589885f6e39f35e48e31dd8ab",
+      "transformation": "byte-identical",
+      "v2PublicPath": "controllers/parallel-suite-controller-v2/scheduler.test.mjs",
+      "v2PublicSha256": "3cb420ce447f1811cfb8dbf306ae268508f20ee589885f6e39f35e48e31dd8ab",
+      "v3AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v2/controllers/parallel-suite-controller-v2/scheduler.test.mjs",
+        "sourceSha256": "3cb420ce447f1811cfb8dbf306ae268508f20ee589885f6e39f35e48e31dd8ab",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "3cb420ce447f1811cfb8dbf306ae268508f20ee589885f6e39f35e48e31dd8ab",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/execution/parallel-suite-controller-v2/scheduler.test.mjs",
+        "sourceSha256": "3cb420ce447f1811cfb8dbf306ae268508f20ee589885f6e39f35e48e31dd8ab",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/parallel-control-source-v1/parallel-suite-controller-v2/worker-process.mjs",
+      "sourceSha256": "635dcc87331242f1396c5239b9f90c996bddd9cb25ed21c28346dd34e2388d8c",
+      "publicPath": "execution/parallel-suite-controller-v2/worker-process.mjs",
+      "publicSha256": "635dcc87331242f1396c5239b9f90c996bddd9cb25ed21c28346dd34e2388d8c",
+      "transformation": "byte-identical",
+      "v2PublicPath": "controllers/parallel-suite-controller-v2/worker-process.mjs",
+      "v2PublicSha256": "635dcc87331242f1396c5239b9f90c996bddd9cb25ed21c28346dd34e2388d8c",
+      "v3AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v2/controllers/parallel-suite-controller-v2/worker-process.mjs",
+        "sourceSha256": "635dcc87331242f1396c5239b9f90c996bddd9cb25ed21c28346dd34e2388d8c",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "635dcc87331242f1396c5239b9f90c996bddd9cb25ed21c28346dd34e2388d8c",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/execution/parallel-suite-controller-v2/worker-process.mjs",
+        "sourceSha256": "635dcc87331242f1396c5239b9f90c996bddd9cb25ed21c28346dd34e2388d8c",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/parallel-control-source-v1/parallel-suite-controller-v2/worker-process.test.mjs",
+      "sourceSha256": "fa2ec3b748372277a1efcd4de63c6ce947efc4bb0ed97b357dac93b16624da8a",
+      "publicPath": "execution/parallel-suite-controller-v2/worker-process.test.mjs",
+      "publicSha256": "fa2ec3b748372277a1efcd4de63c6ce947efc4bb0ed97b357dac93b16624da8a",
+      "transformation": "byte-identical",
+      "v2PublicPath": "controllers/parallel-suite-controller-v2/worker-process.test.mjs",
+      "v2PublicSha256": "fa2ec3b748372277a1efcd4de63c6ce947efc4bb0ed97b357dac93b16624da8a",
+      "v3AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v2/controllers/parallel-suite-controller-v2/worker-process.test.mjs",
+        "sourceSha256": "fa2ec3b748372277a1efcd4de63c6ce947efc4bb0ed97b357dac93b16624da8a",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "fa2ec3b748372277a1efcd4de63c6ce947efc4bb0ed97b357dac93b16624da8a",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/execution/parallel-suite-controller-v2/worker-process.test.mjs",
+        "sourceSha256": "fa2ec3b748372277a1efcd4de63c6ce947efc4bb0ed97b357dac93b16624da8a",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/parallel-control-source-v1/relocation.test.mjs",
+      "sourceSha256": "235135e97bb668c7e18e4d0d5ee2989eb4c08f60d32ee3e8d262071661a76bee",
+      "publicPath": "execution/relocation.test.mjs",
+      "publicSha256": "6b84bbe11874278851816cc7072c25d60fdb1f1bdb6630c180f08a480b12c09d",
+      "transformation": "replace unavailable historical-original test only with explicit SKIP/N/A; mandatory 13 portable mapped-hash test unchanged",
+      "v2PublicPath": "controllers/relocation.test.mjs",
+      "v2PublicSha256": "6b84bbe11874278851816cc7072c25d60fdb1f1bdb6630c180f08a480b12c09d",
+      "v3AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v2/controllers/relocation.test.mjs",
+        "sourceSha256": "6b84bbe11874278851816cc7072c25d60fdb1f1bdb6630c180f08a480b12c09d",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "6b84bbe11874278851816cc7072c25d60fdb1f1bdb6630c180f08a480b12c09d",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/execution/relocation.test.mjs",
+        "sourceSha256": "6b84bbe11874278851816cc7072c25d60fdb1f1bdb6630c180f08a480b12c09d",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/parallel-control-source-v1/rolling-suite-controller-v3/controller.mjs",
+      "sourceSha256": "d2bd25538612d918935438df6af3e479fbc3b0df60255b3e8f1b2b99a11ba4ad",
+      "publicPath": "execution/rolling-suite-controller-v3/controller.mjs",
+      "publicSha256": "d2bd25538612d918935438df6af3e479fbc3b0df60255b3e8f1b2b99a11ba4ad",
+      "transformation": "byte-identical",
+      "v2PublicPath": "controllers/rolling-suite-controller-v3/controller.mjs",
+      "v2PublicSha256": "d2bd25538612d918935438df6af3e479fbc3b0df60255b3e8f1b2b99a11ba4ad",
+      "v3AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v2/controllers/rolling-suite-controller-v3/controller.mjs",
+        "sourceSha256": "d2bd25538612d918935438df6af3e479fbc3b0df60255b3e8f1b2b99a11ba4ad",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "d2bd25538612d918935438df6af3e479fbc3b0df60255b3e8f1b2b99a11ba4ad",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/execution/rolling-suite-controller-v3/controller.mjs",
+        "sourceSha256": "d2bd25538612d918935438df6af3e479fbc3b0df60255b3e8f1b2b99a11ba4ad",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/parallel-control-source-v1/rolling-suite-controller-v3/offline.test.mjs",
+      "sourceSha256": "180aea65a167a6b6f11158e2da4a4d5f5961c7c220855cb5fc7bf5639492b32c",
+      "publicPath": "execution/rolling-suite-controller-v3/offline.test.mjs",
+      "publicSha256": "180aea65a167a6b6f11158e2da4a4d5f5961c7c220855cb5fc7bf5639492b32c",
+      "transformation": "byte-identical",
+      "v2PublicPath": "controllers/rolling-suite-controller-v3/offline.test.mjs",
+      "v2PublicSha256": "180aea65a167a6b6f11158e2da4a4d5f5961c7c220855cb5fc7bf5639492b32c",
+      "v3AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v2/controllers/rolling-suite-controller-v3/offline.test.mjs",
+        "sourceSha256": "180aea65a167a6b6f11158e2da4a4d5f5961c7c220855cb5fc7bf5639492b32c",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "180aea65a167a6b6f11158e2da4a4d5f5961c7c220855cb5fc7bf5639492b32c",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/execution/rolling-suite-controller-v3/offline.test.mjs",
+        "sourceSha256": "180aea65a167a6b6f11158e2da4a4d5f5961c7c220855cb5fc7bf5639492b32c",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/parallel-control-source-v1/rolling-suite-controller-v3/receipts.mjs",
+      "sourceSha256": "1a00de343bdf60da285a114e94300ab63760e3363b4751269a94e42a7cc8d76a",
+      "publicPath": "execution/rolling-suite-controller-v3/receipts.mjs",
+      "publicSha256": "1a00de343bdf60da285a114e94300ab63760e3363b4751269a94e42a7cc8d76a",
+      "transformation": "byte-identical",
+      "v2PublicPath": "controllers/rolling-suite-controller-v3/receipts.mjs",
+      "v2PublicSha256": "1a00de343bdf60da285a114e94300ab63760e3363b4751269a94e42a7cc8d76a",
+      "v3AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v2/controllers/rolling-suite-controller-v3/receipts.mjs",
+        "sourceSha256": "1a00de343bdf60da285a114e94300ab63760e3363b4751269a94e42a7cc8d76a",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "1a00de343bdf60da285a114e94300ab63760e3363b4751269a94e42a7cc8d76a",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/execution/rolling-suite-controller-v3/receipts.mjs",
+        "sourceSha256": "1a00de343bdf60da285a114e94300ab63760e3363b4751269a94e42a7cc8d76a",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/parallel-control-source-v1/rolling-suite-controller-v3/scheduler.mjs",
+      "sourceSha256": "1e7256cd5677bfb0a39e83ef73329152640c187903b0ebc54707a91db92de1f9",
+      "publicPath": "execution/rolling-suite-controller-v3/scheduler.mjs",
+      "publicSha256": "1e7256cd5677bfb0a39e83ef73329152640c187903b0ebc54707a91db92de1f9",
+      "transformation": "byte-identical",
+      "v2PublicPath": "controllers/rolling-suite-controller-v3/scheduler.mjs",
+      "v2PublicSha256": "1e7256cd5677bfb0a39e83ef73329152640c187903b0ebc54707a91db92de1f9",
+      "v3AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v2/controllers/rolling-suite-controller-v3/scheduler.mjs",
+        "sourceSha256": "1e7256cd5677bfb0a39e83ef73329152640c187903b0ebc54707a91db92de1f9",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "1e7256cd5677bfb0a39e83ef73329152640c187903b0ebc54707a91db92de1f9",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/execution/rolling-suite-controller-v3/scheduler.mjs",
+        "sourceSha256": "1e7256cd5677bfb0a39e83ef73329152640c187903b0ebc54707a91db92de1f9",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/parallel-control-source-v1/rolling-suite-controller-v3/worker-process.mjs",
+      "sourceSha256": "edb42a774c8b97fb69289341907b3673d7364a417350fe6b765523bf4cd1d31a",
+      "publicPath": "execution/rolling-suite-controller-v3/worker-process.mjs",
+      "publicSha256": "edb42a774c8b97fb69289341907b3673d7364a417350fe6b765523bf4cd1d31a",
+      "transformation": "byte-identical",
+      "v2PublicPath": "controllers/rolling-suite-controller-v3/worker-process.mjs",
+      "v2PublicSha256": "edb42a774c8b97fb69289341907b3673d7364a417350fe6b765523bf4cd1d31a",
+      "v3AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v2/controllers/rolling-suite-controller-v3/worker-process.mjs",
+        "sourceSha256": "edb42a774c8b97fb69289341907b3673d7364a417350fe6b765523bf4cd1d31a",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "edb42a774c8b97fb69289341907b3673d7364a417350fe6b765523bf4cd1d31a",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/execution/rolling-suite-controller-v3/worker-process.mjs",
+        "sourceSha256": "edb42a774c8b97fb69289341907b3673d7364a417350fe6b765523bf4cd1d31a",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/parallel-control-source-v1/source-inventory.mjs",
+      "sourceSha256": "e2a4aa4fe7230b4419fe00ee9295fe2b6a0f0def4f7f8de13aefe4d0e4c7cecf",
+      "publicPath": "execution/source-inventory.mjs",
+      "publicSha256": "e2a4aa4fe7230b4419fe00ee9295fe2b6a0f0def4f7f8de13aefe4d0e4c7cecf",
+      "transformation": "byte-identical",
+      "v2PublicPath": "controllers/source-inventory.mjs",
+      "v2PublicSha256": "e2a4aa4fe7230b4419fe00ee9295fe2b6a0f0def4f7f8de13aefe4d0e4c7cecf",
+      "v3AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v2/controllers/source-inventory.mjs",
+        "sourceSha256": "e2a4aa4fe7230b4419fe00ee9295fe2b6a0f0def4f7f8de13aefe4d0e4c7cecf",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "e2a4aa4fe7230b4419fe00ee9295fe2b6a0f0def4f7f8de13aefe4d0e4c7cecf",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/execution/source-inventory.mjs",
+        "sourceSha256": "e2a4aa4fe7230b4419fe00ee9295fe2b6a0f0def4f7f8de13aefe4d0e4c7cecf",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/parallel-control-source-v1/SOURCE-MAPPING.json",
+      "sourceSha256": "7a7c97980bf26f5d42ef8b8a2eef44f35ba5c33a369ebbb3c240f7680c16b586",
+      "publicPath": "execution/SOURCE-MAPPING.json",
+      "publicSha256": "0e318ab22025857ed183a04e04e0cbeacc62873d031e4c641951737913497421",
+      "transformation": "replace original private absolute sourcePath with logical sourceId; retain every original/portable hash and changed field; add private mapping/patch hashes",
+      "v2PublicPath": "controllers/SOURCE-MAPPING.json",
+      "v2PublicSha256": "0e318ab22025857ed183a04e04e0cbeacc62873d031e4c641951737913497421",
+      "v3AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v2/controllers/SOURCE-MAPPING.json",
+        "sourceSha256": "0e318ab22025857ed183a04e04e0cbeacc62873d031e4c641951737913497421",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "0e318ab22025857ed183a04e04e0cbeacc62873d031e4c641951737913497421",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/execution/SOURCE-MAPPING.json",
+        "sourceSha256": "0e318ab22025857ed183a04e04e0cbeacc62873d031e4c641951737913497421",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/parallel-control-source-v1/README.md",
+      "sourceSha256": "fcfb76994112c1631c6acf30bcc1644d3381945a42c9d05d2e2a116a183b24c7",
+      "publicPath": "execution/README.md",
+      "publicSha256": "77cb6e0197afccd51c7eca8a4cf403a39d371f21e92684514a19f8b747db0c4c",
+      "transformation": "retain runtime protocol documentation; adapt final community/controllers location and native template; replace private audit links/claims with public provenance, exact commands and explicit historical verification gap",
+      "v2PublicPath": "controllers/README.md",
+      "v2PublicSha256": "dc1e68f01cf2b92369b704871312845e90f4b9ad641f00f8cf7ba38856b569a7",
+      "v3AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v2/controllers/README.md",
+        "sourceSha256": "dc1e68f01cf2b92369b704871312845e90f4b9ad641f00f8cf7ba38856b569a7",
+        "change": "one documentation path replacement only: community/controllers -> community/execution"
+      },
+      "v3PublicSha256": "77cb6e0197afccd51c7eca8a4cf403a39d371f21e92684514a19f8b747db0c4c",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/execution/README.md",
+        "sourceSha256": "77cb6e0197afccd51c7eca8a4cf403a39d371f21e92684514a19f8b747db0c4c",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "delivery-staging/parallel-control-source-v1/SOURCE-INVENTORY.json",
+      "sourceSha256": "e4f9f30ebb20811b762bc6d07be3f1b656ed067fbfd2f38f272fc4717143867a",
+      "publicPath": "execution/SOURCE-INVENTORY.json",
+      "publicSha256": "b3eb973ad0975f42f06debbdbddb93fdba6061f6a6de30d6c62eedf375eab5b3",
+      "transformation": "regenerate exact public controller membership: 19 entries plus self; omitted nine private audit files",
+      "v2PublicPath": "controllers/SOURCE-INVENTORY.json",
+      "v2PublicSha256": "94cb808c0d40c9a47728b535a034244c8b6bed123e056de6a61e5f343a85c111",
+      "v3AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v2/controllers/SOURCE-INVENTORY.json",
+        "sourceSha256": "94cb808c0d40c9a47728b535a034244c8b6bed123e056de6a61e5f343a85c111",
+        "change": "update README member hash only; all19 relative member names and exclusions preserved"
+      },
+      "v3PublicSha256": "b3eb973ad0975f42f06debbdbddb93fdba6061f6a6de30d6c62eedf375eab5b3",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/execution/SOURCE-INVENTORY.json",
+        "sourceSha256": "b3eb973ad0975f42f06debbdbddb93fdba6061f6a6de30d6c62eedf375eab5b3",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "quality-candidate/export.mjs",
+      "sourceSha256": "9928511990b8ddd59ad9fc6c404e8d9ba2e2b45ee92bdd67ede3756123c2fe3e",
+      "publicPath": "reporting/quality-replay-sibling-infra-v1/export.mjs",
+      "publicSha256": "6d3799a4771d6951cb964175010aba5663cf5bcaf27e23958e7dc997b1d6a32b",
+      "transformation": "mechanical static import relocation: 3 toolkit prefix occurrences replaced by ../",
+      "sourceAcceptance": "pending independent root review; frozen input bytes only",
+      "v2PublicPath": "reporting/quality-replay-sibling-infra-v1/export.mjs",
+      "v2PublicSha256": "d525ea60a2ea207148b885434854d6cacdbd3e00b3355def477f7776f77424de",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/quality-replay-sibling-infra-v1/export.mjs",
+        "sourceSha256": "d525ea60a2ea207148b885434854d6cacdbd3e00b3355def477f7776f77424de",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "d525ea60a2ea207148b885434854d6cacdbd3e00b3355def477f7776f77424de",
+      "v4AssemblyInput": {
+        "sourceId": "reports/quality-replay-line-ending-fix-v1/export.mjs",
+        "sourceSha256": "d525ea60a2ea207148b885434854d6cacdbd3e00b3355def477f7776f77424de",
+        "change": "byte-identical"
+      },
+      "v6AssemblyInput": {
+        "sourceId": "reports/quality-swe-image-baseline-fix-v1/export.mjs",
+        "sourceSha256": "6d3799a4771d6951cb964175010aba5663cf5bcaf27e23958e7dc997b1d6a32b",
+        "publicSha256": "6d3799a4771d6951cb964175010aba5663cf5bcaf27e23958e7dc997b1d6a32b",
+        "change": "byte-identical candidate copy",
+        "v5PublicSha256": "d525ea60a2ea207148b885434854d6cacdbd3e00b3355def477f7776f77424de"
+      },
+      "v5PublicSha256": "d525ea60a2ea207148b885434854d6cacdbd3e00b3355def477f7776f77424de",
+      "v7AssemblyInput": {
+        "sourceId": "reports/quality-actual-report-contract-fix-v1/export.mjs",
+        "sourceSha256": "6d3799a4771d6951cb964175010aba5663cf5bcaf27e23958e7dc997b1d6a32b",
+        "publicSha256": "6d3799a4771d6951cb964175010aba5663cf5bcaf27e23958e7dc997b1d6a32b",
+        "change": "byte-identical candidate copy",
+        "v6PublicSha256": "6d3799a4771d6951cb964175010aba5663cf5bcaf27e23958e7dc997b1d6a32b"
+      },
+      "v9AssemblyInput": {
+        "sourceId": "reports/quality-runtime-reconstruction-boundary-fix-v1/export.mjs",
+        "sourceSha256": "6d3799a4771d6951cb964175010aba5663cf5bcaf27e23958e7dc997b1d6a32b",
+        "publicSha256": "6d3799a4771d6951cb964175010aba5663cf5bcaf27e23958e7dc997b1d6a32b",
+        "v8PublicSha256": "6d3799a4771d6951cb964175010aba5663cf5bcaf27e23958e7dc997b1d6a32b",
+        "change": "byte-identical candidate copy"
+      }
+    },
+    {
+      "sourceId": "quality-candidate/core.mjs",
+      "sourceSha256": "aed0c854705dc002cec54ba0a5a782adffed00868e569f696c1fb1fa92cfd0cd",
+      "publicPath": "reporting/quality-replay-sibling-infra-v1/core.mjs",
+      "publicSha256": "3966338ad159fd3c8e16c2e350d9b6ee7d9dd7cbe1196be49a703fb329842668",
+      "transformation": "byte-identical",
+      "sourceAcceptance": "pending independent root review; frozen input bytes only",
+      "v2PublicPath": "reporting/quality-replay-sibling-infra-v1/core.mjs",
+      "v2PublicSha256": "aed0c854705dc002cec54ba0a5a782adffed00868e569f696c1fb1fa92cfd0cd",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/quality-replay-sibling-infra-v1/core.mjs",
+        "sourceSha256": "aed0c854705dc002cec54ba0a5a782adffed00868e569f696c1fb1fa92cfd0cd",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "aed0c854705dc002cec54ba0a5a782adffed00868e569f696c1fb1fa92cfd0cd",
+      "v4AssemblyInput": {
+        "sourceId": "reports/quality-replay-line-ending-fix-v1/core.mjs",
+        "sourceSha256": "aed0c854705dc002cec54ba0a5a782adffed00868e569f696c1fb1fa92cfd0cd",
+        "change": "byte-identical"
+      },
+      "v6AssemblyInput": {
+        "sourceId": "reports/quality-swe-image-baseline-fix-v1/core.mjs",
+        "sourceSha256": "aed0c854705dc002cec54ba0a5a782adffed00868e569f696c1fb1fa92cfd0cd",
+        "publicSha256": "aed0c854705dc002cec54ba0a5a782adffed00868e569f696c1fb1fa92cfd0cd",
+        "change": "byte-identical candidate copy",
+        "v5PublicSha256": "aed0c854705dc002cec54ba0a5a782adffed00868e569f696c1fb1fa92cfd0cd"
+      },
+      "v7AssemblyInput": {
+        "sourceId": "reports/quality-actual-report-contract-fix-v1/core.mjs",
+        "sourceSha256": "3966338ad159fd3c8e16c2e350d9b6ee7d9dd7cbe1196be49a703fb329842668",
+        "publicSha256": "3966338ad159fd3c8e16c2e350d9b6ee7d9dd7cbe1196be49a703fb329842668",
+        "change": "byte-identical candidate copy",
+        "v6PublicSha256": "aed0c854705dc002cec54ba0a5a782adffed00868e569f696c1fb1fa92cfd0cd"
+      },
+      "v6PublicSha256": "aed0c854705dc002cec54ba0a5a782adffed00868e569f696c1fb1fa92cfd0cd",
+      "v9AssemblyInput": {
+        "sourceId": "reports/quality-runtime-reconstruction-boundary-fix-v1/core.mjs",
+        "sourceSha256": "3966338ad159fd3c8e16c2e350d9b6ee7d9dd7cbe1196be49a703fb329842668",
+        "publicSha256": "3966338ad159fd3c8e16c2e350d9b6ee7d9dd7cbe1196be49a703fb329842668",
+        "v8PublicSha256": "3966338ad159fd3c8e16c2e350d9b6ee7d9dd7cbe1196be49a703fb329842668",
+        "change": "byte-identical candidate copy"
+      }
+    },
+    {
+      "sourceId": "quality-candidate/replay.mjs",
+      "sourceSha256": "967290501645e07a395e2991b8386eb55dc90b93d5c0c9007b4bfc76433a57ef",
+      "publicPath": "reporting/quality-replay-sibling-infra-v1/replay.mjs",
+      "publicSha256": "967290501645e07a395e2991b8386eb55dc90b93d5c0c9007b4bfc76433a57ef",
+      "transformation": "byte-identical",
+      "sourceAcceptance": "pending independent root review; frozen input bytes only",
+      "v2PublicPath": "reporting/quality-replay-sibling-infra-v1/replay.mjs",
+      "v2PublicSha256": "967290501645e07a395e2991b8386eb55dc90b93d5c0c9007b4bfc76433a57ef",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/quality-replay-sibling-infra-v1/replay.mjs",
+        "sourceSha256": "967290501645e07a395e2991b8386eb55dc90b93d5c0c9007b4bfc76433a57ef",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "967290501645e07a395e2991b8386eb55dc90b93d5c0c9007b4bfc76433a57ef",
+      "v4AssemblyInput": {
+        "sourceId": "reports/quality-replay-line-ending-fix-v1/replay.mjs",
+        "sourceSha256": "967290501645e07a395e2991b8386eb55dc90b93d5c0c9007b4bfc76433a57ef",
+        "change": "byte-identical"
+      },
+      "v6AssemblyInput": {
+        "sourceId": "reports/quality-swe-image-baseline-fix-v1/replay.mjs",
+        "sourceSha256": "967290501645e07a395e2991b8386eb55dc90b93d5c0c9007b4bfc76433a57ef",
+        "publicSha256": "967290501645e07a395e2991b8386eb55dc90b93d5c0c9007b4bfc76433a57ef",
+        "change": "byte-identical candidate copy",
+        "v5PublicSha256": "967290501645e07a395e2991b8386eb55dc90b93d5c0c9007b4bfc76433a57ef"
+      },
+      "v7AssemblyInput": {
+        "sourceId": "reports/quality-actual-report-contract-fix-v1/replay.mjs",
+        "sourceSha256": "967290501645e07a395e2991b8386eb55dc90b93d5c0c9007b4bfc76433a57ef",
+        "publicSha256": "967290501645e07a395e2991b8386eb55dc90b93d5c0c9007b4bfc76433a57ef",
+        "change": "byte-identical candidate copy",
+        "v6PublicSha256": "967290501645e07a395e2991b8386eb55dc90b93d5c0c9007b4bfc76433a57ef"
+      },
+      "v9AssemblyInput": {
+        "sourceId": "reports/quality-runtime-reconstruction-boundary-fix-v1/replay.mjs",
+        "sourceSha256": "967290501645e07a395e2991b8386eb55dc90b93d5c0c9007b4bfc76433a57ef",
+        "publicSha256": "967290501645e07a395e2991b8386eb55dc90b93d5c0c9007b4bfc76433a57ef",
+        "v8PublicSha256": "967290501645e07a395e2991b8386eb55dc90b93d5c0c9007b4bfc76433a57ef",
+        "change": "byte-identical candidate copy"
+      }
+    },
+    {
+      "sourceId": "quality-candidate/verify.mjs",
+      "sourceSha256": "dc6f644b2bbf0e4474568af33e5197546c929bf0d0a279a382230c714fb5bedb",
+      "publicPath": "reporting/quality-replay-sibling-infra-v1/verify.mjs",
+      "publicSha256": "dc6f644b2bbf0e4474568af33e5197546c929bf0d0a279a382230c714fb5bedb",
+      "transformation": "byte-identical",
+      "sourceAcceptance": "pending independent root review; frozen input bytes only",
+      "v2PublicPath": "reporting/quality-replay-sibling-infra-v1/verify.mjs",
+      "v2PublicSha256": "dc6f644b2bbf0e4474568af33e5197546c929bf0d0a279a382230c714fb5bedb",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/quality-replay-sibling-infra-v1/verify.mjs",
+        "sourceSha256": "dc6f644b2bbf0e4474568af33e5197546c929bf0d0a279a382230c714fb5bedb",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "dc6f644b2bbf0e4474568af33e5197546c929bf0d0a279a382230c714fb5bedb",
+      "v4AssemblyInput": {
+        "sourceId": "reports/quality-replay-line-ending-fix-v1/verify.mjs",
+        "sourceSha256": "dc6f644b2bbf0e4474568af33e5197546c929bf0d0a279a382230c714fb5bedb",
+        "change": "byte-identical"
+      },
+      "v6AssemblyInput": {
+        "sourceId": "reports/quality-swe-image-baseline-fix-v1/verify.mjs",
+        "sourceSha256": "dc6f644b2bbf0e4474568af33e5197546c929bf0d0a279a382230c714fb5bedb",
+        "publicSha256": "dc6f644b2bbf0e4474568af33e5197546c929bf0d0a279a382230c714fb5bedb",
+        "change": "byte-identical candidate copy",
+        "v5PublicSha256": "dc6f644b2bbf0e4474568af33e5197546c929bf0d0a279a382230c714fb5bedb"
+      },
+      "v7AssemblyInput": {
+        "sourceId": "reports/quality-actual-report-contract-fix-v1/verify.mjs",
+        "sourceSha256": "dc6f644b2bbf0e4474568af33e5197546c929bf0d0a279a382230c714fb5bedb",
+        "publicSha256": "dc6f644b2bbf0e4474568af33e5197546c929bf0d0a279a382230c714fb5bedb",
+        "change": "byte-identical candidate copy",
+        "v6PublicSha256": "dc6f644b2bbf0e4474568af33e5197546c929bf0d0a279a382230c714fb5bedb"
+      },
+      "v9AssemblyInput": {
+        "sourceId": "reports/quality-runtime-reconstruction-boundary-fix-v1/verify.mjs",
+        "sourceSha256": "dc6f644b2bbf0e4474568af33e5197546c929bf0d0a279a382230c714fb5bedb",
+        "publicSha256": "dc6f644b2bbf0e4474568af33e5197546c929bf0d0a279a382230c714fb5bedb",
+        "v8PublicSha256": "dc6f644b2bbf0e4474568af33e5197546c929bf0d0a279a382230c714fb5bedb",
+        "change": "byte-identical candidate copy"
+      }
+    },
+    {
+      "sourceId": "quality-candidate/recipe.md",
+      "sourceSha256": "5eaf9576050ccf957a992ca5569fe1ae98eddf71aa322c19f14536f4487d62bb",
+      "publicPath": "reporting/quality-replay-sibling-infra-v1/recipe.md",
+      "publicSha256": "bc58e8ddb0a88159d4d590ae9cd6380589d58d5fd175509dbf9be1479358b725",
+      "transformation": "byte-identical",
+      "sourceAcceptance": "pending independent root review; frozen input bytes only",
+      "v2PublicPath": "reporting/quality-replay-sibling-infra-v1/recipe.md",
+      "v2PublicSha256": "5eaf9576050ccf957a992ca5569fe1ae98eddf71aa322c19f14536f4487d62bb",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/quality-replay-sibling-infra-v1/recipe.md",
+        "sourceSha256": "5eaf9576050ccf957a992ca5569fe1ae98eddf71aa322c19f14536f4487d62bb",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "5eaf9576050ccf957a992ca5569fe1ae98eddf71aa322c19f14536f4487d62bb",
+      "v4AssemblyInput": {
+        "sourceId": "reports/quality-replay-line-ending-fix-v1/recipe.md",
+        "sourceSha256": "3d7cd98bb77ad37eaf036d75e719e1a9e1d925883bcf5f5d7deb209d84e46f40",
+        "change": "byte-identical"
+      },
+      "v6AssemblyInput": {
+        "sourceId": "reports/quality-swe-image-baseline-fix-v1/recipe.md",
+        "sourceSha256": "a3f59866c528594eea4999ec4170db34bf1ed77d29c397e1aada12788cb2d085",
+        "publicSha256": "a3f59866c528594eea4999ec4170db34bf1ed77d29c397e1aada12788cb2d085",
+        "change": "byte-identical candidate copy",
+        "v5PublicSha256": "3d7cd98bb77ad37eaf036d75e719e1a9e1d925883bcf5f5d7deb209d84e46f40"
+      },
+      "v5PublicSha256": "3d7cd98bb77ad37eaf036d75e719e1a9e1d925883bcf5f5d7deb209d84e46f40",
+      "v7AssemblyInput": {
+        "sourceId": "reports/quality-actual-report-contract-fix-v1/recipe.md",
+        "sourceSha256": "bc58e8ddb0a88159d4d590ae9cd6380589d58d5fd175509dbf9be1479358b725",
+        "publicSha256": "bc58e8ddb0a88159d4d590ae9cd6380589d58d5fd175509dbf9be1479358b725",
+        "change": "byte-identical candidate copy",
+        "v6PublicSha256": "a3f59866c528594eea4999ec4170db34bf1ed77d29c397e1aada12788cb2d085"
+      },
+      "v6PublicSha256": "a3f59866c528594eea4999ec4170db34bf1ed77d29c397e1aada12788cb2d085",
+      "v9AssemblyInput": {
+        "sourceId": "reports/quality-runtime-reconstruction-boundary-fix-v1/recipe.md",
+        "sourceSha256": "bc58e8ddb0a88159d4d590ae9cd6380589d58d5fd175509dbf9be1479358b725",
+        "publicSha256": "bc58e8ddb0a88159d4d590ae9cd6380589d58d5fd175509dbf9be1479358b725",
+        "v8PublicSha256": "bc58e8ddb0a88159d4d590ae9cd6380589d58d5fd175509dbf9be1479358b725",
+        "change": "byte-identical candidate copy"
+      }
+    },
+    {
+      "sourceId": "quality-candidate/README.md",
+      "sourceSha256": "a08de0e2a5bbd4e51dceb16e16633dea5171a72738270727bd9427197a2f2846",
+      "publicPath": "reporting/quality-replay-sibling-infra-v1/README.md",
+      "publicSha256": "66db686d900e24a2fe90c9def718ff14d656e39c6d2d4b702b5d70cf131b1506",
+      "transformation": "documentation only: publish module-local test commands and explicit external runtime/helper mappings; no private review-path dependency",
+      "sourceAcceptance": "pending independent root review; frozen input bytes only",
+      "v2PublicPath": "reporting/quality-replay-sibling-infra-v1/README.md",
+      "v2PublicSha256": "67e700552e98f1c46a85920583a2e0ba50f22ec67109a20c730da4627c8b7c58",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/quality-replay-sibling-infra-v1/README.md",
+        "sourceSha256": "67e700552e98f1c46a85920583a2e0ba50f22ec67109a20c730da4627c8b7c58",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "67e700552e98f1c46a85920583a2e0ba50f22ec67109a20c730da4627c8b7c58",
+      "v4AssemblyInput": {
+        "sourceId": "reports/quality-replay-line-ending-fix-v1/README.md",
+        "sourceSha256": "b6ff89647b84cd792b8906dc14e9ff82dc78037fb37ee06d5c8f6d4c849437a6",
+        "change": "byte-identical"
+      },
+      "v6AssemblyInput": {
+        "sourceId": "reports/quality-swe-image-baseline-fix-v1/README.md",
+        "sourceSha256": "e549664cfddcab9f1e70bbed37a333c97250f5b04c461dafdb18f318369704f9",
+        "publicSha256": "e549664cfddcab9f1e70bbed37a333c97250f5b04c461dafdb18f318369704f9",
+        "change": "byte-identical candidate copy",
+        "v5PublicSha256": "b6ff89647b84cd792b8906dc14e9ff82dc78037fb37ee06d5c8f6d4c849437a6"
+      },
+      "v5PublicSha256": "b6ff89647b84cd792b8906dc14e9ff82dc78037fb37ee06d5c8f6d4c849437a6",
+      "v7AssemblyInput": {
+        "sourceId": "reports/quality-actual-report-contract-fix-v1/README.md",
+        "sourceSha256": "53f5cdba06f4b5ef7be78fbd0cc8073e1ff1467bc1ea32810682bb8cae6218d1",
+        "publicSha256": "53f5cdba06f4b5ef7be78fbd0cc8073e1ff1467bc1ea32810682bb8cae6218d1",
+        "change": "byte-identical candidate copy",
+        "v6PublicSha256": "e549664cfddcab9f1e70bbed37a333c97250f5b04c461dafdb18f318369704f9"
+      },
+      "v6PublicSha256": "e549664cfddcab9f1e70bbed37a333c97250f5b04c461dafdb18f318369704f9",
+      "v9AssemblyInput": {
+        "sourceId": "reports/quality-runtime-reconstruction-boundary-fix-v1/README.md",
+        "sourceSha256": "66db686d900e24a2fe90c9def718ff14d656e39c6d2d4b702b5d70cf131b1506",
+        "publicSha256": "66db686d900e24a2fe90c9def718ff14d656e39c6d2d4b702b5d70cf131b1506",
+        "v8PublicSha256": "53f5cdba06f4b5ef7be78fbd0cc8073e1ff1467bc1ea32810682bb8cae6218d1",
+        "change": "byte-identical candidate copy"
+      },
+      "v8PublicSha256": "53f5cdba06f4b5ef7be78fbd0cc8073e1ff1467bc1ea32810682bb8cae6218d1"
+    },
+    {
+      "sourceId": "quality-candidate/synthetic-tests.mjs",
+      "sourceSha256": "41487a0a9536009d33f12854ad8fec21e0ee3431ccbfcfd227d42b15ce9bd29e",
+      "publicPath": "reporting/quality-replay-sibling-infra-v1/synthetic-tests.mjs",
+      "publicSha256": "afe0411d320733bef9ca093e3c4673d8e9c2d8df8d3c23b53bc0bf543054ae21",
+      "transformation": "byte-identical",
+      "sourceAcceptance": "pending independent root review; frozen input bytes only",
+      "v2PublicPath": "reporting/quality-replay-sibling-infra-v1/synthetic-tests.mjs",
+      "v2PublicSha256": "41487a0a9536009d33f12854ad8fec21e0ee3431ccbfcfd227d42b15ce9bd29e",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/quality-replay-sibling-infra-v1/synthetic-tests.mjs",
+        "sourceSha256": "41487a0a9536009d33f12854ad8fec21e0ee3431ccbfcfd227d42b15ce9bd29e",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "41487a0a9536009d33f12854ad8fec21e0ee3431ccbfcfd227d42b15ce9bd29e",
+      "v4AssemblyInput": {
+        "sourceId": "reports/quality-replay-line-ending-fix-v1/synthetic-tests.mjs",
+        "sourceSha256": "41487a0a9536009d33f12854ad8fec21e0ee3431ccbfcfd227d42b15ce9bd29e",
+        "change": "byte-identical"
+      },
+      "v6AssemblyInput": {
+        "sourceId": "reports/quality-swe-image-baseline-fix-v1/synthetic-tests.mjs",
+        "sourceSha256": "af5e7ab1a0fc65dcedc324b101849411a33682f9a2e9bd33c3969459e03454ea",
+        "publicSha256": "af5e7ab1a0fc65dcedc324b101849411a33682f9a2e9bd33c3969459e03454ea",
+        "change": "byte-identical candidate copy",
+        "v5PublicSha256": "41487a0a9536009d33f12854ad8fec21e0ee3431ccbfcfd227d42b15ce9bd29e"
+      },
+      "v5PublicSha256": "41487a0a9536009d33f12854ad8fec21e0ee3431ccbfcfd227d42b15ce9bd29e",
+      "v7AssemblyInput": {
+        "sourceId": "reports/quality-actual-report-contract-fix-v1/synthetic-tests.mjs",
+        "sourceSha256": "236d6106404efd5005bacbfdab2a3c56f0977fc85d59fb41ee68ec8ee91a66af",
+        "publicSha256": "236d6106404efd5005bacbfdab2a3c56f0977fc85d59fb41ee68ec8ee91a66af",
+        "change": "byte-identical candidate copy",
+        "v6PublicSha256": "af5e7ab1a0fc65dcedc324b101849411a33682f9a2e9bd33c3969459e03454ea"
+      },
+      "v6PublicSha256": "af5e7ab1a0fc65dcedc324b101849411a33682f9a2e9bd33c3969459e03454ea",
+      "v9AssemblyInput": {
+        "sourceId": "reports/quality-runtime-reconstruction-boundary-fix-v1/synthetic-tests.mjs",
+        "sourceSha256": "afe0411d320733bef9ca093e3c4673d8e9c2d8df8d3c23b53bc0bf543054ae21",
+        "publicSha256": "afe0411d320733bef9ca093e3c4673d8e9c2d8df8d3c23b53bc0bf543054ae21",
+        "v8PublicSha256": "236d6106404efd5005bacbfdab2a3c56f0977fc85d59fb41ee68ec8ee91a66af",
+        "change": "byte-identical candidate copy"
+      },
+      "v8PublicSha256": "236d6106404efd5005bacbfdab2a3c56f0977fc85d59fb41ee68ec8ee91a66af"
+    },
+    {
+      "sourceId": "quality-candidate/baseline-policy-tests.mjs",
+      "sourceSha256": "aabf09a98fee5cf5af782393b2c3d5d296c95a359fba2754e848db541c8aac7e",
+      "publicPath": "reporting/quality-replay-sibling-infra-v1/baseline-policy-tests.mjs",
+      "publicSha256": "0aa70eab27cd029569bd627760155c90c4c6dd27407580788e85574c38e9647a",
+      "transformation": "byte-identical",
+      "sourceAcceptance": "pending independent root review; frozen input bytes only",
+      "v2PublicPath": "reporting/quality-replay-sibling-infra-v1/baseline-policy-tests.mjs",
+      "v2PublicSha256": "aabf09a98fee5cf5af782393b2c3d5d296c95a359fba2754e848db541c8aac7e",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/quality-replay-sibling-infra-v1/baseline-policy-tests.mjs",
+        "sourceSha256": "aabf09a98fee5cf5af782393b2c3d5d296c95a359fba2754e848db541c8aac7e",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "aabf09a98fee5cf5af782393b2c3d5d296c95a359fba2754e848db541c8aac7e",
+      "v4AssemblyInput": {
+        "sourceId": "reports/quality-replay-line-ending-fix-v1/baseline-policy-tests.mjs",
+        "sourceSha256": "aabf09a98fee5cf5af782393b2c3d5d296c95a359fba2754e848db541c8aac7e",
+        "change": "byte-identical"
+      },
+      "v6AssemblyInput": {
+        "sourceId": "reports/quality-swe-image-baseline-fix-v1/baseline-policy-tests.mjs",
+        "sourceSha256": "0aa70eab27cd029569bd627760155c90c4c6dd27407580788e85574c38e9647a",
+        "publicSha256": "0aa70eab27cd029569bd627760155c90c4c6dd27407580788e85574c38e9647a",
+        "change": "byte-identical candidate copy",
+        "v5PublicSha256": "aabf09a98fee5cf5af782393b2c3d5d296c95a359fba2754e848db541c8aac7e"
+      },
+      "v5PublicSha256": "aabf09a98fee5cf5af782393b2c3d5d296c95a359fba2754e848db541c8aac7e",
+      "v7AssemblyInput": {
+        "sourceId": "reports/quality-actual-report-contract-fix-v1/baseline-policy-tests.mjs",
+        "sourceSha256": "0aa70eab27cd029569bd627760155c90c4c6dd27407580788e85574c38e9647a",
+        "publicSha256": "0aa70eab27cd029569bd627760155c90c4c6dd27407580788e85574c38e9647a",
+        "change": "byte-identical candidate copy",
+        "v6PublicSha256": "0aa70eab27cd029569bd627760155c90c4c6dd27407580788e85574c38e9647a"
+      },
+      "v9AssemblyInput": {
+        "sourceId": "reports/quality-runtime-reconstruction-boundary-fix-v1/baseline-policy-tests.mjs",
+        "sourceSha256": "0aa70eab27cd029569bd627760155c90c4c6dd27407580788e85574c38e9647a",
+        "publicSha256": "0aa70eab27cd029569bd627760155c90c4c6dd27407580788e85574c38e9647a",
+        "v8PublicSha256": "0aa70eab27cd029569bd627760155c90c4c6dd27407580788e85574c38e9647a",
+        "change": "byte-identical candidate copy"
+      }
+    },
+    {
+      "sourceId": "quality-candidate/assets.mjs",
+      "sourceSha256": "df01dfb58b3f02fb9cbb0ce8b439db6a49c94f699b4f7fbb208b71c747f58fb6",
+      "publicPath": "reporting/quality-replay-sibling-infra-v1/assets.mjs",
+      "publicSha256": "a0848fc61c5394ac8bbada22cd2fbf365c23517eb6325e8edcbe21e447c9df48",
+      "transformation": "byte-identical",
+      "sourceAcceptance": "pending independent root review; frozen input bytes only",
+      "v2PublicPath": "reporting/quality-replay-sibling-infra-v1/assets.mjs",
+      "v2PublicSha256": "df01dfb58b3f02fb9cbb0ce8b439db6a49c94f699b4f7fbb208b71c747f58fb6",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/quality-replay-sibling-infra-v1/assets.mjs",
+        "sourceSha256": "df01dfb58b3f02fb9cbb0ce8b439db6a49c94f699b4f7fbb208b71c747f58fb6",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "df01dfb58b3f02fb9cbb0ce8b439db6a49c94f699b4f7fbb208b71c747f58fb6",
+      "v4AssemblyInput": {
+        "sourceId": "reports/quality-replay-line-ending-fix-v1/assets.mjs",
+        "sourceSha256": "df01dfb58b3f02fb9cbb0ce8b439db6a49c94f699b4f7fbb208b71c747f58fb6",
+        "change": "byte-identical"
+      },
+      "v6AssemblyInput": {
+        "sourceId": "reports/quality-swe-image-baseline-fix-v1/assets.mjs",
+        "sourceSha256": "df01dfb58b3f02fb9cbb0ce8b439db6a49c94f699b4f7fbb208b71c747f58fb6",
+        "publicSha256": "df01dfb58b3f02fb9cbb0ce8b439db6a49c94f699b4f7fbb208b71c747f58fb6",
+        "change": "byte-identical candidate copy",
+        "v5PublicSha256": "df01dfb58b3f02fb9cbb0ce8b439db6a49c94f699b4f7fbb208b71c747f58fb6"
+      },
+      "v7AssemblyInput": {
+        "sourceId": "reports/quality-actual-report-contract-fix-v1/assets.mjs",
+        "sourceSha256": "df01dfb58b3f02fb9cbb0ce8b439db6a49c94f699b4f7fbb208b71c747f58fb6",
+        "publicSha256": "df01dfb58b3f02fb9cbb0ce8b439db6a49c94f699b4f7fbb208b71c747f58fb6",
+        "change": "byte-identical candidate copy",
+        "v6PublicSha256": "df01dfb58b3f02fb9cbb0ce8b439db6a49c94f699b4f7fbb208b71c747f58fb6"
+      },
+      "v9AssemblyInput": {
+        "sourceId": "reports/quality-runtime-reconstruction-boundary-fix-v1/assets.mjs",
+        "sourceSha256": "a0848fc61c5394ac8bbada22cd2fbf365c23517eb6325e8edcbe21e447c9df48",
+        "publicSha256": "a0848fc61c5394ac8bbada22cd2fbf365c23517eb6325e8edcbe21e447c9df48",
+        "v8PublicSha256": "df01dfb58b3f02fb9cbb0ce8b439db6a49c94f699b4f7fbb208b71c747f58fb6",
+        "change": "byte-identical candidate copy"
+      },
+      "v8PublicSha256": "df01dfb58b3f02fb9cbb0ce8b439db6a49c94f699b4f7fbb208b71c747f58fb6"
+    },
+    {
+      "sourceId": "quality-candidate/prepare-inputs.py",
+      "sourceSha256": "0a0620d06d0049fb463e8a6e1dae94c1cd01a0abcec23478e0097206b4802fea",
+      "publicPath": "reporting/quality-replay-sibling-infra-v1/prepare-inputs.py",
+      "publicSha256": "cfcbce852b721cbc85b3e094866c3f94d349c2bcc0d4c04a9a4f4198d614a96f",
+      "transformation": "byte-identical",
+      "sourceAcceptance": "pending independent root review; frozen input bytes only",
+      "v2PublicPath": "reporting/quality-replay-sibling-infra-v1/prepare-inputs.py",
+      "v2PublicSha256": "0a0620d06d0049fb463e8a6e1dae94c1cd01a0abcec23478e0097206b4802fea",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/quality-replay-sibling-infra-v1/prepare-inputs.py",
+        "sourceSha256": "0a0620d06d0049fb463e8a6e1dae94c1cd01a0abcec23478e0097206b4802fea",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "0a0620d06d0049fb463e8a6e1dae94c1cd01a0abcec23478e0097206b4802fea",
+      "v4AssemblyInput": {
+        "sourceId": "reports/quality-replay-line-ending-fix-v1/prepare-inputs.py",
+        "sourceSha256": "cfcbce852b721cbc85b3e094866c3f94d349c2bcc0d4c04a9a4f4198d614a96f",
+        "change": "byte-identical"
+      },
+      "v6AssemblyInput": {
+        "sourceId": "reports/quality-swe-image-baseline-fix-v1/prepare-inputs.py",
+        "sourceSha256": "cfcbce852b721cbc85b3e094866c3f94d349c2bcc0d4c04a9a4f4198d614a96f",
+        "publicSha256": "cfcbce852b721cbc85b3e094866c3f94d349c2bcc0d4c04a9a4f4198d614a96f",
+        "change": "byte-identical candidate copy",
+        "v5PublicSha256": "cfcbce852b721cbc85b3e094866c3f94d349c2bcc0d4c04a9a4f4198d614a96f"
+      },
+      "v7AssemblyInput": {
+        "sourceId": "reports/quality-actual-report-contract-fix-v1/prepare-inputs.py",
+        "sourceSha256": "cfcbce852b721cbc85b3e094866c3f94d349c2bcc0d4c04a9a4f4198d614a96f",
+        "publicSha256": "cfcbce852b721cbc85b3e094866c3f94d349c2bcc0d4c04a9a4f4198d614a96f",
+        "change": "byte-identical candidate copy",
+        "v6PublicSha256": "cfcbce852b721cbc85b3e094866c3f94d349c2bcc0d4c04a9a4f4198d614a96f"
+      },
+      "v9AssemblyInput": {
+        "sourceId": "reports/quality-runtime-reconstruction-boundary-fix-v1/prepare-inputs.py",
+        "sourceSha256": "cfcbce852b721cbc85b3e094866c3f94d349c2bcc0d4c04a9a4f4198d614a96f",
+        "publicSha256": "cfcbce852b721cbc85b3e094866c3f94d349c2bcc0d4c04a9a4f4198d614a96f",
+        "v8PublicSha256": "cfcbce852b721cbc85b3e094866c3f94d349c2bcc0d4c04a9a4f4198d614a96f",
+        "change": "byte-identical candidate copy"
+      }
+    },
+    {
+      "sourceId": "quality-candidate/synthetic-assets.py",
+      "sourceSha256": "93a37dd9f8e45c1df4d0297ea995cc1abd47544925814da53df46093cd7c2125",
+      "publicPath": "reporting/quality-replay-sibling-infra-v1/synthetic-assets.py",
+      "publicSha256": "93a37dd9f8e45c1df4d0297ea995cc1abd47544925814da53df46093cd7c2125",
+      "transformation": "byte-identical",
+      "sourceAcceptance": "pending independent root review; frozen input bytes only",
+      "v2PublicPath": "reporting/quality-replay-sibling-infra-v1/synthetic-assets.py",
+      "v2PublicSha256": "93a37dd9f8e45c1df4d0297ea995cc1abd47544925814da53df46093cd7c2125",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/quality-replay-sibling-infra-v1/synthetic-assets.py",
+        "sourceSha256": "93a37dd9f8e45c1df4d0297ea995cc1abd47544925814da53df46093cd7c2125",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "93a37dd9f8e45c1df4d0297ea995cc1abd47544925814da53df46093cd7c2125",
+      "v4AssemblyInput": {
+        "sourceId": "reports/quality-replay-line-ending-fix-v1/synthetic-assets.py",
+        "sourceSha256": "93a37dd9f8e45c1df4d0297ea995cc1abd47544925814da53df46093cd7c2125",
+        "change": "byte-identical"
+      },
+      "v6AssemblyInput": {
+        "sourceId": "reports/quality-swe-image-baseline-fix-v1/synthetic-assets.py",
+        "sourceSha256": "93a37dd9f8e45c1df4d0297ea995cc1abd47544925814da53df46093cd7c2125",
+        "publicSha256": "93a37dd9f8e45c1df4d0297ea995cc1abd47544925814da53df46093cd7c2125",
+        "change": "byte-identical candidate copy",
+        "v5PublicSha256": "93a37dd9f8e45c1df4d0297ea995cc1abd47544925814da53df46093cd7c2125"
+      },
+      "v7AssemblyInput": {
+        "sourceId": "reports/quality-actual-report-contract-fix-v1/synthetic-assets.py",
+        "sourceSha256": "93a37dd9f8e45c1df4d0297ea995cc1abd47544925814da53df46093cd7c2125",
+        "publicSha256": "93a37dd9f8e45c1df4d0297ea995cc1abd47544925814da53df46093cd7c2125",
+        "change": "byte-identical candidate copy",
+        "v6PublicSha256": "93a37dd9f8e45c1df4d0297ea995cc1abd47544925814da53df46093cd7c2125"
+      },
+      "v9AssemblyInput": {
+        "sourceId": "reports/quality-runtime-reconstruction-boundary-fix-v1/synthetic-assets.py",
+        "sourceSha256": "93a37dd9f8e45c1df4d0297ea995cc1abd47544925814da53df46093cd7c2125",
+        "publicSha256": "93a37dd9f8e45c1df4d0297ea995cc1abd47544925814da53df46093cd7c2125",
+        "v8PublicSha256": "93a37dd9f8e45c1df4d0297ea995cc1abd47544925814da53df46093cd7c2125",
+        "change": "byte-identical candidate copy"
+      }
+    },
+    {
+      "sourceId": "quality-candidate-review-test/image-client-checks.py",
+      "sourceSha256": "115e656b03d5ac8362b17d46cd323bfdc97222af0f4995bc280d8d2089700364",
+      "publicPath": "reporting/quality-replay-sibling-infra-v1/image-client-checks.py",
+      "publicSha256": "587814dbf2ffb32f740cab0737ea4deef57baa92f882ce6e99b8149311bc1b69",
+      "transformation": "test source location only: sibling prepare-inputs.py; injected-client assertions unchanged",
+      "sourceAcceptance": "pending independent root review; frozen input bytes only",
+      "v2PublicPath": "reporting/quality-replay-sibling-infra-v1/image-client-checks.py",
+      "v2PublicSha256": "587814dbf2ffb32f740cab0737ea4deef57baa92f882ce6e99b8149311bc1b69",
+      "v3AssemblyInput": {
+        "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/public-reporting/quality-replay-sibling-infra-v1/image-client-checks.py",
+        "sourceSha256": "587814dbf2ffb32f740cab0737ea4deef57baa92f882ce6e99b8149311bc1b69",
+        "change": "byte-identical"
+      },
+      "v3PublicSha256": "587814dbf2ffb32f740cab0737ea4deef57baa92f882ce6e99b8149311bc1b69",
+      "v4AssemblyInput": {
+        "sourceId": "reports/quality-replay-line-ending-fix-v1/image-client-checks.py",
+        "sourceSha256": "587814dbf2ffb32f740cab0737ea4deef57baa92f882ce6e99b8149311bc1b69",
+        "change": "byte-identical"
+      },
+      "v6AssemblyInput": {
+        "sourceId": "reports/quality-swe-image-baseline-fix-v1/image-client-checks.py",
+        "sourceSha256": "587814dbf2ffb32f740cab0737ea4deef57baa92f882ce6e99b8149311bc1b69",
+        "publicSha256": "587814dbf2ffb32f740cab0737ea4deef57baa92f882ce6e99b8149311bc1b69",
+        "change": "byte-identical candidate copy",
+        "v5PublicSha256": "587814dbf2ffb32f740cab0737ea4deef57baa92f882ce6e99b8149311bc1b69"
+      },
+      "v7AssemblyInput": {
+        "sourceId": "reports/quality-actual-report-contract-fix-v1/image-client-checks.py",
+        "sourceSha256": "587814dbf2ffb32f740cab0737ea4deef57baa92f882ce6e99b8149311bc1b69",
+        "publicSha256": "587814dbf2ffb32f740cab0737ea4deef57baa92f882ce6e99b8149311bc1b69",
+        "change": "byte-identical candidate copy",
+        "v6PublicSha256": "587814dbf2ffb32f740cab0737ea4deef57baa92f882ce6e99b8149311bc1b69"
+      },
+      "v9AssemblyInput": {
+        "sourceId": "reports/quality-runtime-reconstruction-boundary-fix-v1/image-client-checks.py",
+        "sourceSha256": "587814dbf2ffb32f740cab0737ea4deef57baa92f882ce6e99b8149311bc1b69",
+        "publicSha256": "587814dbf2ffb32f740cab0737ea4deef57baa92f882ce6e99b8149311bc1b69",
+        "v8PublicSha256": "587814dbf2ffb32f740cab0737ea4deef57baa92f882ce6e99b8149311bc1b69",
+        "change": "byte-identical candidate copy"
+      }
+    },
+    {
+      "sourceId": "reports/public-measurement-producers-v1/LICENSE",
+      "sourceSha256": "0d263fb3cc26798fc9f66741f75a9bc85aabf9ed0df13071b27b1da2bf4d72e9",
+      "publicPath": "reporting/measurement-producers-v1/LICENSE",
+      "publicSha256": "0d263fb3cc26798fc9f66741f75a9bc85aabf9ed0df13071b27b1da2bf4d72e9",
+      "byteIdentical": true,
+      "change": "byte-identical",
+      "v3PublicSha256": "0d263fb3cc26798fc9f66741f75a9bc85aabf9ed0df13071b27b1da2bf4d72e9",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/measurement-producers-v1/LICENSE",
+        "sourceSha256": "0d263fb3cc26798fc9f66741f75a9bc85aabf9ed0df13071b27b1da2bf4d72e9",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "reports/public-measurement-producers-v1/ORIGIN.md",
+      "sourceSha256": "d7a042dbfac57146717feeae19bef5965b20d1030d4348de903f69c15dafdac2",
+      "publicPath": "reporting/measurement-producers-v1/ORIGIN.md",
+      "publicSha256": "d7a042dbfac57146717feeae19bef5965b20d1030d4348de903f69c15dafdac2",
+      "byteIdentical": true,
+      "change": "byte-identical",
+      "v3PublicSha256": "d7a042dbfac57146717feeae19bef5965b20d1030d4348de903f69c15dafdac2",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/measurement-producers-v1/ORIGIN.md",
+        "sourceSha256": "d7a042dbfac57146717feeae19bef5965b20d1030d4348de903f69c15dafdac2",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "reports/public-measurement-producers-v1/README.md",
+      "sourceSha256": "d43ea75bb9e9954f6e658547cf8dcd1cefe7337bf82825649d4ed6a7a075c0b0",
+      "publicPath": "reporting/measurement-producers-v1/README.md",
+      "publicSha256": "d43ea75bb9e9954f6e658547cf8dcd1cefe7337bf82825649d4ed6a7a075c0b0",
+      "byteIdentical": true,
+      "change": "byte-identical",
+      "v3PublicSha256": "d43ea75bb9e9954f6e658547cf8dcd1cefe7337bf82825649d4ed6a7a075c0b0",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/measurement-producers-v1/README.md",
+        "sourceSha256": "d43ea75bb9e9954f6e658547cf8dcd1cefe7337bf82825649d4ed6a7a075c0b0",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "reports/public-measurement-producers-v1/SOURCE-INVENTORY.json",
+      "sourceSha256": "d4335cb31b59ec05526f553c5fdb31aacc7e3372e32c0cca5d981e7c921ba13a",
+      "publicPath": "reporting/measurement-producers-v1/SOURCE-INVENTORY.json",
+      "publicSha256": "d4335cb31b59ec05526f553c5fdb31aacc7e3372e32c0cca5d981e7c921ba13a",
+      "byteIdentical": true,
+      "change": "byte-identical",
+      "v3PublicSha256": "d4335cb31b59ec05526f553c5fdb31aacc7e3372e32c0cca5d981e7c921ba13a",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/measurement-producers-v1/SOURCE-INVENTORY.json",
+        "sourceSha256": "d4335cb31b59ec05526f553c5fdb31aacc7e3372e32c0cca5d981e7c921ba13a",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "reports/public-measurement-producers-v1/SOURCE-MAPPING.json",
+      "sourceSha256": "bca52dda75bd15d50aae5def1997bc374eac820a74feb5150a8b47ae9e36d3f4",
+      "publicPath": "reporting/measurement-producers-v1/SOURCE-MAPPING.json",
+      "publicSha256": "bca52dda75bd15d50aae5def1997bc374eac820a74feb5150a8b47ae9e36d3f4",
+      "byteIdentical": true,
+      "change": "byte-identical",
+      "v3PublicSha256": "bca52dda75bd15d50aae5def1997bc374eac820a74feb5150a8b47ae9e36d3f4",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/measurement-producers-v1/SOURCE-MAPPING.json",
+        "sourceSha256": "bca52dda75bd15d50aae5def1997bc374eac820a74feb5150a8b47ae9e36d3f4",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "reports/public-measurement-producers-v1/metadata/audit.mjs",
+      "sourceSha256": "e2b6e41681a9c0866291bfce199a83c1791d3c760a19fe2a408b3904acb431d1",
+      "publicPath": "reporting/measurement-producers-v1/metadata/audit.mjs",
+      "publicSha256": "e2b6e41681a9c0866291bfce199a83c1791d3c760a19fe2a408b3904acb431d1",
+      "byteIdentical": true,
+      "change": "byte-identical",
+      "v3PublicSha256": "e2b6e41681a9c0866291bfce199a83c1791d3c760a19fe2a408b3904acb431d1",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/measurement-producers-v1/metadata/audit.mjs",
+        "sourceSha256": "e2b6e41681a9c0866291bfce199a83c1791d3c760a19fe2a408b3904acb431d1",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "reports/public-measurement-producers-v1/metadata/fixtures.mjs",
+      "sourceSha256": "eb2af24eca7a01423f32a1a39191f09202b4624540b757dc8aeea138025c3170",
+      "publicPath": "reporting/measurement-producers-v1/metadata/fixtures.mjs",
+      "publicSha256": "eb2af24eca7a01423f32a1a39191f09202b4624540b757dc8aeea138025c3170",
+      "byteIdentical": true,
+      "change": "byte-identical",
+      "v3PublicSha256": "eb2af24eca7a01423f32a1a39191f09202b4624540b757dc8aeea138025c3170",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/measurement-producers-v1/metadata/fixtures.mjs",
+        "sourceSha256": "eb2af24eca7a01423f32a1a39191f09202b4624540b757dc8aeea138025c3170",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "reports/public-measurement-producers-v1/metadata/test-reference-policy.mjs",
+      "sourceSha256": "f39a1fb2d4e34aaf1e1bde6078e842dc0b8546accef52b3c2c5f9320deb210a9",
+      "publicPath": "reporting/measurement-producers-v1/metadata/test-reference-policy.mjs",
+      "publicSha256": "f39a1fb2d4e34aaf1e1bde6078e842dc0b8546accef52b3c2c5f9320deb210a9",
+      "byteIdentical": true,
+      "change": "byte-identical",
+      "v3PublicSha256": "f39a1fb2d4e34aaf1e1bde6078e842dc0b8546accef52b3c2c5f9320deb210a9",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/measurement-producers-v1/metadata/test-reference-policy.mjs",
+        "sourceSha256": "f39a1fb2d4e34aaf1e1bde6078e842dc0b8546accef52b3c2c5f9320deb210a9",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "reports/public-measurement-producers-v1/metadata/test-reference-v2.mjs",
+      "sourceSha256": "f861fdb9e3323ac95c01f37b34f206fc5d96fef7e69a7e9f167cb4c5c56bafd1",
+      "publicPath": "reporting/measurement-producers-v1/metadata/test-reference-v2.mjs",
+      "publicSha256": "f861fdb9e3323ac95c01f37b34f206fc5d96fef7e69a7e9f167cb4c5c56bafd1",
+      "byteIdentical": true,
+      "change": "byte-identical",
+      "v3PublicSha256": "f861fdb9e3323ac95c01f37b34f206fc5d96fef7e69a7e9f167cb4c5c56bafd1",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/measurement-producers-v1/metadata/test-reference-v2.mjs",
+        "sourceSha256": "f861fdb9e3323ac95c01f37b34f206fc5d96fef7e69a7e9f167cb4c5c56bafd1",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "reports/public-measurement-producers-v1/native/audit.py",
+      "sourceSha256": "e721cde70be54880846e37928321f5296f0142889e6de170b109fd35ce9f078f",
+      "publicPath": "reporting/measurement-producers-v1/native/audit.py",
+      "publicSha256": "e721cde70be54880846e37928321f5296f0142889e6de170b109fd35ce9f078f",
+      "byteIdentical": true,
+      "change": "byte-identical",
+      "v3PublicSha256": "e721cde70be54880846e37928321f5296f0142889e6de170b109fd35ce9f078f",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/measurement-producers-v1/native/audit.py",
+        "sourceSha256": "e721cde70be54880846e37928321f5296f0142889e6de170b109fd35ce9f078f",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "reports/public-measurement-producers-v1/native/cached-pilot-golden.py",
+      "sourceSha256": "1645b5b0311ecd7d138c4adabc6ad9913ee69a879dae5601a997a659c2ef1842",
+      "publicPath": "reporting/measurement-producers-v1/native/cached-pilot-golden.py",
+      "publicSha256": "1645b5b0311ecd7d138c4adabc6ad9913ee69a879dae5601a997a659c2ef1842",
+      "byteIdentical": true,
+      "change": "byte-identical",
+      "v3PublicSha256": "1645b5b0311ecd7d138c4adabc6ad9913ee69a879dae5601a997a659c2ef1842",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/measurement-producers-v1/native/cached-pilot-golden.py",
+        "sourceSha256": "1645b5b0311ecd7d138c4adabc6ad9913ee69a879dae5601a997a659c2ef1842",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "reports/public-measurement-producers-v1/native/test_audit.py",
+      "sourceSha256": "5b1804ce48609727b847f7f49094b7c0f83395dd0d3344fa4e1b0c0980b51b38",
+      "publicPath": "reporting/measurement-producers-v1/native/test_audit.py",
+      "publicSha256": "5b1804ce48609727b847f7f49094b7c0f83395dd0d3344fa4e1b0c0980b51b38",
+      "byteIdentical": true,
+      "change": "byte-identical",
+      "v3PublicSha256": "5b1804ce48609727b847f7f49094b7c0f83395dd0d3344fa4e1b0c0980b51b38",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/measurement-producers-v1/native/test_audit.py",
+        "sourceSha256": "5b1804ce48609727b847f7f49094b7c0f83395dd0d3344fa4e1b0c0980b51b38",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "reports/public-measurement-producers-v1/native/test_poll_timeout_delivery.py",
+      "sourceSha256": "359db6b2c7cb6e42df76b879994d2de1b81bfe0d075319eca2c06b823f8899bf",
+      "publicPath": "reporting/measurement-producers-v1/native/test_poll_timeout_delivery.py",
+      "publicSha256": "359db6b2c7cb6e42df76b879994d2de1b81bfe0d075319eca2c06b823f8899bf",
+      "byteIdentical": true,
+      "change": "byte-identical",
+      "v3PublicSha256": "359db6b2c7cb6e42df76b879994d2de1b81bfe0d075319eca2c06b823f8899bf",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/measurement-producers-v1/native/test_poll_timeout_delivery.py",
+        "sourceSha256": "359db6b2c7cb6e42df76b879994d2de1b81bfe0d075319eca2c06b823f8899bf",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "reports/public-measurement-producers-v1/native/test_timeout_delivery.py",
+      "sourceSha256": "1e4bb24df9c8df911c37e34ba49c3e47bb90255cc7fa9804f8d39f4d4f0fb84f",
+      "publicPath": "reporting/measurement-producers-v1/native/test_timeout_delivery.py",
+      "publicSha256": "1e4bb24df9c8df911c37e34ba49c3e47bb90255cc7fa9804f8d39f4d4f0fb84f",
+      "byteIdentical": true,
+      "change": "byte-identical",
+      "v3PublicSha256": "1e4bb24df9c8df911c37e34ba49c3e47bb90255cc7fa9804f8d39f4d4f0fb84f",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/measurement-producers-v1/native/test_timeout_delivery.py",
+        "sourceSha256": "1e4bb24df9c8df911c37e34ba49c3e47bb90255cc7fa9804f8d39f4d4f0fb84f",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "reports/public-measurement-producers-v1/physical/collect-physical-index.ps1",
+      "sourceSha256": "2e9a398b13f062292a1e84daa9611b7029e8355a8620696595c26c4e46d3d1e1",
+      "publicPath": "reporting/measurement-producers-v1/physical/collect-physical-index.ps1",
+      "publicSha256": "2e9a398b13f062292a1e84daa9611b7029e8355a8620696595c26c4e46d3d1e1",
+      "byteIdentical": true,
+      "change": "byte-identical",
+      "v3PublicSha256": "2e9a398b13f062292a1e84daa9611b7029e8355a8620696595c26c4e46d3d1e1",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/measurement-producers-v1/physical/collect-physical-index.ps1",
+        "sourceSha256": "2e9a398b13f062292a1e84daa9611b7029e8355a8620696595c26c4e46d3d1e1",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "reports/public-measurement-producers-v1/physical/infra-ledger.ps1",
+      "sourceSha256": "189fc904fb3afab27d9a05cb7c6bcf0ae6d9267cf76c3f49570104bdc3b12573",
+      "publicPath": "reporting/measurement-producers-v1/physical/infra-ledger.ps1",
+      "publicSha256": "189fc904fb3afab27d9a05cb7c6bcf0ae6d9267cf76c3f49570104bdc3b12573",
+      "byteIdentical": true,
+      "change": "byte-identical",
+      "v3PublicSha256": "189fc904fb3afab27d9a05cb7c6bcf0ae6d9267cf76c3f49570104bdc3b12573",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/measurement-producers-v1/physical/infra-ledger.ps1",
+        "sourceSha256": "189fc904fb3afab27d9a05cb7c6bcf0ae6d9267cf76c3f49570104bdc3b12573",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "reports/public-measurement-producers-v1/physical/verify.ps1",
+      "sourceSha256": "fe2be31d5606df3df6e81c6ab5bb88f102d36b7f0082f9c677b18873caec8f28",
+      "publicPath": "reporting/measurement-producers-v1/physical/verify.ps1",
+      "publicSha256": "fe2be31d5606df3df6e81c6ab5bb88f102d36b7f0082f9c677b18873caec8f28",
+      "byteIdentical": true,
+      "change": "byte-identical",
+      "v3PublicSha256": "fe2be31d5606df3df6e81c6ab5bb88f102d36b7f0082f9c677b18873caec8f28",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/measurement-producers-v1/physical/verify.ps1",
+        "sourceSha256": "fe2be31d5606df3df6e81c6ab5bb88f102d36b7f0082f9c677b18873caec8f28",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "reports/fixed24-repeat-recipe-v1/RECIPE.md",
+      "sourceSha256": "9522bb033db7e33c758b7145cdf622a9207106c83423e62100ee44d179529fb4",
+      "publicPath": "reporting/fixed24-repeat-recipe-v1/RECIPE.md",
+      "publicSha256": "ab01e29e1898b06b7a8c6b7d83f84be952d89274408da8d0e65151fdfa63c72b",
+      "byteIdentical": true,
+      "change": "byte-identical",
+      "v3PublicSha256": "9522bb033db7e33c758b7145cdf622a9207106c83423e62100ee44d179529fb4",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/fixed24-repeat-recipe-v1/RECIPE.md",
+        "sourceSha256": "9522bb033db7e33c758b7145cdf622a9207106c83423e62100ee44d179529fb4",
+        "change": "P3 missing heading blank line only plus explicit new source-approved newline contract/caller guidance; no recipe code fragment changes"
+      },
+      "v5PublicSha256": "21463a882de3ef2927c82d6f6fd2cc457adb7b2bc321edc26809fbb2e6abb5e1",
+      "v6AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v5/reporting/fixed24-repeat-recipe-v1/RECIPE.md",
+        "sourceSha256": "21463a882de3ef2927c82d6f6fd2cc457adb7b2bc321edc26809fbb2e6abb5e1",
+        "publicSha256": "ab01e29e1898b06b7a8c6b7d83f84be952d89274408da8d0e65151fdfa63c72b",
+        "change": "minimal mixed-newline-preserving text/snippet changes distinguishing SWE image baseline from Context Git baseline; explicit null draft canonical base awaits owner"
+      }
+    },
+    {
+      "sourceId": "reports/fixed24-repeat-recipe-v1/timing-inventory.draft.json",
+      "sourceSha256": "b5e7367079d733ce9f7a258429f6c19b486175a592a2b315f9bfd0c6bd4d8900",
+      "publicPath": "reporting/fixed24-repeat-recipe-v1/timing-inventory.draft.json",
+      "publicSha256": "b5e7367079d733ce9f7a258429f6c19b486175a592a2b315f9bfd0c6bd4d8900",
+      "byteIdentical": true,
+      "change": "byte-identical",
+      "v3PublicSha256": "b5e7367079d733ce9f7a258429f6c19b486175a592a2b315f9bfd0c6bd4d8900",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/fixed24-repeat-recipe-v1/timing-inventory.draft.json",
+        "sourceSha256": "b5e7367079d733ce9f7a258429f6c19b486175a592a2b315f9bfd0c6bd4d8900",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "reports/fixed24-repeat-recipe-v1/quality-approval.draft.json",
+      "sourceSha256": "0f2440db67dd7a50ae8c3a2bfd10799b8f03d1b16f4d6e7a323b47c3937396c7",
+      "publicPath": "reporting/fixed24-repeat-recipe-v1/quality-approval.draft.json",
+      "publicSha256": "0f2440db67dd7a50ae8c3a2bfd10799b8f03d1b16f4d6e7a323b47c3937396c7",
+      "byteIdentical": true,
+      "change": "byte-identical",
+      "v3PublicSha256": "0f2440db67dd7a50ae8c3a2bfd10799b8f03d1b16f4d6e7a323b47c3937396c7",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/fixed24-repeat-recipe-v1/quality-approval.draft.json",
+        "sourceSha256": "0f2440db67dd7a50ae8c3a2bfd10799b8f03d1b16f4d6e7a323b47c3937396c7",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "reports/fixed24-repeat-recipe-v1/public-assets.draft.json",
+      "sourceSha256": "fb36dc0984f81b2595d825ac351f338c4f92f233991b4a7d4594bc68989b83bd",
+      "publicPath": "reporting/fixed24-repeat-recipe-v1/public-assets.draft.json",
+      "publicSha256": "fb36dc0984f81b2595d825ac351f338c4f92f233991b4a7d4594bc68989b83bd",
+      "byteIdentical": true,
+      "change": "byte-identical",
+      "v3PublicSha256": "fb36dc0984f81b2595d825ac351f338c4f92f233991b4a7d4594bc68989b83bd",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/fixed24-repeat-recipe-v1/public-assets.draft.json",
+        "sourceSha256": "fb36dc0984f81b2595d825ac351f338c4f92f233991b4a7d4594bc68989b83bd",
+        "change": "byte-identical"
+      }
+    },
+    {
+      "sourceId": "reports/physical-v2-no-infra-reporting-fix-v1/fixture-tests.mjs",
+      "sourceSha256": "884cdc9e8d3ae770768e220ce4c1bddcc70ed3d74a91c435452a8435d6e5d031",
+      "publicPath": "reporting/physical-v2-clean-repeat.tests.mjs",
+      "publicSha256": "316a27c5e0d32fc203f4e2d6af90f343aaaffaa5bf8a8455d605f04d7eb96421",
+      "byteIdentical": false,
+      "change": "five literal import prefix relocations ./public-reporting/ -> ./ only; assertions and algorithms unchanged",
+      "v3PublicSha256": "60321691554693840a2aac5d1d120e6d016e7c0777da39267e7547013c90a043",
+      "v4AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v3/reporting/physical-v2-clean-repeat.tests.mjs",
+        "sourceSha256": "60321691554693840a2aac5d1d120e6d016e7c0777da39267e7547013c90a043",
+        "change": "byte-identical"
+      },
+      "v4PublicSha256": "60321691554693840a2aac5d1d120e6d016e7c0777da39267e7547013c90a043",
+      "v5AssemblyInput": {
+        "sourceId": "delivery-staging/project-source-tree-v4/reporting/physical-v2-clean-repeat.tests.mjs",
+        "sourceSha256": "60321691554693840a2aac5d1d120e6d016e7c0777da39267e7547013c90a043",
+        "change": "one literal producerPath new URL prefix ./public-reporting/ -> ./; preserve all other bytes/assertions/algorithms"
+      }
+    },
+    {
+      "sourceId": "reports/quality-replay-line-ending-fix-v1/jsonl-line-ending-tests.py",
+      "sourceSha256": "86f55ccb0fabc06abf2a26e29e896b769d5c8e3dae73c3f7c6e4fb57656ded68",
+      "publicPath": "reporting/quality-replay-sibling-infra-v1/jsonl-line-ending-tests.py",
+      "publicSha256": "86f55ccb0fabc06abf2a26e29e896b769d5c8e3dae73c3f7c6e4fb57656ded68",
+      "byteIdenticalToInput": true,
+      "change": "byte-identical",
+      "v6AssemblyInput": {
+        "sourceId": "reports/quality-swe-image-baseline-fix-v1/jsonl-line-ending-tests.py",
+        "sourceSha256": "86f55ccb0fabc06abf2a26e29e896b769d5c8e3dae73c3f7c6e4fb57656ded68",
+        "publicSha256": "86f55ccb0fabc06abf2a26e29e896b769d5c8e3dae73c3f7c6e4fb57656ded68",
+        "change": "byte-identical candidate copy",
+        "v5PublicSha256": "86f55ccb0fabc06abf2a26e29e896b769d5c8e3dae73c3f7c6e4fb57656ded68"
+      },
+      "v7AssemblyInput": {
+        "sourceId": "reports/quality-actual-report-contract-fix-v1/jsonl-line-ending-tests.py",
+        "sourceSha256": "86f55ccb0fabc06abf2a26e29e896b769d5c8e3dae73c3f7c6e4fb57656ded68",
+        "publicSha256": "86f55ccb0fabc06abf2a26e29e896b769d5c8e3dae73c3f7c6e4fb57656ded68",
+        "change": "byte-identical candidate copy",
+        "v6PublicSha256": "86f55ccb0fabc06abf2a26e29e896b769d5c8e3dae73c3f7c6e4fb57656ded68"
+      },
+      "v9AssemblyInput": {
+        "sourceId": "reports/quality-runtime-reconstruction-boundary-fix-v1/jsonl-line-ending-tests.py",
+        "sourceSha256": "86f55ccb0fabc06abf2a26e29e896b769d5c8e3dae73c3f7c6e4fb57656ded68",
+        "publicSha256": "86f55ccb0fabc06abf2a26e29e896b769d5c8e3dae73c3f7c6e4fb57656ded68",
+        "v8PublicSha256": "86f55ccb0fabc06abf2a26e29e896b769d5c8e3dae73c3f7c6e4fb57656ded68",
+        "change": "byte-identical candidate copy"
+      }
+    }
+  ],
+  "omittedPrivateAuditSourceIds": [
+    "delivery-staging/parallel-control-source-v1/DELIVERY.md",
+    "delivery-staging/parallel-control-source-v1/SOURCE-CHANGES.patch",
+    "delivery-staging/parallel-control-source-v1/stage-source.mjs",
+    "delivery-staging/parallel-control-source-v1/validation/focused-correction.json",
+    "delivery-staging/parallel-control-source-v1/validation/focused-final-windows.stdout.log",
+    "delivery-staging/parallel-control-source-v1/validation/focused-windows.stdout.log",
+    "delivery-staging/parallel-control-source-v1/validation/independent-review.md",
+    "delivery-staging/parallel-control-source-v1/validation/test-boundary-review.md",
+    "delivery-staging/parallel-control-source-v1/validation/verification.json"
+  ],
+  "historicalOriginalVerification": "not performed; private originals not read or distributed",
+  "priorPackage": {
+    "sourceId": "stable46/source-inventory",
+    "sha256": "9815c2c677c8f9eba38bed0d69244a8e9c13c353b9a62f602a6fcdc8f9602828",
+    "rootAcceptance": {
+      "sourceId": "stable46/root-staging-acceptance",
+      "sha256": "1d3588f417cc992a534695475428166823c66fd8f02326a481a5f2b096b5c8a0",
+      "status": "accepted-stable46-synthetic-source-scope"
+    }
+  },
+  "qualityCandidate": {
+    "readySourceManifest": {
+      "sourceId": "quality-bridge-correction/ready-source-pins",
+      "sha256": "34206347152120c133760faeb3c58e6684e8c188042a4148990633dcbd422d01",
+      "members": 11
+    },
+    "additionalImageClientTestSha256": "115e656b03d5ac8362b17d46cd323bfdc97222af0f4995bc280d8d2089700364",
+    "status": "frozen-source-candidate; independent source acceptance and behavioral validation pending"
+  },
+  "assemblyVersion": 9,
+  "v2SourceInventorySha256": "2368bc00148cc1c45bf60ddeb8e003ffc070e9d0e3f09d0fde46cf38072a34e2",
+  "acceptedReportingProducerSha256": "274b786d8cb7f1cb540ff7327daadd1e2dd7f5de11086ff79ad6d3e41b7fd1c7",
+  "priorAcceptance": {
+    "reportingFixture": {
+      "sourceId": "clean-repeat/root-fixture-acceptance",
+      "sha256": "ff4b4d2bb0842a84cdfa82ce199dc08f064768b055067b53ffb71ec0b79fa737"
+    },
+    "measurementProducer": {
+      "sourceId": "measurement-producers/root-remote-acceptance",
+      "sha256": "29ad029bf3ad3567f0f802689ab87864d001fc72d7e00c8f2b0a9c8f3e14bc19"
+    }
+  },
+  "measurementProducerInventorySha256": "d4335cb31b59ec05526f553c5fdb31aacc7e3372e32c0cca5d981e7c921ba13a",
+  "measurementProducerMappingSha256": "bca52dda75bd15d50aae5def1997bc374eac820a74feb5150a8b47ae9e36d3f4",
+  "controllerDeployment": {
+    "source": "COMMUNITY/execution",
+    "runReceipts": "RUNROOT/execution",
+    "runtimeSources": "byte-identical",
+    "documentation": "one README path replacement; nested inventory repinned"
+  },
+  "v3SourceInventorySha256": "7a551fa5e767c10e6899942ac8d8bb4006846d5801a848b554c25f9c635ca0c5",
+  "v3SourceMappingSha256": "943064f2d2f1082ad0487d6534dfabafa7145805ccb6245c38584a0c59f35c80",
+  "qualityLineEndingSource": {
+    "sourceId": "quality-replay-line-ending-fix-v1",
+    "readyPinsSha256": "0b1e1e454cb7f99955ea5d22606d202c44872ea8c90349c1be46e790b65c2f19",
+    "rootSourceApprovalSha256": "df8cdb8016f70226eaa4b5603aa52815971761f4f2e5dcc43189f5a7b9fb026b",
+    "candidateMembers": 13,
+    "existingChanged": 3,
+    "existingUnchanged": 9,
+    "newMembers": 1,
+    "actualCanonicalRetry": "pending confirmation; source approval is not actual derivation acceptance"
+  },
+  "finalRecipeSourcePins": [
+    {
+      "publicPath": "reporting/fixed24-repeat-recipe-v1/RECIPE.md",
+      "sha256": "21463a882de3ef2927c82d6f6fd2cc457adb7b2bc321edc26809fbb2e6abb5e1"
+    },
+    {
+      "publicPath": "reporting/fixed24-repeat-recipe-v1/timing-inventory.draft.json",
+      "sha256": "b5e7367079d733ce9f7a258429f6c19b486175a592a2b315f9bfd0c6bd4d8900"
+    },
+    {
+      "publicPath": "reporting/fixed24-repeat-recipe-v1/quality-approval.draft.json",
+      "sha256": "0f2440db67dd7a50ae8c3a2bfd10799b8f03d1b16f4d6e7a323b47c3937396c7"
+    },
+    {
+      "publicPath": "reporting/fixed24-repeat-recipe-v1/public-assets.draft.json",
+      "sha256": "fb36dc0984f81b2595d825ac351f338c4f92f233991b4a7d4594bc68989b83bd"
+    }
+  ],
+  "v4SourceInventorySha256": "4e8a23b1989c8a11f32f7eab2f462eab775edd252989b3876607e3563d985d25",
+  "v4SourceMappingSha256": "dfb08919d7c4e6299fb384da7ab6a70038dce10ea6ddcaaed1111fb3ea12acda",
+  "fixtureRelocationCorrection": {
+    "publicPath": "reporting/physical-v2-clean-repeat.tests.mjs",
+    "sourceSha256": "60321691554693840a2aac5d1d120e6d016e7c0777da39267e7547013c90a043",
+    "publicSha256": "316a27c5e0d32fc203f4e2d6af90f343aaaffaa5bf8a8455d605f04d7eb96421",
+    "reason": "runtime producerPath URL must resolve in the exact public reporting tree; the earlier five import rewrites did not cover this URL",
+    "runtimeMjsPrefixScan": "only this one occurrence existed among all46 public .mjs sources; none remains"
+  },
+  "v5SourceInventorySha256": "1fe07221d4181ea0e57bec6a3917f74ef5ba2f3aa362debe56d500bba37e2c10",
+  "v5SourceMappingSha256": "7606892b9213ec1996fe4f404299f1267618704cf13ee065b56fdeeeb42ab20d",
+  "sweImageBaselineOverlay": {
+    "sourceId": "reports/quality-swe-image-baseline-fix-v1",
+    "readySourcePinsSha256": "dc54b27ac9fba6f90f1cf22af0d8e2a78760caaabe953155e33100986b0347ef",
+    "rootIsolatedAcceptanceSha256": "fbbd13ce65d5a8fcde291a9602b5a6f5ce3aee92bf217e2bb7daa7101b766c89",
+    "changedCandidateMembers": 5,
+    "preservedCandidateMembers": 8,
+    "scope": "SWE-only official-prebuilt-image/canonical upstreamBaseCommit/gradingCommit:null; Context and current image guards unchanged; no full exact-v6 behavioral claim"
+  },
+  "v6SourceInventorySha256": "6b7202168dc17d4cea5a7316cca45116b6f52159cbc99924415b91a227c7f09c",
+  "v6SourceMappingSha256": "2dcfc68a0fd3549e12353e35fab45ded5e8ec5407a5e77ae5a88dbad689e3d9c",
+  "actualReportContractOverlay": {
+    "sourceId": "reports/quality-actual-report-contract-fix-v1",
+    "candidatePinsSha256": "ab7dae77115a6bc40ab77541630e1ab9631ed5725a1ff1640b48ba1adbd66cf9",
+    "changedCandidateMembers": 4,
+    "preservedCandidateMembers": 9,
+    "reviewStatus": "independent-review-passed",
+    "scope": "typed Context num_steps/ordered step coverage and SWE patch_is_None; existing raw/projected identities retained; source assembly only",
+    "independentReview": {
+      "sourceId": "reviews/quality-actual-report-contract-independent-review-20261019/REVIEW.md",
+      "sha256": "18fcb05e52596af3b72b1fc4bd83cb0f582252ea1a7bc4d4b8c37832940addd0",
+      "claim": "review passed; behavior/actual data inspection belongs to separate reviewer evidence, not assembly execution"
+    },
+    "rootSourceCorrectionsAcceptanceSha256": "2b64a49389c99a784fe6c48d56ab88184a997e6dd07870b6f7299a4392a46c80"
+  },
+  "v7SourceInventorySha256": "59d2ba02b3c5cef19041aec691980996435e823a24619f560161783aaa97c4be",
+  "v7SourceMappingSha256": "b5a02abf4f26e16208cb5d92b19446b35ed5aba6a6f2cb189b03fd10a139457e",
+  "contextRateFormatterOverlay": {
+    "sourceId": "reviews/final288-reporting-assembly-20261019/formatter-label-candidate/formatter.mjs",
+    "sourceSha256": "57256d3b6b88f79275e196f42b7134c5ef6eddc3f91270401b5f790acabeb24a",
+    "focusedReceiptSha256": "b88a3c85cad3452b38046287ea7076bf94493fee46eca060baa9ed003e572278",
+    "scope": "Context coverage/precision knownMean label/value only; preserve counts/tokens/timing/adapted",
+    "rootAcceptance": {
+      "sourceId": "reviews/final-closure-20261018T193000Z/ROOT-SOURCE-CORRECTIONS-ACCEPTANCE.json",
+      "sha256": "2b64a49389c99a784fe6c48d56ab88184a997e6dd07870b6f7299a4392a46c80"
+    }
+  },
+  "v8SourceInventorySha256": "9bcfb5847602f3ca2f203e755220ba051756d4190267b779b8045ddf01266120",
+  "v8SourceMappingSha256": "c90c6a4f4ae253191a31b673598a32bc3b6c07d5e3a5c19bad301f638346e50d",
+  "runtimeReconstructionBoundaryOverlay": {
+    "sourceId": "reports/quality-runtime-reconstruction-boundary-fix-v1",
+    "candidatePinsSha256": "e12ce024b11ac81577751ddcb313fcdd3e61fc195dd700f0bd38f839dc45c10e",
+    "candidateChangedMembers": 3,
+    "candidatePreservedMembers": 10,
+    "status": "independent-review-and-actual-export-v2-passed",
+    "scope": "remove only historical requirements membership gate; retain cohort/typed-owner-approval/hash/version/current-runtime contracts; historical equality unverified",
+    "independentReview": {
+      "sourceId": "reviews/quality-runtime-boundary-independent-review-20261019/REVIEW.md",
+      "sha256": "e2a60e0b7c90aac6fef025ed0693d0b201b6cf8993f62601b2ef25857ade7632"
+    },
+    "actualExportReceipt": {
+      "sourceId": "reviews/final288-quality-approval-draft-20261019/QUALITY-EXPORT-V2.json",
+      "sha256": "7d3d86322256e7f26678650758aa673c13d79b628dcbbc2034bcd076d12f854d",
+      "qualityManifestSha256": "d3ec91c5592d883bc857c2cdfae3f78d59b24681693664da16472e1aca49355c",
+      "scope": "owner export/verify evidence; assembly did not execute export or regrade; historical equality remains unverified"
+    }
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "kind": "context",
+  "instance_id": "cli__cli-3608",
+  "officialResult": {
+    "instance_id": "cli__cli-3608",
+    "num_steps": 5,
+    "final": {
+      "file": {
+        "coverage": 0.6666666666666666,
+        "precision": 0.6666666666666666,
+        "intersection": 2,
+        "gold_size": 3,
+        "pred_size": 3
+      },
+      "symbol": {
+        "coverage": 0.8333333333333334,
+        "precision": 0.7142857142857143,
+        "intersection": 5,
+        "gold_size": 6,
+        "pred_size": 7
+      },
+      "span": {
+        "coverage": 0.743801652892562,
+        "precision": 0.12307309796121332,
+        "intersection": 990,
+        "gold_size": 1331,
+        "pred_size": 8044
+      },
+      "line": {
+        "coverage": 0.6590909090909091,
+        "precision": 0.09931506849315068,
+        "intersection": 29,
+        "gold_size": 44,
+        "pred_size": 292
+      }
+    },
+    "trajectory": {
+      "steps": [
+        {
+          "step": 1,
+          "coverage": {
+            "file": 0.6666666666666666,
+            "symbol": 0.6666666666666666,
+            "span": 0.5078888054094666,
+            "line": 0.4090909090909091
+          }
+        },
+        {
+          "step": 2,
+          "coverage": {
+            "file": 0.6666666666666666,
+            "symbol": 0.8333333333333334,
+            "span": 0.5687453042824944,
+            "line": 0.5454545454545454
+          }
+        },
+        {
+          "step": 3,
+          "coverage": {
+            "file": 0.6666666666666666,
+            "symbol": 0.8333333333333334,
+            "span": 0.7460555972952667,
+            "line": 0.7045454545454546
+          }
+        },
+        {
+          "step": 4,
+          "coverage": {
+            "file": 0.6666666666666666,
+            "symbol": 0.8333333333333334,
+            "span": 0.7460555972952667,
+            "line": 0.7045454545454546
+          }
+        },
+        {
+          "step": 5,
+          "coverage": {
+            "file": 0.6666666666666666,
+            "symbol": 0.8333333333333334,
+            "span": 0.7460555972952667,
+            "line": 0.7045454545454546
+          }
+        }
+      ],
+      "auc_coverage": {
+        "file": 0.6666666666666666,
+        "symbol": 0.8,
+        "span": 0.6629601803155521,
+        "line": 0.6136363636363636
+      },
+      "redundancy": {
+        "file": 0.40625,
+        "symbol": 0.34375,
+        "span": 0.22084830851731418,
+        "line": 0.22580645161290325
+      }
+    }
+  }
+}

@@ -1,0 +1,1988 @@
+[
+  {
+    "instance_id": "mui__material-ui-34229",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "e4f2f9e5689127b3438cac196544bdfb2c6083ea",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "packages/mui-material/src/NativeSelect/NativeSelect.js",
+            "packages/mui-material/src/NativeSelect/NativeSelectInput.js",
+            "packages/mui-material/src/NativeSelect/NativeSelectInput.test.js",
+            "packages/mui-material/src/Select/Select.js",
+            "packages/mui-material/src/Select/Select.test.js",
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/NativeSelect/NativeSelect.js": [
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 54,
+                "end": 54
+              },
+              {
+                "start": 56,
+                "end": 56
+              }
+            ],
+            "packages/mui-material/src/NativeSelect/NativeSelectInput.js": [
+              {
+                "start": 126,
+                "end": 126
+              },
+              {
+                "start": 152,
+                "end": 152
+              },
+              {
+                "start": 205,
+                "end": 205
+              }
+            ],
+            "packages/mui-material/src/NativeSelect/NativeSelectInput.test.js": [
+              {
+                "start": 6,
+                "end": 6
+              },
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 12,
+                "end": 12
+              },
+              {
+                "start": 15,
+                "end": 15
+              },
+              {
+                "start": 20,
+                "end": 20
+              },
+              {
+                "start": 24,
+                "end": 24
+              },
+              {
+                "start": 33,
+                "end": 33
+              },
+              {
+                "start": 37,
+                "end": 37
+              },
+              {
+                "start": 48,
+                "end": 48
+              },
+              {
+                "start": 60,
+                "end": 60
+              },
+              {
+                "start": 67,
+                "end": 67
+              },
+              {
+                "start": 100,
+                "end": 100
+              },
+              {
+                "start": 103,
+                "end": 103
+              }
+            ],
+            "packages/mui-material/src/Select/Select.js": [
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 62,
+                "end": 62
+              },
+              {
+                "start": 89,
+                "end": 89
+              }
+            ],
+            "packages/mui-material/src/Select/Select.test.js": [
+              {
+                "start": 981,
+                "end": 981
+              },
+              {
+                "start": 993,
+                "end": 993
+              },
+              {
+                "start": 1023,
+                "end": 1023
+              }
+            ],
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 14,
+                "end": 14
+              },
+              {
+                "start": 100,
+                "end": 100
+              },
+              {
+                "start": 128,
+                "end": 128
+              },
+              {
+                "start": 581,
+                "end": 581
+              },
+              {
+                "start": 723,
+                "end": 723
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 549,
+                "end": 549
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 100,
+                "end": 300
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/Select.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/Select.js": [
+              {
+                "start": 1,
+                "end": 160
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 300,
+                "end": 580
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 1,
+                "end": 99
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/Select.test.js",
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/Select.test.js": [
+              {
+                "start": 861,
+                "end": 861
+              },
+              {
+                "start": 874,
+                "end": 874
+              }
+            ],
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 150,
+                "end": 150
+              },
+              {
+                "start": 176,
+                "end": 176
+              },
+              {
+                "start": 218,
+                "end": 218
+              },
+              {
+                "start": 479,
+                "end": 479
+              },
+              {
+                "start": 482,
+                "end": 482
+              },
+              {
+                "start": 549,
+                "end": 549
+              },
+              {
+                "start": 552,
+                "end": 552
+              },
+              {
+                "start": 570,
+                "end": 570
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 12,
+                "end": 12
+              },
+              {
+                "start": 21,
+                "end": 21
+              },
+              {
+                "start": 33,
+                "end": 33
+              },
+              {
+                "start": 113,
+                "end": 113
+              },
+              {
+                "start": 146,
+                "end": 147
+              },
+              {
+                "start": 151,
+                "end": 151
+              },
+              {
+                "start": 153,
+                "end": 154
+              },
+              {
+                "start": 165,
+                "end": 165
+              },
+              {
+                "start": 167,
+                "end": 167
+              },
+              {
+                "start": 177,
+                "end": 177
+              },
+              {
+                "start": 185,
+                "end": 185
+              },
+              {
+                "start": 193,
+                "end": 193
+              },
+              {
+                "start": 197,
+                "end": 197
+              },
+              {
+                "start": 230,
+                "end": 230
+              },
+              {
+                "start": 505,
+                "end": 506
+              },
+              {
+                "start": 532,
+                "end": 532
+              },
+              {
+                "start": 536,
+                "end": 536
+              },
+              {
+                "start": 638,
+                "end": 638
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/Select.test.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/Select.test.js": [
+              {
+                "start": 830,
+                "end": 900
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "yarn.lock"
+          ],
+          "spans": {
+            "yarn.lock": [
+              {
+                "start": 7649,
+                "end": 7649
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/mui-material/package.json"
+          ],
+          "spans": {
+            "packages/mui-material/package.json": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 115,
+                "end": 115
+              },
+              {
+                "start": 126,
+                "end": 126
+              },
+              {
+                "start": 492,
+                "end": 492
+              },
+              {
+                "start": 519,
+                "end": 519
+              },
+              {
+                "start": 521,
+                "end": 521
+              },
+              {
+                "start": 560,
+                "end": 560
+              },
+              {
+                "start": 565,
+                "end": 565
+              },
+              {
+                "start": 568,
+                "end": 568
+              },
+              {
+                "start": 571,
+                "end": 571
+              },
+              {
+                "start": 647,
+                "end": 647
+              },
+              {
+                "start": 704,
+                "end": 704
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/NativeSelect/NativeSelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/NativeSelect/NativeSelectInput.js": [
+              {
+                "start": 1,
+                "end": 130
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.d.ts",
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/Select.d.ts",
+            "packages/mui-material/src/Select/Select.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/Select.d.ts": [
+              {
+                "start": 61,
+                "end": 61
+              }
+            ],
+            "packages/mui-material/src/Select/Select.js": [
+              {
+                "start": 90,
+                "end": 90
+              },
+              {
+                "start": 181,
+                "end": 181
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/mui-material/src/OutlinedInput/OutlinedInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/OutlinedInput/OutlinedInput.js": [
+              {
+                "start": 40,
+                "end": 120
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/InputBase/InputBase.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/InputBase/InputBase.js": [
+              {
+                "start": 23,
+                "end": 23
+              },
+              {
+                "start": 27,
+                "end": 27
+              },
+              {
+                "start": 30,
+                "end": 30
+              },
+              {
+                "start": 49,
+                "end": 49
+              },
+              {
+                "start": 60,
+                "end": 60
+              },
+              {
+                "start": 72,
+                "end": 73
+              },
+              {
+                "start": 83,
+                "end": 83
+              },
+              {
+                "start": 95,
+                "end": 95
+              },
+              {
+                "start": 103,
+                "end": 103
+              },
+              {
+                "start": 106,
+                "end": 106
+              },
+              {
+                "start": 257,
+                "end": 257
+              },
+              {
+                "start": 277,
+                "end": 277
+              },
+              {
+                "start": 492,
+                "end": 492
+              },
+              {
+                "start": 506,
+                "end": 507
+              },
+              {
+                "start": 516,
+                "end": 516
+              },
+              {
+                "start": 518,
+                "end": 518
+              },
+              {
+                "start": 523,
+                "end": 523
+              },
+              {
+                "start": 558,
+                "end": 560
+              },
+              {
+                "start": 630,
+                "end": 630
+              },
+              {
+                "start": 650,
+                "end": 650
+              },
+              {
+                "start": 748,
+                "end": 748
+              },
+              {
+                "start": 775,
+                "end": 775
+              },
+              {
+                "start": 786,
+                "end": 786
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/InputBase/InputBase.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/InputBase/InputBase.js": [
+              {
+                "start": 500,
+                "end": 565
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/InputBase/InputBase.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/InputBase/InputBase.js": [
+              {
+                "start": 95,
+                "end": 115
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/InputBase/InputBase.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/InputBase/InputBase.js": [
+              {
+                "start": 8,
+                "end": 8
+              },
+              {
+                "start": 131,
+                "end": 131
+              },
+              {
+                "start": 261,
+                "end": 261
+              },
+              {
+                "start": 297,
+                "end": 297
+              },
+              {
+                "start": 411,
+                "end": 411
+              },
+              {
+                "start": 447,
+                "end": 447
+              },
+              {
+                "start": 450,
+                "end": 450
+              },
+              {
+                "start": 474,
+                "end": 474
+              },
+              {
+                "start": 509,
+                "end": 509
+              },
+              {
+                "start": 517,
+                "end": 517
+              },
+              {
+                "start": 547,
+                "end": 548
+              },
+              {
+                "start": 670,
+                "end": 670
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 148,
+                "end": 148
+              },
+              {
+                "start": 175,
+                "end": 176
+              },
+              {
+                "start": 180,
+                "end": 180
+              },
+              {
+                "start": 218,
+                "end": 218
+              },
+              {
+                "start": 323,
+                "end": 323
+              },
+              {
+                "start": 481,
+                "end": 482
+              },
+              {
+                "start": 549,
+                "end": 549
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/NativeSelect/NativeSelectInput.js",
+            "packages/mui-material/src/Select/Select.d.ts",
+            "packages/mui-material/src/Select/Select.js",
+            "packages/mui-material/src/Select/Select.test.js",
+            "packages/mui-material/src/Select/SelectInput.d.ts",
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/NativeSelect/NativeSelectInput.js": [
+              {
+                "start": 21,
+                "end": 21
+              },
+              {
+                "start": 73,
+                "end": 73
+              },
+              {
+                "start": 86,
+                "end": 86
+              },
+              {
+                "start": 138,
+                "end": 138
+              }
+            ],
+            "packages/mui-material/src/Select/Select.d.ts": [
+              {
+                "start": 135,
+                "end": 135
+              }
+            ],
+            "packages/mui-material/src/Select/Select.js": [
+              {
+                "start": 57,
+                "end": 57
+              },
+              {
+                "start": 110,
+                "end": 110
+              },
+              {
+                "start": 255,
+                "end": 255
+              }
+            ],
+            "packages/mui-material/src/Select/Select.test.js": [
+              {
+                "start": 708,
+                "end": 708
+              },
+              {
+                "start": 711,
+                "end": 711
+              },
+              {
+                "start": 716,
+                "end": 716
+              }
+            ],
+            "packages/mui-material/src/Select/SelectInput.d.ts": [
+              {
+                "start": 36,
+                "end": 36
+              }
+            ],
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 12,
+                "end": 12
+              },
+              {
+                "start": 21,
+                "end": 21
+              },
+              {
+                "start": 33,
+                "end": 33
+              },
+              {
+                "start": 126,
+                "end": 126
+              },
+              {
+                "start": 492,
+                "end": 492
+              },
+              {
+                "start": 505,
+                "end": 505
+              },
+              {
+                "start": 519,
+                "end": 519
+              },
+              {
+                "start": 521,
+                "end": 521
+              },
+              {
+                "start": 532,
+                "end": 532
+              },
+              {
+                "start": 704,
+                "end": 704
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "CHANGELOG.md"
+          ],
+          "spans": {
+            "CHANGELOG.md": [
+              {
+                "start": 44,
+                "end": 44
+              },
+              {
+                "start": 73,
+                "end": 73
+              },
+              {
+                "start": 238,
+                "end": 238
+              },
+              {
+                "start": 281,
+                "end": 281
+              },
+              {
+                "start": 398,
+                "end": 398
+              },
+              {
+                "start": 410,
+                "end": 410
+              },
+              {
+                "start": 421,
+                "end": 421
+              },
+              {
+                "start": 626,
+                "end": 626
+              },
+              {
+                "start": 632,
+                "end": 632
+              },
+              {
+                "start": 715,
+                "end": 715
+              },
+              {
+                "start": 829,
+                "end": 829
+              },
+              {
+                "start": 849,
+                "end": 849
+              },
+              {
+                "start": 902,
+                "end": 902
+              },
+              {
+                "start": 904,
+                "end": 904
+              },
+              {
+                "start": 906,
+                "end": 906
+              },
+              {
+                "start": 910,
+                "end": 910
+              },
+              {
+                "start": 913,
+                "end": 913
+              },
+              {
+                "start": 1006,
+                "end": 1006
+              },
+              {
+                "start": 1010,
+                "end": 1010
+              },
+              {
+                "start": 1061,
+                "end": 1061
+              },
+              {
+                "start": 1069,
+                "end": 1069
+              },
+              {
+                "start": 1080,
+                "end": 1080
+              },
+              {
+                "start": 1170,
+                "end": 1170
+              },
+              {
+                "start": 1373,
+                "end": 1373
+              },
+              {
+                "start": 1427,
+                "end": 1427
+              },
+              {
+                "start": 1502,
+                "end": 1502
+              },
+              {
+                "start": 1553,
+                "end": 1553
+              },
+              {
+                "start": 1882,
+                "end": 1882
+              },
+              {
+                "start": 2365,
+                "end": 2365
+              },
+              {
+                "start": 2438,
+                "end": 2438
+              },
+              {
+                "start": 2454,
+                "end": 2454
+              },
+              {
+                "start": 2458,
+                "end": 2458
+              },
+              {
+                "start": 2707,
+                "end": 2707
+              },
+              {
+                "start": 2724,
+                "end": 2724
+              },
+              {
+                "start": 2790,
+                "end": 2790
+              },
+              {
+                "start": 2882,
+                "end": 2882
+              },
+              {
+                "start": 2953,
+                "end": 2953
+              },
+              {
+                "start": 2958,
+                "end": 2958
+              },
+              {
+                "start": 3002,
+                "end": 3002
+              },
+              {
+                "start": 3052,
+                "end": 3052
+              },
+              {
+                "start": 3057,
+                "end": 3057
+              },
+              {
+                "start": 3159,
+                "end": 3159
+              },
+              {
+                "start": 3384,
+                "end": 3384
+              },
+              {
+                "start": 3445,
+                "end": 3445
+              },
+              {
+                "start": 3462,
+                "end": 3462
+              },
+              {
+                "start": 3507,
+                "end": 3507
+              },
+              {
+                "start": 3646,
+                "end": 3646
+              },
+              {
+                "start": 3673,
+                "end": 3673
+              },
+              {
+                "start": 3749,
+                "end": 3749
+              },
+              {
+                "start": 3751,
+                "end": 3751
+              },
+              {
+                "start": 4144,
+                "end": 4144
+              },
+              {
+                "start": 4264,
+                "end": 4264
+              },
+              {
+                "start": 4399,
+                "end": 4399
+              },
+              {
+                "start": 4603,
+                "end": 4603
+              },
+              {
+                "start": 4657,
+                "end": 4657
+              },
+              {
+                "start": 4798,
+                "end": 4798
+              },
+              {
+                "start": 4820,
+                "end": 4820
+              },
+              {
+                "start": 4878,
+                "end": 4878
+              },
+              {
+                "start": 5183,
+                "end": 5183
+              },
+              {
+                "start": 5568,
+                "end": 5568
+              },
+              {
+                "start": 5709,
+                "end": 5709
+              },
+              {
+                "start": 5747,
+                "end": 5747
+              },
+              {
+                "start": 5767,
+                "end": 5767
+              },
+              {
+                "start": 5805,
+                "end": 5805
+              },
+              {
+                "start": 5807,
+                "end": 5807
+              },
+              {
+                "start": 5812,
+                "end": 5813
+              },
+              {
+                "start": 5866,
+                "end": 5866
+              },
+              {
+                "start": 5870,
+                "end": 5870
+              },
+              {
+                "start": 5929,
+                "end": 5929
+              },
+              {
+                "start": 6067,
+                "end": 6067
+              },
+              {
+                "start": 6072,
+                "end": 6073
+              },
+              {
+                "start": 6392,
+                "end": 6392
+              },
+              {
+                "start": 6481,
+                "end": 6481
+              },
+              {
+                "start": 6485,
+                "end": 6488
+              },
+              {
+                "start": 6501,
+                "end": 6503
+              },
+              {
+                "start": 6622,
+                "end": 6623
+              },
+              {
+                "start": 6704,
+                "end": 6705
+              },
+              {
+                "start": 6796,
+                "end": 6796
+              },
+              {
+                "start": 7417,
+                "end": 7417
+              },
+              {
+                "start": 7576,
+                "end": 7576
+              },
+              {
+                "start": 7631,
+                "end": 7631
+              },
+              {
+                "start": 7730,
+                "end": 7730
+              },
+              {
+                "start": 7794,
+                "end": 7794
+              },
+              {
+                "start": 7798,
+                "end": 7798
+              },
+              {
+                "start": 7920,
+                "end": 7920
+              },
+              {
+                "start": 8015,
+                "end": 8015
+              },
+              {
+                "start": 8074,
+                "end": 8074
+              },
+              {
+                "start": 8468,
+                "end": 8468
+              },
+              {
+                "start": 8743,
+                "end": 8743
+              },
+              {
+                "start": 8871,
+                "end": 8872
+              },
+              {
+                "start": 8991,
+                "end": 8991
+              },
+              {
+                "start": 9924,
+                "end": 9924
+              },
+              {
+                "start": 9991,
+                "end": 9991
+              },
+              {
+                "start": 10020,
+                "end": 10020
+              },
+              {
+                "start": 10196,
+                "end": 10196
+              },
+              {
+                "start": 10202,
+                "end": 10202
+              },
+              {
+                "start": 10286,
+                "end": 10286
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            ".github/PULL_REQUEST_TEMPLATE.md",
+            "CHANGELOG.md",
+            "CHANGELOG.old.md",
+            "CONTRIBUTING.md",
+            "README.md",
+            "SECURITY.md",
+            "TYPESCRIPT_CONVENTION.md",
+            "benchmark/browser/README.md",
+            "benchmark/server/README.md",
+            "docs/README.md",
+            "docs/data/material/experimental-api/classname-generator/classname-generator.md",
+            "docs/data/material/getting-started/design-resources/design-resources.md",
+            "docs/data/material/getting-started/example-projects/example-projects-pt.md",
+            "docs/data/material/getting-started/example-projects/example-projects-zh.md",
+            "docs/data/material/getting-started/example-projects/example-projects.md",
+            "docs/data/material/getting-started/faq/faq-pt.md",
+            "docs/data/material/getting-started/faq/faq-zh.md",
+            "docs/data/material/getting-started/faq/faq.md",
+            "docs/data/material/getting-started/installation/installation-pt.md",
+            "docs/data/material/getting-started/installation/installation-zh.md",
+            "docs/data/material/getting-started/installation/installation.md",
+            "docs/data/material/getting-started/overview/overview-pt.md",
+            "docs/data/material/getting-started/overview/overview-zh.md",
+            "docs/data/material/getting-started/overview/overview.md",
+            "docs/data/material/getting-started/supported-components/supported-components-pt.md",
+            "docs/data/material/getting-started/supported-components/supported-components-zh.md",
+            "docs/data/material/getting-started/supported-components/supported-components.md",
+            "docs/data/material/getting-started/supported-platforms/supported-platforms-pt.md",
+            "docs/data/material/getting-started/supported-platforms/supported-platforms-zh.md",
+            "docs/data/material/getting-started/supported-platforms/supported-platforms.md",
+            "docs/data/material/getting-started/templates/dashboard/README.md",
+            "docs/data/material/getting-started/templates/pricing/README.md",
+            "docs/data/material/getting-started/templates/sign-in-side/README.md",
+            "docs/data/material/getting-started/templates/sign-in/README.md",
+            "docs/data/material/getting-started/templates/sign-up/README.md",
+            "docs/data/material/getting-started/templates/sticky-footer/README.md",
+            "docs/data/material/getting-started/templates/templates-pt.md",
+            "docs/data/material/getting-started/templates/templates-zh.md",
+            "docs/data/material/getting-started/templates/templates.md",
+            "docs/data/material/getting-started/usage/usage-pt.md",
+            "docs/data/material/getting-started/usage/usage-zh.md",
+            "docs/data/material/getting-started/usage/usage.md",
+            "docs/data/material/guides/api/api-pt.md",
+            "docs/data/material/guides/api/api-zh.md",
+            "docs/data/material/guides/api/api.md",
+            "docs/data/material/guides/composition/composition-pt.md",
+            "docs/data/material/guides/composition/composition-zh.md",
+            "docs/data/material/guides/composition/composition.md",
+            "docs/data/material/guides/content-security-policy/content-security-policy-pt.md",
+            "docs/data/material/guides/content-security-policy/content-security-policy-zh.md",
+            "docs/data/material/guides/content-security-policy/content-security-policy.md",
+            "docs/data/material/guides/flow/flow-pt.md",
+            "docs/data/material/guides/flow/flow-zh.md",
+            "docs/data/material/guides/flow/flow.md",
+            "docs/data/material/guides/localization/localization-pt.md",
+            "docs/data/material/guides/localization/localization-zh.md",
+            "docs/data/material/guides/localization/localization.md",
+            "docs/data/material/guides/minimizing-bundle-size/minimizing-bundle-size-pt.md",
+            "docs/data/material/guides/minimizing-bundle-size/minimizing-bundle-size-zh.md",
+            "docs/data/material/guides/minimizing-bundle-size/minimizing-bundle-size.md",
+            "docs/data/material/guides/pickers-migration/pickers-migration-pt.md",
+            "docs/data/material/guides/pickers-migration/pickers-migration-zh.md",
+            "docs/data/material/guides/pickers-migration/pickers-migration.md",
+            "docs/data/material/guides/responsive-ui/responsive-ui-pt.md",
+            "docs/data/material/guides/responsive-ui/responsive-ui-zh.md",
+            "docs/data/material/guides/responsive-ui/responsive-ui.md",
+            "docs/data/material/guides/right-to-left/right-to-left-pt.md",
+            "docs/data/material/guides/right-to-left/right-to-left-zh.md",
+            "docs/data/material/guides/right-to-left/right-to-left.md",
+            "docs/data/material/guides/routing/routing-pt.md",
+            "docs/data/material/guides/routing/routing-zh.md",
+            "docs/data/material/guides/routing/routing.md",
+            "docs/data/material/guides/server-rendering/server-rendering-pt.md",
+            "docs/data/material/guides/server-rendering/server-rendering-zh.md",
+            "docs/data/material/guides/server-rendering/server-rendering.md",
+            "docs/data/material/guides/shadow-dom/shadow-dom-pt.md",
+            "docs/data/material/guides/shadow-dom/shadow-dom-zh.md",
+            "docs/data/material/guides/shadow-dom/shadow-dom.md",
+            "docs/data/material/guides/styled-engine/styled-engine-pt.md",
+            "docs/data/material/guides/styled-engine/styled-engine-zh.md",
+            "docs/data/material/guides/styled-engine/styled-engine.md",
+            "docs/data/material/guides/testing/testing-pt.md",
+            "docs/data/material/guides/testing/testing-zh.md",
+            "docs/data/material/guides/testing/testing.md",
+            "docs/data/material/guides/typescript/typescript-pt.md",
+            "docs/data/material/guides/typescript/typescript-zh.md",
+            "docs/data/material/guides/typescript/typescript.md",
+            "docs/data/material/guides/understand-mui-packages/understand-mui-packages-pt.md",
+            "docs/data/material/guides/understand-mui-packages/understand-mui-packages-zh.md",
+            "docs/data/material/guides/understand-mui-packages/understand-mui-packages.md",
+            "docs/data/material/migration/migration-grid-v2/migration-grid-v2-pt.md",
+            "docs/data/material/migration/migration-grid-v2/migration-grid-v2-zh.md",
+            "docs/data/material/migration/migration-grid-v2/migration-grid-v2.md",
+            "docs/data/material/migration/migration-v0x/migration-v0x-pt.md",
+            "docs/data/material/migration/migration-v0x/migration-v0x-zh.md",
+            "docs/data/material/migration/migration-v0x/migration-v0x.md",
+            "docs/data/material/migration/migration-v3/migration-v3-pt.md",
+            "docs/data/material/migration/migration-v3/migration-v3-zh.md",
+            "docs/data/material/migration/migration-v3/migration-v3.md",
+            "docs/data/material/migration/migration-v4/migrating-from-jss-pt.md",
+            "docs/data/material/migration/migration-v4/migrating-from-jss-zh.md",
+            "docs/data/material/migration/migration-v4/migrating-from-jss.md",
+            "docs/data/material/migration/migration-v4/migration-v4-pt.md",
+            "docs/data/material/migration/migration-v4/migration-v4-zh.md",
+            "docs/data/material/migration/migration-v4/migration-v4.md",
+            "docs/data/material/migration/migration-v4/troubleshooting-pt.md",
+            "docs/data/material/migration/migration-v4/troubleshooting-zh.md",
+            "docs/data/material/migration/migration-v4/troubleshooting.md",
+            "docs/data/material/migration/migration-v4/v5-component-changes-pt.md",
+            "docs/data/material/migration/migration-v4/v5-component-changes-zh.md",
+            "docs/data/material/migration/migration-v4/v5-component-changes.md",
+            "docs/data/material/migration/migration-v4/v5-style-changes-pt.md",
+            "docs/data/material/migration/migration-v4/v5-style-changes-zh.md",
+            "docs/data/material/migration/migration-v4/v5-style-changes.md",
+            "docs/data/styles/advanced/advanced-pt.md",
+            "docs/data/styles/advanced/advanced-zh.md",
+            "docs/data/styles/advanced/advanced.md",
+            "docs/data/styles/api/api-pt.md",
+            "docs/data/styles/api/api-zh.md",
+            "docs/data/styles/api/api.md",
+            "docs/data/styles/basics/basics-pt.md",
+            "docs/data/styles/basics/basics-zh.md",
+            "docs/data/styles/basics/basics.md",
+            "docs/data/styles/typescript/typescript-pt.md",
+            "docs/data/styles/typescript/typescript-zh.md",
+            "docs/data/styles/typescript/typescript.md",
+            "docs/data/system/borders/borders-pt.md",
+            "docs/data/system/borders/borders-zh.md",
+            "docs/data/system/borders/borders.md",
+            "docs/data/system/components/box/box-pt.md",
+            "docs/data/system/components/box/box-zh.md",
+            "docs/data/system/components/box/box.md",
+            "docs/data/system/components/container/container-pt.md",
+            "docs/data/system/components/container/container-zh.md",
+            "docs/data/system/components/container/container.md",
+            "docs/data/system/components/grid/grid-pt.md",
+            "docs/data/system/components/grid/grid-zh.md",
+            "docs/data/system/components/grid/grid.md",
+            "docs/data/system/components/stack/stack-pt.md",
+            "docs/data/system/components/stack/stack-zh.md",
+            "docs/data/system/components/stack/stack.md",
+            "docs/data/system/display/display-pt.md",
+            "docs/data/system/display/display-zh.md",
+            "docs/data/system/display/display.md",
+            "docs/data/system/experimental-api/configure-the-sx-prop/configure-the-sx-prop.md",
+            "docs/data/system/flexbox/flexbox-pt.md",
+            "docs/data/system/flexbox/flexbox-zh.md",
+            "docs/data/system/flexbox/flexbox.md",
+            "docs/data/system/getting-started/custom-components/advanced-pt.md",
+            "docs/data/system/getting-started/custom-components/advanced-zh.md",
+            "docs/data/system/getting-started/custom-components/custom-components-pt.md",
+            "docs/data/system/getting-started/custom-components/custom-components-zh.md",
+            "docs/data/system/getting-started/custom-components/custom-components.md",
+            "docs/data/system/getting-started/installation/installation-pt.md",
+            "docs/data/system/getting-started/installation/installation-zh.md",
+            "docs/data/system/getting-started/installation/installation.md",
+            "docs/data/system/getting-started/overview/overview-pt.md",
+            "docs/data/system/getting-started/overview/overview-zh.md",
+            "docs/data/system/getting-started/overview/overview.md",
+            "docs/data/system/getting-started/the-sx-prop/the-sx-prop-pt.md",
+            "docs/data/system/getting-started/the-sx-prop/the-sx-prop-zh.md",
+            "docs/data/system/getting-started/the-sx-prop/the-sx-prop.md",
+            "docs/data/system/getting-started/usage/basics-pt.md",
+            "docs/data/system/getting-started/usage/basics-zh.md",
+            "docs/data/system/getting-started/usage/usage-pt.md",
+            "docs/data/system/getting-started/usage/usage-zh.md",
+            "docs/data/system/getting-started/usage/usage.md",
+            "docs/data/system/grid/grid-pt.md",
+            "docs/data/system/grid/grid-zh.md",
+            "docs/data/system/grid/grid.md",
+            "docs/data/system/palette/palette-pt.md",
+            "docs/data/system/palette/palette-zh.md",
+            "docs/data/system/palette/palette.md",
+            "docs/data/system/positions/positions-pt.md",
+            "docs/data/system/positions/positions-zh.md",
+            "docs/data/system/positions/positions.md",
+            "docs/data/system/properties/properties-pt.md",
+            "docs/data/system/properties/properties-zh.md",
+            "docs/data/system/properties/properties.md",
+            "docs/data/system/screen-readers/screen-readers-pt.md",
+            "docs/data/system/screen-readers/screen-readers-zh.md",
+            "docs/data/system/screen-readers/screen-readers.md",
+            "docs/data/system/shadows/shadows-pt.md",
+            "docs/data/system/shadows/shadows-zh.md",
+            "docs/data/system/shadows/shadows.md",
+            "docs/data/system/sizing/sizing-pt.md",
+            "docs/data/system/sizing/sizing-zh.md",
+            "docs/data/system/sizing/sizing.md",
+            "docs/data/system/spacing/spacing-pt.md",
+            "docs/data/system/spacing/spacing-zh.md",
+            "docs/data/system/spacing/spacing.md",
+            "docs/data/system/styled/styled-pt.md",
+            "docs/data/system/styled/styled-zh.md",
+            "docs/data/system/styled/styled.md",
+            "docs/data/system/typography/typography-pt.md",
+            "docs/data/system/typography/typography-zh.md",
+            "docs/data/system/typography/typography.md",
+            "docs/pages/blog/2019-developer-survey-results.md",
+            "docs/pages/blog/2019.md",
+            "docs/pages/blog/2020-developer-survey-results.md",
+            "docs/pages/blog/2020-introducing-sketch.md",
+            "docs/pages/blog/2020-q1-update.md",
+            "docs/pages/blog/2020-q2-update.md",
+            "docs/pages/blog/2020-q3-update.md",
+            "docs/pages/blog/2020.md",
+            "docs/pages/blog/2021-developer-survey-results.md",
+            "docs/pages/blog/2021-q1-update.md",
+            "docs/pages/blog/2021-q2-update.md",
+            "docs/pages/blog/2021-q3-update.md",
+            "docs/pages/blog/2021.md",
+            "docs/pages/blog/2022-tenerife-retreat.md",
+            "docs/pages/blog/aggregation-functions.md",
+            "docs/pages/blog/april-2019-update.md",
+            "docs/pages/blog/august-2019-update.md",
+            "docs/pages/blog/benny-joo-joining.md",
+            "docs/pages/blog/build-layouts-faster-with-grid-v2.md",
+            "docs/pages/blog/callback-support-in-style-overrides.md",
+            "docs/pages/blog/danail-hadjiatanasov-joining.md",
+            "docs/pages/blog/danilo-leal-joining.md",
+            "docs/pages/blog/date-pickers-stable-v5.md",
+            "docs/pages/blog/december-2019-update.md",
+            "docs/pages/blog/docs-restructure-2022.md",
+            "docs/pages/blog/first-look-at-joy.md",
+            "docs/pages/blog/introducing-mui-base.md",
+            "docs/pages/blog/introducing-the-row-grouping-feature.md",
+            "docs/pages/blog/july-2019-update.md",
+            "docs/pages/blog/june-2019-update.md",
+            "docs/pages/blog/lab-date-pickers-to-mui-x.md",
+            "docs/pages/blog/making-customizable-components.md",
+            "docs/pages/blog/march-2019-update.md",
+            "docs/pages/blog/marija-najdova-joining.md",
+            "docs/pages/blog/material-ui-is-now-mui.md",
+            "docs/pages/blog/material-ui-v1-is-out.md",
+            "docs/pages/blog/material-ui-v4-is-out.md",
+            "docs/pages/blog/matheus-wichman-joining.md",
+            "docs/pages/blog/may-2019-update.md",
+            "docs/pages/blog/michal-dudak-joining.md",
+            "docs/pages/blog/mui-core-v5-migration-update.md",
+            "docs/pages/blog/mui-core-v5.md",
+            "docs/pages/blog/mui-product-comparison.md",
+            "docs/pages/blog/mui-x-v5.md",
+            "docs/pages/blog/mui-x-v6-alpha-zero.md",
+            "docs/pages/blog/november-2019-update.md",
+            "docs/pages/blog/october-2019-update.md",
+            "docs/pages/blog/premium-plan-release.md",
+            "docs/pages/blog/september-2019-update.md",
+            "docs/pages/blog/siriwat-kunaporn-joining.md",
+            "docs/pages/blog/spotlight-damien-tassone.md",
+            "docs/pages/experiments/docs/callouts.md",
+            "docs/src/pages/careers/ROLE_TEMPLATE.md",
+            "docs/src/pages/careers/accessibility-engineer.md",
+            "docs/src/pages/careers/design-engineer.md",
+            "docs/src/pages/careers/designer.md",
+            "docs/src/pages/careers/developer-advocate.md",
+            "docs/src/pages/careers/developer-experience-engineer.md",
+            "docs/src/pages/careers/engineering-manager.md",
+            "docs/src/pages/careers/full-stack-engineer.md",
+            "docs/src/pages/careers/lead-designer.md",
+            "docs/src/pages/careers/people-operation-manager.md",
+            "docs/src/pages/careers/product-engineer.md",
+            "docs/src/pages/careers/product-manager.md",
+            "docs/src/pages/careers/product-marketing-manager.md",
+            "docs/src/pages/careers/react-engineer-core.md",
+            "docs/src/pages/careers/react-engineer-x-grid.md",
+            "docs/src/pages/careers/react-engineer-x.md",
+            "docs/src/pages/careers/react-support-engineer.md",
+            "docs/src/pages/careers/react-tech-lead-core.md",
+            "docs/src/pages/careers/react-tech-lead-x-grid.md",
+            "docs/src/pages/careers/support-agent.md",
+            "docs/src/pages/careers/technical-product-manager.md",
+            "docs/src/pages/careers/technical-recruiter.md",
+            "docs/src/pages/company/contact/contact.md",
+            "docs/src/pages/premium-themes/onepirate/modules/views/privacy.md",
+            "docs/src/pages/premium-themes/onepirate/modules/views/terms.md",
+            "docs/src/pages/production-error/index-pt.md",
+            "docs/src/pages/production-error/index-zh.md",
+            "docs/src/pages/production-error/index.md",
+            "docs/src/pages/versions/versions-pt.md",
+            "docs/src/pages/versions/versions-zh.md",
+            "docs/src/pages/versions/versions.md",
+            "examples/base-cra-typescript/README.md",
+            "examples/cdn/README.md",
+            "examples/create-react-app-with-styled-components-typescript/README.md",
+            "examples/create-react-app-with-styled-components/README.md",
+            "examples/create-react-app-with-typescript/README.md",
+            "examples/create-react-app/README.md",
+            "examples/gatsby/README.md",
+            "examples/joy-cra-typescript/README.md",
+            "examples/mui-base-with-tailwind-css/README.md",
+            "examples/nextjs-with-typescript-v4-migration/README.md",
+            "examples/nextjs-with-typescript/README.md",
+            "examples/nextjs/README.md",
+            "examples/preact/README.md",
+            "examples/remix-with-typescript/README.md",
+            "examples/ssr/README.md",
+            "examples/tailwind-css/README.md",
+            "examples/vitejs/README.md",
+            "modules/waterfall/README.md",
+            "packages/docs-utilities/README.md",
+            "packages/eslint-plugin-material-ui/README.md",
+            "packages/feedback/README.md",
+            "packages/mui-base/README.md",
+            "packages/mui-codemod/README.md",
+            "packages/mui-core-downloads-tracker/README.md",
+            "packages/mui-docs/README.md",
+            "packages/mui-envinfo/README.md",
+            "packages/mui-icons-material/README.md",
+            "packages/mui-icons-material/builder.md",
+            "packages/mui-icons-material/fixtures/game-icons/README.md",
+            "packages/mui-joy/README.md",
+            "packages/mui-lab/README.md",
+            "packages/mui-material-next/README.md",
+            "packages/mui-material/README.md",
+            "packages/mui-material/src/internal/svg-icons/README.md",
+            "packages/mui-private-theming/README.md",
+            "packages/mui-styled-engine-sc/README.md",
+            "packages/mui-styled-engine/README.md",
+            "packages/mui-styles/README.md",
+            "packages/mui-system/README.md",
+            "packages/mui-types/README.md",
+            "packages/mui-utils/README.md",
+            "packages/typescript-to-proptypes/CHANGELOG.md",
+            "packages/typescript-to-proptypes/README.md",
+            "scripts/README.md",
+            "test/README.md",
+            "test/bundling/README.md",
+            "test/e2e-website/README.md",
+            "test/e2e/README.md",
+            "test/regressions/README.md",
+            "test/regressions/manual/README.md"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "CHANGELOG.md"
+          ],
+          "spans": {
+            "CHANGELOG.md": [
+              {
+                "start": 1,
+                "end": 90
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/Select.test.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/Select.test.js": [
+              {
+                "start": 13,
+                "end": 13
+              },
+              {
+                "start": 51,
+                "end": 51
+              },
+              {
+                "start": 53,
+                "end": 56
+              },
+              {
+                "start": 66,
+                "end": 66
+              },
+              {
+                "start": 77,
+                "end": 77
+              },
+              {
+                "start": 85,
+                "end": 85
+              },
+              {
+                "start": 107,
+                "end": 108
+              },
+              {
+                "start": 131,
+                "end": 132
+              },
+              {
+                "start": 145,
+                "end": 145
+              },
+              {
+                "start": 165,
+                "end": 165
+              },
+              {
+                "start": 185,
+                "end": 185
+              },
+              {
+                "start": 190,
+                "end": 190
+              },
+              {
+                "start": 206,
+                "end": 207
+              },
+              {
+                "start": 244,
+                "end": 246
+              },
+              {
+                "start": 265,
+                "end": 266
+              },
+              {
+                "start": 282,
+                "end": 284
+              },
+              {
+                "start": 307,
+                "end": 309
+              },
+              {
+                "start": 322,
+                "end": 324
+              },
+              {
+                "start": 339,
+                "end": 340
+              },
+              {
+                "start": 353,
+                "end": 353
+              },
+              {
+                "start": 355,
+                "end": 358
+              },
+              {
+                "start": 370,
+                "end": 371
+              },
+              {
+                "start": 467,
+                "end": 468
+              },
+              {
+                "start": 480,
+                "end": 481
+              },
+              {
+                "start": 493,
+                "end": 494
+              },
+              {
+                "start": 496,
+                "end": 497
+              },
+              {
+                "start": 519,
+                "end": 520
+              },
+              {
+                "start": 522,
+                "end": 523
+              },
+              {
+                "start": 541,
+                "end": 541
+              },
+              {
+                "start": 545,
+                "end": 545
+              },
+              {
+                "start": 547,
+                "end": 547
+              },
+              {
+                "start": 549,
+                "end": 550
+              },
+              {
+                "start": 552,
+                "end": 553
+              },
+              {
+                "start": 657,
+                "end": 658
+              },
+              {
+                "start": 674,
+                "end": 675
+              },
+              {
+                "start": 678,
+                "end": 679
+              },
+              {
+                "start": 696,
+                "end": 696
+              },
+              {
+                "start": 700,
+                "end": 700
+              },
+              {
+                "start": 712,
+                "end": 712
+              },
+              {
+                "start": 724,
+                "end": 726
+              },
+              {
+                "start": 739,
+                "end": 740
+              },
+              {
+                "start": 759,
+                "end": 759
+              },
+              {
+                "start": 764,
+                "end": 764
+              },
+              {
+                "start": 790,
+                "end": 790
+              },
+              {
+                "start": 796,
+                "end": 796
+              },
+              {
+                "start": 821,
+                "end": 821
+              },
+              {
+                "start": 833,
+                "end": 833
+              },
+              {
+                "start": 835,
+                "end": 838
+              },
+              {
+                "start": 854,
+                "end": 854
+              },
+              {
+                "start": 856,
+                "end": 857
+              },
+              {
+                "start": 867,
+                "end": 867
+              },
+              {
+                "start": 869,
+                "end": 870
+              },
+              {
+                "start": 885,
+                "end": 887
+              },
+              {
+                "start": 901,
+                "end": 902
+              },
+              {
+                "start": 904,
+                "end": 905
+              },
+              {
+                "start": 927,
+                "end": 929
+              },
+              {
+                "start": 945,
+                "end": 947
+              },
+              {
+                "start": 971,
+                "end": 973
+              },
+              {
+                "start": 1011,
+                "end": 1013
+              },
+              {
+                "start": 1044,
+                "end": 1046
+              },
+              {
+                "start": 1081,
+                "end": 1082
+              },
+              {
+                "start": 1174,
+                "end": 1174
+              },
+              {
+                "start": 1176,
+                "end": 1176
+              },
+              {
+                "start": 1186,
+                "end": 1186
+              },
+              {
+                "start": 1190,
+                "end": 1190
+              },
+              {
+                "start": 1192,
+                "end": 1192
+              },
+              {
+                "start": 1208,
+                "end": 1210
+              },
+              {
+                "start": 1237,
+                "end": 1240
+              },
+              {
+                "start": 1266,
+                "end": 1267
+              },
+              {
+                "start": 1279,
+                "end": 1280
+              },
+              {
+                "start": 1297,
+                "end": 1297
+              },
+              {
+                "start": 1299,
+                "end": 1299
+              },
+              {
+                "start": 1351,
+                "end": 1352
+              },
+              {
+                "start": 1387,
+                "end": 1388
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "CHANGELOG.md"
+          ],
+          "spans": {
+            "CHANGELOG.md": [
+              {
+                "start": 35,
+                "end": 35
+              },
+              {
+                "start": 57,
+                "end": 57
+              },
+              {
+                "start": 148,
+                "end": 148
+              },
+              {
+                "start": 151,
+                "end": 151
+              },
+              {
+                "start": 205,
+                "end": 205
+              },
+              {
+                "start": 218,
+                "end": 218
+              },
+              {
+                "start": 222,
+                "end": 222
+              },
+              {
+                "start": 251,
+                "end": 251
+              },
+              {
+                "start": 267,
+                "end": 267
+              },
+              {
+                "start": 335,
+                "end": 335
+              },
+              {
+                "start": 381,
+                "end": 381
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "packages/mui-material/src/Select/Select.js",
+        "packages/mui-material/src/Select/Select.test.js",
+        "packages/mui-material/src/Select/SelectInput.js"
+      ],
+      "pred_spans": {
+        "packages/mui-material/src/Select/Select.js": [
+          {
+            "start": 80,
+            "end": 125
+          }
+        ],
+        "packages/mui-material/src/Select/Select.test.js": [
+          {
+            "start": 853,
+            "end": 879
+          }
+        ],
+        "packages/mui-material/src/Select/SelectInput.js": [
+          {
+            "start": 146,
+            "end": 160
+          },
+          {
+            "start": 173,
+            "end": 221
+          },
+          {
+            "start": 478,
+            "end": 483
+          },
+          {
+            "start": 547,
+            "end": 576
+          }
+        ]
+      }
+    }
+  }
+]

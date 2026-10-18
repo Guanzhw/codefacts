@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "kind": "fixed24-public-acquisition-bridge",
+  "status": "draft",
+  "approvedBy": null,
+  "selection": { "path": null, "sha256": null },
+  "helpers": [
+    { "role": "official.py", "path": null, "sha256": null },
+    { "role": "export-fixed-selection.py", "path": null, "sha256": null },
+    { "role": "prepare-context-bases.py", "path": null, "sha256": null }
+  ],
+  "runtimeRecipes": {
+    "context": { "path": null, "sha256": null },
+    "swe": { "path": null, "sha256": null }
+  },
+  "contextManifests": [],
+  "datasets": {
+    "context": { "canonical": null },
+    "swe": { "canonical": null, "derivedSha256": null }
+  },
+  "imageAcquisitions": { "path": null, "sha256": null },
+  "attribution": { "path": null, "sha256": null }
+}

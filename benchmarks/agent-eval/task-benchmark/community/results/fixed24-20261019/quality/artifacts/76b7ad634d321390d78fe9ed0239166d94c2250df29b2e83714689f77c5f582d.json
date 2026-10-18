@@ -1,0 +1,7 @@
+[
+  {
+    "instance_id": "uutils__coreutils-6690",
+    "model_name_or_path": "gpt-swe-ordinary",
+    "model_patch": "diff --git a/src/uu/cp/src/cp.rs b/src/uu/cp/src/cp.rs\nindex cce042b..0ee0bac 100644\n--- a/src/uu/cp/src/cp.rs\n+++ b/src/uu/cp/src/cp.rs\n@@ -677,6 +677,7 @@ pub fn uu_app() -> Command {\n         .arg(\n             Arg::new(options::PATHS)\n                 .action(ArgAction::Append)\n+                .num_args(1..)\n                 .value_hint(clap::ValueHint::AnyPath)\n                 .value_parser(ValueParser::os_string()),\n         )\ndiff --git a/tests/test_util_name.rs b/tests/test_util_name.rs\nindex 689c382..1bfb023 100644\n--- a/tests/test_util_name.rs\n+++ b/tests/test_util_name.rs\n@@ -211,6 +211,25 @@ fn util_completion() {\n     );\n }\n \n+#[test]\n+#[cfg(feature = \"cp\")]\n+fn cp_completion_includes_path_completion() {\n+    use std::process::Command;\n+\n+    let scenario = TestScenario::new(\"completion\");\n+    let output = Command::new(scenario.bin_path)\n+        .args([\"completion\", \"cp\", \"zsh\"])\n+        .output()\n+        .unwrap();\n+    assert_eq!(output.status.code(), Some(0));\n+    assert!(\n+        String::from_utf8(output.stdout)\n+            .unwrap()\n+            .contains(\"*::paths:_files\"),\n+        \"cp zsh completion should complete positional paths\"\n+    );\n+}\n+\n #[test]\n #[cfg(feature = \"true\")]\n fn util_manpage() {\n"
+  }
+]
