@@ -135,7 +135,8 @@ if destination:
  base=pathlib.Path(destination);base.mkdir(parents=True)
 else:
  temporary=tempfile.TemporaryDirectory(prefix='community-symlinks-');base=pathlib.Path(temporary.name)
-root=base/'source';root.mkdir();(root/'package').mkdir()
+# Match grade_context's canonical private clone root, including macOS temporary-directory aliases.
+root=(base/'source').resolve();root.mkdir();(root/'package').mkdir()
 regular=root/'package/source.py';regular.write_bytes(b'def target():\\n    return 1\\n')
 targets={'file-link':'package/source.py','directory-link':'package','dangling-link':'missing/inside'}
 for file,target in targets.items():os.symlink(target,root/file)
