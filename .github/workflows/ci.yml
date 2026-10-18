@@ -86,7 +86,6 @@ jobs:
         shell: bash
     env:
       COMMUNITY: ${{ github.workspace }}/benchmarks/agent-eval/task-benchmark/community
-      WORK: ${{ runner.temp }}/fresh-benchmark-source
       BENCHMARK_SOURCE_INVENTORY_SHA256: 983c625677dfc2ee945a784878f7fc91007ddab4112e0e6bded5ea787bab3b4e
       PYTHONDONTWRITEBYTECODE: '1'
       NUMERIC_RESULTS_MANIFEST_SHA256: d0e9da3fa65f3cb6b1aa1f7781284a9035d2804ba80526fa74c1fbe9a5cddcd7
@@ -100,6 +99,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Initialize benchmark temporary workspace
+        run: echo "WORK=$RUNNER_TEMP/fresh-benchmark-source" >> "$GITHUB_ENV"
       - name: Verify accepted source bytes in Git and checkout
         shell: python
         run: |
