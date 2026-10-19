@@ -10,6 +10,8 @@ Copy the template to a new local input manifest. In that copy, replace the `ABS_
 
 If the MCP SDK resolves dependencies outside `runtime.sdkRoot`, list their absolute file paths in `evaluation.runtimeFiles`. The builder preserves this list; `plan` reports missing files and `freeze` pins their bytes alongside the SDK package. Capture the resolved dependency files before launching the campaign.
 
+For a separately defined screen protocol, set `selectionFile` to its absolute path in the configured input manifest. The builder preserves it, `plan` reports it if missing, and `freeze` pins its bytes and rejects subsequent changes. Without this field, the runner uses the module's `PROTOCOL.md`.
+
 The builder replaces the template's campaign identity, seed, evidence directory, candidate executable, source roots and source manifest paths. The source pack directory must contain `<instanceId>/source/` and `<instanceId>/manifest.json` for each of the four tasks. No source downloads occur.
 
 Use PowerShell from the repository root. Replace every `ABS_*` argument with the matching local absolute path:

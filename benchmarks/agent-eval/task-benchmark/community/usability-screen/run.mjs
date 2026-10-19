@@ -57,13 +57,13 @@ function sources(manifest, verify = false) {
 
 export function plan(manifest) {
   validate(manifest);
-  const required = [manifest.runtime.node, manifest.runtime.rg, path.join(manifest.runtime.dshRoot, 'lib/bin.js'), path.join(manifest.runtime.sdkRoot, 'package.json'), ...manifest.arms.flatMap(arm => [arm.executable, arm.node, arm.cli].filter(Boolean)), ...(manifest.evaluation?.runtimeFiles ?? [])];
+  const required = [manifest.selectionFile ?? path.join(HERE, 'PROTOCOL.md'), manifest.runtime.node, manifest.runtime.rg, path.join(manifest.runtime.dshRoot, 'lib/bin.js'), path.join(manifest.runtime.sdkRoot, 'package.json'), ...manifest.arms.flatMap(arm => [arm.executable, arm.node, arm.cli].filter(Boolean)), ...(manifest.evaluation?.runtimeFiles ?? [])];
   const missing = required.filter(file => !fs.existsSync(file));
   return { modelCallsStarted: 0, cells: schedule(manifest), sourcePins: sources(manifest), missing, readyToFreezeRuntime: missing.length === 0, credentialValuesRead: false };
 }
 
 function pins(manifest, manifestPath) {
-  return collectPins({ ...manifest, selectionFile: path.join(HERE, 'PROTOCOL.md'), evaluation: { inputFiles: [path.join(path.dirname(manifestPath), 'tasks.json')], upstreamRoots: [], runtimeFiles: manifest.evaluation?.runtimeFiles ?? [] } }, manifestPath);
+  return collectPins({ ...manifest, selectionFile: manifest.selectionFile ?? path.join(HERE, 'PROTOCOL.md'), evaluation: { inputFiles: [path.join(path.dirname(manifestPath), 'tasks.json')], upstreamRoots: [], runtimeFiles: manifest.evaluation?.runtimeFiles ?? [] } }, manifestPath);
 }
 
 export function freeze(manifestPath) {

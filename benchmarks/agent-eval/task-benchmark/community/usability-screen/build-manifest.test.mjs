@@ -112,7 +112,7 @@ test('public template blocks use; builder preserves the fixed screen contract an
   } finally { fs.rmSync(root, { recursive: true, force: true }); }
 });
 
-test('builder output freezes and pins its adjacent tasks file without module-local tasks', async () => {
+test('builder output pins its configured protocol, external SDK dependency and adjacent tasks without module-local tasks', async () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'cf-screen-freeze-bootstrap-'));
   try {
     const sourceBenchmarkRoot = fileURLToPath(new URL('../../', import.meta.url));
@@ -126,10 +126,13 @@ test('builder output freezes and pins its adjacent tasks file without module-loc
 
     const sourceManifest = configuredManifest(root), sourceFile = path.join(root, 'source-manifest.json');
     const externalDependency = path.join(root, 'shared-sdk-dependency', 'index.js');
+    const externalProtocol = path.join(root, 'external-protocol', 'PROTOCOL.md');
+    sourceManifest.selectionFile = externalProtocol;
     sourceManifest.evaluation = { runtimeFiles: [externalDependency] };
     fs.writeFileSync(sourceFile, JSON.stringify(sourceManifest, null, 2) + '\n');
     assert.ok(plan(sourceManifest).missing.includes(externalDependency));
-    const runtimeFiles = [externalDependency, sourceManifest.runtime.node, sourceManifest.runtime.rg, sourceManifest.runtime.wsl,
+    assert.ok(plan(sourceManifest).missing.includes(externalProtocol));
+    const runtimeFiles = [externalProtocol, externalDependency, sourceManifest.runtime.node, sourceManifest.runtime.rg, sourceManifest.runtime.wsl,
       path.join(sourceManifest.runtime.dshRoot, 'lib', 'bin.js'), path.join(sourceManifest.runtime.sdkRoot, 'package.json'),
       path.join(root, 'runtime', 'package.json'),
       sourceManifest.arms.find(arm => arm.id === 'codefacts022').executable,
@@ -150,8 +153,14 @@ test('builder output freezes and pins its adjacent tasks file without module-loc
     assert.equal(fs.existsSync(moduleTasks), false);
 
     const manifest = JSON_READ(manifestPath), frozen = freezeCopied(manifestPath);
+    assert.equal(manifest.selectionFile, externalProtocol);
+    assert.ok(frozen.pins.some(pin => pin.path === externalProtocol && pin.sha256 === digest(fs.readFileSync(externalProtocol))));
     assert.ok(frozen.pins.some(pin => pin.path === tasksPath));
     assert.ok(frozen.pins.some(pin => pin.path === externalDependency && pin.sha256 === digest(fs.readFileSync(externalDependency))));
+    fs.writeFileSync(externalProtocol, 'changed external protocol');
+    assert.throws(() => assertFrozenCopied(manifest, frozen), /Frozen runtime or protocol drift/);
+    fs.writeFileSync(externalProtocol, 'synthetic runtime fixture');
+    assert.doesNotThrow(() => assertFrozenCopied(manifest, frozen));
     fs.writeFileSync(externalDependency, 'changed external SDK dependency');
     assert.throws(() => assertFrozenCopied(manifest, frozen), /Frozen runtime or protocol drift/);
     fs.writeFileSync(externalDependency, 'synthetic runtime fixture');
