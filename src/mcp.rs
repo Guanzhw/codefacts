@@ -281,13 +281,13 @@ fn call_tool(
         .unwrap_or_default();
     if name == "explore" {
         let repository_root = optional_string(&arguments, "repository_root")?;
-        let reads = arguments
-            .get("reads")
-            .map(|value| {
+        let reads = match arguments.get("reads") {
+            None | Some(Value::Null) => None,
+            Some(value) => Some(
                 serde_json::from_value::<Vec<ExploreRead>>(value.clone())
-                    .map_err(|error| CodeFactsError::Mcp(format!("invalid reads: {error}")))
-            })
-            .transpose()?;
+                    .map_err(|error| CodeFactsError::Mcp(format!("invalid reads: {error}")))?,
+            ),
+        };
         let text = projects.project(repository_root)?.explore(ExploreOptions {
             query: optional_string(&arguments, "query")?,
             path_prefix: optional_string(&arguments, "path_prefix")?,
@@ -303,7 +303,12 @@ fn call_tool(
         })?;
         return Ok(json!({ "content": [{ "type": "text", "text": text }], "isError": false }));
     }
-    let limit = optional_limit(&arguments)?;
+    let limit =
+        if matches!(name, "expand" | "impact") && arguments.get("limit") == Some(&Value::Null) {
+            None
+        } else {
+            optional_limit(&arguments)?
+        };
     let format = match optional_string(&arguments, "format")? {
         Some("compact") => Format::Compact,
         Some("full") => Format::Full,
@@ -399,8 +404,9 @@ fn required_string<'a>(arguments: &'a Map<String, Value>, key: &str) -> Result<&
 }
 
 fn optional_positive_integer(arguments: &Map<String, Value>, key: &str) -> Result<Option<usize>> {
-    let Some(value) = arguments.get(key) else {
-        return Ok(None);
+    let value = match arguments.get(key) {
+        None | Some(Value::Null) => return Ok(None),
+        Some(value) => value,
     };
     let value = value
         .as_u64()
@@ -559,23 +565,23 @@ fn tool_definitions(tools: ToolProfile) -> Vec<Value> {
     vec![
         json!({
             "name": "explore",
-            "description": "Locate implementation, orient, or read source. Choose ONE form: {\"query\":\"term\",\"path_prefix\":\"src\"} (both optional; omit query for an entry/module map), {\"file_path\":\"src/file\",\"start_line\":1}, or {\"reads\":[{\"file_path\":\"src/file\",\"start_line\":1,\"end_line\":20}]}. Omit fields from the other forms. Small definitions are complete when space permits; use reads for incomplete source. Text includes freshness, locations and omissions within max_bytes. Lexical candidates require judgment. Set repository_root for a rootless server.",
+            "description": "Locate implementation, orient, or read source. Choose ONE form: {\"query\":\"term\",\"path_prefix\":\"src\"} (both optional; leave query unset for an entry/module map), {\"file_path\":\"src/file\",\"start_line\":1}, or {\"reads\":[{\"file_path\":\"src/file\",\"start_line\":1,\"end_line\":20}]}. Omit or use null for unused optional fields. Small definitions are complete when space permits; use reads for incomplete source. Text includes freshness, locations and omissions within max_bytes. Lexical candidates require judgment. Set repository_root for a rootless server.",
             "inputSchema": schema(json!({
-                "repository_root": repository_root_schema(),
-                "query": string_schema("Task/behavior description or code terms; omit for repository orientation"),
-                "path_prefix": string_schema("Optional repository-relative file or directory scope"),
-                "file_path": string_schema("Read a known repository-relative source file; omit query/path_prefix"),
-                "start_line": { "type": "integer", "minimum": 1, "description": "Starting line for file_path follow-up, default 1" },
-                "reads": {
+                "repository_root": nullable_schema(repository_root_schema()),
+                "query": nullable_schema(string_schema("Task/behavior description or code terms; leave unset for repository orientation")),
+                "path_prefix": nullable_schema(string_schema("Optional repository-relative file or directory scope")),
+                "file_path": nullable_schema(string_schema("Read a known repository-relative source file; leave query/path_prefix unset")),
+                "start_line": nullable_schema(json!({ "type": "integer", "minimum": 1, "description": "Starting line for file_path follow-up, default 1" })),
+                "reads": nullable_schema(json!({
                     "type": "array", "minItems": 1, "maxItems": 8,
-                    "description": "Read repository-relative source ranges together; omit query, path_prefix, file_path and start_line. Ranges starting past EOF are reported unavailable; other ranges remain readable.",
+                    "description": "Read repository-relative source ranges together; leave query, path_prefix, file_path and start_line unset. Ranges starting past EOF are reported unavailable; other ranges remain readable.",
                     "items": schema(json!({
                         "file_path": string_schema("Repository-relative source file"),
-                        "start_line": { "type": "integer", "minimum": 1, "description": "First line, default 1" },
-                        "end_line": { "type": "integer", "minimum": 1, "description": "Inclusive last line, clipped to EOF with a notice; omit to read onward within the response budget" }
+                        "start_line": nullable_schema(json!({ "type": "integer", "minimum": 1, "description": "First line, default 1" })),
+                        "end_line": nullable_schema(json!({ "type": "integer", "minimum": 1, "description": "Inclusive last line, clipped to EOF with a notice; leave unset to read onward within the response budget" }))
                     }), &["file_path"])
-                },
-                "max_bytes": { "type": "integer", "minimum": 2000, "maximum": 32000, "default": 24000, "description": "Total rendered UTF-8 response budget, including source and evidence metadata; not an exact token count" }
+                })),
+                "max_bytes": nullable_schema(json!({ "type": "integer", "minimum": 2000, "maximum": 32000, "default": 24000, "description": "Total rendered UTF-8 response budget, including source and evidence metadata; not an exact token count" }))
             }), &[]),
             "annotations": read_only_annotations()
         }),
@@ -607,6 +613,33 @@ fn tool(name: &str, description: &str, mut input_schema: Value) -> Value {
             "description": "Maximum entries per section (default 20, max 50); Compact and Markdown may return fewer to fit the total byte budget."
         });
     }
+    let optional_fields: &[&str] = match name {
+        "expand" => &[
+            "repository_root",
+            "file_path",
+            "limit",
+            "format",
+            "section",
+            "cursor",
+        ],
+        "impact" => &[
+            "repository_root",
+            "file_path",
+            "max_depth",
+            "limit",
+            "format",
+        ],
+        _ => &[],
+    };
+    for field in optional_fields {
+        let property = &mut input_schema["properties"][*field];
+        *property = nullable_schema(property.take());
+    }
+    let description = if optional_fields.is_empty() {
+        description.to_owned()
+    } else {
+        format!("{description} Omit or use null for unused optional fields.")
+    };
     json!({ "name": name, "description": description, "inputSchema": input_schema, "annotations": read_only_annotations() })
 }
 
@@ -620,6 +653,17 @@ fn schema(properties: Value, required: &[&str]) -> Value {
 
 fn string_schema(description: &str) -> Value {
     json!({ "type": "string", "minLength": 1, "description": description })
+}
+
+fn nullable_schema(mut property: Value) -> Value {
+    property["type"] = json!([property["type"], "null"]);
+    if let Some(values) = property.get_mut("enum") {
+        values
+            .as_array_mut()
+            .expect("schema enum array")
+            .push(Value::Null);
+    }
+    property
 }
 
 fn repository_root_schema() -> Value {

@@ -158,7 +158,7 @@ impl CodeFacts {
                     || options.start_line.is_some()))
         {
             return Err(CodeFactsError::Mcp(
-                "Choose one explore mode: discovery (query, optional path_prefix), file read (file_path, optional start_line), or batch read (reads only). Omit every field from the other modes. repository_root and max_bytes work with any mode.".into(),
+                "Choose one explore mode: discovery (query, optional path_prefix), file read (file_path, optional start_line), or batch read (reads only). Omit or use null for every optional field from the other modes. repository_root and max_bytes work with any mode.".into(),
             ));
         }
         if options.start_line.is_some() && options.file_path.is_none() {
