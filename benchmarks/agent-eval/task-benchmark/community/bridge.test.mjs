@@ -66,6 +66,11 @@ function records(config, file) {
   return fs.existsSync(target) ? fs.readFileSync(target, 'utf8').trim().split('\n').filter(Boolean).map(line => JSON.parse(line)) : [];
 }
 
+// The effective benchmark client projects MCP content text and drops structuredContent.
+function modelText(response) {
+  return response.content.filter(item => item.type === 'text').map(item => item.text).join('\n');
+}
+
 test('import starts no process; SDK prerequisite is explicit', () => {
   const run = spawnSync(process.execPath, ['--input-type=module', '-e', `await import(${JSON.stringify(new URL('./bridge.mjs', import.meta.url).href)})`], { encoding: 'utf8', timeout: 10000 });
   assert.equal(run.status, 0, run.stderr);
@@ -147,6 +152,34 @@ test('reconnecting in the same evidence directory keeps only the current raw cat
   assert.deepEqual(fs.readFileSync(wireFile).subarray(0, history.length), history);
 });
 
+test('text-only outer MCP client can poll a silent job and observe nonzero completion', { skip: !enabled }, async t => {
+  const f = fixture(t), sdk = loadSdk(sdkRoot);
+  const outerConfig = path.join(f.tmp, 'outer.json');
+  fs.writeFileSync(outerConfig, JSON.stringify(f.config));
+  const clientEvidence = path.join(f.tmp, 'client-evidence'); fs.mkdirSync(clientEvidence);
+  const outer = await connectNative(sdk, { command: process.execPath, args: [bridgeEntry, '--config', outerConfig], cwd: f.root, env: {} }, clientEvidence);
+  f.closers.push(() => outer.close());
+  const launched = await outer.callTool({ name: 'source_exec', arguments: { command: JSON.stringify({ delayMs: 1800, ending: 'finished\n' }) } }, {});
+  const visible = modelText(launched);
+  const state = JSON.parse(visible.split('\n')[0]);
+  assert.equal(state.status, 'running');
+  assert.equal(state.exit_code, null);
+  assert.match(state.job_id, /^[\da-f-]{36}$/);
+  assert.equal(visible.split('\n').slice(1).join('\n'), 'stdout:\n\nstderr:\n');
+  assert.equal(launched.structuredContent.job_id, state.job_id);
+  const polled = await outer.callTool({ name: 'source_poll', arguments: { job_id: state.job_id, wait_ms: 5000 } }, {});
+  assert.deepEqual(JSON.parse(modelText(polled).split('\n')[0]), { ...state, status: 'completed', exit_code: 0 });
+  assert.match(modelText(polled), /finished/);
+  assert.equal((await outer.callTool({ name: 'source_read', arguments: { file_path: 'sample.js' } }, {})).isError, undefined);
+  const failed = await outer.callTool({ name: 'source_exec', arguments: { command: JSON.stringify({ stderr: 'test failure\n', exitCode: 7 }) } }, {});
+  const failureState = JSON.parse(modelText(failed).split('\n')[0]);
+  assert.equal(failureState.status, 'completed');
+  assert.equal(failureState.exit_code, 7);
+  assert.match(failureState.job_id, /^[\da-f-]{36}$/);
+  assert.match(modelText(failed), /test failure/);
+  assert.equal(failed.isError, true);
+});
+
 test('unique UTF-8 edits, new files, deletion and exact byte/version receipts', { skip: !enabled }, async t => {
   const f = fixture(t), bridge = await f.create();
   const before = fs.readFileSync(path.join(f.root, 'sample.js'));
@@ -221,8 +254,9 @@ test('sandbox is fixed argv with safe environment; jobs return early, poll incre
   const start = Date.now();
   const launched = await bridge.callTool({ name: 'source_exec', arguments: { command } });
   assert.ok(Date.now() - start < 1000);
-  assert.equal(launched.structuredContent.status, 'running');
-  const id = launched.structuredContent.job_id;
+  const visible = JSON.parse(modelText(launched).split('\n')[0]);
+  assert.equal(visible.status, 'running');
+  const id = visible.job_id;
   assert.equal((await bridge.callTool({ name: 'source_list', arguments: {} })).isError, true);
   assert.equal((await bridge.callTool({ name: 'source_edit', arguments: { file_path: 'sample.js', old_text: '', new_text: '' } })).isError, true);
   assert.equal((await bridge.callTool({ name: 'source_exec', arguments: { command } })).isError, true);
@@ -238,6 +272,7 @@ test('sandbox is fixed argv with safe environment; jobs return early, poll incre
   assert.equal(records(f.config, 'exposures.jsonl').at(-1).revision, 1);
   assert.equal(records(f.config, 'edits.jsonl').length, 0);
   const again = await bridge.callTool({ name: 'source_poll', arguments: { job_id: id, wait_ms: 0 } });
+  assert.deepEqual(JSON.parse(modelText(again).split('\n')[0]), { job_id: id, status: 'completed', exit_code: 0 });
   assert.doesNotMatch(again.content[0].text, /ending/);
   assert.equal((await bridge.callTool({ name: 'source_poll', arguments: { job_id: 'unknown' } })).isError, true);
   const lifecycle = records(f.config, 'events.jsonl').filter(record => record.job_id === id);
@@ -259,12 +294,28 @@ test('completed unpolled jobs remain busy; output is bounded valid UTF-8 and fai
   assert.equal(completed.isError, true);
   assert.equal(completed.structuredContent.exit_code, 7);
   assert.equal(completed.structuredContent.truncated, true);
+  assert.deepEqual(JSON.parse(modelText(completed).split('\n')[0]), { job_id: id, status: 'completed', exit_code: 7 });
   assert.ok(Buffer.byteLength(completed.content[0].text) <= MAX_BYTES);
   assert.match(completed.content[0].text, /TRUNCATED/);
   assert.doesNotMatch(completed.content[0].text, /�/);
   assert.ok(fs.statSync(path.join(f.config.evidenceDir, `${id}-stdout.log`)).size > MAX_BYTES);
   assert.equal((await bridge.callTool({ name: 'source_list', arguments: {} })).isError, undefined);
   assert.equal(records(f.config, 'exposures.jsonl').at(-1).revision, 1);
+});
+
+test('sandbox launch errors are visible to a text-only client', { skip: !enabled }, async t => {
+  const f = fixture(t);
+  f.config.sandbox.command = path.join(f.tmp, 'missing-sandbox-command');
+  const bridge = await f.create();
+  const response = await bridge.callTool({ name: 'source_exec', arguments: { command: 'unused' } });
+  const text = modelText(response), state = JSON.parse(text.split('\n')[0]);
+  assert.equal(state.status, 'completed');
+  assert.match(state.job_id, /^[\da-f-]{36}$/);
+  assert.equal(state.exit_code, response.structuredContent.exit_code);
+  assert.match(text, /error:\n.*ENOENT/);
+  assert.equal(response.isError, true);
+  assert.ok(Buffer.byteLength(text) <= MAX_BYTES);
+  assert.equal((await bridge.callTool({ name: 'source_list', arguments: {} })).isError, undefined);
 });
 
 test('close terminates owned sandbox child and inner MCP and records cleanup', { skip: !enabled }, async t => {

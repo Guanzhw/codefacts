@@ -16,9 +16,9 @@ export const repairTools = [
     inputSchema: { type: 'object', properties: { file_path: { type: 'string', minLength: 1 }, old_text: { type: 'string' }, new_text: { type: 'string' } }, required: ['file_path', 'old_text', 'new_text'], additionalProperties: false } },
   { name: 'source_delete', description: 'Delete one existing repository source file by repository-relative file_path. While a sandbox command is outstanding, poll it to completion first.', annotations,
     inputSchema: { type: 'object', properties: { file_path: { type: 'string', minLength: 1 } }, required: ['file_path'], additionalProperties: false } },
-  { name: 'source_exec', description: 'Run a shell command inside the operator-configured isolated test sandbox. The command is one argument to its fixed bash -lc launcher; no host shell is used. Returns completion or a running job_id after at most 1 second. Visible stdout/stderr total at most 16384 UTF-8 bytes per response; truncation is explicit. Poll an outstanding job to completion before inspecting or editing source.', annotations,
+  { name: 'source_exec', description: 'Run a shell command inside the operator-configured isolated test sandbox. The command is one argument to its fixed bash -lc launcher; no host shell is used. Returns completion or a running job_id after at most 1 second. Visible text starts with JSON job_id/status/exit_code, followed by stdout/stderr; the whole response text is at most 16384 UTF-8 bytes and truncation is explicit. Poll an outstanding job to completion before inspecting or editing source.', annotations,
     inputSchema: { type: 'object', properties: { command: { type: 'string', minLength: 1 } }, required: ['command'], additionalProperties: false } },
-  { name: 'source_poll', description: 'Retrieve incremental stdout/stderr and completion of a sandbox job. wait_ms defaults to 1000 and is at most 10000. Visible output totals at most 16384 UTF-8 bytes per response; truncation is explicit. Completion releases source inspection/edit scheduling.', annotations: { ...annotations, destructiveHint: false },
+  { name: 'source_poll', description: 'Retrieve incremental stdout/stderr and completion of a sandbox job. wait_ms defaults to 1000 and is at most 10000. Visible text starts with JSON job_id/status/exit_code, followed by stdout/stderr; the whole response text is at most 16384 UTF-8 bytes and truncation is explicit. Completion releases source inspection/edit scheduling.', annotations: { ...annotations, destructiveHint: false },
     inputSchema: { type: 'object', properties: { job_id: { type: 'string', minLength: 1 }, wait_ms: { type: 'integer', minimum: 0, maximum: 10000 } }, required: ['job_id'], additionalProperties: false } },
 ];
 
@@ -208,11 +208,14 @@ export async function createBridge(input, { sdk, signal, execWaitMs = EXEC_WAIT_
       finally { clearTimeout(timer); }
     }
     const marker = '\n[TRUNCATED: output omitted; narrow the command output]';
-    const output = `stdout:\n${job.stdout}\nstderr:\n${job.stderr}`;
-    const truncated = job.truncated || Buffer.byteLength(output) > MAX_BYTES;
-    const text = truncated ? prefix(output, MAX_BYTES - Buffer.byteLength(marker)) + marker : output;
+    const state = { job_id: job.id, status: job.done ? 'completed' : 'running', exit_code: job.exitCode };
+    const header = JSON.stringify({ ...state, ...(job.signal ? { signal: job.signal } : {}) }) + '\n';
+    const output = `${job.error ? `error:\n${job.error}\n` : ''}stdout:\n${job.stdout}\nstderr:\n${job.stderr}`;
+    const outputLimit = MAX_BYTES - Buffer.byteLength(header);
+    const truncated = job.truncated || Buffer.byteLength(output) > outputLimit;
+    const text = header + (truncated ? prefix(output, outputLimit - Buffer.byteLength(marker)) + marker : output);
     job.stdout = ''; job.stderr = ''; job.truncated = false;
-    const metadata = { job_id: job.id, status: job.done ? 'completed' : 'running', exit_code: job.exitCode, signal: job.signal, truncated, ...(job.error ? { error: job.error } : {}) };
+    const metadata = { ...state, signal: job.signal, truncated, ...(job.error ? { error: job.error } : {}) };
     if (job.done && activeJob === job) { activeJob = undefined; event('sandbox-completion-observed', { job_id: job.id }); }
     return result(text, metadata, Boolean(job.error) || (job.done && job.exitCode !== 0));
   }
