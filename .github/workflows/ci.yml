@@ -46,6 +46,9 @@ jobs:
         env:
           TASK_BENCHMARK_SDK_ROOT: ${{ runner.temp }}/codefacts-benchmark-sdk/node_modules/@modelcontextprotocol/sdk
         run: node --test benchmarks/agent-eval/task-benchmark/community/*.test.mjs
+      - name: Verify isolated usability screen (Windows/Linux)
+        if: runner.os == 'Windows' || runner.os == 'Linux'
+        run: node --test benchmarks/agent-eval/task-benchmark/community/usability-screen/*.test.mjs
 
   quality:
     name: Formatting and lints
