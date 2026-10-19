@@ -125,8 +125,11 @@ test('builder output freezes and pins its adjacent tasks file without module-loc
     const { assertFrozen: assertFrozenCopied, freeze: freezeCopied } = await import(pathToFileURL(path.join(screenDir, 'run.mjs')).href);
 
     const sourceManifest = configuredManifest(root), sourceFile = path.join(root, 'source-manifest.json');
+    const externalDependency = path.join(root, 'shared-sdk-dependency', 'index.js');
+    sourceManifest.evaluation = { runtimeFiles: [externalDependency] };
     fs.writeFileSync(sourceFile, JSON.stringify(sourceManifest, null, 2) + '\n');
-    const runtimeFiles = [sourceManifest.runtime.node, sourceManifest.runtime.rg, sourceManifest.runtime.wsl,
+    assert.ok(plan(sourceManifest).missing.includes(externalDependency));
+    const runtimeFiles = [externalDependency, sourceManifest.runtime.node, sourceManifest.runtime.rg, sourceManifest.runtime.wsl,
       path.join(sourceManifest.runtime.dshRoot, 'lib', 'bin.js'), path.join(sourceManifest.runtime.sdkRoot, 'package.json'),
       path.join(root, 'runtime', 'package.json'),
       sourceManifest.arms.find(arm => arm.id === 'codefacts022').executable,
@@ -148,6 +151,11 @@ test('builder output freezes and pins its adjacent tasks file without module-loc
 
     const manifest = JSON_READ(manifestPath), frozen = freezeCopied(manifestPath);
     assert.ok(frozen.pins.some(pin => pin.path === tasksPath));
+    assert.ok(frozen.pins.some(pin => pin.path === externalDependency && pin.sha256 === digest(fs.readFileSync(externalDependency))));
+    fs.writeFileSync(externalDependency, 'changed external SDK dependency');
+    assert.throws(() => assertFrozenCopied(manifest, frozen), /Frozen runtime or protocol drift/);
+    fs.writeFileSync(externalDependency, 'synthetic runtime fixture');
+    assert.doesNotThrow(() => assertFrozenCopied(manifest, frozen));
     fs.writeFileSync(tasksPath, `${JSON.stringify({ changed: true })}\n`);
     assert.throws(() => assertFrozenCopied(manifest, frozen), /Frozen runtime or protocol drift/);
   } finally {
