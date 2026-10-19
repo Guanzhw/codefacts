@@ -149,32 +149,28 @@ impl CodeFacts {
                 "max_bytes must be between {MIN_BYTES} and {MAX_BYTES}"
             )));
         }
+        if (options.file_path.is_some()
+            && (options.query.is_some() || options.path_prefix.is_some()))
+            || (options.reads.is_some()
+                && (options.query.is_some()
+                    || options.path_prefix.is_some()
+                    || options.file_path.is_some()
+                    || options.start_line.is_some()))
+        {
+            return Err(CodeFactsError::Mcp(
+                "Choose one explore mode: discovery (query, optional path_prefix), file read (file_path, optional start_line), or batch read (reads only). Omit every field from the other modes. repository_root and max_bytes work with any mode.".into(),
+            ));
+        }
         if options.start_line.is_some() && options.file_path.is_none() {
             return Err(CodeFactsError::Mcp("start_line requires file_path".into()));
         }
         if options.start_line == Some(0) {
             return Err(CodeFactsError::Mcp("start_line must be positive".into()));
         }
-        if options.file_path.is_some() && (options.query.is_some() || options.path_prefix.is_some())
-        {
-            return Err(CodeFactsError::Mcp(
-                "file_path is a focused source read; omit query and path_prefix".into(),
-            ));
-        }
         if let Some(reads) = options.reads {
             if reads.is_empty() || reads.len() > 8 {
                 return Err(CodeFactsError::Mcp(
                     "reads must contain 1 to 8 ranges".into(),
-                ));
-            }
-            if options.query.is_some()
-                || options.path_prefix.is_some()
-                || options.file_path.is_some()
-                || options.start_line.is_some()
-            {
-                return Err(CodeFactsError::Mcp(
-                    "reads cannot be combined with query, path_prefix, file_path or start_line"
-                        .into(),
                 ));
             }
         }
@@ -1312,6 +1308,69 @@ mod tests {
     use super::*;
     use crate::lsp::LspMode;
     use tempfile::tempdir;
+
+    #[test]
+    fn mixed_mode_feedback_supports_a_complete_recovery_to_each_legal_form() {
+        let root = tempdir().unwrap();
+        let state = tempdir().unwrap();
+        fs::write(
+            root.path().join("lib.ts"),
+            "export function helper() { return 1; }\n",
+        )
+        .unwrap();
+        let facts =
+            CodeFacts::open_with_lsp(root.path(), state.path().join("facts.sqlite"), LspMode::Off)
+                .unwrap();
+        let reads = [ExploreRead {
+            file_path: "lib.ts".into(),
+            start_line: Some(1),
+            end_line: Some(1),
+        }];
+        // The recorded failure combined all modes. Dropping only query/scope
+        // still conflicts; one response must explain the complete choice.
+        for query in [Some("helper"), None] {
+            let error = facts
+                .explore(ExploreOptions {
+                    query,
+                    path_prefix: query.map(|_| "lib.ts"),
+                    file_path: Some("lib.ts"),
+                    start_line: Some(1),
+                    reads: Some(&reads),
+                    ..Default::default()
+                })
+                .unwrap_err()
+                .to_string();
+            for choice in [
+                "query",
+                "path_prefix",
+                "file_path",
+                "start_line",
+                "reads only",
+            ] {
+                assert!(error.contains(choice), "{error}");
+            }
+        }
+        for options in [
+            ExploreOptions {
+                query: Some("helper"),
+                path_prefix: Some("lib.ts"),
+                ..Default::default()
+            },
+            ExploreOptions {
+                file_path: Some("lib.ts"),
+                start_line: Some(1),
+                ..Default::default()
+            },
+            ExploreOptions {
+                reads: Some(&reads),
+                ..Default::default()
+            },
+        ] {
+            let source = facts.explore(options).unwrap();
+            assert!(source.contains("lib.ts:1-1"), "{source}");
+            assert!(source.contains("export function helper()"), "{source}");
+        }
+    }
 
     #[test]
     fn query_cards_preserve_owner_ranges_for_complete_followup_reads() {

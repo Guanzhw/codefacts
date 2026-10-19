@@ -192,7 +192,10 @@ fn omitted_format_is_text_only_for_all_seven_workflows_in_both_protocol_eras() {
             }
         }
         let missing = mcp.call("expand", json!({"symbol":"missing"}));
-        has(text(&missing), &["not_found"]);
+        has(
+            text(&missing),
+            &["not_found", "explore(query=...)", "explore(file_path=...)"],
+        );
         let no_path = mcp.call("path", json!({"from":"helper", "to":"entry"}));
         has(text(&no_path), &["helper", "entry", "static"]);
         let uncertain = mcp.call("expand", json!({"symbol":"invoke"}));

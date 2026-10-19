@@ -559,7 +559,7 @@ fn tool_definitions(tools: ToolProfile) -> Vec<Value> {
     vec![
         json!({
             "name": "explore",
-            "description": "Orient in an unfamiliar repository, locate implementation from code terms, or read cited source ranges. Omit query for an entry/module map; use query for ranked, source-verified candidates and path_prefix to narrow scope. Complete small definitions are returned when space permits; use reads to batch up to eight ranges when source is incomplete. Text output includes freshness, locations and omissions within max_bytes. Lexical candidates require judgment. Set repository_root for a rootless server.",
+            "description": "Locate implementation, orient, or read source. Choose ONE form: {\"query\":\"term\",\"path_prefix\":\"src\"} (both optional; omit query for an entry/module map), {\"file_path\":\"src/file\",\"start_line\":1}, or {\"reads\":[{\"file_path\":\"src/file\",\"start_line\":1,\"end_line\":20}]}. Omit fields from the other forms. Small definitions are complete when space permits; use reads for incomplete source. Text includes freshness, locations and omissions within max_bytes. Lexical candidates require judgment. Set repository_root for a rootless server.",
             "inputSchema": schema(json!({
                 "repository_root": repository_root_schema(),
                 "query": string_schema("Task/behavior description or code terms; omit for repository orientation"),

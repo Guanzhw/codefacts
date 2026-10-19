@@ -109,7 +109,7 @@ impl CodeFacts {
             other => {
                 let result = match other {
                     SymbolResolution::NotFound => {
-                        json!({"freshness": freshness, "status": "not_found", "symbol": symbol, "message": "No indexed symbol matches this identifier."})
+                        json!({"freshness": freshness, "status": "not_found", "symbol": symbol, "message": "No indexed symbol matches this identifier. Discover names with explore(query=...), or read a known file with explore(file_path=...)."})
                     }
                     SymbolResolution::Ambiguous(matches) => {
                         json!({"freshness": freshness, "status": "ambiguous", "symbol": symbol, "matches": matches, "message": "Use an exact symbol id or add file_path; CodeFacts does not guess."})
