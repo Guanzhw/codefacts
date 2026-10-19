@@ -255,7 +255,7 @@ impl Extractor {
         language: Language,
         source_text: &str,
     ) -> Result<Vec<CodeNode>> {
-        let query = CodeParser::load_query(language)?;
+        let query = CodeParser::cached_query(language)?;
         let capture_names = query.capture_names();
         let mut cursor = QueryCursor::new();
         let source_bytes = source_text.as_bytes();
@@ -464,7 +464,7 @@ impl Extractor {
         file_nodes: &[CodeNode],
         node_index: &HashMap<String, Vec<&CodeNode>>,
     ) -> Result<Vec<CodeEdge>> {
-        let query = CodeParser::load_query(language)?;
+        let query = CodeParser::cached_query(language)?;
         let capture_names = query.capture_names();
         let mut cursor = QueryCursor::new();
         let source_bytes = source_text.as_bytes();
