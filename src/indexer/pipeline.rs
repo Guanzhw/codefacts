@@ -23,7 +23,7 @@ use ignore::WalkBuilder;
 use rayon::prelude::*;
 use sha2::{Digest, Sha256};
 
-use crate::error::Result;
+use crate::error::{CodeFactsError, Result};
 use crate::graph::store::GraphStore;
 use crate::indexer::endpoints::{extract_endpoint_edges, extract_endpoints, EndpointBinding};
 use crate::indexer::extractor::Extractor;
@@ -151,7 +151,7 @@ impl<'a> IndexingPipeline<'a> {
         let incremental = options.incremental && !self.store.full_reindex_required()?;
 
         // ---- Collect files ----
-        let file_paths = collect_files(root);
+        let file_paths = collect_files(root)?;
 
         let current_paths: HashSet<String> = file_paths
             .iter()
@@ -898,7 +898,7 @@ const ALWAYS_SKIP_DIRS: &[&str] = &[
 ];
 
 /// Collect all supported source files under `root`, respecting `.gitignore`.
-fn collect_files(root: &Path) -> Vec<PathBuf> {
+fn collect_files(root: &Path) -> Result<Vec<PathBuf>> {
     let walker = WalkBuilder::new(root)
         .standard_filters(true) // respects .gitignore, .ignore, hidden files
         .filter_entry(|entry| {
@@ -913,7 +913,10 @@ fn collect_files(root: &Path) -> Vec<PathBuf> {
         .build();
 
     let mut files = Vec::new();
-    for entry in walker.flatten() {
+    for entry in walker {
+        let entry = entry.map_err(|error| {
+            CodeFactsError::Other(format!("Failed to discover source files: {error}"))
+        })?;
         if !entry.file_type().is_some_and(|ft| ft.is_file()) {
             continue;
         }
@@ -922,7 +925,7 @@ fn collect_files(root: &Path) -> Vec<PathBuf> {
             files.push(path.to_path_buf());
         }
     }
-    files
+    Ok(files)
 }
 
 // ---------------------------------------------------------------------------
@@ -1015,7 +1018,7 @@ class Calculator:
     #[test]
     fn collect_files_finds_supported_files() {
         let (tmp, _store) = setup_test_project();
-        let files = collect_files(tmp.path());
+        let files = collect_files(tmp.path()).unwrap();
 
         let names: Vec<String> = files
             .iter()
