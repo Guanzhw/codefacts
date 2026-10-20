@@ -12,9 +12,9 @@ use sha2::{Digest, Sha256};
 
 use super::{path_matches_prefix, CodeFacts, Freshness};
 use crate::error::{CodeFactsError, Result};
-use crate::graph::retrieval::{query_terms, SourceMatch};
+use crate::graph::retrieval::{query_terms, SourceMatch, MAX_QUERY_CHARS};
 use crate::graph::store::{detect_is_test_node, GraphStore};
-use crate::types::{CodeNode, EdgeKind, NodeKind};
+use crate::types::{CodeNode, EdgeKind, Language, NodeKind};
 
 const DEFAULT_BYTES: usize = 24_000;
 const MIN_BYTES: usize = 2_000;
@@ -327,6 +327,7 @@ impl CodeFacts {
             self.task_excerpts(
                 &hits,
                 &terms,
+                &query_identifiers(query),
                 &catalog.nodes,
                 &hashes,
                 &mut sources,
@@ -430,6 +431,7 @@ impl CodeFacts {
         &self,
         hits: &[SourceMatch],
         terms: &[String],
+        mentioned_identifiers: &HashSet<String>,
         nodes: &[CodeNode],
         hashes: &HashMap<String, String>,
         sources: &mut HashMap<String, Source>,
@@ -454,23 +456,25 @@ impl CodeFacts {
                 .map(Vec::as_slice)
                 .unwrap_or(&[]);
             let owners = file_nodes.iter().filter(|n| {
-                n.start_line <= hit.end_line
-                    && n.end_line >= hit.start_line
-                    && !matches!(
-                        n.kind,
-                        NodeKind::Variable | NodeKind::Module | NodeKind::Namespace
-                    )
-                    && (matches!(n.kind, NodeKind::Function | NodeKind::Method)
-                        || !file_nodes.iter().any(|child| {
-                            child.id != n.id
-                                && child.start_line >= n.start_line
-                                && child.end_line <= n.end_line
-                                && (matches!(child.kind, NodeKind::Function | NodeKind::Method)
-                                    || (n.kind == NodeKind::Heading
-                                        && child.kind == NodeKind::Heading))
-                                && child.start_line <= hit.end_line
-                                && child.end_line >= hit.start_line
-                        }))
+                if n.start_line > hit.end_line || n.end_line < hit.start_line {
+                    return false;
+                }
+                if explicit_variable_container(n, mentioned_identifiers) {
+                    return true;
+                }
+                !matches!(
+                    n.kind,
+                    NodeKind::Variable | NodeKind::Module | NodeKind::Namespace
+                ) && (matches!(n.kind, NodeKind::Function | NodeKind::Method)
+                    || !file_nodes.iter().any(|child| {
+                        child.id != n.id
+                            && child.start_line >= n.start_line
+                            && child.end_line <= n.end_line
+                            && (matches!(child.kind, NodeKind::Function | NodeKind::Method)
+                                || (n.kind == NodeKind::Heading && child.kind == NodeKind::Heading))
+                            && child.start_line <= hit.end_line
+                            && child.end_line >= hit.start_line
+                    }))
             });
             let mut found = false;
             for node in owners {
@@ -980,6 +984,42 @@ fn node_excerpt(node: &CodeNode, reason: String) -> Excerpt {
     }
 }
 
+/// Conservative, case-sensitive mentions from the bounded original query.
+/// ASCII whitespace/punctuation delimit tokens except `_`, `$` and backslash.
+/// Keep non-ASCII and escapes attached so Unicode identifier continuations never
+/// create false mentions. Unicode punctuation/whitespace adjacency may therefore
+/// withhold variable eligibility; lexical scoring still uses expanded terms.
+fn query_identifiers(query: &str) -> HashSet<String> {
+    let identifier_char = |ch: char| {
+        !ch.is_ascii_whitespace() && (!ch.is_ascii_punctuation() || matches!(ch, '_' | '$' | '\\'))
+    };
+    let mut chars = query.chars();
+    let mut bounded: String = chars.by_ref().take(MAX_QUERY_CHARS).collect();
+    // A query cutoff cannot turn a prefix of a longer identifier into a mention.
+    if chars.next().is_some_and(identifier_char) {
+        while bounded.ends_with(identifier_char) {
+            bounded.pop();
+        }
+    }
+    bounded
+        .split(|ch| !identifier_char(ch))
+        .filter(|word| !word.is_empty())
+        .map(str::to_string)
+        .collect()
+}
+
+fn explicit_variable_container(node: &CodeNode, mentions: &HashSet<String>) -> bool {
+    node.kind == NodeKind::Variable
+        && matches!(
+            node.language,
+            Language::JavaScript | Language::Jsx | Language::TypeScript | Language::Tsx
+        )
+        // is_local records function ancestry, including anonymous callbacks;
+        // declarations inside a module-level block can still be eligible.
+        && !node.is_local
+        && mentions.contains(&node.name)
+}
+
 fn owner_source(lines: &[&str], node: &CodeNode) -> String {
     // Markdown headings are line-based owners; their extractor has no column spans.
     if node.kind == NodeKind::Heading {
@@ -1318,6 +1358,240 @@ mod tests {
     use super::*;
     use crate::lsp::LspMode;
     use tempfile::tempdir;
+
+    #[test]
+    fn explicit_variable_mentions_preserve_whole_identifiers_case_and_query_bound() {
+        let mentions = query_identifiers("`SelectInput`, (_name); obj.$name selectInput");
+        for name in ["SelectInput", "_name", "$name", "selectInput"] {
+            assert!(mentions.contains(name));
+        }
+        for name in ["Input", "name", "SelectInputExtra", "SELECTINPUT"] {
+            assert!(!mentions.contains(name));
+        }
+        assert!(!query_identifiers("SelectInputExtra").contains("SelectInput"));
+        assert!(!query_identifiers("selectInput").contains("SelectInput"));
+        let prefix = " ".repeat(MAX_QUERY_CHARS - "SelectInput".len());
+        for suffix in [
+            "Extra",
+            "\u{200c}Extra",
+            "\u{200d}Extra",
+            "\u{0301}Extra",
+            r"\u200CExtra",
+        ] {
+            assert!(!query_identifiers(&format!("SelectInput{suffix}")).contains("SelectInput"));
+            assert!(
+                !query_identifiers(&format!("{prefix}SelectInput{suffix}")).contains("SelectInput")
+            );
+        }
+        assert!(query_identifiers("Select\u{200c}Input").contains("Select\u{200c}Input"));
+        for separator in ["，", "\u{00a0}"] {
+            assert!(
+                !query_identifiers(&format!("SelectInput{separator}Menu")).contains("SelectInput")
+            );
+        }
+        assert!(query_identifiers(&format!("{prefix}SelectInput ignored")).contains("SelectInput"));
+        assert!(
+            !query_identifiers(&format!("{}SelectInput", " ".repeat(MAX_QUERY_CHARS)))
+                .contains("SelectInput")
+        );
+    }
+
+    #[test]
+    fn explicit_variable_containers_are_limited_to_js_family_outside_functions() {
+        let mentions = query_identifiers("SelectInput");
+        let mut node = card_node("variable", "SelectInput", "entry", 1, 1);
+        node.kind = NodeKind::Variable;
+        for language in [
+            Language::JavaScript,
+            Language::Jsx,
+            Language::TypeScript,
+            Language::Tsx,
+            Language::Python,
+            Language::Rust,
+        ] {
+            node.language = language;
+            let expected = matches!(
+                language,
+                Language::JavaScript | Language::Jsx | Language::TypeScript | Language::Tsx
+            );
+            assert_eq!(explicit_variable_container(&node, &mentions), expected);
+            node.is_local = true;
+            assert!(!explicit_variable_container(&node, &mentions));
+            node.is_local = false;
+        }
+    }
+
+    #[test]
+    fn compound_explore_returns_explicit_variable_source_in_js_ts_jsx_and_tsx() {
+        for (extension, annotation, returned) in [
+            ("js", "", "[Menu, props.anchorEl]"),
+            ("ts", ": any", "[Menu, props.anchorEl]"),
+            ("jsx", "", "<Menu anchorEl={props.anchorEl} />"),
+            ("tsx", ": any", "<Menu anchorEl={props.anchorEl} />"),
+        ] {
+            let root = tempdir().unwrap();
+            let state = tempdir().unwrap();
+            let path = format!("entry.{extension}");
+            let source = format!(
+                "const Direct = function Direct(props{annotation}) {{\n  const DirectMenu = props.Menu;\n  return [DirectMenu, props.anchorEl];\n}};\nconst SelectInput = React.forwardRef(function SelectInput(props{annotation}, ref{annotation}) {{\n  const Menu = props.Menu;\n  return {returned};\n}});\n"
+            );
+            fs::write(root.path().join(&path), &source).unwrap();
+            let facts = CodeFacts::open_with_lsp(
+                root.path(),
+                state.path().join("facts.sqlite"),
+                LspMode::Off,
+            )
+            .unwrap();
+            let before = ["Direct", "SelectInput"]
+                .map(|name| facts.expand(name, Some(&path), None).unwrap());
+            let nodes = serde_json::to_value(facts.store.get_all_nodes().unwrap()).unwrap();
+            let edges = serde_json::to_value(facts.store.get_all_edges().unwrap()).unwrap();
+            assert_eq!(before[0]["definition"]["kind"], "function");
+            assert_eq!(before[1]["definition"]["kind"], "variable");
+            let response = facts
+                .explore(ExploreOptions {
+                    query: Some("SelectInput Menu anchorEl"),
+                    ..Default::default()
+                })
+                .unwrap();
+            assert!(
+                response.contains(&format!("{path}:1-4 | function Direct\n")),
+                "{response}"
+            );
+            assert!(
+                response.contains(&format!("{path}:5-8 | variable SelectInput\n")),
+                "{response}"
+            );
+            assert!(!response.contains("| function SelectInput\n"), "{response}");
+            for (index, line) in source.lines().enumerate() {
+                assert!(
+                    response.contains(&format!("{}: {line}\n", index + 1)),
+                    "{response}"
+                );
+            }
+            for (index, name) in ["Direct", "SelectInput"].iter().enumerate() {
+                let after = facts.expand(name, Some(&path), None).unwrap();
+                assert_eq!(before[index]["definition"], after["definition"]);
+                assert_eq!(before[index]["source"], after["source"]);
+            }
+            assert_eq!(
+                nodes,
+                serde_json::to_value(facts.store.get_all_nodes().unwrap()).unwrap()
+            );
+            assert_eq!(
+                edges,
+                serde_json::to_value(facts.store.get_all_edges().unwrap()).unwrap()
+            );
+        }
+    }
+
+    #[test]
+    fn explicit_variable_owners_keep_child_preference_and_honest_value_kinds() {
+        let root = tempdir().unwrap();
+        let state = tempdir().unwrap();
+        let source = "const Public = wrap(function Inner() {\n  function nested() { return 'Menu anchorEl'; }\n  const Local = 1;\n  return nested();\n});\nfunction Outer() { const FunctionLocal = 1; }\nconst Anonymous = wrap(function() { const CallbackLocal = 1; });\nconst Arrow = wrap(() => { const ArrowLocal = 1; });\nconst ReturnValue = arbitraryFactory();\nconst Settings = { anchorEl: true };\nif (enabled) { const Scoped = 1; }\nconst Input = '中文'; const SelectInput = arbitraryFactory();\nconst _name = 1; const $name = 2;\n";
+        fs::write(root.path().join("entry.js"), source).unwrap();
+        let facts =
+            CodeFacts::open_with_lsp(root.path(), state.path().join("facts.sqlite"), LspMode::Off)
+                .unwrap();
+        facts.refresh().unwrap();
+        let nodes = facts.store.get_all_nodes().unwrap();
+        let hashes = facts.store.get_file_hashes().unwrap();
+        for name in ["Local", "FunctionLocal", "CallbackLocal", "ArrowLocal"] {
+            assert!(
+                nodes
+                    .iter()
+                    .find(|node| node.name == name)
+                    .unwrap()
+                    .is_local
+            );
+        }
+        assert!(
+            !nodes
+                .iter()
+                .find(|node| node.name == "Scoped")
+                .unwrap()
+                .is_local
+        );
+        let selected_input = nodes
+            .iter()
+            .find(|node| node.name == "SelectInput")
+            .unwrap();
+        assert_eq!(
+            owner_source(&source.lines().collect::<Vec<_>>(), selected_input),
+            "SelectInput = arbitraryFactory()"
+        );
+        let candidates = |query: &str| {
+            facts
+                .task_excerpts(
+                    &[SourceMatch {
+                        file_path: "entry.js".into(),
+                        start_line: 1,
+                        end_line: source.lines().count() as u32,
+                        score: 1.0,
+                    }],
+                    &query_terms(query),
+                    &query_identifiers(query),
+                    &nodes,
+                    &hashes,
+                    &mut HashMap::new(),
+                    &mut Vec::new(),
+                    &mut Vec::new(),
+                )
+                .unwrap()
+        };
+        for (query, expected) in [
+            ("Public Menu anchorEl", Some("Public")),
+            ("Menu anchorEl", None),
+            ("Inner", None),
+            ("Local FunctionLocal CallbackLocal ArrowLocal", None),
+            ("Anonymous", Some("Anonymous")),
+            ("Arrow", Some("Arrow")),
+            ("ReturnValue", Some("ReturnValue")),
+            ("Settings", Some("Settings")),
+            ("Scoped", Some("Scoped")),
+            ("SelectInput", Some("SelectInput")),
+            ("SelectInputExtra", None),
+            ("SelectInput\u{200c}Extra", None),
+            ("SelectInput\u{200d}Extra", None),
+            ("SelectInput\u{0301}Extra", None),
+            (r"SelectInput\u200CExtra", None),
+            ("selectInput", None),
+            ("`_name`", Some("_name")),
+            ("($name)", Some("$name")),
+        ] {
+            let selected = candidates(query);
+            let variables: Vec<_> = selected
+                .iter()
+                .filter_map(|excerpt| {
+                    nodes
+                        .iter()
+                        .find(|n| Some(&n.id) == excerpt.node_id.as_ref())
+                })
+                .filter(|node| node.kind == NodeKind::Variable)
+                .map(|node| node.name.as_str())
+                .collect();
+            assert_eq!(
+                variables,
+                expected.into_iter().collect::<Vec<_>>(),
+                "{query}"
+            );
+        }
+        let public = candidates("Public Menu anchorEl");
+        assert_eq!(
+            public
+                .iter()
+                .filter(|e| e.reason.contains("complete variable Public;"))
+                .count(),
+            1
+        );
+        assert!(public
+            .iter()
+            .any(|e| e.reason.contains("complete function nested;")));
+        assert!(!candidates("Menu anchorEl")
+            .iter()
+            .any(|e| e.reason.contains("complete variable")));
+    }
 
     #[test]
     fn query_cards_preserve_owner_ranges_for_complete_followup_reads() {

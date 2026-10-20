@@ -15,7 +15,7 @@ use super::store::{split_identifier, GraphStore};
 const CHUNK_LINES: usize = 40;
 const CHUNK_OVERLAP: usize = 6;
 const MAX_QUERY_TERMS: usize = 24;
-const MAX_QUERY_CHARS: usize = 8192;
+pub(crate) const MAX_QUERY_CHARS: usize = 8192;
 const MAX_MATCHES: usize = 256;
 
 const SCHEMA: &str = "
