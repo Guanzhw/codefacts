@@ -539,7 +539,7 @@ mod tests {
                 .unwrap();
             assert!(Format::Markdown.text(&page).len() <= COMPACT_EXPAND_BYTES);
             for relationship in page["callees"].as_array().unwrap() {
-                assert_eq!(relationship["to"], "function helper @ lib.rs:83");
+                assert_eq!(relationship["to"], "function:lib.rs:helper:83");
                 assert!(sites.insert(relationship["callsite"].as_str().unwrap().to_owned()));
             }
             let Some(next) = page["next"]["callees"].as_str() else {
