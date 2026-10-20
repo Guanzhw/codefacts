@@ -149,8 +149,14 @@ export function evaluateLifecycle(events, { expectedInstanceIds = [], unknownDes
     if (knownPids.size > 1) issue('FAIL', 'pid-changed', instance.instanceId, [...knownPids]);
     if (starts.length && !closes.length) issue('UNKNOWN', 'missing-child-close', instance.instanceId, 'Child exit or close() return does not establish closed pipes');
     if (!starts.length && !closes.length && !completed.length && !count('spawn-error').length) issue('UNKNOWN', 'missing-completion', instance.instanceId, 'Instance has no completion receipt');
+    // runRg accepts code 1 as no matches; raw codes and closure checks remain intact.
+    const cleanRipgrepNoMatch = instance.role === 'ripgrep' && !count('child-kill-requested').length;
     for (const record of [...exits, ...closes, ...completed]) {
-      if (typeof record.details?.code === 'number' && record.details.code !== 0) issue('FAIL', 'nonzero-exit', instance.instanceId, record.details);
+      const acceptedRipgrepNoMatch = cleanRipgrepNoMatch
+        && ['child-exit', 'child-close'].includes(record.type)
+        && record.details?.code === 1
+        && record.details.signal === null;
+      if (typeof record.details?.code === 'number' && record.details.code !== 0 && !acceptedRipgrepNoMatch) issue('FAIL', 'nonzero-exit', instance.instanceId, record.details);
     }
     for (const record of records) {
       if (['close-await-timeout', 'forced-pipe-close', 'forced-pipe-destroy'].includes(record.type)) issue('UNKNOWN', record.type, instance.instanceId, record.details);

@@ -240,6 +240,34 @@ test('nonzero exit and impossible close order fail', t => {
   assert.ok(result.issues.some(issue => issue.code === 'close-before-start'));
 });
 
+test('ripgrep no-match exit is complete while errors and cleanup exits remain failures', t => {
+  const observeExit = (role, code, { close = true, kill = false, signal = null } = {}) => {
+    const lifecycle = fixture(t, role);
+    lifecycle.event('child-started', { pid: 123 });
+    if (kill) lifecycle.event('child-kill-requested', { signal: 'SIGTERM', reason: 'output-truncated' });
+    lifecycle.event('child-exit', { pid: 123, code, signal });
+    if (close) lifecycle.event('child-close', { pid: 123, code, signal });
+    return { lifecycle, result: evaluateLifecycle(lifecycle.snapshot()) };
+  };
+
+  const noMatch = observeExit('ripgrep', 1);
+  assert.equal(noMatch.result.status, 'PASS');
+  assert.equal(noMatch.result.instances[0].exit.code, 1);
+  assert.equal(noMatch.result.instances[0].close.code, 1);
+
+  assert.equal(observeExit('ripgrep', 2).result.status, 'FAIL');
+  assert.equal(observeExit('dummy-child', 1).result.status, 'FAIL');
+
+  const unclosed = observeExit('ripgrep', 1, { close: false });
+  assert.equal(unclosed.result.status, 'UNKNOWN');
+  assert.equal(unclosed.result.instances[0].exit.code, 1);
+
+  const killed = observeExit('ripgrep', 1, { kill: true });
+  assert.equal(killed.result.status, 'FAIL');
+  assert.equal(killed.result.forcedCleanup.length, 1);
+  assert.ok(killed.result.issues.some(issue => issue.code === 'nonzero-exit'));
+});
+
 test('real direct child records start, exit and close without a race', async t => {
   const lifecycle = fixture(t);
   const child = spawn(process.execPath, ['-e', 'process.stdout.write("done");'], { stdio: ['ignore', 'pipe', 'pipe'] });
