@@ -229,9 +229,9 @@ test('both SDK helpers load the exported token-meter client from nested and hois
   for (const meterLayout of ['nested', 'hoisted']) {
     const installRoot = fakeSdk(path.join(directory, meterLayout), { meterLayout });
     const resolved = fileURLToPath(resolveDshTokenMeterClient(installRoot));
-    assert.equal(resolved, path.join(meterLayout === 'hoisted'
+    assert.equal(resolved, fs.realpathSync(path.join(meterLayout === 'hoisted'
       ? path.dirname(installRoot) : installRoot, meterLayout === 'hoisted'
-        ? 'dsh-token-meter/lib/types/client.js' : 'node_modules/@deepseek-ai/dsh-token-meter/lib/types/client.js'));
+        ? 'dsh-token-meter/lib/types/client.js' : 'node_modules/@deepseek-ai/dsh-token-meter/lib/types/client.js')));
     for (const [name, run] of [['base', runBaseDshAttempt], ['community', runDshAttempt]]) {
       const receipt = await run({ installRoot, attemptDir: path.join(directory, `${meterLayout}-${name}`),
         root: directory, ...selection, probeOnly: true, timeoutMs: 10000 });
