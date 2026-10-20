@@ -70,7 +70,38 @@ fn body(result: &Value) -> Value {
     if decoded["max_bytes"].is_number() {
         assert!(text.len() <= 16_384, "{} bytes", text.len());
     }
+    if decoded["format"] == "compact" {
+        assert_no_hashes(&decoded);
+    }
     decoded
+}
+
+fn assert_no_hashes(value: &Value) {
+    match value {
+        Value::Object(fields) => {
+            assert!(!fields.contains_key("source_hash"));
+            assert!(!fields.contains_key("source_hashes"));
+            for value in fields.values() {
+                assert_no_hashes(value);
+            }
+        }
+        Value::Array(values) => values.iter().for_each(assert_no_hashes),
+        _ => {}
+    }
+}
+
+fn evidence_file<'a>(neighborhood: &'a Value, evidence: &'a Value) -> &'a Value {
+    evidence
+        .get("file_path")
+        .unwrap_or(&neighborhood["file_path"])
+}
+
+fn assert_evidence_matches(neighborhood: &Value, compact: &Value, full: &Value) {
+    let mut restored = compact.clone();
+    restored["file_path"] = evidence_file(neighborhood, compact).clone();
+    let mut expected = full.clone();
+    expected.as_object_mut().unwrap().remove("source_hash");
+    assert_eq!(restored, expected);
 }
 
 #[test]
@@ -96,17 +127,18 @@ fn compact_relations_preserve_all_call_sites_with_bounded_continuations() {
         json!({"symbol":"entry","limit":50,"format":"full"}),
     ));
     assert_eq!(full["callees"].as_array().unwrap().len(), 50);
-    assert!(full["callees"][0]["from"]["evidence"]["source_hash"].is_string());
+    assert_eq!(
+        full["callees"][0]["from"]["evidence"]["source_hash"],
+        hex::encode(Sha256::digest(source.as_bytes()))
+    );
     let first = body(&mcp.call(
         "expand",
         json!({"format":"compact","symbol":"entry","limit":50}),
     ));
     assert_eq!(first["format"], "compact");
     assert_eq!(first["source"]["text"], full["source"]["text"]);
-    assert_eq!(
-        first["source_hashes"]["lib.rs"],
-        hex::encode(Sha256::digest(source.as_bytes()))
-    );
+    assert_eq!(first["file_path"], "lib.rs");
+    assert!(first["definition"]["evidence"].get("file_path").is_none());
     assert_eq!(first["references"]["semantic"]["status"], "disabled");
     assert!(
         first["callees"].as_array().unwrap().len() < 50,
@@ -123,8 +155,16 @@ fn compact_relations_preserve_all_call_sites_with_bounded_continuations() {
             assert!(relation.get("from").is_none());
             assert!(relation["to"]["id"].as_str().unwrap().contains("helper_"));
             assert_eq!(relation["evidence"]["confidence"], "static");
-            assert_eq!(relation["evidence"]["file_path"], "lib.rs");
-            assert!(sites.insert(relation["evidence"]["start_line"].as_u64().unwrap()));
+            assert!(relation["evidence"].get("file_path").is_none());
+            assert_eq!(evidence_file(&page, &relation["evidence"]), "lib.rs");
+            assert_eq!(evidence_file(&page, &relation["to"]["evidence"]), "lib.rs");
+            assert!(sites.insert((
+                evidence_file(&page, &relation["evidence"])
+                    .as_str()
+                    .unwrap()
+                    .to_owned(),
+                relation["evidence"]["start_line"].as_u64().unwrap(),
+            )));
         }
         let Some(next) = page["next"]["callees"].as_str() else {
             break;
@@ -144,7 +184,10 @@ fn compact_relations_preserve_all_call_sites_with_bounded_continuations() {
             "continuation must not repeat source"
         );
     }
-    assert_eq!(sites, (2..=81).collect());
+    assert_eq!(
+        sites,
+        (2..=81).map(|line| ("lib.rs".to_owned(), line)).collect()
+    );
     let wrong_section = mcp.call(
         "expand",
         json!({"format":"compact","symbol":"entry","section":"callers","cursor":cursor}),
@@ -187,6 +230,12 @@ fn compact_context_and_uncertain_edges_retain_their_own_anchors_and_evidence() {
         assert_eq!(edge["to"]["id"], original["to"]["id"]);
         assert_eq!(edge["evidence"]["confidence"], "heuristic");
         assert_eq!(edge["resolution"], original["resolution"]);
+        assert_evidence_matches(&compact, &edge["evidence"], &original["evidence"]);
+        assert_evidence_matches(
+            &compact,
+            &edge["to"]["evidence"],
+            &original["to"]["evidence"],
+        );
         assert!(edge.get("from").is_none());
     }
     let search = body(&mcp.call(
@@ -205,6 +254,89 @@ fn compact_context_and_uncertain_edges_retain_their_own_anchors_and_evidence() {
     assert_eq!(missing["format"], "compact");
     let invalid = mcp.call("expand", json!({"symbol":"invoke","format":"brief"}));
     assert_eq!(invalid["isError"], true);
+}
+
+#[test]
+fn compact_cross_file_locations_and_search_context_defaults_are_independent() {
+    let root = tempdir().unwrap();
+    let state = tempdir().unwrap();
+    for (file, source) in [
+        ("left.go", "package fixture\nfunc entryLeft() { sink() }\n"),
+        (
+            "right.go",
+            "package fixture\nfunc entryRight() { sink() }\n",
+        ),
+        ("sink.go", "package fixture\nfunc sink() {}\n"),
+        (
+            "caller.go",
+            "package fixture\nfunc caller() { entryLeft(); entryRight() }\n",
+        ),
+    ] {
+        fs::write(root.path().join(file), source).unwrap();
+    }
+    let mut mcp = Mcp::new(root.path(), &state.path().join("facts.sqlite"));
+    let full = body(&mcp.call("expand", json!({"symbol":"entryLeft","format":"full"})));
+    let compact = body(&mcp.call("expand", json!({"symbol":"entryLeft","format":"compact"})));
+    assert_eq!(compact["file_path"], "left.go");
+    assert_evidence_matches(
+        &compact,
+        &compact["definition"]["evidence"],
+        &full["definition"]["evidence"],
+    );
+    for (section, retained, omitted) in [("callers", "from", "to"), ("callees", "to", "from")] {
+        assert_eq!(compact[section].as_array().unwrap().len(), 1);
+        let edge = &compact[section][0];
+        let original = &full[section][0];
+        assert!(edge.get(omitted).is_none());
+        assert_eq!(edge["kind"], original["kind"]);
+        assert_eq!(edge[retained]["id"], original[retained]["id"]);
+        assert_evidence_matches(&compact, &edge["evidence"], &original["evidence"]);
+        assert_evidence_matches(
+            &compact,
+            &edge[retained]["evidence"],
+            &original[retained]["evidence"],
+        );
+    }
+    assert_eq!(compact["callers"][0]["evidence"]["file_path"], "caller.go");
+    assert_eq!(
+        compact["callees"][0]["to"]["evidence"]["file_path"],
+        "sink.go"
+    );
+    assert!(compact["callees"][0]["evidence"].get("file_path").is_none());
+
+    let search = body(&mcp.call(
+        "search",
+        json!({"query":"entry", "detail":"context", "context_limit":2, "format":"compact"}),
+    ));
+    assert!(search.get("file_path").is_none());
+    let entries = search["context_entries"].as_array().unwrap();
+    assert_eq!(entries.len(), 2);
+    let files: BTreeSet<_> = entries
+        .iter()
+        .map(|entry| entry["file_path"].as_str().unwrap())
+        .collect();
+    assert_eq!(files, BTreeSet::from(["left.go", "right.go"]));
+    for entry in entries {
+        let anchor = entry["symbol"]["id"].as_str().unwrap();
+        let result = search["results"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|result| result["id"] == anchor)
+            .unwrap();
+        assert_eq!(entry["file_path"], result["evidence"]["file_path"]);
+        assert!(entry["symbol"]["evidence"].get("file_path").is_none());
+        assert_eq!(
+            entry["callees"][0]["to"]["evidence"]["file_path"],
+            "sink.go"
+        );
+        assert!(entry["callees"][0]["evidence"].get("file_path").is_none());
+        assert_eq!(
+            evidence_file(entry, &entry["callees"][0]["evidence"]),
+            &entry["file_path"]
+        );
+        assert_eq!(entry["callers"][0]["evidence"]["file_path"], "caller.go");
+    }
 }
 
 #[test]

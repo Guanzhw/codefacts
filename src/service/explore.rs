@@ -1233,6 +1233,57 @@ fn card_sequence(selected: Vec<Excerpt>, ranked: Vec<Excerpt>) -> Vec<(Excerpt, 
     sequence
 }
 
+fn card_preview(
+    excerpt: &Excerpt,
+    lines: &[&str],
+    focus: u32,
+    body: &str,
+    allocation: usize,
+) -> String {
+    if body.len() <= allocation {
+        return body.to_string();
+    }
+    const GAP: &str = "[... source lines omitted ...]\n";
+    let mut delivered = BTreeSet::new();
+    let mut delivered_bytes = 0;
+    // Keep the identity and strongest lexical evidence first, then spend
+    // the remaining share on surrounding whole source lines.
+    for (index, line) in [excerpt.start, focus]
+        .into_iter()
+        .chain(focus + 1..=excerpt.end)
+        .chain((excerpt.start + 1..focus).rev())
+        .enumerate()
+    {
+        if delivered.contains(&line) {
+            continue;
+        }
+        let left = delivered.range(..line).next_back().copied();
+        let right = delivered.range(line..).next().copied();
+        let old_gaps = usize::from(left.zip(right).is_some_and(|(a, b)| b > a + 1));
+        let new_gaps = usize::from(left.is_some_and(|left| line > left + 1))
+            + usize::from(right.is_some_and(|right| right > line + 1));
+        let line_bytes = line.ilog10() as usize + 1 + 2 + lines[(line - 1) as usize].len() + 1;
+        let candidate_bytes =
+            delivered_bytes - old_gaps * GAP.len() + new_gaps * GAP.len() + line_bytes;
+        if candidate_bytes <= allocation {
+            delivered.insert(line);
+            delivered_bytes = candidate_bytes;
+        } else if index >= 2 {
+            break;
+        }
+    }
+    let mut preview = String::with_capacity(delivered_bytes);
+    let mut previous = None;
+    for line in delivered {
+        if previous.is_some_and(|previous| line > previous + 1) {
+            preview.push_str(GAP);
+        }
+        let _ = writeln!(preview, "{line}: {}", lines[(line - 1) as usize]);
+        previous = Some(line);
+    }
+    preview
+}
+
 fn render_cards(
     output: &mut String,
     cards: Vec<(Excerpt, bool)>,
@@ -1299,49 +1350,55 @@ fn render_cards(
         retained = index + 1;
     }
     metadata_bytes += omission(retained).len();
-    let allocation = (budget - metadata_bytes).checked_div(retained).unwrap_or(0);
-    for (index, (excerpt, _)) in cards.iter().take(retained).enumerate() {
-        let source = &sources[&excerpt.path];
-        let lines: Vec<_> = source.text.lines().collect();
-        let focus = best_line(&lines, excerpt.start, excerpt.end, terms);
-        let body = (excerpt.start..=excerpt.end)
-            .map(|line| format!("{line}: {}\n", lines[(line - 1) as usize]))
-            .collect::<String>();
-        let mut preview = String::new();
-        let mut delivered = Vec::new();
-        let complete = body.len() <= allocation;
-        if complete {
-            preview = body;
-        } else {
-            // Keep the identity and strongest lexical evidence first, then
-            // spend the remaining share on surrounding whole source lines.
-            for (index, line) in [excerpt.start, focus]
-                .into_iter()
-                .chain(focus + 1..=excerpt.end)
-                .chain((excerpt.start + 1..focus).rev())
-                .enumerate()
-            {
-                if delivered.contains(&line) {
-                    continue;
-                }
-                let mut candidate_lines = delivered.clone();
-                candidate_lines.push(line);
-                candidate_lines.sort_unstable();
-                let mut candidate = String::new();
-                for (index, &line) in candidate_lines.iter().enumerate() {
-                    if index > 0 && line > candidate_lines[index - 1] + 1 {
-                        candidate.push_str("[... source lines omitted ...]\n");
-                    }
-                    let _ = writeln!(candidate, "{line}: {}", lines[(line - 1) as usize]);
-                }
-                if candidate.len() <= allocation {
-                    preview = candidate;
-                    delivered = candidate_lines;
-                } else if index >= 2 {
-                    break;
-                }
+    let source_budget = budget - metadata_bytes;
+    let previews: Vec<_> = cards
+        .iter()
+        .take(retained)
+        .map(|(excerpt, _)| {
+            let lines: Vec<_> = sources[&excerpt.path].text.lines().collect();
+            let focus = best_line(&lines, excerpt.start, excerpt.end, terms);
+            let body = (excerpt.start..=excerpt.end)
+                .map(|line| format!("{line}: {}\n", lines[(line - 1) as usize]))
+                .collect::<String>();
+            let maximum = card_preview(excerpt, &lines, focus, &body, source_budget);
+            (lines, focus, body, maximum)
+        })
+        .collect();
+    let mut allocations = vec![0; retained];
+    let mut pending: Vec<_> = (0..retained).collect();
+    let mut remaining = source_budget;
+    // Equal shares are capped at what each card can actually return. This
+    // releases short owners and impossible whole lines without changing order.
+    while !pending.is_empty() {
+        let share = remaining / pending.len();
+        let previous_count = pending.len();
+        pending.retain(|&index| {
+            let capacity = previews[index].3.len();
+            if capacity <= share {
+                allocations[index] = capacity;
+                remaining -= capacity;
+                false
+            } else {
+                true
             }
+        });
+        if pending.len() == previous_count {
+            let remainder = remaining % pending.len();
+            for (ordinal, &index) in pending.iter().enumerate() {
+                allocations[index] = share + usize::from(ordinal < remainder);
+            }
+            break;
         }
+    }
+    for (index, ((excerpt, _), (lines, focus, body, maximum))) in
+        cards.iter().zip(previews).enumerate()
+    {
+        let preview = if allocations[index] == maximum.len() {
+            maximum
+        } else {
+            card_preview(excerpt, &lines, focus, &body, allocations[index])
+        };
+        let complete = preview == body;
         output.push_str(&frames[index].0);
         output.push_str(if preview.is_empty() {
             "[source omitted"
@@ -2372,7 +2429,7 @@ mod tests {
     }
 
     #[test]
-    fn cards_do_not_borrow_unused_preview_bytes_from_another_card() {
+    fn cards_reuse_short_complete_cards_source_budget() {
         let text = format!("short\n{}\n", "x".repeat(1400));
         let sources = card_source("fixture.rs", &text);
         let mut response = String::new();
@@ -2392,9 +2449,126 @@ mod tests {
         )
         .unwrap();
         assert!(response.contains("1: short\n"));
+        assert!(
+            response.contains("fixture.rs:2-2 | lexical source range\n[complete] implementation")
+        );
+        assert!(response.contains(&format!("2: {}\n", "x".repeat(1400))));
+        assert!(response.len() <= 2000);
+    }
+
+    #[test]
+    fn cards_do_not_reserve_source_budget_for_impossible_utf8_lines() {
+        let text = format!("{}\nshort\n{}\n", "中文".repeat(1000), "x".repeat(1400));
+        let sources = card_source("fixture.rs", &text);
+        let mut response = String::new();
+        render_cards(
+            &mut response,
+            card_sequence(
+                (1..=3)
+                    .map(|line| card_excerpt("fixture.rs", line, line, None))
+                    .collect(),
+                vec![],
+            ),
+            &[],
+            &[],
+            &sources,
+            2000,
+        )
+        .unwrap();
         assert!(response
-            .contains("fixture.rs:2-2 | lexical source range\n[source omitted] implementation"));
-        assert!(!response.contains("2: x"));
+            .contains("fixture.rs:1-1 | lexical source range\n[source omitted] implementation"));
+        assert!(!response.contains("1: 中文"));
+        assert!(response.contains("2: short\n"));
+        assert!(
+            response.contains("fixture.rs:3-3 | lexical source range\n[complete] implementation")
+        );
+        assert!(response.contains(&format!("3: {}\n", "x".repeat(1400))));
+        assert!(response.len() <= 2000);
+    }
+
+    #[test]
+    fn cards_share_reclaimed_bytes_between_multiple_previews_in_order() {
+        let text = std::iter::once("short\n".to_string())
+            .chain((2..=121).map(|line| format!("// needle {line}: {}\n", "中".repeat(10))))
+            .collect::<String>();
+        let sources = card_source("fixture.rs", &text);
+        let cards = card_sequence(
+            vec![
+                card_excerpt("fixture.rs", 1, 1, None),
+                card_excerpt("fixture.rs", 2, 61, None),
+                card_excerpt("fixture.rs", 62, 121, None),
+            ],
+            vec![],
+        );
+        let mut response = String::new();
+        render_cards(
+            &mut response,
+            cards.clone(),
+            &[],
+            &["needle".into()],
+            &sources,
+            2000,
+        )
+        .unwrap();
+        assert_eq!(response.matches("[complete] implementation").count(), 1);
+        assert_eq!(response.matches("[preview] implementation").count(), 2);
+        let first = response.find("## fixture.rs:1-1").unwrap();
+        let second = response.find("## fixture.rs:2-61").unwrap();
+        let third = response.find("## fixture.rs:62-121").unwrap();
+        assert!(first < second && second < third);
+        let mut counts = [0_usize; 2];
+        for line in response.lines() {
+            let Some((number, source)) = line.split_once(": ") else {
+                continue;
+            };
+            let Ok(number) = number.parse::<usize>() else {
+                continue;
+            };
+            assert_eq!(source, text.lines().nth(number - 1).unwrap());
+            if (2..=61).contains(&number) {
+                counts[0] += 1;
+            } else if (62..=121).contains(&number) {
+                counts[1] += 1;
+            }
+        }
+        // Three fixed shares return at most eleven of these whole lines each.
+        assert!(counts.iter().all(|&count| count >= 14), "{counts:?}");
+        assert!(counts[0].abs_diff(counts[1]) <= 1, "{counts:?}");
+        let mut repeated = String::new();
+        render_cards(
+            &mut repeated,
+            cards,
+            &[],
+            &["needle".into()],
+            &sources,
+            2000,
+        )
+        .unwrap();
+        assert_eq!(response, repeated);
+        assert!(response.len() <= 2000);
+    }
+
+    #[test]
+    fn card_preview_accounts_for_utf8_lines_when_source_gaps_close() {
+        let text = format!("identity\n{}\n中\nneedle\n文\n", "x".repeat(1000));
+        let lines: Vec<_> = text.lines().collect();
+        let body = lines
+            .iter()
+            .enumerate()
+            .map(|(index, line)| format!("{}: {line}\n", index + 1))
+            .collect::<String>();
+        let preview = card_preview(
+            &card_excerpt("fixture.rs", 1, 5, None),
+            &lines,
+            4,
+            &body,
+            100,
+        );
+        assert_eq!(
+            preview,
+            "1: identity\n[... source lines omitted ...]\n3: 中\n4: needle\n5: 文\n"
+        );
+        assert!(preview.len() <= 100);
     }
 
     #[test]

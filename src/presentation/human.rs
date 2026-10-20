@@ -462,7 +462,7 @@ mod tests {
     }
 
     #[test]
-    fn human_scope_hides_routine_refresh_metadata_while_machine_exports_keep_hashes() {
+    fn human_scope_hides_routine_refresh_metadata_while_full_exports_keep_hashes() {
         let canonical = json!({"freshness":{"repository_root":"D:/repo", "generation":7,
             "status":"partial", "files_indexed":2, "files_unchanged":3, "duration_ms":8,
             "files_unreadable":1, "files_parse_failed":0}, "symbols":[symbol_fact("entry", "lib.rs", 2)],
@@ -481,7 +481,10 @@ mod tests {
         assert!(!text.contains("fingerprint"));
         assert!(!text.contains("format:"));
         let compact = Format::Compact.present_for("outline", canonical.clone());
-        assert_eq!(compact["source_hashes"]["lib.rs"], "full-fingerprint");
+        assert!(compact.get("source_hashes").is_none());
+        assert!(compact["symbols"][0]["evidence"]
+            .get("source_hash")
+            .is_none());
         assert!(compact["symbols"][0]["id"].is_string());
         assert_eq!(
             Format::Full.present_for("outline", canonical.clone()),

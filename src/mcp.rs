@@ -594,7 +594,7 @@ fn tool_definitions(tools: ToolProfile) -> Vec<Value> {
 fn tool(name: &str, description: &str, mut input_schema: Value) -> Value {
     input_schema["properties"]["format"] = json!({
         "type": "string", "enum": ["compact", "full", "markdown"], "default": "markdown",
-        "description": "markdown (default) returns readable text with source locations, relationship certainty and continuations. compact returns JSON with shared evidence and anchors; full returns nested JSON facts. Both JSON formats include structuredContent."
+        "description": "markdown (default) returns readable text with source locations, relationship certainty and continuations. compact returns JSON without source hashes; expand and each search context entry provide a file_path default for omitted nested paths. full returns nested JSON facts with hash evidence. Both JSON formats include structuredContent."
     });
     if name == "expand" {
         input_schema["properties"]["section"] = json!({
