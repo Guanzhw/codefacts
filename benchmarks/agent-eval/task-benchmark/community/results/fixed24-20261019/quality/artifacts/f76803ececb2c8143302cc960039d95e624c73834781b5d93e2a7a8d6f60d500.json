@@ -1,0 +1,154 @@
+[
+  {
+    "instance_id": "clap-rs__clap-2534",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "9e83a909fa26538bd6fbbf9babb5904827ca0be4",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "clap_derive/src/dummies.rs",
+            "clap_derive/src/lib.rs",
+            "src/derive.rs",
+            "src/mkeymap.rs",
+            "src/output/help.rs",
+            "src/util/argstr.rs"
+          ],
+          "spans": {
+            "clap_derive/src/dummies.rs": [
+              {
+                "start": 4,
+                "end": 18
+              },
+              {
+                "start": 29,
+                "end": 49
+              },
+              {
+                "start": 59,
+                "end": 77
+              }
+            ],
+            "clap_derive/src/lib.rs": [
+              {
+                "start": 73,
+                "end": 79
+              }
+            ],
+            "src/derive.rs": [
+              {
+                "start": 70,
+                "end": 76
+              },
+              {
+                "start": 145,
+                "end": 173
+              },
+              {
+                "start": 206,
+                "end": 223
+              }
+            ],
+            "src/output/help.rs": [
+              {
+                "start": 97,
+                "end": 138
+              },
+              {
+                "start": 449,
+                "end": 507
+              },
+              {
+                "start": 784,
+                "end": 848
+              },
+              {
+                "start": 1010,
+                "end": 1018
+              },
+              {
+                "start": 1087,
+                "end": 1101
+              }
+            ],
+            "src/util/argstr.rs": [
+              {
+                "start": 1,
+                "end": 260
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/help.rs"
+          ],
+          "spans": {
+            "src/output/help.rs": [
+              {
+                "start": 806,
+                "end": 900
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "clap_derive/src/dummies.rs",
+            "clap_derive/src/lib.rs",
+            "src/output/help.rs",
+            "src/util/fnv.rs"
+          ],
+          "spans": {
+            "clap_derive/src/lib.rs": [
+              {
+                "start": 73,
+                "end": 79
+              }
+            ],
+            "src/output/help.rs": [
+              {
+                "start": 157,
+                "end": 165
+              },
+              {
+                "start": 173,
+                "end": 418
+              },
+              {
+                "start": 449,
+                "end": 539
+              },
+              {
+                "start": 550,
+                "end": 666
+              }
+            ],
+            "src/util/fnv.rs": [
+              {
+                "start": 1,
+                "end": 46
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "src/output/help.rs"
+      ],
+      "pred_spans": {
+        "src/output/help.rs": [
+          {
+            "start": 809,
+            "end": 880
+          },
+          {
+            "start": 1090,
+            "end": 1098
+          }
+        ]
+      }
+    }
+  }
+]

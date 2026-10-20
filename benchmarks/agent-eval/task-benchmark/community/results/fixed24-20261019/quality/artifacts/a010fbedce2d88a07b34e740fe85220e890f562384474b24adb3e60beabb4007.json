@@ -1,0 +1,252 @@
+{
+  "kind": "context",
+  "instance_id": "sveltejs__svelte-10391",
+  "officialResult": {
+    "instance_id": "sveltejs__svelte-10391",
+    "num_steps": 22,
+    "final": {
+      "file": {
+        "coverage": 0.2,
+        "precision": 1,
+        "intersection": 1,
+        "gold_size": 5,
+        "pred_size": 1
+      },
+      "symbol": {
+        "coverage": 0.4,
+        "precision": 1,
+        "intersection": 2,
+        "gold_size": 5,
+        "pred_size": 2
+      },
+      "span": {
+        "coverage": 0.05667639207896207,
+        "precision": 1,
+        "intersection": 913,
+        "gold_size": 16109,
+        "pred_size": 913
+      },
+      "line": {
+        "coverage": 0.05175292153589316,
+        "precision": 1,
+        "intersection": 31,
+        "gold_size": 599,
+        "pred_size": 31
+      }
+    },
+    "trajectory": {
+      "steps": [
+        {
+          "step": 1,
+          "coverage": {
+            "file": 0,
+            "symbol": 0,
+            "span": 0,
+            "line": 0
+          }
+        },
+        {
+          "step": 2,
+          "coverage": {
+            "file": 0,
+            "symbol": 0,
+            "span": 0,
+            "line": 0
+          }
+        },
+        {
+          "step": 3,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 0,
+            "span": 0,
+            "line": 0
+          }
+        },
+        {
+          "step": 4,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 0.2,
+            "span": 0.0019243900924948787,
+            "line": 0.001669449081803005
+          }
+        },
+        {
+          "step": 5,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 0.6,
+            "span": 0.042026196536097835,
+            "line": 0.03672787979966611
+          }
+        },
+        {
+          "step": 6,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 0.6,
+            "span": 0.042026196536097835,
+            "line": 0.03672787979966611
+          }
+        },
+        {
+          "step": 7,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 0.8,
+            "span": 0.04332981563101372,
+            "line": 0.038397328881469114
+          }
+        },
+        {
+          "step": 8,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0990129741138494,
+            "line": 0.08180300500834725
+          }
+        },
+        {
+          "step": 9,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0990129741138494,
+            "line": 0.08180300500834725
+          }
+        },
+        {
+          "step": 10,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0990129741138494,
+            "line": 0.08180300500834725
+          }
+        },
+        {
+          "step": 11,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0990129741138494,
+            "line": 0.08180300500834725
+          }
+        },
+        {
+          "step": 12,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0990129741138494,
+            "line": 0.08180300500834725
+          }
+        },
+        {
+          "step": 13,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0990129741138494,
+            "line": 0.08180300500834725
+          }
+        },
+        {
+          "step": 14,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0990129741138494,
+            "line": 0.08180300500834725
+          }
+        },
+        {
+          "step": 15,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0990129741138494,
+            "line": 0.08180300500834725
+          }
+        },
+        {
+          "step": 16,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0990129741138494,
+            "line": 0.08180300500834725
+          }
+        },
+        {
+          "step": 17,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0990129741138494,
+            "line": 0.08180300500834725
+          }
+        },
+        {
+          "step": 18,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0990129741138494,
+            "line": 0.08180300500834725
+          }
+        },
+        {
+          "step": 19,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0990129741138494,
+            "line": 0.08180300500834725
+          }
+        },
+        {
+          "step": 20,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0990129741138494,
+            "line": 0.08180300500834725
+          }
+        },
+        {
+          "step": 21,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0990129741138494,
+            "line": 0.08180300500834725
+          }
+        },
+        {
+          "step": 22,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0990129741138494,
+            "line": 0.08180300500834725
+          }
+        }
+      ],
+      "auc_coverage": {
+        "file": 0.18181818181818185,
+        "symbol": 0.7818181818181817,
+        "span": 0.07338641865924754,
+        "line": 0.0609348914858097
+      },
+      "redundancy": {
+        "file": 0.2870370370370371,
+        "symbol": 0.27884615384615385,
+        "span": 0.07497073284944977,
+        "line": 0.06557377049180324
+      }
+    }
+  }
+}

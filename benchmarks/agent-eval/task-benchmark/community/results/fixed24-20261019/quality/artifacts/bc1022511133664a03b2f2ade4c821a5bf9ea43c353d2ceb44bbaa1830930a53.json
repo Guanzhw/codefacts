@@ -1,0 +1,90 @@
+{
+  "kind": "context",
+  "instance_id": "mui__material-ui-26807",
+  "officialResult": {
+    "instance_id": "mui__material-ui-26807",
+    "num_steps": 4,
+    "final": {
+      "file": {
+        "coverage": 0.4,
+        "precision": 1,
+        "intersection": 2,
+        "gold_size": 5,
+        "pred_size": 2
+      },
+      "symbol": {
+        "coverage": 0.2,
+        "precision": 1,
+        "intersection": 1,
+        "gold_size": 5,
+        "pred_size": 1
+      },
+      "span": {
+        "coverage": 0.081297976273552,
+        "precision": 0.587641866330391,
+        "intersection": 466,
+        "gold_size": 5732,
+        "pred_size": 793
+      },
+      "line": {
+        "coverage": 0.0975609756097561,
+        "precision": 0.5333333333333333,
+        "intersection": 16,
+        "gold_size": 164,
+        "pred_size": 30
+      }
+    },
+    "trajectory": {
+      "steps": [
+        {
+          "step": 1,
+          "coverage": {
+            "file": 0.4,
+            "symbol": 0.2,
+            "span": 0.008722958827634334,
+            "line": 0.012195121951219513
+          }
+        },
+        {
+          "step": 2,
+          "coverage": {
+            "file": 0.6,
+            "symbol": 0.2,
+            "span": 0.008722958827634334,
+            "line": 0.012195121951219513
+          }
+        },
+        {
+          "step": 3,
+          "coverage": {
+            "file": 0.6,
+            "symbol": 0.8,
+            "span": 0.43091416608513605,
+            "line": 0.5304878048780488
+          }
+        },
+        {
+          "step": 4,
+          "coverage": {
+            "file": 0.6,
+            "symbol": 0.8,
+            "span": 0.4619678995115143,
+            "line": 0.5670731707317073
+          }
+        }
+      ],
+      "auc_coverage": {
+        "file": 0.55,
+        "symbol": 0.5,
+        "span": 0.22758199581297975,
+        "line": 0.2804878048780488
+      },
+      "redundancy": {
+        "file": 0.4545454545454546,
+        "symbol": 0.0714285714285714,
+        "span": 0.050162187210380016,
+        "line": 0.02684563758389258
+      }
+    }
+  }
+}

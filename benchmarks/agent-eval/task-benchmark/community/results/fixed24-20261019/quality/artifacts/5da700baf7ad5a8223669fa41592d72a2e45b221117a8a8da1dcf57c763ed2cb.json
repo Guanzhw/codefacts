@@ -1,0 +1,7 @@
+[
+  {
+    "instance_id": "axios__axios-5085",
+    "model_name_or_path": "deepseek-swe-ordinary",
+    "model_patch": "diff --git a/lib/core/AxiosHeaders.js b/lib/core/AxiosHeaders.js\nindex 9d56538..477794e 100644\n--- a/lib/core/AxiosHeaders.js\n+++ b/lib/core/AxiosHeaders.js\n@@ -15,7 +15,7 @@ function normalizeValue(value) {\n     return value;\n   }\n \n-  return String(value);\n+  return utils.isArray(value) ? value.map(normalizeValue) : String(value);\n }\n \n function parseTokens(str) {\ndiff --git a/nul b/nul\nnew file mode 100644\nindex 0000000..1695425\n--- /dev/null\n+++ b/nul\n@@ -0,0 +1 @@\n+bash: line 1: cd: too many arguments\ndiff --git a/test/unit/core/AxiosHeaders.js b/test/unit/core/AxiosHeaders.js\nindex da7be11..d4495a5 100644\n--- a/test/unit/core/AxiosHeaders.js\n+++ b/test/unit/core/AxiosHeaders.js\n@@ -327,5 +327,17 @@ describe('AxiosHeaders', function () {\n         bar: '3'\n       });\n     });\n+\n+    it('should preserve array header values such as set-cookie', function () {\n+      const headers = new AxiosHeaders({\n+        'Content-Type': 'application/json',\n+        'Set-Cookie': ['foo=bar; Path=/', 'baz=qux; Path=/']\n+      });\n+\n+      assert.deepStrictEqual(headers.normalize().get('set-cookie'), [\n+        'foo=bar; Path=/',\n+        'baz=qux; Path=/'\n+      ]);\n+    });\n   });\n });\n"
+  }
+]

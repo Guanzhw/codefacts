@@ -45,6 +45,18 @@ jobs:
         run: node --test benchmarks/agent-eval/runner.test.mjs benchmarks/agent-eval/opensession-corpus/campaign.test.mjs
       - name: Verify task benchmark offline core
         run: node --test benchmarks/agent-eval/task-benchmark/campaign.test.mjs benchmarks/agent-eval/task-benchmark/collect.test.mjs benchmarks/agent-eval/task-benchmark/dsh-adapter.test.mjs benchmarks/agent-eval/task-benchmark/fetch-corpora.test.mjs benchmarks/agent-eval/task-benchmark/summary.test.mjs benchmarks/agent-eval/task-benchmark/publish.test.mjs benchmarks/agent-eval/task-benchmark/usage-recovery.test.mjs benchmarks/agent-eval/task-benchmark/published-baseline.test.mjs
+      - name: Install isolated community benchmark protocol fixtures
+        run: npm install --prefix "${{ runner.temp }}/codefacts-benchmark-sdk" --ignore-scripts --no-audit --no-fund --package-lock=false @modelcontextprotocol/sdk@1.30.0 ajv@8.20.0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify community task benchmark
+        env:
+          TASK_BENCHMARK_SDK_ROOT: ${{ runner.temp }}/codefacts-benchmark-sdk/node_modules/@modelcontextprotocol/sdk
+        run: node --test benchmarks/agent-eval/task-benchmark/community/*.test.mjs
+      - name: Verify isolated usability screen (Windows/Linux)
+        if: runner.os == 'Windows' || runner.os == 'Linux'
+        run: node --test benchmarks/agent-eval/task-benchmark/community/usability-screen/*.test.mjs
 
   quality:
     name: Formatting and lints
@@ -76,3 +88,152 @@ jobs:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@1.91.0
       - run: cargo check --locked --lib --bin codefacts
+
+  benchmark-source:
+    name: Benchmark source (Ubuntu)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    env:
+      COMMUNITY: ${{ github.workspace }}/benchmarks/agent-eval/task-benchmark/community
+      BENCHMARK_SOURCE_INVENTORY_SHA256: 983c625677dfc2ee945a784878f7fc91007ddab4112e0e6bded5ea787bab3b4e
+      PYTHONDONTWRITEBYTECODE: '1'
+      NUMERIC_RESULTS_MANIFEST_SHA256: d0e9da3fa65f3cb6b1aa1f7781284a9035d2804ba80526fa74c1fbe9a5cddcd7
+      QUALITY_RESULTS_MANIFEST_SHA256: d3ec91c5592d883bc857c2cdfae3f78d59b24681693664da16472e1aca49355c
+      BENCHMARK_DELIVERY_MANIFEST_SHA256: 54d4c9cbda61a31ca279233cd72df0e93f7ec290717682655fedf3cd52a53700
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Initialize benchmark temporary workspace
+        run: echo "WORK=$RUNNER_TEMP/fresh-benchmark-source" >> "$GITHUB_ENV"
+      - name: Verify accepted source bytes in Git and checkout
+        shell: python
+        run: |
+          import hashlib, json, os, pathlib, subprocess
+          base = pathlib.Path(os.environ['COMMUNITY'])
+          prefix = 'benchmarks/agent-eval/task-benchmark/community/'
+          pin = os.environ['BENCHMARK_SOURCE_INVENTORY_SHA256']
+          digest = lambda raw: hashlib.sha256(raw).hexdigest()
+          manifest = (base / 'SOURCE-INVENTORY.json').read_bytes()
+          assert digest(manifest) == pin, 'Source inventory pin differs'
+          rows = json.loads(manifest)['files'] + [{'path': 'SOURCE-INVENTORY.json', 'sha256': pin}]
+          assert len(rows) == 81
+          for row in rows:
+              name = prefix + row['path']
+              assert digest((base / row['path']).read_bytes()) == row['sha256'], name
+              blob = subprocess.check_output(['git', 'show', 'HEAD:' + name])
+              assert digest(blob) == row['sha256'], name
+              plain = subprocess.check_output(['git', 'hash-object', '--no-filters', '--', name]).strip()
+              filtered = subprocess.check_output(['git', 'hash-object', '--path=' + name, '--', name]).strip()
+              assert plain == filtered, name
+          print('Verified all 81 accepted source members in HEAD and checkout')
+      - name: Verify committed numeric and quality bundles offline
+        run: |
+          RESULTS="$COMMUNITY/results/fixed24-20261019"
+          node "$RESULTS/numeric/verify.mjs" --manifest "$RESULTS/numeric/manifest.json" --sha256 "$NUMERIC_RESULTS_MANIFEST_SHA256"
+          node "$RESULTS/quality/verify.mjs" "$RESULTS/quality/manifest.json" "$QUALITY_RESULTS_MANIFEST_SHA256"
+      - name: Verify complete committed benchmark delivery
+        shell: python
+        run: |
+          import hashlib, json, os, pathlib
+          base = pathlib.Path(os.environ['COMMUNITY']) / 'results/fixed24-20261019'
+          digest = lambda raw: hashlib.sha256(raw).hexdigest()
+          raw = (base / 'DELIVERY.json').read_bytes()
+          assert digest(raw) == os.environ['BENCHMARK_DELIVERY_MANIFEST_SHA256']
+          rows = json.loads(raw)['files']
+          actual = {p.relative_to(base).as_posix() for p in base.rglob('*') if p.is_file()}
+          assert actual == set(rows) | {'DELIVERY.json'}
+          for name, expected in rows.items():
+              assert digest((base / name).read_bytes()) == expected, name
+          print(f'Verified complete benchmark delivery: {len(rows) + 1} files')
+      - name: Verify controller fixtures and nested source inventory
+        run: |
+          node --test "$COMMUNITY/execution/relocation.test.mjs" "$COMMUNITY/execution/parallel-suite-controller-v2/scheduler.test.mjs" "$COMMUNITY/execution/parallel-suite-controller-v2/worker-process.test.mjs" "$COMMUNITY/execution/rolling-suite-controller-v3/offline.test.mjs"
+          node "$COMMUNITY/execution/source-inventory.mjs" --verify b3eb973ad0975f42f06debbdbddb93fdba6061f6a6de30d6c62eedf375eab5b3
+      - name: Verify reporting and measurement fixtures
+        run: |
+          mkdir -p "$WORK"
+          node "$COMMUNITY/reporting/timing-regime-reporting-infra-v2/synthetic-tests.mjs"
+          node "$COMMUNITY/reporting/cold-disk-appendix-infra-v2/synthetic-tests.mjs"
+          node "$COMMUNITY/reporting/physical-v2-clean-repeat.tests.mjs" --work-dir "$WORK/clean-physical"
+          node "$COMMUNITY/reporting/measurement-producers-v1/metadata/fixtures.mjs" --output-dir "$WORK/metadata"
+          mkdir "$WORK/native"
+          cd "$COMMUNITY/reporting/measurement-producers-v1/native"
+          PRODUCER_TEST_OUTPUT_DIR="$WORK/native" python -B -m unittest -v test_audit test_timeout_delivery test_poll_timeout_delivery
+      - name: Prepare pinned quality fixture dependencies
+        run: |
+          python -m venv "$WORK/quality-venv"
+          "$WORK/quality-venv/bin/python" -m pip install -r "$COMMUNITY/context-requirements.txt"
+          git -c core.autocrlf=false clone --filter=blob:none --no-checkout https://github.com/EuniAI/ContextBench "$WORK/ContextBench"
+          git -C "$WORK/ContextBench" -c core.autocrlf=false checkout --detach 1436c28a8eb95496da4ea69ad458b9f8a8eb7d61
+          test "$(git -C "$WORK/ContextBench" rev-parse HEAD)" = 1436c28a8eb95496da4ea69ad458b9f8a8eb7d61
+          echo "QUALITY_BRIDGE_PYTHON=$WORK/quality-venv/bin/python" >> "$GITHUB_ENV"
+          echo "QUALITY_CONTEXT_OFFICIAL_ROOT=$WORK/ContextBench" >> "$GITHUB_ENV"
+          echo "QUALITY_BRIDGE_COMMUNITY_SOURCE=$COMMUNITY" >> "$GITHUB_ENV"
+      - name: Verify quality fixtures and retain the exact generated root
+        id: quality-fixture
+        run: |
+          cd "$COMMUNITY/reporting/quality-replay-sibling-infra-v1"
+          node synthetic-tests.mjs | tee "$WORK/quality-validation.json"
+          python - <<'PY'
+          import json, os, pathlib
+          result = json.loads((pathlib.Path(os.environ['WORK']) / 'quality-validation.json').read_bytes())
+          assert result['status'] == 'passed'
+          root = pathlib.Path(result['root'])
+          assert root.is_absolute() and root.is_dir()
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as output:
+              output.write(f'root={root}\n')
+          PY
+      - name: Verify quality baseline, image client and JSONL policies
+        env:
+          EXACT_QUALITY_FIXTURE_ROOT: ${{ steps.quality-fixture.outputs.root }}
+        run: |
+          cd "$COMMUNITY/reporting/quality-replay-sibling-infra-v1"
+          node baseline-policy-tests.mjs "$EXACT_QUALITY_FIXTURE_ROOT"
+          "$QUALITY_BRIDGE_PYTHON" -B image-client-checks.py
+          "$QUALITY_BRIDGE_PYTHON" -B jsonl-line-ending-tests.py
+
+  benchmark-physical-windows:
+    name: Benchmark physical fixtures (Windows)
+    runs-on: windows-latest
+    env:
+      COMMUNITY: ${{ github.workspace }}/benchmarks/agent-eval/task-benchmark/community
+      BENCHMARK_SOURCE_INVENTORY_SHA256: 983c625677dfc2ee945a784878f7fc91007ddab4112e0e6bded5ea787bab3b4e
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify accepted source bytes in Git and checkout
+        shell: python
+        run: |
+          import hashlib, json, os, pathlib, subprocess
+          base = pathlib.Path(os.environ['COMMUNITY'])
+          prefix = 'benchmarks/agent-eval/task-benchmark/community/'
+          pin = os.environ['BENCHMARK_SOURCE_INVENTORY_SHA256']
+          digest = lambda raw: hashlib.sha256(raw).hexdigest()
+          manifest = (base / 'SOURCE-INVENTORY.json').read_bytes()
+          assert digest(manifest) == pin, 'Source inventory pin differs'
+          rows = json.loads(manifest)['files'] + [{'path': 'SOURCE-INVENTORY.json', 'sha256': pin}]
+          assert len(rows) == 81
+          for row in rows:
+              name = prefix + row['path']
+              assert digest((base / row['path']).read_bytes()) == row['sha256'], name
+              blob = subprocess.check_output(['git', 'show', 'HEAD:' + name])
+              assert digest(blob) == row['sha256'], name
+              plain = subprocess.check_output(['git', 'hash-object', '--no-filters', '--', name]).strip()
+              filtered = subprocess.check_output(['git', 'hash-object', '--path=' + name, '--', name]).strip()
+              assert plain == filtered, name
+          print('Verified all 81 accepted source members in HEAD and checkout')
+      - name: Verify native Windows physical allocation fixtures
+        shell: pwsh
+        run: pwsh -NoProfile -File "$env:COMMUNITY/reporting/measurement-producers-v1/physical/verify.ps1" -OutputDir "$env:RUNNER_TEMP/physical-source-fixtures"

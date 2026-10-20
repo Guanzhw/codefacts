@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "suitePath": "./new-run/suite.json",
+  "frameworkDir": "..",
+  "guardModule": "./guard.mjs",
+  "sidecarBuildDir": "./new-run/fresh-sidecar-build",
+  "runtimeVolumePath": ".",
+  "evidenceVolumePath": "."
+}

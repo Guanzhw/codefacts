@@ -1,0 +1,2403 @@
+{
+  "schemaVersion": 1,
+  "kind": "cold-disk-descriptive-appendix",
+  "suiteId": "community-four-family-fixed24-20261017-v1",
+  "quantile": "P95 nearest rank: sorted[ceil(0.95*n)-1]; median averages middle two for even n; null excluded, zero retained",
+  "interpretation": "fresh private index per assigned cell; OS cache not cleared; post-query physical allocation snapshot; descriptive strata only, no causal comparison",
+  "distinctSourceTasks": 24,
+  "panels": [
+    {
+      "modelId": "claude",
+      "cohort": "context",
+      "split": "confirmation_holdout",
+      "conditionId": "context-historical-serial",
+      "admittedConcurrency": 1,
+      "arm": "codefacts022",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 3066.835449999897,
+        "p95": 45694.107199999504,
+        "mean": 13204.62429999985
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 45936640,
+        "p95": 221958144,
+        "mean": 84709376
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 4,
+        "knownBytes": 341946368,
+        "completeBytes": 341946368
+      },
+      "cellIds": [
+        "claude-context/ctx-cli__cli-3608-codefacts022",
+        "claude-context/ctx-clap-rs__clap-4248-codefacts022",
+        "claude-context/ctx-sveltejs__svelte-10391-codefacts022",
+        "claude-context/ctx-mui__material-ui-34229-codefacts022"
+      ]
+    },
+    {
+      "modelId": "claude",
+      "cohort": "context",
+      "split": "confirmation_holdout",
+      "conditionId": "context-historical-serial",
+      "admittedConcurrency": 1,
+      "arm": "codegraph",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 6478.63389999955,
+        "p95": 53195.96509999968,
+        "mean": 17192.582699999737
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 32276709,
+        "p95": 324120805,
+        "mean": 101586149
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 8,
+        "knownBytes": 406344608,
+        "completeBytes": 406344608
+      },
+      "cellIds": [
+        "claude-context/ctx-cli__cli-3608-codegraph",
+        "claude-context/ctx-clap-rs__clap-4248-codegraph",
+        "claude-context/ctx-sveltejs__svelte-10391-codegraph",
+        "claude-context/ctx-mui__material-ui-34229-codegraph"
+      ]
+    },
+    {
+      "modelId": "claude",
+      "cohort": "context",
+      "split": "confirmation_holdout",
+      "conditionId": "context-historical-serial",
+      "admittedConcurrency": 1,
+      "arm": "ordinary",
+      "nativeIndexApplicable": false,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 0,
+      "successfulIndexDistinctSourceTasks": 0,
+      "coldIndexMs": null,
+      "setupLogicalBytes": null,
+      "actualAllocatedBytes": null,
+      "cellIds": [
+        "claude-context/ctx-cli__cli-3608-ordinary",
+        "claude-context/ctx-clap-rs__clap-4248-ordinary",
+        "claude-context/ctx-sveltejs__svelte-10391-ordinary",
+        "claude-context/ctx-mui__material-ui-34229-ordinary"
+      ]
+    },
+    {
+      "modelId": "claude",
+      "cohort": "context",
+      "split": "pilot",
+      "conditionId": "context-historical-serial",
+      "admittedConcurrency": 1,
+      "arm": "codefacts022",
+      "nativeIndexApplicable": true,
+      "plannedCells": 8,
+      "distinctSourceTasks": 8,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 8,
+      "successfulIndexDistinctSourceTasks": 8,
+      "coldIndexMs": {
+        "known": 8,
+        "missing": 0,
+        "median": 3850.4681499996223,
+        "p95": 36944.930300001055,
+        "mean": 8021.9992750003
+      },
+      "setupLogicalBytes": {
+        "known": 8,
+        "missing": 0,
+        "median": 84660224,
+        "p95": 195080192,
+        "mean": 82397184
+      },
+      "actualAllocatedBytes": {
+        "inventories": 8,
+        "known": 8,
+        "missing": 0,
+        "uniqueFileIds": 8,
+        "knownBytes": 701059072,
+        "completeBytes": 701059072
+      },
+      "cellIds": [
+        "claude-context/ctx-cli__cli-5698-codefacts022",
+        "claude-context/ctx-cli__cli-9794-codefacts022",
+        "claude-context/ctx-nushell__nushell-12901-codefacts022",
+        "claude-context/ctx-clap-rs__clap-2534-codefacts022",
+        "claude-context/ctx-sveltejs__svelte-12509-codefacts022",
+        "claude-context/ctx-sveltejs__svelte-3394-codefacts022",
+        "claude-context/ctx-vuejs__core-11899-codefacts022",
+        "claude-context/ctx-mui__material-ui-26807-codefacts022"
+      ]
+    },
+    {
+      "modelId": "claude",
+      "cohort": "context",
+      "split": "pilot",
+      "conditionId": "context-historical-serial",
+      "admittedConcurrency": 1,
+      "arm": "codegraph",
+      "nativeIndexApplicable": true,
+      "plannedCells": 8,
+      "distinctSourceTasks": 8,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 8,
+      "successfulIndexDistinctSourceTasks": 8,
+      "coldIndexMs": {
+        "known": 8,
+        "missing": 0,
+        "median": 6691.095850000158,
+        "p95": 35327.02060000226,
+        "mean": 10483.424562500324
+      },
+      "setupLogicalBytes": {
+        "known": 8,
+        "missing": 0,
+        "median": 45146341,
+        "p95": 249032933,
+        "mean": 67429605
+      },
+      "actualAllocatedBytes": {
+        "inventories": 8,
+        "known": 8,
+        "missing": 0,
+        "uniqueFileIds": 16,
+        "knownBytes": 539436864,
+        "completeBytes": 539436864
+      },
+      "cellIds": [
+        "claude-context/ctx-cli__cli-5698-codegraph",
+        "claude-context/ctx-cli__cli-9794-codegraph",
+        "claude-context/ctx-nushell__nushell-12901-codegraph",
+        "claude-context/ctx-clap-rs__clap-2534-codegraph",
+        "claude-context/ctx-sveltejs__svelte-12509-codegraph",
+        "claude-context/ctx-sveltejs__svelte-3394-codegraph",
+        "claude-context/ctx-vuejs__core-11899-codegraph",
+        "claude-context/ctx-mui__material-ui-26807-codegraph"
+      ]
+    },
+    {
+      "modelId": "claude",
+      "cohort": "context",
+      "split": "pilot",
+      "conditionId": "context-historical-serial",
+      "admittedConcurrency": 1,
+      "arm": "ordinary",
+      "nativeIndexApplicable": false,
+      "plannedCells": 8,
+      "distinctSourceTasks": 8,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 0,
+      "successfulIndexDistinctSourceTasks": 0,
+      "coldIndexMs": null,
+      "setupLogicalBytes": null,
+      "actualAllocatedBytes": null,
+      "cellIds": [
+        "claude-context/ctx-cli__cli-5698-ordinary",
+        "claude-context/ctx-cli__cli-9794-ordinary",
+        "claude-context/ctx-nushell__nushell-12901-ordinary",
+        "claude-context/ctx-clap-rs__clap-2534-ordinary",
+        "claude-context/ctx-sveltejs__svelte-12509-ordinary",
+        "claude-context/ctx-sveltejs__svelte-3394-ordinary",
+        "claude-context/ctx-vuejs__core-11899-ordinary",
+        "claude-context/ctx-mui__material-ui-26807-ordinary"
+      ]
+    },
+    {
+      "modelId": "claude",
+      "cohort": "swe",
+      "split": "confirmation_holdout",
+      "conditionId": "swe-confirmation-v3-rolling",
+      "admittedConcurrency": 2,
+      "arm": "codefacts022",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 1994.8231000000014,
+        "p95": 4491.9856,
+        "mean": 2389.2127250000012
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 40194048,
+        "p95": 70168576,
+        "mean": 41324544
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 4,
+        "knownBytes": 171311104,
+        "completeBytes": 171311104
+      },
+      "cellIds": [
+        "claude-swe/swe-caddyserver__caddy-5995-codefacts022",
+        "claude-swe/swe-tokio-rs__tokio-6603-codefacts022",
+        "claude-swe/swe-preactjs__preact-3010-codefacts022",
+        "claude-swe/swe-facebook__docusaurus-10130-codefacts022"
+      ]
+    },
+    {
+      "modelId": "claude",
+      "cohort": "swe",
+      "split": "confirmation_holdout",
+      "conditionId": "swe-confirmation-v3-rolling",
+      "admittedConcurrency": 2,
+      "arm": "codegraph",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 3501.851649999997,
+        "p95": 8275.994999999995,
+        "mean": 4524.160024999997
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 23611621,
+        "p95": 35410149,
+        "mean": 23669989
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 8,
+        "knownBytes": 94679968,
+        "completeBytes": 94679968
+      },
+      "cellIds": [
+        "claude-swe/swe-caddyserver__caddy-5995-codegraph",
+        "claude-swe/swe-tokio-rs__tokio-6603-codegraph",
+        "claude-swe/swe-preactjs__preact-3010-codegraph",
+        "claude-swe/swe-facebook__docusaurus-10130-codegraph"
+      ]
+    },
+    {
+      "modelId": "claude",
+      "cohort": "swe",
+      "split": "confirmation_holdout",
+      "conditionId": "swe-confirmation-v3-rolling",
+      "admittedConcurrency": 2,
+      "arm": "ordinary",
+      "nativeIndexApplicable": false,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 0,
+      "successfulIndexDistinctSourceTasks": 0,
+      "coldIndexMs": null,
+      "setupLogicalBytes": null,
+      "actualAllocatedBytes": null,
+      "cellIds": [
+        "claude-swe/swe-caddyserver__caddy-5995-ordinary",
+        "claude-swe/swe-tokio-rs__tokio-6603-ordinary",
+        "claude-swe/swe-preactjs__preact-3010-ordinary",
+        "claude-swe/swe-facebook__docusaurus-10130-ordinary"
+      ]
+    },
+    {
+      "modelId": "claude",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-first46-serial",
+      "admittedConcurrency": 1,
+      "arm": "codefacts022",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 4802.57475,
+        "p95": 18684.097699999984,
+        "mean": 7287.077449999997
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 86292480,
+        "p95": 521166848,
+        "mean": 179683328
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 4,
+        "knownBytes": 770187264,
+        "completeBytes": 770187264
+      },
+      "cellIds": [
+        "claude-swe/swe-hashicorp__terraform-35543-codefacts022",
+        "claude-swe/swe-caddyserver__caddy-4774-codefacts022",
+        "claude-swe/swe-nushell__nushell-12901-codefacts022",
+        "claude-swe/swe-uutils__coreutils-6690-codefacts022"
+      ]
+    },
+    {
+      "modelId": "claude",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-first46-serial",
+      "admittedConcurrency": 1,
+      "arm": "codegraph",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 9066.0396,
+        "p95": 13222.278699999995,
+        "mean": 8591.497899999998
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 64882917,
+        "p95": 127209701,
+        "mean": 67107045
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 8,
+        "knownBytes": 268428192,
+        "completeBytes": 268428192
+      },
+      "cellIds": [
+        "claude-swe/swe-hashicorp__terraform-35543-codegraph",
+        "claude-swe/swe-caddyserver__caddy-4774-codegraph",
+        "claude-swe/swe-nushell__nushell-12901-codegraph",
+        "claude-swe/swe-uutils__coreutils-6690-codegraph"
+      ]
+    },
+    {
+      "modelId": "claude",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-first46-serial",
+      "admittedConcurrency": 1,
+      "arm": "ordinary",
+      "nativeIndexApplicable": false,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 0,
+      "successfulIndexDistinctSourceTasks": 0,
+      "coldIndexMs": null,
+      "setupLogicalBytes": null,
+      "actualAllocatedBytes": null,
+      "cellIds": [
+        "claude-swe/swe-hashicorp__terraform-35543-ordinary",
+        "claude-swe/swe-caddyserver__caddy-4774-ordinary",
+        "claude-swe/swe-nushell__nushell-12901-ordinary",
+        "claude-swe/swe-uutils__coreutils-6690-ordinary"
+      ]
+    },
+    {
+      "modelId": "claude",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-v2-waves",
+      "admittedConcurrency": 2,
+      "arm": "codefacts022",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 2494.8669500000033,
+        "p95": 4596.349300000002,
+        "mean": 2518.802775000002
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 42319872,
+        "p95": 88514560,
+        "mean": 44266496
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 4,
+        "knownBytes": 193921024,
+        "completeBytes": 193921024
+      },
+      "cellIds": [
+        "claude-swe/swe-preactjs__preact-3562-codefacts022",
+        "claude-swe/swe-axios__axios-5085-codefacts022",
+        "claude-swe/swe-vuejs__core-11899-codefacts022",
+        "claude-swe/swe-facebook__docusaurus-9183-codefacts022"
+      ]
+    },
+    {
+      "modelId": "claude",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-v2-waves",
+      "admittedConcurrency": 2,
+      "arm": "codegraph",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 3703.048449999995,
+        "p95": 8965.597600000001,
+        "mean": 4646.899599999998
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 21258469,
+        "p95": 44597477,
+        "mean": 22649061
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 8,
+        "knownBytes": 90596256,
+        "completeBytes": 90596256
+      },
+      "cellIds": [
+        "claude-swe/swe-preactjs__preact-3562-codegraph",
+        "claude-swe/swe-axios__axios-5085-codegraph",
+        "claude-swe/swe-vuejs__core-11899-codegraph",
+        "claude-swe/swe-facebook__docusaurus-9183-codegraph"
+      ]
+    },
+    {
+      "modelId": "claude",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-v2-waves",
+      "admittedConcurrency": 2,
+      "arm": "ordinary",
+      "nativeIndexApplicable": false,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 0,
+      "successfulIndexDistinctSourceTasks": 0,
+      "coldIndexMs": null,
+      "setupLogicalBytes": null,
+      "actualAllocatedBytes": null,
+      "cellIds": [
+        "claude-swe/swe-preactjs__preact-3562-ordinary",
+        "claude-swe/swe-axios__axios-5085-ordinary",
+        "claude-swe/swe-vuejs__core-11899-ordinary",
+        "claude-swe/swe-facebook__docusaurus-9183-ordinary"
+      ]
+    },
+    {
+      "modelId": "deepseek",
+      "cohort": "context",
+      "split": "confirmation_holdout",
+      "conditionId": "context-historical-serial",
+      "admittedConcurrency": 1,
+      "arm": "codefacts022",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 3048.206949999789,
+        "p95": 43923.91830000095,
+        "mean": 12754.793475000144
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 45936640,
+        "p95": 221958144,
+        "mean": 84709376
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 4,
+        "knownBytes": 353824768,
+        "completeBytes": 353824768
+      },
+      "cellIds": [
+        "deepseek-context/ctx-cli__cli-3608-codefacts022",
+        "deepseek-context/ctx-clap-rs__clap-4248-codefacts022",
+        "deepseek-context/ctx-sveltejs__svelte-10391-codefacts022",
+        "deepseek-context/ctx-mui__material-ui-34229-codefacts022"
+      ]
+    },
+    {
+      "modelId": "deepseek",
+      "cohort": "context",
+      "split": "confirmation_holdout",
+      "conditionId": "context-historical-serial",
+      "admittedConcurrency": 1,
+      "arm": "codegraph",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 6624.2074999999895,
+        "p95": 45954.875900000334,
+        "mean": 15645.127500000046
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 31731941,
+        "p95": 324120805,
+        "mean": 101313765
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 8,
+        "knownBytes": 405255072,
+        "completeBytes": 405255072
+      },
+      "cellIds": [
+        "deepseek-context/ctx-cli__cli-3608-codegraph",
+        "deepseek-context/ctx-clap-rs__clap-4248-codegraph",
+        "deepseek-context/ctx-sveltejs__svelte-10391-codegraph",
+        "deepseek-context/ctx-mui__material-ui-34229-codegraph"
+      ]
+    },
+    {
+      "modelId": "deepseek",
+      "cohort": "context",
+      "split": "confirmation_holdout",
+      "conditionId": "context-historical-serial",
+      "admittedConcurrency": 1,
+      "arm": "ordinary",
+      "nativeIndexApplicable": false,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 0,
+      "successfulIndexDistinctSourceTasks": 0,
+      "coldIndexMs": null,
+      "setupLogicalBytes": null,
+      "actualAllocatedBytes": null,
+      "cellIds": [
+        "deepseek-context/ctx-cli__cli-3608-ordinary",
+        "deepseek-context/ctx-clap-rs__clap-4248-ordinary",
+        "deepseek-context/ctx-sveltejs__svelte-10391-ordinary",
+        "deepseek-context/ctx-mui__material-ui-34229-ordinary"
+      ]
+    },
+    {
+      "modelId": "deepseek",
+      "cohort": "context",
+      "split": "pilot",
+      "conditionId": "context-historical-serial",
+      "admittedConcurrency": 1,
+      "arm": "codefacts022",
+      "nativeIndexApplicable": true,
+      "plannedCells": 8,
+      "distinctSourceTasks": 8,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 8,
+      "successfulIndexDistinctSourceTasks": 8,
+      "coldIndexMs": {
+        "known": 8,
+        "missing": 0,
+        "median": 3807.6719499998726,
+        "p95": 35010.79079999775,
+        "mean": 7955.5163374994445
+      },
+      "setupLogicalBytes": {
+        "known": 8,
+        "missing": 0,
+        "median": 84660224,
+        "p95": 195080192,
+        "mean": 82397184
+      },
+      "actualAllocatedBytes": {
+        "inventories": 8,
+        "known": 8,
+        "missing": 0,
+        "uniqueFileIds": 8,
+        "knownBytes": 682594304,
+        "completeBytes": 682594304
+      },
+      "cellIds": [
+        "deepseek-context/ctx-cli__cli-5698-codefacts022",
+        "deepseek-context/ctx-cli__cli-9794-codefacts022",
+        "deepseek-context/ctx-nushell__nushell-12901-codefacts022",
+        "deepseek-context/ctx-clap-rs__clap-2534-codefacts022",
+        "deepseek-context/ctx-sveltejs__svelte-12509-codefacts022",
+        "deepseek-context/ctx-sveltejs__svelte-3394-codefacts022",
+        "deepseek-context/ctx-vuejs__core-11899-codefacts022",
+        "deepseek-context/ctx-mui__material-ui-26807-codefacts022"
+      ]
+    },
+    {
+      "modelId": "deepseek",
+      "cohort": "context",
+      "split": "pilot",
+      "conditionId": "context-historical-serial",
+      "admittedConcurrency": 1,
+      "arm": "codegraph",
+      "nativeIndexApplicable": true,
+      "plannedCells": 8,
+      "distinctSourceTasks": 8,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 8,
+      "successfulIndexDistinctSourceTasks": 8,
+      "coldIndexMs": {
+        "known": 8,
+        "missing": 0,
+        "median": 9092.93150000088,
+        "p95": 35485.874199997634,
+        "mean": 11411.65358749988
+      },
+      "setupLogicalBytes": {
+        "known": 8,
+        "missing": 0,
+        "median": 45146341,
+        "p95": 249032933,
+        "mean": 67319013
+      },
+      "actualAllocatedBytes": {
+        "inventories": 8,
+        "known": 8,
+        "missing": 0,
+        "uniqueFileIds": 16,
+        "knownBytes": 538552128,
+        "completeBytes": 538552128
+      },
+      "cellIds": [
+        "deepseek-context/ctx-cli__cli-5698-codegraph",
+        "deepseek-context/ctx-cli__cli-9794-codegraph",
+        "deepseek-context/ctx-nushell__nushell-12901-codegraph",
+        "deepseek-context/ctx-clap-rs__clap-2534-codegraph",
+        "deepseek-context/ctx-sveltejs__svelte-12509-codegraph",
+        "deepseek-context/ctx-sveltejs__svelte-3394-codegraph",
+        "deepseek-context/ctx-vuejs__core-11899-codegraph",
+        "deepseek-context/ctx-mui__material-ui-26807-codegraph"
+      ]
+    },
+    {
+      "modelId": "deepseek",
+      "cohort": "context",
+      "split": "pilot",
+      "conditionId": "context-historical-serial",
+      "admittedConcurrency": 1,
+      "arm": "ordinary",
+      "nativeIndexApplicable": false,
+      "plannedCells": 8,
+      "distinctSourceTasks": 8,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 0,
+      "successfulIndexDistinctSourceTasks": 0,
+      "coldIndexMs": null,
+      "setupLogicalBytes": null,
+      "actualAllocatedBytes": null,
+      "cellIds": [
+        "deepseek-context/ctx-cli__cli-5698-ordinary",
+        "deepseek-context/ctx-cli__cli-9794-ordinary",
+        "deepseek-context/ctx-nushell__nushell-12901-ordinary",
+        "deepseek-context/ctx-clap-rs__clap-2534-ordinary",
+        "deepseek-context/ctx-sveltejs__svelte-12509-ordinary",
+        "deepseek-context/ctx-sveltejs__svelte-3394-ordinary",
+        "deepseek-context/ctx-vuejs__core-11899-ordinary",
+        "deepseek-context/ctx-mui__material-ui-26807-ordinary"
+      ]
+    },
+    {
+      "modelId": "deepseek",
+      "cohort": "swe",
+      "split": "confirmation_holdout",
+      "conditionId": "swe-confirmation-v3-rolling",
+      "admittedConcurrency": 2,
+      "arm": "codefacts022",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 2174.5262000000002,
+        "p95": 5045.136400000003,
+        "mean": 2572.312250000001
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 40194048,
+        "p95": 70168576,
+        "mean": 41324544
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 4,
+        "knownBytes": 188370944,
+        "completeBytes": 188370944
+      },
+      "cellIds": [
+        "deepseek-swe/swe-caddyserver__caddy-5995-codefacts022",
+        "deepseek-swe/swe-tokio-rs__tokio-6603-codefacts022",
+        "deepseek-swe/swe-preactjs__preact-3010-codefacts022",
+        "deepseek-swe/swe-facebook__docusaurus-10130-codefacts022"
+      ]
+    },
+    {
+      "modelId": "deepseek",
+      "cohort": "swe",
+      "split": "confirmation_holdout",
+      "conditionId": "swe-confirmation-v3-rolling",
+      "admittedConcurrency": 2,
+      "arm": "codegraph",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 5153.214099999997,
+        "p95": 8949.44430000001,
+        "mean": 5565.366975000003
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 23611621,
+        "p95": 35410149,
+        "mean": 23669989
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 8,
+        "knownBytes": 94679968,
+        "completeBytes": 94679968
+      },
+      "cellIds": [
+        "deepseek-swe/swe-caddyserver__caddy-5995-codegraph",
+        "deepseek-swe/swe-tokio-rs__tokio-6603-codegraph",
+        "deepseek-swe/swe-preactjs__preact-3010-codegraph",
+        "deepseek-swe/swe-facebook__docusaurus-10130-codegraph"
+      ]
+    },
+    {
+      "modelId": "deepseek",
+      "cohort": "swe",
+      "split": "confirmation_holdout",
+      "conditionId": "swe-confirmation-v3-rolling",
+      "admittedConcurrency": 2,
+      "arm": "ordinary",
+      "nativeIndexApplicable": false,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 0,
+      "successfulIndexDistinctSourceTasks": 0,
+      "coldIndexMs": null,
+      "setupLogicalBytes": null,
+      "actualAllocatedBytes": null,
+      "cellIds": [
+        "deepseek-swe/swe-caddyserver__caddy-5995-ordinary",
+        "deepseek-swe/swe-tokio-rs__tokio-6603-ordinary",
+        "deepseek-swe/swe-preactjs__preact-3010-ordinary",
+        "deepseek-swe/swe-facebook__docusaurus-10130-ordinary"
+      ]
+    },
+    {
+      "modelId": "deepseek",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-first46-serial",
+      "admittedConcurrency": 1,
+      "arm": "codefacts022",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 4866.5080999999955,
+        "p95": 17666.91470000001,
+        "mean": 7088.437475000001
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 86292480,
+        "p95": 521166848,
+        "mean": 179683328
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 4,
+        "knownBytes": 756076544,
+        "completeBytes": 756076544
+      },
+      "cellIds": [
+        "deepseek-swe/swe-hashicorp__terraform-35543-codefacts022",
+        "deepseek-swe/swe-caddyserver__caddy-4774-codefacts022",
+        "deepseek-swe/swe-nushell__nushell-12901-codefacts022",
+        "deepseek-swe/swe-uutils__coreutils-6690-codefacts022"
+      ]
+    },
+    {
+      "modelId": "deepseek",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-first46-serial",
+      "admittedConcurrency": 1,
+      "arm": "codegraph",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 8811.060700000002,
+        "p95": 11236.723500000007,
+        "mean": 7892.825775000003
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 64882917,
+        "p95": 127209701,
+        "mean": 67107045
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 8,
+        "knownBytes": 268428192,
+        "completeBytes": 268428192
+      },
+      "cellIds": [
+        "deepseek-swe/swe-hashicorp__terraform-35543-codegraph",
+        "deepseek-swe/swe-caddyserver__caddy-4774-codegraph",
+        "deepseek-swe/swe-nushell__nushell-12901-codegraph",
+        "deepseek-swe/swe-uutils__coreutils-6690-codegraph"
+      ]
+    },
+    {
+      "modelId": "deepseek",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-first46-serial",
+      "admittedConcurrency": 1,
+      "arm": "ordinary",
+      "nativeIndexApplicable": false,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 0,
+      "successfulIndexDistinctSourceTasks": 0,
+      "coldIndexMs": null,
+      "setupLogicalBytes": null,
+      "actualAllocatedBytes": null,
+      "cellIds": [
+        "deepseek-swe/swe-hashicorp__terraform-35543-ordinary",
+        "deepseek-swe/swe-caddyserver__caddy-4774-ordinary",
+        "deepseek-swe/swe-nushell__nushell-12901-ordinary",
+        "deepseek-swe/swe-uutils__coreutils-6690-ordinary"
+      ]
+    },
+    {
+      "modelId": "deepseek",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-v2-waves",
+      "admittedConcurrency": 2,
+      "arm": "codefacts022",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 2549.2894499999966,
+        "p95": 5118.3315,
+        "mean": 2673.585624999999
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 42319872,
+        "p95": 88514560,
+        "mean": 44266496
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 4,
+        "knownBytes": 179302400,
+        "completeBytes": 179302400
+      },
+      "cellIds": [
+        "deepseek-swe/swe-preactjs__preact-3562-codefacts022",
+        "deepseek-swe/swe-axios__axios-5085-codefacts022",
+        "deepseek-swe/swe-vuejs__core-11899-codefacts022",
+        "deepseek-swe/swe-facebook__docusaurus-9183-codefacts022"
+      ]
+    },
+    {
+      "modelId": "deepseek",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-v2-waves",
+      "admittedConcurrency": 2,
+      "arm": "codegraph",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 5023.631049999996,
+        "p95": 7652.205500000004,
+        "mean": 5002.784374999999
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 21258469,
+        "p95": 44597477,
+        "mean": 22649061
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 8,
+        "knownBytes": 90596256,
+        "completeBytes": 90596256
+      },
+      "cellIds": [
+        "deepseek-swe/swe-preactjs__preact-3562-codegraph",
+        "deepseek-swe/swe-axios__axios-5085-codegraph",
+        "deepseek-swe/swe-vuejs__core-11899-codegraph",
+        "deepseek-swe/swe-facebook__docusaurus-9183-codegraph"
+      ]
+    },
+    {
+      "modelId": "deepseek",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-v2-waves",
+      "admittedConcurrency": 2,
+      "arm": "ordinary",
+      "nativeIndexApplicable": false,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 0,
+      "successfulIndexDistinctSourceTasks": 0,
+      "coldIndexMs": null,
+      "setupLogicalBytes": null,
+      "actualAllocatedBytes": null,
+      "cellIds": [
+        "deepseek-swe/swe-preactjs__preact-3562-ordinary",
+        "deepseek-swe/swe-axios__axios-5085-ordinary",
+        "deepseek-swe/swe-vuejs__core-11899-ordinary",
+        "deepseek-swe/swe-facebook__docusaurus-9183-ordinary"
+      ]
+    },
+    {
+      "modelId": "gpt",
+      "cohort": "context",
+      "split": "confirmation_holdout",
+      "conditionId": "context-historical-serial",
+      "admittedConcurrency": 1,
+      "arm": "codefacts022",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 2904.052749999799,
+        "p95": 42045.5693,
+        "mean": 12210.653224999878
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 45936640,
+        "p95": 221958144,
+        "mean": 84709376
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 4,
+        "knownBytes": 338837504,
+        "completeBytes": 338837504
+      },
+      "cellIds": [
+        "gpt-context/ctx-cli__cli-3608-codefacts022",
+        "gpt-context/ctx-clap-rs__clap-4248-codefacts022",
+        "gpt-context/ctx-sveltejs__svelte-10391-codefacts022",
+        "gpt-context/ctx-mui__material-ui-34229-codefacts022"
+      ]
+    },
+    {
+      "modelId": "gpt",
+      "cohort": "context",
+      "split": "confirmation_holdout",
+      "conditionId": "context-historical-serial",
+      "admittedConcurrency": 1,
+      "arm": "codegraph",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 1,
+      "expectedSuccessfulIndexCells": 3,
+      "successfulIndexDistinctSourceTasks": 3,
+      "coldIndexMs": {
+        "known": 3,
+        "missing": 0,
+        "median": 3164.782700000331,
+        "p95": 9845.261900000274,
+        "mean": 5207.832000000247
+      },
+      "setupLogicalBytes": {
+        "known": 3,
+        "missing": 0,
+        "median": 17846501,
+        "p95": 47534309,
+        "mean": 27683727.666666668
+      },
+      "actualAllocatedBytes": {
+        "inventories": 3,
+        "known": 3,
+        "missing": 0,
+        "uniqueFileIds": 6,
+        "knownBytes": 83051192,
+        "completeBytes": 83051192
+      },
+      "cellIds": [
+        "gpt-context/ctx-cli__cli-3608-codegraph",
+        "gpt-context/ctx-clap-rs__clap-4248-codegraph",
+        "gpt-context/ctx-sveltejs__svelte-10391-codegraph",
+        "gpt-context/ctx-mui__material-ui-34229-codegraph"
+      ]
+    },
+    {
+      "modelId": "gpt",
+      "cohort": "context",
+      "split": "confirmation_holdout",
+      "conditionId": "context-historical-serial",
+      "admittedConcurrency": 1,
+      "arm": "ordinary",
+      "nativeIndexApplicable": false,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 0,
+      "successfulIndexDistinctSourceTasks": 0,
+      "coldIndexMs": null,
+      "setupLogicalBytes": null,
+      "actualAllocatedBytes": null,
+      "cellIds": [
+        "gpt-context/ctx-cli__cli-3608-ordinary",
+        "gpt-context/ctx-clap-rs__clap-4248-ordinary",
+        "gpt-context/ctx-sveltejs__svelte-10391-ordinary",
+        "gpt-context/ctx-mui__material-ui-34229-ordinary"
+      ]
+    },
+    {
+      "modelId": "gpt",
+      "cohort": "context",
+      "split": "pilot",
+      "conditionId": "context-historical-serial",
+      "admittedConcurrency": 1,
+      "arm": "codefacts022",
+      "nativeIndexApplicable": true,
+      "plannedCells": 8,
+      "distinctSourceTasks": 8,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 8,
+      "successfulIndexDistinctSourceTasks": 8,
+      "coldIndexMs": {
+        "known": 8,
+        "missing": 0,
+        "median": 4257.751200000057,
+        "p95": 35844.66660000011,
+        "mean": 8081.3332125002635
+      },
+      "setupLogicalBytes": {
+        "known": 8,
+        "missing": 0,
+        "median": 84660224,
+        "p95": 195080192,
+        "mean": 82397184
+      },
+      "actualAllocatedBytes": {
+        "inventories": 8,
+        "known": 8,
+        "missing": 0,
+        "uniqueFileIds": 8,
+        "knownBytes": 659177472,
+        "completeBytes": 659177472
+      },
+      "cellIds": [
+        "gpt-context/ctx-cli__cli-5698-codefacts022",
+        "gpt-context/ctx-cli__cli-9794-codefacts022",
+        "gpt-context/ctx-nushell__nushell-12901-codefacts022",
+        "gpt-context/ctx-clap-rs__clap-2534-codefacts022",
+        "gpt-context/ctx-sveltejs__svelte-12509-codefacts022",
+        "gpt-context/ctx-sveltejs__svelte-3394-codefacts022",
+        "gpt-context/ctx-vuejs__core-11899-codefacts022",
+        "gpt-context/ctx-mui__material-ui-26807-codefacts022"
+      ]
+    },
+    {
+      "modelId": "gpt",
+      "cohort": "context",
+      "split": "pilot",
+      "conditionId": "context-historical-serial",
+      "admittedConcurrency": 1,
+      "arm": "codegraph",
+      "nativeIndexApplicable": true,
+      "plannedCells": 8,
+      "distinctSourceTasks": 8,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 8,
+      "successfulIndexDistinctSourceTasks": 8,
+      "coldIndexMs": {
+        "known": 8,
+        "missing": 0,
+        "median": 6250.361549998634,
+        "p95": 36553.17240000144,
+        "mean": 11065.841849999619
+      },
+      "setupLogicalBytes": {
+        "known": 8,
+        "missing": 0,
+        "median": 45146341,
+        "p95": 249032933,
+        "mean": 67558629
+      },
+      "actualAllocatedBytes": {
+        "inventories": 8,
+        "known": 8,
+        "missing": 0,
+        "uniqueFileIds": 16,
+        "knownBytes": 540469056,
+        "completeBytes": 540469056
+      },
+      "cellIds": [
+        "gpt-context/ctx-cli__cli-5698-codegraph",
+        "gpt-context/ctx-cli__cli-9794-codegraph",
+        "gpt-context/ctx-nushell__nushell-12901-codegraph",
+        "gpt-context/ctx-clap-rs__clap-2534-codegraph",
+        "gpt-context/ctx-sveltejs__svelte-12509-codegraph",
+        "gpt-context/ctx-sveltejs__svelte-3394-codegraph",
+        "gpt-context/ctx-vuejs__core-11899-codegraph",
+        "gpt-context/ctx-mui__material-ui-26807-codegraph"
+      ]
+    },
+    {
+      "modelId": "gpt",
+      "cohort": "context",
+      "split": "pilot",
+      "conditionId": "context-historical-serial",
+      "admittedConcurrency": 1,
+      "arm": "ordinary",
+      "nativeIndexApplicable": false,
+      "plannedCells": 8,
+      "distinctSourceTasks": 8,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 0,
+      "successfulIndexDistinctSourceTasks": 0,
+      "coldIndexMs": null,
+      "setupLogicalBytes": null,
+      "actualAllocatedBytes": null,
+      "cellIds": [
+        "gpt-context/ctx-cli__cli-5698-ordinary",
+        "gpt-context/ctx-cli__cli-9794-ordinary",
+        "gpt-context/ctx-nushell__nushell-12901-ordinary",
+        "gpt-context/ctx-clap-rs__clap-2534-ordinary",
+        "gpt-context/ctx-sveltejs__svelte-12509-ordinary",
+        "gpt-context/ctx-sveltejs__svelte-3394-ordinary",
+        "gpt-context/ctx-vuejs__core-11899-ordinary",
+        "gpt-context/ctx-mui__material-ui-26807-ordinary"
+      ]
+    },
+    {
+      "modelId": "gpt",
+      "cohort": "swe",
+      "split": "confirmation_holdout",
+      "conditionId": "swe-confirmation-v3-rolling",
+      "admittedConcurrency": 2,
+      "arm": "codefacts022",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 1999.0623000000014,
+        "p95": 4590.948499999999,
+        "mean": 2384.557275000001
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 40194048,
+        "p95": 70168576,
+        "mean": 41324544
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 4,
+        "knownBytes": 165298176,
+        "completeBytes": 165298176
+      },
+      "cellIds": [
+        "gpt-swe/swe-caddyserver__caddy-5995-codefacts022",
+        "gpt-swe/swe-tokio-rs__tokio-6603-codefacts022",
+        "gpt-swe/swe-preactjs__preact-3010-codefacts022",
+        "gpt-swe/swe-facebook__docusaurus-10130-codefacts022"
+      ]
+    },
+    {
+      "modelId": "gpt",
+      "cohort": "swe",
+      "split": "confirmation_holdout",
+      "conditionId": "swe-confirmation-v3-rolling",
+      "admittedConcurrency": 2,
+      "arm": "codegraph",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 6332.374500000002,
+        "p95": 9626.452500000007,
+        "mean": 6296.569100000002
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 23611621,
+        "p95": 35410149,
+        "mean": 23669989
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 8,
+        "knownBytes": 94679968,
+        "completeBytes": 94679968
+      },
+      "cellIds": [
+        "gpt-swe/swe-caddyserver__caddy-5995-codegraph",
+        "gpt-swe/swe-tokio-rs__tokio-6603-codegraph",
+        "gpt-swe/swe-preactjs__preact-3010-codegraph",
+        "gpt-swe/swe-facebook__docusaurus-10130-codegraph"
+      ]
+    },
+    {
+      "modelId": "gpt",
+      "cohort": "swe",
+      "split": "confirmation_holdout",
+      "conditionId": "swe-confirmation-v3-rolling",
+      "admittedConcurrency": 2,
+      "arm": "ordinary",
+      "nativeIndexApplicable": false,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 0,
+      "successfulIndexDistinctSourceTasks": 0,
+      "coldIndexMs": null,
+      "setupLogicalBytes": null,
+      "actualAllocatedBytes": null,
+      "cellIds": [
+        "gpt-swe/swe-caddyserver__caddy-5995-ordinary",
+        "gpt-swe/swe-tokio-rs__tokio-6603-ordinary",
+        "gpt-swe/swe-preactjs__preact-3010-ordinary",
+        "gpt-swe/swe-facebook__docusaurus-10130-ordinary"
+      ]
+    },
+    {
+      "modelId": "gpt",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-first46-serial",
+      "admittedConcurrency": 1,
+      "arm": "codefacts022",
+      "nativeIndexApplicable": true,
+      "plannedCells": 3,
+      "distinctSourceTasks": 3,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 3,
+      "successfulIndexDistinctSourceTasks": 3,
+      "coldIndexMs": {
+        "known": 3,
+        "missing": 0,
+        "median": 7970.754100000006,
+        "p95": 17449.6587,
+        "mean": 8760.198300000002
+      },
+      "setupLogicalBytes": {
+        "known": 3,
+        "missing": 0,
+        "median": 112009216,
+        "p95": 521166848,
+        "mean": 219385856
+      },
+      "actualAllocatedBytes": {
+        "inventories": 3,
+        "known": 3,
+        "missing": 0,
+        "uniqueFileIds": 3,
+        "knownBytes": 658157568,
+        "completeBytes": 658157568
+      },
+      "cellIds": [
+        "gpt-swe/swe-hashicorp__terraform-35543-codefacts022",
+        "gpt-swe/swe-caddyserver__caddy-4774-codefacts022",
+        "gpt-swe/swe-nushell__nushell-12901-codefacts022"
+      ]
+    },
+    {
+      "modelId": "gpt",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-first46-serial",
+      "admittedConcurrency": 1,
+      "arm": "codegraph",
+      "nativeIndexApplicable": true,
+      "plannedCells": 3,
+      "distinctSourceTasks": 3,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 3,
+      "successfulIndexDistinctSourceTasks": 3,
+      "coldIndexMs": {
+        "known": 3,
+        "missing": 0,
+        "median": 10727.25989999999,
+        "p95": 11127.240000000005,
+        "mean": 8055.906699999997
+      },
+      "setupLogicalBytes": {
+        "known": 3,
+        "missing": 0,
+        "median": 84660453,
+        "p95": 127205605,
+        "mean": 74439567.66666667
+      },
+      "actualAllocatedBytes": {
+        "inventories": 3,
+        "known": 3,
+        "missing": 0,
+        "uniqueFileIds": 6,
+        "knownBytes": 223318712,
+        "completeBytes": 223318712
+      },
+      "cellIds": [
+        "gpt-swe/swe-hashicorp__terraform-35543-codegraph",
+        "gpt-swe/swe-caddyserver__caddy-4774-codegraph",
+        "gpt-swe/swe-nushell__nushell-12901-codegraph"
+      ]
+    },
+    {
+      "modelId": "gpt",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-first46-serial",
+      "admittedConcurrency": 1,
+      "arm": "ordinary",
+      "nativeIndexApplicable": false,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 0,
+      "successfulIndexDistinctSourceTasks": 0,
+      "coldIndexMs": null,
+      "setupLogicalBytes": null,
+      "actualAllocatedBytes": null,
+      "cellIds": [
+        "gpt-swe/swe-hashicorp__terraform-35543-ordinary",
+        "gpt-swe/swe-caddyserver__caddy-4774-ordinary",
+        "gpt-swe/swe-nushell__nushell-12901-ordinary",
+        "gpt-swe/swe-uutils__coreutils-6690-ordinary"
+      ]
+    },
+    {
+      "modelId": "gpt",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-v2-waves",
+      "admittedConcurrency": 1,
+      "arm": "codegraph",
+      "nativeIndexApplicable": true,
+      "plannedCells": 1,
+      "distinctSourceTasks": 1,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 1,
+      "successfulIndexDistinctSourceTasks": 1,
+      "coldIndexMs": {
+        "known": 1,
+        "missing": 0,
+        "median": 4333.932000000001,
+        "p95": 4333.932000000001,
+        "mean": 4333.932000000001
+      },
+      "setupLogicalBytes": {
+        "known": 1,
+        "missing": 0,
+        "median": 30142693,
+        "p95": 30142693,
+        "mean": 30142693
+      },
+      "actualAllocatedBytes": {
+        "inventories": 1,
+        "known": 1,
+        "missing": 0,
+        "uniqueFileIds": 2,
+        "knownBytes": 30142696,
+        "completeBytes": 30142696
+      },
+      "cellIds": [
+        "gpt-swe/swe-facebook__docusaurus-9183-codegraph"
+      ]
+    },
+    {
+      "modelId": "gpt",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-v2-waves",
+      "admittedConcurrency": 1,
+      "arm": "ordinary",
+      "nativeIndexApplicable": false,
+      "plannedCells": 1,
+      "distinctSourceTasks": 1,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 0,
+      "successfulIndexDistinctSourceTasks": 0,
+      "coldIndexMs": null,
+      "setupLogicalBytes": null,
+      "actualAllocatedBytes": null,
+      "cellIds": [
+        "gpt-swe/swe-facebook__docusaurus-9183-ordinary"
+      ]
+    },
+    {
+      "modelId": "gpt",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-v2-waves",
+      "admittedConcurrency": 2,
+      "arm": "codefacts022",
+      "nativeIndexApplicable": true,
+      "plannedCells": 5,
+      "distinctSourceTasks": 5,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 5,
+      "successfulIndexDistinctSourceTasks": 5,
+      "coldIndexMs": {
+        "known": 5,
+        "missing": 0,
+        "median": 2984.9565000000002,
+        "p95": 5500.978499999997,
+        "mean": 2743.1110999999996
+      },
+      "setupLogicalBytes": {
+        "known": 5,
+        "missing": 0,
+        "median": 60575744,
+        "p95": 88514560,
+        "mean": 47528345.6
+      },
+      "actualAllocatedBytes": {
+        "inventories": 5,
+        "known": 5,
+        "missing": 0,
+        "uniqueFileIds": 5,
+        "knownBytes": 237641728,
+        "completeBytes": 237641728
+      },
+      "cellIds": [
+        "gpt-swe/swe-uutils__coreutils-6690-codefacts022",
+        "gpt-swe/swe-preactjs__preact-3562-codefacts022",
+        "gpt-swe/swe-axios__axios-5085-codefacts022",
+        "gpt-swe/swe-vuejs__core-11899-codefacts022",
+        "gpt-swe/swe-facebook__docusaurus-9183-codefacts022"
+      ]
+    },
+    {
+      "modelId": "gpt",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-v2-waves",
+      "admittedConcurrency": 2,
+      "arm": "codegraph",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 4902.281599999998,
+        "p95": 7583.043399999995,
+        "mean": 4926.349899999998
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 28485861,
+        "p95": 45105381,
+        "mean": 26389733
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 8,
+        "knownBytes": 105558944,
+        "completeBytes": 105558944
+      },
+      "cellIds": [
+        "gpt-swe/swe-uutils__coreutils-6690-codegraph",
+        "gpt-swe/swe-preactjs__preact-3562-codegraph",
+        "gpt-swe/swe-axios__axios-5085-codegraph",
+        "gpt-swe/swe-vuejs__core-11899-codegraph"
+      ]
+    },
+    {
+      "modelId": "gpt",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-v2-waves",
+      "admittedConcurrency": 2,
+      "arm": "ordinary",
+      "nativeIndexApplicable": false,
+      "plannedCells": 3,
+      "distinctSourceTasks": 3,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 0,
+      "successfulIndexDistinctSourceTasks": 0,
+      "coldIndexMs": null,
+      "setupLogicalBytes": null,
+      "actualAllocatedBytes": null,
+      "cellIds": [
+        "gpt-swe/swe-preactjs__preact-3562-ordinary",
+        "gpt-swe/swe-axios__axios-5085-ordinary",
+        "gpt-swe/swe-vuejs__core-11899-ordinary"
+      ]
+    },
+    {
+      "modelId": "qwen",
+      "cohort": "context",
+      "split": "confirmation_holdout",
+      "conditionId": "context-historical-serial",
+      "admittedConcurrency": 1,
+      "arm": "codefacts022",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 2949.7696999998298,
+        "p95": 42310.85899999924,
+        "mean": 12300.4274999997
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 45936640,
+        "p95": 221958144,
+        "mean": 84709376
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 4,
+        "knownBytes": 423903232,
+        "completeBytes": 423903232
+      },
+      "cellIds": [
+        "qwen-context/ctx-cli__cli-3608-codefacts022",
+        "qwen-context/ctx-clap-rs__clap-4248-codefacts022",
+        "qwen-context/ctx-sveltejs__svelte-10391-codefacts022",
+        "qwen-context/ctx-mui__material-ui-34229-codefacts022"
+      ]
+    },
+    {
+      "modelId": "qwen",
+      "cohort": "context",
+      "split": "confirmation_holdout",
+      "conditionId": "context-historical-serial",
+      "admittedConcurrency": 1,
+      "arm": "codegraph",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 6649.05159999989,
+        "p95": 42649.34279999882,
+        "mean": 14648.150724999665
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 32575717,
+        "p95": 324120805,
+        "mean": 101735653
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 8,
+        "knownBytes": 406942624,
+        "completeBytes": 406942624
+      },
+      "cellIds": [
+        "qwen-context/ctx-cli__cli-3608-codegraph",
+        "qwen-context/ctx-clap-rs__clap-4248-codegraph",
+        "qwen-context/ctx-sveltejs__svelte-10391-codegraph",
+        "qwen-context/ctx-mui__material-ui-34229-codegraph"
+      ]
+    },
+    {
+      "modelId": "qwen",
+      "cohort": "context",
+      "split": "confirmation_holdout",
+      "conditionId": "context-historical-serial",
+      "admittedConcurrency": 1,
+      "arm": "ordinary",
+      "nativeIndexApplicable": false,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 0,
+      "successfulIndexDistinctSourceTasks": 0,
+      "coldIndexMs": null,
+      "setupLogicalBytes": null,
+      "actualAllocatedBytes": null,
+      "cellIds": [
+        "qwen-context/ctx-cli__cli-3608-ordinary",
+        "qwen-context/ctx-clap-rs__clap-4248-ordinary",
+        "qwen-context/ctx-sveltejs__svelte-10391-ordinary",
+        "qwen-context/ctx-mui__material-ui-34229-ordinary"
+      ]
+    },
+    {
+      "modelId": "qwen",
+      "cohort": "context",
+      "split": "pilot",
+      "conditionId": "context-historical-serial",
+      "admittedConcurrency": 1,
+      "arm": "codefacts022",
+      "nativeIndexApplicable": true,
+      "plannedCells": 8,
+      "distinctSourceTasks": 8,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 8,
+      "successfulIndexDistinctSourceTasks": 8,
+      "coldIndexMs": {
+        "known": 8,
+        "missing": 0,
+        "median": 4256.196650000988,
+        "p95": 34851.77739999816,
+        "mean": 7863.637949999946
+      },
+      "setupLogicalBytes": {
+        "known": 8,
+        "missing": 0,
+        "median": 84660224,
+        "p95": 195080192,
+        "mean": 82397184
+      },
+      "actualAllocatedBytes": {
+        "inventories": 8,
+        "known": 8,
+        "missing": 0,
+        "uniqueFileIds": 8,
+        "knownBytes": 780054528,
+        "completeBytes": 780054528
+      },
+      "cellIds": [
+        "qwen-context/ctx-cli__cli-5698-codefacts022",
+        "qwen-context/ctx-cli__cli-9794-codefacts022",
+        "qwen-context/ctx-nushell__nushell-12901-codefacts022",
+        "qwen-context/ctx-clap-rs__clap-2534-codefacts022",
+        "qwen-context/ctx-sveltejs__svelte-12509-codefacts022",
+        "qwen-context/ctx-sveltejs__svelte-3394-codefacts022",
+        "qwen-context/ctx-vuejs__core-11899-codefacts022",
+        "qwen-context/ctx-mui__material-ui-26807-codefacts022"
+      ]
+    },
+    {
+      "modelId": "qwen",
+      "cohort": "context",
+      "split": "pilot",
+      "conditionId": "context-historical-serial",
+      "admittedConcurrency": 1,
+      "arm": "codegraph",
+      "nativeIndexApplicable": true,
+      "plannedCells": 8,
+      "distinctSourceTasks": 8,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 8,
+      "successfulIndexDistinctSourceTasks": 8,
+      "coldIndexMs": {
+        "known": 8,
+        "missing": 0,
+        "median": 8786.073950000107,
+        "p95": 34691.02749999985,
+        "mean": 11212.72499999986
+      },
+      "setupLogicalBytes": {
+        "known": 8,
+        "missing": 0,
+        "median": 45146341,
+        "p95": 249032933,
+        "mean": 67527397
+      },
+      "actualAllocatedBytes": {
+        "inventories": 8,
+        "known": 8,
+        "missing": 0,
+        "uniqueFileIds": 16,
+        "knownBytes": 540219200,
+        "completeBytes": 540219200
+      },
+      "cellIds": [
+        "qwen-context/ctx-cli__cli-5698-codegraph",
+        "qwen-context/ctx-cli__cli-9794-codegraph",
+        "qwen-context/ctx-nushell__nushell-12901-codegraph",
+        "qwen-context/ctx-clap-rs__clap-2534-codegraph",
+        "qwen-context/ctx-sveltejs__svelte-12509-codegraph",
+        "qwen-context/ctx-sveltejs__svelte-3394-codegraph",
+        "qwen-context/ctx-vuejs__core-11899-codegraph",
+        "qwen-context/ctx-mui__material-ui-26807-codegraph"
+      ]
+    },
+    {
+      "modelId": "qwen",
+      "cohort": "context",
+      "split": "pilot",
+      "conditionId": "context-historical-serial",
+      "admittedConcurrency": 1,
+      "arm": "ordinary",
+      "nativeIndexApplicable": false,
+      "plannedCells": 8,
+      "distinctSourceTasks": 8,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 0,
+      "successfulIndexDistinctSourceTasks": 0,
+      "coldIndexMs": null,
+      "setupLogicalBytes": null,
+      "actualAllocatedBytes": null,
+      "cellIds": [
+        "qwen-context/ctx-cli__cli-5698-ordinary",
+        "qwen-context/ctx-cli__cli-9794-ordinary",
+        "qwen-context/ctx-nushell__nushell-12901-ordinary",
+        "qwen-context/ctx-clap-rs__clap-2534-ordinary",
+        "qwen-context/ctx-sveltejs__svelte-12509-ordinary",
+        "qwen-context/ctx-sveltejs__svelte-3394-ordinary",
+        "qwen-context/ctx-vuejs__core-11899-ordinary",
+        "qwen-context/ctx-mui__material-ui-26807-ordinary"
+      ]
+    },
+    {
+      "modelId": "qwen",
+      "cohort": "swe",
+      "split": "confirmation_holdout",
+      "conditionId": "swe-confirmation-v3-rolling",
+      "admittedConcurrency": 2,
+      "arm": "codefacts022",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 2015.8689000000013,
+        "p95": 5515.537599999996,
+        "mean": 2615.1692249999996
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 40194048,
+        "p95": 70168576,
+        "mean": 41324544
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 4,
+        "knownBytes": 186195968,
+        "completeBytes": 186195968
+      },
+      "cellIds": [
+        "qwen-swe/swe-caddyserver__caddy-5995-codefacts022",
+        "qwen-swe/swe-tokio-rs__tokio-6603-codefacts022",
+        "qwen-swe/swe-preactjs__preact-3010-codefacts022",
+        "qwen-swe/swe-facebook__docusaurus-10130-codefacts022"
+      ]
+    },
+    {
+      "modelId": "qwen",
+      "cohort": "swe",
+      "split": "confirmation_holdout",
+      "conditionId": "swe-confirmation-v3-rolling",
+      "admittedConcurrency": 2,
+      "arm": "codegraph",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 3686.9418000000005,
+        "p95": 8406.545699999988,
+        "mean": 4672.270299999998
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 23611621,
+        "p95": 35410149,
+        "mean": 23669989
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 8,
+        "knownBytes": 94679968,
+        "completeBytes": 94679968
+      },
+      "cellIds": [
+        "qwen-swe/swe-caddyserver__caddy-5995-codegraph",
+        "qwen-swe/swe-tokio-rs__tokio-6603-codegraph",
+        "qwen-swe/swe-preactjs__preact-3010-codegraph",
+        "qwen-swe/swe-facebook__docusaurus-10130-codegraph"
+      ]
+    },
+    {
+      "modelId": "qwen",
+      "cohort": "swe",
+      "split": "confirmation_holdout",
+      "conditionId": "swe-confirmation-v3-rolling",
+      "admittedConcurrency": 2,
+      "arm": "ordinary",
+      "nativeIndexApplicable": false,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 0,
+      "successfulIndexDistinctSourceTasks": 0,
+      "coldIndexMs": null,
+      "setupLogicalBytes": null,
+      "actualAllocatedBytes": null,
+      "cellIds": [
+        "qwen-swe/swe-caddyserver__caddy-5995-ordinary",
+        "qwen-swe/swe-tokio-rs__tokio-6603-ordinary",
+        "qwen-swe/swe-preactjs__preact-3010-ordinary",
+        "qwen-swe/swe-facebook__docusaurus-10130-ordinary"
+      ]
+    },
+    {
+      "modelId": "qwen",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-first46-serial",
+      "admittedConcurrency": 1,
+      "arm": "codefacts022",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 4533.941900000002,
+        "p95": 17174.994099999996,
+        "mean": 6780.655525
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 86292480,
+        "p95": 521166848,
+        "mean": 179683328
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 4,
+        "knownBytes": 779591680,
+        "completeBytes": 779591680
+      },
+      "cellIds": [
+        "qwen-swe/swe-hashicorp__terraform-35543-codefacts022",
+        "qwen-swe/swe-caddyserver__caddy-4774-codefacts022",
+        "qwen-swe/swe-nushell__nushell-12901-codefacts022",
+        "qwen-swe/swe-uutils__coreutils-6690-codefacts022"
+      ]
+    },
+    {
+      "modelId": "qwen",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-first46-serial",
+      "admittedConcurrency": 1,
+      "arm": "codegraph",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 8583.929549999997,
+        "p95": 10977.047000000006,
+        "mean": 7626.831875
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 64882917,
+        "p95": 127209701,
+        "mean": 67107045
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 8,
+        "knownBytes": 268428192,
+        "completeBytes": 268428192
+      },
+      "cellIds": [
+        "qwen-swe/swe-hashicorp__terraform-35543-codegraph",
+        "qwen-swe/swe-caddyserver__caddy-4774-codegraph",
+        "qwen-swe/swe-nushell__nushell-12901-codegraph",
+        "qwen-swe/swe-uutils__coreutils-6690-codegraph"
+      ]
+    },
+    {
+      "modelId": "qwen",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-first46-serial",
+      "admittedConcurrency": 1,
+      "arm": "ordinary",
+      "nativeIndexApplicable": false,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 0,
+      "successfulIndexDistinctSourceTasks": 0,
+      "coldIndexMs": null,
+      "setupLogicalBytes": null,
+      "actualAllocatedBytes": null,
+      "cellIds": [
+        "qwen-swe/swe-hashicorp__terraform-35543-ordinary",
+        "qwen-swe/swe-caddyserver__caddy-4774-ordinary",
+        "qwen-swe/swe-nushell__nushell-12901-ordinary",
+        "qwen-swe/swe-uutils__coreutils-6690-ordinary"
+      ]
+    },
+    {
+      "modelId": "qwen",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-v2-waves",
+      "admittedConcurrency": 2,
+      "arm": "codefacts022",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 2536.4140499999994,
+        "p95": 5476.036399999997,
+        "mean": 2757.469399999999
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 42319872,
+        "p95": 88514560,
+        "mean": 44266496
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 4,
+        "knownBytes": 196960256,
+        "completeBytes": 196960256
+      },
+      "cellIds": [
+        "qwen-swe/swe-preactjs__preact-3562-codefacts022",
+        "qwen-swe/swe-axios__axios-5085-codefacts022",
+        "qwen-swe/swe-vuejs__core-11899-codefacts022",
+        "qwen-swe/swe-facebook__docusaurus-9183-codefacts022"
+      ]
+    },
+    {
+      "modelId": "qwen",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-v2-waves",
+      "admittedConcurrency": 2,
+      "arm": "codegraph",
+      "nativeIndexApplicable": true,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 4,
+      "successfulIndexDistinctSourceTasks": 4,
+      "coldIndexMs": {
+        "known": 4,
+        "missing": 0,
+        "median": 3952.348049999997,
+        "p95": 7500.698200000006,
+        "mean": 4427.316525
+      },
+      "setupLogicalBytes": {
+        "known": 4,
+        "missing": 0,
+        "median": 21258469,
+        "p95": 44597477,
+        "mean": 22649061
+      },
+      "actualAllocatedBytes": {
+        "inventories": 4,
+        "known": 4,
+        "missing": 0,
+        "uniqueFileIds": 8,
+        "knownBytes": 90596256,
+        "completeBytes": 90596256
+      },
+      "cellIds": [
+        "qwen-swe/swe-preactjs__preact-3562-codegraph",
+        "qwen-swe/swe-axios__axios-5085-codegraph",
+        "qwen-swe/swe-vuejs__core-11899-codegraph",
+        "qwen-swe/swe-facebook__docusaurus-9183-codegraph"
+      ]
+    },
+    {
+      "modelId": "qwen",
+      "cohort": "swe",
+      "split": "pilot",
+      "conditionId": "swe-pilot-v2-waves",
+      "admittedConcurrency": 2,
+      "arm": "ordinary",
+      "nativeIndexApplicable": false,
+      "plannedCells": 4,
+      "distinctSourceTasks": 4,
+      "signedPremodelCells": 0,
+      "expectedSuccessfulIndexCells": 0,
+      "successfulIndexDistinctSourceTasks": 0,
+      "coldIndexMs": null,
+      "setupLogicalBytes": null,
+      "actualAllocatedBytes": null,
+      "cellIds": [
+        "qwen-swe/swe-preactjs__preact-3562-ordinary",
+        "qwen-swe/swe-axios__axios-5085-ordinary",
+        "qwen-swe/swe-vuejs__core-11899-ordinary",
+        "qwen-swe/swe-facebook__docusaurus-9183-ordinary"
+      ]
+    }
+  ],
+  "measurementInterval": {
+    "startedAt": "2026-10-19T03:30:41.7542195+08:00",
+    "completedAt": "2026-10-19T03:30:47.2055938+08:00"
+  },
+  "allocationStatus": "separate-collector-receipt-supplied",
+  "retainedBuckets": {
+    "successfulFormal": {
+      "inventories": 191,
+      "known": 191,
+      "missing": 0,
+      "uniqueFileIds": 286,
+      "knownBytes": 14039496216,
+      "completeBytes": 14039496216
+    },
+    "infrastructureFailureRetained": {
+      "inventories": 3,
+      "known": 3,
+      "missing": 0,
+      "uniqueFileIds": 9,
+      "knownBytes": 197423824,
+      "completeBytes": 197423824
+    },
+    "allRetained": {
+      "inventories": 194,
+      "known": 194,
+      "missing": 0,
+      "uniqueFileIds": 295,
+      "knownBytes": 14236920040,
+      "completeBytes": 14236920040
+    }
+  },
+  "failures": [
+    {
+      "id": "gpt-context/ctx-mui__material-ui-34229-codegraph",
+      "metadataSha256": "33e92e569c953b3fb63a9d59ad1c14441054cbbcf996d7afa26c3edeed18bfee",
+      "reason": "native-init-failed-before-model",
+      "failedPreparationCount": 3,
+      "failedPreparationWallMs": 74103.92070000076,
+      "canonicalSlotWallMs": 28109.555399999997,
+      "archivedPreparationWallMs": 45994.36530000076,
+      "historyOverlap": "includes-canonical-slot-wall",
+      "costRefs": [
+        {
+          "phase": "context-confirmation-v2",
+          "metadataSha256": "3ecb069e695e573e3214b10b2d9a5aa807c2797e092d6621b966ea5f26fcfa7b",
+          "slotWallMs": 22917.95350000076,
+          "canonical": false
+        },
+        {
+          "phase": "context-confirmation-v3",
+          "metadataSha256": "5c34ee4cbffa9196abfa3a19c322e9eb82b0ce9bd4c0074dd65543d5adbf133b",
+          "slotWallMs": 23076.4118,
+          "canonical": false
+        },
+        {
+          "phase": "context-confirmation-onecell-v1",
+          "metadataSha256": "33e92e569c953b3fb63a9d59ad1c14441054cbbcf996d7afa26c3edeed18bfee",
+          "slotWallMs": 28109.555399999997,
+          "canonical": true
+        }
+      ],
+      "inventories": [
+        {
+          "id": "gpt-context/ctx-mui__material-ui-34229-codegraph",
+          "formal": true,
+          "phase": "context-confirmation-onecell-v1",
+          "metadataSha256": "33e92e569c953b3fb63a9d59ad1c14441054cbbcf996d7afa26c3edeed18bfee",
+          "status": "failure-inventory-measured",
+          "allocationSizeBytes": 98267376,
+          "files": [
+            {
+              "identity": "file-000179",
+              "allocationSizeBytes": 232
+            },
+            {
+              "identity": "file-000180",
+              "allocationSizeBytes": 98267136
+            },
+            {
+              "identity": "file-000181",
+              "allocationSizeBytes": 8
+            }
+          ]
+        },
+        {
+          "id": "gpt-context/ctx-mui__material-ui-34229-codegraph",
+          "formal": false,
+          "phase": "context-confirmation-v2",
+          "metadataSha256": "3ecb069e695e573e3214b10b2d9a5aa807c2797e092d6621b966ea5f26fcfa7b",
+          "status": "failure-inventory-measured",
+          "allocationSizeBytes": 40075504,
+          "files": [
+            {
+              "identity": "file-000290",
+              "allocationSizeBytes": 232
+            },
+            {
+              "identity": "file-000291",
+              "allocationSizeBytes": 40075264
+            },
+            {
+              "identity": "file-000292",
+              "allocationSizeBytes": 8
+            }
+          ]
+        },
+        {
+          "id": "gpt-context/ctx-mui__material-ui-34229-codegraph",
+          "formal": false,
+          "phase": "context-confirmation-v3",
+          "metadataSha256": "5c34ee4cbffa9196abfa3a19c322e9eb82b0ce9bd4c0074dd65543d5adbf133b",
+          "status": "failure-inventory-measured",
+          "allocationSizeBytes": 59080944,
+          "files": [
+            {
+              "identity": "file-000293",
+              "allocationSizeBytes": 232
+            },
+            {
+              "identity": "file-000294",
+              "allocationSizeBytes": 59080704
+            },
+            {
+              "identity": "file-000295",
+              "allocationSizeBytes": 8
+            }
+          ]
+        }
+      ],
+      "retainedAllocation": {
+        "inventories": 3,
+        "known": 3,
+        "missing": 0,
+        "uniqueFileIds": 9,
+        "knownBytes": 197423824,
+        "completeBytes": 197423824
+      }
+    }
+  ],
+  "provenance": {
+    "rows": "adapted.json/nonTimingData.rows (logical bytes); adapted.json/timing.rows[].clocks.indexDurationMs (cold elapsed)",
+    "allocation": "adapted.json/nonTimingData.allocation (opaque file identities, retained inventories, measurement interval)",
+    "costs": "adapted.json/nonTimingData.infrastructure; failedPreparationWallMs includes canonicalSlotWallMs"
+  },
+  "source": {
+    "adaptedSha256": "59aaf2768a66ba6624211f6327ab2c68c34641c0fa9bdade653426e5d8601405",
+    "prerequisite": "ROOT verified original timing-regime public bundle before invoking this exporter"
+  }
+}

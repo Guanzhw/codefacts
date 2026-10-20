@@ -1,0 +1,324 @@
+[
+  {
+    "instance_id": "clap-rs__clap-2534",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "9e83a909fa26538bd6fbbf9babb5904827ca0be4",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "src/build/app/mod.rs",
+            "src/build/arg/mod.rs",
+            "src/output/help.rs"
+          ],
+          "spans": {
+            "src/build/app/mod.rs": [
+              {
+                "start": 96,
+                "end": 96
+              },
+              {
+                "start": 220,
+                "end": 220
+              },
+              {
+                "start": 225,
+                "end": 225
+              },
+              {
+                "start": 230,
+                "end": 230
+              },
+              {
+                "start": 1054,
+                "end": 1055
+              },
+              {
+                "start": 1064,
+                "end": 1064
+              },
+              {
+                "start": 1070,
+                "end": 1070
+              },
+              {
+                "start": 1073,
+                "end": 1074
+              },
+              {
+                "start": 1080,
+                "end": 1080
+              },
+              {
+                "start": 1083,
+                "end": 1083
+              },
+              {
+                "start": 2850,
+                "end": 2850
+              }
+            ],
+            "src/build/arg/mod.rs": [
+              {
+                "start": 118,
+                "end": 118
+              },
+              {
+                "start": 155,
+                "end": 156
+              },
+              {
+                "start": 2454,
+                "end": 2454
+              },
+              {
+                "start": 2496,
+                "end": 2496
+              },
+              {
+                "start": 4047,
+                "end": 4047
+              },
+              {
+                "start": 4587,
+                "end": 4588
+              },
+              {
+                "start": 4747,
+                "end": 4747
+              },
+              {
+                "start": 5006,
+                "end": 5006
+              }
+            ],
+            "src/output/help.rs": [
+              {
+                "start": 44,
+                "end": 44
+              },
+              {
+                "start": 86,
+                "end": 86
+              },
+              {
+                "start": 92,
+                "end": 92
+              },
+              {
+                "start": 112,
+                "end": 112
+              },
+              {
+                "start": 117,
+                "end": 117
+              },
+              {
+                "start": 122,
+                "end": 122
+              },
+              {
+                "start": 176,
+                "end": 176
+              },
+              {
+                "start": 184,
+                "end": 184
+              },
+              {
+                "start": 192,
+                "end": 192
+              },
+              {
+                "start": 196,
+                "end": 196
+              },
+              {
+                "start": 202,
+                "end": 202
+              },
+              {
+                "start": 213,
+                "end": 213
+              },
+              {
+                "start": 244,
+                "end": 244
+              },
+              {
+                "start": 252,
+                "end": 252
+              },
+              {
+                "start": 263,
+                "end": 263
+              },
+              {
+                "start": 268,
+                "end": 268
+              },
+              {
+                "start": 272,
+                "end": 272
+              },
+              {
+                "start": 324,
+                "end": 324
+              },
+              {
+                "start": 391,
+                "end": 392
+              },
+              {
+                "start": 408,
+                "end": 408
+              },
+              {
+                "start": 457,
+                "end": 457
+              },
+              {
+                "start": 462,
+                "end": 462
+              },
+              {
+                "start": 464,
+                "end": 464
+              },
+              {
+                "start": 473,
+                "end": 473
+              },
+              {
+                "start": 494,
+                "end": 494
+              },
+              {
+                "start": 511,
+                "end": 511
+              },
+              {
+                "start": 516,
+                "end": 516
+              },
+              {
+                "start": 524,
+                "end": 524
+              },
+              {
+                "start": 531,
+                "end": 531
+              },
+              {
+                "start": 534,
+                "end": 534
+              },
+              {
+                "start": 538,
+                "end": 539
+              },
+              {
+                "start": 715,
+                "end": 715
+              },
+              {
+                "start": 724,
+                "end": 725
+              },
+              {
+                "start": 756,
+                "end": 757
+              },
+              {
+                "start": 772,
+                "end": 772
+              },
+              {
+                "start": 775,
+                "end": 775
+              },
+              {
+                "start": 793,
+                "end": 793
+              },
+              {
+                "start": 799,
+                "end": 799
+              },
+              {
+                "start": 805,
+                "end": 805
+              },
+              {
+                "start": 814,
+                "end": 814
+              },
+              {
+                "start": 871,
+                "end": 872
+              },
+              {
+                "start": 904,
+                "end": 904
+              },
+              {
+                "start": 938,
+                "end": 938
+              },
+              {
+                "start": 948,
+                "end": 948
+              },
+              {
+                "start": 1090,
+                "end": 1091
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/help.rs"
+          ],
+          "spans": {
+            "src/output/help.rs": [
+              {
+                "start": 100,
+                "end": 260
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/help.rs"
+          ],
+          "spans": {
+            "src/output/help.rs": [
+              {
+                "start": 780,
+                "end": 900
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/help.rs"
+          ],
+          "spans": {
+            "src/output/help.rs": [
+              {
+                "start": 1080,
+                "end": 1110
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [],
+      "pred_spans": {}
+    }
+  }
+]

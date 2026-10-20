@@ -1,0 +1,984 @@
+[
+  {
+    "instance_id": "cli__cli-9794",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "435ecd47c0228abd787523947e3a298024689d8d",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command.go",
+            "pkg/cmd/extension/command_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command.go": [
+              {
+                "start": 649,
+                "end": 649
+              }
+            ],
+            "pkg/cmd/extension/command_test.go": [
+              {
+                "start": 992,
+                "end": 992
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/browse/browse.go",
+            "pkg/cmd/extension/manager.go",
+            "pkg/cmd/extension/manager_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/browse/browse.go": [
+              {
+                "start": 222,
+                "end": 222
+              },
+              {
+                "start": 230,
+                "end": 230
+              }
+            ],
+            "pkg/cmd/extension/manager.go": [
+              {
+                "start": 194,
+                "end": 194
+              },
+              {
+                "start": 214,
+                "end": 214
+              },
+              {
+                "start": 242,
+                "end": 242
+              },
+              {
+                "start": 373,
+                "end": 373
+              },
+              {
+                "start": 541,
+                "end": 541
+              }
+            ],
+            "pkg/cmd/extension/manager_test.go": [
+              {
+                "start": 722,
+                "end": 722
+              },
+              {
+                "start": 761,
+                "end": 761
+              },
+              {
+                "start": 806,
+                "end": 806
+              },
+              {
+                "start": 872,
+                "end": 872
+              },
+              {
+                "start": 915,
+                "end": 915
+              },
+              {
+                "start": 967,
+                "end": 967
+              },
+              {
+                "start": 1031,
+                "end": 1031
+              },
+              {
+                "start": 1323,
+                "end": 1323
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/manager.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/manager.go": [
+              {
+                "start": 1,
+                "end": 280
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command.go": [
+              {
+                "start": 560,
+                "end": 676
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "cmd/gen-docs/main.go",
+            "pkg/cmd/extension/command.go",
+            "pkg/cmd/extension/command_test.go",
+            "pkg/cmd/extension/manager.go",
+            "pkg/extensions/extension.go",
+            "pkg/extensions/manager_mock.go"
+          ],
+          "spans": {
+            "cmd/gen-docs/main.go": [
+              {
+                "start": 109,
+                "end": 109
+              }
+            ],
+            "pkg/cmd/extension/command.go": [
+              {
+                "start": 320,
+                "end": 320
+              }
+            ],
+            "pkg/cmd/extension/command_test.go": [
+              {
+                "start": 273,
+                "end": 273
+              },
+              {
+                "start": 277,
+                "end": 277
+              }
+            ],
+            "pkg/cmd/extension/manager.go": [
+              {
+                "start": 194,
+                "end": 194
+              }
+            ],
+            "pkg/extensions/extension.go": [
+              {
+                "start": 35,
+                "end": 35
+              }
+            ],
+            "pkg/extensions/manager_mock.go": [
+              {
+                "start": 34,
+                "end": 35
+              },
+              {
+                "start": 65,
+                "end": 66
+              },
+              {
+                "start": 107,
+                "end": 108
+              },
+              {
+                "start": 132,
+                "end": 132
+              },
+              {
+                "start": 281,
+                "end": 284
+              },
+              {
+                "start": 291,
+                "end": 294
+              },
+              {
+                "start": 297,
+                "end": 297
+              },
+              {
+                "start": 300,
+                "end": 301
+              },
+              {
+                "start": 307,
+                "end": 309
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command.go",
+            "pkg/cmd/extension/command_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command.go": [
+              {
+                "start": 330,
+                "end": 330
+              },
+              {
+                "start": 642,
+                "end": 642
+              }
+            ],
+            "pkg/cmd/extension/command_test.go": [
+              {
+                "start": 934,
+                "end": 934
+              },
+              {
+                "start": 1017,
+                "end": 1017
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command.go": [
+              {
+                "start": 24,
+                "end": 24
+              },
+              {
+                "start": 306,
+                "end": 308
+              },
+              {
+                "start": 314,
+                "end": 314
+              },
+              {
+                "start": 336,
+                "end": 336
+              },
+              {
+                "start": 450,
+                "end": 450
+              },
+              {
+                "start": 597,
+                "end": 597
+              },
+              {
+                "start": 606,
+                "end": 606
+              },
+              {
+                "start": 610,
+                "end": 610
+              },
+              {
+                "start": 655,
+                "end": 655
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command.go": [
+              {
+                "start": 280,
+                "end": 360
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command_test.go": [
+              {
+                "start": 230,
+                "end": 330
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command_test.go": [
+              {
+                "start": 920,
+                "end": 1030
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command_test.go": [
+              {
+                "start": 1,
+                "end": 230
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command_test.go": [
+              {
+                "start": 830,
+                "end": 930
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/manager_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/manager_test.go": [
+              {
+                "start": 258,
+                "end": 258
+              },
+              {
+                "start": 295,
+                "end": 295
+              },
+              {
+                "start": 315,
+                "end": 315
+              },
+              {
+                "start": 331,
+                "end": 331
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/manager_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/manager_test.go": [
+              {
+                "start": 66,
+                "end": 66
+              },
+              {
+                "start": 98,
+                "end": 98
+              },
+              {
+                "start": 137,
+                "end": 137
+              },
+              {
+                "start": 165,
+                "end": 165
+              },
+              {
+                "start": 189,
+                "end": 189
+              },
+              {
+                "start": 204,
+                "end": 204
+              },
+              {
+                "start": 214,
+                "end": 214
+              },
+              {
+                "start": 230,
+                "end": 230
+              },
+              {
+                "start": 268,
+                "end": 268
+              },
+              {
+                "start": 305,
+                "end": 305
+              },
+              {
+                "start": 320,
+                "end": 320
+              },
+              {
+                "start": 336,
+                "end": 336
+              },
+              {
+                "start": 360,
+                "end": 360
+              },
+              {
+                "start": 384,
+                "end": 384
+              },
+              {
+                "start": 409,
+                "end": 409
+              },
+              {
+                "start": 487,
+                "end": 487
+              },
+              {
+                "start": 551,
+                "end": 551
+              },
+              {
+                "start": 616,
+                "end": 616
+              },
+              {
+                "start": 669,
+                "end": 669
+              },
+              {
+                "start": 694,
+                "end": 694
+              },
+              {
+                "start": 722,
+                "end": 722
+              },
+              {
+                "start": 761,
+                "end": 761
+              },
+              {
+                "start": 806,
+                "end": 806
+              },
+              {
+                "start": 872,
+                "end": 872
+              },
+              {
+                "start": 915,
+                "end": 915
+              },
+              {
+                "start": 967,
+                "end": 967
+              },
+              {
+                "start": 1031,
+                "end": 1031
+              },
+              {
+                "start": 1105,
+                "end": 1105
+              },
+              {
+                "start": 1131,
+                "end": 1131
+              },
+              {
+                "start": 1158,
+                "end": 1158
+              },
+              {
+                "start": 1207,
+                "end": 1207
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command.go",
+            "pkg/cmd/extension/command_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command.go": [
+              {
+                "start": 644,
+                "end": 644
+              }
+            ],
+            "pkg/cmd/extension/command_test.go": [
+              {
+                "start": 982,
+                "end": 982
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command.go": [
+              {
+                "start": 1,
+                "end": 40
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command.go": [
+              {
+                "start": 360,
+                "end": 430
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/manager.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/manager.go": [
+              {
+                "start": 520,
+                "end": 580
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/extension.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/extension.go": [
+              {
+                "start": 43,
+                "end": 43
+              },
+              {
+                "start": 47,
+                "end": 47
+              },
+              {
+                "start": 51,
+                "end": 51
+              },
+              {
+                "start": 59,
+                "end": 59
+              },
+              {
+                "start": 181,
+                "end": 181
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/extension.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/extension.go": [
+              {
+                "start": 35,
+                "end": 75
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/extension.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/extension.go": [
+              {
+                "start": 165,
+                "end": 195
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/extension.go",
+            "pkg/cmd/extension/manager.go",
+            "pkg/cmd/extension/manager_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/extension.go": [
+              {
+                "start": 44,
+                "end": 44
+              }
+            ],
+            "pkg/cmd/extension/manager.go": [
+              {
+                "start": 195,
+                "end": 195
+              }
+            ],
+            "pkg/cmd/extension/manager_test.go": [
+              {
+                "start": 1299,
+                "end": 1299
+              },
+              {
+                "start": 1327,
+                "end": 1327
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "go.mod"
+          ],
+          "spans": {
+            "go.mod": [
+              {
+                "start": 1,
+                "end": 15
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command_test.go",
+            "pkg/cmd/extension/manager_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command_test.go": [
+              {
+                "start": 30,
+                "end": 31
+              }
+            ],
+            "pkg/cmd/extension/manager_test.go": [
+              {
+                "start": 1248,
+                "end": 1248
+              },
+              {
+                "start": 1252,
+                "end": 1252
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command.go",
+            "pkg/cmd/extension/command_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command.go": [
+              {
+                "start": 330,
+                "end": 330
+              },
+              {
+                "start": 642,
+                "end": 642
+              }
+            ],
+            "pkg/cmd/extension/command_test.go": [
+              {
+                "start": 934,
+                "end": 934
+              },
+              {
+                "start": 1017,
+                "end": 1017
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/extensions/extension.go"
+          ],
+          "spans": {
+            "pkg/extensions/extension.go": [
+              {
+                "start": 1,
+                "end": 41
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command.go",
+            "pkg/cmd/extension/command_test.go",
+            "pkg/cmd/extension/extension.go",
+            "pkg/cmd/extension/extension_test.go",
+            "pkg/cmd/extension/git.go",
+            "pkg/cmd/extension/http.go",
+            "pkg/cmd/extension/manager.go",
+            "pkg/cmd/extension/manager_test.go",
+            "pkg/cmd/extension/mocks.go",
+            "pkg/cmd/extension/symlink_other.go",
+            "pkg/cmd/extension/symlink_windows.go"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "pkg/cmd/config/clear-cache/clear_cache_test.go",
+            "pkg/cmd/extension/extension_test.go",
+            "pkg/cmd/extension/manager_test.go",
+            "pkg/githubtemplate/github_template_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/config/clear-cache/clear_cache_test.go": [
+              {
+                "start": 14,
+                "end": 14
+              }
+            ],
+            "pkg/cmd/extension/extension_test.go": [
+              {
+                "start": 57,
+                "end": 57
+              }
+            ],
+            "pkg/cmd/extension/manager_test.go": [
+              {
+                "start": 68,
+                "end": 69
+              },
+              {
+                "start": 72,
+                "end": 72
+              },
+              {
+                "start": 80,
+                "end": 81
+              },
+              {
+                "start": 102,
+                "end": 102
+              },
+              {
+                "start": 139,
+                "end": 140
+              },
+              {
+                "start": 167,
+                "end": 168
+              },
+              {
+                "start": 191,
+                "end": 192
+              },
+              {
+                "start": 216,
+                "end": 217
+              },
+              {
+                "start": 232,
+                "end": 236
+              },
+              {
+                "start": 270,
+                "end": 274
+              },
+              {
+                "start": 307,
+                "end": 307
+              },
+              {
+                "start": 322,
+                "end": 322
+              },
+              {
+                "start": 338,
+                "end": 339
+              },
+              {
+                "start": 362,
+                "end": 363
+              },
+              {
+                "start": 386,
+                "end": 387
+              },
+              {
+                "start": 411,
+                "end": 411
+              },
+              {
+                "start": 494,
+                "end": 494
+              },
+              {
+                "start": 558,
+                "end": 558
+              },
+              {
+                "start": 621,
+                "end": 621
+              },
+              {
+                "start": 673,
+                "end": 673
+              },
+              {
+                "start": 696,
+                "end": 697
+              },
+              {
+                "start": 731,
+                "end": 731
+              },
+              {
+                "start": 770,
+                "end": 770
+              },
+              {
+                "start": 796,
+                "end": 796
+              },
+              {
+                "start": 1133,
+                "end": 1133
+              },
+              {
+                "start": 1160,
+                "end": 1160
+              },
+              {
+                "start": 1186,
+                "end": 1186
+              },
+              {
+                "start": 1193,
+                "end": 1193
+              },
+              {
+                "start": 1209,
+                "end": 1209
+              },
+              {
+                "start": 1230,
+                "end": 1230
+              },
+              {
+                "start": 1234,
+                "end": 1234
+              }
+            ],
+            "pkg/githubtemplate/github_template_test.go": [
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 143,
+                "end": 143
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/manager_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/manager_test.go": [
+              {
+                "start": 1120,
+                "end": 1265
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        }
+      ],
+      "pred_files": [
+        "pkg/cmd/extension/command.go",
+        "pkg/cmd/extension/command_test.go",
+        "pkg/cmd/extension/manager.go"
+      ],
+      "pred_spans": {
+        "pkg/cmd/extension/command.go": [
+          {
+            "start": 3,
+            "end": 10
+          },
+          {
+            "start": 311,
+            "end": 344
+          },
+          {
+            "start": 642,
+            "end": 662
+          }
+        ],
+        "pkg/cmd/extension/command_test.go": [
+          {
+            "start": 1,
+            "end": 12
+          },
+          {
+            "start": 269,
+            "end": 308
+          },
+          {
+            "start": 934,
+            "end": 1025
+          }
+        ],
+        "pkg/cmd/extension/manager.go": [
+          {
+            "start": 194,
+            "end": 201
+          }
+        ]
+      }
+    }
+  }
+]

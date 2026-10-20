@@ -1,0 +1,171 @@
+{
+  "kind": "context",
+  "instance_id": "cli__cli-3608",
+  "officialResult": {
+    "instance_id": "cli__cli-3608",
+    "num_steps": 13,
+    "final": {
+      "file": {
+        "coverage": 0.6666666666666666,
+        "precision": 0.6666666666666666,
+        "intersection": 2,
+        "gold_size": 3,
+        "pred_size": 3
+      },
+      "symbol": {
+        "coverage": 0.8333333333333334,
+        "precision": 0.8333333333333334,
+        "intersection": 5,
+        "gold_size": 6,
+        "pred_size": 6
+      },
+      "span": {
+        "coverage": 0.743801652892562,
+        "precision": 0.1380945738596736,
+        "intersection": 990,
+        "gold_size": 1331,
+        "pred_size": 7169
+      },
+      "line": {
+        "coverage": 0.6590909090909091,
+        "precision": 0.10034602076124567,
+        "intersection": 29,
+        "gold_size": 44,
+        "pred_size": 289
+      }
+    },
+    "trajectory": {
+      "steps": [
+        {
+          "step": 1,
+          "coverage": {
+            "file": 1,
+            "symbol": 0.6666666666666666,
+            "span": 0.4567993989481593,
+            "line": 0.20454545454545456
+          }
+        },
+        {
+          "step": 2,
+          "coverage": {
+            "file": 1,
+            "symbol": 0.6666666666666666,
+            "span": 0.4567993989481593,
+            "line": 0.20454545454545456
+          }
+        },
+        {
+          "step": 3,
+          "coverage": {
+            "file": 1,
+            "symbol": 0.8333333333333334,
+            "span": 0.6288504883546205,
+            "line": 0.5227272727272727
+          }
+        },
+        {
+          "step": 4,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.8144252441773103,
+            "line": 0.75
+          }
+        },
+        {
+          "step": 5,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.8144252441773103,
+            "line": 0.75
+          }
+        },
+        {
+          "step": 6,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.8144252441773103,
+            "line": 0.75
+          }
+        },
+        {
+          "step": 7,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.8144252441773103,
+            "line": 0.75
+          }
+        },
+        {
+          "step": 8,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.8542449286250939,
+            "line": 0.7727272727272727
+          }
+        },
+        {
+          "step": 9,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.8542449286250939,
+            "line": 0.7727272727272727
+          }
+        },
+        {
+          "step": 10,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.8542449286250939,
+            "line": 0.7727272727272727
+          }
+        },
+        {
+          "step": 11,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.8542449286250939,
+            "line": 0.7727272727272727
+          }
+        },
+        {
+          "step": 12,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.8542449286250939,
+            "line": 0.7727272727272727
+          }
+        },
+        {
+          "step": 13,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.8542449286250939,
+            "line": 0.7727272727272727
+          }
+        }
+      ],
+      "auc_coverage": {
+        "file": 1,
+        "symbol": 0.9358974358974359,
+        "span": 0.7635092180546726,
+        "line": 0.659090909090909
+      },
+      "redundancy": {
+        "file": 0.08125000000000004,
+        "symbol": 0.34444444444444444,
+        "span": 0.15436450572667626,
+        "line": 0.09472259810554806
+      }
+    }
+  }
+}

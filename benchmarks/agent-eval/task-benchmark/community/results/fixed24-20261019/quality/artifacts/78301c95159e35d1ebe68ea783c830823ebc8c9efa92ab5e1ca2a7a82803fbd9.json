@@ -1,0 +1,7 @@
+[
+  {
+    "instance_id": "tokio-rs__tokio-6603",
+    "model_name_or_path": "deepseek-swe-codegraph",
+    "model_patch": ""
+  }
+]

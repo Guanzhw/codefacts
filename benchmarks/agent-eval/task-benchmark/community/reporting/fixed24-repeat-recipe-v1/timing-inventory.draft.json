@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "kind": "closed-timing-source-inventory",
+  "suiteId": "community-four-family-fixed24-20261017-v1",
+  "status": "draft",
+  "approvedBy": null,
+  "summarySha256": null,
+  "suiteFreezeSha256": null,
+  "serialGroups": [
+    {
+      "conditionId": "REPLACE-NEW-RUN-context-serial",
+      "cohort": "context",
+      "split": null,
+      "closure": {
+        "path": null,
+        "sha256": null
+      }
+    }
+  ],
+  "executions": [
+    {
+      "id": "REPLACE-NEW-RUN-swe-pilot-v2",
+      "conditionId": "REPLACE-NEW-RUN-swe-pilot-waves",
+      "decision": {
+        "path": null,
+        "sha256": null
+      },
+      "amendment": {
+        "path": null,
+        "sha256": null
+      },
+      "origin": {
+        "path": null,
+        "sha256": null
+      },
+      "owner": {
+        "path": null,
+        "sha256": null
+      },
+      "exit": {
+        "path": null,
+        "sha256": null
+      },
+      "waves": []
+    },
+    {
+      "id": "REPLACE-NEW-RUN-swe-confirm-v3",
+      "conditionId": "REPLACE-NEW-RUN-swe-confirm-rolling",
+      "decision": {
+        "path": null,
+        "sha256": null
+      },
+      "amendment": {
+        "path": null,
+        "sha256": null
+      },
+      "origin": {
+        "path": null,
+        "sha256": null
+      },
+      "owner": {
+        "path": null,
+        "sha256": null
+      },
+      "exit": {
+        "path": null,
+        "sha256": null
+      },
+      "freeze": {
+        "path": null,
+        "sha256": null
+      },
+      "capacity": {
+        "path": null,
+        "sha256": null
+      },
+      "ledger": {
+        "path": null,
+        "sha256": null
+      },
+      "pilotReview": {
+        "path": null,
+        "sha256": null
+      },
+      "initialBoundary": {
+        "path": null,
+        "sha256": null
+      },
+      "verifyEnd": {
+        "path": null,
+        "sha256": null
+      },
+      "phaseOutcomes": {
+        "path": null,
+        "sha256": null
+      },
+      "controllerArtifact": {
+        "path": null,
+        "sha256": null
+      },
+      "receiptJournal": {
+        "path": null,
+        "sha256": null
+      },
+      "capacityLedger": {
+        "path": null,
+        "sha256": null
+      },
+      "artifactFiles": [],
+      "jobs": []
+    }
+  ],
+  "originSerialConditionId": "REPLACE-NEW-RUN-swe-first46-serial"
+}

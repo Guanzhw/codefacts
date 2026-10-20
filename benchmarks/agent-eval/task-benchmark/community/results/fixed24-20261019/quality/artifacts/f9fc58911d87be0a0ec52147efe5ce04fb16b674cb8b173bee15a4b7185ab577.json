@@ -1,0 +1,7 @@
+[
+  {
+    "instance_id": "preactjs__preact-3562",
+    "model_name_or_path": "deepseek-swe-codefacts022",
+    "model_patch": "diff --git a/compat/src/render.js b/compat/src/render.js\nindex fa1544b..73c6049 100644\n--- a/compat/src/render.js\n+++ b/compat/src/render.js\n@@ -161,6 +161,24 @@ options.vnode = vnode => {\n \t\t\t\tvalue = undefined;\n \t\t\t}\n \n+\t\t\t// `onInput` and the normalized `onChange` (see above) both map\n+\t\t\t// onto the same DOM `input` event. Normalize them to the same key\n+\t\t\t// and chain the handlers so both callbacks are invoked instead of\n+\t\t\t// the last one silently winning. See #3562\n+\t\t\tif (/^oninput$/i.test(i)) {\n+\t\t\t\ti = 'oninput';\n+\t\t\t\tif (typeof value == 'function') {\n+\t\t\t\t\tconst prev = normalizedProps[i];\n+\t\t\t\t\tif (typeof prev == 'function') {\n+\t\t\t\t\t\tnormalizedProps[i] = e => {\n+\t\t\t\t\t\t\tprev(e);\n+\t\t\t\t\t\t\tvalue(e);\n+\t\t\t\t\t\t};\n+\t\t\t\t\t\tcontinue;\n+\t\t\t\t\t}\n+\t\t\t\t}\n+\t\t\t}\n+\n \t\t\tnormalizedProps[i] = value;\n \t\t}\n \n"
+  }
+]

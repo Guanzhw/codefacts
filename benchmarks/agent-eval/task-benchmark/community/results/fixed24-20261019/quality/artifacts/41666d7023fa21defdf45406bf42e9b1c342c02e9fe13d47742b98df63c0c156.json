@@ -1,0 +1,4045 @@
+[
+  {
+    "instance_id": "clap-rs__clap-4248",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "baaee3d5105b66b8c3a3141f57013b58959a9fdd",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "clap_bench/benches/01_default.rs",
+            "clap_bench/benches/02_simple.rs",
+            "clap_bench/benches/03_complex.rs",
+            "clap_bench/benches/04_new_help.rs",
+            "clap_bench/benches/05_ripgrep.rs",
+            "clap_bench/benches/06_rustup.rs",
+            "clap_bench/src/lib.rs",
+            "clap_complete/examples/completion-derive.rs",
+            "clap_complete/examples/completion.rs",
+            "clap_complete/examples/dynamic.rs",
+            "clap_complete/src/dynamic.rs",
+            "clap_complete/src/generator/mod.rs",
+            "clap_complete/src/generator/utils.rs",
+            "clap_complete/src/lib.rs",
+            "clap_complete/src/macros.rs",
+            "clap_complete/src/shells/bash.rs",
+            "clap_complete/src/shells/elvish.rs",
+            "clap_complete/src/shells/fish.rs",
+            "clap_complete/src/shells/mod.rs",
+            "clap_complete/src/shells/powershell.rs",
+            "clap_complete/src/shells/shell.rs",
+            "clap_complete/src/shells/zsh.rs",
+            "clap_complete/tests/bash.rs",
+            "clap_complete/tests/common.rs",
+            "clap_complete/tests/dynamic.rs",
+            "clap_complete/tests/elvish.rs",
+            "clap_complete/tests/examples.rs",
+            "clap_complete/tests/fish.rs",
+            "clap_complete/tests/general.rs",
+            "clap_complete/tests/powershell.rs",
+            "clap_complete/tests/zsh.rs",
+            "clap_complete_fig/examples/fig_completion.rs",
+            "clap_complete_fig/src/fig.rs",
+            "clap_complete_fig/src/lib.rs",
+            "clap_complete_fig/tests/common.rs",
+            "clap_complete_fig/tests/fig.rs",
+            "clap_derive/src/attr.rs",
+            "clap_derive/src/derives/args.rs",
+            "clap_derive/src/derives/into_app.rs",
+            "clap_derive/src/derives/mod.rs",
+            "clap_derive/src/derives/parser.rs",
+            "clap_derive/src/derives/subcommand.rs",
+            "clap_derive/src/derives/value_enum.rs",
+            "clap_derive/src/dummies.rs",
+            "clap_derive/src/item.rs",
+            "clap_derive/src/lib.rs",
+            "clap_derive/src/utils/doc_comments.rs",
+            "clap_derive/src/utils/mod.rs",
+            "clap_derive/src/utils/spanned.rs",
+            "clap_derive/src/utils/ty.rs",
+            "clap_lex/src/lib.rs",
+            "clap_lex/tests/lexer.rs",
+            "clap_lex/tests/parsed.rs",
+            "clap_lex/tests/shorts.rs",
+            "clap_mangen/examples/man.rs",
+            "clap_mangen/src/lib.rs",
+            "clap_mangen/src/render.rs",
+            "clap_mangen/tests/common.rs",
+            "clap_mangen/tests/roff.rs",
+            "examples/cargo-example-derive.rs",
+            "examples/cargo-example.rs",
+            "examples/demo.rs",
+            "examples/derive_ref/augment_args.rs",
+            "examples/derive_ref/augment_subcommands.rs",
+            "examples/derive_ref/flatten_hand_args.rs",
+            "examples/derive_ref/hand_subcommand.rs",
+            "examples/escaped-positional-derive.rs",
+            "examples/escaped-positional.rs",
+            "examples/find.rs",
+            "examples/git-derive.rs",
+            "examples/git.rs",
+            "examples/multicall-busybox.rs",
+            "examples/multicall-hostname.rs",
+            "examples/pacman.rs",
+            "examples/repl.rs",
+            "examples/tutorial_builder/01_quick.rs",
+            "examples/tutorial_builder/02_app_settings.rs",
+            "examples/tutorial_builder/02_apps.rs",
+            "examples/tutorial_builder/02_crate.rs",
+            "examples/tutorial_builder/03_01_flag_bool.rs",
+            "examples/tutorial_builder/03_01_flag_count.rs",
+            "examples/tutorial_builder/03_02_option.rs",
+            "examples/tutorial_builder/03_02_option_mult.rs",
+            "examples/tutorial_builder/03_03_positional.rs",
+            "examples/tutorial_builder/03_03_positional_mult.rs",
+            "examples/tutorial_builder/03_04_subcommands.rs",
+            "examples/tutorial_builder/03_05_default_values.rs",
+            "examples/tutorial_builder/04_01_enum.rs",
+            "examples/tutorial_builder/04_01_possible.rs",
+            "examples/tutorial_builder/04_02_parse.rs",
+            "examples/tutorial_builder/04_02_validate.rs",
+            "examples/tutorial_builder/04_03_relations.rs",
+            "examples/tutorial_builder/04_04_custom.rs",
+            "examples/tutorial_builder/05_01_assert.rs",
+            "examples/tutorial_derive/01_quick.rs",
+            "examples/tutorial_derive/02_app_settings.rs",
+            "examples/tutorial_derive/02_apps.rs",
+            "examples/tutorial_derive/02_crate.rs",
+            "examples/tutorial_derive/03_01_flag_bool.rs",
+            "examples/tutorial_derive/03_01_flag_count.rs",
+            "examples/tutorial_derive/03_02_option.rs",
+            "examples/tutorial_derive/03_02_option_mult.rs",
+            "examples/tutorial_derive/03_03_positional.rs",
+            "examples/tutorial_derive/03_03_positional_mult.rs",
+            "examples/tutorial_derive/03_04_subcommands.rs",
+            "examples/tutorial_derive/03_04_subcommands_alt.rs",
+            "examples/tutorial_derive/03_05_default_values.rs",
+            "examples/tutorial_derive/04_01_enum.rs",
+            "examples/tutorial_derive/04_02_parse.rs",
+            "examples/tutorial_derive/04_02_validate.rs",
+            "examples/tutorial_derive/04_03_relations.rs",
+            "examples/tutorial_derive/04_04_custom.rs",
+            "examples/tutorial_derive/05_01_assert.rs",
+            "examples/typed-derive.rs",
+            "src/_cookbook/cargo_example.rs",
+            "src/_cookbook/cargo_example_derive.rs",
+            "src/_cookbook/escaped_positional.rs",
+            "src/_cookbook/escaped_positional_derive.rs",
+            "src/_cookbook/find.rs",
+            "src/_cookbook/git.rs",
+            "src/_cookbook/git_derive.rs",
+            "src/_cookbook/mod.rs",
+            "src/_cookbook/multicall_busybox.rs",
+            "src/_cookbook/multicall_hostname.rs",
+            "src/_cookbook/pacman.rs",
+            "src/_cookbook/repl.rs",
+            "src/_cookbook/typed_derive.rs",
+            "src/_derive/_tutorial.rs",
+            "src/_derive/mod.rs",
+            "src/_faq.rs",
+            "src/_features.rs",
+            "src/_tutorial.rs",
+            "src/bin/stdio-fixture.rs",
+            "src/builder/action.rs",
+            "src/builder/app_settings.rs",
+            "src/builder/arg.rs",
+            "src/builder/arg_group.rs",
+            "src/builder/arg_predicate.rs",
+            "src/builder/arg_settings.rs",
+            "src/builder/command.rs",
+            "src/builder/debug_asserts.rs",
+            "src/builder/mod.rs",
+            "src/builder/os_str.rs",
+            "src/builder/possible_value.rs",
+            "src/builder/range.rs",
+            "src/builder/resettable.rs",
+            "src/builder/str.rs",
+            "src/builder/styled_str.rs",
+            "src/builder/tests.rs",
+            "src/builder/value_hint.rs",
+            "src/builder/value_parser.rs",
+            "src/derive.rs",
+            "src/error/context.rs",
+            "src/error/format.rs",
+            "src/error/kind.rs",
+            "src/error/mod.rs",
+            "src/lib.rs",
+            "src/macros.rs",
+            "src/mkeymap.rs",
+            "src/output/fmt.rs",
+            "src/output/help.rs",
+            "src/output/help_template.rs",
+            "src/output/mod.rs",
+            "src/output/textwrap/core.rs",
+            "src/output/textwrap/mod.rs",
+            "src/output/textwrap/word_separators.rs",
+            "src/output/textwrap/wrap_algorithms.rs",
+            "src/output/usage.rs",
+            "src/parser/arg_matcher.rs",
+            "src/parser/error.rs",
+            "src/parser/features/mod.rs",
+            "src/parser/features/suggestions.rs",
+            "src/parser/matches/any_value.rs",
+            "src/parser/matches/arg_matches.rs",
+            "src/parser/matches/matched_arg.rs",
+            "src/parser/matches/mod.rs",
+            "src/parser/matches/value_source.rs",
+            "src/parser/mod.rs",
+            "src/parser/parser.rs",
+            "src/parser/validator.rs",
+            "src/util/color.rs",
+            "src/util/flat_map.rs",
+            "src/util/flat_set.rs",
+            "src/util/graph.rs",
+            "src/util/id.rs",
+            "src/util/mod.rs",
+            "src/util/str_to_bool.rs",
+            "tests/builder/action.rs",
+            "tests/builder/app_settings.rs",
+            "tests/builder/arg_aliases.rs",
+            "tests/builder/arg_aliases_short.rs",
+            "tests/builder/arg_matches.rs",
+            "tests/builder/borrowed.rs",
+            "tests/builder/cargo.rs",
+            "tests/builder/command.rs",
+            "tests/builder/conflicts.rs",
+            "tests/builder/default_missing_vals.rs",
+            "tests/builder/default_vals.rs",
+            "tests/builder/delimiters.rs",
+            "tests/builder/derive_order.rs",
+            "tests/builder/display_order.rs",
+            "tests/builder/double_require.rs",
+            "tests/builder/empty_values.rs",
+            "tests/builder/env.rs",
+            "tests/builder/error.rs",
+            "tests/builder/flag_subcommands.rs",
+            "tests/builder/flags.rs",
+            "tests/builder/global_args.rs",
+            "tests/builder/grouped_values.rs",
+            "tests/builder/groups.rs",
+            "tests/builder/help.rs",
+            "tests/builder/help_env.rs",
+            "tests/builder/hidden_args.rs",
+            "tests/builder/ignore_errors.rs",
+            "tests/builder/indices.rs",
+            "tests/builder/main.rs",
+            "tests/builder/multiple_occurrences.rs",
+            "tests/builder/multiple_values.rs",
+            "tests/builder/opts.rs",
+            "tests/builder/positionals.rs",
+            "tests/builder/posix_compatible.rs",
+            "tests/builder/possible_values.rs",
+            "tests/builder/propagate_globals.rs",
+            "tests/builder/require.rs",
+            "tests/builder/subcommands.rs",
+            "tests/builder/template_help.rs",
+            "tests/builder/tests.rs",
+            "tests/builder/unicode.rs",
+            "tests/builder/unique_args.rs",
+            "tests/builder/utf16.rs",
+            "tests/builder/utf8.rs",
+            "tests/builder/utils.rs",
+            "tests/builder/version.rs",
+            "tests/derive/app_name.rs",
+            "tests/derive/arguments.rs",
+            "tests/derive/author_version_about.rs",
+            "tests/derive/basic.rs",
+            "tests/derive/boxed.rs",
+            "tests/derive/custom_string_parsers.rs",
+            "tests/derive/default_value.rs",
+            "tests/derive/deny_warnings.rs",
+            "tests/derive/doc_comments_help.rs",
+            "tests/derive/explicit_name_no_renaming.rs",
+            "tests/derive/flags.rs",
+            "tests/derive/flatten.rs",
+            "tests/derive/generic.rs",
+            "tests/derive/groups.rs",
+            "tests/derive/help.rs",
+            "tests/derive/issues.rs",
+            "tests/derive/macros.rs",
+            "tests/derive/main.rs",
+            "tests/derive/naming.rs",
+            "tests/derive/nested_subcommands.rs",
+            "tests/derive/non_literal_attributes.rs",
+            "tests/derive/options.rs",
+            "tests/derive/privacy.rs",
+            "tests/derive/raw_bool_literal.rs",
+            "tests/derive/raw_idents.rs",
+            "tests/derive/rename_all_env.rs",
+            "tests/derive/skip.rs",
+            "tests/derive/subcommands.rs",
+            "tests/derive/type_alias_regressions.rs",
+            "tests/derive/utf8.rs",
+            "tests/derive/utils.rs",
+            "tests/derive/value_enum.rs",
+            "tests/derive_ui.rs",
+            "tests/derive_ui/bool_value_enum.rs",
+            "tests/derive_ui/clap_empty_attr.rs",
+            "tests/derive_ui/default_value_t_invalid.rs",
+            "tests/derive_ui/default_values_t_invalid.rs",
+            "tests/derive_ui/enum_flatten.rs",
+            "tests/derive_ui/enum_variant_not_args.rs",
+            "tests/derive_ui/external_subcommand_misuse.rs",
+            "tests/derive_ui/external_subcommand_wrong_type.rs",
+            "tests/derive_ui/flatten_and_methods.rs",
+            "tests/derive_ui/flatten_enum_in_struct.rs",
+            "tests/derive_ui/flatten_struct_in_enum.rs",
+            "tests/derive_ui/multiple_external_subcommand.rs",
+            "tests/derive_ui/non_existent_attr.rs",
+            "tests/derive_ui/rename_all_wrong_casing.rs",
+            "tests/derive_ui/skip_flatten.rs",
+            "tests/derive_ui/skip_subcommand.rs",
+            "tests/derive_ui/skip_with_other_options.rs",
+            "tests/derive_ui/skip_without_default.rs",
+            "tests/derive_ui/struct_subcommand.rs",
+            "tests/derive_ui/subcommand_and_flatten.rs",
+            "tests/derive_ui/subcommand_and_methods.rs",
+            "tests/derive_ui/subcommand_on_struct.rs",
+            "tests/derive_ui/subcommand_opt_opt.rs",
+            "tests/derive_ui/subcommand_opt_vec.rs",
+            "tests/derive_ui/tuple_struct.rs",
+            "tests/derive_ui/value_enum_non_unit.rs",
+            "tests/derive_ui/value_enum_on_struct.rs",
+            "tests/examples.rs",
+            "tests/macros.rs",
+            "tests/ui.rs"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "src/output/mod.rs"
+          ],
+          "spans": {
+            "src/output/mod.rs": [
+              {
+                "start": 1,
+                "end": 23
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/styled_str.rs"
+          ],
+          "spans": {
+            "src/builder/styled_str.rs": [
+              {
+                "start": 1,
+                "end": 260
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/action.rs",
+            "src/builder/arg.rs",
+            "src/builder/command.rs",
+            "src/builder/mod.rs",
+            "src/error/format.rs",
+            "src/error/mod.rs",
+            "src/macros.rs",
+            "src/output/help.rs",
+            "src/output/help_template.rs"
+          ],
+          "spans": {
+            "src/builder/action.rs": [
+              {
+                "start": 209,
+                "end": 209
+              }
+            ],
+            "src/builder/arg.rs": [
+              {
+                "start": 4116,
+                "end": 4116
+              },
+              {
+                "start": 4119,
+                "end": 4120
+              },
+              {
+                "start": 4122,
+                "end": 4123
+              },
+              {
+                "start": 4125,
+                "end": 4126
+              },
+              {
+                "start": 4130,
+                "end": 4130
+              },
+              {
+                "start": 4138,
+                "end": 4138
+              },
+              {
+                "start": 4140,
+                "end": 4140
+              },
+              {
+                "start": 4144,
+                "end": 4144
+              },
+              {
+                "start": 4146,
+                "end": 4146
+              },
+              {
+                "start": 4152,
+                "end": 4152
+              },
+              {
+                "start": 4154,
+                "end": 4154
+              },
+              {
+                "start": 4157,
+                "end": 4157
+              },
+              {
+                "start": 4160,
+                "end": 4160
+              }
+            ],
+            "src/builder/command.rs": [
+              {
+                "start": 24,
+                "end": 24
+              },
+              {
+                "start": 720,
+                "end": 720
+              },
+              {
+                "start": 723,
+                "end": 723
+              },
+              {
+                "start": 727,
+                "end": 727
+              },
+              {
+                "start": 729,
+                "end": 729
+              },
+              {
+                "start": 731,
+                "end": 731
+              },
+              {
+                "start": 737,
+                "end": 737
+              },
+              {
+                "start": 754,
+                "end": 754
+              },
+              {
+                "start": 756,
+                "end": 756
+              },
+              {
+                "start": 758,
+                "end": 758
+              },
+              {
+                "start": 773,
+                "end": 773
+              },
+              {
+                "start": 778,
+                "end": 778
+              },
+              {
+                "start": 781,
+                "end": 781
+              },
+              {
+                "start": 783,
+                "end": 784
+              },
+              {
+                "start": 790,
+                "end": 790
+              },
+              {
+                "start": 807,
+                "end": 807
+              },
+              {
+                "start": 809,
+                "end": 810
+              },
+              {
+                "start": 870,
+                "end": 870
+              },
+              {
+                "start": 872,
+                "end": 873
+              },
+              {
+                "start": 876,
+                "end": 876
+              },
+              {
+                "start": 2915,
+                "end": 2915
+              },
+              {
+                "start": 3027,
+                "end": 3027
+              },
+              {
+                "start": 3054,
+                "end": 3054
+              },
+              {
+                "start": 3091,
+                "end": 3091
+              },
+              {
+                "start": 3118,
+                "end": 3118
+              },
+              {
+                "start": 4282,
+                "end": 4286
+              },
+              {
+                "start": 4487,
+                "end": 4487
+              },
+              {
+                "start": 4489,
+                "end": 4489
+              },
+              {
+                "start": 4497,
+                "end": 4498
+              },
+              {
+                "start": 4500,
+                "end": 4500
+              },
+              {
+                "start": 4505,
+                "end": 4507
+              }
+            ],
+            "src/builder/mod.rs": [
+              {
+                "start": 15,
+                "end": 15
+              },
+              {
+                "start": 36,
+                "end": 36
+              }
+            ],
+            "src/error/format.rs": [
+              {
+                "start": 32,
+                "end": 33
+              },
+              {
+                "start": 35,
+                "end": 35
+              },
+              {
+                "start": 37,
+                "end": 37
+              },
+              {
+                "start": 39,
+                "end": 39
+              },
+              {
+                "start": 41,
+                "end": 42
+              },
+              {
+                "start": 54,
+                "end": 55
+              },
+              {
+                "start": 57,
+                "end": 57
+              },
+              {
+                "start": 59,
+                "end": 59
+              },
+              {
+                "start": 61,
+                "end": 61
+              },
+              {
+                "start": 63,
+                "end": 63
+              },
+              {
+                "start": 69,
+                "end": 69
+              },
+              {
+                "start": 72,
+                "end": 72
+              },
+              {
+                "start": 74,
+                "end": 74
+              },
+              {
+                "start": 78,
+                "end": 80
+              },
+              {
+                "start": 85,
+                "end": 85
+              },
+              {
+                "start": 93,
+                "end": 95
+              },
+              {
+                "start": 99,
+                "end": 99
+              },
+              {
+                "start": 101,
+                "end": 103
+              },
+              {
+                "start": 107,
+                "end": 109
+              },
+              {
+                "start": 112,
+                "end": 112
+              },
+              {
+                "start": 123,
+                "end": 125
+              },
+              {
+                "start": 140,
+                "end": 142
+              },
+              {
+                "start": 144,
+                "end": 147
+              },
+              {
+                "start": 153,
+                "end": 155
+              },
+              {
+                "start": 158,
+                "end": 159
+              },
+              {
+                "start": 161,
+                "end": 161
+              },
+              {
+                "start": 163,
+                "end": 163
+              },
+              {
+                "start": 169,
+                "end": 173
+              },
+              {
+                "start": 183,
+                "end": 185
+              },
+              {
+                "start": 189,
+                "end": 193
+              },
+              {
+                "start": 198,
+                "end": 198
+              },
+              {
+                "start": 201,
+                "end": 202
+              },
+              {
+                "start": 212,
+                "end": 212
+              },
+              {
+                "start": 214,
+                "end": 216
+              },
+              {
+                "start": 226,
+                "end": 228
+              },
+              {
+                "start": 243,
+                "end": 247
+              },
+              {
+                "start": 264,
+                "end": 270
+              },
+              {
+                "start": 284,
+                "end": 287
+              },
+              {
+                "start": 289,
+                "end": 290
+              },
+              {
+                "start": 292,
+                "end": 292
+              },
+              {
+                "start": 310,
+                "end": 316
+              },
+              {
+                "start": 325,
+                "end": 327
+              },
+              {
+                "start": 336,
+                "end": 343
+              },
+              {
+                "start": 346,
+                "end": 350
+              },
+              {
+                "start": 358,
+                "end": 360
+              },
+              {
+                "start": 368,
+                "end": 370
+              },
+              {
+                "start": 394,
+                "end": 396
+              },
+              {
+                "start": 398,
+                "end": 398
+              },
+              {
+                "start": 401,
+                "end": 401
+              },
+              {
+                "start": 403,
+                "end": 403
+              },
+              {
+                "start": 415,
+                "end": 417
+              },
+              {
+                "start": 430,
+                "end": 430
+              },
+              {
+                "start": 432,
+                "end": 434
+              },
+              {
+                "start": 436,
+                "end": 436
+              }
+            ],
+            "src/error/mod.rs": [
+              {
+                "start": 94,
+                "end": 94
+              },
+              {
+                "start": 216,
+                "end": 217
+              },
+              {
+                "start": 274,
+                "end": 275
+              },
+              {
+                "start": 278,
+                "end": 278
+              },
+              {
+                "start": 282,
+                "end": 282
+              },
+              {
+                "start": 286,
+                "end": 287
+              },
+              {
+                "start": 642,
+                "end": 643
+              },
+              {
+                "start": 699,
+                "end": 699
+              },
+              {
+                "start": 701,
+                "end": 701
+              },
+              {
+                "start": 710,
+                "end": 710
+              },
+              {
+                "start": 712,
+                "end": 712
+              }
+            ],
+            "src/macros.rs": [
+              {
+                "start": 651,
+                "end": 655
+              }
+            ],
+            "src/output/help.rs": [
+              {
+                "start": 9,
+                "end": 10
+              },
+              {
+                "start": 29,
+                "end": 29
+              },
+              {
+                "start": 35,
+                "end": 35
+              }
+            ],
+            "src/output/help_template.rs": [
+              {
+                "start": 37,
+                "end": 37
+              },
+              {
+                "start": 829,
+                "end": 830
+              },
+              {
+                "start": 832,
+                "end": 833
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 690,
+                "end": 900
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/fmt.rs"
+          ],
+          "spans": {
+            "src/output/fmt.rs": [
+              {
+                "start": 1,
+                "end": 91
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/error/mod.rs"
+          ],
+          "spans": {
+            "src/error/mod.rs": [
+              {
+                "start": 600,
+                "end": 760
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/error/mod.rs"
+          ],
+          "spans": {
+            "src/error/mod.rs": [
+              {
+                "start": 21,
+                "end": 22
+              },
+              {
+                "start": 92,
+                "end": 92
+              },
+              {
+                "start": 187,
+                "end": 187
+              },
+              {
+                "start": 194,
+                "end": 194
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/styled_str.rs"
+          ],
+          "spans": {
+            "src/builder/styled_str.rs": [
+              {
+                "start": 282,
+                "end": 282
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/styled_str.rs"
+          ],
+          "spans": {
+            "src/builder/styled_str.rs": [
+              {
+                "start": 255,
+                "end": 315
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/error/mod.rs"
+          ],
+          "spans": {
+            "src/error/mod.rs": [
+              {
+                "start": 60,
+                "end": 210
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs",
+            "src/error/mod.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 870,
+                "end": 870
+              },
+              {
+                "start": 872,
+                "end": 873
+              },
+              {
+                "start": 876,
+                "end": 876
+              }
+            ],
+            "src/error/mod.rs": [
+              {
+                "start": 94,
+                "end": 94
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "tests/builder/help.rs",
+            "tests/builder/positionals.rs",
+            "tests/builder/subcommands.rs",
+            "tests/derive/macros.rs"
+          ],
+          "spans": {
+            "tests/builder/help.rs": [
+              {
+                "start": 2661,
+                "end": 2661
+              }
+            ],
+            "tests/builder/positionals.rs": [
+              {
+                "start": 214,
+                "end": 214
+              },
+              {
+                "start": 220,
+                "end": 220
+              },
+              {
+                "start": 229,
+                "end": 229
+              },
+              {
+                "start": 240,
+                "end": 240
+              },
+              {
+                "start": 246,
+                "end": 246
+              }
+            ],
+            "tests/builder/subcommands.rs": [
+              {
+                "start": 346,
+                "end": 346
+              },
+              {
+                "start": 610,
+                "end": 610
+              }
+            ],
+            "tests/derive/macros.rs": [
+              {
+                "start": 18,
+                "end": 18
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/arg.rs",
+            "src/builder/command.rs",
+            "src/builder/mod.rs",
+            "src/builder/possible_value.rs",
+            "src/builder/resettable.rs",
+            "src/builder/styled_str.rs",
+            "src/error/context.rs",
+            "src/error/format.rs",
+            "src/error/mod.rs",
+            "src/macros.rs",
+            "src/output/fmt.rs",
+            "src/output/help.rs",
+            "src/output/help_template.rs",
+            "src/output/textwrap/mod.rs",
+            "src/output/usage.rs",
+            "src/parser/validator.rs"
+          ],
+          "spans": {
+            "src/builder/arg.rs": [
+              {
+                "start": 19,
+                "end": 19
+              },
+              {
+                "start": 57,
+                "end": 58
+              },
+              {
+                "start": 2024,
+                "end": 2024
+              },
+              {
+                "start": 2086,
+                "end": 2086
+              },
+              {
+                "start": 3685,
+                "end": 3685
+              },
+              {
+                "start": 3700,
+                "end": 3700
+              },
+              {
+                "start": 4115,
+                "end": 4116
+              },
+              {
+                "start": 4129,
+                "end": 4130
+              }
+            ],
+            "src/builder/command.rs": [
+              {
+                "start": 18,
+                "end": 18
+              },
+              {
+                "start": 80,
+                "end": 85
+              },
+              {
+                "start": 89,
+                "end": 89
+              },
+              {
+                "start": 91,
+                "end": 91
+              },
+              {
+                "start": 96,
+                "end": 96
+              },
+              {
+                "start": 727,
+                "end": 727
+              },
+              {
+                "start": 754,
+                "end": 754
+              },
+              {
+                "start": 781,
+                "end": 781
+              },
+              {
+                "start": 807,
+                "end": 807
+              },
+              {
+                "start": 876,
+                "end": 876
+              },
+              {
+                "start": 1442,
+                "end": 1442
+              },
+              {
+                "start": 1467,
+                "end": 1467
+              },
+              {
+                "start": 1489,
+                "end": 1489
+              },
+              {
+                "start": 1511,
+                "end": 1511
+              },
+              {
+                "start": 1531,
+                "end": 1531
+              },
+              {
+                "start": 1551,
+                "end": 1551
+              },
+              {
+                "start": 1645,
+                "end": 1645
+              },
+              {
+                "start": 1682,
+                "end": 1682
+              },
+              {
+                "start": 1734,
+                "end": 1734
+              },
+              {
+                "start": 3215,
+                "end": 3215
+              },
+              {
+                "start": 3223,
+                "end": 3223
+              },
+              {
+                "start": 3337,
+                "end": 3337
+              },
+              {
+                "start": 3343,
+                "end": 3343
+              },
+              {
+                "start": 3349,
+                "end": 3349
+              },
+              {
+                "start": 3355,
+                "end": 3355
+              },
+              {
+                "start": 3662,
+                "end": 3662
+              },
+              {
+                "start": 3666,
+                "end": 3666
+              },
+              {
+                "start": 3671,
+                "end": 3671
+              },
+              {
+                "start": 4266,
+                "end": 4266
+              },
+              {
+                "start": 4282,
+                "end": 4282
+              },
+              {
+                "start": 4487,
+                "end": 4487
+              },
+              {
+                "start": 4497,
+                "end": 4497
+              },
+              {
+                "start": 4503,
+                "end": 4503
+              },
+              {
+                "start": 4505,
+                "end": 4505
+              }
+            ],
+            "src/builder/mod.rs": [
+              {
+                "start": 36,
+                "end": 36
+              }
+            ],
+            "src/builder/possible_value.rs": [
+              {
+                "start": 3,
+                "end": 3
+              },
+              {
+                "start": 33,
+                "end": 33
+              },
+              {
+                "start": 78,
+                "end": 78
+              },
+              {
+                "start": 151,
+                "end": 151
+              },
+              {
+                "start": 159,
+                "end": 159
+              }
+            ],
+            "src/builder/resettable.rs": [
+              {
+                "start": 7,
+                "end": 7
+              },
+              {
+                "start": 96,
+                "end": 97
+              },
+              {
+                "start": 171,
+                "end": 172
+              }
+            ],
+            "src/builder/styled_str.rs": [
+              {
+                "start": 3,
+                "end": 3
+              },
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 226,
+                "end": 226
+              },
+              {
+                "start": 228,
+                "end": 228
+              },
+              {
+                "start": 233,
+                "end": 233
+              },
+              {
+                "start": 235,
+                "end": 235
+              },
+              {
+                "start": 241,
+                "end": 241
+              },
+              {
+                "start": 243,
+                "end": 243
+              },
+              {
+                "start": 249,
+                "end": 249
+              },
+              {
+                "start": 251,
+                "end": 251
+              },
+              {
+                "start": 257,
+                "end": 257
+              },
+              {
+                "start": 259,
+                "end": 259
+              },
+              {
+                "start": 263,
+                "end": 263
+              },
+              {
+                "start": 269,
+                "end": 269
+              },
+              {
+                "start": 282,
+                "end": 282
+              }
+            ],
+            "src/error/context.rs": [
+              {
+                "start": 81,
+                "end": 81
+              },
+              {
+                "start": 93,
+                "end": 93
+              }
+            ],
+            "src/error/format.rs": [
+              {
+                "start": 7,
+                "end": 7
+              },
+              {
+                "start": 18,
+                "end": 18
+              },
+              {
+                "start": 31,
+                "end": 32
+              },
+              {
+                "start": 53,
+                "end": 54
+              },
+              {
+                "start": 68,
+                "end": 68
+              },
+              {
+                "start": 78,
+                "end": 78
+              },
+              {
+                "start": 85,
+                "end": 85
+              },
+              {
+                "start": 392,
+                "end": 394
+              },
+              {
+                "start": 415,
+                "end": 415
+              },
+              {
+                "start": 430,
+                "end": 430
+              }
+            ],
+            "src/error/mod.rs": [
+              {
+                "start": 20,
+                "end": 20
+              },
+              {
+                "start": 216,
+                "end": 216
+              },
+              {
+                "start": 274,
+                "end": 274
+              },
+              {
+                "start": 278,
+                "end": 278
+              },
+              {
+                "start": 286,
+                "end": 286
+              },
+              {
+                "start": 294,
+                "end": 294
+              },
+              {
+                "start": 311,
+                "end": 311
+              },
+              {
+                "start": 322,
+                "end": 322
+              },
+              {
+                "start": 331,
+                "end": 331
+              },
+              {
+                "start": 373,
+                "end": 373
+              },
+              {
+                "start": 393,
+                "end": 393
+              },
+              {
+                "start": 403,
+                "end": 403
+              },
+              {
+                "start": 415,
+                "end": 415
+              },
+              {
+                "start": 425,
+                "end": 425
+              },
+              {
+                "start": 437,
+                "end": 437
+              },
+              {
+                "start": 447,
+                "end": 447
+              },
+              {
+                "start": 459,
+                "end": 459
+              },
+              {
+                "start": 466,
+                "end": 466
+              },
+              {
+                "start": 473,
+                "end": 473
+              },
+              {
+                "start": 484,
+                "end": 484
+              },
+              {
+                "start": 496,
+                "end": 496
+              },
+              {
+                "start": 508,
+                "end": 508
+              },
+              {
+                "start": 527,
+                "end": 527
+              },
+              {
+                "start": 557,
+                "end": 557
+              },
+              {
+                "start": 576,
+                "end": 576
+              },
+              {
+                "start": 587,
+                "end": 587
+              },
+              {
+                "start": 597,
+                "end": 597
+              },
+              {
+                "start": 619,
+                "end": 619
+              },
+              {
+                "start": 631,
+                "end": 631
+              },
+              {
+                "start": 638,
+                "end": 638
+              },
+              {
+                "start": 689,
+                "end": 689
+              },
+              {
+                "start": 693,
+                "end": 693
+              },
+              {
+                "start": 707,
+                "end": 707
+              },
+              {
+                "start": 725,
+                "end": 726
+              }
+            ],
+            "src/macros.rs": [
+              {
+                "start": 651,
+                "end": 651
+              }
+            ],
+            "src/output/fmt.rs": [
+              {
+                "start": 1,
+                "end": 1
+              },
+              {
+                "start": 15,
+                "end": 15
+              },
+              {
+                "start": 27,
+                "end": 27
+              }
+            ],
+            "src/output/help.rs": [
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 9,
+                "end": 9
+              }
+            ],
+            "src/output/help_template.rs": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 27,
+                "end": 27
+              },
+              {
+                "start": 75,
+                "end": 75
+              },
+              {
+                "start": 87,
+                "end": 87
+              },
+              {
+                "start": 550,
+                "end": 550
+              },
+              {
+                "start": 829,
+                "end": 829
+              },
+              {
+                "start": 876,
+                "end": 876
+              },
+              {
+                "start": 936,
+                "end": 936
+              },
+              {
+                "start": 1011,
+                "end": 1011
+              }
+            ],
+            "src/output/textwrap/mod.rs": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "src/output/usage.rs": [
+              {
+                "start": 7,
+                "end": 7
+              },
+              {
+                "start": 36,
+                "end": 36
+              },
+              {
+                "start": 40,
+                "end": 40
+              },
+              {
+                "start": 48,
+                "end": 48
+              },
+              {
+                "start": 73,
+                "end": 73
+              },
+              {
+                "start": 75,
+                "end": 75
+              },
+              {
+                "start": 128,
+                "end": 128
+              },
+              {
+                "start": 130,
+                "end": 130
+              },
+              {
+                "start": 190,
+                "end": 190
+              },
+              {
+                "start": 197,
+                "end": 197
+              },
+              {
+                "start": 281,
+                "end": 281
+              },
+              {
+                "start": 289,
+                "end": 289
+              },
+              {
+                "start": 321,
+                "end": 321
+              }
+            ],
+            "src/parser/validator.rs": [
+              {
+                "start": 2,
+                "end": 2
+              },
+              {
+                "start": 190,
+                "end": 190
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 1,
+                "end": 30
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 4460,
+                "end": 4520
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/styled_str.rs"
+          ],
+          "spans": {
+            "src/builder/styled_str.rs": [
+              {
+                "start": 180,
+                "end": 315
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/util/color.rs"
+          ],
+          "spans": {
+            "src/util/color.rs": [
+              {
+                "start": 1,
+                "end": 62
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "tests/builder/utils.rs"
+          ],
+          "spans": {
+            "tests/builder/utils.rs": [
+              {
+                "start": 1,
+                "end": 101
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "tests/builder/positionals.rs"
+          ],
+          "spans": {
+            "tests/builder/positionals.rs": [
+              {
+                "start": 205,
+                "end": 260
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "tests/builder/help.rs"
+          ],
+          "spans": {
+            "tests/builder/help.rs": [
+              {
+                "start": 2640,
+                "end": 2700
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "CHANGELOG.md",
+            "CONTRIBUTING.md"
+          ],
+          "spans": {
+            "CHANGELOG.md": [
+              {
+                "start": 464,
+                "end": 465
+              },
+              {
+                "start": 1156,
+                "end": 1156
+              },
+              {
+                "start": 1192,
+                "end": 1192
+              },
+              {
+                "start": 1220,
+                "end": 1220
+              },
+              {
+                "start": 1281,
+                "end": 1281
+              }
+            ],
+            "CONTRIBUTING.md": [
+              {
+                "start": 40,
+                "end": 40
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "clap_bench/benches/05_ripgrep.rs",
+            "clap_complete/src/dynamic.rs",
+            "clap_complete/tests/common.rs",
+            "clap_complete_fig/tests/common.rs",
+            "clap_mangen/tests/common.rs",
+            "src/builder/command.rs",
+            "src/builder/str.rs",
+            "src/error/format.rs",
+            "src/parser/parser.rs",
+            "src/util/id.rs",
+            "src/util/str_to_bool.rs",
+            "tests/derive/macros.rs"
+          ],
+          "spans": {
+            "clap_bench/benches/05_ripgrep.rs": [
+              {
+                "start": 351,
+                "end": 351
+              },
+              {
+                "start": 555,
+                "end": 555
+              },
+              {
+                "start": 557,
+                "end": 557
+              }
+            ],
+            "clap_complete/src/dynamic.rs": [
+              {
+                "start": 147,
+                "end": 147
+              }
+            ],
+            "clap_complete/tests/common.rs": [
+              {
+                "start": 109,
+                "end": 110
+              },
+              {
+                "start": 121,
+                "end": 121
+              }
+            ],
+            "clap_complete_fig/tests/common.rs": [
+              {
+                "start": 107,
+                "end": 108
+              },
+              {
+                "start": 119,
+                "end": 119
+              }
+            ],
+            "clap_mangen/tests/common.rs": [
+              {
+                "start": 105,
+                "end": 106
+              },
+              {
+                "start": 117,
+                "end": 117
+              }
+            ],
+            "src/builder/command.rs": [
+              {
+                "start": 238,
+                "end": 238
+              },
+              {
+                "start": 280,
+                "end": 280
+              }
+            ],
+            "src/builder/str.rs": [
+              {
+                "start": 117,
+                "end": 117
+              }
+            ],
+            "src/error/format.rs": [
+              {
+                "start": 440,
+                "end": 440
+              },
+              {
+                "start": 445,
+                "end": 445
+              }
+            ],
+            "src/parser/parser.rs": [
+              {
+                "start": 1338,
+                "end": 1338
+              },
+              {
+                "start": 1342,
+                "end": 1342
+              },
+              {
+                "start": 1346,
+                "end": 1346
+              }
+            ],
+            "src/util/id.rs": [
+              {
+                "start": 100,
+                "end": 100
+              }
+            ],
+            "src/util/str_to_bool.rs": [
+              {
+                "start": 12,
+                "end": 12
+              }
+            ],
+            "tests/derive/macros.rs": [
+              {
+                "start": 18,
+                "end": 18
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            ".clippy.toml",
+            ".github/FUNDING.yml",
+            ".github/ISSUE_TEMPLATE/bug_report.yml",
+            ".github/ISSUE_TEMPLATE/config.yml",
+            ".github/ISSUE_TEMPLATE/feature_request.yml",
+            ".github/PULL_REQUEST_TEMPLATE.md",
+            ".github/dependabot.yml",
+            ".github/settings.yml",
+            ".github/workflows/audit.yml",
+            ".github/workflows/ci.yml",
+            ".github/workflows/committed.yml",
+            ".github/workflows/post-release.yml",
+            ".github/workflows/pre-commit.yml",
+            ".github/workflows/release-notes.py",
+            ".github/workflows/rust-next.yml",
+            ".github/workflows/spelling.yml",
+            ".gitignore",
+            ".pre-commit-config.yaml",
+            "CHANGELOG.md",
+            "CONTRIBUTING.md",
+            "Cargo.lock",
+            "Cargo.toml",
+            "LICENSE-APACHE",
+            "LICENSE-MIT",
+            "Makefile",
+            "README.md",
+            "assets/clap.png",
+            "clap_bench/Cargo.toml",
+            "clap_bench/benches/01_default.rs",
+            "clap_bench/benches/02_simple.rs",
+            "clap_bench/benches/03_complex.rs",
+            "clap_bench/benches/04_new_help.rs",
+            "clap_bench/benches/05_ripgrep.rs",
+            "clap_bench/benches/06_rustup.rs",
+            "clap_bench/src/lib.rs",
+            "clap_complete/CHANGELOG.md",
+            "clap_complete/CONTRIBUTING.md",
+            "clap_complete/Cargo.toml",
+            "clap_complete/LICENSE-APACHE",
+            "clap_complete/LICENSE-MIT",
+            "clap_complete/README.md",
+            "clap_complete/examples/dynamic.rs",
+            "clap_complete/src/dynamic.rs",
+            "clap_complete/src/generator/mod.rs",
+            "clap_complete/src/generator/utils.rs",
+            "clap_complete/src/lib.rs",
+            "clap_complete/src/macros.rs",
+            "clap_complete/src/shells/bash.rs",
+            "clap_complete/src/shells/elvish.rs",
+            "clap_complete/src/shells/fish.rs",
+            "clap_complete/src/shells/mod.rs",
+            "clap_complete/src/shells/powershell.rs",
+            "clap_complete/src/shells/shell.rs",
+            "clap_complete/src/shells/zsh.rs",
+            "clap_complete/tests/bash.rs",
+            "clap_complete/tests/common.rs",
+            "clap_complete/tests/dynamic.rs",
+            "clap_complete/tests/elvish.rs",
+            "clap_complete/tests/examples.rs",
+            "clap_complete/tests/fish.rs",
+            "clap_complete/tests/general.rs",
+            "clap_complete/tests/powershell.rs",
+            "clap_complete/tests/snapshots/aliases.bash",
+            "clap_complete/tests/snapshots/aliases.elvish",
+            "clap_complete/tests/snapshots/aliases.fish",
+            "clap_complete/tests/snapshots/aliases.ps1",
+            "clap_complete/tests/snapshots/aliases.zsh",
+            "clap_complete/tests/snapshots/basic.bash",
+            "clap_complete/tests/snapshots/basic.elvish",
+            "clap_complete/tests/snapshots/basic.fish",
+            "clap_complete/tests/snapshots/basic.ps1",
+            "clap_complete/tests/snapshots/basic.zsh",
+            "clap_complete/tests/snapshots/feature_sample.bash",
+            "clap_complete/tests/snapshots/feature_sample.elvish",
+            "clap_complete/tests/snapshots/feature_sample.fish",
+            "clap_complete/tests/snapshots/feature_sample.ps1",
+            "clap_complete/tests/snapshots/feature_sample.zsh",
+            "clap_complete/tests/snapshots/quoting.bash",
+            "clap_complete/tests/snapshots/quoting.elvish",
+            "clap_complete/tests/snapshots/quoting.fish",
+            "clap_complete/tests/snapshots/quoting.ps1",
+            "clap_complete/tests/snapshots/quoting.zsh",
+            "clap_complete/tests/snapshots/register_minimal.bash",
+            "clap_complete/tests/snapshots/special_commands.bash",
+            "clap_complete/tests/snapshots/special_commands.elvish",
+            "clap_complete/tests/snapshots/special_commands.fish",
+            "clap_complete/tests/snapshots/special_commands.ps1",
+            "clap_complete/tests/snapshots/special_commands.zsh",
+            "clap_complete/tests/snapshots/sub_subcommands.bash",
+            "clap_complete/tests/snapshots/sub_subcommands.elvish",
+            "clap_complete/tests/snapshots/sub_subcommands.fish",
+            "clap_complete/tests/snapshots/sub_subcommands.ps1",
+            "clap_complete/tests/snapshots/sub_subcommands.zsh",
+            "clap_complete/tests/snapshots/value_hint.bash",
+            "clap_complete/tests/snapshots/value_hint.elvish",
+            "clap_complete/tests/snapshots/value_hint.fish",
+            "clap_complete/tests/snapshots/value_hint.ps1",
+            "clap_complete/tests/snapshots/value_hint.zsh",
+            "clap_complete/tests/zsh.rs",
+            "clap_complete_fig/CHANGELOG.md",
+            "clap_complete_fig/Cargo.toml",
+            "clap_complete_fig/LICENSE-APACHE",
+            "clap_complete_fig/LICENSE-MIT",
+            "clap_complete_fig/README.md",
+            "clap_complete_fig/examples/fig_completion.rs",
+            "clap_complete_fig/src/fig.rs",
+            "clap_complete_fig/src/lib.rs",
+            "clap_complete_fig/tests/common.rs",
+            "clap_complete_fig/tests/fig.rs",
+            "clap_derive/CONTRIBUTING.md",
+            "clap_derive/Cargo.toml",
+            "clap_derive/LICENSE-APACHE",
+            "clap_derive/LICENSE-MIT",
+            "clap_derive/README.md",
+            "clap_derive/src/attr.rs",
+            "clap_derive/src/derives/args.rs",
+            "clap_derive/src/derives/into_app.rs",
+            "clap_derive/src/derives/mod.rs",
+            "clap_derive/src/derives/parser.rs",
+            "clap_derive/src/derives/subcommand.rs",
+            "clap_derive/src/derives/value_enum.rs",
+            "clap_derive/src/dummies.rs",
+            "clap_derive/src/item.rs",
+            "clap_derive/src/lib.rs",
+            "clap_derive/src/utils/doc_comments.rs",
+            "clap_derive/src/utils/mod.rs",
+            "clap_derive/src/utils/spanned.rs",
+            "clap_derive/src/utils/ty.rs",
+            "clap_lex/CHANGELOG.md",
+            "clap_lex/CONTRIBUTING.md",
+            "clap_lex/Cargo.toml",
+            "clap_lex/LICENSE-APACHE",
+            "clap_lex/LICENSE-MIT",
+            "clap_lex/README.md",
+            "clap_lex/src/lib.rs",
+            "clap_lex/tests/lexer.rs",
+            "clap_lex/tests/parsed.rs",
+            "clap_lex/tests/shorts.rs",
+            "clap_mangen/CHANGELOG.md",
+            "clap_mangen/CONTRIBUTING.md",
+            "clap_mangen/Cargo.toml",
+            "clap_mangen/LICENSE-APACHE",
+            "clap_mangen/LICENSE-MIT",
+            "clap_mangen/README.md",
+            "clap_mangen/examples/man.rs",
+            "clap_mangen/src/lib.rs",
+            "clap_mangen/src/render.rs",
+            "clap_mangen/tests/common.rs",
+            "clap_mangen/tests/roff.rs",
+            "clap_mangen/tests/snapshots/aliases.bash.roff",
+            "clap_mangen/tests/snapshots/basic.bash.roff",
+            "clap_mangen/tests/snapshots/feature_sample.bash.roff",
+            "clap_mangen/tests/snapshots/hidden_option.bash.roff",
+            "clap_mangen/tests/snapshots/possible_values.bash.roff",
+            "clap_mangen/tests/snapshots/quoting.bash.roff",
+            "clap_mangen/tests/snapshots/special_commands.bash.roff",
+            "clap_mangen/tests/snapshots/sub_subcommands.bash.roff",
+            "clap_mangen/tests/snapshots/value_env.bash.roff",
+            "clap_mangen/tests/snapshots/value_hint.bash.roff",
+            "committed.toml",
+            "examples/cargo-example-derive.md",
+            "examples/cargo-example-derive.rs",
+            "examples/cargo-example.md",
+            "examples/cargo-example.rs",
+            "examples/demo.md",
+            "examples/demo.rs",
+            "examples/derive_ref/augment_args.rs",
+            "examples/derive_ref/augment_subcommands.rs",
+            "examples/derive_ref/flatten_hand_args.rs",
+            "examples/derive_ref/hand_subcommand.rs",
+            "examples/derive_ref/interop_tests.md",
+            "examples/escaped-positional-derive.md",
+            "examples/escaped-positional-derive.rs",
+            "examples/escaped-positional.md",
+            "examples/escaped-positional.rs",
+            "examples/find.md",
+            "examples/find.rs",
+            "examples/git-derive.md",
+            "examples/git-derive.rs",
+            "examples/git.md",
+            "examples/git.rs",
+            "examples/multicall-busybox.md",
+            "examples/multicall-busybox.rs",
+            "examples/multicall-hostname.md",
+            "examples/multicall-hostname.rs",
+            "examples/pacman.md",
+            "examples/pacman.rs",
+            "examples/repl.rs",
+            "examples/tutorial_builder/01_quick.md",
+            "examples/tutorial_builder/01_quick.rs",
+            "examples/tutorial_builder/02_app_settings.md",
+            "examples/tutorial_builder/02_app_settings.rs",
+            "examples/tutorial_builder/02_apps.md",
+            "examples/tutorial_builder/02_apps.rs",
+            "examples/tutorial_builder/02_crate.md",
+            "examples/tutorial_builder/02_crate.rs",
+            "examples/tutorial_builder/03_01_flag_bool.md",
+            "examples/tutorial_builder/03_01_flag_bool.rs",
+            "examples/tutorial_builder/03_01_flag_count.md",
+            "examples/tutorial_builder/03_01_flag_count.rs",
+            "examples/tutorial_builder/03_02_option.md",
+            "examples/tutorial_builder/03_02_option.rs",
+            "examples/tutorial_builder/03_02_option_mult.md",
+            "examples/tutorial_builder/03_02_option_mult.rs",
+            "examples/tutorial_builder/03_03_positional.md",
+            "examples/tutorial_builder/03_03_positional.rs",
+            "examples/tutorial_builder/03_03_positional_mult.md",
+            "examples/tutorial_builder/03_03_positional_mult.rs",
+            "examples/tutorial_builder/03_04_subcommands.md",
+            "examples/tutorial_builder/03_04_subcommands.rs",
+            "examples/tutorial_builder/03_05_default_values.md",
+            "examples/tutorial_builder/03_05_default_values.rs",
+            "examples/tutorial_builder/04_01_enum.md",
+            "examples/tutorial_builder/04_01_enum.rs",
+            "examples/tutorial_builder/04_01_possible.md",
+            "examples/tutorial_builder/04_01_possible.rs",
+            "examples/tutorial_builder/04_02_parse.md",
+            "examples/tutorial_builder/04_02_parse.rs",
+            "examples/tutorial_builder/04_02_validate.md",
+            "examples/tutorial_builder/04_02_validate.rs",
+            "examples/tutorial_builder/04_03_relations.md",
+            "examples/tutorial_builder/04_03_relations.rs",
+            "examples/tutorial_builder/04_04_custom.md",
+            "examples/tutorial_builder/04_04_custom.rs",
+            "examples/tutorial_builder/05_01_assert.rs",
+            "examples/tutorial_derive/01_quick.md",
+            "examples/tutorial_derive/01_quick.rs",
+            "examples/tutorial_derive/02_app_settings.md",
+            "examples/tutorial_derive/02_app_settings.rs",
+            "examples/tutorial_derive/02_apps.md",
+            "examples/tutorial_derive/02_apps.rs",
+            "examples/tutorial_derive/02_crate.md",
+            "examples/tutorial_derive/02_crate.rs",
+            "examples/tutorial_derive/03_01_flag_bool.md",
+            "examples/tutorial_derive/03_01_flag_bool.rs",
+            "examples/tutorial_derive/03_01_flag_count.md",
+            "examples/tutorial_derive/03_01_flag_count.rs",
+            "examples/tutorial_derive/03_02_option.md",
+            "examples/tutorial_derive/03_02_option.rs",
+            "examples/tutorial_derive/03_02_option_mult.md",
+            "examples/tutorial_derive/03_02_option_mult.rs",
+            "examples/tutorial_derive/03_03_positional.md",
+            "examples/tutorial_derive/03_03_positional.rs",
+            "examples/tutorial_derive/03_03_positional_mult.md",
+            "examples/tutorial_derive/03_03_positional_mult.rs",
+            "examples/tutorial_derive/03_04_subcommands.md",
+            "examples/tutorial_derive/03_04_subcommands.rs",
+            "examples/tutorial_derive/03_04_subcommands_alt.rs",
+            "examples/tutorial_derive/03_05_default_values.md",
+            "examples/tutorial_derive/03_05_default_values.rs",
+            "examples/tutorial_derive/04_01_enum.md",
+            "examples/tutorial_derive/04_01_enum.rs",
+            "examples/tutorial_derive/04_02_parse.md",
+            "examples/tutorial_derive/04_02_parse.rs",
+            "examples/tutorial_derive/04_02_validate.md",
+            "examples/tutorial_derive/04_02_validate.rs",
+            "examples/tutorial_derive/04_03_relations.md",
+            "examples/tutorial_derive/04_03_relations.rs",
+            "examples/tutorial_derive/04_04_custom.md",
+            "examples/tutorial_derive/04_04_custom.rs",
+            "examples/tutorial_derive/05_01_assert.rs",
+            "examples/typed-derive.md",
+            "examples/typed-derive.rs",
+            "release.toml",
+            "src/_cookbook/cargo_example.rs",
+            "src/_cookbook/cargo_example_derive.rs",
+            "src/_cookbook/escaped_positional.rs",
+            "src/_cookbook/escaped_positional_derive.rs",
+            "src/_cookbook/find.rs",
+            "src/_cookbook/git.rs",
+            "src/_cookbook/git_derive.rs",
+            "src/_cookbook/mod.rs",
+            "src/_cookbook/multicall_busybox.rs",
+            "src/_cookbook/multicall_hostname.rs",
+            "src/_cookbook/pacman.rs",
+            "src/_cookbook/repl.rs",
+            "src/_cookbook/typed_derive.rs",
+            "src/_derive/_tutorial.rs",
+            "src/_derive/mod.rs",
+            "src/_faq.rs",
+            "src/_features.rs",
+            "src/_tutorial.rs",
+            "src/builder/action.rs",
+            "src/builder/app_settings.rs",
+            "src/builder/arg.rs",
+            "src/builder/arg_group.rs",
+            "src/builder/arg_predicate.rs",
+            "src/builder/arg_settings.rs",
+            "src/builder/command.rs",
+            "src/builder/debug_asserts.rs",
+            "src/builder/mod.rs",
+            "src/builder/os_str.rs",
+            "src/builder/possible_value.rs",
+            "src/builder/range.rs",
+            "src/builder/resettable.rs",
+            "src/builder/str.rs",
+            "src/builder/styled_str.rs",
+            "src/builder/tests.rs",
+            "src/builder/value_hint.rs",
+            "src/builder/value_parser.rs",
+            "src/derive.rs",
+            "src/error/context.rs",
+            "src/error/format.rs",
+            "src/error/kind.rs",
+            "src/error/mod.rs",
+            "src/lib.rs",
+            "src/macros.rs",
+            "src/mkeymap.rs",
+            "src/output/fmt.rs",
+            "src/output/help.rs",
+            "src/output/help_template.rs",
+            "src/output/mod.rs",
+            "src/output/usage.rs",
+            "src/parser/mod.rs",
+            "src/parser/parser.rs",
+            "src/parser/validator.rs",
+            "src/util/color.rs",
+            "src/util/flat_map.rs",
+            "src/util/flat_set.rs",
+            "src/util/graph.rs",
+            "src/util/id.rs",
+            "src/util/mod.rs",
+            "src/util/str_to_bool.rs",
+            "tests/builder/action.rs",
+            "tests/builder/app_settings.rs",
+            "tests/builder/arg_aliases.rs",
+            "tests/builder/arg_aliases_short.rs",
+            "tests/builder/arg_matches.rs",
+            "tests/builder/borrowed.rs",
+            "tests/builder/cargo.rs",
+            "tests/builder/command.rs",
+            "tests/builder/conflicts.rs",
+            "tests/builder/default_missing_vals.rs",
+            "tests/builder/default_vals.rs",
+            "tests/builder/delimiters.rs",
+            "tests/builder/derive_order.rs",
+            "tests/builder/display_order.rs",
+            "tests/builder/double_require.rs",
+            "tests/builder/empty_values.rs",
+            "tests/builder/env.rs",
+            "tests/builder/error.rs",
+            "tests/builder/flag_subcommands.rs",
+            "tests/builder/flags.rs",
+            "tests/builder/global_args.rs",
+            "tests/builder/grouped_values.rs",
+            "tests/builder/groups.rs",
+            "tests/builder/help.rs",
+            "tests/builder/help_env.rs",
+            "tests/builder/hidden_args.rs",
+            "tests/builder/ignore_errors.rs",
+            "tests/builder/indices.rs",
+            "tests/builder/main.rs",
+            "tests/builder/multiple_occurrences.rs",
+            "tests/builder/multiple_values.rs",
+            "tests/builder/opts.rs",
+            "tests/builder/positionals.rs",
+            "tests/builder/posix_compatible.rs",
+            "tests/builder/possible_values.rs",
+            "tests/builder/propagate_globals.rs",
+            "tests/builder/require.rs",
+            "tests/builder/subcommands.rs",
+            "tests/builder/template_help.rs",
+            "tests/builder/tests.rs",
+            "tests/builder/unicode.rs",
+            "tests/builder/unique_args.rs",
+            "tests/builder/utf16.rs",
+            "tests/builder/utf8.rs",
+            "tests/builder/utils.rs",
+            "tests/builder/version.rs",
+            "tests/derive/app_name.rs",
+            "tests/derive/arguments.rs",
+            "tests/derive/author_version_about.rs",
+            "tests/derive/basic.rs",
+            "tests/derive/boxed.rs",
+            "tests/derive/custom_string_parsers.rs",
+            "tests/derive/default_value.rs",
+            "tests/derive/deny_warnings.rs",
+            "tests/derive/doc_comments_help.rs",
+            "tests/derive/explicit_name_no_renaming.rs",
+            "tests/derive/flags.rs",
+            "tests/derive/flatten.rs",
+            "tests/derive/generic.rs",
+            "tests/derive/groups.rs",
+            "tests/derive/help.rs",
+            "tests/derive/issues.rs",
+            "tests/derive/macros.rs",
+            "tests/derive/main.rs",
+            "tests/derive/naming.rs",
+            "tests/derive/nested_subcommands.rs",
+            "tests/derive/non_literal_attributes.rs",
+            "tests/derive/options.rs",
+            "tests/derive/privacy.rs",
+            "tests/derive/raw_bool_literal.rs",
+            "tests/derive/raw_idents.rs",
+            "tests/derive/rename_all_env.rs",
+            "tests/derive/skip.rs",
+            "tests/derive/subcommands.rs",
+            "tests/derive/type_alias_regressions.rs",
+            "tests/derive/utf8.rs",
+            "tests/derive/utils.rs",
+            "tests/derive/value_enum.rs",
+            "tests/derive_ui.rs",
+            "tests/derive_ui/bool_value_enum.rs",
+            "tests/derive_ui/bool_value_enum.stderr",
+            "tests/derive_ui/clap_empty_attr.rs",
+            "tests/derive_ui/clap_empty_attr.stderr",
+            "tests/derive_ui/default_value_t_invalid.rs",
+            "tests/derive_ui/default_value_t_invalid.stderr",
+            "tests/derive_ui/default_values_t_invalid.rs",
+            "tests/derive_ui/default_values_t_invalid.stderr",
+            "tests/derive_ui/enum_flatten.rs",
+            "tests/derive_ui/enum_flatten.stderr",
+            "tests/derive_ui/enum_variant_not_args.rs",
+            "tests/derive_ui/enum_variant_not_args.stderr",
+            "tests/derive_ui/external_subcommand_misuse.rs",
+            "tests/derive_ui/external_subcommand_misuse.stderr",
+            "tests/derive_ui/external_subcommand_wrong_type.rs",
+            "tests/derive_ui/external_subcommand_wrong_type.stderr",
+            "tests/derive_ui/flatten_and_methods.rs",
+            "tests/derive_ui/flatten_and_methods.stderr",
+            "tests/derive_ui/flatten_enum_in_struct.rs",
+            "tests/derive_ui/flatten_enum_in_struct.stderr",
+            "tests/derive_ui/flatten_struct_in_enum.rs",
+            "tests/derive_ui/flatten_struct_in_enum.stderr",
+            "tests/derive_ui/multiple_external_subcommand.rs",
+            "tests/derive_ui/multiple_external_subcommand.stderr",
+            "tests/derive_ui/non_existent_attr.rs",
+            "tests/derive_ui/non_existent_attr.stderr",
+            "tests/derive_ui/rename_all_wrong_casing.rs",
+            "tests/derive_ui/rename_all_wrong_casing.stderr",
+            "tests/derive_ui/skip_flatten.rs",
+            "tests/derive_ui/skip_flatten.stderr",
+            "tests/derive_ui/skip_subcommand.rs",
+            "tests/derive_ui/skip_subcommand.stderr",
+            "tests/derive_ui/skip_with_other_options.rs",
+            "tests/derive_ui/skip_with_other_options.stderr",
+            "tests/derive_ui/skip_without_default.rs",
+            "tests/derive_ui/skip_without_default.stderr",
+            "tests/derive_ui/struct_subcommand.rs",
+            "tests/derive_ui/struct_subcommand.stderr",
+            "tests/derive_ui/subcommand_and_flatten.rs",
+            "tests/derive_ui/subcommand_and_flatten.stderr",
+            "tests/derive_ui/subcommand_and_methods.rs",
+            "tests/derive_ui/subcommand_and_methods.stderr",
+            "tests/derive_ui/subcommand_on_struct.rs",
+            "tests/derive_ui/subcommand_on_struct.stderr",
+            "tests/derive_ui/subcommand_opt_opt.rs",
+            "tests/derive_ui/subcommand_opt_opt.stderr",
+            "tests/derive_ui/subcommand_opt_vec.rs",
+            "tests/derive_ui/subcommand_opt_vec.stderr",
+            "tests/derive_ui/tuple_struct.rs",
+            "tests/derive_ui/tuple_struct.stderr",
+            "tests/derive_ui/value_enum_non_unit.rs",
+            "tests/derive_ui/value_enum_non_unit.stderr",
+            "tests/derive_ui/value_enum_on_struct.rs",
+            "tests/derive_ui/value_enum_on_struct.stderr",
+            "tests/examples.rs",
+            "tests/macros.rs",
+            "tests/ui.rs",
+            "tests/ui/V_flag_stdout.toml",
+            "tests/ui/arg_required_else_help_stderr.toml",
+            "tests/ui/error_stderr.toml",
+            "tests/ui/h_flag_stdout.toml",
+            "tests/ui/help_cmd_stdout.toml",
+            "tests/ui/help_flag_stdout.toml",
+            "tests/ui/version_flag_stdout.toml",
+            "typos.toml"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "Cargo.toml"
+          ],
+          "spans": {
+            "Cargo.toml": [
+              {
+                "start": 1,
+                "end": 120
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "CHANGELOG.md"
+          ],
+          "spans": {
+            "CHANGELOG.md": [
+              {
+                "start": 464,
+                "end": 465
+              },
+              {
+                "start": 1156,
+                "end": 1156
+              },
+              {
+                "start": 1192,
+                "end": 1192
+              },
+              {
+                "start": 1220,
+                "end": 1220
+              },
+              {
+                "start": 1281,
+                "end": 1281
+              },
+              {
+                "start": 1694,
+                "end": 1694
+              },
+              {
+                "start": 3528,
+                "end": 3528
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs",
+            "src/error/mod.rs",
+            "src/parser/parser.rs",
+            "src/parser/validator.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 873,
+                "end": 873
+              },
+              {
+                "start": 876,
+                "end": 876
+              },
+              {
+                "start": 4487,
+                "end": 4487
+              },
+              {
+                "start": 4489,
+                "end": 4489
+              }
+            ],
+            "src/error/mod.rs": [
+              {
+                "start": 94,
+                "end": 94
+              },
+              {
+                "start": 274,
+                "end": 274
+              },
+              {
+                "start": 278,
+                "end": 278
+              },
+              {
+                "start": 286,
+                "end": 286
+              }
+            ],
+            "src/parser/parser.rs": [
+              {
+                "start": 1552,
+                "end": 1553
+              },
+              {
+                "start": 1558,
+                "end": 1558
+              }
+            ],
+            "src/parser/validator.rs": [
+              {
+                "start": 61,
+                "end": 62
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs",
+            "tests/builder/positionals.rs",
+            "tests/builder/subcommands.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 870,
+                "end": 870
+              }
+            ],
+            "tests/builder/positionals.rs": [
+              {
+                "start": 214,
+                "end": 214
+              },
+              {
+                "start": 220,
+                "end": 220
+              },
+              {
+                "start": 229,
+                "end": 229
+              },
+              {
+                "start": 240,
+                "end": 240
+              },
+              {
+                "start": 246,
+                "end": 246
+              }
+            ],
+            "tests/builder/subcommands.rs": [
+              {
+                "start": 346,
+                "end": 346
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "CHANGELOG.md"
+          ],
+          "spans": {
+            "CHANGELOG.md": [
+              {
+                "start": 1,
+                "end": 120
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "CHANGELOG.md"
+          ],
+          "spans": {
+            "CHANGELOG.md": [
+              {
+                "start": 32,
+                "end": 32
+              },
+              {
+                "start": 48,
+                "end": 48
+              },
+              {
+                "start": 53,
+                "end": 53
+              },
+              {
+                "start": 69,
+                "end": 69
+              },
+              {
+                "start": 72,
+                "end": 72
+              },
+              {
+                "start": 124,
+                "end": 124
+              },
+              {
+                "start": 184,
+                "end": 184
+              },
+              {
+                "start": 187,
+                "end": 187
+              },
+              {
+                "start": 191,
+                "end": 199
+              },
+              {
+                "start": 201,
+                "end": 201
+              },
+              {
+                "start": 203,
+                "end": 203
+              },
+              {
+                "start": 218,
+                "end": 218
+              },
+              {
+                "start": 220,
+                "end": 220
+              },
+              {
+                "start": 232,
+                "end": 232
+              },
+              {
+                "start": 234,
+                "end": 234
+              },
+              {
+                "start": 255,
+                "end": 255
+              },
+              {
+                "start": 263,
+                "end": 263
+              },
+              {
+                "start": 271,
+                "end": 271
+              },
+              {
+                "start": 273,
+                "end": 274
+              },
+              {
+                "start": 283,
+                "end": 299
+              },
+              {
+                "start": 312,
+                "end": 312
+              },
+              {
+                "start": 399,
+                "end": 399
+              },
+              {
+                "start": 438,
+                "end": 438
+              },
+              {
+                "start": 475,
+                "end": 475
+              },
+              {
+                "start": 512,
+                "end": 512
+              },
+              {
+                "start": 533,
+                "end": 536
+              },
+              {
+                "start": 540,
+                "end": 540
+              },
+              {
+                "start": 546,
+                "end": 546
+              },
+              {
+                "start": 563,
+                "end": 564
+              },
+              {
+                "start": 586,
+                "end": 586
+              },
+              {
+                "start": 624,
+                "end": 624
+              },
+              {
+                "start": 655,
+                "end": 657
+              },
+              {
+                "start": 664,
+                "end": 664
+              },
+              {
+                "start": 666,
+                "end": 666
+              },
+              {
+                "start": 670,
+                "end": 670
+              },
+              {
+                "start": 680,
+                "end": 680
+              },
+              {
+                "start": 691,
+                "end": 691
+              },
+              {
+                "start": 693,
+                "end": 699
+              },
+              {
+                "start": 722,
+                "end": 722
+              },
+              {
+                "start": 724,
+                "end": 725
+              },
+              {
+                "start": 765,
+                "end": 766
+              },
+              {
+                "start": 836,
+                "end": 836
+              },
+              {
+                "start": 852,
+                "end": 852
+              },
+              {
+                "start": 855,
+                "end": 857
+              },
+              {
+                "start": 865,
+                "end": 865
+              },
+              {
+                "start": 873,
+                "end": 873
+              },
+              {
+                "start": 898,
+                "end": 898
+              },
+              {
+                "start": 924,
+                "end": 924
+              },
+              {
+                "start": 928,
+                "end": 929
+              },
+              {
+                "start": 932,
+                "end": 932
+              },
+              {
+                "start": 945,
+                "end": 945
+              },
+              {
+                "start": 950,
+                "end": 950
+              },
+              {
+                "start": 958,
+                "end": 958
+              },
+              {
+                "start": 989,
+                "end": 989
+              },
+              {
+                "start": 994,
+                "end": 994
+              },
+              {
+                "start": 998,
+                "end": 999
+              },
+              {
+                "start": 1029,
+                "end": 1032
+              },
+              {
+                "start": 1036,
+                "end": 1039
+              },
+              {
+                "start": 1046,
+                "end": 1046
+              },
+              {
+                "start": 1053,
+                "end": 1053
+              },
+              {
+                "start": 1058,
+                "end": 1058
+              },
+              {
+                "start": 1067,
+                "end": 1067
+              },
+              {
+                "start": 1095,
+                "end": 1095
+              },
+              {
+                "start": 1103,
+                "end": 1104
+              },
+              {
+                "start": 1172,
+                "end": 1172
+              },
+              {
+                "start": 1194,
+                "end": 1194
+              },
+              {
+                "start": 1221,
+                "end": 1221
+              },
+              {
+                "start": 1263,
+                "end": 1263
+              },
+              {
+                "start": 1269,
+                "end": 1269
+              },
+              {
+                "start": 1357,
+                "end": 1357
+              },
+              {
+                "start": 1374,
+                "end": 1374
+              },
+              {
+                "start": 1383,
+                "end": 1383
+              },
+              {
+                "start": 1398,
+                "end": 1398
+              },
+              {
+                "start": 1432,
+                "end": 1433
+              },
+              {
+                "start": 1450,
+                "end": 1450
+              },
+              {
+                "start": 1465,
+                "end": 1465
+              },
+              {
+                "start": 1469,
+                "end": 1469
+              },
+              {
+                "start": 1507,
+                "end": 1507
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/error/mod.rs"
+          ],
+          "spans": {
+            "src/error/mod.rs": [
+              {
+                "start": 1,
+                "end": 59
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/error/mod.rs"
+          ],
+          "spans": {
+            "src/error/mod.rs": [
+              {
+                "start": 200,
+                "end": 300
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/help.rs"
+          ],
+          "spans": {
+            "src/output/help.rs": [
+              {
+                "start": 1,
+                "end": 43
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/usage.rs"
+          ],
+          "spans": {
+            "src/output/usage.rs": [
+              {
+                "start": 1,
+                "end": 100
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "tests/ui.rs"
+          ],
+          "spans": {
+            "tests/ui.rs": [
+              {
+                "start": 1,
+                "end": 36
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/lib.rs"
+          ],
+          "spans": {
+            "src/lib.rs": [
+              {
+                "start": 1,
+                "end": 159
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 468,
+                "end": 468
+              },
+              {
+                "start": 724,
+                "end": 725
+              },
+              {
+                "start": 751,
+                "end": 752
+              },
+              {
+                "start": 779,
+                "end": 779
+              },
+              {
+                "start": 805,
+                "end": 805
+              },
+              {
+                "start": 870,
+                "end": 870
+              },
+              {
+                "start": 872,
+                "end": 873
+              },
+              {
+                "start": 876,
+                "end": 876
+              },
+              {
+                "start": 879,
+                "end": 879
+              },
+              {
+                "start": 3716,
+                "end": 3716
+              },
+              {
+                "start": 3748,
+                "end": 3748
+              },
+              {
+                "start": 3754,
+                "end": 3754
+              },
+              {
+                "start": 3933,
+                "end": 3933
+              },
+              {
+                "start": 4487,
+                "end": 4487
+              },
+              {
+                "start": 4489,
+                "end": 4489
+              },
+              {
+                "start": 4503,
+                "end": 4503
+              },
+              {
+                "start": 4539,
+                "end": 4539
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 4530,
+                "end": 4565
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/error/mod.rs",
+            "src/parser/parser.rs",
+            "src/parser/validator.rs"
+          ],
+          "spans": {
+            "src/error/mod.rs": [
+              {
+                "start": 274,
+                "end": 274
+              },
+              {
+                "start": 278,
+                "end": 278
+              },
+              {
+                "start": 286,
+                "end": 286
+              }
+            ],
+            "src/parser/parser.rs": [
+              {
+                "start": 1553,
+                "end": 1553
+              },
+              {
+                "start": 1558,
+                "end": 1558
+              }
+            ],
+            "src/parser/validator.rs": [
+              {
+                "start": 62,
+                "end": 62
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "src/builder/mod.rs"
+          ],
+          "spans": {
+            "src/builder/mod.rs": [
+              {
+                "start": 1,
+                "end": 45
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "tests/builder/help.rs",
+            "tests/builder/positionals.rs",
+            "tests/builder/subcommands.rs"
+          ],
+          "spans": {
+            "tests/builder/help.rs": [
+              {
+                "start": 2661,
+                "end": 2661
+              }
+            ],
+            "tests/builder/positionals.rs": [
+              {
+                "start": 214,
+                "end": 214
+              },
+              {
+                "start": 220,
+                "end": 220
+              },
+              {
+                "start": 229,
+                "end": 229
+              },
+              {
+                "start": 240,
+                "end": 240
+              },
+              {
+                "start": 246,
+                "end": 246
+              }
+            ],
+            "tests/builder/subcommands.rs": [
+              {
+                "start": 346,
+                "end": 346
+              },
+              {
+                "start": 610,
+                "end": 610
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "tests/builder/subcommands.rs"
+          ],
+          "spans": {
+            "tests/builder/subcommands.rs": [
+              {
+                "start": 325,
+                "end": 355
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/arg.rs",
+            "src/builder/command.rs",
+            "src/builder/mod.rs",
+            "src/builder/possible_value.rs",
+            "src/builder/resettable.rs",
+            "src/builder/styled_str.rs",
+            "src/error/context.rs",
+            "src/error/format.rs",
+            "src/error/mod.rs",
+            "src/macros.rs",
+            "src/output/fmt.rs",
+            "src/output/help.rs",
+            "src/output/help_template.rs",
+            "src/output/mod.rs",
+            "src/output/textwrap/mod.rs",
+            "src/output/usage.rs",
+            "src/parser/parser.rs",
+            "src/parser/validator.rs"
+          ],
+          "spans": {
+            "src/builder/arg.rs": [
+              {
+                "start": 19,
+                "end": 19
+              },
+              {
+                "start": 57,
+                "end": 58
+              },
+              {
+                "start": 2024,
+                "end": 2024
+              },
+              {
+                "start": 2086,
+                "end": 2086
+              },
+              {
+                "start": 3685,
+                "end": 3685
+              },
+              {
+                "start": 3700,
+                "end": 3700
+              },
+              {
+                "start": 4115,
+                "end": 4116
+              },
+              {
+                "start": 4129,
+                "end": 4130
+              }
+            ],
+            "src/builder/command.rs": [
+              {
+                "start": 18,
+                "end": 18
+              },
+              {
+                "start": 24,
+                "end": 24
+              },
+              {
+                "start": 80,
+                "end": 85
+              },
+              {
+                "start": 89,
+                "end": 89
+              },
+              {
+                "start": 91,
+                "end": 91
+              },
+              {
+                "start": 96,
+                "end": 96
+              },
+              {
+                "start": 727,
+                "end": 727
+              },
+              {
+                "start": 729,
+                "end": 729
+              },
+              {
+                "start": 754,
+                "end": 754
+              },
+              {
+                "start": 756,
+                "end": 756
+              },
+              {
+                "start": 773,
+                "end": 773
+              },
+              {
+                "start": 778,
+                "end": 778
+              },
+              {
+                "start": 781,
+                "end": 781
+              },
+              {
+                "start": 783,
+                "end": 783
+              },
+              {
+                "start": 790,
+                "end": 790
+              },
+              {
+                "start": 807,
+                "end": 807
+              },
+              {
+                "start": 809,
+                "end": 809
+              },
+              {
+                "start": 820,
+                "end": 820
+              },
+              {
+                "start": 833,
+                "end": 833
+              },
+              {
+                "start": 844,
+                "end": 844
+              },
+              {
+                "start": 857,
+                "end": 857
+              },
+              {
+                "start": 870,
+                "end": 870
+              },
+              {
+                "start": 872,
+                "end": 873
+              },
+              {
+                "start": 876,
+                "end": 876
+              },
+              {
+                "start": 1442,
+                "end": 1442
+              },
+              {
+                "start": 1467,
+                "end": 1467
+              },
+              {
+                "start": 1489,
+                "end": 1489
+              },
+              {
+                "start": 1511,
+                "end": 1511
+              },
+              {
+                "start": 1531,
+                "end": 1531
+              },
+              {
+                "start": 1551,
+                "end": 1551
+              },
+              {
+                "start": 1645,
+                "end": 1645
+              },
+              {
+                "start": 1682,
+                "end": 1682
+              },
+              {
+                "start": 1734,
+                "end": 1734
+              },
+              {
+                "start": 2915,
+                "end": 2915
+              },
+              {
+                "start": 3215,
+                "end": 3215
+              },
+              {
+                "start": 3223,
+                "end": 3223
+              },
+              {
+                "start": 3337,
+                "end": 3337
+              },
+              {
+                "start": 3343,
+                "end": 3343
+              },
+              {
+                "start": 3349,
+                "end": 3349
+              },
+              {
+                "start": 3355,
+                "end": 3355
+              },
+              {
+                "start": 3662,
+                "end": 3662
+              },
+              {
+                "start": 3666,
+                "end": 3666
+              },
+              {
+                "start": 3671,
+                "end": 3671
+              },
+              {
+                "start": 4266,
+                "end": 4266
+              },
+              {
+                "start": 4282,
+                "end": 4282
+              },
+              {
+                "start": 4487,
+                "end": 4487
+              },
+              {
+                "start": 4489,
+                "end": 4489
+              },
+              {
+                "start": 4497,
+                "end": 4498
+              },
+              {
+                "start": 4503,
+                "end": 4503
+              },
+              {
+                "start": 4505,
+                "end": 4505
+              }
+            ],
+            "src/builder/mod.rs": [
+              {
+                "start": 36,
+                "end": 36
+              }
+            ],
+            "src/builder/possible_value.rs": [
+              {
+                "start": 3,
+                "end": 3
+              },
+              {
+                "start": 33,
+                "end": 33
+              },
+              {
+                "start": 78,
+                "end": 78
+              },
+              {
+                "start": 151,
+                "end": 151
+              },
+              {
+                "start": 159,
+                "end": 159
+              }
+            ],
+            "src/builder/resettable.rs": [
+              {
+                "start": 7,
+                "end": 7
+              },
+              {
+                "start": 96,
+                "end": 97
+              },
+              {
+                "start": 171,
+                "end": 172
+              }
+            ],
+            "src/builder/styled_str.rs": [
+              {
+                "start": 3,
+                "end": 3
+              },
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 226,
+                "end": 226
+              },
+              {
+                "start": 228,
+                "end": 228
+              },
+              {
+                "start": 233,
+                "end": 233
+              },
+              {
+                "start": 235,
+                "end": 235
+              },
+              {
+                "start": 241,
+                "end": 241
+              },
+              {
+                "start": 243,
+                "end": 243
+              },
+              {
+                "start": 249,
+                "end": 249
+              },
+              {
+                "start": 251,
+                "end": 251
+              },
+              {
+                "start": 257,
+                "end": 257
+              },
+              {
+                "start": 259,
+                "end": 259
+              },
+              {
+                "start": 263,
+                "end": 263
+              },
+              {
+                "start": 269,
+                "end": 269
+              },
+              {
+                "start": 282,
+                "end": 282
+              }
+            ],
+            "src/error/context.rs": [
+              {
+                "start": 81,
+                "end": 81
+              },
+              {
+                "start": 93,
+                "end": 93
+              }
+            ],
+            "src/error/format.rs": [
+              {
+                "start": 7,
+                "end": 7
+              },
+              {
+                "start": 18,
+                "end": 18
+              },
+              {
+                "start": 31,
+                "end": 32
+              },
+              {
+                "start": 53,
+                "end": 54
+              },
+              {
+                "start": 68,
+                "end": 68
+              },
+              {
+                "start": 78,
+                "end": 78
+              },
+              {
+                "start": 85,
+                "end": 85
+              },
+              {
+                "start": 392,
+                "end": 394
+              },
+              {
+                "start": 415,
+                "end": 415
+              },
+              {
+                "start": 430,
+                "end": 430
+              }
+            ],
+            "src/error/mod.rs": [
+              {
+                "start": 20,
+                "end": 20
+              },
+              {
+                "start": 94,
+                "end": 94
+              },
+              {
+                "start": 216,
+                "end": 216
+              },
+              {
+                "start": 274,
+                "end": 274
+              },
+              {
+                "start": 278,
+                "end": 278
+              },
+              {
+                "start": 286,
+                "end": 286
+              },
+              {
+                "start": 294,
+                "end": 294
+              },
+              {
+                "start": 311,
+                "end": 311
+              },
+              {
+                "start": 322,
+                "end": 322
+              },
+              {
+                "start": 331,
+                "end": 331
+              },
+              {
+                "start": 373,
+                "end": 373
+              },
+              {
+                "start": 393,
+                "end": 393
+              },
+              {
+                "start": 403,
+                "end": 403
+              },
+              {
+                "start": 415,
+                "end": 415
+              },
+              {
+                "start": 425,
+                "end": 425
+              },
+              {
+                "start": 437,
+                "end": 437
+              },
+              {
+                "start": 447,
+                "end": 447
+              },
+              {
+                "start": 459,
+                "end": 459
+              },
+              {
+                "start": 466,
+                "end": 466
+              },
+              {
+                "start": 473,
+                "end": 473
+              },
+              {
+                "start": 484,
+                "end": 484
+              },
+              {
+                "start": 496,
+                "end": 496
+              },
+              {
+                "start": 508,
+                "end": 508
+              },
+              {
+                "start": 527,
+                "end": 527
+              },
+              {
+                "start": 557,
+                "end": 557
+              },
+              {
+                "start": 576,
+                "end": 576
+              },
+              {
+                "start": 587,
+                "end": 587
+              },
+              {
+                "start": 597,
+                "end": 597
+              },
+              {
+                "start": 619,
+                "end": 619
+              },
+              {
+                "start": 631,
+                "end": 631
+              },
+              {
+                "start": 638,
+                "end": 638
+              },
+              {
+                "start": 689,
+                "end": 689
+              },
+              {
+                "start": 693,
+                "end": 693
+              },
+              {
+                "start": 707,
+                "end": 707
+              },
+              {
+                "start": 725,
+                "end": 726
+              }
+            ],
+            "src/macros.rs": [
+              {
+                "start": 651,
+                "end": 651
+              }
+            ],
+            "src/output/fmt.rs": [
+              {
+                "start": 1,
+                "end": 1
+              },
+              {
+                "start": 15,
+                "end": 15
+              },
+              {
+                "start": 27,
+                "end": 27
+              }
+            ],
+            "src/output/help.rs": [
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 9,
+                "end": 10
+              },
+              {
+                "start": 29,
+                "end": 29
+              },
+              {
+                "start": 35,
+                "end": 35
+              }
+            ],
+            "src/output/help_template.rs": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 27,
+                "end": 27
+              },
+              {
+                "start": 37,
+                "end": 37
+              },
+              {
+                "start": 75,
+                "end": 75
+              },
+              {
+                "start": 87,
+                "end": 87
+              },
+              {
+                "start": 550,
+                "end": 550
+              },
+              {
+                "start": 829,
+                "end": 829
+              },
+              {
+                "start": 876,
+                "end": 876
+              },
+              {
+                "start": 936,
+                "end": 936
+              },
+              {
+                "start": 1011,
+                "end": 1011
+              }
+            ],
+            "src/output/mod.rs": [
+              {
+                "start": 10,
+                "end": 10
+              }
+            ],
+            "src/output/textwrap/mod.rs": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "src/output/usage.rs": [
+              {
+                "start": 7,
+                "end": 7
+              },
+              {
+                "start": 36,
+                "end": 36
+              },
+              {
+                "start": 40,
+                "end": 40
+              },
+              {
+                "start": 48,
+                "end": 48
+              },
+              {
+                "start": 73,
+                "end": 73
+              },
+              {
+                "start": 75,
+                "end": 75
+              },
+              {
+                "start": 128,
+                "end": 128
+              },
+              {
+                "start": 130,
+                "end": 130
+              },
+              {
+                "start": 190,
+                "end": 190
+              },
+              {
+                "start": 197,
+                "end": 197
+              },
+              {
+                "start": 281,
+                "end": 281
+              },
+              {
+                "start": 289,
+                "end": 289
+              },
+              {
+                "start": 321,
+                "end": 321
+              }
+            ],
+            "src/parser/parser.rs": [
+              {
+                "start": 1338,
+                "end": 1338
+              },
+              {
+                "start": 1342,
+                "end": 1342
+              },
+              {
+                "start": 1346,
+                "end": 1346
+              },
+              {
+                "start": 1552,
+                "end": 1552
+              }
+            ],
+            "src/parser/validator.rs": [
+              {
+                "start": 2,
+                "end": 2
+              },
+              {
+                "start": 61,
+                "end": 61
+              },
+              {
+                "start": 190,
+                "end": 190
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/parser/parser.rs"
+          ],
+          "spans": {
+            "src/parser/parser.rs": [
+              {
+                "start": 1540,
+                "end": 1565
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/parser/validator.rs"
+          ],
+          "spans": {
+            "src/parser/validator.rs": [
+              {
+                "start": 45,
+                "end": 75
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "tests/builder/help.rs"
+          ],
+          "spans": {
+            "tests/builder/help.rs": [
+              {
+                "start": 2680,
+                "end": 2766
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "tests/builder/error.rs"
+          ],
+          "spans": {
+            "tests/builder/error.rs": [
+              {
+                "start": 1,
+                "end": 130
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/_faq.rs",
+            "src/_features.rs"
+          ],
+          "spans": {
+            "src/_faq.rs": [
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 90,
+                "end": 90
+              },
+              {
+                "start": 92,
+                "end": 92
+              },
+              {
+                "start": 94,
+                "end": 94
+              }
+            ],
+            "src/_features.rs": [
+              {
+                "start": 8,
+                "end": 9
+              },
+              {
+                "start": 20,
+                "end": 21
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/_faq.rs"
+          ],
+          "spans": {
+            "src/_faq.rs": [
+              {
+                "start": 1,
+                "end": 95
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 700,
+                "end": 715
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 460,
+                "end": 485
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "src/builder/command.rs",
+        "src/builder/styled_str.rs",
+        "src/error/mod.rs"
+      ],
+      "pred_spans": {
+        "src/builder/command.rs": [
+          {
+            "start": 711,
+            "end": 883
+          }
+        ],
+        "src/builder/styled_str.rs": [
+          {
+            "start": 176,
+            "end": 224
+          }
+        ],
+        "src/error/mod.rs": [
+          {
+            "start": 141,
+            "end": 197
+          }
+        ]
+      }
+    }
+  }
+]

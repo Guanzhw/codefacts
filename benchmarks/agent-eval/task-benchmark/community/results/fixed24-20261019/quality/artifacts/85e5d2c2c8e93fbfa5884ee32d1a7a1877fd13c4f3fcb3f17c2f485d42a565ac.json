@@ -1,0 +1,707 @@
+[
+  {
+    "instance_id": "cli__cli-3608",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "ffc897e622bf3bfe556f07605804184c36f18e71",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            ".gitattributes",
+            ".github/CODE-OF-CONDUCT.md",
+            ".github/CONTRIBUTING.md",
+            ".github/ISSUE_TEMPLATE/bug_report.md",
+            ".github/ISSUE_TEMPLATE/config.yml",
+            ".github/ISSUE_TEMPLATE/feedback.md",
+            ".github/ISSUE_TEMPLATE/submit-a-request.md",
+            ".github/PULL_REQUEST_TEMPLATE/bug_fix.md",
+            ".github/SECURITY.md",
+            ".github/workflows/codeql.yml",
+            ".github/workflows/go.yml",
+            ".github/workflows/lint.yml",
+            ".github/workflows/prauto.yml",
+            ".github/workflows/releases.yml",
+            ".gitignore",
+            ".golangci.yml",
+            ".goreleaser.yml",
+            ".vscode/settings.json",
+            "LICENSE",
+            "Makefile",
+            "README.md",
+            "api/cache.go",
+            "api/cache_test.go",
+            "api/client.go",
+            "api/client_test.go",
+            "api/export_pr.go",
+            "api/export_pr_test.go",
+            "api/pull_request_test.go",
+            "api/queries_comments.go",
+            "api/queries_issue.go",
+            "api/queries_org.go",
+            "api/queries_pr.go",
+            "api/queries_pr_review.go",
+            "api/queries_pr_test.go",
+            "api/queries_repo.go",
+            "api/queries_repo_test.go",
+            "api/queries_user.go",
+            "api/query_builder.go",
+            "api/query_builder_test.go",
+            "api/reaction_groups.go",
+            "api/reaction_groups_test.go",
+            "cmd/gen-docs/main.go",
+            "cmd/gen-docs/main_test.go",
+            "cmd/gh/main.go",
+            "cmd/gh/main_test.go",
+            "context/context.go",
+            "context/remote.go",
+            "context/remote_test.go",
+            "docs/README.md",
+            "docs/command-line-syntax.md",
+            "docs/gh-vs-hub.md",
+            "docs/install_linux.md",
+            "docs/releasing.md",
+            "docs/source.md",
+            "docs/triage.md",
+            "git/fixtures/.gitignore",
+            "git/fixtures/simple.git/HEAD",
+            "git/fixtures/simple.git/config",
+            "git/fixtures/simple.git/index",
+            "git/fixtures/simple.git/logs/HEAD",
+            "git/fixtures/simple.git/logs/refs/heads/main",
+            "git/fixtures/simple.git/objects/4b/825dc642cb6eb9a060e54bf8d69288fbee4904",
+            "git/fixtures/simple.git/objects/6f/1a2405cace1633d89a79c74c65f22fe78f9659",
+            "git/fixtures/simple.git/objects/d1/e0abfb7d158ed544a202a6958c62d4fc22e12f",
+            "git/fixtures/simple.git/refs/heads/main",
+            "git/git.go",
+            "git/git_test.go",
+            "git/remote.go",
+            "git/remote_test.go",
+            "git/ssh_config.go",
+            "git/ssh_config_test.go",
+            "git/url.go",
+            "git/url_test.go",
+            "go.mod",
+            "go.sum",
+            "internal/authflow/flow.go",
+            "internal/authflow/success.go",
+            "internal/build/build.go",
+            "internal/config/alias_config.go",
+            "internal/config/config_file.go",
+            "internal/config/config_file_test.go",
+            "internal/config/config_map.go",
+            "internal/config/config_type.go",
+            "internal/config/config_type_test.go",
+            "internal/config/from_env.go",
+            "internal/config/from_env_test.go",
+            "internal/config/from_file.go",
+            "internal/config/stub.go",
+            "internal/config/testing.go",
+            "internal/docs/docs_test.go",
+            "internal/docs/man.go",
+            "internal/docs/man_test.go",
+            "internal/docs/markdown.go",
+            "internal/docs/markdown_test.go",
+            "internal/ghinstance/host.go",
+            "internal/ghinstance/host_test.go",
+            "internal/ghrepo/repo.go",
+            "internal/ghrepo/repo_test.go",
+            "internal/run/run.go",
+            "internal/run/stub.go",
+            "internal/update/update.go",
+            "internal/update/update_test.go",
+            "pkg/cmd/actions/actions.go",
+            "pkg/cmd/alias/alias.go",
+            "pkg/cmd/alias/delete/delete.go",
+            "pkg/cmd/alias/delete/delete_test.go",
+            "pkg/cmd/alias/expand/expand.go",
+            "pkg/cmd/alias/expand/expand_test.go",
+            "pkg/cmd/alias/list/list.go",
+            "pkg/cmd/alias/list/list_test.go",
+            "pkg/cmd/alias/set/set.go",
+            "pkg/cmd/alias/set/set_test.go",
+            "pkg/cmd/api/api.go",
+            "pkg/cmd/api/api_test.go",
+            "pkg/cmd/api/http.go",
+            "pkg/cmd/api/http_test.go",
+            "pkg/cmd/api/pagination.go",
+            "pkg/cmd/api/pagination_test.go",
+            "pkg/cmd/auth/auth.go",
+            "pkg/cmd/auth/gitcredential/helper.go",
+            "pkg/cmd/auth/gitcredential/helper_test.go",
+            "pkg/cmd/auth/login/login.go",
+            "pkg/cmd/auth/login/login_test.go",
+            "pkg/cmd/auth/logout/logout.go",
+            "pkg/cmd/auth/logout/logout_test.go",
+            "pkg/cmd/auth/refresh/refresh.go",
+            "pkg/cmd/auth/refresh/refresh_test.go",
+            "pkg/cmd/auth/shared/git_credential.go",
+            "pkg/cmd/auth/shared/git_credential_test.go",
+            "pkg/cmd/auth/shared/login_flow.go",
+            "pkg/cmd/auth/shared/login_flow_test.go",
+            "pkg/cmd/auth/shared/oauth_scopes.go",
+            "pkg/cmd/auth/shared/oauth_scopes_test.go",
+            "pkg/cmd/auth/shared/ssh_keys.go",
+            "pkg/cmd/auth/status/status.go",
+            "pkg/cmd/auth/status/status_test.go",
+            "pkg/cmd/completion/completion.go",
+            "pkg/cmd/completion/completion_test.go",
+            "pkg/cmd/config/config.go",
+            "pkg/cmd/config/get/get.go",
+            "pkg/cmd/config/get/get_test.go",
+            "pkg/cmd/config/set/set.go",
+            "pkg/cmd/config/set/set_test.go",
+            "pkg/cmd/factory/default.go",
+            "pkg/cmd/factory/http.go",
+            "pkg/cmd/factory/remote_resolver.go",
+            "pkg/cmd/factory/remote_resolver_test.go",
+            "pkg/cmd/gist/clone/clone.go",
+            "pkg/cmd/gist/clone/clone_test.go",
+            "pkg/cmd/gist/create/create.go",
+            "pkg/cmd/gist/create/create_test.go",
+            "pkg/cmd/gist/delete/delete.go",
+            "pkg/cmd/gist/delete/delete_test.go",
+            "pkg/cmd/gist/edit/edit.go",
+            "pkg/cmd/gist/edit/edit_test.go",
+            "pkg/cmd/gist/gist.go",
+            "pkg/cmd/gist/list/list.go",
+            "pkg/cmd/gist/list/list_test.go",
+            "pkg/cmd/gist/shared/shared.go",
+            "pkg/cmd/gist/shared/shared_test.go",
+            "pkg/cmd/gist/view/view.go",
+            "pkg/cmd/gist/view/view_test.go",
+            "pkg/cmd/issue/close/close.go",
+            "pkg/cmd/issue/close/close_test.go",
+            "pkg/cmd/issue/comment/comment.go",
+            "pkg/cmd/issue/comment/comment_test.go",
+            "pkg/cmd/issue/create/create.go",
+            "pkg/cmd/issue/create/create_test.go",
+            "pkg/cmd/issue/create/fixtures/repoWithNonLegacyIssueTemplates/.github/ISSUE_TEMPLATE/bug_report.md",
+            "pkg/cmd/issue/create/fixtures/repoWithNonLegacyIssueTemplates/.github/ISSUE_TEMPLATE/enhancement.md",
+            "pkg/cmd/issue/delete/delete.go",
+            "pkg/cmd/issue/delete/delete_test.go",
+            "pkg/cmd/issue/edit/edit.go",
+            "pkg/cmd/issue/edit/edit_test.go",
+            "pkg/cmd/issue/issue.go",
+            "pkg/cmd/issue/list/fixtures/issueList.json",
+            "pkg/cmd/issue/list/fixtures/issueSearch.json",
+            "pkg/cmd/issue/list/http.go",
+            "pkg/cmd/issue/list/http_test.go",
+            "pkg/cmd/issue/list/list.go",
+            "pkg/cmd/issue/list/list_test.go",
+            "pkg/cmd/issue/reopen/reopen.go",
+            "pkg/cmd/issue/reopen/reopen_test.go",
+            "pkg/cmd/issue/shared/display.go",
+            "pkg/cmd/issue/shared/display_test.go",
+            "pkg/cmd/issue/shared/lookup.go",
+            "pkg/cmd/issue/shared/lookup_test.go",
+            "pkg/cmd/issue/status/fixtures/issueStatus.json",
+            "pkg/cmd/issue/status/status.go",
+            "pkg/cmd/issue/status/status_test.go",
+            "pkg/cmd/issue/transfer/transfer.go",
+            "pkg/cmd/issue/transfer/transfer_test.go",
+            "pkg/cmd/issue/view/fixtures/issueView_preview.json",
+            "pkg/cmd/issue/view/fixtures/issueView_previewClosedState.json",
+            "pkg/cmd/issue/view/fixtures/issueView_previewFullComments.json",
+            "pkg/cmd/issue/view/fixtures/issueView_previewSingleComment.json",
+            "pkg/cmd/issue/view/fixtures/issueView_previewWithEmptyBody.json",
+            "pkg/cmd/issue/view/fixtures/issueView_previewWithMetadata.json",
+            "pkg/cmd/issue/view/view.go",
+            "pkg/cmd/issue/view/view_test.go",
+            "pkg/cmd/pr/checkout/checkout.go",
+            "pkg/cmd/pr/checkout/checkout_test.go",
+            "pkg/cmd/pr/checks/checks.go",
+            "pkg/cmd/pr/checks/checks_test.go",
+            "pkg/cmd/pr/checks/fixtures/allPassing.json",
+            "pkg/cmd/pr/checks/fixtures/someFailing.json",
+            "pkg/cmd/pr/checks/fixtures/somePending.json",
+            "pkg/cmd/pr/checks/fixtures/withStatuses.json",
+            "pkg/cmd/pr/close/close.go",
+            "pkg/cmd/pr/close/close_test.go",
+            "pkg/cmd/pr/comment/comment.go",
+            "pkg/cmd/pr/comment/comment_test.go",
+            "pkg/cmd/pr/create/create.go",
+            "pkg/cmd/pr/create/create_test.go",
+            "pkg/cmd/pr/create/fixtures/repoWithNonLegacyPRTemplates/.github/PULL_REQUEST_TEMPLATE/bug_fix.md",
+            "pkg/cmd/pr/create/regexp_writer.go",
+            "pkg/cmd/pr/create/regexp_writer_test.go",
+            "pkg/cmd/pr/diff/diff.go",
+            "pkg/cmd/pr/diff/diff_test.go",
+            "pkg/cmd/pr/edit/edit.go",
+            "pkg/cmd/pr/edit/edit_test.go",
+            "pkg/cmd/pr/list/fixtures/prList.json",
+            "pkg/cmd/pr/list/fixtures/prListWithDuplicates.json",
+            "pkg/cmd/pr/list/http.go",
+            "pkg/cmd/pr/list/http_test.go",
+            "pkg/cmd/pr/list/list.go",
+            "pkg/cmd/pr/list/list_test.go",
+            "pkg/cmd/pr/merge/http.go",
+            "pkg/cmd/pr/merge/merge.go",
+            "pkg/cmd/pr/merge/merge_test.go",
+            "pkg/cmd/pr/pr.go",
+            "pkg/cmd/pr/ready/ready.go",
+            "pkg/cmd/pr/ready/ready_test.go",
+            "pkg/cmd/pr/reopen/reopen.go",
+            "pkg/cmd/pr/reopen/reopen_test.go",
+            "pkg/cmd/pr/review/review.go",
+            "pkg/cmd/pr/review/review_test.go",
+            "pkg/cmd/pr/shared/commentable.go",
+            "pkg/cmd/pr/shared/comments.go",
+            "pkg/cmd/pr/shared/display.go",
+            "pkg/cmd/pr/shared/display_test.go",
+            "pkg/cmd/pr/shared/editable.go",
+            "pkg/cmd/pr/shared/lookup.go",
+            "pkg/cmd/pr/shared/lookup_test.go",
+            "pkg/cmd/pr/shared/params.go",
+            "pkg/cmd/pr/shared/params_test.go",
+            "pkg/cmd/pr/shared/preserve.go",
+            "pkg/cmd/pr/shared/preserve_test.go",
+            "pkg/cmd/pr/shared/reaction_groups.go",
+            "pkg/cmd/pr/shared/state.go",
+            "pkg/cmd/pr/shared/survey.go",
+            "pkg/cmd/pr/shared/survey_test.go",
+            "pkg/cmd/pr/shared/templates.go",
+            "pkg/cmd/pr/shared/templates_test.go",
+            "pkg/cmd/pr/status/fixtures/prStatus.json",
+            "pkg/cmd/pr/status/fixtures/prStatusChecks.json",
+            "pkg/cmd/pr/status/fixtures/prStatusCurrentBranch.json",
+            "pkg/cmd/pr/status/fixtures/prStatusCurrentBranchClosed.json",
+            "pkg/cmd/pr/status/fixtures/prStatusCurrentBranchClosedOnDefaultBranch.json",
+            "pkg/cmd/pr/status/fixtures/prStatusCurrentBranchMerged.json",
+            "pkg/cmd/pr/status/fixtures/prStatusCurrentBranchMergedOnDefaultBranch.json",
+            "pkg/cmd/pr/status/status.go",
+            "pkg/cmd/pr/status/status_test.go",
+            "pkg/cmd/pr/view/fixtures/prView.json",
+            "pkg/cmd/pr/view/fixtures/prViewPreview.json",
+            "pkg/cmd/pr/view/fixtures/prViewPreviewClosedState.json",
+            "pkg/cmd/pr/view/fixtures/prViewPreviewDraftState.json",
+            "pkg/cmd/pr/view/fixtures/prViewPreviewDraftStatebyBranch.json",
+            "pkg/cmd/pr/view/fixtures/prViewPreviewFullComments.json",
+            "pkg/cmd/pr/view/fixtures/prViewPreviewManyReviews.json",
+            "pkg/cmd/pr/view/fixtures/prViewPreviewMergedState.json",
+            "pkg/cmd/pr/view/fixtures/prViewPreviewNoReviews.json",
+            "pkg/cmd/pr/view/fixtures/prViewPreviewReviews.json",
+            "pkg/cmd/pr/view/fixtures/prViewPreviewSingleComment.json",
+            "pkg/cmd/pr/view/fixtures/prViewPreviewWithMetadataByBranch.json",
+            "pkg/cmd/pr/view/fixtures/prViewPreviewWithMetadataByNumber.json",
+            "pkg/cmd/pr/view/fixtures/prViewPreviewWithReviewersByNumber.json",
+            "pkg/cmd/pr/view/fixtures/prView_EmptyBody.json",
+            "pkg/cmd/pr/view/fixtures/prView_NoActiveBranch.json",
+            "pkg/cmd/pr/view/view.go",
+            "pkg/cmd/pr/view/view_test.go",
+            "pkg/cmd/release/create/create.go",
+            "pkg/cmd/release/create/create_test.go",
+            "pkg/cmd/release/create/http.go",
+            "pkg/cmd/release/delete/delete.go",
+            "pkg/cmd/release/delete/delete_test.go",
+            "pkg/cmd/release/download/download.go",
+            "pkg/cmd/release/download/download_test.go",
+            "pkg/cmd/release/list/http.go",
+            "pkg/cmd/release/list/list.go",
+            "pkg/cmd/release/list/list_test.go",
+            "pkg/cmd/release/release.go",
+            "pkg/cmd/release/shared/fetch.go",
+            "pkg/cmd/release/shared/upload.go",
+            "pkg/cmd/release/shared/upload_test.go",
+            "pkg/cmd/release/upload/upload.go",
+            "pkg/cmd/release/view/view.go",
+            "pkg/cmd/release/view/view_test.go",
+            "pkg/cmd/repo/clone/clone.go",
+            "pkg/cmd/repo/clone/clone_test.go",
+            "pkg/cmd/repo/create/create.go",
+            "pkg/cmd/repo/create/create_test.go",
+            "pkg/cmd/repo/create/http.go",
+            "pkg/cmd/repo/create/http_test.go",
+            "pkg/cmd/repo/credits/credits.go",
+            "pkg/cmd/repo/fork/fork.go",
+            "pkg/cmd/repo/fork/forkResult.json",
+            "pkg/cmd/repo/fork/fork_test.go",
+            "pkg/cmd/repo/garden/garden.go",
+            "pkg/cmd/repo/garden/http.go",
+            "pkg/cmd/repo/list/fixtures/repoList.json",
+            "pkg/cmd/repo/list/fixtures/repoSearch.json",
+            "pkg/cmd/repo/list/http.go",
+            "pkg/cmd/repo/list/http_test.go",
+            "pkg/cmd/repo/list/list.go",
+            "pkg/cmd/repo/list/list_test.go",
+            "pkg/cmd/repo/repo.go",
+            "pkg/cmd/repo/view/http.go",
+            "pkg/cmd/repo/view/view.go",
+            "pkg/cmd/repo/view/view_test.go",
+            "pkg/cmd/root/help.go",
+            "pkg/cmd/root/help_reference.go",
+            "pkg/cmd/root/help_test.go",
+            "pkg/cmd/root/help_topic.go",
+            "pkg/cmd/root/help_topic_test.go",
+            "pkg/cmd/root/root.go",
+            "pkg/cmd/run/download/download.go",
+            "pkg/cmd/run/download/download_test.go",
+            "pkg/cmd/run/download/fixtures/myproject.zip",
+            "pkg/cmd/run/download/http.go",
+            "pkg/cmd/run/download/http_test.go",
+            "pkg/cmd/run/download/zip.go",
+            "pkg/cmd/run/download/zip_test.go",
+            "pkg/cmd/run/list/list.go",
+            "pkg/cmd/run/list/list_test.go",
+            "pkg/cmd/run/rerun/rerun.go",
+            "pkg/cmd/run/rerun/rerun_test.go",
+            "pkg/cmd/run/run.go",
+            "pkg/cmd/run/shared/artifacts.go",
+            "pkg/cmd/run/shared/presentation.go",
+            "pkg/cmd/run/shared/shared.go",
+            "pkg/cmd/run/shared/shared_test.go",
+            "pkg/cmd/run/shared/test.go",
+            "pkg/cmd/run/view/fixtures/run_log.zip",
+            "pkg/cmd/run/view/view.go",
+            "pkg/cmd/run/view/view_test.go",
+            "pkg/cmd/run/watch/watch.go",
+            "pkg/cmd/run/watch/watch_test.go",
+            "pkg/cmd/secret/list/list.go",
+            "pkg/cmd/secret/list/list_test.go",
+            "pkg/cmd/secret/remove/remove.go",
+            "pkg/cmd/secret/remove/remove_test.go",
+            "pkg/cmd/secret/secret.go",
+            "pkg/cmd/secret/set/http.go",
+            "pkg/cmd/secret/set/set.go",
+            "pkg/cmd/secret/set/set_test.go",
+            "pkg/cmd/secret/shared/shared.go",
+            "pkg/cmd/ssh-key/add/add.go",
+            "pkg/cmd/ssh-key/add/add_test.go",
+            "pkg/cmd/ssh-key/add/http.go",
+            "pkg/cmd/ssh-key/list/http.go",
+            "pkg/cmd/ssh-key/list/list.go",
+            "pkg/cmd/ssh-key/list/list_test.go",
+            "pkg/cmd/ssh-key/ssh-key.go",
+            "pkg/cmd/version/version.go",
+            "pkg/cmd/version/version_test.go",
+            "pkg/cmd/workflow/disable/disable.go",
+            "pkg/cmd/workflow/disable/disable_test.go",
+            "pkg/cmd/workflow/enable/enable.go",
+            "pkg/cmd/workflow/enable/enable_test.go",
+            "pkg/cmd/workflow/list/list.go",
+            "pkg/cmd/workflow/list/list_test.go",
+            "pkg/cmd/workflow/run/run.go",
+            "pkg/cmd/workflow/run/run_test.go",
+            "pkg/cmd/workflow/shared/shared.go",
+            "pkg/cmd/workflow/shared/test.go",
+            "pkg/cmd/workflow/view/http.go",
+            "pkg/cmd/workflow/view/view.go",
+            "pkg/cmd/workflow/view/view_test.go",
+            "pkg/cmd/workflow/workflow.go",
+            "pkg/cmdutil/args.go",
+            "pkg/cmdutil/args_test.go",
+            "pkg/cmdutil/auth_check.go",
+            "pkg/cmdutil/auth_check_test.go",
+            "pkg/cmdutil/errors.go",
+            "pkg/cmdutil/factory.go",
+            "pkg/cmdutil/file_input.go",
+            "pkg/cmdutil/json_flags.go",
+            "pkg/cmdutil/json_flags_test.go",
+            "pkg/cmdutil/legacy.go",
+            "pkg/cmdutil/repo_override.go",
+            "pkg/cmdutil/web_browser.go",
+            "pkg/export/filter.go",
+            "pkg/export/filter_test.go",
+            "pkg/export/template.go",
+            "pkg/export/template_test.go",
+            "pkg/githubsearch/query.go",
+            "pkg/githubtemplate/github_template.go",
+            "pkg/githubtemplate/github_template_test.go",
+            "pkg/httpmock/legacy.go",
+            "pkg/httpmock/registry.go",
+            "pkg/httpmock/stub.go",
+            "pkg/iostreams/color.go",
+            "pkg/iostreams/color_test.go",
+            "pkg/iostreams/console.go",
+            "pkg/iostreams/console_windows.go",
+            "pkg/iostreams/iostreams.go",
+            "pkg/jsoncolor/jsoncolor.go",
+            "pkg/jsoncolor/jsoncolor_test.go",
+            "pkg/markdown/markdown.go",
+            "pkg/markdown/markdown_test.go",
+            "pkg/prompt/prompt.go",
+            "pkg/prompt/stubber.go",
+            "pkg/set/string_set.go",
+            "pkg/set/string_set_test.go",
+            "pkg/surveyext/editor.go",
+            "pkg/surveyext/editor_manual.go",
+            "pkg/text/indent.go",
+            "pkg/text/indent_test.go",
+            "pkg/text/sanitize.go",
+            "pkg/text/sanitize_test.go",
+            "pkg/text/truncate.go",
+            "pkg/text/truncate_test.go",
+            "script/build.go",
+            "script/changelog",
+            "script/createrepo.sh",
+            "script/distributions",
+            "script/override.ubuntu",
+            "script/pubkey.asc",
+            "script/rpmmacros",
+            "script/scoop-gen",
+            "script/setup-windows-certificate.ps1",
+            "script/sign.ps1",
+            "script/signtool.exe",
+            "test/helpers.go",
+            "utils/table_printer.go",
+            "utils/table_printer_test.go",
+            "utils/terminal.go",
+            "utils/utils.go",
+            "utils/utils_test.go",
+            "wix.json"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "pkg/cmd/repo/fork/fork.go"
+          ],
+          "spans": {
+            "pkg/cmd/repo/fork/fork.go": [
+              {
+                "start": 1,
+                "end": 260
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/repo/fork/fork_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/repo/fork/fork_test.go": [
+              {
+                "start": 1,
+                "end": 300
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/repo/repo.go"
+          ],
+          "spans": {
+            "pkg/cmd/repo/repo.go": [
+              {
+                "start": 1,
+                "end": 45
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/repo/create/http.go"
+          ],
+          "spans": {
+            "pkg/cmd/repo/create/http.go": [
+              {
+                "start": 1,
+                "end": 145
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/repo/fork/fork.go"
+          ],
+          "spans": {
+            "pkg/cmd/repo/fork/fork.go": [
+              {
+                "start": 230,
+                "end": 308
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "api/queries_repo.go"
+          ],
+          "spans": {
+            "api/queries_repo.go": [
+              {
+                "start": 1,
+                "end": 260
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "api/queries_repo.go",
+            "pkg/cmd/pr/create/create.go",
+            "pkg/cmd/repo/fork/fork.go"
+          ],
+          "spans": {
+            "api/queries_repo.go": [
+              {
+                "start": 314,
+                "end": 315
+              }
+            ],
+            "pkg/cmd/pr/create/create.go": [
+              {
+                "start": 667,
+                "end": 667
+              },
+              {
+                "start": 677,
+                "end": 677
+              },
+              {
+                "start": 682,
+                "end": 682
+              },
+              {
+                "start": 727,
+                "end": 727
+              }
+            ],
+            "pkg/cmd/repo/fork/fork.go": [
+              {
+                "start": 172,
+                "end": 172
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "api/queries_repo.go"
+          ],
+          "spans": {
+            "api/queries_repo.go": [
+              {
+                "start": 290,
+                "end": 370
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "pkg/cmd/repo/fork/fork_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/repo/fork/fork_test.go": [
+              {
+                "start": 340,
+                "end": 560
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/repo/fork/fork.go"
+          ],
+          "spans": {
+            "pkg/cmd/repo/fork/fork.go": [
+              {
+                "start": 25,
+                "end": 180
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/repo/create/create.go"
+          ],
+          "spans": {
+            "pkg/cmd/repo/create/create.go": [
+              {
+                "start": 1,
+                "end": 180
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "api/queries_repo_test.go"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "api/queries_repo_test.go"
+          ],
+          "spans": {
+            "api/queries_repo_test.go": [
+              {
+                "start": 1,
+                "end": 300
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/pr/create/create.go"
+          ],
+          "spans": {
+            "pkg/cmd/pr/create/create.go": [
+              {
+                "start": 650,
+                "end": 700
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "api/queries_repo.go",
+        "pkg/cmd/pr/create/create.go",
+        "pkg/cmd/repo/fork/fork.go",
+        "pkg/cmd/repo/fork/fork_test.go"
+      ],
+      "pred_spans": {
+        "api/queries_repo.go": [
+          {
+            "start": 303,
+            "end": 335
+          }
+        ],
+        "pkg/cmd/pr/create/create.go": [
+          {
+            "start": 666,
+            "end": 682
+          }
+        ],
+        "pkg/cmd/repo/fork/fork.go": [
+          {
+            "start": 25,
+            "end": 114
+          },
+          {
+            "start": 117,
+            "end": 176
+          }
+        ],
+        "pkg/cmd/repo/fork/fork_test.go": [
+          {
+            "start": 25,
+            "end": 203
+          }
+        ]
+      }
+    }
+  }
+]

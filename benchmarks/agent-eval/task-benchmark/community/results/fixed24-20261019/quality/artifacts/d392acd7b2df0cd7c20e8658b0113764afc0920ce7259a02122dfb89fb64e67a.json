@@ -1,0 +1,7 @@
+[
+  {
+    "instance_id": "vuejs__core-11899",
+    "model_name_or_path": "deepseek-swe-codegraph",
+    "model_patch": "diff --git a/packages/compiler-sfc/__tests__/tmpRepro.spec.ts b/packages/compiler-sfc/__tests__/tmpRepro.spec.ts\nnew file mode 100644\nindex 0000000..a6e8864\n--- /dev/null\n+++ b/packages/compiler-sfc/__tests__/tmpRepro.spec.ts\n@@ -0,0 +1,30 @@\n+import { compileScoped } from './compileStyle.spec'\n+\n+test('repro nested media', () => {\n+  const code = compileScoped(\n+    `.foo {\n+  background-color: red;\n+  .bar {}\n+  @media only screen and (max-width: 800px) {\n+    background-color: green;\n+  }\n+}`,\n+  )\n+  console.log('=== OUTPUT START ===')\n+  console.log(code)\n+  console.log('=== OUTPUT END ===')\n+})\n+\n+test('repro nested media no bar', () => {\n+  const code = compileScoped(\n+    `.foo {\n+  background-color: red;\n+  @media only screen and (max-width: 800px) {\n+    background-color: green;\n+  }\n+}`,\n+  )\n+  console.log('=== OUTPUT2 START ===')\n+  console.log(code)\n+  console.log('=== OUTPUT2 END ===')\n+})\n"
+  }
+]

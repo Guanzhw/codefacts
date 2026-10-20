@@ -1,0 +1,1241 @@
+[
+  {
+    "instance_id": "mui__material-ui-34229",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "e4f2f9e5689127b3438cac196544bdfb2c6083ea",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "packages/mui-material/src/Select/Select.js",
+            "packages/mui-material/src/Select/Select.test.js",
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/Select.js": [
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 62,
+                "end": 62
+              },
+              {
+                "start": 89,
+                "end": 89
+              }
+            ],
+            "packages/mui-material/src/Select/Select.test.js": [
+              {
+                "start": 981,
+                "end": 981
+              },
+              {
+                "start": 993,
+                "end": 993
+              },
+              {
+                "start": 1023,
+                "end": 1023
+              }
+            ],
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 14,
+                "end": 14
+              },
+              {
+                "start": 100,
+                "end": 100
+              },
+              {
+                "start": 128,
+                "end": 128
+              },
+              {
+                "start": 581,
+                "end": 581
+              },
+              {
+                "start": 723,
+                "end": 723
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-joy/src/Select/Select.spec.tsx",
+            "packages/mui-joy/src/Select/Select.test.tsx",
+            "packages/mui-joy/src/Select/Select.tsx",
+            "packages/mui-joy/src/Select/SelectProps.ts",
+            "packages/mui-joy/src/Select/index.ts",
+            "packages/mui-joy/src/Select/selectClasses.ts",
+            "packages/mui-material/src/Select/Select.d.ts",
+            "packages/mui-material/src/Select/Select.js",
+            "packages/mui-material/src/Select/Select.spec.tsx",
+            "packages/mui-material/src/Select/Select.test.js",
+            "packages/mui-material/src/Select/SelectInput.d.ts",
+            "packages/mui-material/src/Select/SelectInput.js",
+            "packages/mui-material/src/Select/index.d.ts",
+            "packages/mui-material/src/Select/index.js",
+            "packages/mui-material/src/Select/selectClasses.ts",
+            "test/regressions/fixtures/Select/SelectAlignment.js",
+            "test/regressions/fixtures/Select/SelectChips.js",
+            "test/regressions/fixtures/Select/SelectMissingValue.js",
+            "test/regressions/fixtures/Select/SelectOverflow.js"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 1,
+                "end": 260
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 260,
+                "end": 559
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 546,
+                "end": 580
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/Select.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/Select.js": [
+              {
+                "start": 1,
+                "end": 130
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-joy/src/Select/Select.tsx",
+            "packages/mui-material/src/Select/Select.d.ts",
+            "packages/mui-material/src/Select/Select.js",
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-joy/src/Select/Select.tsx": [
+              {
+                "start": 351,
+                "end": 351
+              },
+              {
+                "start": 482,
+                "end": 482
+              },
+              {
+                "start": 570,
+                "end": 570
+              }
+            ],
+            "packages/mui-material/src/Select/Select.d.ts": [
+              {
+                "start": 61,
+                "end": 61
+              }
+            ],
+            "packages/mui-material/src/Select/Select.js": [
+              {
+                "start": 90,
+                "end": 90
+              },
+              {
+                "start": 181,
+                "end": 181
+              }
+            ],
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 148,
+                "end": 148
+              },
+              {
+                "start": 150,
+                "end": 150
+              },
+              {
+                "start": 175,
+                "end": 176
+              },
+              {
+                "start": 180,
+                "end": 180
+              },
+              {
+                "start": 218,
+                "end": 218
+              },
+              {
+                "start": 323,
+                "end": 323
+              },
+              {
+                "start": 479,
+                "end": 479
+              },
+              {
+                "start": 481,
+                "end": 482
+              },
+              {
+                "start": 549,
+                "end": 549
+              },
+              {
+                "start": 570,
+                "end": 570
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-joy/src/Select/Select.tsx",
+            "packages/mui-joy/src/Select/SelectProps.ts"
+          ],
+          "spans": {
+            "packages/mui-joy/src/Select/Select.tsx": [
+              {
+                "start": 642,
+                "end": 642
+              },
+              {
+                "start": 682,
+                "end": 682
+              }
+            ],
+            "packages/mui-joy/src/Select/SelectProps.ts": [
+              {
+                "start": 60,
+                "end": 60
+              },
+              {
+                "start": 83,
+                "end": 83
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/Select.test.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/Select.test.js": [
+              {
+                "start": 13,
+                "end": 13
+              },
+              {
+                "start": 51,
+                "end": 51
+              },
+              {
+                "start": 53,
+                "end": 56
+              },
+              {
+                "start": 66,
+                "end": 66
+              },
+              {
+                "start": 77,
+                "end": 77
+              },
+              {
+                "start": 85,
+                "end": 85
+              },
+              {
+                "start": 107,
+                "end": 108
+              },
+              {
+                "start": 131,
+                "end": 132
+              },
+              {
+                "start": 145,
+                "end": 145
+              },
+              {
+                "start": 165,
+                "end": 165
+              },
+              {
+                "start": 185,
+                "end": 185
+              },
+              {
+                "start": 190,
+                "end": 190
+              },
+              {
+                "start": 206,
+                "end": 207
+              },
+              {
+                "start": 244,
+                "end": 246
+              },
+              {
+                "start": 265,
+                "end": 266
+              },
+              {
+                "start": 282,
+                "end": 284
+              },
+              {
+                "start": 307,
+                "end": 309
+              },
+              {
+                "start": 322,
+                "end": 324
+              },
+              {
+                "start": 339,
+                "end": 340
+              },
+              {
+                "start": 353,
+                "end": 353
+              },
+              {
+                "start": 355,
+                "end": 358
+              },
+              {
+                "start": 370,
+                "end": 371
+              },
+              {
+                "start": 467,
+                "end": 468
+              },
+              {
+                "start": 480,
+                "end": 481
+              },
+              {
+                "start": 493,
+                "end": 494
+              },
+              {
+                "start": 496,
+                "end": 497
+              },
+              {
+                "start": 519,
+                "end": 520
+              },
+              {
+                "start": 522,
+                "end": 523
+              },
+              {
+                "start": 541,
+                "end": 541
+              },
+              {
+                "start": 545,
+                "end": 545
+              },
+              {
+                "start": 547,
+                "end": 547
+              },
+              {
+                "start": 549,
+                "end": 550
+              },
+              {
+                "start": 552,
+                "end": 553
+              },
+              {
+                "start": 657,
+                "end": 658
+              },
+              {
+                "start": 674,
+                "end": 675
+              },
+              {
+                "start": 678,
+                "end": 679
+              },
+              {
+                "start": 693,
+                "end": 693
+              },
+              {
+                "start": 696,
+                "end": 696
+              },
+              {
+                "start": 700,
+                "end": 700
+              },
+              {
+                "start": 704,
+                "end": 704
+              },
+              {
+                "start": 712,
+                "end": 712
+              },
+              {
+                "start": 724,
+                "end": 726
+              },
+              {
+                "start": 739,
+                "end": 740
+              },
+              {
+                "start": 759,
+                "end": 759
+              },
+              {
+                "start": 764,
+                "end": 764
+              },
+              {
+                "start": 790,
+                "end": 790
+              },
+              {
+                "start": 796,
+                "end": 796
+              },
+              {
+                "start": 821,
+                "end": 821
+              },
+              {
+                "start": 833,
+                "end": 833
+              },
+              {
+                "start": 835,
+                "end": 838
+              },
+              {
+                "start": 856,
+                "end": 857
+              },
+              {
+                "start": 861,
+                "end": 861
+              },
+              {
+                "start": 864,
+                "end": 864
+              },
+              {
+                "start": 869,
+                "end": 870
+              },
+              {
+                "start": 874,
+                "end": 874
+              },
+              {
+                "start": 877,
+                "end": 877
+              },
+              {
+                "start": 885,
+                "end": 887
+              },
+              {
+                "start": 901,
+                "end": 902
+              },
+              {
+                "start": 904,
+                "end": 905
+              },
+              {
+                "start": 927,
+                "end": 929
+              },
+              {
+                "start": 945,
+                "end": 947
+              },
+              {
+                "start": 971,
+                "end": 973
+              },
+              {
+                "start": 1011,
+                "end": 1013
+              },
+              {
+                "start": 1044,
+                "end": 1046
+              },
+              {
+                "start": 1081,
+                "end": 1082
+              },
+              {
+                "start": 1174,
+                "end": 1174
+              },
+              {
+                "start": 1176,
+                "end": 1176
+              },
+              {
+                "start": 1186,
+                "end": 1186
+              },
+              {
+                "start": 1190,
+                "end": 1190
+              },
+              {
+                "start": 1192,
+                "end": 1192
+              },
+              {
+                "start": 1208,
+                "end": 1210
+              },
+              {
+                "start": 1237,
+                "end": 1240
+              },
+              {
+                "start": 1266,
+                "end": 1267
+              },
+              {
+                "start": 1279,
+                "end": 1280
+              },
+              {
+                "start": 1297,
+                "end": 1297
+              },
+              {
+                "start": 1299,
+                "end": 1299
+              },
+              {
+                "start": 1351,
+                "end": 1352
+              },
+              {
+                "start": 1387,
+                "end": 1388
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "yarn.lock"
+          ],
+          "spans": {
+            "yarn.lock": [
+              {
+                "start": 7649,
+                "end": 7649
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/Select.test.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/Select.test.js": [
+              {
+                "start": 840,
+                "end": 890
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/InputBase/InputBase.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/InputBase/InputBase.js": [
+              {
+                "start": 400,
+                "end": 560
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/Select.test.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/Select.test.js": [
+              {
+                "start": 861,
+                "end": 861
+              },
+              {
+                "start": 874,
+                "end": 874
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.d.ts",
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/SelectInput.d.ts": [
+              {
+                "start": 36,
+                "end": 36
+              }
+            ],
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 126,
+                "end": 126
+              },
+              {
+                "start": 148,
+                "end": 148
+              },
+              {
+                "start": 175,
+                "end": 176
+              },
+              {
+                "start": 180,
+                "end": 180
+              },
+              {
+                "start": 218,
+                "end": 218
+              },
+              {
+                "start": 323,
+                "end": 323
+              },
+              {
+                "start": 481,
+                "end": 482
+              },
+              {
+                "start": 492,
+                "end": 492
+              },
+              {
+                "start": 519,
+                "end": 519
+              },
+              {
+                "start": 521,
+                "end": 521
+              },
+              {
+                "start": 549,
+                "end": 549
+              },
+              {
+                "start": 704,
+                "end": 704
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "test/regressions/fixtures/Select/SelectAlignment.js"
+          ],
+          "spans": {
+            "test/regressions/fixtures/Select/SelectAlignment.js": [
+              {
+                "start": 1,
+                "end": 43
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/Select.test.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/Select.test.js": [
+              {
+                "start": 1,
+                "end": 50
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 549,
+                "end": 549
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "CHANGELOG.md",
+            "CHANGELOG.old.md",
+            "packages/typescript-to-proptypes/CHANGELOG.md"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "docs/data/material/components/text-fields/text-fields-pt.md",
+            "docs/data/material/components/text-fields/text-fields-zh.md",
+            "docs/data/material/components/text-fields/text-fields.md"
+          ],
+          "spans": {
+            "docs/data/material/components/text-fields/text-fields-pt.md": [
+              {
+                "start": 134,
+                "end": 134
+              }
+            ],
+            "docs/data/material/components/text-fields/text-fields-zh.md": [
+              {
+                "start": 134,
+                "end": 134
+              }
+            ],
+            "docs/data/material/components/text-fields/text-fields.md": [
+              {
+                "start": 157,
+                "end": 157
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/InputBase/InputBase.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/InputBase/InputBase.js": [
+              {
+                "start": 1,
+                "end": 130
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/package.json"
+          ],
+          "spans": {
+            "packages/mui-material/package.json": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 580,
+                "end": 723
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-joy/src/Select/Select.tsx"
+          ],
+          "spans": {
+            "packages/mui-joy/src/Select/Select.tsx": [
+              {
+                "start": 330,
+                "end": 600
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "CHANGELOG.md"
+          ],
+          "spans": {
+            "CHANGELOG.md": [
+              {
+                "start": 1,
+                "end": 120
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-joy/src/Select/Select.tsx"
+          ],
+          "spans": {
+            "packages/mui-joy/src/Select/Select.tsx": [
+              {
+                "start": 543,
+                "end": 543
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Menu/Menu.d.ts",
+            "packages/mui-material/src/Menu/Menu.js",
+            "packages/mui-material/src/Menu/Menu.test.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Menu/Menu.d.ts": [
+              {
+                "start": 15,
+                "end": 15
+              }
+            ],
+            "packages/mui-material/src/Menu/Menu.js": [
+              {
+                "start": 208,
+                "end": 208
+              }
+            ],
+            "packages/mui-material/src/Menu/Menu.test.js": [
+              {
+                "start": 17,
+                "end": 17
+              },
+              {
+                "start": 42,
+                "end": 42
+              },
+              {
+                "start": 72,
+                "end": 72
+              },
+              {
+                "start": 92,
+                "end": 92
+              },
+              {
+                "start": 105,
+                "end": 105
+              },
+              {
+                "start": 118,
+                "end": 118
+              },
+              {
+                "start": 131,
+                "end": 131
+              },
+              {
+                "start": 140,
+                "end": 140
+              },
+              {
+                "start": 154,
+                "end": 154
+              },
+              {
+                "start": 170,
+                "end": 170
+              },
+              {
+                "start": 180,
+                "end": 180
+              },
+              {
+                "start": 192,
+                "end": 192
+              },
+              {
+                "start": 205,
+                "end": 205
+              },
+              {
+                "start": 234,
+                "end": 234
+              },
+              {
+                "start": 247,
+                "end": 247
+              },
+              {
+                "start": 264,
+                "end": 264
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.d.ts",
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/mui-material/package.json"
+          ],
+          "spans": {
+            "packages/mui-material/package.json": [
+              {
+                "start": 1,
+                "end": 10
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/selectClasses.ts"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/selectClasses.ts": [
+              {
+                "start": 1,
+                "end": 53
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.d.ts"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/SelectInput.d.ts": [
+              {
+                "start": 1,
+                "end": 45
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/Select.test.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/Select.test.js": [
+              {
+                "start": 30,
+                "end": 30
+              },
+              {
+                "start": 70,
+                "end": 70
+              },
+              {
+                "start": 111,
+                "end": 111
+              },
+              {
+                "start": 148,
+                "end": 148
+              },
+              {
+                "start": 168,
+                "end": 168
+              },
+              {
+                "start": 227,
+                "end": 227
+              },
+              {
+                "start": 233,
+                "end": 233
+              },
+              {
+                "start": 249,
+                "end": 249
+              },
+              {
+                "start": 270,
+                "end": 270
+              },
+              {
+                "start": 287,
+                "end": 287
+              },
+              {
+                "start": 362,
+                "end": 362
+              },
+              {
+                "start": 421,
+                "end": 421
+              },
+              {
+                "start": 427,
+                "end": 427
+              },
+              {
+                "start": 439,
+                "end": 439
+              },
+              {
+                "start": 445,
+                "end": 445
+              },
+              {
+                "start": 574,
+                "end": 574
+              },
+              {
+                "start": 580,
+                "end": 580
+              },
+              {
+                "start": 582,
+                "end": 582
+              },
+              {
+                "start": 616,
+                "end": 616
+              },
+              {
+                "start": 618,
+                "end": 618
+              },
+              {
+                "start": 647,
+                "end": 647
+              },
+              {
+                "start": 661,
+                "end": 661
+              },
+              {
+                "start": 683,
+                "end": 683
+              },
+              {
+                "start": 716,
+                "end": 716
+              },
+              {
+                "start": 730,
+                "end": 730
+              },
+              {
+                "start": 744,
+                "end": 744
+              },
+              {
+                "start": 802,
+                "end": 802
+              },
+              {
+                "start": 842,
+                "end": 842
+              },
+              {
+                "start": 860,
+                "end": 860
+              },
+              {
+                "start": 873,
+                "end": 873
+              },
+              {
+                "start": 909,
+                "end": 909
+              },
+              {
+                "start": 1025,
+                "end": 1025
+              },
+              {
+                "start": 1069,
+                "end": 1069
+              },
+              {
+                "start": 1099,
+                "end": 1099
+              },
+              {
+                "start": 1133,
+                "end": 1133
+              },
+              {
+                "start": 1141,
+                "end": 1141
+              },
+              {
+                "start": 1147,
+                "end": 1147
+              },
+              {
+                "start": 1220,
+                "end": 1220
+              },
+              {
+                "start": 1270,
+                "end": 1270
+              },
+              {
+                "start": 1336,
+                "end": 1336
+              },
+              {
+                "start": 1369,
+                "end": 1369
+              },
+              {
+                "start": 1443,
+                "end": 1443
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/Select.test.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/Select.test.js": [
+              {
+                "start": 660,
+                "end": 720
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "packages/mui-material/src/Select/Select.test.js",
+        "packages/mui-material/src/Select/SelectInput.js"
+      ],
+      "pred_spans": {
+        "packages/mui-material/src/Select/Select.test.js": [
+          {
+            "start": 853,
+            "end": 879
+          }
+        ],
+        "packages/mui-material/src/Select/SelectInput.js": [
+          {
+            "start": 146,
+            "end": 159
+          },
+          {
+            "start": 174,
+            "end": 180
+          },
+          {
+            "start": 208,
+            "end": 221
+          },
+          {
+            "start": 478,
+            "end": 483
+          },
+          {
+            "start": 546,
+            "end": 576
+          }
+        ]
+      }
+    }
+  }
+]

@@ -1,0 +1,7 @@
+[
+  {
+    "instance_id": "uutils__coreutils-6690",
+    "model_name_or_path": "claude-swe-ordinary",
+    "model_patch": "diff --git a/src/uu/cp/src/cp.rs b/src/uu/cp/src/cp.rs\nindex cce042b..2730bf6 100644\n--- a/src/uu/cp/src/cp.rs\n+++ b/src/uu/cp/src/cp.rs\n@@ -677,6 +677,7 @@ pub fn uu_app() -> Command {\n         .arg(\n             Arg::new(options::PATHS)\n                 .action(ArgAction::Append)\n+                .num_args(1..)\n                 .value_hint(clap::ValueHint::AnyPath)\n                 .value_parser(ValueParser::os_string()),\n         )\n@@ -2384,9 +2385,22 @@ fn disk_usage_directory(p: &Path) -> io::Result<u64> {\n #[cfg(test)]\n mod tests {\n \n-    use crate::{aligned_ancestors, localize_to_target, Attributes, Preserve};\n+    use crate::{aligned_ancestors, localize_to_target, options, uu_app, Attributes, Preserve};\n     use std::path::Path;\n \n+    #[test]\n+    fn test_paths_arg_is_multi_valued_for_shell_completion() {\n+        // clap_complete only emits a catch-all positional (`*::paths:_files` in zsh)\n+        // when the positional is multi-valued. Without it, `cp file <Tab>` offers\n+        // only flags.\n+        let app = uu_app();\n+        let paths = app\n+            .get_arguments()\n+            .find(|a| a.get_id() == options::PATHS)\n+            .expect(\"PATHS argument must exist\");\n+        assert!(paths.get_num_args().unwrap().max_values() > 1);\n+    }\n+\n     #[test]\n     fn test_cp_localize_to_target() {\n         let root = Path::new(\"a/source/\");\n"
+  }
+]

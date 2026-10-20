@@ -1,0 +1,626 @@
+[
+  {
+    "instance_id": "vuejs__core-11899",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "980858792775e23b8fbf79019d7ca79d5d8e30e1",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts": [
+              {
+                "start": 225,
+                "end": 226
+              },
+              {
+                "start": 228,
+                "end": 228
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts",
+            "packages/compiler-sfc/package.json",
+            "packages/compiler-sfc/src/compileStyle.ts",
+            "packages/compiler-sfc/src/style/cssVars.ts",
+            "packages/compiler-sfc/src/style/pluginScoped.ts",
+            "packages/compiler-sfc/src/style/pluginTrim.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts": [
+              {
+                "start": 362,
+                "end": 362
+              }
+            ],
+            "packages/compiler-sfc/package.json": [
+              {
+                "start": 52,
+                "end": 52
+              },
+              {
+                "start": 62,
+                "end": 63
+              }
+            ],
+            "packages/compiler-sfc/src/compileStyle.ts": [
+              {
+                "start": 1,
+                "end": 1
+              },
+              {
+                "start": 7,
+                "end": 7
+              },
+              {
+                "start": 18,
+                "end": 18
+              },
+              {
+                "start": 31,
+                "end": 32
+              },
+              {
+                "start": 40,
+                "end": 41
+              },
+              {
+                "start": 101,
+                "end": 102
+              },
+              {
+                "start": 114,
+                "end": 114
+              },
+              {
+                "start": 135,
+                "end": 135
+              },
+              {
+                "start": 145,
+                "end": 145
+              },
+              {
+                "start": 175,
+                "end": 175
+              },
+              {
+                "start": 183,
+                "end": 183
+              }
+            ],
+            "packages/compiler-sfc/src/style/cssVars.ts": [
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 133,
+                "end": 133
+              },
+              {
+                "start": 158,
+                "end": 158
+              }
+            ],
+            "packages/compiler-sfc/src/style/pluginScoped.ts": [
+              {
+                "start": 7,
+                "end": 8
+              },
+              {
+                "start": 19,
+                "end": 19
+              },
+              {
+                "start": 289,
+                "end": 289
+              }
+            ],
+            "packages/compiler-sfc/src/style/pluginTrim.ts": [
+              {
+                "start": 1,
+                "end": 1
+              },
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 17,
+                "end": 17
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/LICENSE",
+            "packages/compiler-sfc/README.md",
+            "packages/compiler-sfc/__tests__/__snapshots__/compileScript.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/__snapshots__/compileTemplate.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/__snapshots__/cssVars.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/__snapshots__/templateTransformAssetUrl.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/__snapshots__/templateTransformSrcset.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript.spec.ts",
+            "packages/compiler-sfc/__tests__/compileScript/__snapshots__/defineEmits.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript/__snapshots__/defineExpose.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript/__snapshots__/defineModel.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript/__snapshots__/defineOptions.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript/__snapshots__/defineProps.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript/__snapshots__/definePropsDestructure.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript/__snapshots__/defineSlots.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript/__snapshots__/hoistStatic.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript/__snapshots__/importUsageCheck.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript/defineEmits.spec.ts",
+            "packages/compiler-sfc/__tests__/compileScript/defineExpose.spec.ts",
+            "packages/compiler-sfc/__tests__/compileScript/defineModel.spec.ts",
+            "packages/compiler-sfc/__tests__/compileScript/defineOptions.spec.ts",
+            "packages/compiler-sfc/__tests__/compileScript/defineProps.spec.ts",
+            "packages/compiler-sfc/__tests__/compileScript/definePropsDestructure.spec.ts",
+            "packages/compiler-sfc/__tests__/compileScript/defineSlots.spec.ts",
+            "packages/compiler-sfc/__tests__/compileScript/hoistStatic.spec.ts",
+            "packages/compiler-sfc/__tests__/compileScript/importUsageCheck.spec.ts",
+            "packages/compiler-sfc/__tests__/compileScript/resolveType.spec.ts",
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts",
+            "packages/compiler-sfc/__tests__/compileTemplate.spec.ts",
+            "packages/compiler-sfc/__tests__/cssVars.spec.ts",
+            "packages/compiler-sfc/__tests__/fixture/import.scss",
+            "packages/compiler-sfc/__tests__/parse.spec.ts",
+            "packages/compiler-sfc/__tests__/rewriteDefault.spec.ts",
+            "packages/compiler-sfc/__tests__/templateTransformAssetUrl.spec.ts",
+            "packages/compiler-sfc/__tests__/templateTransformSrcset.spec.ts",
+            "packages/compiler-sfc/__tests__/templateUtils.spec.ts",
+            "packages/compiler-sfc/__tests__/utils.ts",
+            "packages/compiler-sfc/package.json",
+            "packages/compiler-sfc/src/cache.ts",
+            "packages/compiler-sfc/src/compileScript.ts",
+            "packages/compiler-sfc/src/compileStyle.ts",
+            "packages/compiler-sfc/src/compileTemplate.ts",
+            "packages/compiler-sfc/src/index.ts",
+            "packages/compiler-sfc/src/parse.ts",
+            "packages/compiler-sfc/src/rewriteDefault.ts",
+            "packages/compiler-sfc/src/script/analyzeScriptBindings.ts",
+            "packages/compiler-sfc/src/script/context.ts",
+            "packages/compiler-sfc/src/script/defineEmits.ts",
+            "packages/compiler-sfc/src/script/defineExpose.ts",
+            "packages/compiler-sfc/src/script/defineModel.ts",
+            "packages/compiler-sfc/src/script/defineOptions.ts",
+            "packages/compiler-sfc/src/script/defineProps.ts",
+            "packages/compiler-sfc/src/script/definePropsDestructure.ts",
+            "packages/compiler-sfc/src/script/defineSlots.ts",
+            "packages/compiler-sfc/src/script/importUsageCheck.ts",
+            "packages/compiler-sfc/src/script/normalScript.ts",
+            "packages/compiler-sfc/src/script/resolveType.ts",
+            "packages/compiler-sfc/src/script/topLevelAwait.ts",
+            "packages/compiler-sfc/src/script/utils.ts",
+            "packages/compiler-sfc/src/shims.d.ts",
+            "packages/compiler-sfc/src/style/cssVars.ts",
+            "packages/compiler-sfc/src/style/pluginScoped.ts",
+            "packages/compiler-sfc/src/style/pluginTrim.ts",
+            "packages/compiler-sfc/src/style/preprocessors.ts",
+            "packages/compiler-sfc/src/template/templateUtils.ts",
+            "packages/compiler-sfc/src/template/transformAssetUrl.ts",
+            "packages/compiler-sfc/src/template/transformSrcset.ts",
+            "packages/compiler-sfc/src/warn.ts"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/src/style/cssVars.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/src/style/cssVars.ts": [
+              {
+                "start": 1,
+                "end": 180
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/__tests__/cssVars.spec.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/__tests__/cssVars.spec.ts": [
+              {
+                "start": 1,
+                "end": 260
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts": [
+              {
+                "start": 190,
+                "end": 250
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/__tests__/__snapshots__/compileScript.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/__snapshots__/cssVars.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript.spec.ts",
+            "packages/compiler-sfc/__tests__/compileScript/__snapshots__/definePropsDestructure.spec.ts.snap",
+            "packages/compiler-sfc/__tests__/compileScript/definePropsDestructure.spec.ts",
+            "packages/compiler-sfc/__tests__/compileScript/resolveType.spec.ts",
+            "packages/compiler-sfc/__tests__/cssVars.spec.ts",
+            "packages/compiler-sfc/__tests__/parse.spec.ts",
+            "packages/compiler-sfc/src/compileScript.ts",
+            "packages/compiler-sfc/src/script/definePropsDestructure.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/__tests__/__snapshots__/compileScript.spec.ts.snap": [
+              {
+                "start": 228,
+                "end": 228
+              },
+              {
+                "start": 263,
+                "end": 263
+              },
+              {
+                "start": 318,
+                "end": 318
+              },
+              {
+                "start": 395,
+                "end": 395
+              },
+              {
+                "start": 419,
+                "end": 419
+              },
+              {
+                "start": 443,
+                "end": 443
+              },
+              {
+                "start": 472,
+                "end": 472
+              },
+              {
+                "start": 498,
+                "end": 498
+              },
+              {
+                "start": 942,
+                "end": 942
+              }
+            ],
+            "packages/compiler-sfc/__tests__/__snapshots__/cssVars.spec.ts.snap": [
+              {
+                "start": 129,
+                "end": 129
+              }
+            ],
+            "packages/compiler-sfc/__tests__/compileScript.spec.ts": [
+              {
+                "start": 515,
+                "end": 515
+              },
+              {
+                "start": 777,
+                "end": 777
+              },
+              {
+                "start": 784,
+                "end": 784
+              },
+              {
+                "start": 795,
+                "end": 795
+              },
+              {
+                "start": 799,
+                "end": 799
+              },
+              {
+                "start": 821,
+                "end": 821
+              },
+              {
+                "start": 840,
+                "end": 840
+              }
+            ],
+            "packages/compiler-sfc/__tests__/compileScript/__snapshots__/definePropsDestructure.spec.ts.snap": [
+              {
+                "start": 256,
+                "end": 256
+              }
+            ],
+            "packages/compiler-sfc/__tests__/compileScript/definePropsDestructure.spec.ts": [
+              {
+                "start": 50,
+                "end": 50
+              },
+              {
+                "start": 364,
+                "end": 364
+              },
+              {
+                "start": 370,
+                "end": 370
+              }
+            ],
+            "packages/compiler-sfc/__tests__/compileScript/resolveType.spec.ts": [
+              {
+                "start": 306,
+                "end": 307
+              },
+              {
+                "start": 599,
+                "end": 599
+              },
+              {
+                "start": 618,
+                "end": 618
+              },
+              {
+                "start": 637,
+                "end": 637
+              },
+              {
+                "start": 915,
+                "end": 915
+              },
+              {
+                "start": 917,
+                "end": 917
+              }
+            ],
+            "packages/compiler-sfc/__tests__/cssVars.spec.ts": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "packages/compiler-sfc/__tests__/parse.spec.ts": [
+              {
+                "start": 36,
+                "end": 36
+              },
+              {
+                "start": 263,
+                "end": 263
+              }
+            ],
+            "packages/compiler-sfc/src/compileScript.ts": [
+              {
+                "start": 632,
+                "end": 632
+              }
+            ],
+            "packages/compiler-sfc/src/script/definePropsDestructure.ts": [
+              {
+                "start": 67,
+                "end": 67
+              },
+              {
+                "start": 77,
+                "end": 77
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/src/parse.ts",
+            "packages/compiler-sfc/src/style/cssVars.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/src/parse.ts": [
+              {
+                "start": 16,
+                "end": 16
+              },
+              {
+                "start": 294,
+                "end": 294
+              }
+            ],
+            "packages/compiler-sfc/src/style/cssVars.ts": [
+              {
+                "start": 60,
+                "end": 60
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/src/compileStyle.ts",
+            "packages/compiler-sfc/src/style/cssVars.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/src/compileStyle.ts": [
+              {
+                "start": 17,
+                "end": 17
+              },
+              {
+                "start": 115,
+                "end": 115
+              }
+            ],
+            "packages/compiler-sfc/src/style/cssVars.ts": [
+              {
+                "start": 130,
+                "end": 130
+              },
+              {
+                "start": 158,
+                "end": 158
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/src/compileStyle.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/src/compileStyle.ts": [
+              {
+                "start": 90,
+                "end": 195
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/__tests__/cssVars.spec.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/__tests__/cssVars.spec.ts": [
+              {
+                "start": 240,
+                "end": 344
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/src/style/pluginScoped.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/src/style/pluginScoped.ts": [
+              {
+                "start": 1,
+                "end": 145
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/src/style/pluginScoped.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/src/style/pluginScoped.ts": [
+              {
+                "start": 145,
+                "end": 290
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts": [
+              {
+                "start": 226,
+                "end": 226
+              },
+              {
+                "start": 228,
+                "end": 228
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/src/style/cssVars.ts",
+            "packages/compiler-sfc/src/style/preprocessors.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/src/style/cssVars.ts": [
+              {
+                "start": 64,
+                "end": 65
+              }
+            ],
+            "packages/compiler-sfc/src/style/preprocessors.ts": [
+              {
+                "start": 102,
+                "end": 102
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts": [
+              {
+                "start": 226,
+                "end": 226
+              },
+              {
+                "start": 228,
+                "end": 228
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts"
+          ],
+          "spans": {
+            "packages/compiler-sfc/__tests__/compileStyle.spec.ts": [
+              {
+                "start": 1,
+                "end": 190
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "packages/compiler-sfc/__tests__/compileStyle.spec.ts",
+        "packages/compiler-sfc/src/style/pluginScoped.ts"
+      ],
+      "pred_spans": {
+        "packages/compiler-sfc/__tests__/compileStyle.spec.ts": [
+          {
+            "start": 28,
+            "end": 49
+          },
+          {
+            "start": 216,
+            "end": 232
+          }
+        ],
+        "packages/compiler-sfc/src/style/pluginScoped.ts": [
+          {
+            "start": 14,
+            "end": 65
+          },
+          {
+            "start": 68,
+            "end": 94
+          },
+          {
+            "start": 224,
+            "end": 283
+          }
+        ]
+      }
+    }
+  }
+]

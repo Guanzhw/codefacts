@@ -1,0 +1,8 @@
+{
+  "declarationStatus": "valid",
+  "requests": 30,
+  "responses": 30,
+  "failedResponses": 1,
+  "locatorOnlyResponses": 0,
+  "unmappedByReason": {}
+}

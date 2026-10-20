@@ -1,0 +1,351 @@
+[
+  {
+    "instance_id": "sveltejs__svelte-10391",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "736d584f27963b4b35ef3617518cce4a48abe001",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "packages/svelte/src/compiler/errors.js",
+            "packages/svelte/src/compiler/legacy.js",
+            "packages/svelte/src/compiler/phases/1-parse/state/element.js",
+            "packages/svelte/src/compiler/phases/2-analyze/a11y.js",
+            "packages/svelte/src/compiler/phases/2-analyze/css/Selector.js",
+            "packages/svelte/src/compiler/phases/2-analyze/index.js",
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js",
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js",
+            "packages/svelte/src/compiler/phases/3-transform/server/transform-server.js",
+            "packages/svelte/src/compiler/phases/nodes.js",
+            "packages/svelte/src/compiler/phases/scope.js",
+            "packages/svelte/src/compiler/types/legacy-nodes.d.ts",
+            "packages/svelte/src/compiler/types/template.d.ts"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/errors.js": [
+              {
+                "start": 139,
+                "end": 139
+              },
+              {
+                "start": 190,
+                "end": 190
+              },
+              {
+                "start": 390,
+                "end": 390
+              }
+            ],
+            "packages/svelte/src/compiler/legacy.js": [
+              {
+                "start": 373,
+                "end": 373
+              },
+              {
+                "start": 567,
+                "end": 567
+              }
+            ],
+            "packages/svelte/src/compiler/phases/1-parse/state/element.js": [
+              {
+                "start": 115,
+                "end": 115
+              },
+              {
+                "start": 608,
+                "end": 608
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/a11y.js": [
+              {
+                "start": 1087,
+                "end": 1087
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/css/Selector.js": [
+              {
+                "start": 555,
+                "end": 555
+              },
+              {
+                "start": 568,
+                "end": 568
+              },
+              {
+                "start": 575,
+                "end": 575
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/index.js": [
+              {
+                "start": 895,
+                "end": 895
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js": [
+              {
+                "start": 27,
+                "end": 27
+              },
+              {
+                "start": 491,
+                "end": 491
+              },
+              {
+                "start": 595,
+                "end": 595
+              },
+              {
+                "start": 600,
+                "end": 600
+              }
+            ],
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js": [
+              {
+                "start": 780,
+                "end": 780
+              },
+              {
+                "start": 1904,
+                "end": 1904
+              },
+              {
+                "start": 2096,
+                "end": 2096
+              },
+              {
+                "start": 2833,
+                "end": 2835
+              },
+              {
+                "start": 2885,
+                "end": 2885
+              },
+              {
+                "start": 2909,
+                "end": 2909
+              }
+            ],
+            "packages/svelte/src/compiler/phases/3-transform/server/transform-server.js": [
+              {
+                "start": 830,
+                "end": 830
+              },
+              {
+                "start": 1488,
+                "end": 1488
+              },
+              {
+                "start": 1525,
+                "end": 1525
+              },
+              {
+                "start": 1567,
+                "end": 1567
+              },
+              {
+                "start": 1770,
+                "end": 1770
+              }
+            ],
+            "packages/svelte/src/compiler/phases/nodes.js": [
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 17,
+                "end": 17
+              }
+            ],
+            "packages/svelte/src/compiler/phases/scope.js": [
+              {
+                "start": 34,
+                "end": 34
+              },
+              {
+                "start": 162,
+                "end": 162
+              },
+              {
+                "start": 298,
+                "end": 298
+              },
+              {
+                "start": 366,
+                "end": 366
+              }
+            ],
+            "packages/svelte/src/compiler/types/legacy-nodes.d.ts": [
+              {
+                "start": 73,
+                "end": 73
+              },
+              {
+                "start": 75,
+                "end": 75
+              }
+            ],
+            "packages/svelte/src/compiler/types/template.d.ts": [
+              {
+                "start": 194,
+                "end": 197
+              },
+              {
+                "start": 199,
+                "end": 199
+              },
+              {
+                "start": 261,
+                "end": 261
+              },
+              {
+                "start": 282,
+                "end": 283
+              },
+              {
+                "start": 355,
+                "end": 355
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js": [
+              {
+                "start": 480,
+                "end": 620
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/scope.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/scope.js": [
+              {
+                "start": 285,
+                "end": 390
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/index.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/index.js": [
+              {
+                "start": 885,
+                "end": 915
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js": [
+              {
+                "start": 2825,
+                "end": 2960
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js": [
+              {
+                "start": 2960,
+                "end": 2975
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/3-transform/server/transform-server.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/3-transform/server/transform-server.js": [
+              {
+                "start": 1560,
+                "end": 1610
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/scope.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/scope.js": [
+              {
+                "start": 270,
+                "end": 290
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/scope.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/scope.js": [
+              {
+                "start": 390,
+                "end": 420
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "packages/svelte/src/compiler/phases/2-analyze/validation.js",
+        "packages/svelte/src/compiler/phases/scope.js"
+      ],
+      "pred_spans": {
+        "packages/svelte/src/compiler/phases/2-analyze/validation.js": [
+          {
+            "start": 491,
+            "end": 504
+          },
+          {
+            "start": 600,
+            "end": 616
+          }
+        ],
+        "packages/svelte/src/compiler/phases/scope.js": [
+          {
+            "start": 284,
+            "end": 288
+          },
+          {
+            "start": 359,
+            "end": 361
+          }
+        ]
+      }
+    }
+  }
+]

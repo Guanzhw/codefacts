@@ -1,0 +1,108 @@
+{
+  "kind": "context",
+  "instance_id": "mui__material-ui-34229",
+  "officialResult": {
+    "instance_id": "mui__material-ui-34229",
+    "num_steps": 6,
+    "final": {
+      "file": {
+        "coverage": 1,
+        "precision": 1,
+        "intersection": 1,
+        "gold_size": 1,
+        "pred_size": 1
+      },
+      "symbol": {
+        "coverage": 0,
+        "precision": 1,
+        "intersection": 0,
+        "gold_size": 9,
+        "pred_size": 0
+      },
+      "span": {
+        "coverage": 0.15657921916959305,
+        "precision": 0.8422222222222222,
+        "intersection": 758,
+        "gold_size": 4841,
+        "pred_size": 900
+      },
+      "line": {
+        "coverage": 0.13872832369942195,
+        "precision": 0.8888888888888888,
+        "intersection": 24,
+        "gold_size": 173,
+        "pred_size": 27
+      }
+    },
+    "trajectory": {
+      "steps": [
+        {
+          "step": 1,
+          "coverage": {
+            "file": 1,
+            "symbol": 0.2222222222222222,
+            "span": 0.12166907663705846,
+            "line": 0.057803468208092484
+          }
+        },
+        {
+          "step": 2,
+          "coverage": {
+            "file": 1,
+            "symbol": 0.2222222222222222,
+            "span": 0.12166907663705846,
+            "line": 0.057803468208092484
+          }
+        },
+        {
+          "step": 3,
+          "coverage": {
+            "file": 1,
+            "symbol": 0.2222222222222222,
+            "span": 0.6593678991943813,
+            "line": 0.6069364161849711
+          }
+        },
+        {
+          "step": 4,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 1,
+            "line": 1
+          }
+        },
+        {
+          "step": 5,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 1,
+            "line": 1
+          }
+        },
+        {
+          "step": 6,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 1,
+            "line": 1
+          }
+        }
+      ],
+      "auc_coverage": {
+        "file": 1,
+        "symbol": 0.611111111111111,
+        "span": 0.6504510087447497,
+        "line": 0.6204238921001927
+      },
+      "redundancy": {
+        "file": 0.625,
+        "symbol": 0.07692307692307687,
+        "span": 0.08479372033588906,
+        "line": 0.046070460704607075
+      }
+    }
+  }
+}

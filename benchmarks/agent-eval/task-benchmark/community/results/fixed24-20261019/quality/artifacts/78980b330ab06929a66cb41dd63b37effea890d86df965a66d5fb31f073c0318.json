@@ -1,0 +1,1062 @@
+[
+  {
+    "instance_id": "cli__cli-5698",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "287385be821d13168a9e11ebaab787db1d03999a",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "api/client.go",
+            "internal/docs/markdown.go",
+            "pkg/cmd/alias/delete/delete_test.go",
+            "pkg/cmd/alias/list/list_test.go",
+            "pkg/cmd/alias/set/set_test.go",
+            "pkg/cmd/api/api_test.go",
+            "pkg/cmd/auth/login/login_test.go",
+            "pkg/cmd/auth/logout/logout_test.go",
+            "pkg/cmd/auth/refresh/refresh_test.go",
+            "pkg/cmd/auth/status/status_test.go",
+            "pkg/cmd/browse/browse_test.go",
+            "pkg/cmd/completion/completion_test.go",
+            "pkg/cmd/config/get/get_test.go",
+            "pkg/cmd/config/list/list_test.go",
+            "pkg/cmd/config/set/set_test.go",
+            "pkg/cmd/extension/command_test.go",
+            "pkg/cmd/gist/clone/clone_test.go",
+            "pkg/cmd/gist/create/create_test.go",
+            "pkg/cmd/gist/delete/delete_test.go",
+            "pkg/cmd/gist/edit/edit_test.go",
+            "pkg/cmd/gist/list/list_test.go",
+            "pkg/cmd/gist/view/view_test.go",
+            "pkg/cmd/issue/close/close_test.go",
+            "pkg/cmd/issue/comment/comment_test.go",
+            "pkg/cmd/issue/create/create_test.go",
+            "pkg/cmd/issue/delete/delete_test.go",
+            "pkg/cmd/issue/edit/edit_test.go",
+            "pkg/cmd/issue/list/list_test.go",
+            "pkg/cmd/issue/reopen/reopen_test.go",
+            "pkg/cmd/issue/status/status_test.go",
+            "pkg/cmd/issue/transfer/transfer_test.go",
+            "pkg/cmd/issue/view/view_test.go",
+            "pkg/cmd/label/clone_test.go",
+            "pkg/cmd/label/create_test.go",
+            "pkg/cmd/label/delete_test.go",
+            "pkg/cmd/label/edit_test.go",
+            "pkg/cmd/label/list_test.go",
+            "pkg/cmd/pr/checkout/checkout_test.go",
+            "pkg/cmd/pr/checks/checks_test.go",
+            "pkg/cmd/pr/close/close_test.go",
+            "pkg/cmd/pr/comment/comment_test.go",
+            "pkg/cmd/pr/create/create_test.go",
+            "pkg/cmd/pr/diff/diff_test.go",
+            "pkg/cmd/pr/edit/edit_test.go",
+            "pkg/cmd/pr/list/list_test.go",
+            "pkg/cmd/pr/merge/merge_test.go",
+            "pkg/cmd/pr/ready/ready_test.go",
+            "pkg/cmd/pr/reopen/reopen_test.go",
+            "pkg/cmd/pr/review/review_test.go",
+            "pkg/cmd/pr/status/status_test.go",
+            "pkg/cmd/pr/view/view_test.go",
+            "pkg/cmd/release/create/create_test.go",
+            "pkg/cmd/release/delete-asset/delete_asset_test.go",
+            "pkg/cmd/release/delete/delete_test.go",
+            "pkg/cmd/release/download/download_test.go",
+            "pkg/cmd/release/edit/edit_test.go",
+            "pkg/cmd/release/list/list_test.go",
+            "pkg/cmd/release/view/view_test.go",
+            "pkg/cmd/repo/archive/archive_test.go",
+            "pkg/cmd/repo/clone/clone_test.go",
+            "pkg/cmd/repo/create/create_test.go",
+            "pkg/cmd/repo/delete/delete_test.go",
+            "pkg/cmd/repo/edit/edit_test.go",
+            "pkg/cmd/repo/fork/fork_test.go",
+            "pkg/cmd/repo/list/list_test.go",
+            "pkg/cmd/repo/rename/rename_test.go",
+            "pkg/cmd/repo/sync/sync_test.go",
+            "pkg/cmd/repo/view/view_test.go",
+            "pkg/cmd/root/help_topic_test.go",
+            "pkg/cmd/root/root.go",
+            "pkg/cmd/run/cancel/cancel_test.go",
+            "pkg/cmd/run/download/download_test.go",
+            "pkg/cmd/run/list/list_test.go",
+            "pkg/cmd/run/rerun/rerun_test.go",
+            "pkg/cmd/run/view/view_test.go",
+            "pkg/cmd/run/watch/watch_test.go",
+            "pkg/cmd/search/issues/issues_test.go",
+            "pkg/cmd/search/prs/prs_test.go",
+            "pkg/cmd/search/repos/repos_test.go",
+            "pkg/cmd/secret/delete/delete_test.go",
+            "pkg/cmd/secret/list/list_test.go",
+            "pkg/cmd/secret/set/set_test.go",
+            "pkg/cmd/workflow/disable/disable_test.go",
+            "pkg/cmd/workflow/enable/enable_test.go",
+            "pkg/cmd/workflow/list/list_test.go",
+            "pkg/cmd/workflow/run/run_test.go",
+            "pkg/cmd/workflow/view/view_test.go",
+            "pkg/cmdutil/json_flags_test.go"
+          ],
+          "spans": {
+            "api/client.go": [
+              {
+                "start": 86,
+                "end": 86
+              }
+            ],
+            "internal/docs/markdown.go": [
+              {
+                "start": 17,
+                "end": 17
+              },
+              {
+                "start": 27,
+                "end": 27
+              }
+            ],
+            "pkg/cmd/alias/delete/delete_test.go": [
+              {
+                "start": 74,
+                "end": 75
+              }
+            ],
+            "pkg/cmd/alias/list/list_test.go": [
+              {
+                "start": 69,
+                "end": 70
+              }
+            ],
+            "pkg/cmd/alias/set/set_test.go": [
+              {
+                "start": 62,
+                "end": 63
+              }
+            ],
+            "pkg/cmd/api/api_test.go": [
+              {
+                "start": 331,
+                "end": 332
+              }
+            ],
+            "pkg/cmd/auth/login/login_test.go": [
+              {
+                "start": 195,
+                "end": 196
+              }
+            ],
+            "pkg/cmd/auth/logout/logout_test.go": [
+              {
+                "start": 77,
+                "end": 78
+              }
+            ],
+            "pkg/cmd/auth/refresh/refresh_test.go": [
+              {
+                "start": 113,
+                "end": 114
+              }
+            ],
+            "pkg/cmd/auth/status/status_test.go": [
+              {
+                "start": 62,
+                "end": 63
+              }
+            ],
+            "pkg/cmd/browse/browse_test.go": [
+              {
+                "start": 129,
+                "end": 130
+              }
+            ],
+            "pkg/cmd/completion/completion_test.go": [
+              {
+                "start": 57,
+                "end": 58
+              }
+            ],
+            "pkg/cmd/config/get/get_test.go": [
+              {
+                "start": 61,
+                "end": 62
+              }
+            ],
+            "pkg/cmd/config/list/list_test.go": [
+              {
+                "start": 55,
+                "end": 56
+              }
+            ],
+            "pkg/cmd/config/set/set_test.go": [
+              {
+                "start": 67,
+                "end": 68
+              }
+            ],
+            "pkg/cmd/extension/command_test.go": [
+              {
+                "start": 587,
+                "end": 588
+              }
+            ],
+            "pkg/cmd/gist/clone/clone_test.go": [
+              {
+                "start": 36,
+                "end": 37
+              }
+            ],
+            "pkg/cmd/gist/create/create_test.go": [
+              {
+                "start": 149,
+                "end": 150
+              }
+            ],
+            "pkg/cmd/gist/delete/delete_test.go": [
+              {
+                "start": 45,
+                "end": 46
+              }
+            ],
+            "pkg/cmd/gist/edit/edit_test.go": [
+              {
+                "start": 99,
+                "end": 100
+              }
+            ],
+            "pkg/cmd/gist/list/list_test.go": [
+              {
+                "start": 88,
+                "end": 89
+              }
+            ],
+            "pkg/cmd/gist/view/view_test.go": [
+              {
+                "start": 98,
+                "end": 99
+              }
+            ],
+            "pkg/cmd/issue/close/close_test.go": [
+              {
+                "start": 48,
+                "end": 49
+              }
+            ],
+            "pkg/cmd/issue/comment/comment_test.go": [
+              {
+                "start": 170,
+                "end": 171
+              }
+            ],
+            "pkg/cmd/issue/create/create_test.go": [
+              {
+                "start": 118,
+                "end": 119
+              },
+              {
+                "start": 327,
+                "end": 328
+              }
+            ],
+            "pkg/cmd/issue/delete/delete_test.go": [
+              {
+                "start": 49,
+                "end": 50
+              }
+            ],
+            "pkg/cmd/issue/edit/edit_test.go": [
+              {
+                "start": 232,
+                "end": 233
+              }
+            ],
+            "pkg/cmd/issue/list/list_test.go": [
+              {
+                "start": 51,
+                "end": 52
+              }
+            ],
+            "pkg/cmd/issue/reopen/reopen_test.go": [
+              {
+                "start": 48,
+                "end": 49
+              }
+            ],
+            "pkg/cmd/issue/status/status_test.go": [
+              {
+                "start": 47,
+                "end": 48
+              }
+            ],
+            "pkg/cmd/issue/transfer/transfer_test.go": [
+              {
+                "start": 46,
+                "end": 47
+              },
+              {
+                "start": 88,
+                "end": 89
+              }
+            ],
+            "pkg/cmd/issue/view/view_test.go": [
+              {
+                "start": 50,
+                "end": 51
+              }
+            ],
+            "pkg/cmd/label/clone_test.go": [
+              {
+                "start": 65,
+                "end": 66
+              }
+            ],
+            "pkg/cmd/label/create_test.go": [
+              {
+                "start": 69,
+                "end": 70
+              }
+            ],
+            "pkg/cmd/label/delete_test.go": [
+              {
+                "start": 69,
+                "end": 70
+              }
+            ],
+            "pkg/cmd/label/edit_test.go": [
+              {
+                "start": 73,
+                "end": 74
+              }
+            ],
+            "pkg/cmd/label/list_test.go": [
+              {
+                "start": 151,
+                "end": 152
+              }
+            ],
+            "pkg/cmd/pr/checkout/checkout_test.go": [
+              {
+                "start": 248,
+                "end": 249
+              }
+            ],
+            "pkg/cmd/pr/checks/checks_test.go": [
+              {
+                "start": 85,
+                "end": 86
+              }
+            ],
+            "pkg/cmd/pr/close/close_test.go": [
+              {
+                "start": 86,
+                "end": 87
+              }
+            ],
+            "pkg/cmd/pr/comment/comment_test.go": [
+              {
+                "start": 191,
+                "end": 192
+              }
+            ],
+            "pkg/cmd/pr/create/create_test.go": [
+              {
+                "start": 158,
+                "end": 159
+              },
+              {
+                "start": 238,
+                "end": 239
+              }
+            ],
+            "pkg/cmd/pr/diff/diff_test.go": [
+              {
+                "start": 113,
+                "end": 114
+              }
+            ],
+            "pkg/cmd/pr/edit/edit_test.go": [
+              {
+                "start": 283,
+                "end": 284
+              }
+            ],
+            "pkg/cmd/pr/list/list_test.go": [
+              {
+                "start": 48,
+                "end": 49
+              }
+            ],
+            "pkg/cmd/pr/merge/merge_test.go": [
+              {
+                "start": 179,
+                "end": 180
+              },
+              {
+                "start": 252,
+                "end": 253
+              }
+            ],
+            "pkg/cmd/pr/ready/ready_test.go": [
+              {
+                "start": 75,
+                "end": 76
+              },
+              {
+                "start": 113,
+                "end": 114
+              }
+            ],
+            "pkg/cmd/pr/reopen/reopen_test.go": [
+              {
+                "start": 42,
+                "end": 43
+              }
+            ],
+            "pkg/cmd/pr/review/review_test.go": [
+              {
+                "start": 152,
+                "end": 153
+              },
+              {
+                "start": 194,
+                "end": 195
+              }
+            ],
+            "pkg/cmd/pr/status/status_test.go": [
+              {
+                "start": 65,
+                "end": 66
+              }
+            ],
+            "pkg/cmd/pr/view/view_test.go": [
+              {
+                "start": 99,
+                "end": 100
+              },
+              {
+                "start": 136,
+                "end": 137
+              }
+            ],
+            "pkg/cmd/release/create/create_test.go": [
+              {
+                "start": 253,
+                "end": 254
+              }
+            ],
+            "pkg/cmd/release/delete-asset/delete_asset_test.go": [
+              {
+                "start": 81,
+                "end": 82
+              }
+            ],
+            "pkg/cmd/release/delete/delete_test.go": [
+              {
+                "start": 75,
+                "end": 76
+              }
+            ],
+            "pkg/cmd/release/download/download_test.go": [
+              {
+                "start": 137,
+                "end": 138
+              }
+            ],
+            "pkg/cmd/release/edit/edit_test.go": [
+              {
+                "start": 154,
+                "end": 155
+              }
+            ],
+            "pkg/cmd/release/list/list_test.go": [
+              {
+                "start": 70,
+                "end": 71
+              }
+            ],
+            "pkg/cmd/release/view/view_test.go": [
+              {
+                "start": 80,
+                "end": 81
+              }
+            ],
+            "pkg/cmd/repo/archive/archive_test.go": [
+              {
+                "start": 53,
+                "end": 54
+              }
+            ],
+            "pkg/cmd/repo/clone/clone_test.go": [
+              {
+                "start": 77,
+                "end": 78
+              },
+              {
+                "start": 115,
+                "end": 116
+              }
+            ],
+            "pkg/cmd/repo/create/create_test.go": [
+              {
+                "start": 149,
+                "end": 150
+              }
+            ],
+            "pkg/cmd/repo/delete/delete_test.go": [
+              {
+                "start": 63,
+                "end": 64
+              }
+            ],
+            "pkg/cmd/repo/edit/edit_test.go": [
+              {
+                "start": 69,
+                "end": 70
+              }
+            ],
+            "pkg/cmd/repo/fork/fork_test.go": [
+              {
+                "start": 168,
+                "end": 169
+              }
+            ],
+            "pkg/cmd/repo/list/list_test.go": [
+              {
+                "start": 235,
+                "end": 236
+              },
+              {
+                "start": 282,
+                "end": 283
+              }
+            ],
+            "pkg/cmd/repo/rename/rename_test.go": [
+              {
+                "start": 92,
+                "end": 93
+              }
+            ],
+            "pkg/cmd/repo/sync/sync_test.go": [
+              {
+                "start": 84,
+                "end": 85
+              }
+            ],
+            "pkg/cmd/repo/view/view_test.go": [
+              {
+                "start": 82,
+                "end": 83
+              }
+            ],
+            "pkg/cmd/root/help_topic_test.go": [
+              {
+                "start": 68,
+                "end": 69
+              }
+            ],
+            "pkg/cmd/root/root.go": [
+              {
+                "start": 59,
+                "end": 60
+              }
+            ],
+            "pkg/cmd/run/cancel/cancel_test.go": [
+              {
+                "start": 68,
+                "end": 69
+              }
+            ],
+            "pkg/cmd/run/download/download_test.go": [
+              {
+                "start": 125,
+                "end": 126
+              }
+            ],
+            "pkg/cmd/run/list/list_test.go": [
+              {
+                "start": 93,
+                "end": 94
+              }
+            ],
+            "pkg/cmd/run/rerun/rerun_test.go": [
+              {
+                "start": 143,
+                "end": 144
+              }
+            ],
+            "pkg/cmd/run/view/view_test.go": [
+              {
+                "start": 140,
+                "end": 141
+              }
+            ],
+            "pkg/cmd/run/watch/watch_test.go": [
+              {
+                "start": 81,
+                "end": 82
+              }
+            ],
+            "pkg/cmd/search/issues/issues_test.go": [
+              {
+                "start": 180,
+                "end": 181
+              }
+            ],
+            "pkg/cmd/search/prs/prs_test.go": [
+              {
+                "start": 189,
+                "end": 190
+              }
+            ],
+            "pkg/cmd/search/repos/repos_test.go": [
+              {
+                "start": 134,
+                "end": 135
+              }
+            ],
+            "pkg/cmd/secret/delete/delete_test.go": [
+              {
+                "start": 95,
+                "end": 96
+              }
+            ],
+            "pkg/cmd/secret/list/list_test.go": [
+              {
+                "start": 91,
+                "end": 92
+              }
+            ],
+            "pkg/cmd/secret/set/set_test.go": [
+              {
+                "start": 189,
+                "end": 190
+              }
+            ],
+            "pkg/cmd/workflow/disable/disable_test.go": [
+              {
+                "start": 75,
+                "end": 76
+              }
+            ],
+            "pkg/cmd/workflow/enable/enable_test.go": [
+              {
+                "start": 75,
+                "end": 76
+              }
+            ],
+            "pkg/cmd/workflow/list/list_test.go": [
+              {
+                "start": 85,
+                "end": 86
+              }
+            ],
+            "pkg/cmd/workflow/run/run_test.go": [
+              {
+                "start": 126,
+                "end": 127
+              }
+            ],
+            "pkg/cmd/workflow/view/view_test.go": [
+              {
+                "start": 144,
+                "end": 145
+              }
+            ],
+            "pkg/cmdutil/json_flags_test.go": [
+              {
+                "start": 102,
+                "end": 103
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/root/help.go",
+            "pkg/cmd/root/help_topic.go"
+          ],
+          "spans": {
+            "pkg/cmd/root/help.go": [
+              {
+                "start": 16,
+                "end": 16
+              },
+              {
+                "start": 20,
+                "end": 20
+              },
+              {
+                "start": 25,
+                "end": 25
+              },
+              {
+                "start": 32,
+                "end": 33
+              },
+              {
+                "start": 56,
+                "end": 56
+              },
+              {
+                "start": 69,
+                "end": 69
+              },
+              {
+                "start": 71,
+                "end": 71
+              },
+              {
+                "start": 75,
+                "end": 75
+              }
+            ],
+            "pkg/cmd/root/help_topic.go": [
+              {
+                "start": 150,
+                "end": 150
+              },
+              {
+                "start": 152,
+                "end": 153
+              },
+              {
+                "start": 158,
+                "end": 158
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/root/root.go"
+          ],
+          "spans": {
+            "pkg/cmd/root/root.go": [
+              {
+                "start": 1,
+                "end": 110
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/root/help.go"
+          ],
+          "spans": {
+            "pkg/cmd/root/help.go": [
+              {
+                "start": 1,
+                "end": 120
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/root/help_topic.go"
+          ],
+          "spans": {
+            "pkg/cmd/root/help_topic.go": [
+              {
+                "start": 1,
+                "end": 160
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/root/help.go"
+          ],
+          "spans": {
+            "pkg/cmd/root/help.go": [
+              {
+                "start": 120,
+                "end": 230
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "cmd/gh/main.go"
+          ],
+          "spans": {
+            "cmd/gh/main.go": [
+              {
+                "start": 66,
+                "end": 66
+              },
+              {
+                "start": 69,
+                "end": 69
+              },
+              {
+                "start": 71,
+                "end": 71
+              },
+              {
+                "start": 78,
+                "end": 78
+              },
+              {
+                "start": 208,
+                "end": 208
+              },
+              {
+                "start": 242,
+                "end": 242
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "internal/docs/docs_test.go",
+            "internal/docs/man.go",
+            "internal/docs/man_test.go",
+            "internal/featuredetection/feature_detection.go",
+            "pkg/cmd/repo/create/create.go",
+            "pkg/cmd/repo/list/list.go",
+            "pkg/prompt/stubber.go",
+            "test/helpers.go"
+          ],
+          "spans": {
+            "internal/docs/docs_test.go": [
+              {
+                "start": 67,
+                "end": 67
+              }
+            ],
+            "internal/docs/man.go": [
+              {
+                "start": 135,
+                "end": 135
+              },
+              {
+                "start": 139,
+                "end": 139
+              }
+            ],
+            "internal/docs/man_test.go": [
+              {
+                "start": 101,
+                "end": 101
+              },
+              {
+                "start": 104,
+                "end": 104
+              }
+            ],
+            "internal/featuredetection/feature_detection.go": [
+              {
+                "start": 90,
+                "end": 90
+              }
+            ],
+            "pkg/cmd/repo/create/create.go": [
+              {
+                "start": 181,
+                "end": 183
+              }
+            ],
+            "pkg/cmd/repo/list/list.go": [
+              {
+                "start": 101,
+                "end": 102
+              }
+            ],
+            "pkg/prompt/stubber.go": [
+              {
+                "start": 34,
+                "end": 34
+              },
+              {
+                "start": 177,
+                "end": 177
+              },
+              {
+                "start": 182,
+                "end": 182
+              }
+            ],
+            "test/helpers.go": [
+              {
+                "start": 48,
+                "end": 48
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "cmd/gh/main.go"
+          ],
+          "spans": {
+            "cmd/gh/main.go": [
+              {
+                "start": 40,
+                "end": 130
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/root/root.go"
+          ],
+          "spans": {
+            "pkg/cmd/root/root.go": [
+              {
+                "start": 110,
+                "end": 175
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "internal/docs/markdown.go",
+            "pkg/cmd/root/help.go",
+            "pkg/cmd/root/help_topic.go",
+            "pkg/cmd/root/help_topic_test.go",
+            "pkg/cmd/root/root.go"
+          ],
+          "spans": {
+            "internal/docs/markdown.go": [
+              {
+                "start": 137,
+                "end": 137
+              }
+            ],
+            "pkg/cmd/root/help.go": [
+              {
+                "start": 15,
+                "end": 15
+              },
+              {
+                "start": 76,
+                "end": 76
+              },
+              {
+                "start": 83,
+                "end": 83
+              }
+            ],
+            "pkg/cmd/root/help_topic.go": [
+              {
+                "start": 130,
+                "end": 130
+              },
+              {
+                "start": 143,
+                "end": 143
+              },
+              {
+                "start": 149,
+                "end": 149
+              }
+            ],
+            "pkg/cmd/root/help_topic_test.go": [
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 66,
+                "end": 66
+              }
+            ],
+            "pkg/cmd/root/root.go": [
+              {
+                "start": 64,
+                "end": 64
+              },
+              {
+                "start": 66,
+                "end": 66
+              },
+              {
+                "start": 111,
+                "end": 114
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "pkg/cmd/root/help_topic_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/root/help_topic_test.go": [
+              {
+                "start": 50,
+                "end": 79
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/root/help_reference.go",
+            "pkg/cmd/root/root.go"
+          ],
+          "spans": {
+            "pkg/cmd/root/help_reference.go": [
+              {
+                "start": 14,
+                "end": 14
+              }
+            ],
+            "pkg/cmd/root/root.go": [
+              {
+                "start": 115,
+                "end": 115
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "pkg/cmd/root/help.go",
+        "pkg/cmd/root/help_topic.go",
+        "pkg/cmd/root/root.go"
+      ],
+      "pred_spans": {
+        "pkg/cmd/root/help.go": [
+          {
+            "start": 15,
+            "end": 36
+          },
+          {
+            "start": 55,
+            "end": 90
+          },
+          {
+            "start": 193,
+            "end": 204
+          }
+        ],
+        "pkg/cmd/root/help_topic.go": [
+          {
+            "start": 130,
+            "end": 159
+          }
+        ],
+        "pkg/cmd/root/root.go": [
+          {
+            "start": 59,
+            "end": 67
+          },
+          {
+            "start": 110,
+            "end": 116
+          }
+        ]
+      }
+    }
+  }
+]
