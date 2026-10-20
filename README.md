@@ -185,9 +185,12 @@ response is text-only: it appears in `content[0].text` without a duplicate
 states useful facts once and omits raw source hashes, routine counters and
 repeated endpoint or locator fields. It keeps repository identity, freshness
 and generation, partial-source reasons, exact locations, uncertainty and
-relationship direction, active cutoffs, and usable continuation cursors. Small
-exploration owners include complete source when it fits; otherwise the result
-labels the preview and its omitted owner lines. Source hashing and disk
+relationship direction, active cutoffs, and usable continuation cursors.
+Relationship counterparts and impact witness parents use exact symbol IDs that
+can be copied into `expand.symbol` or `impact.symbol`. File snapshot anchors are
+labelled separately because they are traversal evidence rather than symbols.
+Small exploration owners include complete source when it fits; otherwise the
+result labels the preview and its omitted owner lines. Source hashing and disk
 verification remain internal.
 
 Clients that require the previous machine-readable result shapes should request
