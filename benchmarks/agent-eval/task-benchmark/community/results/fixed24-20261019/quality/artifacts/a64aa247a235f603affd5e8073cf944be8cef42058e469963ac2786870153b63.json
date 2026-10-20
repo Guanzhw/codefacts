@@ -1,0 +1,429 @@
+[
+  {
+    "instance_id": "mui__material-ui-26807",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "f791d0473239ff2976a53052fe6ae130b746b7ae",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "packages/material-ui/src/StepLabel/StepLabel.d.ts",
+            "packages/material-ui/src/StepLabel/StepLabel.js",
+            "packages/material-ui/src/StepLabel/StepLabel.test.js"
+          ],
+          "spans": {
+            "packages/material-ui/src/StepLabel/StepLabel.d.ts": [
+              {
+                "start": 6,
+                "end": 6
+              },
+              {
+                "start": 8,
+                "end": 8
+              },
+              {
+                "start": 16,
+                "end": 16
+              },
+              {
+                "start": 44,
+                "end": 44
+              },
+              {
+                "start": 54,
+                "end": 54
+              },
+              {
+                "start": 56,
+                "end": 56
+              },
+              {
+                "start": 58,
+                "end": 58
+              }
+            ],
+            "packages/material-ui/src/StepLabel/StepLabel.js": [
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 36,
+                "end": 36
+              },
+              {
+                "start": 39,
+                "end": 40
+              },
+              {
+                "start": 67,
+                "end": 68
+              },
+              {
+                "start": 93,
+                "end": 94
+              },
+              {
+                "start": 107,
+                "end": 108
+              },
+              {
+                "start": 117,
+                "end": 118
+              },
+              {
+                "start": 153,
+                "end": 153
+              },
+              {
+                "start": 160,
+                "end": 160
+              },
+              {
+                "start": 168,
+                "end": 168
+              },
+              {
+                "start": 170,
+                "end": 170
+              },
+              {
+                "start": 172,
+                "end": 172
+              },
+              {
+                "start": 180,
+                "end": 180
+              },
+              {
+                "start": 183,
+                "end": 184
+              },
+              {
+                "start": 188,
+                "end": 188
+              },
+              {
+                "start": 232,
+                "end": 232
+              },
+              {
+                "start": 234,
+                "end": 234
+              }
+            ],
+            "packages/material-ui/src/StepLabel/StepLabel.test.js": [
+              {
+                "start": 8,
+                "end": 8
+              },
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 14,
+                "end": 14
+              },
+              {
+                "start": 17,
+                "end": 17
+              },
+              {
+                "start": 27,
+                "end": 27
+              },
+              {
+                "start": 37,
+                "end": 37
+              },
+              {
+                "start": 53,
+                "end": 53
+              },
+              {
+                "start": 70,
+                "end": 70
+              },
+              {
+                "start": 83,
+                "end": 83
+              },
+              {
+                "start": 95,
+                "end": 95
+              },
+              {
+                "start": 107,
+                "end": 107
+              },
+              {
+                "start": 120,
+                "end": 120
+              },
+              {
+                "start": 132,
+                "end": 132
+              },
+              {
+                "start": 144,
+                "end": 144
+              },
+              {
+                "start": 154,
+                "end": 154
+              },
+              {
+                "start": 168,
+                "end": 168
+              },
+              {
+                "start": 180,
+                "end": 180
+              },
+              {
+                "start": 182,
+                "end": 182
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/material-ui/src/StepLabel/StepLabel.js"
+          ],
+          "spans": {
+            "packages/material-ui/src/StepLabel/StepLabel.js": [
+              {
+                "start": 1,
+                "end": 234
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/material-ui/src/StepLabel/StepLabel.d.ts"
+          ],
+          "spans": {
+            "packages/material-ui/src/StepLabel/StepLabel.d.ts": [
+              {
+                "start": 1,
+                "end": 58
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/material-ui/src/StepLabel/StepLabel.test.js"
+          ],
+          "spans": {
+            "packages/material-ui/src/StepLabel/StepLabel.test.js": [
+              {
+                "start": 1,
+                "end": 80
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "docs/pages/api-docs/step-label.js",
+            "docs/pages/api-docs/step-label.json",
+            "docs/translations/api-docs/step-label/step-label-de.json",
+            "docs/translations/api-docs/step-label/step-label-es.json",
+            "docs/translations/api-docs/step-label/step-label-fr.json",
+            "docs/translations/api-docs/step-label/step-label-ja.json",
+            "docs/translations/api-docs/step-label/step-label-pt.json",
+            "docs/translations/api-docs/step-label/step-label-ru.json",
+            "docs/translations/api-docs/step-label/step-label-zh.json",
+            "docs/translations/api-docs/step-label/step-label.json"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "docs/pages/api-docs/step-label.json"
+          ],
+          "spans": {
+            "docs/pages/api-docs/step-label.json": [
+              {
+                "start": 1,
+                "end": 37
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "docs/pages/api-docs/step-label.js"
+          ],
+          "spans": {
+            "docs/pages/api-docs/step-label.js": [
+              {
+                "start": 1,
+                "end": 19
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/material-ui/src/Backdrop/Backdrop.js",
+            "packages/material-ui/src/Badge/Badge.js",
+            "packages/material-ui/src/InputBase/InputBase.d.ts",
+            "packages/material-ui/src/InputBase/InputBase.js",
+            "packages/material-ui/src/ListItem/ListItem.d.ts",
+            "packages/material-ui/src/ListItem/ListItem.js",
+            "packages/material-ui/src/Modal/Modal.js",
+            "packages/material-ui/src/Slider/Slider.js"
+          ],
+          "spans": {
+            "packages/material-ui/src/Backdrop/Backdrop.js": [
+              {
+                "start": 121,
+                "end": 121
+              }
+            ],
+            "packages/material-ui/src/Badge/Badge.js": [
+              {
+                "start": 304,
+                "end": 304
+              }
+            ],
+            "packages/material-ui/src/InputBase/InputBase.d.ts": [
+              {
+                "start": 56,
+                "end": 56
+              }
+            ],
+            "packages/material-ui/src/InputBase/InputBase.js": [
+              {
+                "start": 598,
+                "end": 598
+              }
+            ],
+            "packages/material-ui/src/ListItem/ListItem.d.ts": [
+              {
+                "start": 100,
+                "end": 100
+              }
+            ],
+            "packages/material-ui/src/ListItem/ListItem.js": [
+              {
+                "start": 395,
+                "end": 395
+              }
+            ],
+            "packages/material-ui/src/Modal/Modal.js": [
+              {
+                "start": 162,
+                "end": 162
+              }
+            ],
+            "packages/material-ui/src/Slider/Slider.js": [
+              {
+                "start": 558,
+                "end": 558
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/material-ui/src/StepLabel/StepLabel.test.js"
+          ],
+          "spans": {
+            "packages/material-ui/src/StepLabel/StepLabel.test.js": [
+              {
+                "start": 25,
+                "end": 188
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/material-ui/src/ListItem/ListItem.d.ts"
+          ],
+          "spans": {
+            "packages/material-ui/src/ListItem/ListItem.d.ts": [
+              {
+                "start": 75,
+                "end": 120
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/material-ui/src/ListItem/ListItem.js"
+          ],
+          "spans": {
+            "packages/material-ui/src/ListItem/ListItem.js": [
+              {
+                "start": 365,
+                "end": 410
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/material-ui/src/InputBase/InputBase.d.ts"
+          ],
+          "spans": {
+            "packages/material-ui/src/InputBase/InputBase.d.ts": [
+              {
+                "start": 1,
+                "end": 75
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "docs/pages/api-docs/step-label.json",
+        "packages/material-ui/src/StepLabel/StepLabel.d.ts",
+        "packages/material-ui/src/StepLabel/StepLabel.js",
+        "packages/material-ui/src/StepLabel/StepLabel.test.js"
+      ],
+      "pred_spans": {
+        "docs/pages/api-docs/step-label.json": [
+          {
+            "start": 1,
+            "end": 11
+          }
+        ],
+        "packages/material-ui/src/StepLabel/StepLabel.d.ts": [
+          {
+            "start": 1,
+            "end": 42
+          }
+        ],
+        "packages/material-ui/src/StepLabel/StepLabel.js": [
+          {
+            "start": 117,
+            "end": 184
+          },
+          {
+            "start": 188,
+            "end": 230
+          }
+        ],
+        "packages/material-ui/src/StepLabel/StepLabel.test.js": [
+          {
+            "start": 25,
+            "end": 46
+          }
+        ]
+      }
+    }
+  }
+]

@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "kind": "portable-controller-source-inventory",
+  "excludedGeneratedDirectories": [
+    "validation/synthetic",
+    "rolling-suite-controller-v3/synthetic-fixtures"
+  ],
+  "files": [
+    {
+      "path": "accounted-suite-controller-v1/build-sidecar.mjs",
+      "sha256": "07268c6a4475957014a6a842a6d80ef2a34d423c1be96c7155d35283d1d7c984"
+    },
+    {
+      "path": "accounted-suite-controller-v1/controller.mjs",
+      "sha256": "a231d12e10c8ee5f24bde7b04bc74201f3cea5f56a60876fa129a29775ec0c4a"
+    },
+    {
+      "path": "config.mjs",
+      "sha256": "254d184514c75349721ed8555bc8717e9e7b708cd15c536d9935246893ebab7a"
+    },
+    {
+      "path": "controller.template.json",
+      "sha256": "4d864e969857dc6aa6b03bfb017d0c415118005d50fd8f313b2bd5684dd74556"
+    },
+    {
+      "path": "guard.mjs",
+      "sha256": "e356dfe6990d79f8a2f195bb638a43b3fc6bee59ff958cc5bbc4ab0480dee825"
+    },
+    {
+      "path": "parallel-suite-controller-v2/controller.mjs",
+      "sha256": "5a40d5db1ec603114e777c7d57ff07b0bc41e1da47df8db7c2ffb9d25b655677"
+    },
+    {
+      "path": "parallel-suite-controller-v2/scheduler.mjs",
+      "sha256": "b17ef8f5ad17fdb05a40a709852eebf01cf2261bbf5a441a524252a721eb0a9c"
+    },
+    {
+      "path": "parallel-suite-controller-v2/scheduler.test.mjs",
+      "sha256": "3cb420ce447f1811cfb8dbf306ae268508f20ee589885f6e39f35e48e31dd8ab"
+    },
+    {
+      "path": "parallel-suite-controller-v2/worker-process.mjs",
+      "sha256": "635dcc87331242f1396c5239b9f90c996bddd9cb25ed21c28346dd34e2388d8c"
+    },
+    {
+      "path": "parallel-suite-controller-v2/worker-process.test.mjs",
+      "sha256": "fa2ec3b748372277a1efcd4de63c6ce947efc4bb0ed97b357dac93b16624da8a"
+    },
+    {
+      "path": "README.md",
+      "sha256": "77cb6e0197afccd51c7eca8a4cf403a39d371f21e92684514a19f8b747db0c4c"
+    },
+    {
+      "path": "relocation.test.mjs",
+      "sha256": "6b84bbe11874278851816cc7072c25d60fdb1f1bdb6630c180f08a480b12c09d"
+    },
+    {
+      "path": "rolling-suite-controller-v3/controller.mjs",
+      "sha256": "d2bd25538612d918935438df6af3e479fbc3b0df60255b3e8f1b2b99a11ba4ad"
+    },
+    {
+      "path": "rolling-suite-controller-v3/offline.test.mjs",
+      "sha256": "180aea65a167a6b6f11158e2da4a4d5f5961c7c220855cb5fc7bf5639492b32c"
+    },
+    {
+      "path": "rolling-suite-controller-v3/receipts.mjs",
+      "sha256": "1a00de343bdf60da285a114e94300ab63760e3363b4751269a94e42a7cc8d76a"
+    },
+    {
+      "path": "rolling-suite-controller-v3/scheduler.mjs",
+      "sha256": "1e7256cd5677bfb0a39e83ef73329152640c187903b0ebc54707a91db92de1f9"
+    },
+    {
+      "path": "rolling-suite-controller-v3/worker-process.mjs",
+      "sha256": "edb42a774c8b97fb69289341907b3673d7364a417350fe6b765523bf4cd1d31a"
+    },
+    {
+      "path": "source-inventory.mjs",
+      "sha256": "e2a4aa4fe7230b4419fe00ee9295fe2b6a0f0def4f7f8de13aefe4d0e4c7cecf"
+    },
+    {
+      "path": "SOURCE-MAPPING.json",
+      "sha256": "0e318ab22025857ed183a04e04e0cbeacc62873d031e4c641951737913497421"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "declarationStatus": "missing-final-declaration",
+  "requests": 17,
+  "responses": 17,
+  "failedResponses": 0,
+  "locatorOnlyResponses": 0,
+  "unmappedByReason": {
+    "source-line-mismatch-or-truncated": {
+      "count": 2,
+      "bytes": 0
+    }
+  }
+}

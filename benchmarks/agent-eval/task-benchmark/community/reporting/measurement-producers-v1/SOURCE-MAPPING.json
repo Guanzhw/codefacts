@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "kind": "fixed24-public-measurement-producer-source-mapping",
+  "frameworkRevision": "ec1c7f7d788db8244388e200f5849de3b1564b21",
+  "frameworkRpc": {
+    "relativeToCommunity": "../rpc.mjs",
+    "sha256": "b0c4736404f45c2963c7f1d6ee69ffd2a8b49923a5be899667cf0c26dac26a19"
+  },
+  "entries": [
+    {
+      "path": "metadata/audit.mjs",
+      "origin": "reviews/closed-phase-auditor-infra-v3/audit.mjs",
+      "originalSha256": "49a36e1168fa62426ae980c857b5b3ef3ca0196d9bcd2e3ff58674d2752da27d",
+      "derivation": "Explicit suite/output roots only; original audit predicates and schema retained.",
+      "publicSha256": "e2b6e41681a9c0866291bfce199a83c1791d3c760a19fe2a408b3904acb431d1",
+      "publicBytes": 25038
+    },
+    {
+      "path": "metadata/test-reference-policy.mjs",
+      "origin": "reviews/closed-phase-auditor/audit.mjs",
+      "originalSha256": "1ed367b30009dd0c58cfa1ef1142098ee9b7a708c4f7fa21d95dbf9847e11de9",
+      "derivation": "Only acceptedGrade and its MISSING_CONTEXT dependency; no IO, CLI, defaults or artifacts.",
+      "publicSha256": "f39a1fb2d4e34aaf1e1bde6078e842dc0b8546accef52b3c2c5f9320deb210a9",
+      "publicBytes": 920
+    },
+    {
+      "path": "metadata/test-reference-v2.mjs",
+      "origin": "reviews/closed-phase-auditor-infra-v2/audit.mjs",
+      "originalSha256": "1d362e4df84c9c39d21c9a20b5513b9a3ce208c94397d1bba675601cda8ad696",
+      "derivation": "Only actually called audit/acceptedGrade/verifyLedger/verifyInfraCell plus their dependencies; remove historical CLI, artifact writer and implicit root.",
+      "publicSha256": "f861fdb9e3323ac95c01f37b34f206fc5d96fef7e69a7e9f167cb4c5c56bafd1",
+      "publicBytes": 22308
+    },
+    {
+      "path": "metadata/fixtures.mjs",
+      "origin": "reviews/closed-phase-auditor-infra-v3/fixtures.mjs",
+      "originalSha256": "41393b89d463748a1f5b16a5e3eb73d15d208cbf160d64458dcbf59e170d1ded",
+      "derivation": "Private imports resolved to bounded test-only reference modules; explicit synthetic/output root. All assertions preserved.",
+      "publicSha256": "eb2af24eca7a01423f32a1a39191f09202b4624540b757dc8aeea138025c3170",
+      "publicBytes": 21533
+    },
+    {
+      "path": "native/audit.py",
+      "origin": "reports/native-service-auditor-infra-v4/audit.py",
+      "originalSha256": "f4ab5e87da098509cf714db1e031e14ba49ce5643388469dea13b81a4698e8bc",
+      "derivation": "Required explicit suite/output roots only; reconciliation, selection, golden and declared-attempt semantics retained.",
+      "publicSha256": "e721cde70be54880846e37928321f5296f0142889e6de170b109fd35ce9f078f",
+      "publicBytes": 46410
+    },
+    {
+      "path": "native/test_audit.py",
+      "origin": "reports/native-service-auditor-infra-v4/test_audit.py",
+      "originalSha256": "fdcc943eb3cd999cfff97a00d0c72a9cf0480d7eaa2557c46c87cff5b4017ded",
+      "derivation": "Move inherited actual cached-golden test to explicit runner; pure assertions retained; explicit test temp root.",
+      "publicSha256": "5b1804ce48609727b847f7f49094b7c0f83395dd0d3344fa4e1b0c0980b51b38",
+      "publicBytes": 24879
+    },
+    {
+      "path": "native/cached-pilot-golden.py",
+      "origin": "reports/native-service-auditor-infra-v4/test_audit.py",
+      "originalSha256": "fdcc943eb3cd999cfff97a00d0c72a9cf0480d7eaa2557c46c87cff5b4017ded",
+      "derivation": "Exact inherited historical golden assertions; explicit opt-in suite root, no implicit private input, no synthetic substitution.",
+      "publicSha256": "1645b5b0311ecd7d138c4adabc6ad9913ee69a879dae5601a997a659c2ef1842",
+      "publicBytes": 1381
+    },
+    {
+      "path": "native/test_timeout_delivery.py",
+      "origin": "reports/native-service-auditor-infra-v4/test_timeout_delivery.py",
+      "originalSha256": "e1836e745a87bd199fa9a3eeaa6ec1a70bfe4cc6a2f5bc6f37650456966ad032",
+      "derivation": "Preserve all timeout/96-cell routing assertions; route temporary writes and updated CLI to explicit test root.",
+      "publicSha256": "1e4bb24df9c8df911c37e34ba49c3e47bb90255cc7fa9804f8d39f4d4f0fb84f",
+      "publicBytes": 17490
+    },
+    {
+      "path": "native/test_poll_timeout_delivery.py",
+      "origin": "reports/native-service-auditor-infra-v4/test_poll_timeout_delivery.py",
+      "originalSha256": "d51b368953b08fcc2873f496f67c23b0332a5ac9947f4f391fa4d5c13e30d223",
+      "derivation": "Byte content retained, UTF-8 LF normalized only.",
+      "publicSha256": "359db6b2c7cb6e42df76b879994d2de1b81bfe0d075319eca2c06b823f8899bf",
+      "publicBytes": 8026
+    },
+    {
+      "path": "physical/collect-physical-index.ps1",
+      "origin": "reports/physical-index-collector-infra-v2/collect-physical-index.ps1",
+      "originalSha256": "d37df9ad8bfb923ae43144cbe7451eed3e5fdab25237c722bb9e64630af362c9",
+      "derivation": "Explicit Windows/suite/output boundaries and authoritative frozen campaign evidenceDir mapping only; allocation and accounting retained.",
+      "publicSha256": "2e9a398b13f062292a1e84daa9611b7029e8355a8620696595c26c4e46d3d1e1",
+      "publicBytes": 21429
+    },
+    {
+      "path": "physical/infra-ledger.ps1",
+      "origin": "reports/physical-index-collector-infra-v2/infra-ledger.ps1",
+      "originalSha256": "d6d09724c0fc6b51bf1db48e507161952e3b1f392aeddab25fc6dacea5d6ace4",
+      "derivation": "Canonical path uses the collector-established campaign mapping; approval/pins/no-model/cost/failure/dedup policy unchanged.",
+      "publicSha256": "189fc904fb3afab27d9a05cb7c6bcf0ae6d9267cf76c3f49570104bdc3b12573",
+      "publicBytes": 7099
+    },
+    {
+      "path": "physical/verify.ps1",
+      "origin": "reports/physical-index-collector-infra-v2/verify.ps1",
+      "originalSha256": "edf8df0b3e24c1f0b18df138c0e3176c6a690d9102c5ff117a952f4ba5041857",
+      "derivation": "Synthetic fixed288/192 freeze and nondefault manifest paths; original nine checks/values retained plus mapping checks; every write in explicit test output root.",
+      "publicSha256": "fe2be31d5606df3df6e81c6ab5bb88f102d36b7f0082f9c677b18873caec8f28",
+      "publicBytes": 10242
+    },
+    {
+      "path": "README.md",
+      "origin": "owner-approved public producer delivery documentation",
+      "originalSha256": null,
+      "publicSha256": "d43ea75bb9e9954f6e658547cf8dcd1cefe7337bf82825649d4ed6a7a075c0b0",
+      "publicBytes": 11768,
+      "derivation": "authored source-contract and lineage documentation"
+    },
+    {
+      "path": "ORIGIN.md",
+      "origin": "owner-approved public producer delivery documentation",
+      "originalSha256": null,
+      "publicSha256": "d7a042dbfac57146717feeae19bef5965b20d1030d4348de903f69c15dafdac2",
+      "publicBytes": 3742,
+      "derivation": "authored source-contract and lineage documentation"
+    },
+    {
+      "path": "LICENSE",
+      "origin": "CodeFacts repository LICENSE",
+      "originalSha256": "0d263fb3cc26798fc9f66741f75a9bc85aabf9ed0df13071b27b1da2bf4d72e9",
+      "publicSha256": "0d263fb3cc26798fc9f66741f75a9bc85aabf9ed0df13071b27b1da2bf4d72e9",
+      "publicBytes": 1122,
+      "derivation": "verbatim license"
+    }
+  ],
+  "selfAndInventoryPins": "Retain exact raw SOURCE-MAPPING.json and SOURCE-INVENTORY.json digests externally to avoid a circular self hash.",
+  "validation": "Source/AST/syntax checks only. Behavioral, Windows and actual closed-input acceptance pending."
+}

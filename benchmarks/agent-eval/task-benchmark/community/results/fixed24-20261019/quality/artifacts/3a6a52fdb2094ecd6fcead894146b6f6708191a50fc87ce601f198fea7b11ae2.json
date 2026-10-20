@@ -1,0 +1,81 @@
+{
+  "kind": "context",
+  "instance_id": "clap-rs__clap-2534",
+  "officialResult": {
+    "instance_id": "clap-rs__clap-2534",
+    "num_steps": 3,
+    "final": {
+      "file": {
+        "coverage": 1,
+        "precision": 1,
+        "intersection": 1,
+        "gold_size": 1,
+        "pred_size": 1
+      },
+      "symbol": {
+        "coverage": 0.13636363636363635,
+        "precision": 1,
+        "intersection": 3,
+        "gold_size": 22,
+        "pred_size": 3
+      },
+      "span": {
+        "coverage": 0.14473403118991668,
+        "precision": 0.9992625368731564,
+        "intersection": 2710,
+        "gold_size": 18724,
+        "pred_size": 2712
+      },
+      "line": {
+        "coverage": 0.14184397163120568,
+        "precision": 0.9876543209876543,
+        "intersection": 80,
+        "gold_size": 564,
+        "pred_size": 81
+      }
+    },
+    "trajectory": {
+      "steps": [
+        {
+          "step": 1,
+          "coverage": {
+            "file": 1,
+            "symbol": 0.4090909090909091,
+            "span": 0.21106601153599658,
+            "line": 0.22163120567375885
+          }
+        },
+        {
+          "step": 2,
+          "coverage": {
+            "file": 1,
+            "symbol": 0.4090909090909091,
+            "span": 0.27221747489852594,
+            "line": 0.2801418439716312
+          }
+        },
+        {
+          "step": 3,
+          "coverage": {
+            "file": 1,
+            "symbol": 0.8636363636363636,
+            "span": 0.7739265114291818,
+            "line": 0.7322695035460993
+          }
+        }
+      ],
+      "auc_coverage": {
+        "file": 1,
+        "symbol": 0.5606060606060607,
+        "span": 0.41906999928790145,
+        "line": 0.41134751773049644
+      },
+      "redundancy": {
+        "file": 0.36363636363636365,
+        "symbol": 0.07608695652173914,
+        "span": 0.09236794864820763,
+        "line": 0.09260832625318605
+      }
+    }
+  }
+}

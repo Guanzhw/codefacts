@@ -1,0 +1,333 @@
+{
+  "kind": "context",
+  "instance_id": "sveltejs__svelte-10391",
+  "officialResult": {
+    "instance_id": "sveltejs__svelte-10391",
+    "num_steps": 31,
+    "final": {
+      "file": {
+        "coverage": 0.2,
+        "precision": 0.3333333333333333,
+        "intersection": 1,
+        "gold_size": 5,
+        "pred_size": 3
+      },
+      "symbol": {
+        "coverage": 0.4,
+        "precision": 1,
+        "intersection": 2,
+        "gold_size": 5,
+        "pred_size": 2
+      },
+      "span": {
+        "coverage": 0.056179775280898875,
+        "precision": 0.5425659472422062,
+        "intersection": 905,
+        "gold_size": 16109,
+        "pred_size": 1668
+      },
+      "line": {
+        "coverage": 0.048414023372287146,
+        "precision": 0.5471698113207547,
+        "intersection": 29,
+        "gold_size": 599,
+        "pred_size": 53
+      }
+    },
+    "trajectory": {
+      "steps": [
+        {
+          "step": 1,
+          "coverage": {
+            "file": 0,
+            "symbol": 0,
+            "span": 0,
+            "line": 0
+          }
+        },
+        {
+          "step": 2,
+          "coverage": {
+            "file": 0,
+            "symbol": 0,
+            "span": 0,
+            "line": 0
+          }
+        },
+        {
+          "step": 3,
+          "coverage": {
+            "file": 0,
+            "symbol": 0,
+            "span": 0,
+            "line": 0
+          }
+        },
+        {
+          "step": 4,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 0,
+            "span": 0,
+            "line": 0
+          }
+        },
+        {
+          "step": 5,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 0,
+            "span": 0,
+            "line": 0
+          }
+        },
+        {
+          "step": 6,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 0.2,
+            "span": 0.0050903221801477435,
+            "line": 0.00333889816360601
+          }
+        },
+        {
+          "step": 7,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 0.2,
+            "span": 0.0050903221801477435,
+            "line": 0.00333889816360601
+          }
+        },
+        {
+          "step": 8,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 0.2,
+            "span": 0.0050903221801477435,
+            "line": 0.00333889816360601
+          }
+        },
+        {
+          "step": 9,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 0.2,
+            "span": 0.0050903221801477435,
+            "line": 0.00333889816360601
+          }
+        },
+        {
+          "step": 10,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0818796945806692,
+            "line": 0.07178631051752922
+          }
+        },
+        {
+          "step": 11,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0818796945806692,
+            "line": 0.07178631051752922
+          }
+        },
+        {
+          "step": 12,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0818796945806692,
+            "line": 0.07178631051752922
+          }
+        },
+        {
+          "step": 13,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0818796945806692,
+            "line": 0.07178631051752922
+          }
+        },
+        {
+          "step": 14,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0818796945806692,
+            "line": 0.07178631051752922
+          }
+        },
+        {
+          "step": 15,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0818796945806692,
+            "line": 0.07178631051752922
+          }
+        },
+        {
+          "step": 16,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0818796945806692,
+            "line": 0.07178631051752922
+          }
+        },
+        {
+          "step": 17,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0818796945806692,
+            "line": 0.07178631051752922
+          }
+        },
+        {
+          "step": 18,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0818796945806692,
+            "line": 0.07178631051752922
+          }
+        },
+        {
+          "step": 19,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0818796945806692,
+            "line": 0.07178631051752922
+          }
+        },
+        {
+          "step": 20,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0818796945806692,
+            "line": 0.07178631051752922
+          }
+        },
+        {
+          "step": 21,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0818796945806692,
+            "line": 0.07178631051752922
+          }
+        },
+        {
+          "step": 22,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0818796945806692,
+            "line": 0.07178631051752922
+          }
+        },
+        {
+          "step": 23,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0818796945806692,
+            "line": 0.07178631051752922
+          }
+        },
+        {
+          "step": 24,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0818796945806692,
+            "line": 0.07178631051752922
+          }
+        },
+        {
+          "step": 25,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0818796945806692,
+            "line": 0.07178631051752922
+          }
+        },
+        {
+          "step": 26,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0818796945806692,
+            "line": 0.07178631051752922
+          }
+        },
+        {
+          "step": 27,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0818796945806692,
+            "line": 0.07178631051752922
+          }
+        },
+        {
+          "step": 28,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0818796945806692,
+            "line": 0.07178631051752922
+          }
+        },
+        {
+          "step": 29,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0818796945806692,
+            "line": 0.07178631051752922
+          }
+        },
+        {
+          "step": 30,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0818796945806692,
+            "line": 0.07178631051752922
+          }
+        },
+        {
+          "step": 31,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0818796945806692,
+            "line": 0.07178631051752922
+          }
+        }
+      ],
+      "auc_coverage": {
+        "file": 0.18064516129032265,
+        "symbol": 0.7354838709677419,
+        "span": 0.05876498611275206,
+        "line": 0.05137594916258279
+      },
+      "redundancy": {
+        "file": 0.14199395770392753,
+        "symbol": 0.2987012987012987,
+        "span": 0.16139980390678033,
+        "line": 0.1584905660377358
+      }
+    }
+  }
+}

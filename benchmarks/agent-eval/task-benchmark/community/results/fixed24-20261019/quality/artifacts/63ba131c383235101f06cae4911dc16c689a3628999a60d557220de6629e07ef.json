@@ -1,0 +1,1259 @@
+[
+  {
+    "instance_id": "cli__cli-9794",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "435ecd47c0228abd787523947e3a298024689d8d",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            ".devcontainer/devcontainer.json",
+            ".gitattributes",
+            ".github/CODE-OF-CONDUCT.md",
+            ".github/CODEOWNERS",
+            ".github/CONTRIBUTING.md",
+            ".github/ISSUE_TEMPLATE/bug_report.md",
+            ".github/ISSUE_TEMPLATE/config.yml",
+            ".github/ISSUE_TEMPLATE/feedback.md",
+            ".github/ISSUE_TEMPLATE/submit-a-design-proposal.md",
+            ".github/ISSUE_TEMPLATE/submit-a-request.md",
+            ".github/PULL_REQUEST_TEMPLATE.md",
+            ".github/SECURITY.md",
+            ".github/dependabot.yml",
+            ".github/workflows/codeql.yml",
+            ".github/workflows/deployment.yml",
+            ".github/workflows/go.yml",
+            ".github/workflows/homebrew-bump.yml",
+            ".github/workflows/issueauto.yml",
+            ".github/workflows/lint.yml",
+            ".github/workflows/prauto.yml",
+            ".github/workflows/triage.yml",
+            ".gitignore",
+            ".golangci.yml",
+            ".goreleaser.yml",
+            "LICENSE",
+            "Makefile",
+            "README.md",
+            "acceptance/README.md",
+            "acceptance/acceptance_test.go",
+            "acceptance/testdata/api/basic-graphql.txtar",
+            "acceptance/testdata/api/basic-rest.txtar",
+            "acceptance/testdata/issue/issue-comment.txtar",
+            "acceptance/testdata/issue/issue-create-basic.txtar",
+            "acceptance/testdata/issue/issue-create-with-metadata.txtar",
+            "acceptance/testdata/issue/issue-list.txtar",
+            "acceptance/testdata/issue/issue-view.txtar",
+            "acceptance/testdata/pr/pr-checkout.txtar",
+            "acceptance/testdata/pr/pr-comment.txtar",
+            "acceptance/testdata/pr/pr-create-basic.txtar",
+            "acceptance/testdata/pr/pr-create-with-metadata.txtar",
+            "acceptance/testdata/pr/pr-list.txtar",
+            "acceptance/testdata/pr/pr-merge-merge-strategy.txtar",
+            "acceptance/testdata/pr/pr-merge-rebase-strategy.txtar",
+            "acceptance/testdata/pr/pr-view.txtar",
+            "acceptance/testdata/release/release-create.txtar",
+            "acceptance/testdata/release/release-list.txtar",
+            "acceptance/testdata/release/release-upload-download.txtar",
+            "acceptance/testdata/release/release-view.txtar",
+            "acceptance/testdata/repo/repo-archive-unarchive.txtar",
+            "acceptance/testdata/repo/repo-clone.txtar",
+            "acceptance/testdata/repo/repo-create-view.txtar",
+            "acceptance/testdata/repo/repo-delete.txtar",
+            "acceptance/testdata/repo/repo-deploy-key.txtar",
+            "acceptance/testdata/repo/repo-edit.txtar",
+            "acceptance/testdata/repo/repo-fork-sync.txtar",
+            "acceptance/testdata/repo/repo-list-rename.txtar",
+            "acceptance/testdata/repo/repo-set-default.txtar",
+            "acceptance/testdata/workflow/cache-list-delete.txtar",
+            "acceptance/testdata/workflow/run-cancel.txtar",
+            "acceptance/testdata/workflow/run-delete.txtar",
+            "acceptance/testdata/workflow/run-download.txtar",
+            "acceptance/testdata/workflow/run-rerun.txtar",
+            "acceptance/testdata/workflow/run-view.txtar",
+            "acceptance/testdata/workflow/workflow-enable-disable.txtar",
+            "acceptance/testdata/workflow/workflow-list.txtar",
+            "acceptance/testdata/workflow/workflow-run.txtar",
+            "acceptance/testdata/workflow/workflow-view.txtar",
+            "api/client.go",
+            "api/client_test.go",
+            "api/export_pr.go",
+            "api/export_pr_test.go",
+            "api/export_repo.go",
+            "api/http_client.go",
+            "api/http_client_test.go",
+            "api/pull_request_test.go",
+            "api/queries_branch_issue_reference.go",
+            "api/queries_comments.go",
+            "api/queries_issue.go",
+            "api/queries_org.go",
+            "api/queries_pr.go",
+            "api/queries_pr_review.go",
+            "api/queries_pr_test.go",
+            "api/queries_projects_v2.go",
+            "api/queries_projects_v2_test.go",
+            "api/queries_repo.go",
+            "api/queries_repo_test.go",
+            "api/queries_user.go",
+            "api/query_builder.go",
+            "api/query_builder_test.go",
+            "api/reaction_groups.go",
+            "api/reaction_groups_test.go",
+            "build/macOS/distribution.xml",
+            "build/windows/gh.wixproj",
+            "build/windows/gh.wxs",
+            "build/windows/ui.wxs",
+            "cmd/gen-docs/main.go",
+            "cmd/gen-docs/main_test.go",
+            "cmd/gh/main.go",
+            "context/context.go",
+            "context/remote.go",
+            "context/remote_test.go",
+            "docs/README.md",
+            "docs/codespaces.md",
+            "docs/command-line-syntax.md",
+            "docs/gh-vs-hub.md",
+            "docs/install_linux.md",
+            "docs/multiple-accounts.md",
+            "docs/project-layout.md",
+            "docs/releasing.md",
+            "docs/source.md",
+            "docs/triage.md",
+            "docs/working-with-us.md",
+            "git/client.go",
+            "git/client_test.go",
+            "git/command.go",
+            "git/errors.go",
+            "git/fixtures/.gitignore",
+            "git/fixtures/simple.git/HEAD",
+            "git/fixtures/simple.git/config",
+            "git/fixtures/simple.git/index",
+            "git/fixtures/simple.git/logs/HEAD",
+            "git/fixtures/simple.git/logs/refs/heads/main",
+            "git/fixtures/simple.git/objects/4b/825dc642cb6eb9a060e54bf8d69288fbee4904",
+            "git/fixtures/simple.git/objects/6f/1a2405cace1633d89a79c74c65f22fe78f9659",
+            "git/fixtures/simple.git/objects/d1/e0abfb7d158ed544a202a6958c62d4fc22e12f",
+            "git/fixtures/simple.git/refs/heads/main",
+            "git/objects.go",
+            "git/url.go",
+            "git/url_test.go",
+            "go.mod",
+            "go.sum",
+            "internal/authflow/flow.go",
+            "internal/authflow/flow_test.go",
+            "internal/authflow/success.go",
+            "internal/browser/browser.go",
+            "internal/browser/stub.go",
+            "internal/build/build.go",
+            "internal/codespaces/api/api.go",
+            "internal/codespaces/api/api_test.go",
+            "internal/codespaces/codespaces.go",
+            "internal/codespaces/connection/connection.go",
+            "internal/codespaces/connection/connection_test.go",
+            "internal/codespaces/connection/tunnels_api_server_mock.go",
+            "internal/codespaces/portforwarder/port_forwarder.go",
+            "internal/codespaces/portforwarder/port_forwarder_test.go",
+            "internal/codespaces/rpc/codespace/codespace_host_service.v1.pb.go",
+            "internal/codespaces/rpc/codespace/codespace_host_service.v1.proto",
+            "internal/codespaces/rpc/codespace/codespace_host_service.v1.proto.mock.go",
+            "internal/codespaces/rpc/codespace/codespace_host_service.v1_grpc.pb.go",
+            "internal/codespaces/rpc/generate.md",
+            "internal/codespaces/rpc/generate.sh",
+            "internal/codespaces/rpc/invoker.go",
+            "internal/codespaces/rpc/invoker_test.go",
+            "internal/codespaces/rpc/jupyter/jupyter_server_host_service.v1.pb.go",
+            "internal/codespaces/rpc/jupyter/jupyter_server_host_service.v1.proto",
+            "internal/codespaces/rpc/jupyter/jupyter_server_host_service.v1.proto.mock.go",
+            "internal/codespaces/rpc/jupyter/jupyter_server_host_service.v1_grpc.pb.go",
+            "internal/codespaces/rpc/ssh/ssh_server_host_service.v1.pb.go",
+            "internal/codespaces/rpc/ssh/ssh_server_host_service.v1.proto",
+            "internal/codespaces/rpc/ssh/ssh_server_host_service.v1.proto.mock.go",
+            "internal/codespaces/rpc/ssh/ssh_server_host_service.v1_grpc.pb.go",
+            "internal/codespaces/rpc/test/port_forwarder.go",
+            "internal/codespaces/ssh.go",
+            "internal/codespaces/ssh_test.go",
+            "internal/codespaces/states.go",
+            "internal/config/auth_config_test.go",
+            "internal/config/config.go",
+            "internal/config/config_test.go",
+            "internal/config/migrate_test.go",
+            "internal/config/migration/multi_account.go",
+            "internal/config/migration/multi_account_test.go",
+            "internal/config/stub.go",
+            "internal/docs/docs_test.go",
+            "internal/docs/man.go",
+            "internal/docs/man_test.go",
+            "internal/docs/markdown.go",
+            "internal/docs/markdown_test.go",
+            "internal/featuredetection/detector_mock.go",
+            "internal/featuredetection/feature_detection.go",
+            "internal/featuredetection/feature_detection_test.go",
+            "internal/gh/gh.go",
+            "internal/gh/mock/config.go",
+            "internal/gh/mock/migration.go",
+            "internal/ghcmd/cmd.go",
+            "internal/ghcmd/cmd_test.go",
+            "internal/ghinstance/host.go",
+            "internal/ghinstance/host_test.go",
+            "internal/ghrepo/repo.go",
+            "internal/ghrepo/repo_test.go",
+            "internal/keyring/keyring.go",
+            "internal/prompter/prompter.go",
+            "internal/prompter/prompter_mock.go",
+            "internal/prompter/test.go",
+            "internal/run/run.go",
+            "internal/run/stub.go",
+            "internal/tableprinter/table_printer.go",
+            "internal/tableprinter/table_printer_test.go",
+            "internal/text/text.go",
+            "internal/text/text_test.go",
+            "internal/update/update.go",
+            "internal/update/update_test.go",
+            "pkg/cmd/actions/actions.go",
+            "pkg/cmd/alias/alias.go",
+            "pkg/cmd/alias/delete/delete.go",
+            "pkg/cmd/alias/delete/delete_test.go",
+            "pkg/cmd/alias/imports/import.go",
+            "pkg/cmd/alias/imports/import_test.go",
+            "pkg/cmd/alias/list/list.go",
+            "pkg/cmd/alias/list/list_test.go",
+            "pkg/cmd/alias/set/set.go",
+            "pkg/cmd/alias/set/set_test.go",
+            "pkg/cmd/alias/shared/validations.go",
+            "pkg/cmd/alias/shared/validations_test.go",
+            "pkg/cmd/api/api.go",
+            "pkg/cmd/api/api_test.go",
+            "pkg/cmd/api/fields.go",
+            "pkg/cmd/api/fields_test.go",
+            "pkg/cmd/api/http.go",
+            "pkg/cmd/api/http_test.go",
+            "pkg/cmd/api/pagination.go",
+            "pkg/cmd/api/pagination_test.go",
+            "pkg/cmd/attestation/verification/extensions.go",
+            "pkg/cmd/attestation/verification/extensions_test.go",
+            "pkg/cmd/attestation/verification/mock_verifier.go",
+            "pkg/cmd/attestation/verification/policy.go",
+            "pkg/cmd/attestation/verification/sigstore.go",
+            "pkg/cmd/attestation/verification/sigstore_integration_test.go",
+            "pkg/cmd/attestation/verification/tuf.go",
+            "pkg/cmd/attestation/verification/tuf_test.go",
+            "pkg/cmd/attestation/verify/options.go",
+            "pkg/cmd/attestation/verify/options_test.go",
+            "pkg/cmd/attestation/verify/policy.go",
+            "pkg/cmd/attestation/verify/policy_test.go",
+            "pkg/cmd/attestation/verify/verify.go",
+            "pkg/cmd/attestation/verify/verify_integration_test.go",
+            "pkg/cmd/attestation/verify/verify_test.go",
+            "pkg/cmd/auth/switch/switch.go",
+            "pkg/cmd/auth/switch/switch_test.go",
+            "pkg/cmd/auth/token/token.go",
+            "pkg/cmd/auth/token/token_test.go",
+            "pkg/cmd/browse/browse.go",
+            "pkg/cmd/browse/browse_test.go",
+            "pkg/cmd/cache/cache.go",
+            "pkg/cmd/cache/delete/delete.go",
+            "pkg/cmd/cache/delete/delete_test.go",
+            "pkg/cmd/cache/list/list.go",
+            "pkg/cmd/cache/list/list_test.go",
+            "pkg/cmd/cache/shared/shared.go",
+            "pkg/cmd/cache/shared/shared_test.go",
+            "pkg/cmd/codespace/code.go",
+            "pkg/cmd/codespace/code_test.go",
+            "pkg/cmd/codespace/codespace_selector.go",
+            "pkg/cmd/codespace/codespace_selector_test.go",
+            "pkg/cmd/codespace/common.go",
+            "pkg/cmd/codespace/common_test.go",
+            "pkg/cmd/codespace/create.go",
+            "pkg/cmd/codespace/create_test.go",
+            "pkg/cmd/codespace/delete.go",
+            "pkg/cmd/codespace/delete_test.go",
+            "pkg/cmd/codespace/edit.go",
+            "pkg/cmd/codespace/edit_test.go",
+            "pkg/cmd/codespace/jupyter.go",
+            "pkg/cmd/codespace/list.go",
+            "pkg/cmd/codespace/list_test.go",
+            "pkg/cmd/codespace/logs.go",
+            "pkg/cmd/codespace/logs_test.go",
+            "pkg/cmd/codespace/mock_api.go",
+            "pkg/cmd/codespace/mock_prompter.go",
+            "pkg/cmd/codespace/ports.go",
+            "pkg/cmd/codespace/ports_test.go",
+            "pkg/cmd/codespace/rebuild.go",
+            "pkg/cmd/codespace/rebuild_test.go",
+            "pkg/cmd/codespace/root.go",
+            "pkg/cmd/codespace/select.go",
+            "pkg/cmd/codespace/select_test.go",
+            "pkg/cmd/codespace/ssh.go",
+            "pkg/cmd/codespace/ssh_test.go",
+            "pkg/cmd/codespace/stop.go",
+            "pkg/cmd/codespace/stop_test.go",
+            "pkg/cmd/codespace/view.go",
+            "pkg/cmd/codespace/view_test.go",
+            "pkg/cmd/completion/completion.go",
+            "pkg/cmd/completion/completion_test.go",
+            "pkg/cmd/config/clear-cache/clear_cache.go",
+            "pkg/cmd/config/clear-cache/clear_cache_test.go",
+            "pkg/cmd/config/config.go",
+            "pkg/cmd/config/get/get.go",
+            "pkg/cmd/config/get/get_test.go",
+            "pkg/cmd/config/list/list.go",
+            "pkg/cmd/config/list/list_test.go",
+            "pkg/cmd/config/set/set.go",
+            "pkg/cmd/config/set/set_test.go",
+            "pkg/cmd/extension/browse/browse.go",
+            "pkg/cmd/extension/browse/browse_test.go",
+            "pkg/cmd/extension/browse/rg.go",
+            "pkg/cmd/extension/command.go",
+            "pkg/cmd/extension/command_test.go",
+            "pkg/cmd/extension/ext_tmpls/buildScript.sh",
+            "pkg/cmd/extension/ext_tmpls/goBinMain.go.txt",
+            "pkg/cmd/extension/ext_tmpls/goBinWorkflow.yml",
+            "pkg/cmd/extension/ext_tmpls/otherBinWorkflow.yml",
+            "pkg/cmd/extension/ext_tmpls/script.sh",
+            "pkg/cmd/extension/extension.go",
+            "pkg/cmd/extension/extension_test.go",
+            "pkg/cmd/extension/git.go",
+            "pkg/cmd/extension/http.go",
+            "pkg/cmd/extension/manager.go",
+            "pkg/cmd/extension/manager_test.go",
+            "pkg/cmd/extension/mocks.go",
+            "pkg/cmd/extension/symlink_other.go",
+            "pkg/cmd/extension/symlink_windows.go",
+            "pkg/cmd/factory/default.go",
+            "pkg/cmd/factory/default_test.go",
+            "pkg/cmd/factory/remote_resolver.go",
+            "pkg/cmd/factory/remote_resolver_test.go",
+            "pkg/cmd/gist/clone/clone.go",
+            "pkg/cmd/gist/clone/clone_test.go",
+            "pkg/cmd/gist/create/create.go",
+            "pkg/cmd/gist/create/create_test.go",
+            "pkg/cmd/gist/delete/delete.go",
+            "pkg/cmd/gist/delete/delete_test.go",
+            "pkg/cmd/gist/edit/edit.go",
+            "pkg/cmd/gist/edit/edit_test.go",
+            "pkg/cmd/gist/gist.go",
+            "pkg/cmd/gist/list/list.go",
+            "pkg/cmd/gist/list/list_test.go",
+            "pkg/cmd/gist/rename/rename.go",
+            "pkg/cmd/gist/rename/rename_test.go",
+            "pkg/cmd/gist/shared/shared.go",
+            "pkg/cmd/gist/shared/shared_test.go",
+            "pkg/cmd/gist/view/view.go",
+            "pkg/cmd/gist/view/view_test.go",
+            "pkg/cmd/gpg-key/add/add.go",
+            "pkg/cmd/gpg-key/add/add_test.go",
+            "pkg/cmd/gpg-key/add/http.go",
+            "pkg/cmd/gpg-key/delete/delete.go",
+            "pkg/cmd/gpg-key/delete/delete_test.go",
+            "pkg/cmd/gpg-key/delete/http.go",
+            "pkg/cmd/gpg-key/gpg_key.go",
+            "pkg/cmd/gpg-key/list/http.go",
+            "pkg/cmd/gpg-key/list/list.go",
+            "pkg/cmd/gpg-key/list/list_test.go",
+            "pkg/cmd/issue/delete/delete.go",
+            "pkg/cmd/issue/delete/delete_test.go",
+            "pkg/cmd/label/clone.go",
+            "pkg/cmd/label/clone_test.go",
+            "pkg/cmd/label/create.go",
+            "pkg/cmd/label/create_test.go",
+            "pkg/cmd/label/delete.go",
+            "pkg/cmd/label/delete_test.go",
+            "pkg/cmd/label/edit.go",
+            "pkg/cmd/label/edit_test.go",
+            "pkg/cmd/label/http.go",
+            "pkg/cmd/label/http_test.go",
+            "pkg/cmd/label/label.go",
+            "pkg/cmd/label/list.go",
+            "pkg/cmd/label/list_test.go",
+            "pkg/cmd/label/shared.go",
+            "pkg/cmd/org/list/http.go",
+            "pkg/cmd/org/list/http_test.go",
+            "pkg/cmd/org/list/list.go",
+            "pkg/cmd/org/list/list_test.go",
+            "pkg/cmd/org/org.go",
+            "pkg/cmd/project/item-add/item_add.go",
+            "pkg/cmd/project/item-add/item_add_test.go",
+            "pkg/cmd/project/item-archive/item_archive.go",
+            "pkg/cmd/project/item-archive/item_archive_test.go",
+            "pkg/cmd/project/unlink/unlink.go",
+            "pkg/cmd/project/unlink/unlink_test.go",
+            "pkg/cmd/project/view/view.go",
+            "pkg/cmd/project/view/view_test.go",
+            "pkg/cmd/release/upload/upload.go",
+            "pkg/cmd/release/upload/upload_test.go",
+            "pkg/cmd/release/view/view.go",
+            "pkg/cmd/release/view/view_test.go",
+            "pkg/cmd/repo/view/http.go",
+            "pkg/cmd/repo/view/view.go",
+            "pkg/cmd/repo/view/view_test.go",
+            "pkg/cmd/ruleset/view/fixtures/rulesetViewRepo.json",
+            "pkg/cmd/ruleset/view/http.go",
+            "pkg/cmd/ruleset/view/view.go",
+            "pkg/cmd/ruleset/view/view_test.go",
+            "pkg/cmd/secret/shared/shared.go",
+            "pkg/cmd/secret/shared/shared_test.go",
+            "pkg/cmd/variable/delete/delete.go",
+            "pkg/cmd/variable/delete/delete_test.go",
+            "pkg/cmd/variable/get/get.go",
+            "pkg/cmd/variable/get/get_test.go",
+            "pkg/cmd/variable/list/list.go",
+            "pkg/cmd/variable/list/list_test.go",
+            "pkg/cmd/variable/set/http.go",
+            "pkg/cmd/variable/set/set.go",
+            "pkg/cmd/variable/set/set_test.go",
+            "pkg/cmd/variable/shared/shared.go",
+            "pkg/cmd/variable/shared/shared_test.go",
+            "pkg/cmd/variable/variable.go",
+            "pkg/cmd/version/version.go",
+            "pkg/cmd/version/version_test.go",
+            "pkg/cmd/workflow/disable/disable.go",
+            "pkg/cmd/workflow/disable/disable_test.go",
+            "pkg/cmd/workflow/enable/enable.go",
+            "pkg/cmd/workflow/enable/enable_test.go",
+            "pkg/cmd/workflow/list/list.go",
+            "pkg/cmd/workflow/list/list_test.go",
+            "pkg/cmd/workflow/run/run.go",
+            "pkg/cmd/workflow/run/run_test.go",
+            "pkg/cmd/workflow/shared/shared.go",
+            "pkg/cmd/workflow/shared/test.go",
+            "pkg/cmd/workflow/view/view.go",
+            "pkg/cmd/workflow/view/view_test.go",
+            "pkg/cmd/workflow/workflow.go",
+            "pkg/cmdutil/args.go",
+            "pkg/cmdutil/args_test.go",
+            "pkg/cmdutil/auth_check.go",
+            "pkg/cmdutil/auth_check_test.go",
+            "pkg/cmdutil/cmdgroup.go",
+            "pkg/cmdutil/errors.go",
+            "pkg/cmdutil/factory.go",
+            "pkg/cmdutil/factory_test.go",
+            "pkg/cmdutil/file_input.go",
+            "pkg/cmdutil/flags.go",
+            "pkg/cmdutil/json_flags.go",
+            "pkg/cmdutil/json_flags_test.go",
+            "pkg/cmdutil/legacy.go",
+            "pkg/cmdutil/repo_override.go",
+            "pkg/extensions/extension.go",
+            "pkg/extensions/extension_mock.go",
+            "pkg/extensions/manager_mock.go",
+            "pkg/findsh/find.go",
+            "pkg/findsh/find_windows.go",
+            "pkg/githubtemplate/github_template.go",
+            "pkg/githubtemplate/github_template_test.go",
+            "pkg/httpmock/legacy.go",
+            "pkg/httpmock/registry.go",
+            "pkg/httpmock/stub.go",
+            "pkg/iostreams/color.go",
+            "pkg/iostreams/color_test.go",
+            "pkg/iostreams/console.go",
+            "pkg/iostreams/console_windows.go",
+            "pkg/iostreams/epipe_other.go",
+            "pkg/iostreams/epipe_windows.go",
+            "pkg/iostreams/iostreams.go",
+            "pkg/iostreams/iostreams_test.go",
+            "pkg/jsoncolor/jsoncolor.go",
+            "pkg/jsoncolor/jsoncolor_test.go",
+            "pkg/jsonfieldstest/jsonfieldstest.go",
+            "pkg/markdown/markdown.go",
+            "pkg/option/option.go",
+            "pkg/option/option_test.go",
+            "pkg/search/query.go",
+            "pkg/search/query_test.go",
+            "pkg/search/result.go",
+            "pkg/search/result_test.go",
+            "pkg/search/searcher.go",
+            "pkg/search/searcher_mock.go",
+            "pkg/search/searcher_test.go",
+            "pkg/set/string_set.go",
+            "pkg/set/string_set_test.go",
+            "pkg/ssh/ssh_keys.go",
+            "pkg/surveyext/editor.go",
+            "pkg/surveyext/editor_manual.go",
+            "pkg/surveyext/editor_test.go",
+            "script/build.bat",
+            "script/build.go",
+            "script/createrepo.sh",
+            "script/distributions",
+            "script/label-assets",
+            "script/nolint-insert",
+            "script/override.ubuntu",
+            "script/pkgmacos",
+            "script/release",
+            "script/rpmmacros",
+            "script/sign",
+            "script/sign.ps1",
+            "test/helpers.go",
+            "test/integration/attestation-cmd/download-and-verify-package-attestation.sh",
+            "test/integration/attestation-cmd/verify-sigstore-bundle-versions.sh",
+            "utils/utils.go"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/manager.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/manager.go": [
+              {
+                "start": 1,
+                "end": 300
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/extension.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/extension.go": [
+              {
+                "start": 1,
+                "end": 236
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/browse/browse.go",
+            "pkg/cmd/extension/browse/browse_test.go",
+            "pkg/cmd/extension/command_test.go",
+            "pkg/cmd/extension/manager.go",
+            "pkg/cmd/extension/manager_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/browse/browse.go": [
+              {
+                "start": 61,
+                "end": 61
+              },
+              {
+                "start": 67,
+                "end": 67
+              },
+              {
+                "start": 70,
+                "end": 71
+              },
+              {
+                "start": 78,
+                "end": 78
+              },
+              {
+                "start": 152,
+                "end": 152
+              },
+              {
+                "start": 158,
+                "end": 159
+              },
+              {
+                "start": 163,
+                "end": 163
+              },
+              {
+                "start": 166,
+                "end": 166
+              },
+              {
+                "start": 168,
+                "end": 168
+              },
+              {
+                "start": 201,
+                "end": 201
+              },
+              {
+                "start": 218,
+                "end": 218
+              },
+              {
+                "start": 222,
+                "end": 223
+              },
+              {
+                "start": 230,
+                "end": 230
+              },
+              {
+                "start": 232,
+                "end": 232
+              },
+              {
+                "start": 333,
+                "end": 333
+              },
+              {
+                "start": 358,
+                "end": 358
+              },
+              {
+                "start": 360,
+                "end": 360
+              },
+              {
+                "start": 363,
+                "end": 363
+              },
+              {
+                "start": 366,
+                "end": 367
+              },
+              {
+                "start": 422,
+                "end": 422
+              },
+              {
+                "start": 504,
+                "end": 504
+              },
+              {
+                "start": 603,
+                "end": 603
+              }
+            ],
+            "pkg/cmd/extension/browse/browse_test.go": [
+              {
+                "start": 48,
+                "end": 48
+              },
+              {
+                "start": 55,
+                "end": 55
+              },
+              {
+                "start": 159,
+                "end": 159
+              },
+              {
+                "start": 167,
+                "end": 167
+              },
+              {
+                "start": 175,
+                "end": 175
+              },
+              {
+                "start": 183,
+                "end": 183
+              },
+              {
+                "start": 204,
+                "end": 204
+              },
+              {
+                "start": 216,
+                "end": 216
+              },
+              {
+                "start": 224,
+                "end": 224
+              },
+              {
+                "start": 228,
+                "end": 228
+              },
+              {
+                "start": 232,
+                "end": 232
+              },
+              {
+                "start": 240,
+                "end": 240
+              },
+              {
+                "start": 252,
+                "end": 252
+              },
+              {
+                "start": 256,
+                "end": 256
+              },
+              {
+                "start": 273,
+                "end": 273
+              },
+              {
+                "start": 297,
+                "end": 297
+              },
+              {
+                "start": 304,
+                "end": 304
+              },
+              {
+                "start": 311,
+                "end": 311
+              },
+              {
+                "start": 318,
+                "end": 318
+              },
+              {
+                "start": 339,
+                "end": 340
+              },
+              {
+                "start": 342,
+                "end": 342
+              },
+              {
+                "start": 348,
+                "end": 348
+              },
+              {
+                "start": 351,
+                "end": 351
+              },
+              {
+                "start": 369,
+                "end": 369
+              },
+              {
+                "start": 379,
+                "end": 379
+              }
+            ],
+            "pkg/cmd/extension/command_test.go": [
+              {
+                "start": 117,
+                "end": 117
+              },
+              {
+                "start": 154,
+                "end": 154
+              },
+              {
+                "start": 220,
+                "end": 221
+              },
+              {
+                "start": 226,
+                "end": 226
+              },
+              {
+                "start": 230,
+                "end": 232
+              },
+              {
+                "start": 239,
+                "end": 240
+              },
+              {
+                "start": 252,
+                "end": 252
+              },
+              {
+                "start": 255,
+                "end": 256
+              },
+              {
+                "start": 267,
+                "end": 267
+              },
+              {
+                "start": 270,
+                "end": 271
+              },
+              {
+                "start": 273,
+                "end": 273
+              },
+              {
+                "start": 277,
+                "end": 277
+              },
+              {
+                "start": 285,
+                "end": 285
+              },
+              {
+                "start": 290,
+                "end": 290
+              },
+              {
+                "start": 294,
+                "end": 296
+              },
+              {
+                "start": 303,
+                "end": 304
+              },
+              {
+                "start": 306,
+                "end": 306
+              },
+              {
+                "start": 478,
+                "end": 478
+              },
+              {
+                "start": 482,
+                "end": 482
+              },
+              {
+                "start": 492,
+                "end": 492
+              },
+              {
+                "start": 623,
+                "end": 623
+              },
+              {
+                "start": 655,
+                "end": 655
+              },
+              {
+                "start": 686,
+                "end": 686
+              },
+              {
+                "start": 688,
+                "end": 688
+              },
+              {
+                "start": 718,
+                "end": 718
+              },
+              {
+                "start": 748,
+                "end": 748
+              },
+              {
+                "start": 810,
+                "end": 811
+              },
+              {
+                "start": 816,
+                "end": 816
+              },
+              {
+                "start": 822,
+                "end": 824
+              },
+              {
+                "start": 828,
+                "end": 828
+              },
+              {
+                "start": 831,
+                "end": 832
+              },
+              {
+                "start": 839,
+                "end": 839
+              },
+              {
+                "start": 848,
+                "end": 849
+              },
+              {
+                "start": 985,
+                "end": 985
+              },
+              {
+                "start": 992,
+                "end": 992
+              },
+              {
+                "start": 995,
+                "end": 995
+              },
+              {
+                "start": 1002,
+                "end": 1002
+              },
+              {
+                "start": 1012,
+                "end": 1012
+              }
+            ],
+            "pkg/cmd/extension/manager.go": [
+              {
+                "start": 109,
+                "end": 109
+              },
+              {
+                "start": 132,
+                "end": 132
+              },
+              {
+                "start": 163,
+                "end": 163
+              },
+              {
+                "start": 194,
+                "end": 194
+              },
+              {
+                "start": 196,
+                "end": 196
+              },
+              {
+                "start": 209,
+                "end": 209
+              },
+              {
+                "start": 213,
+                "end": 214
+              },
+              {
+                "start": 228,
+                "end": 228
+              },
+              {
+                "start": 236,
+                "end": 236
+              },
+              {
+                "start": 239,
+                "end": 239
+              },
+              {
+                "start": 242,
+                "end": 242
+              },
+              {
+                "start": 268,
+                "end": 268
+              },
+              {
+                "start": 274,
+                "end": 274
+              },
+              {
+                "start": 298,
+                "end": 298
+              },
+              {
+                "start": 304,
+                "end": 304
+              },
+              {
+                "start": 352,
+                "end": 352
+              },
+              {
+                "start": 373,
+                "end": 373
+              },
+              {
+                "start": 387,
+                "end": 387
+              }
+            ],
+            "pkg/cmd/extension/manager_test.go": [
+              {
+                "start": 209,
+                "end": 209
+              },
+              {
+                "start": 236,
+                "end": 236
+              },
+              {
+                "start": 258,
+                "end": 258
+              },
+              {
+                "start": 274,
+                "end": 274
+              },
+              {
+                "start": 295,
+                "end": 295
+              },
+              {
+                "start": 307,
+                "end": 307
+              },
+              {
+                "start": 315,
+                "end": 315
+              },
+              {
+                "start": 322,
+                "end": 322
+              },
+              {
+                "start": 331,
+                "end": 331
+              },
+              {
+                "start": 722,
+                "end": 722
+              },
+              {
+                "start": 754,
+                "end": 754
+              },
+              {
+                "start": 761,
+                "end": 761
+              },
+              {
+                "start": 796,
+                "end": 796
+              },
+              {
+                "start": 798,
+                "end": 798
+              },
+              {
+                "start": 806,
+                "end": 806
+              },
+              {
+                "start": 844,
+                "end": 844
+              },
+              {
+                "start": 872,
+                "end": 872
+              },
+              {
+                "start": 908,
+                "end": 909
+              },
+              {
+                "start": 915,
+                "end": 915
+              },
+              {
+                "start": 960,
+                "end": 961
+              },
+              {
+                "start": 967,
+                "end": 967
+              },
+              {
+                "start": 1005,
+                "end": 1005
+              },
+              {
+                "start": 1031,
+                "end": 1031
+              },
+              {
+                "start": 1079,
+                "end": 1079
+              },
+              {
+                "start": 1123,
+                "end": 1123
+              },
+              {
+                "start": 1295,
+                "end": 1295
+              },
+              {
+                "start": 1322,
+                "end": 1324
+              },
+              {
+                "start": 1327,
+                "end": 1327
+              },
+              {
+                "start": 1342,
+                "end": 1342
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command.go": [
+              {
+                "start": 1,
+                "end": 220
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command.go": [
+              {
+                "start": 220,
+                "end": 380
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command_test.go": [
+              {
+                "start": 950,
+                "end": 1030
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/manager.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/manager.go": [
+              {
+                "start": 375,
+                "end": 455
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command.go",
+            "pkg/cmd/extension/command_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command.go": [
+              {
+                "start": 642,
+                "end": 642
+              }
+            ],
+            "pkg/cmd/extension/command_test.go": [
+              {
+                "start": 934,
+                "end": 934
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command.go"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/manager_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/manager_test.go": [
+              {
+                "start": 1270,
+                "end": 1325
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command.go": [
+              {
+                "start": 600,
+                "end": 676
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command_test.go": [
+              {
+                "start": 205,
+                "end": 315
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command_test.go": [
+              {
+                "start": 915,
+                "end": 955
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/extensions/extension.go"
+          ],
+          "spans": {
+            "pkg/extensions/extension.go": [
+              {
+                "start": 1,
+                "end": 41
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/manager.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/manager.go": [
+              {
+                "start": 125,
+                "end": 205
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "pkg/cmd/extension/command.go",
+        "pkg/cmd/extension/command_test.go",
+        "pkg/cmd/extension/manager.go"
+      ],
+      "pred_spans": {
+        "pkg/cmd/extension/command.go": [
+          {
+            "start": 311,
+            "end": 320
+          },
+          {
+            "start": 642,
+            "end": 662
+          }
+        ],
+        "pkg/cmd/extension/command_test.go": [
+          {
+            "start": 270,
+            "end": 282
+          }
+        ],
+        "pkg/cmd/extension/manager.go": [
+          {
+            "start": 131,
+            "end": 173
+          },
+          {
+            "start": 194,
+            "end": 201
+          }
+        ]
+      }
+    }
+  }
+]

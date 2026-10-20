@@ -1,0 +1,7 @@
+[
+  {
+    "instance_id": "caddyserver__caddy-5995",
+    "model_name_or_path": "deepseek-swe-codegraph",
+    "model_patch": "diff --git a/replacer.go b/replacer.go\nindex 5d33b7f..046be86 100644\n--- a/replacer.go\n+++ b/replacer.go\n@@ -133,7 +133,7 @@ func (r *Replacer) replace(input, empty string,\n \ttreatUnknownAsEmpty, errOnEmpty, errOnUnknown bool,\n \tf ReplacementFunc,\n ) (string, error) {\n-\tif !strings.Contains(input, string(phOpen)) {\n+\tif !strings.Contains(input, string(phOpen)) && !strings.Contains(input, string(phClose)) {\n \t\treturn input, nil\n \t}\n \ndiff --git a/replacer_test.go b/replacer_test.go\nindex 41ada7d..4ab4ca0 100644\n--- a/replacer_test.go\n+++ b/replacer_test.go\n@@ -69,7 +69,7 @@ func TestReplacer(t *testing.T) {\n \t\t},\n \t\t{\n \t\t\tinput:  `\\}`,\n-\t\t\texpect: `\\}`,\n+\t\t\texpect: `}`,\n \t\t},\n \t\t{\n \t\t\tinput:  \"{}\",\n"
+  }
+]

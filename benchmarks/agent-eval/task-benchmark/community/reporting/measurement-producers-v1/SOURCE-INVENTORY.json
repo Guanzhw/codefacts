@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "kind": "fixed24-public-measurement-producer-source-inventory",
+  "fileCount": 17,
+  "allowlist": [
+    "LICENSE",
+    "ORIGIN.md",
+    "README.md",
+    "SOURCE-INVENTORY.json",
+    "SOURCE-MAPPING.json",
+    "metadata/audit.mjs",
+    "metadata/fixtures.mjs",
+    "metadata/test-reference-policy.mjs",
+    "metadata/test-reference-v2.mjs",
+    "native/audit.py",
+    "native/cached-pilot-golden.py",
+    "native/test_audit.py",
+    "native/test_poll_timeout_delivery.py",
+    "native/test_timeout_delivery.py",
+    "physical/collect-physical-index.ps1",
+    "physical/infra-ledger.ps1",
+    "physical/verify.ps1"
+  ],
+  "files": [
+    {
+      "path": "LICENSE",
+      "sha256": "0d263fb3cc26798fc9f66741f75a9bc85aabf9ed0df13071b27b1da2bf4d72e9",
+      "bytes": 1122
+    },
+    {
+      "path": "ORIGIN.md",
+      "sha256": "d7a042dbfac57146717feeae19bef5965b20d1030d4348de903f69c15dafdac2",
+      "bytes": 3742
+    },
+    {
+      "path": "README.md",
+      "sha256": "d43ea75bb9e9954f6e658547cf8dcd1cefe7337bf82825649d4ed6a7a075c0b0",
+      "bytes": 11768
+    },
+    {
+      "path": "SOURCE-MAPPING.json",
+      "sha256": "bca52dda75bd15d50aae5def1997bc374eac820a74feb5150a8b47ae9e36d3f4",
+      "bytes": 7317
+    },
+    {
+      "path": "metadata/audit.mjs",
+      "sha256": "e2b6e41681a9c0866291bfce199a83c1791d3c760a19fe2a408b3904acb431d1",
+      "bytes": 25038
+    },
+    {
+      "path": "metadata/fixtures.mjs",
+      "sha256": "eb2af24eca7a01423f32a1a39191f09202b4624540b757dc8aeea138025c3170",
+      "bytes": 21533
+    },
+    {
+      "path": "metadata/test-reference-policy.mjs",
+      "sha256": "f39a1fb2d4e34aaf1e1bde6078e842dc0b8546accef52b3c2c5f9320deb210a9",
+      "bytes": 920
+    },
+    {
+      "path": "metadata/test-reference-v2.mjs",
+      "sha256": "f861fdb9e3323ac95c01f37b34f206fc5d96fef7e69a7e9f167cb4c5c56bafd1",
+      "bytes": 22308
+    },
+    {
+      "path": "native/audit.py",
+      "sha256": "e721cde70be54880846e37928321f5296f0142889e6de170b109fd35ce9f078f",
+      "bytes": 46410
+    },
+    {
+      "path": "native/cached-pilot-golden.py",
+      "sha256": "1645b5b0311ecd7d138c4adabc6ad9913ee69a879dae5601a997a659c2ef1842",
+      "bytes": 1381
+    },
+    {
+      "path": "native/test_audit.py",
+      "sha256": "5b1804ce48609727b847f7f49094b7c0f83395dd0d3344fa4e1b0c0980b51b38",
+      "bytes": 24879
+    },
+    {
+      "path": "native/test_poll_timeout_delivery.py",
+      "sha256": "359db6b2c7cb6e42df76b879994d2de1b81bfe0d075319eca2c06b823f8899bf",
+      "bytes": 8026
+    },
+    {
+      "path": "native/test_timeout_delivery.py",
+      "sha256": "1e4bb24df9c8df911c37e34ba49c3e47bb90255cc7fa9804f8d39f4d4f0fb84f",
+      "bytes": 17490
+    },
+    {
+      "path": "physical/collect-physical-index.ps1",
+      "sha256": "2e9a398b13f062292a1e84daa9611b7029e8355a8620696595c26c4e46d3d1e1",
+      "bytes": 21429
+    },
+    {
+      "path": "physical/infra-ledger.ps1",
+      "sha256": "189fc904fb3afab27d9a05cb7c6bcf0ae6d9267cf76c3f49570104bdc3b12573",
+      "bytes": 7099
+    },
+    {
+      "path": "physical/verify.ps1",
+      "sha256": "fe2be31d5606df3df6e81c6ab5bb88f102d36b7f0082f9c677b18873caec8f28",
+      "bytes": 10242
+    }
+  ],
+  "selfPin": "The raw SHA-256 of SOURCE-INVENTORY.json must be retained externally; files hashes the other 16 package files."
+}

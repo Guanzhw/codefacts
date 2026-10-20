@@ -1,0 +1,854 @@
+[
+  {
+    "instance_id": "sveltejs__svelte-10391",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "736d584f27963b4b35ef3617518cce4a48abe001",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            ".changeset/afraid-moose-matter.md",
+            ".changeset/angry-books-jam.md",
+            ".changeset/angry-plums-punch.md",
+            ".changeset/beige-flies-wash.md",
+            ".changeset/beige-rabbits-shave.md",
+            ".changeset/big-cars-serve.md",
+            ".changeset/big-eyes-carry.md",
+            ".changeset/blue-timers-film.md",
+            ".changeset/brave-shrimps-kiss.md",
+            ".changeset/brave-walls-destroy.md",
+            ".changeset/breezy-carrots-flash.md",
+            ".changeset/bright-peas-juggle.md",
+            ".changeset/bright-snakes-sing.md",
+            ".changeset/brown-spoons-boil.md",
+            ".changeset/chatty-cups-drop.md",
+            ".changeset/chatty-taxis-juggle.md",
+            ".changeset/chilled-pumas-invite.md",
+            ".changeset/chilly-dolphins-lick.md",
+            ".changeset/clean-eels-beg.md",
+            ".changeset/clever-chefs-relate.md",
+            ".changeset/clever-rockets-burn.md",
+            ".changeset/cold-birds-own.md",
+            ".changeset/config.json",
+            ".changeset/cool-ants-leave.md",
+            ".changeset/cuddly-pianos-drop.md",
+            ".changeset/curly-lizards-dream.md",
+            ".changeset/curvy-cups-cough.md",
+            ".changeset/curvy-ties-shout.md",
+            ".changeset/cyan-flowers-destroy.md",
+            ".changeset/dirty-bats-punch.md",
+            ".changeset/dirty-garlics-design.md",
+            ".changeset/dirty-tips-add.md",
+            ".changeset/dry-clocks-grow.md",
+            ".changeset/dry-eggs-play.md",
+            ".changeset/dry-eggs-retire.md",
+            ".changeset/dull-mangos-wave.md",
+            ".editorconfig",
+            ".eslintignore",
+            ".eslintrc.cjs",
+            ".gitattributes",
+            ".github/FUNDING.yml",
+            ".github/ISSUE_TEMPLATE.md",
+            ".github/ISSUE_TEMPLATE/bug_report.yml",
+            ".github/ISSUE_TEMPLATE/config.yml",
+            ".github/ISSUE_TEMPLATE/feature_request.yml",
+            ".github/PULL_REQUEST_TEMPLATE.md",
+            ".github/workflows/ci.yml",
+            ".github/workflows/ecosystem-ci-trigger.yml",
+            ".github/workflows/release.yml",
+            ".gitignore",
+            ".npmrc",
+            ".prettierignore",
+            ".prettierrc",
+            ".vscode/launch.json",
+            ".vscode/settings.json",
+            "CODE_OF_CONDUCT.md",
+            "CONTRIBUTING.md",
+            "FUNDING.json",
+            "LICENSE.md",
+            "README.md",
+            "documentation/blog/2016-11-26-frameworks-without-the-framework.md",
+            "documentation/blog/2017-08-07-the-easiest-way-to-get-started.md",
+            "documentation/blog/2017-09-06-the-zen-of-just-writing-css.md",
+            "documentation/blog/2017-12-31-sapper-towards-the-ideal-web-app-framework.md",
+            "documentation/blog/2018-04-18-version-2.md",
+            "documentation/blog/2018-12-26-svelte-css-in-js.md",
+            "documentation/blog/2018-12-27-virtual-dom-is-pure-overhead.md",
+            "documentation/blog/2019-01-31-svelte-on-the-changelog.md",
+            "documentation/blog/2019-04-15-setting-up-your-editor.md",
+            "documentation/blog/2019-04-16-svelte-for-new-developers.md",
+            "documentation/blog/2019-04-20-write-less-code.md",
+            "documentation/blog/2019-04-22-svelte-3-rethinking-reactivity.md",
+            "documentation/blog/2020-07-17-svelte-and-typescript.md",
+            "documentation/blog/2020-10-01-whats-new-in-svelte-october-2020.md",
+            "documentation/blog/2020-11-01-whats-new-in-svelte-november-2020.md",
+            "documentation/blog/2020-11-05-whats-the-deal-with-sveltekit.md",
+            "documentation/blog/2020-12-01-whats-new-in-svelte-december-2020.md",
+            "documentation/blog/2021-01-01-whats-new-in-svelte-january-2021.md",
+            "documentation/blog/2021-02-01-whats-new-in-svelte-february-2021.md",
+            "documentation/blog/2021-03-01-whats-new-in-svelte-march-2021.md",
+            "documentation/blog/2021-03-23-sveltekit-beta.md",
+            "documentation/blog/2021-04-01-whats-new-in-svelte-april-2021.md",
+            "documentation/blog/2021-05-01-whats-new-in-svelte-may-2021.md",
+            "documentation/blog/2021-06-01-whats-new-in-svelte-june-2021.md",
+            "documentation/blog/2021-07-01-whats-new-in-svelte-july-2021.md",
+            "documentation/blog/2021-08-01-whats-new-in-svelte-august-2021.md",
+            "documentation/blog/2021-09-01-whats-new-in-svelte-september-2021.md",
+            "documentation/blog/2021-10-01-whats-new-in-svelte-october-2021.md",
+            "documentation/blog/2021-11-01-whats-new-in-svelte-november-2021.md",
+            "documentation/blog/2021-12-01-whats-new-in-svelte-december-2021.md",
+            "documentation/blog/2022-01-01-whats-new-in-svelte-january-2022.md",
+            "documentation/blog/2022-01-13-accelerating-sveltes-development.md",
+            "documentation/blog/2022-02-01-whats-new-in-svelte-february-2022.md",
+            "documentation/blog/2022-03-01-whats-new-in-svelte-march-2022.md",
+            "documentation/blog/2022-04-01-whats-new-in-svelte-april-2022.md",
+            "documentation/blog/2022-05-01-whats-new-in-svelte-may-2022.md",
+            "documentation/blog/2022-06-01-whats-new-in-svelte-june-2022.md",
+            "documentation/blog/2022-07-01-whats-new-in-svelte-july-2022.md",
+            "documentation/blog/2022-08-01-whats-new-in-svelte-august-2022.md",
+            "documentation/blog/2022-09-01-whats-new-in-svelte-september-2022.md",
+            "documentation/blog/2022-10-01-whats-new-in-svelte-october-2022.md",
+            "documentation/blog/2022-11-01-whats-new-in-svelte-november-2022.md",
+            "documentation/blog/2022-12-01-whats-new-in-svelte-december-2022.md",
+            "documentation/blog/2022-12-14-announcing-sveltekit-1.0.md",
+            "documentation/blog/2023-01-01-whats-new-in-svelte-january-2023.md",
+            "documentation/blog/2023-02-01-whats-new-in-svelte-february-2023.md",
+            "documentation/blog/2023-02-21-streaming-snapshots-sveltekit.md",
+            "documentation/blog/2023-03-01-whats-new-in-svelte-march-2023.md",
+            "documentation/blog/2023-03-09-zero-config-type-safety.md",
+            "documentation/blog/2023-04-01-whats-new-in-svelte-april-2023.md",
+            "documentation/blog/2023-05-01-whats-new-in-svelte-may-2023.md",
+            "documentation/blog/2023-06-01-whats-new-in-svelte-june-2023.md",
+            "documentation/blog/2023-06-22-svelte-4.md",
+            "documentation/blog/2023-06-29-svelte-dev-overhaul.md",
+            "documentation/blog/2023-07-01-whats-new-in-svelte-july-2023.md",
+            "documentation/blog/2023-08-01-whats-new-in-svelte-august-2023.md",
+            "documentation/blog/2023-08-31-view-transitions.md",
+            "documentation/blog/2023-09-01-whats-new-in-svelte-september-2023.md",
+            "documentation/blog/2023-09-20-runes.md",
+            "documentation/blog/2023-10-01-hacktoberfest.md",
+            "documentation/blog/2023-10-01-whats-new-in-svelte-october-2023.md",
+            "documentation/blog/2023-11-01-whats-new-in-svelte-november-2023.md",
+            "documentation/docs/01-getting-started/01-introduction.md",
+            "documentation/docs/01-getting-started/meta.json",
+            "documentation/docs/03-runtime/01-svelte.md",
+            "documentation/docs/03-runtime/02-svelte-store.md",
+            "documentation/docs/03-runtime/03-svelte-motion.md",
+            "documentation/docs/03-runtime/04-svelte-transition.md",
+            "documentation/docs/03-runtime/05-svelte-animate.md",
+            "documentation/docs/03-runtime/06-svelte-easing.md",
+            "documentation/docs/03-runtime/07-svelte-action.md",
+            "documentation/docs/03-runtime/meta.json",
+            "documentation/docs/05-misc/01-faq.md",
+            "documentation/docs/05-misc/02-accessibility-warnings.md",
+            "documentation/docs/05-misc/03-typescript.md",
+            "documentation/docs/05-misc/04-v4-migration-guide.md",
+            "documentation/docs/05-misc/meta.json",
+            "documentation/docs/06-legacy/01-svelte-register.md",
+            "documentation/docs/06-legacy/meta.json",
+            "documentation/examples/99-embeds/meta.json",
+            "documentation/tutorial/19-next-steps/meta.json",
+            "package.json",
+            "packages/svelte/.gitignore",
+            "packages/svelte/CHANGELOG-pre-5.md",
+            "packages/svelte/CHANGELOG.md",
+            "packages/svelte/elements.d.ts",
+            "packages/svelte/package.json",
+            "packages/svelte/tsconfig.json",
+            "packages/svelte/types/index.d.ts",
+            "playgrounds/demo/server.js",
+            "playgrounds/demo/src/entry-client.ts",
+            "playgrounds/demo/src/entry-server.ts",
+            "playgrounds/demo/tsconfig.json",
+            "playgrounds/demo/vite.config.js",
+            "playgrounds/sandbox/.gitignore",
+            "playgrounds/sandbox/input/.gitkeep",
+            "playgrounds/sandbox/package.json",
+            "playgrounds/sandbox/run.js",
+            "playgrounds/sandbox/tsconfig.json",
+            "pnpm-lock.yaml",
+            "pnpm-workspace.yaml",
+            "sites/svelte-5-preview/svelte.config.js",
+            "sites/svelte-5-preview/vercel.json",
+            "sites/svelte-5-preview/vite.config.js",
+            "sites/svelte.dev/.gitignore",
+            "sites/svelte.dev/README.md",
+            "sites/svelte.dev/config.js",
+            "sites/svelte.dev/package.json",
+            "sites/svelte.dev/placeholder/index.html",
+            "sites/svelte.dev/scripts/generate_examples.js",
+            "sites/svelte.dev/scripts/get_contributors.js",
+            "sites/svelte.dev/scripts/get_donors.js",
+            "sites/svelte.dev/scripts/type-gen/index.js",
+            "sites/svelte.dev/scripts/update.js",
+            "sites/svelte.dev/scripts/update_template.js",
+            "sites/svelte.dev/static/examples/thumbnails/7guis-circles.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/7guis-counter.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/7guis-crud.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/adding-parameters-to-transitions.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/animate.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/area-chart.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/auto-subscriptions.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/await-blocks.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/bar-chart.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/bind-this.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/checkbox-inputs.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/class-shorthand.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/classes.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/clock.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/component-bindings.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/component-events.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/conditional-slots.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/context-api.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/custom-css-transitions.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/custom-js-transitions.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/custom-stores.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/debug.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/declaring-props.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/default-values.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/deferred-transitions.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/derived-stores.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/dimensions.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/dom-event-forwarding.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/dom-events.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/dynamic-attributes.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/each-block-bindings.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/each-blocks.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/easing.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/else-blocks.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/else-if-blocks.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/event-forwarding.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/event-modifiers.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/file-inputs.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/group-inputs.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/hacker-news.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/hello-world.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/html-tags.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/if-blocks.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/immutable-data.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/in-and-out.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/inline-handlers.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/keyed-each-blocks.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/media-elements.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/modal.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/module-exports.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/multiple-select-bindings.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/named-slots.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/nested-components.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/numeric-inputs.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/ondestroy.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/onmount.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/reactive-assignments.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/reactive-declarations.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/reactive-statements.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/readable-stores.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/scatterplot.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/select-bindings.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/sharing-code.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/slot-fallbacks.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/slot-props.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/slots.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/spread-props.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/spring.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/styling.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/svelte-body.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/svelte-component.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/svelte-document.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/svelte-element.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/svelte-head.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/svelte-self.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/svelte-window-bindings.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/svelte-window.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/svg-transitions.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/text-inputs.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/textarea-inputs.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/tick.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/transition-events.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/transition.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/tweened.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/update.jpg",
+            "sites/svelte.dev/static/examples/thumbnails/writable-stores.jpg",
+            "sites/svelte.dev/static/favicon.png",
+            "sites/svelte.dev/static/icons/check.svg",
+            "sites/svelte.dev/static/icons/chevron.svg",
+            "sites/svelte.dev/static/icons/collapse.svg",
+            "sites/svelte.dev/static/icons/download.svg",
+            "sites/svelte.dev/static/icons/dropdown.svg",
+            "sites/svelte.dev/static/icons/edit.svg",
+            "sites/svelte.dev/static/icons/expand.svg",
+            "sites/svelte.dev/static/icons/flip.svg",
+            "sites/svelte.dev/static/icons/fork.svg",
+            "sites/svelte.dev/static/icons/link.svg",
+            "sites/svelte.dev/static/icons/loading.svg",
+            "sites/svelte.dev/static/icons/save.svg",
+            "sites/svelte.dev/static/icons/search.svg",
+            "sites/svelte.dev/static/images/og/svelte-machine.png",
+            "sites/svelte.dev/static/images/svelte-android-chrome-192.png",
+            "sites/svelte.dev/static/images/svelte-android-chrome-512.png",
+            "sites/svelte.dev/static/images/svelte-apple-touch-icon.png",
+            "sites/svelte.dev/static/images/svelte-mstile-150.png",
+            "sites/svelte.dev/static/images/twitter-card.png",
+            "sites/svelte.dev/static/images/twitter-thumbnail.jpg",
+            "sites/svelte.dev/static/manifest.json",
+            "sites/svelte.dev/static/media/rethinking-best-practices.jpg",
+            "sites/svelte.dev/static/media/svelte-ts.png",
+            "sites/svelte.dev/static/robots.txt",
+            "sites/svelte.dev/static/svelte-logo-horizontal.svg",
+            "sites/svelte.dev/static/svelte-logo-mask.svg",
+            "sites/svelte.dev/static/svelte-logo-outline.svg",
+            "sites/svelte.dev/static/svelte-logo-vertical.svg",
+            "sites/svelte.dev/static/svelte-logo.svg",
+            "sites/svelte.dev/static/tutorial/dark-theme.css",
+            "sites/svelte.dev/static/tutorial/icons/email.svg",
+            "sites/svelte.dev/static/tutorial/icons/folder-open.svg",
+            "sites/svelte.dev/static/tutorial/icons/folder.svg",
+            "sites/svelte.dev/static/tutorial/icons/gif.svg",
+            "sites/svelte.dev/static/tutorial/icons/map-marker.svg",
+            "sites/svelte.dev/static/tutorial/icons/md.svg",
+            "sites/svelte.dev/static/tutorial/icons/xlsx.svg",
+            "sites/svelte.dev/static/tutorial/image.gif",
+            "sites/svelte.dev/static/tutorial/kitten.png",
+            "sites/svelte.dev/static/whos-using-svelte/1password.svg",
+            "sites/svelte.dev/static/whos-using-svelte/Schneider_Electric.svg",
+            "sites/svelte.dev/static/whos-using-svelte/alaskaairlines.svg",
+            "sites/svelte.dev/static/whos-using-svelte/avast.svg",
+            "sites/svelte.dev/static/whos-using-svelte/chess.svg",
+            "sites/svelte.dev/static/whos-using-svelte/fusioncharts.svg",
+            "sites/svelte.dev/static/whos-using-svelte/godaddy.svg",
+            "sites/svelte.dev/static/whos-using-svelte/ibm.svg",
+            "sites/svelte.dev/static/whos-using-svelte/les-echos.svg",
+            "sites/svelte.dev/static/whos-using-svelte/nyt.svg",
+            "sites/svelte.dev/static/whos-using-svelte/philips.svg",
+            "sites/svelte.dev/static/whos-using-svelte/rakuten.svg",
+            "sites/svelte.dev/static/whos-using-svelte/razorpay.svg",
+            "sites/svelte.dev/static/whos-using-svelte/square.svg",
+            "sites/svelte.dev/static/whos-using-svelte/transloadit.svg",
+            "sites/svelte.dev/svelte.config.js",
+            "sites/svelte.dev/tsconfig.json",
+            "sites/svelte.dev/vercel.json",
+            "sites/svelte.dev/vite.config.js",
+            "vitest.config.js"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/errors.js",
+            "packages/svelte/src/compiler/phases/1-parse/state/element.js",
+            "packages/svelte/src/compiler/phases/1-parse/utils/names.js",
+            "packages/svelte/src/compiler/phases/2-analyze/index.js",
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js",
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js",
+            "packages/svelte/src/compiler/phases/3-transform/server/transform-server.js",
+            "packages/svelte/src/compiler/phases/constants.js",
+            "packages/svelte/src/compiler/phases/scope.js",
+            "packages/svelte/src/compiler/types/index.d.ts",
+            "packages/svelte/src/compiler/types/legacy-nodes.d.ts",
+            "packages/svelte/src/compiler/types/template.d.ts",
+            "packages/svelte/src/compiler/utils/builders.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/errors.js": [
+              {
+                "start": 139,
+                "end": 139
+              },
+              {
+                "start": 190,
+                "end": 190
+              },
+              {
+                "start": 390,
+                "end": 390
+              }
+            ],
+            "packages/svelte/src/compiler/phases/1-parse/state/element.js": [
+              {
+                "start": 608,
+                "end": 608
+              }
+            ],
+            "packages/svelte/src/compiler/phases/1-parse/utils/names.js": [
+              {
+                "start": 29,
+                "end": 29
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/index.js": [
+              {
+                "start": 623,
+                "end": 623
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js": [
+              {
+                "start": 927,
+                "end": 927
+              }
+            ],
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js": [
+              {
+                "start": 2834,
+                "end": 2835
+              }
+            ],
+            "packages/svelte/src/compiler/phases/3-transform/server/transform-server.js": [
+              {
+                "start": 2042,
+                "end": 2042
+              }
+            ],
+            "packages/svelte/src/compiler/phases/constants.js": [
+              {
+                "start": 165,
+                "end": 165
+              }
+            ],
+            "packages/svelte/src/compiler/phases/scope.js": [
+              {
+                "start": 285,
+                "end": 285
+              },
+              {
+                "start": 294,
+                "end": 294
+              },
+              {
+                "start": 366,
+                "end": 366
+              },
+              {
+                "start": 372,
+                "end": 372
+              },
+              {
+                "start": 487,
+                "end": 487
+              },
+              {
+                "start": 598,
+                "end": 598
+              },
+              {
+                "start": 628,
+                "end": 628
+              }
+            ],
+            "packages/svelte/src/compiler/types/index.d.ts": [
+              {
+                "start": 235,
+                "end": 235
+              }
+            ],
+            "packages/svelte/src/compiler/types/legacy-nodes.d.ts": [
+              {
+                "start": 73,
+                "end": 73
+              },
+              {
+                "start": 75,
+                "end": 75
+              }
+            ],
+            "packages/svelte/src/compiler/types/template.d.ts": [
+              {
+                "start": 194,
+                "end": 194
+              },
+              {
+                "start": 197,
+                "end": 197
+              },
+              {
+                "start": 199,
+                "end": 199
+              }
+            ],
+            "packages/svelte/src/compiler/utils/builders.js": [
+              {
+                "start": 155,
+                "end": 155
+              },
+              {
+                "start": 461,
+                "end": 461
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/legacy.js",
+            "packages/svelte/src/compiler/phases/1-parse/state/element.js",
+            "packages/svelte/src/compiler/phases/2-analyze/a11y.js",
+            "packages/svelte/src/compiler/phases/2-analyze/css/Selector.js",
+            "packages/svelte/src/compiler/phases/2-analyze/index.js",
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js",
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js",
+            "packages/svelte/src/compiler/phases/3-transform/server/transform-server.js",
+            "packages/svelte/src/compiler/phases/nodes.js",
+            "packages/svelte/src/compiler/types/template.d.ts"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/legacy.js": [
+              {
+                "start": 373,
+                "end": 373
+              }
+            ],
+            "packages/svelte/src/compiler/phases/1-parse/state/element.js": [
+              {
+                "start": 115,
+                "end": 115
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/a11y.js": [
+              {
+                "start": 1087,
+                "end": 1087
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/css/Selector.js": [
+              {
+                "start": 555,
+                "end": 555
+              },
+              {
+                "start": 568,
+                "end": 568
+              },
+              {
+                "start": 575,
+                "end": 575
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/index.js": [
+              {
+                "start": 895,
+                "end": 895
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js": [
+              {
+                "start": 600,
+                "end": 600
+              }
+            ],
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js": [
+              {
+                "start": 2909,
+                "end": 2909
+              }
+            ],
+            "packages/svelte/src/compiler/phases/3-transform/server/transform-server.js": [
+              {
+                "start": 1567,
+                "end": 1567
+              }
+            ],
+            "packages/svelte/src/compiler/phases/nodes.js": [
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 17,
+                "end": 17
+              }
+            ],
+            "packages/svelte/src/compiler/types/template.d.ts": [
+              {
+                "start": 282,
+                "end": 283
+              },
+              {
+                "start": 355,
+                "end": 355
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js": [
+              {
+                "start": 570,
+                "end": 660
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js": [
+              {
+                "start": 1,
+                "end": 60
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/errors.js",
+            "packages/svelte/src/compiler/legacy.js",
+            "packages/svelte/src/compiler/phases/1-parse/state/element.js",
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js",
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js",
+            "packages/svelte/src/compiler/phases/3-transform/server/transform-server.js",
+            "packages/svelte/src/compiler/phases/scope.js",
+            "packages/svelte/src/compiler/types/template.d.ts"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/errors.js": [
+              {
+                "start": 390,
+                "end": 390
+              }
+            ],
+            "packages/svelte/src/compiler/legacy.js": [
+              {
+                "start": 567,
+                "end": 567
+              }
+            ],
+            "packages/svelte/src/compiler/phases/1-parse/state/element.js": [
+              {
+                "start": 608,
+                "end": 608
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js": [
+              {
+                "start": 27,
+                "end": 27
+              },
+              {
+                "start": 491,
+                "end": 491
+              },
+              {
+                "start": 595,
+                "end": 595
+              }
+            ],
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js": [
+              {
+                "start": 780,
+                "end": 780
+              },
+              {
+                "start": 1904,
+                "end": 1904
+              },
+              {
+                "start": 2096,
+                "end": 2096
+              },
+              {
+                "start": 2833,
+                "end": 2833
+              },
+              {
+                "start": 2885,
+                "end": 2885
+              }
+            ],
+            "packages/svelte/src/compiler/phases/3-transform/server/transform-server.js": [
+              {
+                "start": 830,
+                "end": 830
+              },
+              {
+                "start": 1488,
+                "end": 1488
+              },
+              {
+                "start": 1525,
+                "end": 1525
+              },
+              {
+                "start": 1770,
+                "end": 1770
+              }
+            ],
+            "packages/svelte/src/compiler/phases/scope.js": [
+              {
+                "start": 34,
+                "end": 34
+              },
+              {
+                "start": 162,
+                "end": 162
+              },
+              {
+                "start": 285,
+                "end": 285
+              },
+              {
+                "start": 294,
+                "end": 294
+              },
+              {
+                "start": 298,
+                "end": 298
+              },
+              {
+                "start": 372,
+                "end": 372
+              }
+            ],
+            "packages/svelte/src/compiler/types/template.d.ts": [
+              {
+                "start": 195,
+                "end": 196
+              },
+              {
+                "start": 261,
+                "end": 261
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/index.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/index.js": [
+              {
+                "start": 890,
+                "end": 915
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js": [
+              {
+                "start": 2905,
+                "end": 2935
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js": [
+              {
+                "start": 2935,
+                "end": 2960
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js": [
+              {
+                "start": 488,
+                "end": 500
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/scope.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/scope.js": [
+              {
+                "start": 280,
+                "end": 300
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js": [
+              {
+                "start": 500,
+                "end": 512
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/scope.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/scope.js": [
+              {
+                "start": 355,
+                "end": 385
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/errors.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/errors.js": [
+              {
+                "start": 271,
+                "end": 271
+              },
+              {
+                "start": 276,
+                "end": 276
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js": [
+              {
+                "start": 600,
+                "end": 616
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [],
+      "pred_spans": {}
+    }
+  }
+]

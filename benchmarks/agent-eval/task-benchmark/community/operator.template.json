@@ -1,0 +1,41 @@
+{
+  "cohort": "context",
+  "campaignId": "context-fixed24-new-run",
+  "dataDir": "/absolute/private/export-24",
+  "sourcesDir": "/absolute/new/sources",
+  "sourceEvidenceDir": "/absolute/new/source-evidence",
+  "setupDir": "/absolute/new/campaign-setup",
+  "gradingConfigFile": "/absolute/private/grading.json",
+  "model": {
+    "provider": "opencode-go",
+    "id": "deepseek-v4.1-flash",
+    "reasoningEffort": "high"
+  },
+  "runtime": {
+    "dshRoot": "/absolute/dsh-package",
+    "node": "/absolute/node",
+    "sdkRoot": "/absolute/node_modules/@modelcontextprotocol/sdk",
+    "rg": "/absolute/rg",
+    "wsl": "/absolute/wsl.exe",
+    "wslDistro": "Ubuntu",
+    "symlinkStrategy": "wsl-lx",
+    "contextSourceMode": "hardlink",
+    "contextGitMode": "boundary-only"
+  },
+  "arms": [
+    { "id": "ordinary" },
+    { "id": "codefacts022", "version": "0.2.2", "executable": "/absolute/codefacts.exe" },
+    { "id": "codegraph", "version": "1.6.2", "node": "/absolute/codegraph/node.exe", "cli": "/absolute/codegraph/lib/dist/bin/codegraph.js" }
+  ],
+  "inputFiles": [
+    "/absolute/private/original-context.parquet",
+    "/absolute/source-evidence/readiness.json",
+    "/absolute/private/context-controls-receipt.json"
+  ],
+  "upstreamRoots": [
+    "/absolute/pinned/ContextBench",
+    "/absolute/shared-sdk-parent/node_modules"
+  ],
+  "runtimeFiles": ["/absolute/private/runtime-receipt.json"],
+  "sandboxes": {}
+}

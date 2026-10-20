@@ -1,0 +1,433 @@
+{
+  "schemaVersion": 1,
+  "kind": "fixed24-public-acquisition-bridge",
+  "selection": {
+    "path": "artifacts/2c24e94d2fd05042359693d8b6fc219d8ee59bf66a34f4ca55fca3f2ef86c17e.json",
+    "sha256": "2c24e94d2fd05042359693d8b6fc219d8ee59bf66a34f4ca55fca3f2ef86c17e"
+  },
+  "helpers": [
+    {
+      "path": "artifacts/2f8503f7397206c24585e3605962d6b2eefae5adb4a49ec60eadd2fd15997ef7.py",
+      "sha256": "2f8503f7397206c24585e3605962d6b2eefae5adb4a49ec60eadd2fd15997ef7",
+      "role": "official.py",
+      "originalSha256": "2f8503f7397206c24585e3605962d6b2eefae5adb4a49ec60eadd2fd15997ef7"
+    },
+    {
+      "path": "artifacts/d1d8ee5136600d871d2e80cb86b938705f52a9e15ec7d7d9e03afac006270e89.py",
+      "sha256": "d1d8ee5136600d871d2e80cb86b938705f52a9e15ec7d7d9e03afac006270e89",
+      "role": "export-fixed-selection.py",
+      "originalSha256": "d1d8ee5136600d871d2e80cb86b938705f52a9e15ec7d7d9e03afac006270e89"
+    },
+    {
+      "path": "artifacts/c0f5c170c4d3a466b75616092e6f5829d9b1ad63cd9216018734cbfe16ccda4c.py",
+      "sha256": "c0f5c170c4d3a466b75616092e6f5829d9b1ad63cd9216018734cbfe16ccda4c",
+      "role": "prepare-context-bases.py",
+      "originalSha256": "c0f5c170c4d3a466b75616092e6f5829d9b1ad63cd9216018734cbfe16ccda4c"
+    }
+  ],
+  "runtimeRecipes": {
+    "context": {
+      "path": "artifacts/a879f44dbf92943953837064856774dd183bfc9ce7d701f811cd40cad13f893c.json",
+      "sha256": "a879f44dbf92943953837064856774dd183bfc9ce7d701f811cd40cad13f893c"
+    },
+    "swe": {
+      "path": "artifacts/a9356a920ff833fcf29cc42466603c508daccc678a3ea45a0b9d34cd42aacc8c.json",
+      "sha256": "a9356a920ff833fcf29cc42466603c508daccc678a3ea45a0b9d34cd42aacc8c"
+    }
+  },
+  "manifests": [
+    {
+      "instanceId": "cli__cli-5698",
+      "originalSha256": "d7d82561ebba2c22b17188c79dc7b930b44552bc1a4a6e3499e8f32730f958fd",
+      "public": {
+        "path": "artifacts/d7d82561ebba2c22b17188c79dc7b930b44552bc1a4a6e3499e8f32730f958fd.json",
+        "sha256": "d7d82561ebba2c22b17188c79dc7b930b44552bc1a4a6e3499e8f32730f958fd"
+      },
+      "projection": "remove-sourceRepresentation-v1",
+      "archiveSha256": "ff122113a2345e899910df6bfeaf512619dd74723506f5846e572b8afa7564e7",
+      "archive": {
+        "kind": "source",
+        "repository": "https://codeload.github.com/cli/cli/tar.gz/d2683a1370c5f3d97eaa1e4a4a8cfbc32c1293c2",
+        "revision": "d2683a1370c5f3d97eaa1e4a4a8cfbc32c1293c2",
+        "path": "base.tar.gz",
+        "sha256": "ff122113a2345e899910df6bfeaf512619dd74723506f5846e572b8afa7564e7"
+      },
+      "upstreamBaseCommit": "d2683a1370c5f3d97eaa1e4a4a8cfbc32c1293c2",
+      "gradingCommit": "287385be821d13168a9e11ebaab787db1d03999a"
+    },
+    {
+      "instanceId": "cli__cli-9794",
+      "originalSha256": "dd7bfb5a0a7aca88c7f7c8aa7c7060820a3bc57e98b4e4f91c78302474e410ed",
+      "public": {
+        "path": "artifacts/dd7bfb5a0a7aca88c7f7c8aa7c7060820a3bc57e98b4e4f91c78302474e410ed.json",
+        "sha256": "dd7bfb5a0a7aca88c7f7c8aa7c7060820a3bc57e98b4e4f91c78302474e410ed"
+      },
+      "projection": "remove-sourceRepresentation-v1",
+      "archiveSha256": "2d981002dbc945c11f550021d56384baddc6b38f1489819dde1a28cb6600cf4d",
+      "archive": {
+        "kind": "source",
+        "repository": "https://codeload.github.com/cli/cli/tar.gz/92ff87c6b77f055b0446430bf8cf65025f2c64a7",
+        "revision": "92ff87c6b77f055b0446430bf8cf65025f2c64a7",
+        "path": "base.tar.gz",
+        "sha256": "2d981002dbc945c11f550021d56384baddc6b38f1489819dde1a28cb6600cf4d"
+      },
+      "upstreamBaseCommit": "92ff87c6b77f055b0446430bf8cf65025f2c64a7",
+      "gradingCommit": "435ecd47c0228abd787523947e3a298024689d8d"
+    },
+    {
+      "instanceId": "cli__cli-3608",
+      "originalSha256": "00d552cb3bab741e3437f09229a39d94ccb6dc3be5e8f526e7ec00db6d9cd09f",
+      "public": {
+        "path": "artifacts/00d552cb3bab741e3437f09229a39d94ccb6dc3be5e8f526e7ec00db6d9cd09f.json",
+        "sha256": "00d552cb3bab741e3437f09229a39d94ccb6dc3be5e8f526e7ec00db6d9cd09f"
+      },
+      "projection": "remove-sourceRepresentation-v1",
+      "archiveSha256": "3d7818731b01a010793b2463e0c17e7026902ea2bf7d1fb896b66d10a0788516",
+      "archive": {
+        "kind": "source",
+        "repository": "https://codeload.github.com/cli/cli/tar.gz/026b07d1cfbf23a3ccb4d4703a2496d65e177fcc",
+        "revision": "026b07d1cfbf23a3ccb4d4703a2496d65e177fcc",
+        "path": "base.tar.gz",
+        "sha256": "3d7818731b01a010793b2463e0c17e7026902ea2bf7d1fb896b66d10a0788516"
+      },
+      "upstreamBaseCommit": "026b07d1cfbf23a3ccb4d4703a2496d65e177fcc",
+      "gradingCommit": "ffc897e622bf3bfe556f07605804184c36f18e71"
+    },
+    {
+      "instanceId": "nushell__nushell-12901",
+      "originalSha256": "c3d26a24075c4a13b001db7f7950752a2585c84152f5e00ddea5ecb3d7084828",
+      "public": {
+        "path": "artifacts/c3d26a24075c4a13b001db7f7950752a2585c84152f5e00ddea5ecb3d7084828.json",
+        "sha256": "c3d26a24075c4a13b001db7f7950752a2585c84152f5e00ddea5ecb3d7084828"
+      },
+      "projection": "remove-sourceRepresentation-v1",
+      "archiveSha256": "43f60dec4eacb7b6323cbcca9c5758e25d0165354ba905f3716551fdf9df52ca",
+      "archive": {
+        "kind": "source",
+        "repository": "https://codeload.github.com/nushell/nushell/tar.gz/580c60bb821af25f838edafd8461bb206d3419f3",
+        "revision": "580c60bb821af25f838edafd8461bb206d3419f3",
+        "path": "base.tar.gz",
+        "sha256": "43f60dec4eacb7b6323cbcca9c5758e25d0165354ba905f3716551fdf9df52ca"
+      },
+      "upstreamBaseCommit": "580c60bb821af25f838edafd8461bb206d3419f3",
+      "gradingCommit": "bc098d5013ac2e7a953c0d7d115799972fee9e17"
+    },
+    {
+      "instanceId": "clap-rs__clap-2534",
+      "originalSha256": "1332cf11e1cab44aebc4073a2c20f482bd4d2b05068d266994738797f34b03d0",
+      "public": {
+        "path": "artifacts/1332cf11e1cab44aebc4073a2c20f482bd4d2b05068d266994738797f34b03d0.json",
+        "sha256": "1332cf11e1cab44aebc4073a2c20f482bd4d2b05068d266994738797f34b03d0"
+      },
+      "projection": "remove-sourceRepresentation-v1",
+      "archiveSha256": "23d2f61838818e39f049d0f3fa697b444c8c07d331681d2204d967de295de45a",
+      "archive": {
+        "kind": "source",
+        "repository": "https://codeload.github.com/clap-rs/clap/tar.gz/33c305ea6ff6cdda7796e57966374cb40633968f",
+        "revision": "33c305ea6ff6cdda7796e57966374cb40633968f",
+        "path": "base.tar.gz",
+        "sha256": "23d2f61838818e39f049d0f3fa697b444c8c07d331681d2204d967de295de45a"
+      },
+      "upstreamBaseCommit": "33c305ea6ff6cdda7796e57966374cb40633968f",
+      "gradingCommit": "9e83a909fa26538bd6fbbf9babb5904827ca0be4"
+    },
+    {
+      "instanceId": "clap-rs__clap-4248",
+      "originalSha256": "fc72de3b4067648a605788c2dc09ae35ca3b05f320a9fe09a08faf86821842a5",
+      "public": {
+        "path": "artifacts/fc72de3b4067648a605788c2dc09ae35ca3b05f320a9fe09a08faf86821842a5.json",
+        "sha256": "fc72de3b4067648a605788c2dc09ae35ca3b05f320a9fe09a08faf86821842a5"
+      },
+      "projection": "remove-sourceRepresentation-v1",
+      "archiveSha256": "46d9aaeb89358e8c39adace467d2d3e530daf3e9278bb40cda0a3e2ab4100edd",
+      "archive": {
+        "kind": "source",
+        "repository": "https://codeload.github.com/clap-rs/clap/tar.gz/8e510650a98a528d3c016cfdfddbe67ae3a470a5",
+        "revision": "8e510650a98a528d3c016cfdfddbe67ae3a470a5",
+        "path": "base.tar.gz",
+        "sha256": "46d9aaeb89358e8c39adace467d2d3e530daf3e9278bb40cda0a3e2ab4100edd"
+      },
+      "upstreamBaseCommit": "8e510650a98a528d3c016cfdfddbe67ae3a470a5",
+      "gradingCommit": "baaee3d5105b66b8c3a3141f57013b58959a9fdd"
+    },
+    {
+      "instanceId": "sveltejs__svelte-12509",
+      "originalSha256": "14903d1e4b82f78a0aee291ca607a708c5ddc1170fff470f337b6ecd2e4a03db",
+      "public": {
+        "path": "artifacts/14903d1e4b82f78a0aee291ca607a708c5ddc1170fff470f337b6ecd2e4a03db.json",
+        "sha256": "14903d1e4b82f78a0aee291ca607a708c5ddc1170fff470f337b6ecd2e4a03db"
+      },
+      "projection": "remove-sourceRepresentation-v1",
+      "archiveSha256": "af607690c207661cded661e11dc9b1b86bca0b77e48347d800da03f3982a1b97",
+      "archive": {
+        "kind": "source",
+        "repository": "https://codeload.github.com/sveltejs/svelte/tar.gz/30b143cef0d5ea17a6edec33496681882eadce34",
+        "revision": "30b143cef0d5ea17a6edec33496681882eadce34",
+        "path": "base.tar.gz",
+        "sha256": "af607690c207661cded661e11dc9b1b86bca0b77e48347d800da03f3982a1b97"
+      },
+      "upstreamBaseCommit": "30b143cef0d5ea17a6edec33496681882eadce34",
+      "gradingCommit": "9cc5a45cb1135b68b7ee0d39d43d820bcf0e8545"
+    },
+    {
+      "instanceId": "sveltejs__svelte-3394",
+      "originalSha256": "b1adb3e7b81795eb16f17700f00638636bfe385700f3ee738255501bb5c85a85",
+      "public": {
+        "path": "artifacts/b1adb3e7b81795eb16f17700f00638636bfe385700f3ee738255501bb5c85a85.json",
+        "sha256": "b1adb3e7b81795eb16f17700f00638636bfe385700f3ee738255501bb5c85a85"
+      },
+      "projection": "remove-sourceRepresentation-v1",
+      "archiveSha256": "a57d9ce60b292afc0f7f5f5de6af96a29b025fd41ae5902651454d02ed6baecf",
+      "archive": {
+        "kind": "source",
+        "repository": "https://codeload.github.com/sveltejs/svelte/tar.gz/bb9a9efec275084983117adee52718b5a35376b6",
+        "revision": "bb9a9efec275084983117adee52718b5a35376b6",
+        "path": "base.tar.gz",
+        "sha256": "a57d9ce60b292afc0f7f5f5de6af96a29b025fd41ae5902651454d02ed6baecf"
+      },
+      "upstreamBaseCommit": "bb9a9efec275084983117adee52718b5a35376b6",
+      "gradingCommit": "798bb3f0da7f547eef007718b14a18d1c0d94e2f"
+    },
+    {
+      "instanceId": "sveltejs__svelte-10391",
+      "originalSha256": "42c0c7b7d64e91958a7d27fbcf56ca315d446d4f50f747d60ec18fb54a708de4",
+      "public": {
+        "path": "artifacts/ee638ef15a67ba30acb8224d4c79c6bb15f5c2247c826379511a6bc6d4eae6f0.json",
+        "sha256": "ee638ef15a67ba30acb8224d4c79c6bb15f5c2247c826379511a6bc6d4eae6f0"
+      },
+      "projection": "remove-sourceRepresentation-v1",
+      "archiveSha256": "d66323635c530b1afed100fdf8803db89605258be0b1b5550ce8dd000fb360c2",
+      "archive": {
+        "kind": "source",
+        "repository": "https://codeload.github.com/sveltejs/svelte/tar.gz/b6fcc149b87720a431eb636ce291a0c0125b0bae",
+        "revision": "b6fcc149b87720a431eb636ce291a0c0125b0bae",
+        "path": "base.tar.gz",
+        "sha256": "d66323635c530b1afed100fdf8803db89605258be0b1b5550ce8dd000fb360c2"
+      },
+      "upstreamBaseCommit": "b6fcc149b87720a431eb636ce291a0c0125b0bae",
+      "gradingCommit": "736d584f27963b4b35ef3617518cce4a48abe001"
+    },
+    {
+      "instanceId": "vuejs__core-11899",
+      "originalSha256": "75515c73da01b8569a634a5cec796bc6d4130d15834dedb47e80a92a48ac98d6",
+      "public": {
+        "path": "artifacts/75515c73da01b8569a634a5cec796bc6d4130d15834dedb47e80a92a48ac98d6.json",
+        "sha256": "75515c73da01b8569a634a5cec796bc6d4130d15834dedb47e80a92a48ac98d6"
+      },
+      "projection": "remove-sourceRepresentation-v1",
+      "archiveSha256": "4ef45546927b3d915668e2ecfb341c6fcce0a042e666a96dd3f403b9f402c65f",
+      "archive": {
+        "kind": "source",
+        "repository": "https://codeload.github.com/vuejs/core/tar.gz/d0b513eb463f580e29378e43d112ff6859aa366e",
+        "revision": "d0b513eb463f580e29378e43d112ff6859aa366e",
+        "path": "base.tar.gz",
+        "sha256": "4ef45546927b3d915668e2ecfb341c6fcce0a042e666a96dd3f403b9f402c65f"
+      },
+      "upstreamBaseCommit": "d0b513eb463f580e29378e43d112ff6859aa366e",
+      "gradingCommit": "980858792775e23b8fbf79019d7ca79d5d8e30e1"
+    },
+    {
+      "instanceId": "mui__material-ui-26807",
+      "originalSha256": "e29d16869110ccd7198e194275befeefdd3ef3517a6150f09212999581b7743e",
+      "public": {
+        "path": "artifacts/e29d16869110ccd7198e194275befeefdd3ef3517a6150f09212999581b7743e.json",
+        "sha256": "e29d16869110ccd7198e194275befeefdd3ef3517a6150f09212999581b7743e"
+      },
+      "projection": "remove-sourceRepresentation-v1",
+      "archiveSha256": "1fad194acae146bffb775690f3f064502bb3c182fb9e42fda16dff51a4028a97",
+      "archive": {
+        "kind": "source",
+        "repository": "https://codeload.github.com/mui/material-ui/tar.gz/567e6cf97dce71eba9370e8c13519d206a98ffd2",
+        "revision": "567e6cf97dce71eba9370e8c13519d206a98ffd2",
+        "path": "base.tar.gz",
+        "sha256": "1fad194acae146bffb775690f3f064502bb3c182fb9e42fda16dff51a4028a97"
+      },
+      "upstreamBaseCommit": "567e6cf97dce71eba9370e8c13519d206a98ffd2",
+      "gradingCommit": "f791d0473239ff2976a53052fe6ae130b746b7ae"
+    },
+    {
+      "instanceId": "mui__material-ui-34229",
+      "originalSha256": "9a34733460500c6f6300f941e1c4653a4b627a5b013d1ccb8defac1900786b85",
+      "public": {
+        "path": "artifacts/9a34733460500c6f6300f941e1c4653a4b627a5b013d1ccb8defac1900786b85.json",
+        "sha256": "9a34733460500c6f6300f941e1c4653a4b627a5b013d1ccb8defac1900786b85"
+      },
+      "projection": "remove-sourceRepresentation-v1",
+      "archiveSha256": "e6f28d0094bf201aa87c1cad8ab16510784be4371be2a4a1025060f6211a00ea",
+      "archive": {
+        "kind": "source",
+        "repository": "https://codeload.github.com/mui/material-ui/tar.gz/fa62bf35e109ede215cb8cbae66ba4d6a30fef60",
+        "revision": "fa62bf35e109ede215cb8cbae66ba4d6a30fef60",
+        "path": "base.tar.gz",
+        "sha256": "e6f28d0094bf201aa87c1cad8ab16510784be4371be2a4a1025060f6211a00ea"
+      },
+      "upstreamBaseCommit": "fa62bf35e109ede215cb8cbae66ba4d6a30fef60",
+      "gradingCommit": "e4f2f9e5689127b3438cac196544bdfb2c6083ea"
+    }
+  ],
+  "datasets": {
+    "context": {
+      "canonical": {
+        "kind": "dataset",
+        "repository": "https://huggingface.co/datasets/Contextbench/ContextBench",
+        "revision": "c2855792b006af41c67202d33883fb9d46362853",
+        "path": "data/full.parquet",
+        "sha256": "2f56535bdc73eb8a68bf4ebb49789d8e9cd4f219ea60df6290b85278aee61ca8"
+      },
+      "format": "parquet"
+    },
+    "swe": {
+      "canonical": {
+        "kind": "dataset",
+        "repository": "https://huggingface.co/datasets/SWE-bench/SWE-bench_Multilingual",
+        "revision": "846e647b9f33c0b51b739d005d13d85493c9af09",
+        "path": "data/test-00000-of-00001.parquet",
+        "sha256": "92abca7cb527b41a9f66d03a26ce441ff7319e3a49f985998fd56be4bb9b08b2"
+      },
+      "format": "parquet",
+      "derivedSha256": "654f487c93addfabd8bd6071a03dc1277b37229503b0b9955c7f1e03ce09d486"
+    }
+  },
+  "images": [
+    {
+      "instanceId": "hashicorp__terraform-35543",
+      "officialTag": "swebench/sweb.eval.x86_64.hashicorp_1776_terraform-35543:latest",
+      "indexDigest": "sha256:6dcd1a4c4abeb2c7a6b9829bccef31faaa6dfea17c089c2d7eac232dd9ed8693",
+      "platformManifestDigest": "sha256:57ddad71c2bc85a20fb9e353e0012aec6ef747fd4e1744a30f20804b70acf1b6",
+      "configDigest": "sha256:5e3f3e0a7e88ec77c59032f2151dc78a795230781fd7c51376233370ffce9af5",
+      "platform": "linux/amd64",
+      "provenanceSha256": "6bb99d56d0bcefdcd1326873beb2a29a67f0723c66946f7ba092423b7d4a10cd",
+      "availability": "metadata-only-layers-unverified",
+      "historicalCellBinding": "not-established-by-acquisition"
+    },
+    {
+      "instanceId": "caddyserver__caddy-4774",
+      "officialTag": "swebench/sweb.eval.x86_64.caddyserver_1776_caddy-4774:latest",
+      "indexDigest": "sha256:6bb2b27fcf73cc42fef88f73e24dd0277c6327efb438ec87c9071b6bf6a8dc98",
+      "platformManifestDigest": "sha256:f1559c2f158f4f967531a1b57ed2a845c40a3d8ddb820b9e5bd56947c096d244",
+      "configDigest": "sha256:b9669f9d8e5d3cc152f7b3aa4c8fba581135b09056e30d7d3fc8e9100cb2c84f",
+      "platform": "linux/amd64",
+      "provenanceSha256": "6bb99d56d0bcefdcd1326873beb2a29a67f0723c66946f7ba092423b7d4a10cd",
+      "availability": "metadata-only-layers-unverified",
+      "historicalCellBinding": "not-established-by-acquisition"
+    },
+    {
+      "instanceId": "caddyserver__caddy-5995",
+      "officialTag": "swebench/sweb.eval.x86_64.caddyserver_1776_caddy-5995:latest",
+      "indexDigest": "sha256:570a67c63f18b18874b912cb7e48c74ee21905acd333c2baefde3e9d036c45d7",
+      "platformManifestDigest": "sha256:27efcf350038653acd2c7e23f9d0f8d69ef4e2a01ad3ee45f7cd6faa3adf0018",
+      "configDigest": "sha256:e13cfefb64b4fdadbdcbd75a2f307e648d251282ab276a23cd474d2d0d9230f1",
+      "platform": "linux/amd64",
+      "provenanceSha256": "bf67e82e7b38703b3052fc666f349f168663686dfc70891a33ba4b7267330bce",
+      "availability": "metadata-only-layers-unverified",
+      "historicalCellBinding": "not-established-by-acquisition"
+    },
+    {
+      "instanceId": "nushell__nushell-12901",
+      "officialTag": "swebench/sweb.eval.x86_64.nushell_1776_nushell-12901:latest",
+      "indexDigest": "sha256:c9b82f636f527e4611614106d118d85c9754b27c36a5df4c440c6c4f5fbe7ef7",
+      "platformManifestDigest": "sha256:f05f334607d3ea982999f15fbf27a26ea56903eb688a6f84e53b4821401ff322",
+      "configDigest": "sha256:4026eee559723ed93a93b91342c9cacfdd4dc2545f22cdf21aeeb3a6eb760c6c",
+      "platform": "linux/amd64",
+      "provenanceSha256": "6bb99d56d0bcefdcd1326873beb2a29a67f0723c66946f7ba092423b7d4a10cd",
+      "availability": "metadata-only-layers-unverified",
+      "historicalCellBinding": "not-established-by-acquisition"
+    },
+    {
+      "instanceId": "uutils__coreutils-6690",
+      "officialTag": "swebench/sweb.eval.x86_64.uutils_1776_coreutils-6690:latest",
+      "indexDigest": "sha256:a5fbd1d8b22816625f7ea6f150df1f77c645d22e6ac2b25804848b48c5e4aa41",
+      "platformManifestDigest": "sha256:e7db820822cc1d1dd6a6a124e7840cef20bc143f452c240c85a54b85bdf3493e",
+      "configDigest": "sha256:b80c8b83eef47fc662a764b77878fc0bfe7dc8c271ad09ae4d59f4736e273719",
+      "platform": "linux/amd64",
+      "provenanceSha256": "6bb99d56d0bcefdcd1326873beb2a29a67f0723c66946f7ba092423b7d4a10cd",
+      "availability": "metadata-only-layers-unverified",
+      "historicalCellBinding": "not-established-by-acquisition"
+    },
+    {
+      "instanceId": "tokio-rs__tokio-6603",
+      "officialTag": "swebench/sweb.eval.x86_64.tokio-rs_1776_tokio-6603:latest",
+      "indexDigest": "sha256:2998f5726864d57a6a1e759ed42fed6b27c8260e1debe14fd85746367199332d",
+      "platformManifestDigest": "sha256:a7ae228c119303e7d21ba25b1a247bfe63eb894d576d04afb687fea86dd6a549",
+      "configDigest": "sha256:da095b46997ebfc19d8952c5ebeab8d555c8e84a03ac5fc1b146023c4a6b5f1e",
+      "platform": "linux/amd64",
+      "provenanceSha256": "bf67e82e7b38703b3052fc666f349f168663686dfc70891a33ba4b7267330bce",
+      "availability": "metadata-only-layers-unverified",
+      "historicalCellBinding": "not-established-by-acquisition"
+    },
+    {
+      "instanceId": "preactjs__preact-3562",
+      "officialTag": "swebench/sweb.eval.x86_64.preactjs_1776_preact-3562:latest",
+      "indexDigest": "sha256:97b558985eb5688efafd8f2d7c99a4e290856af429f79163415a10ffd1798eda",
+      "platformManifestDigest": "sha256:d007ec55602bf6a425a9063e26075fc40a9e7747e478572712b83da10131958f",
+      "configDigest": "sha256:66e35db6ed67519bc7f62b028da63293ce81e54773d243dcb736561aac53ea0a",
+      "platform": "linux/amd64",
+      "provenanceSha256": "6bb99d56d0bcefdcd1326873beb2a29a67f0723c66946f7ba092423b7d4a10cd",
+      "availability": "metadata-only-layers-unverified",
+      "historicalCellBinding": "not-established-by-acquisition"
+    },
+    {
+      "instanceId": "axios__axios-5085",
+      "officialTag": "swebench/sweb.eval.x86_64.axios_1776_axios-5085:latest",
+      "indexDigest": "sha256:d0a38e17c8f11e41c3d71b46c532db321f732a27e80d57c798e38913da195def",
+      "platformManifestDigest": "sha256:924c1bac3251b62b23a0db0692f7ed0759b1397e164982eedf12096a11393927",
+      "configDigest": "sha256:0983ece7324e9c339264a15748f88231f1bdf0e8b6e56a441021c01b38de7b18",
+      "platform": "linux/amd64",
+      "provenanceSha256": "6bb99d56d0bcefdcd1326873beb2a29a67f0723c66946f7ba092423b7d4a10cd",
+      "availability": "metadata-only-layers-unverified",
+      "historicalCellBinding": "not-established-by-acquisition"
+    },
+    {
+      "instanceId": "preactjs__preact-3010",
+      "officialTag": "swebench/sweb.eval.x86_64.preactjs_1776_preact-3010:latest",
+      "indexDigest": "sha256:e8aa1e355221d42235e7beb1d83c902b1ca9f40112af090d4d87e60b3f69366d",
+      "platformManifestDigest": "sha256:0ffd05a07312d1d4b10895b433a044502b6a40cd9a7048eaa532bb4134548823",
+      "configDigest": "sha256:60796b2577082e0a00bcbc9c4569a1a950dd8f55cc42f47b615be2453525180e",
+      "platform": "linux/amd64",
+      "provenanceSha256": "bf67e82e7b38703b3052fc666f349f168663686dfc70891a33ba4b7267330bce",
+      "availability": "metadata-only-layers-unverified",
+      "historicalCellBinding": "not-established-by-acquisition"
+    },
+    {
+      "instanceId": "vuejs__core-11899",
+      "officialTag": "swebench/sweb.eval.x86_64.vuejs_1776_core-11899:latest",
+      "indexDigest": "sha256:478044c8261c7214865d88a687053b35e1935acd186b4ac7ae0d16af57826311",
+      "platformManifestDigest": "sha256:a199b55342e4f19881c07b7b1b9c3e930240233948a0c3515bebd000ce117e0c",
+      "configDigest": "sha256:9583bff913979a362060d6485ef3b5b694a7396c496814b6d2cfd1bc07347394",
+      "platform": "linux/amd64",
+      "provenanceSha256": "6bb99d56d0bcefdcd1326873beb2a29a67f0723c66946f7ba092423b7d4a10cd",
+      "availability": "metadata-only-layers-unverified",
+      "historicalCellBinding": "not-established-by-acquisition"
+    },
+    {
+      "instanceId": "facebook__docusaurus-9183",
+      "officialTag": "swebench/sweb.eval.x86_64.facebook_1776_docusaurus-9183:latest",
+      "indexDigest": "sha256:39613108947e31ae391740b6345098378cabc846973abb59d6e2bcb93aca38a3",
+      "platformManifestDigest": "sha256:ea9211f31b1f9d0e6808c8eaa98992b2d92d2aa4bcda930d7c34f83970fd91c5",
+      "configDigest": "sha256:86052b53b86dc3430773f30bc67e123102aa9cb5e6fa9910be1d9fdef0d7b7e2",
+      "platform": "linux/amd64",
+      "provenanceSha256": "6bb99d56d0bcefdcd1326873beb2a29a67f0723c66946f7ba092423b7d4a10cd",
+      "availability": "metadata-only-layers-unverified",
+      "historicalCellBinding": "not-established-by-acquisition"
+    },
+    {
+      "instanceId": "facebook__docusaurus-10130",
+      "officialTag": "swebench/sweb.eval.x86_64.facebook_1776_docusaurus-10130:latest",
+      "indexDigest": "sha256:e48084f281e6363e77c1cbde079d6f54ee26e94250e79370eef4ac92cb616542",
+      "platformManifestDigest": "sha256:e6174c1366d0a83b1d5498cf0c4c4d0e2affd3521cfc39b4572b26f6470d7bdb",
+      "configDigest": "sha256:b794add5f6d861573f08718a931a38b7c301b09d8ae83d5dcf5f52a17e961237",
+      "platform": "linux/amd64",
+      "provenanceSha256": "bf67e82e7b38703b3052fc666f349f168663686dfc70891a33ba4b7267330bce",
+      "availability": "metadata-only-layers-unverified",
+      "historicalCellBinding": "not-established-by-acquisition"
+    }
+  ],
+  "attribution": {
+    "path": "artifacts/ed1dd577f065a95e15f52826f51999f53137b1082aeee58560f67a21819509aa.json",
+    "sha256": "ed1dd577f065a95e15f52826f51999f53137b1082aeee58560f67a21819509aa"
+  },
+  "publicTasks": {
+    "path": "artifacts/e300079fb79acacfceaeba66aa2041f1e64b28aefb929542d4701ee8967ffb72.json",
+    "sha256": "e300079fb79acacfceaeba66aa2041f1e64b28aefb929542d4701ee8967ffb72"
+  }
+}

@@ -1,0 +1,3047 @@
+[
+  {
+    "instance_id": "sveltejs__svelte-12509",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "9cc5a45cb1135b68b7ee0d39d43d820bcf0e8545",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            ".changeset/afraid-dogs-matter.md",
+            ".changeset/afraid-geckos-dance.md",
+            ".changeset/afraid-kids-hide.md",
+            ".changeset/afraid-moose-matter.md",
+            ".changeset/afraid-worms-drum.md",
+            ".changeset/angry-birds-fly.md",
+            ".changeset/angry-books-jam.md",
+            ".changeset/angry-plums-punch.md",
+            ".changeset/angry-wasps-help.md",
+            ".changeset/beige-cobras-smoke.md",
+            ".changeset/beige-flies-wash.md",
+            ".changeset/beige-gifts-appear.md",
+            ".changeset/beige-mirrors-listen.md",
+            ".changeset/beige-rabbits-shave.md",
+            ".changeset/beige-seas-share.md",
+            ".changeset/big-cars-serve.md",
+            ".changeset/big-eggs-flash.md",
+            ".changeset/big-eyes-carry.md",
+            ".changeset/big-geese-act.md",
+            ".changeset/big-moons-occur.md",
+            ".changeset/blue-ants-raise.md",
+            ".changeset/blue-lemons-wait.md",
+            ".changeset/blue-rules-juggle.md",
+            ".changeset/blue-timers-film.md",
+            ".changeset/blue-waves-sneeze.md",
+            ".changeset/brave-carrots-draw.md",
+            ".changeset/brave-gorillas-end.md",
+            ".changeset/brave-gorillas-fold.md",
+            ".changeset/brave-pigs-obey.md",
+            ".changeset/brave-points-sleep.md",
+            ".changeset/brave-shrimps-kiss.md",
+            ".changeset/brave-walls-destroy.md",
+            ".changeset/brave-walls-flow.md",
+            ".changeset/breezy-carrots-flash.md",
+            ".changeset/breezy-rules-beg.md",
+            ".changeset/breezy-waves-camp.md",
+            ".changeset/bright-berries-smell.md",
+            ".changeset/bright-falcons-float.md",
+            ".changeset/bright-needles-pretend.md",
+            ".changeset/bright-peas-juggle.md",
+            ".changeset/bright-snakes-sing.md",
+            ".changeset/brown-geckos-fry.md",
+            ".changeset/brown-houses-obey.md",
+            ".changeset/brown-months-fry.md",
+            ".changeset/brown-spoons-boil.md",
+            ".changeset/calm-buses-clap.md",
+            ".changeset/calm-pandas-vanish.md",
+            ".changeset/calm-ravens-sneeze.md",
+            ".changeset/chatty-beans-divide.md",
+            ".changeset/chatty-cups-drop.md",
+            ".changeset/chatty-ghosts-unite.md",
+            ".changeset/chatty-sloths-allow.md",
+            ".changeset/chatty-taxis-juggle.md",
+            ".changeset/chilled-pumas-invite.md",
+            ".changeset/chilled-seas-jog.md",
+            ".changeset/chilly-dolphins-lick.md",
+            ".changeset/chilly-laws-juggle.md",
+            ".changeset/chilly-pans-raise.md",
+            ".changeset/chilly-rocks-hug.md",
+            ".changeset/chilly-snakes-scream.md",
+            ".changeset/clean-cats-wave.md",
+            ".changeset/clean-eels-beg.md",
+            ".changeset/clean-melons-wash.md",
+            ".changeset/clever-chefs-relate.md",
+            ".changeset/clever-maps-travel.md",
+            ".changeset/clever-rockets-burn.md",
+            ".changeset/clever-sloths-push.md",
+            ".changeset/clever-stingrays-shout.md",
+            ".changeset/clever-toys-laugh.md",
+            ".changeset/cold-beans-tease.md",
+            ".changeset/cold-birds-own.md",
+            ".changeset/cold-cheetahs-judge.md",
+            ".changeset/cold-lamps-accept.md",
+            ".changeset/cold-masks-learn.md",
+            ".changeset/cold-shrimps-hug.md",
+            ".changeset/cold-teachers-turn.md",
+            ".changeset/config.json",
+            ".changeset/cool-actors-tan.md",
+            ".changeset/cool-ants-leave.md",
+            ".changeset/cool-comics-marry.md",
+            ".changeset/cool-jobs-scream.md",
+            ".changeset/cool-peas-lick.md",
+            ".changeset/cool-poems-watch.md",
+            ".changeset/cool-rabbits-tickle.md",
+            ".changeset/cool-roses-trade.md",
+            ".changeset/cuddly-pianos-drop.md",
+            ".changeset/cuddly-points-tickle.md",
+            ".changeset/curly-cooks-cheer.md",
+            ".changeset/curly-lizards-dream.md",
+            ".changeset/curvy-buses-laugh.md",
+            ".changeset/curvy-cups-cough.md",
+            ".changeset/curvy-flies-exercise.md",
+            ".changeset/curvy-ties-shout.md",
+            ".changeset/cyan-colts-raise.md",
+            ".changeset/cyan-ducks-teach.md",
+            ".changeset/cyan-flowers-destroy.md",
+            ".changeset/cyan-news-grow.md",
+            ".changeset/cyan-spies-grin.md",
+            ".changeset/cyan-squids-drive.md",
+            ".changeset/cyan-toes-share.md",
+            ".changeset/dirty-bats-punch.md",
+            ".changeset/dirty-donuts-yell.md",
+            ".changeset/dirty-eyes-itch.md",
+            ".changeset/dirty-garlics-design.md",
+            ".changeset/dirty-tips-add.md",
+            ".changeset/dry-clocks-grow.md",
+            ".changeset/dry-eggs-play.md",
+            ".changeset/dry-eggs-retire.md",
+            ".changeset/dry-fans-march.md",
+            ".changeset/dry-ghosts-prove.md",
+            ".changeset/dry-parrots-bathe.md",
+            ".changeset/dry-pillows-exist.md",
+            ".changeset/dull-coins-vanish.md",
+            ".changeset/dull-donkeys-smell.md",
+            ".changeset/dull-mangos-wave.md",
+            ".changeset/dull-pens-pay.md",
+            ".changeset/dull-pots-add.md",
+            ".changeset/dull-roses-relate.md",
+            ".changeset/dull-worms-relax.md",
+            ".changeset/early-ads-tie.md",
+            ".changeset/early-months-whisper.md",
+            ".changeset/eight-carrots-hunt.md",
+            ".changeset/eight-cougars-watch.md",
+            ".changeset/eight-hornets-punch.md",
+            ".changeset/eight-jeans-compare.md",
+            ".changeset/eight-pianos-raise.md",
+            ".changeset/eight-steaks-shout.md",
+            ".changeset/eighty-bikes-camp.md",
+            ".changeset/eighty-days-cheat.md",
+            ".changeset/eighty-lizards-notice.md",
+            ".changeset/eleven-avocados-walk.md",
+            ".changeset/eleven-beers-yell.md",
+            ".changeset/eleven-cows-judge.md",
+            ".changeset/eleven-cycles-applaud.md",
+            ".changeset/eleven-donuts-sit.md",
+            ".changeset/eleven-hounds-pump.md",
+            ".changeset/empty-bags-heal.md",
+            ".changeset/empty-bulldogs-exercise.md",
+            ".changeset/empty-coins-build.md",
+            ".changeset/empty-crabs-think.md",
+            ".changeset/empty-files-prove.md",
+            ".changeset/empty-flowers-change.md",
+            ".changeset/empty-geckos-pretend.md",
+            ".changeset/empty-horses-tell.md",
+            ".changeset/empty-tools-share.md",
+            ".changeset/fair-bags-smoke.md",
+            ".changeset/fair-beers-help.md",
+            ".changeset/fair-crabs-check.md",
+            ".changeset/fair-pianos-talk.md",
+            ".changeset/fair-spies-repeat.md",
+            ".changeset/famous-chairs-notice.md",
+            ".changeset/famous-falcons-melt.md",
+            ".changeset/famous-kiwis-thank.md",
+            ".changeset/famous-knives-sneeze.md",
+            ".changeset/famous-pants-pay.md",
+            ".changeset/fast-donkeys-pay.md",
+            ".changeset/fast-penguins-matter.md",
+            ".changeset/fast-toes-act.md",
+            ".changeset/fast-weeks-clean.md",
+            ".changeset/few-badgers-guess.md",
+            ".changeset/few-cheetahs-taste.md",
+            ".changeset/few-clouds-shop.md",
+            ".changeset/few-mugs-fail.md",
+            ".changeset/few-teachers-know.md",
+            ".changeset/few-zoos-own.md",
+            ".changeset/fifty-masks-give.md",
+            ".changeset/fifty-rice-wait.md",
+            ".changeset/fifty-steaks-float.md",
+            ".changeset/five-tigers-search.md",
+            ".changeset/flat-feet-visit.md",
+            ".changeset/flat-ghosts-fly.md",
+            ".changeset/flat-melons-protect.md",
+            ".changeset/flat-olives-live.md",
+            ".changeset/fluffy-colts-grin.md",
+            ".changeset/fluffy-dolls-share.md",
+            ".changeset/fluffy-humans-worry.md",
+            ".changeset/fluffy-ravens-juggle.md",
+            ".changeset/forty-comics-invent.md",
+            ".changeset/forty-dogs-divide.md",
+            ".changeset/forty-dolls-wave.md",
+            ".changeset/forty-peaches-unite.md",
+            ".changeset/forty-suns-smile.md",
+            ".changeset/four-balloons-beam.md",
+            ".changeset/four-flies-hammer.md",
+            ".changeset/four-mice-hammer.md",
+            ".changeset/four-pugs-listen.md",
+            ".changeset/fresh-beds-wash.md",
+            ".changeset/fresh-dots-destroy.md",
+            ".changeset/fresh-impalas-bow.md",
+            ".changeset/fresh-walls-bathe.md",
+            ".changeset/fresh-weeks-trade.md",
+            ".changeset/fresh-wombats-learn.md",
+            ".changeset/fresh-zoos-burn.md",
+            ".changeset/friendly-candles-relate.md",
+            ".changeset/friendly-clouds-rhyme.md",
+            ".changeset/friendly-lies-camp.md",
+            ".changeset/funny-cooks-clean.md",
+            ".changeset/funny-dragons-double.md",
+            ".changeset/funny-ties-jump.md",
+            ".changeset/funny-trees-cry.md",
+            ".changeset/funny-wombats-argue.md",
+            ".changeset/fuzzy-bags-camp.md",
+            ".changeset/fuzzy-donuts-provide.md",
+            ".changeset/gentle-dolls-juggle.md",
+            ".changeset/gentle-eagles-walk.md",
+            ".changeset/gentle-sheep-hug.md",
+            ".changeset/gentle-spies-happen.md",
+            ".changeset/gentle-ties-fetch.md",
+            ".changeset/gentle-toys-chew.md",
+            ".changeset/gentle-trees-exercise.md",
+            ".changeset/gentle-wasps-pull.md",
+            ".changeset/giant-bananas-turn.md",
+            ".changeset/giant-jars-applaud.md",
+            ".changeset/giant-moons-own.md",
+            ".changeset/giant-planets-shake.md",
+            ".changeset/giant-plants-grin.md",
+            ".changeset/giant-roses-press.md",
+            ".changeset/gold-tools-nail.md",
+            ".changeset/good-buses-reply.md",
+            ".changeset/good-cars-visit.md",
+            ".changeset/good-pianos-jump.md",
+            ".changeset/good-plums-type.md",
+            ".changeset/good-rice-tap.md",
+            ".changeset/good-rivers-yawn.md",
+            ".changeset/good-roses-argue.md",
+            ".changeset/gorgeous-boxes-design.md",
+            ".changeset/gorgeous-hats-wonder.md",
+            ".changeset/gorgeous-monkeys-carry.md",
+            ".changeset/gorgeous-singers-rest.md",
+            ".changeset/great-fans-unite.md",
+            ".changeset/great-icons-retire.md",
+            ".changeset/great-plums-pretend.md",
+            ".changeset/green-eggs-approve.md",
+            ".changeset/honest-nails-share.md",
+            ".editorconfig",
+            ".gitattributes",
+            ".github/FUNDING.yml",
+            ".github/ISSUE_TEMPLATE.md",
+            ".github/ISSUE_TEMPLATE/bug_report.yml",
+            ".github/ISSUE_TEMPLATE/config.yml",
+            ".github/ISSUE_TEMPLATE/feature_request.yml",
+            ".github/PULL_REQUEST_TEMPLATE.md",
+            ".github/workflows/ci.yml",
+            ".github/workflows/ecosystem-ci-trigger.yml",
+            ".github/workflows/release.yml",
+            ".gitignore",
+            ".npmrc",
+            ".prettierignore",
+            ".prettierrc",
+            ".vscode/launch.json",
+            ".vscode/settings.json",
+            "CODE_OF_CONDUCT.md",
+            "CONTRIBUTING.md",
+            "FUNDING.json",
+            "LICENSE.md",
+            "README.md",
+            "benchmarking/benchmarks.js",
+            "benchmarking/benchmarks/kairo/kairo_avoidable.js",
+            "benchmarking/benchmarks/kairo/kairo_broad.js",
+            "benchmarking/benchmarks/kairo/kairo_deep.js",
+            "benchmarking/benchmarks/kairo/kairo_diamond.js",
+            "benchmarking/benchmarks/kairo/kairo_mux.js",
+            "benchmarking/benchmarks/kairo/kairo_repeated.js",
+            "benchmarking/benchmarks/kairo/kairo_triangle.js",
+            "benchmarking/benchmarks/kairo/kairo_unstable.js",
+            "benchmarking/benchmarks/kairo/util.js",
+            "benchmarking/benchmarks/mol_bench.js",
+            "benchmarking/benchmarks/sbench.js",
+            "benchmarking/compare/index.js",
+            "benchmarking/compare/runner.js",
+            "benchmarking/run.js",
+            "benchmarking/tsconfig.json",
+            "benchmarking/utils.js",
+            "documentation/docs/01-introduction/01-overview.md",
+            "documentation/docs/01-introduction/02-getting-started.md",
+            "documentation/docs/01-introduction/03-reactivity-fundamentals.md",
+            "documentation/docs/01-introduction/index.md",
+            "documentation/docs/02-template-syntax/01-component-fundamentals.md",
+            "documentation/docs/02-template-syntax/02-basic-markup.md",
+            "documentation/docs/02-template-syntax/03-control-flow.md",
+            "documentation/docs/02-template-syntax/04-snippets.md",
+            "documentation/docs/02-template-syntax/05-styles-and-classes.md",
+            "documentation/docs/02-template-syntax/06-transitions-and-animations.md",
+            "documentation/docs/02-template-syntax/07-actions.md",
+            "documentation/docs/02-template-syntax/08-bindings.md",
+            "documentation/docs/02-template-syntax/09-special-elements.md",
+            "documentation/docs/02-template-syntax/10-data-fetching.md",
+            "documentation/docs/02-template-syntax/index.md",
+            "documentation/docs/03-runes/01-state.md",
+            "documentation/docs/03-runes/02-side-effects.md",
+            "documentation/docs/03-runes/index.md",
+            "documentation/docs/04-runtime/01-stores.md",
+            "documentation/docs/04-runtime/02-context.md",
+            "documentation/docs/04-runtime/03-lifecycle-hooks.md",
+            "documentation/docs/04-runtime/04-imperative-component-api.md",
+            "documentation/docs/04-runtime/index.md",
+            "documentation/docs/05-misc/01-debugging.md",
+            "documentation/docs/05-misc/02-testing.md",
+            "documentation/docs/05-misc/03-typescript.md",
+            "documentation/docs/05-misc/04-custom-elements.md",
+            "documentation/docs/05-misc/05-reactivity-indepth.md",
+            "documentation/docs/05-misc/06-svelte-5-migration-guide.md",
+            "documentation/docs/05-misc/index.md",
+            "documentation/docs/98-reference/01-state.md",
+            "documentation/docs/98-reference/20-svelte.md",
+            "documentation/docs/98-reference/21-svelte-action.md",
+            "documentation/docs/98-reference/21-svelte-animate.md",
+            "documentation/docs/98-reference/21-svelte-compiler.md",
+            "documentation/docs/98-reference/21-svelte-easing.md",
+            "documentation/docs/98-reference/21-svelte-events.md",
+            "documentation/docs/98-reference/21-svelte-legacy.md",
+            "documentation/docs/98-reference/21-svelte-motion.md",
+            "documentation/docs/98-reference/21-svelte-reactivity.md",
+            "documentation/docs/98-reference/21-svelte-server.md",
+            "documentation/docs/98-reference/21-svelte-store.md",
+            "documentation/docs/98-reference/21-svelte-transition.md",
+            "documentation/docs/98-reference/index.md",
+            "documentation/docs/index.md",
+            "documentation/tutorial/04-logic/meta.json",
+            "documentation/tutorial/09-motion/01-tweened/text.md",
+            "documentation/tutorial/09-motion/02-spring/app-a/App.svelte",
+            "documentation/tutorial/09-motion/02-spring/app-b/App.svelte",
+            "documentation/tutorial/09-motion/02-spring/text.md",
+            "documentation/tutorial/09-motion/meta.json",
+            "documentation/tutorial/14-composition/05-slot-props/text.md",
+            "documentation/tutorial/14-composition/meta.json",
+            "documentation/tutorial/18-special-tags/02-html-tags/app-a/App.svelte",
+            "documentation/tutorial/18-special-tags/02-html-tags/app-b/App.svelte",
+            "documentation/tutorial/18-special-tags/02-html-tags/text.md",
+            "documentation/tutorial/18-special-tags/meta.json",
+            "documentation/tutorial/19-next-steps/01-congratulations/app-a/App.svelte",
+            "documentation/tutorial/19-next-steps/01-congratulations/text.md",
+            "documentation/tutorial/19-next-steps/meta.json",
+            "eslint.config.js",
+            "package.json",
+            "packages/svelte/tsconfig.generated.json",
+            "packages/svelte/tsconfig.json",
+            "packages/svelte/tsconfig.runtime.json",
+            "packages/svelte/types/index.d.ts",
+            "playgrounds/demo/.gitignore",
+            "playgrounds/demo/demo.css",
+            "playgrounds/demo/favicon.png",
+            "playgrounds/demo/index.html",
+            "playgrounds/demo/package.json",
+            "playgrounds/demo/scripts/create-app-svelte.js",
+            "playgrounds/demo/scripts/main.template.svelte",
+            "playgrounds/demo/ssr-dev.js",
+            "playgrounds/demo/ssr-prod.js",
+            "playgrounds/demo/tsconfig.json",
+            "playgrounds/demo/vite.config.js",
+            "playgrounds/sandbox/.gitignore",
+            "playgrounds/sandbox/.prettierignore",
+            "playgrounds/sandbox/input/.gitkeep",
+            "playgrounds/sandbox/package.json",
+            "playgrounds/sandbox/run.js",
+            "playgrounds/sandbox/tsconfig.json",
+            "pnpm-lock.yaml",
+            "pnpm-workspace.yaml",
+            "sites/svelte-5-preview/.gitignore",
+            "sites/svelte-5-preview/jsconfig.json",
+            "sites/svelte-5-preview/package.json",
+            "sites/svelte-5-preview/static/favicon.png",
+            "sites/svelte-5-preview/svelte.config.js",
+            "sites/svelte-5-preview/vercel.json",
+            "sites/svelte-5-preview/vite.config.js",
+            "sites/svelte.dev/.env",
+            "sites/svelte.dev/.gitignore",
+            "sites/svelte.dev/.prettierignore",
+            "sites/svelte.dev/README.md",
+            "sites/svelte.dev/config.js",
+            "sites/svelte.dev/package.json",
+            "sites/svelte.dev/placeholder/index.html",
+            "sites/svelte.dev/scripts/generate_examples.js",
+            "sites/svelte.dev/scripts/get_contributors.js",
+            "sites/svelte.dev/scripts/get_donors.js",
+            "sites/svelte.dev/scripts/type-gen/index.js",
+            "sites/svelte.dev/scripts/update.js",
+            "sites/svelte.dev/scripts/update_template.js",
+            "sites/svelte.dev/static/images/og/svelte-machine.png",
+            "sites/svelte.dev/static/images/svelte-android-chrome-192.png",
+            "sites/svelte.dev/static/images/svelte-android-chrome-512.png",
+            "sites/svelte.dev/static/images/svelte-apple-touch-icon.png",
+            "sites/svelte.dev/static/images/svelte-mstile-150.png",
+            "sites/svelte.dev/static/images/twitter-card.png",
+            "sites/svelte.dev/static/images/twitter-thumbnail.jpg",
+            "sites/svelte.dev/static/manifest.json",
+            "sites/svelte.dev/static/media/rethinking-best-practices.jpg",
+            "sites/svelte.dev/static/media/svelte-ts.png",
+            "sites/svelte.dev/static/robots.txt",
+            "sites/svelte.dev/static/svelte-logo-horizontal.svg",
+            "sites/svelte.dev/static/svelte-logo-mask.svg",
+            "sites/svelte.dev/static/svelte-logo-outline.svg",
+            "sites/svelte.dev/static/svelte-logo-vertical.svg",
+            "sites/svelte.dev/static/svelte-logo.svg",
+            "sites/svelte.dev/static/tutorial/dark-theme.css",
+            "sites/svelte.dev/static/tutorial/icons/email.svg",
+            "sites/svelte.dev/static/tutorial/icons/folder-open.svg",
+            "sites/svelte.dev/static/tutorial/icons/folder.svg",
+            "sites/svelte.dev/static/tutorial/icons/gif.svg",
+            "sites/svelte.dev/static/tutorial/icons/map-marker.svg",
+            "sites/svelte.dev/static/tutorial/icons/md.svg",
+            "sites/svelte.dev/static/tutorial/icons/xlsx.svg",
+            "sites/svelte.dev/static/tutorial/image.gif",
+            "sites/svelte.dev/static/tutorial/kitten.png",
+            "sites/svelte.dev/static/whos-using-svelte/1password.svg",
+            "sites/svelte.dev/static/whos-using-svelte/Schneider_Electric.svg",
+            "sites/svelte.dev/static/whos-using-svelte/alaskaairlines.svg",
+            "sites/svelte.dev/static/whos-using-svelte/avast.svg",
+            "sites/svelte.dev/static/whos-using-svelte/chess.svg",
+            "sites/svelte.dev/static/whos-using-svelte/fusioncharts.svg",
+            "sites/svelte.dev/static/whos-using-svelte/godaddy.svg",
+            "sites/svelte.dev/static/whos-using-svelte/ibm.svg",
+            "sites/svelte.dev/static/whos-using-svelte/les-echos.svg",
+            "sites/svelte.dev/static/whos-using-svelte/nyt.svg",
+            "sites/svelte.dev/static/whos-using-svelte/philips.svg",
+            "sites/svelte.dev/static/whos-using-svelte/rakuten.svg",
+            "sites/svelte.dev/static/whos-using-svelte/razorpay.svg",
+            "sites/svelte.dev/static/whos-using-svelte/square.svg",
+            "sites/svelte.dev/static/whos-using-svelte/transloadit.svg",
+            "sites/svelte.dev/svelte.config.js",
+            "sites/svelte.dev/tsconfig.json",
+            "sites/svelte.dev/vercel.json",
+            "sites/svelte.dev/vite.config.js",
+            "vitest.config.js"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/errors.js",
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js",
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js",
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js",
+            "packages/svelte/src/compiler/types/css.d.ts",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-combinator/_config.js",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-declaration/_config.js",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/_config.js",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-modifier/_config.js",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-multiple/_config.js",
+            "packages/svelte/tests/css/samples/general-siblings-combinator-rendertag-global/_config.js",
+            "packages/svelte/tests/css/samples/general-siblings-combinator-slot-global/_config.js",
+            "packages/svelte/tests/css/samples/global-block/_config.js",
+            "packages/svelte/tests/css/samples/global-nested-block/_config.js",
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/_config.js",
+            "packages/svelte/tests/css/samples/siblings-combinator-global/_config.js",
+            "packages/svelte/tests/sourcemaps/samples/external/_config.js",
+            "packages/svelte/types/index.d.ts"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/errors.js": [
+              {
+                "start": 437,
+                "end": 437
+              },
+              {
+                "start": 443,
+                "end": 443
+              },
+              {
+                "start": 447,
+                "end": 447
+              },
+              {
+                "start": 452,
+                "end": 452
+              },
+              {
+                "start": 456,
+                "end": 456
+              },
+              {
+                "start": 461,
+                "end": 461
+              },
+              {
+                "start": 465,
+                "end": 465
+              },
+              {
+                "start": 470,
+                "end": 470
+              },
+              {
+                "start": 474,
+                "end": 474
+              },
+              {
+                "start": 479,
+                "end": 479
+              },
+              {
+                "start": 483,
+                "end": 483
+              },
+              {
+                "start": 488,
+                "end": 488
+              },
+              {
+                "start": 492,
+                "end": 492
+              },
+              {
+                "start": 497,
+                "end": 497
+              },
+              {
+                "start": 501,
+                "end": 501
+              },
+              {
+                "start": 506,
+                "end": 506
+              },
+              {
+                "start": 528,
+                "end": 528
+              },
+              {
+                "start": 533,
+                "end": 533
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js": [
+              {
+                "start": 20,
+                "end": 20
+              },
+              {
+                "start": 88,
+                "end": 88
+              },
+              {
+                "start": 150,
+                "end": 150
+              },
+              {
+                "start": 157,
+                "end": 157
+              },
+              {
+                "start": 167,
+                "end": 167
+              },
+              {
+                "start": 174,
+                "end": 174
+              },
+              {
+                "start": 179,
+                "end": 179
+              },
+              {
+                "start": 184,
+                "end": 185
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js": [
+              {
+                "start": 109,
+                "end": 109
+              },
+              {
+                "start": 187,
+                "end": 187
+              },
+              {
+                "start": 234,
+                "end": 234
+              }
+            ],
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js": [
+              {
+                "start": 144,
+                "end": 144
+              },
+              {
+                "start": 222,
+                "end": 222
+              },
+              {
+                "start": 244,
+                "end": 244
+              }
+            ],
+            "packages/svelte/src/compiler/types/css.d.ts": [
+              {
+                "start": 59,
+                "end": 59
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-combinator/_config.js": [
+              {
+                "start": 6,
+                "end": 6
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-declaration/_config.js": [
+              {
+                "start": 6,
+                "end": 6
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/_config.js": [
+              {
+                "start": 7,
+                "end": 7
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-modifier/_config.js": [
+              {
+                "start": 6,
+                "end": 6
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-multiple/_config.js": [
+              {
+                "start": 6,
+                "end": 6
+              }
+            ],
+            "packages/svelte/tests/css/samples/general-siblings-combinator-rendertag-global/_config.js": [
+              {
+                "start": 12,
+                "end": 12
+              }
+            ],
+            "packages/svelte/tests/css/samples/general-siblings-combinator-slot-global/_config.js": [
+              {
+                "start": 12,
+                "end": 12
+              }
+            ],
+            "packages/svelte/tests/css/samples/global-block/_config.js": [
+              {
+                "start": 8,
+                "end": 8
+              }
+            ],
+            "packages/svelte/tests/css/samples/global-nested-block/_config.js": [
+              {
+                "start": 7,
+                "end": 7
+              },
+              {
+                "start": 21,
+                "end": 21
+              }
+            ],
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/_config.js": [
+              {
+                "start": 7,
+                "end": 7
+              }
+            ],
+            "packages/svelte/tests/css/samples/siblings-combinator-global/_config.js": [
+              {
+                "start": 7,
+                "end": 7
+              },
+              {
+                "start": 21,
+                "end": 21
+              }
+            ],
+            "packages/svelte/tests/sourcemaps/samples/external/_config.js": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/types/index.d.ts": [
+              {
+                "start": 1341,
+                "end": 1341
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js": [
+              {
+                "start": 1,
+                "end": 213
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js": [
+              {
+                "start": 1,
+                "end": 300
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/errors.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/errors.js": [
+              {
+                "start": 420,
+                "end": 560
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/types/css.d.ts"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/types/css.d.ts": [
+              {
+                "start": 1,
+                "end": 155
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/1-parse/read/style.js",
+            "packages/svelte/src/compiler/phases/1-parse/state/element.js",
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js",
+            "packages/svelte/src/compiler/phases/2-analyze/index.js",
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/1-parse/read/style.js": [
+              {
+                "start": 188,
+                "end": 188
+              }
+            ],
+            "packages/svelte/src/compiler/phases/1-parse/state/element.js": [
+              {
+                "start": 150,
+                "end": 150
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js": [
+              {
+                "start": 49,
+                "end": 49
+              },
+              {
+                "start": 228,
+                "end": 229
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/index.js": [
+              {
+                "start": 320,
+                "end": 320
+              },
+              {
+                "start": 564,
+                "end": 564
+              },
+              {
+                "start": 581,
+                "end": 581
+              }
+            ],
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js": [
+              {
+                "start": 197,
+                "end": 197
+              },
+              {
+                "start": 232,
+                "end": 232
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/1-parse/read/style.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/1-parse/read/style.js": [
+              {
+                "start": 1,
+                "end": 260
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js": [
+              {
+                "start": 1,
+                "end": 280
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/1-parse/read/style.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/1-parse/read/style.js": [
+              {
+                "start": 247,
+                "end": 360
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js": [
+              {
+                "start": 277,
+                "end": 470
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/global-block/_config.js",
+            "packages/svelte/tests/css/samples/global-block/expected.css",
+            "packages/svelte/tests/css/samples/global-block/input.svelte",
+            "packages/svelte/tests/css/samples/global-keyframes-with-no-elements/expected.css",
+            "packages/svelte/tests/css/samples/global-keyframes-with-no-elements/input.svelte",
+            "packages/svelte/tests/css/samples/global-keyframes/expected.css",
+            "packages/svelte/tests/css/samples/global-keyframes/input.svelte",
+            "packages/svelte/tests/css/samples/global-nested-block/_config.js",
+            "packages/svelte/tests/css/samples/global-nested-block/expected.css",
+            "packages/svelte/tests/css/samples/global-nested-block/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-child-combinator-2/_config.js",
+            "packages/svelte/tests/css/samples/global-with-child-combinator-2/expected.css",
+            "packages/svelte/tests/css/samples/global-with-child-combinator-2/expected.html",
+            "packages/svelte/tests/css/samples/global-with-child-combinator-2/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-child-combinator/_config.js",
+            "packages/svelte/tests/css/samples/global-with-child-combinator/expected.css",
+            "packages/svelte/tests/css/samples/global-with-child-combinator/expected.html",
+            "packages/svelte/tests/css/samples/global-with-child-combinator/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-class/_config.js",
+            "packages/svelte/tests/css/samples/global-with-class/expected.css",
+            "packages/svelte/tests/css/samples/global-with-class/expected.html",
+            "packages/svelte/tests/css/samples/global-with-class/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-data-attribute/expected.css",
+            "packages/svelte/tests/css/samples/global-with-data-attribute/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-nesting/_config.js",
+            "packages/svelte/tests/css/samples/global-with-nesting/expected.css",
+            "packages/svelte/tests/css/samples/global-with-nesting/expected.html",
+            "packages/svelte/tests/css/samples/global-with-nesting/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/_config.js",
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/expected.css",
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/input.svelte"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-combinator/_config.js",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-combinator/main.svelte",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-declaration/_config.js",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-declaration/main.svelte",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/_config.js",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/main.svelte",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-modifier/_config.js",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-modifier/main.svelte",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-multiple/_config.js",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-multiple/main.svelte"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/global-nested-block/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/global-nested-block/input.svelte": [
+              {
+                "start": 1,
+                "end": 35
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/global-nested-block/expected.css"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/global-nested-block/expected.css": [
+              {
+                "start": 1,
+                "end": 32
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/global-block/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/global-block/input.svelte": [
+              {
+                "start": 1,
+                "end": 21
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/global-block/expected.css"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/global-block/expected.css": [
+              {
+                "start": 1,
+                "end": 17
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/global-with-nesting/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/global-with-nesting/input.svelte": [
+              {
+                "start": 1,
+                "end": 14
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/global-with-nesting/expected.css"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/global-with-nesting/expected.css": [
+              {
+                "start": 1,
+                "end": 5
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/general-siblings-combinator-rendertag-global/_config.js",
+            "packages/svelte/tests/css/samples/general-siblings-combinator-rendertag-global/expected.css",
+            "packages/svelte/tests/css/samples/general-siblings-combinator-rendertag-global/input.svelte",
+            "packages/svelte/tests/css/samples/general-siblings-combinator-slot-global/_config.js",
+            "packages/svelte/tests/css/samples/general-siblings-combinator-slot-global/expected.css",
+            "packages/svelte/tests/css/samples/general-siblings-combinator-slot-global/input.svelte",
+            "packages/svelte/tests/css/samples/global-block/_config.js",
+            "packages/svelte/tests/css/samples/global-block/expected.css",
+            "packages/svelte/tests/css/samples/global-block/input.svelte",
+            "packages/svelte/tests/css/samples/global-keyframes-with-no-elements/expected.css",
+            "packages/svelte/tests/css/samples/global-keyframes-with-no-elements/input.svelte",
+            "packages/svelte/tests/css/samples/global-keyframes/expected.css",
+            "packages/svelte/tests/css/samples/global-keyframes/input.svelte",
+            "packages/svelte/tests/css/samples/global-nested-block/_config.js",
+            "packages/svelte/tests/css/samples/global-nested-block/expected.css",
+            "packages/svelte/tests/css/samples/global-nested-block/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-child-combinator-2/_config.js",
+            "packages/svelte/tests/css/samples/global-with-child-combinator-2/expected.css",
+            "packages/svelte/tests/css/samples/global-with-child-combinator-2/expected.html",
+            "packages/svelte/tests/css/samples/global-with-child-combinator-2/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-child-combinator/_config.js",
+            "packages/svelte/tests/css/samples/global-with-child-combinator/expected.css",
+            "packages/svelte/tests/css/samples/global-with-child-combinator/expected.html",
+            "packages/svelte/tests/css/samples/global-with-child-combinator/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-class/_config.js",
+            "packages/svelte/tests/css/samples/global-with-class/expected.css",
+            "packages/svelte/tests/css/samples/global-with-class/expected.html",
+            "packages/svelte/tests/css/samples/global-with-class/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-data-attribute/expected.css",
+            "packages/svelte/tests/css/samples/global-with-data-attribute/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-nesting/_config.js",
+            "packages/svelte/tests/css/samples/global-with-nesting/expected.css",
+            "packages/svelte/tests/css/samples/global-with-nesting/expected.html",
+            "packages/svelte/tests/css/samples/global-with-nesting/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/_config.js",
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/expected.css",
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/input.svelte",
+            "packages/svelte/tests/css/samples/global/expected.css",
+            "packages/svelte/tests/css/samples/global/input.svelte",
+            "packages/svelte/tests/css/samples/local-inside-global/expected.css",
+            "packages/svelte/tests/css/samples/local-inside-global/input.svelte",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner-class/_config.js",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner-class/expected.css",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner-class/expected.html",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner-class/input.svelte",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner-multiple/_config.js",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner-multiple/expected.css",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner-multiple/expected.html",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner-multiple/input.svelte",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner/_config.js",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner/expected.css",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner/expected.html",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner/input.svelte",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer-multiple/_config.js",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer-multiple/expected.css",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer-multiple/expected.html",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer-multiple/input.svelte",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer/_config.js",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer/expected.css",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer/expected.html",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer/input.svelte",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global-children/expected.css",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global-children/expected.html",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global-children/input.svelte",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global-descendants/expected.css",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global-descendants/expected.html",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global-descendants/input.svelte",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global/_config.js",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global/expected.css",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global/expected.html",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global/input.svelte",
+            "packages/svelte/tests/css/samples/siblings-combinator-global/_config.js",
+            "packages/svelte/tests/css/samples/siblings-combinator-global/expected.css",
+            "packages/svelte/tests/css/samples/siblings-combinator-global/input.svelte"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/svelte/messages/compile-errors/style.md",
+            "packages/svelte/src/compiler/errors.js",
+            "packages/svelte/src/compiler/phases/1-parse/read/style.js",
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js",
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js",
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-warn.js",
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js",
+            "packages/svelte/src/compiler/types/css.d.ts",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-combinator/_config.js",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-declaration/_config.js",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/_config.js",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-modifier/_config.js",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-multiple/_config.js",
+            "packages/svelte/types/index.d.ts"
+          ],
+          "spans": {
+            "packages/svelte/messages/compile-errors/style.md": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 13,
+                "end": 13
+              },
+              {
+                "start": 17,
+                "end": 17
+              },
+              {
+                "start": 21,
+                "end": 21
+              },
+              {
+                "start": 25,
+                "end": 25
+              }
+            ],
+            "packages/svelte/src/compiler/errors.js": [
+              {
+                "start": 442,
+                "end": 443
+              },
+              {
+                "start": 451,
+                "end": 452
+              },
+              {
+                "start": 460,
+                "end": 461
+              },
+              {
+                "start": 469,
+                "end": 470
+              },
+              {
+                "start": 478,
+                "end": 479
+              }
+            ],
+            "packages/svelte/src/compiler/phases/1-parse/read/style.js": [
+              {
+                "start": 121,
+                "end": 121
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js": [
+              {
+                "start": 89,
+                "end": 89
+              },
+              {
+                "start": 115,
+                "end": 115
+              },
+              {
+                "start": 117,
+                "end": 117
+              },
+              {
+                "start": 124,
+                "end": 124
+              },
+              {
+                "start": 130,
+                "end": 130
+              },
+              {
+                "start": 136,
+                "end": 136
+              },
+              {
+                "start": 151,
+                "end": 151
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js": [
+              {
+                "start": 65,
+                "end": 65
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-warn.js": [
+              {
+                "start": 36,
+                "end": 36
+              }
+            ],
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js": [
+              {
+                "start": 140,
+                "end": 140
+              },
+              {
+                "start": 301,
+                "end": 301
+              }
+            ],
+            "packages/svelte/src/compiler/types/css.d.ts": [
+              {
+                "start": 36,
+                "end": 36
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-combinator/_config.js": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-declaration/_config.js": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/_config.js": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-modifier/_config.js": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-multiple/_config.js": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "packages/svelte/types/index.d.ts": [
+              {
+                "start": 1318,
+                "end": 1318
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/messages/compile-errors/style.md",
+            "packages/svelte/src/compiler/errors.js",
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-3/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-type-selector-placement/errors.json"
+          ],
+          "spans": {
+            "packages/svelte/messages/compile-errors/style.md": [
+              {
+                "start": 29,
+                "end": 29
+              },
+              {
+                "start": 49,
+                "end": 49
+              }
+            ],
+            "packages/svelte/src/compiler/errors.js": [
+              {
+                "start": 487,
+                "end": 488
+              },
+              {
+                "start": 532,
+                "end": 533
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js": [
+              {
+                "start": 160,
+                "end": 160
+              },
+              {
+                "start": 181,
+                "end": 181
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/errors.json": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-3/errors.json": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement/errors.json": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-type-selector-placement/errors.json": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js": [
+              {
+                "start": 297,
+                "end": 360
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-warn.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-warn.js": [
+              {
+                "start": 1,
+                "end": 42
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js": [
+              {
+                "start": 108,
+                "end": 120
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-3/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-3/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-4/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-4/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-5/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-5/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-6/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-6/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement/input.svelte"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-3/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-3/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-4/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-4/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-5/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-5/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-6/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-6/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/errors.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              },
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 8,
+                "end": 8
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-3/errors.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-3/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              },
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-4/errors.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-4/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-5/errors.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-5/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-6/errors.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-6/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              },
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement/errors.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-combinator/main.svelte",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-declaration/main.svelte",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/main.svelte",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-multiple/main.svelte",
+            "packages/svelte/tests/css/samples/global-block/input.svelte",
+            "packages/svelte/tests/css/samples/global-nested-block/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-combinator/main.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-declaration/main.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/main.svelte": [
+              {
+                "start": 3,
+                "end": 3
+              },
+              {
+                "start": 6,
+                "end": 6
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-multiple/main.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/css/samples/global-block/input.svelte": [
+              {
+                "start": 4,
+                "end": 4
+              },
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 16,
+                "end": 16
+              }
+            ],
+            "packages/svelte/tests/css/samples/global-nested-block/input.svelte": [
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 15,
+                "end": 15
+              },
+              {
+                "start": 25,
+                "end": 25
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/main.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/main.svelte": [
+              {
+                "start": 6,
+                "end": 6
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-combinator/main.svelte",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-declaration/main.svelte",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/main.svelte",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-modifier/main.svelte",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-multiple/main.svelte",
+            "packages/svelte/tests/css/samples/global-block/input.svelte",
+            "packages/svelte/tests/css/samples/global-nested-block/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-combinator/main.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-declaration/main.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/main.svelte": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-modifier/main.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-multiple/main.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/css/samples/global-block/input.svelte": [
+              {
+                "start": 4,
+                "end": 4
+              },
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 16,
+                "end": 16
+              }
+            ],
+            "packages/svelte/tests/css/samples/global-nested-block/input.svelte": [
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 15,
+                "end": 15
+              },
+              {
+                "start": 25,
+                "end": 25
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/1-parse/read/style.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/1-parse/read/style.js": [
+              {
+                "start": 350,
+                "end": 430
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/main.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/main.svelte": [
+              {
+                "start": 1,
+                "end": 8
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-modifier/main.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-modifier/main.svelte": [
+              {
+                "start": 1,
+                "end": 3
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-combinator/main.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-combinator/main.svelte": [
+              {
+                "start": 1,
+                "end": 3
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-multiple/main.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-multiple/main.svelte": [
+              {
+                "start": 1,
+                "end": 3
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/runtime-legacy/samples/transition-js-dynamic-if-block-bidi/_config.js",
+            "packages/svelte/tests/runtime-legacy/samples/transition-js-dynamic-if-block-bidi/main.svelte",
+            "packages/svelte/tests/runtime-legacy/samples/transition-js-if-block-bidi/_config.js",
+            "packages/svelte/tests/runtime-legacy/samples/transition-js-if-block-bidi/main.svelte",
+            "packages/svelte/tests/runtime-runes/samples/non-local-mutation-global/main.svelte",
+            "packages/svelte/tests/runtime-runes/samples/non-local-mutation-inherited-owner-2/main.svelte",
+            "packages/svelte/tests/runtime-runes/samples/non-local-mutation-inherited-owner-4/main.svelte",
+            "packages/svelte/tests/runtime-runes/samples/non-local-mutation-inherited-owner-4/sub.svelte",
+            "packages/svelte/tests/runtime-runes/samples/non-local-mutation-inherited-owner/Counter.svelte",
+            "packages/svelte/tests/runtime-runes/samples/non-local-mutation-inherited-owner/main.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/runtime-legacy/samples/transition-js-dynamic-if-block-bidi/_config.js": [
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 14,
+                "end": 14
+              }
+            ],
+            "packages/svelte/tests/runtime-legacy/samples/transition-js-dynamic-if-block-bidi/main.svelte": [
+              {
+                "start": 6,
+                "end": 6
+              }
+            ],
+            "packages/svelte/tests/runtime-legacy/samples/transition-js-if-block-bidi/_config.js": [
+              {
+                "start": 6,
+                "end": 6
+              },
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 20,
+                "end": 20
+              }
+            ],
+            "packages/svelte/tests/runtime-legacy/samples/transition-js-if-block-bidi/main.svelte": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "packages/svelte/tests/runtime-runes/samples/non-local-mutation-global/main.svelte": [
+              {
+                "start": 4,
+                "end": 4
+              },
+              {
+                "start": 8,
+                "end": 8
+              },
+              {
+                "start": 10,
+                "end": 11
+              }
+            ],
+            "packages/svelte/tests/runtime-runes/samples/non-local-mutation-inherited-owner-2/main.svelte": [
+              {
+                "start": 4,
+                "end": 4
+              },
+              {
+                "start": 7,
+                "end": 8
+              }
+            ],
+            "packages/svelte/tests/runtime-runes/samples/non-local-mutation-inherited-owner-4/main.svelte": [
+              {
+                "start": 7,
+                "end": 7
+              },
+              {
+                "start": 9,
+                "end": 9
+              }
+            ],
+            "packages/svelte/tests/runtime-runes/samples/non-local-mutation-inherited-owner-4/sub.svelte": [
+              {
+                "start": 7,
+                "end": 7
+              }
+            ],
+            "packages/svelte/tests/runtime-runes/samples/non-local-mutation-inherited-owner/Counter.svelte": [
+              {
+                "start": 5,
+                "end": 6
+              }
+            ],
+            "packages/svelte/tests/runtime-runes/samples/non-local-mutation-inherited-owner/main.svelte": [
+              {
+                "start": 6,
+                "end": 6
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/package.json"
+          ],
+          "spans": {
+            "packages/svelte/package.json": [
+              {
+                "start": 1,
+                "end": 40
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/messages/compile-errors/style.md"
+          ],
+          "spans": {
+            "packages/svelte/messages/compile-errors/style.md": [
+              {
+                "start": 1,
+                "end": 51
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js": [
+              {
+                "start": 220,
+                "end": 220
+              },
+              {
+                "start": 228,
+                "end": 228
+              },
+              {
+                "start": 247,
+                "end": 247
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            ".changeset/chilly-snakes-scream.md",
+            ".changeset/cyan-spies-grin.md",
+            ".changeset/dry-fans-march.md",
+            ".changeset/gentle-dolls-juggle.md",
+            ".changeset/green-hounds-play.md",
+            ".changeset/mean-numbers-cry.md",
+            ".changeset/selfish-panthers-add.md",
+            ".changeset/serious-kids-deliver.md",
+            ".changeset/shiny-shrimps-march.md",
+            ".changeset/small-apples-eat.md",
+            ".changeset/sweet-pens-sniff.md",
+            ".changeset/swift-seahorses-deliver.md",
+            ".changeset/thirty-pears-hug.md"
+          ],
+          "spans": {
+            ".changeset/chilly-snakes-scream.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/cyan-spies-grin.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/dry-fans-march.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/gentle-dolls-juggle.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/green-hounds-play.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/mean-numbers-cry.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/selfish-panthers-add.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/serious-kids-deliver.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/shiny-shrimps-march.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/small-apples-eat.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/sweet-pens-sniff.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/swift-seahorses-deliver.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/thirty-pears-hug.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            ".changeset/selfish-panthers-add.md"
+          ],
+          "spans": {
+            ".changeset/selfish-panthers-add.md": [
+              {
+                "start": 1,
+                "end": 5
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            ".changeset/serious-kids-deliver.md"
+          ],
+          "spans": {
+            ".changeset/serious-kids-deliver.md": [
+              {
+                "start": 1,
+                "end": 5
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            ".changeset/sweet-pens-sniff.md"
+          ],
+          "spans": {
+            ".changeset/sweet-pens-sniff.md": [
+              {
+                "start": 1,
+                "end": 5
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            ".changeset/thirty-pears-hug.md"
+          ],
+          "spans": {
+            ".changeset/thirty-pears-hug.md": [
+              {
+                "start": 1,
+                "end": 5
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            ".changeset/small-apples-eat.md"
+          ],
+          "spans": {
+            ".changeset/small-apples-eat.md": [
+              {
+                "start": 1,
+                "end": 5
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/index.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/index.js": [
+              {
+                "start": 550,
+                "end": 620
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/global/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/global/input.svelte": [
+              {
+                "start": 1,
+                "end": 16
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/global/expected.css"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/global/expected.css": [
+              {
+                "start": 1,
+                "end": 11
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/global-with-class/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/global-with-class/input.svelte": [
+              {
+                "start": 1,
+                "end": 14
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/global-with-class/expected.css"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/global-with-class/expected.css": [
+              {
+                "start": 1,
+                "end": 9
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "documentation/blog/2021-05-01-whats-new-in-svelte-may-2021.md",
+            "documentation/docs/02-template-syntax/05-styles-and-classes.md",
+            "documentation/docs/05-misc/04-custom-elements.md"
+          ],
+          "spans": {
+            "documentation/blog/2021-05-01-whats-new-in-svelte-may-2021.md": [
+              {
+                "start": 12,
+                "end": 12
+              }
+            ],
+            "documentation/docs/02-template-syntax/05-styles-and-classes.md": [
+              {
+                "start": 6,
+                "end": 6
+              },
+              {
+                "start": 28,
+                "end": 28
+              },
+              {
+                "start": 30,
+                "end": 30
+              },
+              {
+                "start": 34,
+                "end": 34
+              },
+              {
+                "start": 39,
+                "end": 39
+              },
+              {
+                "start": 46,
+                "end": 46
+              }
+            ],
+            "documentation/docs/05-misc/04-custom-elements.md": [
+              {
+                "start": 119,
+                "end": 119
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "documentation/docs/02-template-syntax/05-styles-and-classes.md"
+          ],
+          "spans": {
+            "documentation/docs/02-template-syntax/05-styles-and-classes.md": [
+              {
+                "start": 1,
+                "end": 80
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/input.svelte": [
+              {
+                "start": 1,
+                "end": 5
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/expected.css"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/expected.css": [
+              {
+                "start": 1,
+                "end": 3
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner/input.svelte": [
+              {
+                "start": 1,
+                "end": 9
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner/expected.html"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner/expected.html": [
+              {
+                "start": 1,
+                "end": 1
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner/expected.css"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner/expected.css": [
+              {
+                "start": 1,
+                "end": 3
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/input.svelte",
+            "packages/svelte/tests/css/samples/local-inside-global/input.svelte",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global-descendants/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/css/samples/local-inside-global/input.svelte": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global-descendants/input.svelte": [
+              {
+                "start": 7,
+                "end": 7
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/local-inside-global/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/local-inside-global/input.svelte": [
+              {
+                "start": 1,
+                "end": 11
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/local-inside-global/expected.css"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/local-inside-global/expected.css": [
+              {
+                "start": 1,
+                "end": 7
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global-descendants/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global-descendants/input.svelte": [
+              {
+                "start": 1,
+                "end": 16
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global-descendants/expected.html"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global-descendants/expected.html": [
+              {
+                "start": 1,
+                "end": 5
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global-descendants/expected.css"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global-descendants/expected.css": [
+              {
+                "start": 1,
+                "end": 3
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            ".changeset/beige-mirrors-listen.md",
+            ".changeset/chilly-dolphins-lick.md",
+            ".changeset/chilly-snakes-scream.md",
+            ".changeset/clever-maps-travel.md",
+            ".changeset/cyan-spies-grin.md",
+            ".changeset/dry-fans-march.md",
+            ".changeset/dull-coins-vanish.md",
+            ".changeset/fluffy-dolls-share.md",
+            ".changeset/funny-dragons-double.md",
+            ".changeset/funny-ties-jump.md",
+            ".changeset/gentle-dolls-juggle.md",
+            ".changeset/giant-plants-grin.md",
+            ".changeset/green-hounds-play.md",
+            ".changeset/itchy-beds-kneel.md",
+            ".changeset/mean-numbers-cry.md",
+            ".changeset/moody-ghosts-buy.md",
+            ".changeset/pink-mayflies-tie.md",
+            ".changeset/rich-taxis-hear.md",
+            ".changeset/selfish-panthers-add.md",
+            ".changeset/serious-kids-deliver.md",
+            ".changeset/shiny-shrimps-march.md",
+            ".changeset/small-apples-eat.md",
+            ".changeset/smart-spiders-fetch.md",
+            ".changeset/sweet-mangos-beg.md",
+            ".changeset/sweet-pens-sniff.md",
+            ".changeset/swift-seahorses-deliver.md",
+            ".changeset/thick-shirts-deliver.md",
+            ".changeset/thirty-pears-hug.md",
+            ".changeset/three-rice-tie.md"
+          ],
+          "spans": {
+            ".changeset/beige-mirrors-listen.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/chilly-dolphins-lick.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/chilly-snakes-scream.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/clever-maps-travel.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/cyan-spies-grin.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/dry-fans-march.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/dull-coins-vanish.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/fluffy-dolls-share.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/funny-dragons-double.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/funny-ties-jump.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/gentle-dolls-juggle.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/giant-plants-grin.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/green-hounds-play.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/itchy-beds-kneel.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/mean-numbers-cry.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/moody-ghosts-buy.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/pink-mayflies-tie.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/rich-taxis-hear.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/selfish-panthers-add.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/serious-kids-deliver.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/shiny-shrimps-march.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/small-apples-eat.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/smart-spiders-fetch.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/sweet-mangos-beg.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/sweet-pens-sniff.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/swift-seahorses-deliver.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/thick-shirts-deliver.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/thirty-pears-hug.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/three-rice-tie.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/global-with-nesting/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/global-with-nesting/input.svelte": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/general-siblings-combinator-rendertag-global/input.svelte",
+            "packages/svelte/tests/css/samples/general-siblings-combinator-slot-global/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-child-combinator-2/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-child-combinator/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/input.svelte",
+            "packages/svelte/tests/css/samples/local-inside-global/input.svelte",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner-multiple/input.svelte",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer-multiple/input.svelte",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer/input.svelte",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global-descendants/input.svelte",
+            "packages/svelte/tests/css/samples/siblings-combinator-global/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/general-siblings-combinator-rendertag-global/input.svelte": [
+              {
+                "start": 15,
+                "end": 19
+              },
+              {
+                "start": 22,
+                "end": 22
+              }
+            ],
+            "packages/svelte/tests/css/samples/general-siblings-combinator-slot-global/input.svelte": [
+              {
+                "start": 15,
+                "end": 19
+              },
+              {
+                "start": 22,
+                "end": 22
+              }
+            ],
+            "packages/svelte/tests/css/samples/global-with-child-combinator-2/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/css/samples/global-with-child-combinator/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/css/samples/local-inside-global/input.svelte": [
+              {
+                "start": 4,
+                "end": 4
+              },
+              {
+                "start": 8,
+                "end": 8
+              }
+            ],
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner-multiple/input.svelte": [
+              {
+                "start": 6,
+                "end": 6
+              }
+            ],
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer-multiple/input.svelte": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer/input.svelte": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global-descendants/input.svelte": [
+              {
+                "start": 7,
+                "end": 7
+              }
+            ],
+            "packages/svelte/tests/css/samples/siblings-combinator-global/input.svelte": [
+              {
+                "start": 2,
+                "end": 7
+              },
+              {
+                "start": 9,
+                "end": 10
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer/input.svelte": [
+              {
+                "start": 1,
+                "end": 7
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer/expected.html"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer/expected.html": [
+              {
+                "start": 1,
+                "end": 1
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer/expected.css"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer/expected.css": [
+              {
+                "start": 1,
+                "end": 3
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer-multiple/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer-multiple/input.svelte": [
+              {
+                "start": 1,
+                "end": 7
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer-multiple/expected.html"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer-multiple/expected.html": [
+              {
+                "start": 1,
+                "end": 1
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer-multiple/expected.css"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer-multiple/expected.css": [
+              {
+                "start": 1,
+                "end": 3
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/global-with-child-combinator-2/input.svelte",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner-multiple/input.svelte",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer-multiple/input.svelte",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global-descendants/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/global-with-child-combinator-2/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner-multiple/input.svelte": [
+              {
+                "start": 6,
+                "end": 6
+              }
+            ],
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer-multiple/input.svelte": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global-descendants/input.svelte": [
+              {
+                "start": 7,
+                "end": 7
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/types/index.d.ts"
+          ],
+          "spans": {
+            "packages/svelte/types/index.d.ts": [
+              {
+                "start": 1300,
+                "end": 1360
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/global-with-class/_config.js"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/global-with-class/_config.js": [
+              {
+                "start": 1,
+                "end": 5
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/global-with-class/expected.html"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/global-with-class/expected.html": [
+              {
+                "start": 1,
+                "end": 2
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/_config.js"
+          ],
+          "spans": {
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/_config.js": [
+              {
+                "start": 1,
+                "end": 10
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/CHANGELOG.md"
+          ],
+          "spans": {
+            "packages/svelte/CHANGELOG.md": [
+              {
+                "start": 131,
+                "end": 131
+              },
+              {
+                "start": 953,
+                "end": 953
+              },
+              {
+                "start": 1653,
+                "end": 1653
+              },
+              {
+                "start": 1675,
+                "end": 1675
+              },
+              {
+                "start": 1835,
+                "end": 1835
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/1-parse/utils/entities.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/1-parse/utils/entities.js": [
+              {
+                "start": 399,
+                "end": 399
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/svelte/scripts/check-treeshakeability.js",
+            "packages/svelte/scripts/generate-types.js",
+            "packages/svelte/scripts/generate-version.js"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js",
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js": [
+              {
+                "start": 188,
+                "end": 188
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js": [
+              {
+                "start": 300,
+                "end": 300
+              },
+              {
+                "start": 307,
+                "end": 307
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/errors.js",
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js",
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js",
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/errors.js": [
+              {
+                "start": 474,
+                "end": 474
+              },
+              {
+                "start": 479,
+                "end": 479
+              },
+              {
+                "start": 483,
+                "end": 483
+              },
+              {
+                "start": 488,
+                "end": 488
+              },
+              {
+                "start": 492,
+                "end": 492
+              },
+              {
+                "start": 497,
+                "end": 497
+              },
+              {
+                "start": 501,
+                "end": 501
+              },
+              {
+                "start": 506,
+                "end": 506
+              },
+              {
+                "start": 528,
+                "end": 528
+              },
+              {
+                "start": 533,
+                "end": 533
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js": [
+              {
+                "start": 20,
+                "end": 20
+              },
+              {
+                "start": 157,
+                "end": 157
+              },
+              {
+                "start": 167,
+                "end": 167
+              },
+              {
+                "start": 174,
+                "end": 174
+              },
+              {
+                "start": 179,
+                "end": 179
+              },
+              {
+                "start": 184,
+                "end": 185
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js": [
+              {
+                "start": 109,
+                "end": 109
+              },
+              {
+                "start": 187,
+                "end": 187
+              },
+              {
+                "start": 234,
+                "end": 234
+              }
+            ],
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js": [
+              {
+                "start": 222,
+                "end": 222
+              },
+              {
+                "start": 244,
+                "end": 244
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/errors.json"
+          ],
+          "spans": {
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/errors.json": [
+              {
+                "start": 1,
+                "end": 14
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/input.svelte": [
+              {
+                "start": 1,
+                "end": 11
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-6/errors.json"
+          ],
+          "spans": {
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-6/errors.json": [
+              {
+                "start": 1,
+                "end": 14
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-6/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-6/input.svelte": [
+              {
+                "start": 1,
+                "end": 8
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "packages/svelte/messages/compile-errors/style.md",
+        "packages/svelte/src/compiler/errors.js",
+        "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js",
+        "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js",
+        "packages/svelte/src/compiler/phases/3-transform/css/index.js"
+      ],
+      "pred_spans": {
+        "packages/svelte/messages/compile-errors/style.md": [
+          {
+            "start": 21,
+            "end": 27
+          }
+        ],
+        "packages/svelte/src/compiler/errors.js": [
+          {
+            "start": 464,
+            "end": 480
+          }
+        ],
+        "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js": [
+          {
+            "start": 19,
+            "end": 35
+          },
+          {
+            "start": 88,
+            "end": 97
+          },
+          {
+            "start": 114,
+            "end": 137
+          },
+          {
+            "start": 142,
+            "end": 164
+          }
+        ],
+        "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js": [
+          {
+            "start": 298,
+            "end": 302
+          }
+        ],
+        "packages/svelte/src/compiler/phases/3-transform/css/index.js": [
+          {
+            "start": 219,
+            "end": 224
+          }
+        ]
+      }
+    }
+  }
+]

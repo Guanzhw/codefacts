@@ -1,0 +1,306 @@
+[
+  {
+    "instance_id": "mui__material-ui-26807",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "f791d0473239ff2976a53052fe6ae130b746b7ae",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "docs/src/pages/premium-themes/onepirate/modules/components/Typography.js",
+            "docs/src/pages/premium-themes/onepirate/modules/components/Typography.tsx",
+            "packages/material-ui-system/src/index.d.ts",
+            "packages/material-ui/src/StepLabel/StepLabel.d.ts",
+            "packages/material-ui/src/StepLabel/StepLabel.js",
+            "packages/material-ui/src/StepLabel/stepLabelClasses.ts",
+            "packages/material-ui/src/Typography/Typography.d.ts"
+          ],
+          "spans": {
+            "docs/src/pages/premium-themes/onepirate/modules/components/Typography.js": [
+              {
+                "start": 1,
+                "end": 35
+              },
+              {
+                "start": 62,
+                "end": 92
+              }
+            ],
+            "docs/src/pages/premium-themes/onepirate/modules/components/Typography.tsx": [
+              {
+                "start": 1,
+                "end": 100
+              }
+            ],
+            "packages/material-ui-system/src/index.d.ts": [
+              {
+                "start": 24,
+                "end": 30
+              },
+              {
+                "start": 50,
+                "end": 94
+              }
+            ],
+            "packages/material-ui/src/StepLabel/StepLabel.d.ts": [
+              {
+                "start": 1,
+                "end": 58
+              }
+            ],
+            "packages/material-ui/src/StepLabel/StepLabel.js": [
+              {
+                "start": 10,
+                "end": 189
+              }
+            ],
+            "packages/material-ui/src/StepLabel/stepLabelClasses.ts": [
+              {
+                "start": 1,
+                "end": 48
+              }
+            ],
+            "packages/material-ui/src/Typography/Typography.d.ts": [
+              {
+                "start": 1,
+                "end": 98
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/material-ui/src/StepLabel/StepLabel.js",
+            "packages/material-ui/src/StepLabel/StepLabel.test.js",
+            "packages/material-ui/src/StepLabel/index.js"
+          ],
+          "spans": {
+            "packages/material-ui/src/StepLabel/StepLabel.js": [
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 36,
+                "end": 36
+              },
+              {
+                "start": 39,
+                "end": 40
+              },
+              {
+                "start": 67,
+                "end": 68
+              },
+              {
+                "start": 93,
+                "end": 94
+              },
+              {
+                "start": 107,
+                "end": 108
+              },
+              {
+                "start": 117,
+                "end": 118
+              },
+              {
+                "start": 153,
+                "end": 153
+              },
+              {
+                "start": 160,
+                "end": 160
+              },
+              {
+                "start": 168,
+                "end": 168
+              },
+              {
+                "start": 170,
+                "end": 170
+              },
+              {
+                "start": 172,
+                "end": 172
+              },
+              {
+                "start": 180,
+                "end": 180
+              },
+              {
+                "start": 183,
+                "end": 184
+              },
+              {
+                "start": 188,
+                "end": 188
+              },
+              {
+                "start": 232,
+                "end": 232
+              },
+              {
+                "start": 234,
+                "end": 234
+              }
+            ],
+            "packages/material-ui/src/StepLabel/StepLabel.test.js": [
+              {
+                "start": 8,
+                "end": 8
+              },
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 14,
+                "end": 14
+              },
+              {
+                "start": 17,
+                "end": 17
+              },
+              {
+                "start": 27,
+                "end": 27
+              },
+              {
+                "start": 37,
+                "end": 37
+              },
+              {
+                "start": 53,
+                "end": 53
+              },
+              {
+                "start": 70,
+                "end": 70
+              },
+              {
+                "start": 83,
+                "end": 83
+              },
+              {
+                "start": 95,
+                "end": 95
+              },
+              {
+                "start": 107,
+                "end": 107
+              },
+              {
+                "start": 120,
+                "end": 120
+              },
+              {
+                "start": 132,
+                "end": 132
+              },
+              {
+                "start": 144,
+                "end": 144
+              },
+              {
+                "start": 154,
+                "end": 154
+              },
+              {
+                "start": 168,
+                "end": 168
+              },
+              {
+                "start": 180,
+                "end": 180
+              },
+              {
+                "start": 182,
+                "end": 182
+              }
+            ],
+            "packages/material-ui/src/StepLabel/index.js": [
+              {
+                "start": 1,
+                "end": 1
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/material-ui/src/StepLabel/StepLabel.js"
+          ],
+          "spans": {
+            "packages/material-ui/src/StepLabel/StepLabel.js": [
+              {
+                "start": 1,
+                "end": 9
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/material-ui/src/StepLabel/StepLabel.js"
+          ],
+          "spans": {
+            "packages/material-ui/src/StepLabel/StepLabel.js": [
+              {
+                "start": 186,
+                "end": 234
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/material-ui/src/StepLabel/StepLabel.test.js"
+          ],
+          "spans": {
+            "packages/material-ui/src/StepLabel/StepLabel.test.js": [
+              {
+                "start": 1,
+                "end": 50
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        }
+      ],
+      "pred_files": [
+        "packages/material-ui/src/StepLabel/StepLabel.d.ts",
+        "packages/material-ui/src/StepLabel/StepLabel.js",
+        "packages/material-ui/src/StepLabel/StepLabel.test.js"
+      ],
+      "pred_spans": {
+        "packages/material-ui/src/StepLabel/StepLabel.d.ts": [
+          {
+            "start": 1,
+            "end": 44
+          }
+        ],
+        "packages/material-ui/src/StepLabel/StepLabel.js": [
+          {
+            "start": 117,
+            "end": 186
+          },
+          {
+            "start": 188,
+            "end": 230
+          }
+        ],
+        "packages/material-ui/src/StepLabel/StepLabel.test.js": [
+          {
+            "start": 14,
+            "end": 38
+          }
+        ]
+      }
+    }
+  }
+]

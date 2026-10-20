@@ -1,0 +1,144 @@
+{
+  "kind": "context",
+  "instance_id": "sveltejs__svelte-10391",
+  "officialResult": {
+    "instance_id": "sveltejs__svelte-10391",
+    "num_steps": 10,
+    "final": {
+      "file": {
+        "coverage": 0.2,
+        "precision": 1,
+        "intersection": 1,
+        "gold_size": 5,
+        "pred_size": 1
+      },
+      "symbol": {
+        "coverage": 0.4,
+        "precision": 1,
+        "intersection": 2,
+        "gold_size": 5,
+        "pred_size": 2
+      },
+      "span": {
+        "coverage": 0.05667639207896207,
+        "precision": 1,
+        "intersection": 913,
+        "gold_size": 16109,
+        "pred_size": 913
+      },
+      "line": {
+        "coverage": 0.05175292153589316,
+        "precision": 1,
+        "intersection": 31,
+        "gold_size": 599,
+        "pred_size": 31
+      }
+    },
+    "trajectory": {
+      "steps": [
+        {
+          "step": 1,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 0,
+            "span": 0,
+            "line": 0
+          }
+        },
+        {
+          "step": 2,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 0,
+            "span": 0,
+            "line": 0
+          }
+        },
+        {
+          "step": 3,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 0.2,
+            "span": 0.0050903221801477435,
+            "line": 0.00333889816360601
+          }
+        },
+        {
+          "step": 4,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 0.6,
+            "span": 0.042026196536097835,
+            "line": 0.03672787979966611
+          }
+        },
+        {
+          "step": 5,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 0.6,
+            "span": 0.042026196536097835,
+            "line": 0.03672787979966611
+          }
+        },
+        {
+          "step": 6,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 0.8,
+            "span": 0.06605003414240487,
+            "line": 0.05509181969949917
+          }
+        },
+        {
+          "step": 7,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0987646657148178,
+            "line": 0.08013355592654424
+          }
+        },
+        {
+          "step": 8,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0987646657148178,
+            "line": 0.08013355592654424
+          }
+        },
+        {
+          "step": 9,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0987646657148178,
+            "line": 0.08013355592654424
+          }
+        },
+        {
+          "step": 10,
+          "coverage": {
+            "file": 0.2,
+            "symbol": 1,
+            "span": 0.0987646657148178,
+            "line": 0.08013355592654424
+          }
+        }
+      ],
+      "auc_coverage": {
+        "file": 0.19999999999999998,
+        "symbol": 0.62,
+        "span": 0.055025141225401954,
+        "line": 0.04524207011686144
+      },
+      "redundancy": {
+        "file": 0.5517241379310345,
+        "symbol": 0.2647058823529411,
+        "span": 0.24323396744459702,
+        "line": 0.2540125610607118
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "declarationStatus": "valid",
+  "requests": 39,
+  "responses": 39,
+  "failedResponses": 1,
+  "locatorOnlyResponses": 2,
+  "unmappedByReason": {
+    "locator-only-no-visible-source": {
+      "count": 2,
+      "bytes": 987
+    }
+  }
+}

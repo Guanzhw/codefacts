@@ -1,0 +1,1158 @@
+[
+  {
+    "instance_id": "sveltejs__svelte-3394",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "798bb3f0da7f547eef007718b14a18d1c0d94e2f",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            ".editorconfig",
+            ".eslintignore",
+            ".eslintrc.js",
+            ".github/ISSUE_TEMPLATE.md",
+            ".github/ISSUE_TEMPLATE/bug_report.md",
+            ".github/ISSUE_TEMPLATE/feature_request.md",
+            ".github/ISSUE_TEMPLATE/questions-and-help.md",
+            ".github/PULL_REQUEST_TEMPLATE.md",
+            ".gitignore",
+            ".prettierrc",
+            ".travis.yml",
+            "CHANGELOG.md",
+            "LICENSE",
+            "README.md",
+            "appveyor.yml",
+            "banner.png",
+            "mocha.coverage.opts",
+            "mocha.opts",
+            "package-lock.json",
+            "package.json",
+            "register.js",
+            "rollup.config.js",
+            "site/static/fonts/overpass/overpass-latin-100.woff2",
+            "site/static/fonts/overpass/overpass-latin-300.woff2",
+            "site/static/fonts/overpass/overpass-latin-400.woff2",
+            "site/static/fonts/overpass/overpass-latin-600.woff2",
+            "site/static/fonts/overpass/overpass-latin-700.woff2",
+            "site/static/fonts/roboto/roboto-latin-400.woff2",
+            "site/static/fonts/roboto/roboto-latin-400italic.woff2",
+            "site/static/fonts/roboto/roboto-latin-500.woff2",
+            "site/static/fonts/roboto/roboto-latin-500italic.woff2",
+            "site/static/global.css",
+            "site/static/icons/arrow-right.svg",
+            "site/static/icons/check.svg",
+            "site/static/icons/chevron.svg",
+            "site/static/icons/collapse.svg",
+            "site/static/icons/download.svg",
+            "site/static/icons/dropdown.svg",
+            "site/static/icons/edit.svg",
+            "site/static/icons/expand.svg",
+            "site/static/icons/flip.svg",
+            "site/static/icons/fork.svg",
+            "site/static/icons/link.svg",
+            "site/static/icons/loading.svg",
+            "site/static/icons/save.svg",
+            "site/static/images/svelte-android-chrome-192.png",
+            "site/static/images/svelte-android-chrome-512.png",
+            "site/static/images/svelte-apple-touch-icon.png",
+            "site/static/images/svelte-mstile-150.png",
+            "site/static/images/twitter-card.png",
+            "site/static/logo-mask.svg",
+            "site/static/manifest.json",
+            "site/static/media/rethinking-best-practices.jpg",
+            "site/static/organisations/beyonk.svg",
+            "site/static/organisations/chess.svg",
+            "site/static/organisations/comigo.svg",
+            "site/static/organisations/datawrapper.svg",
+            "site/static/organisations/dbnomics.jpg",
+            "site/static/organisations/dbnomics.webp",
+            "site/static/organisations/deck.svg",
+            "site/static/organisations/from-now-on.png",
+            "site/static/organisations/godaddy.svg",
+            "site/static/organisations/healthtree.png",
+            "site/static/organisations/itslearning.svg",
+            "site/static/organisations/mustlab.png",
+            "site/static/organisations/nesta.svg",
+            "site/static/organisations/nonkosi.svg",
+            "site/static/organisations/nyt.svg",
+            "site/static/organisations/nzz.svg",
+            "site/static/organisations/open-state-foundation.svg",
+            "site/static/organisations/razorpay.svg",
+            "site/static/organisations/socialist-party.svg",
+            "site/static/organisations/stone.svg",
+            "site/static/organisations/strixcloud.svg",
+            "site/static/organisations/sucuri.png",
+            "site/static/organisations/thunderdome.svg",
+            "site/static/organisations/tokopedia.2x.png",
+            "site/static/organisations/tokopedia.3x.png",
+            "site/static/organisations/tokopedia.png",
+            "site/static/organisations/webdesq.svg",
+            "site/static/prism.css",
+            "site/static/svelte-logo-horizontal.svg",
+            "site/static/svelte-logo-mask.svg",
+            "site/static/svelte-logo-outline.svg",
+            "site/static/svelte-logo-vertical.svg",
+            "site/static/svelte-logo.svg",
+            "site/static/svelte-logotype.svg",
+            "site/static/tutorial/dark-theme.css",
+            "site/static/tutorial/icons/email.svg",
+            "site/static/tutorial/icons/folder-open.svg",
+            "site/static/tutorial/icons/folder.svg",
+            "site/static/tutorial/icons/gif.svg",
+            "site/static/tutorial/icons/map-marker.svg",
+            "site/static/tutorial/icons/md.svg",
+            "site/static/tutorial/icons/xlsx.svg",
+            "site/static/tutorial/image.gif",
+            "site/static/tutorial/kitten.png",
+            "site/static/tutorial/music/beethoven.mp3",
+            "site/static/tutorial/music/holst.mp3",
+            "site/static/tutorial/music/mozart.mp3",
+            "site/static/tutorial/music/satie.mp3",
+            "site/static/tutorial/music/strauss.mp3",
+            "site/test/utils/slug.js",
+            "src/compiler/Stats.ts",
+            "src/compiler/compile/utils/CodeBuilder.ts",
+            "src/compiler/compile/utils/__test__.ts",
+            "src/compiler/compile/utils/add_to_set.ts",
+            "src/compiler/compile/utils/deindent.ts",
+            "src/compiler/compile/utils/flatten_reference.ts",
+            "src/compiler/compile/utils/get_name_from_filename.ts",
+            "src/compiler/compile/utils/get_object.ts",
+            "src/compiler/compile/utils/get_slot_data.ts",
+            "src/compiler/compile/utils/scope.ts",
+            "src/compiler/compile/utils/snip.ts",
+            "src/compiler/compile/utils/stringify.ts",
+            "src/compiler/compile/utils/stringify_attribute.ts",
+            "src/compiler/compile/utils/stringify_props.ts",
+            "src/compiler/compile/utils/tail.ts",
+            "src/compiler/compile/utils/unwrap_parens.ts",
+            "src/compiler/config.ts",
+            "src/compiler/index.ts",
+            "src/compiler/interfaces.ts",
+            "src/compiler/parse/acorn.ts",
+            "src/compiler/parse/index.ts",
+            "src/compiler/parse/read/context.ts",
+            "src/compiler/parse/read/expression.ts",
+            "src/compiler/parse/read/script.ts",
+            "src/compiler/parse/read/style.ts",
+            "src/compiler/parse/state/fragment.ts",
+            "src/compiler/parse/state/mustache.ts",
+            "src/compiler/parse/state/tag.ts",
+            "src/compiler/parse/state/text.ts",
+            "src/compiler/parse/utils/entities.ts",
+            "src/compiler/parse/utils/html.ts",
+            "src/compiler/preprocess/index.ts",
+            "src/compiler/tsconfig.json",
+            "src/compiler/utils/error.ts",
+            "src/compiler/utils/full_char_code_at.ts",
+            "src/compiler/utils/fuzzymatch.ts",
+            "src/compiler/utils/get_code_frame.ts",
+            "src/compiler/utils/indentation.ts",
+            "src/compiler/utils/list.ts",
+            "src/compiler/utils/names.ts",
+            "src/compiler/utils/namespaces.ts",
+            "src/compiler/utils/nodes_match.ts",
+            "src/compiler/utils/patterns.ts",
+            "src/compiler/utils/repeat.ts",
+            "src/compiler/utils/trim.ts",
+            "src/runtime/ambient.ts",
+            "src/runtime/animate/index.ts",
+            "src/runtime/easing/index.ts",
+            "src/runtime/index.ts",
+            "src/runtime/internal/Component.ts",
+            "src/runtime/internal/animations.ts",
+            "src/runtime/internal/await_block.ts",
+            "src/runtime/internal/dom.ts",
+            "src/runtime/internal/environment.ts",
+            "src/runtime/internal/globals.ts",
+            "src/runtime/internal/index.ts",
+            "src/runtime/internal/keyed_each.ts",
+            "src/runtime/internal/lifecycle.ts",
+            "src/runtime/internal/loop.ts",
+            "src/runtime/internal/scheduler.ts",
+            "src/runtime/internal/spread.ts",
+            "src/runtime/internal/ssr.ts",
+            "src/runtime/internal/style_manager.ts",
+            "src/runtime/internal/transitions.ts",
+            "src/runtime/internal/utils.ts",
+            "src/runtime/motion/index.ts",
+            "src/runtime/motion/spring.ts",
+            "src/runtime/motion/tweened.ts",
+            "src/runtime/motion/utils.ts",
+            "src/runtime/store/index.ts",
+            "src/runtime/transition/index.ts",
+            "src/runtime/tsconfig.json",
+            "test/css/samples/unused-selector-ternary/_config.js",
+            "test/custom-elements/assert.js",
+            "test/custom-elements/index.js",
+            "test/custom-elements/samples/custom-method/main.svelte",
+            "test/custom-elements/samples/custom-method/test.js",
+            "test/custom-elements/samples/escaped-css/main.svelte",
+            "test/custom-elements/samples/escaped-css/test.js",
+            "test/custom-elements/samples/html-slots/main.svelte",
+            "test/custom-elements/samples/html-slots/test.js",
+            "test/custom-elements/samples/html/main.svelte",
+            "test/custom-elements/samples/html/test.js",
+            "test/custom-elements/samples/nested.skip/Counter.svelte",
+            "test/custom-elements/samples/nested.skip/main.svelte",
+            "test/custom-elements/samples/nested.skip/test.js",
+            "test/custom-elements/samples/new-styled/main.svelte",
+            "test/custom-elements/samples/new-styled/test.js",
+            "test/custom-elements/samples/new/main.svelte",
+            "test/custom-elements/samples/new/test.js",
+            "test/custom-elements/samples/no-missing-prop-warnings/_config.js",
+            "test/custom-elements/samples/no-missing-prop-warnings/main.svelte",
+            "test/custom-elements/samples/no-missing-prop-warnings/test.js",
+            "test/custom-elements/samples/no-svelte-options/_config.js",
+            "test/custom-elements/samples/no-svelte-options/main.svelte",
+            "test/custom-elements/samples/no-svelte-options/test.js",
+            "test/custom-elements/samples/no-tag-warning/_config.js",
+            "test/custom-elements/samples/no-tag-warning/main.svelte",
+            "test/custom-elements/samples/no-tag-warning/test.js",
+            "test/custom-elements/samples/no-tag/_config.js",
+            "test/custom-elements/samples/no-tag/main.svelte",
+            "test/custom-elements/samples/no-tag/test.js",
+            "test/custom-elements/samples/oncreate/main.svelte",
+            "test/custom-elements/samples/oncreate/test.js",
+            "test/custom-elements/samples/props/main.svelte",
+            "test/custom-elements/samples/props/my-widget.svelte",
+            "test/custom-elements/samples/props/test.js",
+            "test/helpers.js",
+            "test/hydration/index.js",
+            "test/hydration/samples/if-block-anchor/_after.html",
+            "test/hydration/samples/if-block-anchor/_before.html",
+            "test/hydration/samples/if-block-anchor/_config.js",
+            "test/hydration/samples/if-block-anchor/main.svelte",
+            "test/hydration/samples/if-block-false/_after.html",
+            "test/hydration/samples/if-block-false/_before.html",
+            "test/hydration/samples/if-block-false/_config.js",
+            "test/hydration/samples/if-block-false/main.svelte",
+            "test/hydration/samples/if-block-update/_after.html",
+            "test/hydration/samples/if-block-update/_before.html",
+            "test/hydration/samples/if-block-update/_config.js",
+            "test/hydration/samples/if-block-update/main.svelte",
+            "test/hydration/samples/if-block/_after.html",
+            "test/hydration/samples/if-block/_before.html",
+            "test/hydration/samples/if-block/_config.js",
+            "test/hydration/samples/if-block/main.svelte",
+            "test/hydration/samples/raw/_after.html",
+            "test/hydration/samples/raw/_before.html",
+            "test/hydration/samples/raw/_config.js",
+            "test/hydration/samples/raw/main.svelte",
+            "test/hydration/samples/text-fallback/Nested.svelte",
+            "test/hydration/samples/text-fallback/_after.html",
+            "test/hydration/samples/text-fallback/_before.html",
+            "test/hydration/samples/text-fallback/main.svelte",
+            "test/hydration/samples/top-level-text/_after.html",
+            "test/hydration/samples/top-level-text/_before.html",
+            "test/hydration/samples/top-level-text/_config.js",
+            "test/hydration/samples/top-level-text/main.svelte",
+            "test/js/samples/dynamic-import/expected.js",
+            "test/js/samples/dynamic-import/input.svelte",
+            "test/js/samples/each-block-array-literal/expected.js",
+            "test/js/samples/each-block-array-literal/input.svelte",
+            "test/js/samples/each-block-changed-check/expected.js",
+            "test/js/samples/each-block-changed-check/input.svelte",
+            "test/js/samples/each-block-keyed/expected.js",
+            "test/js/samples/each-block-keyed/input.svelte",
+            "test/js/samples/reactive-values-non-topologically-ordered/expected.js",
+            "test/js/samples/reactive-values-non-topologically-ordered/input.svelte",
+            "test/js/samples/reactive-values-non-writable-dependencies/expected.js",
+            "test/js/samples/reactive-values-non-writable-dependencies/input.svelte",
+            "test/js/samples/select-dynamic-value/expected.js",
+            "test/js/samples/select-dynamic-value/input.svelte",
+            "test/js/samples/setup-method/expected.js",
+            "test/js/samples/setup-method/input.svelte",
+            "test/js/samples/ssr-no-oncreate-etc/_config.js",
+            "test/js/samples/ssr-no-oncreate-etc/expected.js",
+            "test/js/samples/ssr-no-oncreate-etc/input.svelte",
+            "test/js/samples/ssr-preserve-comments/_config.js",
+            "test/js/samples/ssr-preserve-comments/expected.js",
+            "test/js/samples/ssr-preserve-comments/input.svelte",
+            "test/js/samples/svg-title/expected.js",
+            "test/js/samples/svg-title/input.svelte",
+            "test/js/samples/title/expected.js",
+            "test/js/samples/title/input.svelte",
+            "test/js/samples/transition-local/expected.js",
+            "test/js/samples/transition-local/input.svelte",
+            "test/js/samples/transition-repeated-outro/expected.js",
+            "test/js/samples/transition-repeated-outro/input.svelte",
+            "test/js/samples/unreferenced-state-not-invalidated/expected.js",
+            "test/js/samples/unreferenced-state-not-invalidated/input.svelte",
+            "test/js/samples/use-elements-as-anchors/expected.js",
+            "test/js/samples/use-elements-as-anchors/input.svelte",
+            "test/js/samples/window-binding-scroll/expected.js",
+            "test/js/samples/window-binding-scroll/input.svelte",
+            "test/js/update.js",
+            "test/parser/samples/transition-intro-no-params/input.svelte",
+            "test/parser/samples/transition-intro-no-params/output.json",
+            "test/parser/samples/unusual-identifier/input.svelte",
+            "test/parser/samples/unusual-identifier/output.json",
+            "test/parser/samples/whitespace-leading-trailing/input.svelte",
+            "test/parser/samples/whitespace-leading-trailing/output.json",
+            "test/parser/samples/whitespace-normal/input.svelte",
+            "test/parser/samples/whitespace-normal/output.json",
+            "test/parser/samples/yield/input.svelte",
+            "test/parser/samples/yield/output.json",
+            "test/parser/update.js",
+            "test/preprocess/samples/multiple-preprocessors/_config.js",
+            "test/preprocess/samples/multiple-preprocessors/input.svelte",
+            "test/preprocess/samples/multiple-preprocessors/output.svelte",
+            "test/preprocess/samples/partial-names/_config.js",
+            "test/preprocess/samples/partial-names/input.svelte",
+            "test/preprocess/samples/partial-names/output.svelte",
+            "test/preprocess/samples/script-multiple/_config.js",
+            "test/preprocess/samples/script-multiple/input.svelte",
+            "test/preprocess/samples/script-multiple/output.svelte",
+            "test/preprocess/samples/script/_config.js",
+            "test/preprocess/samples/script/input.svelte",
+            "test/preprocess/samples/script/output.svelte",
+            "test/preprocess/samples/style-async/_config.js",
+            "test/preprocess/samples/style-async/input.svelte",
+            "test/preprocess/samples/style-async/output.svelte",
+            "test/preprocess/samples/style-attributes/_config.js",
+            "test/preprocess/samples/style-attributes/input.svelte",
+            "test/preprocess/samples/style-attributes/output.svelte",
+            "test/preprocess/samples/style/_config.js",
+            "test/preprocess/samples/style/input.svelte",
+            "test/preprocess/samples/style/output.svelte",
+            "test/runtime/samples/whitespace-list/_config.js",
+            "test/runtime/samples/whitespace-normal/_config.js",
+            "test/runtime/samples/whitespace-normal/main.svelte",
+            "test/runtime/samples/window-bind-scroll-update/_config.js",
+            "test/runtime/samples/window-bind-scroll-update/main.svelte",
+            "test/runtime/samples/window-binding-multiple-handlers/_config.js",
+            "test/runtime/samples/window-binding-multiple-handlers/main.svelte",
+            "test/runtime/samples/window-binding-resize/_config.js",
+            "test/runtime/samples/window-binding-resize/main.svelte",
+            "test/runtime/samples/window-event-context/_config.js",
+            "test/runtime/samples/window-event-context/main.svelte",
+            "test/runtime/samples/window-event-custom/_config.js",
+            "test/runtime/samples/window-event-custom/main.svelte",
+            "test/runtime/samples/window-event/_config.js",
+            "test/runtime/samples/window-event/main.svelte",
+            "test/server-side-rendering/samples/styles-nested/One.svelte",
+            "test/server-side-rendering/samples/styles-nested/Two.svelte",
+            "test/server-side-rendering/samples/styles-nested/_expected.css",
+            "test/server-side-rendering/samples/styles-nested/_expected.html",
+            "test/server-side-rendering/samples/styles-nested/main.svelte",
+            "test/server-side-rendering/samples/text-area-bind/_expected.html",
+            "test/server-side-rendering/samples/text-area-bind/main.svelte",
+            "test/server-side-rendering/samples/textarea-children/_expected.html",
+            "test/server-side-rendering/samples/textarea-children/main.svelte",
+            "test/server-side-rendering/samples/textarea-value/_expected.html",
+            "test/server-side-rendering/samples/textarea-value/main.svelte",
+            "test/server-side-rendering/samples/triple/_expected.html",
+            "test/server-side-rendering/samples/triple/main.svelte",
+            "test/setup.js",
+            "test/sourcemaps/samples/binding-shorthand.skip/input.svelte",
+            "test/sourcemaps/samples/binding-shorthand.skip/test.js",
+            "test/sourcemaps/samples/binding/input.svelte",
+            "test/sourcemaps/samples/binding/test.js",
+            "test/sourcemaps/samples/css/input.svelte",
+            "test/sourcemaps/samples/css/test.js",
+            "test/sourcemaps/samples/each-block/input.svelte",
+            "test/sourcemaps/samples/each-block/test.js",
+            "test/sourcemaps/samples/script/input.svelte",
+            "test/sourcemaps/samples/script/test.js",
+            "test/sourcemaps/samples/static-no-script/input.svelte",
+            "test/sourcemaps/samples/static-no-script/test.js",
+            "test/stats/index.js",
+            "test/stats/samples/basic/_config.js",
+            "test/stats/samples/basic/input.svelte",
+            "test/store/index.js",
+            "test/vars/samples/imports/_config.js",
+            "test/vars/samples/imports/input.svelte",
+            "test/vars/samples/mutated-vs-reassigned-bindings/_config.js",
+            "test/vars/samples/mutated-vs-reassigned-bindings/input.svelte",
+            "test/vars/samples/mutated-vs-reassigned/_config.js",
+            "test/vars/samples/mutated-vs-reassigned/input.svelte",
+            "test/vars/samples/props/_config.js",
+            "test/vars/samples/props/input.svelte",
+            "test/vars/samples/store-referenced/_config.js",
+            "test/vars/samples/store-referenced/input.svelte",
+            "test/vars/samples/store-unreferenced/_config.js",
+            "test/vars/samples/store-unreferenced/input.svelte",
+            "test/vars/samples/template-references/_config.js",
+            "test/vars/samples/template-references/input.svelte",
+            "test/vars/samples/transitions/_config.js",
+            "test/vars/samples/transitions/input.svelte",
+            "test/vars/samples/undeclared/_config.js",
+            "test/vars/samples/undeclared/input.svelte",
+            "tsconfig.json"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts",
+            "src/compiler/compile/nodes/Binding.ts",
+            "src/compiler/compile/nodes/shared/Expression.ts",
+            "src/compiler/compile/render_dom/index.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts",
+            "src/compiler/interfaces.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 208,
+                "end": 208
+              },
+              {
+                "start": 368,
+                "end": 368
+              },
+              {
+                "start": 699,
+                "end": 699
+              },
+              {
+                "start": 760,
+                "end": 760
+              },
+              {
+                "start": 1161,
+                "end": 1161
+              },
+              {
+                "start": 1164,
+                "end": 1164
+              }
+            ],
+            "src/compiler/compile/nodes/Binding.ts": [
+              {
+                "start": 53,
+                "end": 53
+              },
+              {
+                "start": 63,
+                "end": 63
+              }
+            ],
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 186,
+                "end": 186
+              },
+              {
+                "start": 192,
+                "end": 192
+              }
+            ],
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 368,
+                "end": 368
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "src/compiler/interfaces.ts": [
+              {
+                "start": 125,
+                "end": 125
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts",
+            "src/compiler/compile/nodes/shared/Expression.ts",
+            "src/compiler/compile/render_dom/index.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/index.ts",
+            "src/compiler/compile/render_dom/wrappers/InlineComponent/index.ts",
+            "src/compiler/compile/render_dom/wrappers/Window.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/bind_this.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 811,
+                "end": 811
+              },
+              {
+                "start": 815,
+                "end": 815
+              },
+              {
+                "start": 827,
+                "end": 827
+              },
+              {
+                "start": 830,
+                "end": 830
+              },
+              {
+                "start": 842,
+                "end": 842
+              }
+            ],
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 348,
+                "end": 348
+              },
+              {
+                "start": 433,
+                "end": 433
+              },
+              {
+                "start": 461,
+                "end": 461
+              }
+            ],
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 83,
+                "end": 83
+              },
+              {
+                "start": 85,
+                "end": 85
+              },
+              {
+                "start": 88,
+                "end": 88
+              },
+              {
+                "start": 193,
+                "end": 193
+              },
+              {
+                "start": 211,
+                "end": 211
+              },
+              {
+                "start": 225,
+                "end": 225
+              },
+              {
+                "start": 235,
+                "end": 235
+              },
+              {
+                "start": 264,
+                "end": 264
+              },
+              {
+                "start": 284,
+                "end": 284
+              },
+              {
+                "start": 346,
+                "end": 346
+              },
+              {
+                "start": 393,
+                "end": 393
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Element/index.ts": [
+              {
+                "start": 484,
+                "end": 484
+              },
+              {
+                "start": 697,
+                "end": 697
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/InlineComponent/index.ts": [
+              {
+                "start": 321,
+                "end": 321
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Window.ts": [
+              {
+                "start": 129,
+                "end": 129
+              },
+              {
+                "start": 173,
+                "end": 173
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/shared/bind_this.ts": [
+              {
+                "start": 27,
+                "end": 27
+              },
+              {
+                "start": 34,
+                "end": 34
+              },
+              {
+                "start": 38,
+                "end": 38
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts",
+            "src/compiler/compile/nodes/shared/Expression.ts",
+            "src/compiler/compile/render_dom/index.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 641,
+                "end": 641
+              },
+              {
+                "start": 746,
+                "end": 746
+              },
+              {
+                "start": 752,
+                "end": 752
+              },
+              {
+                "start": 1146,
+                "end": 1146
+              },
+              {
+                "start": 1151,
+                "end": 1151
+              }
+            ],
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 55,
+                "end": 55
+              },
+              {
+                "start": 60,
+                "end": 60
+              },
+              {
+                "start": 170,
+                "end": 170
+              },
+              {
+                "start": 175,
+                "end": 175
+              },
+              {
+                "start": 293,
+                "end": 293
+              },
+              {
+                "start": 421,
+                "end": 421
+              },
+              {
+                "start": 444,
+                "end": 444
+              }
+            ],
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 175,
+                "end": 176
+              },
+              {
+                "start": 196,
+                "end": 196
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/index.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 150,
+                "end": 245
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 720,
+                "end": 775
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 800,
+                "end": 850
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/nodes/shared/Expression.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 145,
+                "end": 205
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/nodes/shared/Expression.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 400,
+                "end": 475
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/index.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 220,
+                "end": 270
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/utils/get_object.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/utils/get_object.ts": [
+              {
+                "start": 1,
+                "end": 8
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "test/js/samples/select-dynamic-value/expected.js"
+          ],
+          "spans": {
+            "test/js/samples/select-dynamic-value/expected.js": [
+              {
+                "start": 36,
+                "end": 36
+              },
+              {
+                "start": 48,
+                "end": 48
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "test/runtime/samples/nested-transition-if-block-not-remounted/_config.js",
+            "test/vars/samples/$$props-logicless/_config.js",
+            "test/vars/samples/$$props/_config.js",
+            "test/vars/samples/actions/_config.js",
+            "test/vars/samples/animations/_config.js",
+            "test/vars/samples/component-namespaced/_config.js",
+            "test/vars/samples/duplicate-non-hoistable/_config.js",
+            "test/vars/samples/duplicate-vars/_config.js",
+            "test/vars/samples/implicit-reactive/_config.js",
+            "test/vars/samples/imports/_config.js",
+            "test/vars/samples/mutated-vs-reassigned-bindings/_config.js",
+            "test/vars/samples/mutated-vs-reassigned/_config.js",
+            "test/vars/samples/props/_config.js",
+            "test/vars/samples/store-referenced/_config.js",
+            "test/vars/samples/store-unreferenced/_config.js",
+            "test/vars/samples/template-references/_config.js",
+            "test/vars/samples/transitions/_config.js"
+          ],
+          "spans": {
+            "test/runtime/samples/nested-transition-if-block-not-remounted/_config.js": [
+              {
+                "start": 19,
+                "end": 19
+              }
+            ],
+            "test/vars/samples/$$props-logicless/_config.js": [
+              {
+                "start": 9,
+                "end": 9
+              }
+            ],
+            "test/vars/samples/$$props/_config.js": [
+              {
+                "start": 9,
+                "end": 9
+              }
+            ],
+            "test/vars/samples/actions/_config.js": [
+              {
+                "start": 8,
+                "end": 8
+              },
+              {
+                "start": 18,
+                "end": 18
+              }
+            ],
+            "test/vars/samples/animations/_config.js": [
+              {
+                "start": 8,
+                "end": 8
+              },
+              {
+                "start": 18,
+                "end": 18
+              }
+            ],
+            "test/vars/samples/component-namespaced/_config.js": [
+              {
+                "start": 9,
+                "end": 9
+              }
+            ],
+            "test/vars/samples/duplicate-non-hoistable/_config.js": [
+              {
+                "start": 9,
+                "end": 9
+              }
+            ],
+            "test/vars/samples/duplicate-vars/_config.js": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 19,
+                "end": 19
+              }
+            ],
+            "test/vars/samples/implicit-reactive/_config.js": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 19,
+                "end": 19
+              }
+            ],
+            "test/vars/samples/imports/_config.js": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 19,
+                "end": 19
+              },
+              {
+                "start": 29,
+                "end": 29
+              }
+            ],
+            "test/vars/samples/mutated-vs-reassigned-bindings/_config.js": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 19,
+                "end": 19
+              }
+            ],
+            "test/vars/samples/mutated-vs-reassigned/_config.js": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 19,
+                "end": 19
+              }
+            ],
+            "test/vars/samples/props/_config.js": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 19,
+                "end": 19
+              },
+              {
+                "start": 29,
+                "end": 29
+              },
+              {
+                "start": 39,
+                "end": 39
+              }
+            ],
+            "test/vars/samples/store-referenced/_config.js": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 19,
+                "end": 19
+              }
+            ],
+            "test/vars/samples/store-unreferenced/_config.js": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 19,
+                "end": 19
+              }
+            ],
+            "test/vars/samples/template-references/_config.js": [
+              {
+                "start": 8,
+                "end": 8
+              },
+              {
+                "start": 18,
+                "end": 18
+              },
+              {
+                "start": 28,
+                "end": 28
+              }
+            ],
+            "test/vars/samples/transitions/_config.js": [
+              {
+                "start": 8,
+                "end": 8
+              },
+              {
+                "start": 18,
+                "end": 18
+              },
+              {
+                "start": 28,
+                "end": 28
+              },
+              {
+                "start": 38,
+                "end": 38
+              },
+              {
+                "start": 48,
+                "end": 48
+              },
+              {
+                "start": 58,
+                "end": 58
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "test/vars/samples/mutated-vs-reassigned/input.svelte"
+          ],
+          "spans": {
+            "test/vars/samples/mutated-vs-reassigned/input.svelte": [
+              {
+                "start": 1,
+                "end": 7
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "test/vars/samples/mutated-vs-reassigned-bindings/input.svelte"
+          ],
+          "spans": {
+            "test/vars/samples/mutated-vs-reassigned-bindings/input.svelte": [
+              {
+                "start": 1,
+                "end": 7
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/interfaces.ts"
+          ],
+          "spans": {
+            "src/compiler/interfaces.ts": [
+              {
+                "start": 110,
+                "end": 135
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 185,
+                "end": 220
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/index.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 1,
+                "end": 120
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 1125,
+                "end": 1175
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/index.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 350,
+                "end": 380
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "test/vars/samples/mutated-vs-reassigned/_config.js"
+          ],
+          "spans": {
+            "test/vars/samples/mutated-vs-reassigned/_config.js": [
+              {
+                "start": 1,
+                "end": 26
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts": [
+              {
+                "start": 1,
+                "end": 10
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "src/compiler/compile/Component.ts",
+        "src/compiler/compile/render_dom/index.ts",
+        "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts",
+        "src/compiler/compile/utils/get_object.ts"
+      ],
+      "pred_spans": {
+        "src/compiler/compile/Component.ts": [
+          {
+            "start": 731,
+            "end": 763
+          },
+          {
+            "start": 811,
+            "end": 843
+          }
+        ],
+        "src/compiler/compile/render_dom/index.ts": [
+          {
+            "start": 156,
+            "end": 220
+          },
+          {
+            "start": 223,
+            "end": 253
+          }
+        ],
+        "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts": [
+          {
+            "start": 1,
+            "end": 10
+          }
+        ],
+        "src/compiler/compile/utils/get_object.ts": [
+          {
+            "start": 1,
+            "end": 8
+          }
+        ]
+      }
+    }
+  }
+]

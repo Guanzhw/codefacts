@@ -1,0 +1,2895 @@
+[
+  {
+    "instance_id": "sveltejs__svelte-12509",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "9cc5a45cb1135b68b7ee0d39d43d820bcf0e8545",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "packages/svelte/src/compiler/errors.js",
+            "packages/svelte/src/compiler/index.js",
+            "packages/svelte/src/compiler/phases/1-parse/acorn.js",
+            "packages/svelte/src/compiler/phases/1-parse/index.js",
+            "packages/svelte/src/compiler/types/css.d.ts",
+            "sites/svelte-5-preview/src/lib/workers/bundler/plugins/replace.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/index.js": [
+              {
+                "start": 1,
+                "end": 148
+              }
+            ],
+            "packages/svelte/src/compiler/phases/1-parse/acorn.js": [
+              {
+                "start": 3,
+                "end": 53
+              },
+              {
+                "start": 151,
+                "end": 186
+              }
+            ],
+            "packages/svelte/src/compiler/phases/1-parse/index.js": [
+              {
+                "start": 43,
+                "end": 299
+              }
+            ],
+            "packages/svelte/src/compiler/types/css.d.ts": [
+              {
+                "start": 1,
+                "end": 155
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/errors.js",
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js",
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js",
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js",
+            "packages/svelte/src/compiler/types/css.d.ts"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/errors.js": [
+              {
+                "start": 437,
+                "end": 437
+              },
+              {
+                "start": 443,
+                "end": 443
+              },
+              {
+                "start": 447,
+                "end": 447
+              },
+              {
+                "start": 452,
+                "end": 452
+              },
+              {
+                "start": 456,
+                "end": 456
+              },
+              {
+                "start": 461,
+                "end": 461
+              },
+              {
+                "start": 465,
+                "end": 465
+              },
+              {
+                "start": 470,
+                "end": 470
+              },
+              {
+                "start": 474,
+                "end": 474
+              },
+              {
+                "start": 479,
+                "end": 479
+              },
+              {
+                "start": 483,
+                "end": 483
+              },
+              {
+                "start": 488,
+                "end": 488
+              },
+              {
+                "start": 492,
+                "end": 492
+              },
+              {
+                "start": 497,
+                "end": 497
+              },
+              {
+                "start": 501,
+                "end": 501
+              },
+              {
+                "start": 506,
+                "end": 506
+              },
+              {
+                "start": 528,
+                "end": 528
+              },
+              {
+                "start": 533,
+                "end": 533
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js": [
+              {
+                "start": 20,
+                "end": 20
+              },
+              {
+                "start": 88,
+                "end": 88
+              },
+              {
+                "start": 150,
+                "end": 150
+              },
+              {
+                "start": 157,
+                "end": 157
+              },
+              {
+                "start": 167,
+                "end": 167
+              },
+              {
+                "start": 174,
+                "end": 174
+              },
+              {
+                "start": 179,
+                "end": 179
+              },
+              {
+                "start": 184,
+                "end": 185
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js": [
+              {
+                "start": 109,
+                "end": 109
+              },
+              {
+                "start": 187,
+                "end": 187
+              },
+              {
+                "start": 234,
+                "end": 234
+              }
+            ],
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js": [
+              {
+                "start": 144,
+                "end": 144
+              },
+              {
+                "start": 222,
+                "end": 222
+              },
+              {
+                "start": 244,
+                "end": 244
+              }
+            ],
+            "packages/svelte/src/compiler/types/css.d.ts": [
+              {
+                "start": 59,
+                "end": 59
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/errors.js",
+            "packages/svelte/src/compiler/index.js",
+            "packages/svelte/src/compiler/phases/1-parse/acorn.js",
+            "packages/svelte/src/compiler/phases/1-parse/index.js",
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js",
+            "packages/svelte/src/compiler/types/css.d.ts",
+            "packages/svelte/types/index.d.ts"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/errors.js": [
+              {
+                "start": 475,
+                "end": 510
+              }
+            ],
+            "packages/svelte/src/compiler/index.js": [
+              {
+                "start": 1,
+                "end": 10
+              },
+              {
+                "start": 104,
+                "end": 148
+              }
+            ],
+            "packages/svelte/src/compiler/phases/1-parse/acorn.js": [
+              {
+                "start": 3,
+                "end": 30
+              },
+              {
+                "start": 151,
+                "end": 186
+              }
+            ],
+            "packages/svelte/src/compiler/phases/1-parse/index.js": [
+              {
+                "start": 140,
+                "end": 148
+              },
+              {
+                "start": 183,
+                "end": 208
+              },
+              {
+                "start": 290,
+                "end": 299
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js": [
+              {
+                "start": 37,
+                "end": 43
+              },
+              {
+                "start": 110,
+                "end": 213
+              }
+            ],
+            "packages/svelte/src/compiler/types/css.d.ts": [
+              {
+                "start": 1,
+                "end": 155
+              }
+            ],
+            "packages/svelte/types/index.d.ts": [
+              {
+                "start": 1218,
+                "end": 1224
+              },
+              {
+                "start": 1273,
+                "end": 1279
+              },
+              {
+                "start": 1336,
+                "end": 1410
+              },
+              {
+                "start": 1423,
+                "end": 1439
+              },
+              {
+                "start": 1882,
+                "end": 1899
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/1-parse/read/style.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/1-parse/read/style.js": [
+              {
+                "start": 121,
+                "end": 121
+              },
+              {
+                "start": 186,
+                "end": 187
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/1-parse/read/style.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/1-parse/read/style.js": [
+              {
+                "start": 1,
+                "end": 300
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js": [
+              {
+                "start": 1,
+                "end": 213
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js": [
+              {
+                "start": 1,
+                "end": 300
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js": [
+              {
+                "start": 1,
+                "end": 300
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js",
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js",
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-warn.js",
+            "packages/svelte/src/compiler/phases/2-analyze/index.js",
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js": [
+              {
+                "start": 52,
+                "end": 52
+              },
+              {
+                "start": 56,
+                "end": 56
+              },
+              {
+                "start": 67,
+                "end": 67
+              },
+              {
+                "start": 79,
+                "end": 79
+              },
+              {
+                "start": 89,
+                "end": 89
+              },
+              {
+                "start": 106,
+                "end": 106
+              },
+              {
+                "start": 115,
+                "end": 115
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js": [
+              {
+                "start": 65,
+                "end": 65
+              },
+              {
+                "start": 114,
+                "end": 114
+              },
+              {
+                "start": 188,
+                "end": 188
+              },
+              {
+                "start": 228,
+                "end": 229
+              },
+              {
+                "start": 241,
+                "end": 241
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-warn.js": [
+              {
+                "start": 36,
+                "end": 36
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/index.js": [
+              {
+                "start": 581,
+                "end": 581
+              }
+            ],
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js": [
+              {
+                "start": 140,
+                "end": 140
+              },
+              {
+                "start": 227,
+                "end": 227
+              },
+              {
+                "start": 232,
+                "end": 232
+              },
+              {
+                "start": 301,
+                "end": 301
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-prune.js": [
+              {
+                "start": 300,
+                "end": 420
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-combinator/_config.js",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-combinator/main.svelte",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-declaration/_config.js",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-declaration/main.svelte",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/_config.js",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/main.svelte",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-modifier/_config.js",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-modifier/main.svelte",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-multiple/_config.js",
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-multiple/main.svelte",
+            "packages/svelte/tests/css/samples/general-siblings-combinator-rendertag-global/_config.js",
+            "packages/svelte/tests/css/samples/general-siblings-combinator-rendertag-global/expected.css",
+            "packages/svelte/tests/css/samples/general-siblings-combinator-rendertag-global/input.svelte",
+            "packages/svelte/tests/css/samples/general-siblings-combinator-slot-global/_config.js",
+            "packages/svelte/tests/css/samples/general-siblings-combinator-slot-global/expected.css",
+            "packages/svelte/tests/css/samples/general-siblings-combinator-slot-global/input.svelte",
+            "packages/svelte/tests/css/samples/global-block/_config.js",
+            "packages/svelte/tests/css/samples/global-block/expected.css",
+            "packages/svelte/tests/css/samples/global-block/input.svelte",
+            "packages/svelte/tests/css/samples/global-nested-block/_config.js",
+            "packages/svelte/tests/css/samples/global-nested-block/expected.css",
+            "packages/svelte/tests/css/samples/global-nested-block/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-child-combinator-2/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-child-combinator/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-class/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-data-attribute/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-nesting/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/_config.js",
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/expected.css",
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/input.svelte",
+            "packages/svelte/tests/css/samples/global/input.svelte",
+            "packages/svelte/tests/css/samples/local-inside-global/input.svelte",
+            "packages/svelte/tests/css/samples/nested-css/input.svelte",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner-multiple/input.svelte",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner/input.svelte",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer-multiple/input.svelte",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer/input.svelte",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global-children/input.svelte",
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global-descendants/input.svelte",
+            "packages/svelte/tests/css/samples/siblings-combinator-global/_config.js",
+            "packages/svelte/tests/css/samples/siblings-combinator-global/expected.css",
+            "packages/svelte/tests/css/samples/siblings-combinator-global/input.svelte",
+            "packages/svelte/tests/css/samples/supports-namespace/input.svelte",
+            "packages/svelte/tests/sourcemaps/samples/external/_config.js",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-3/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-3/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-4/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-4/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-5/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-5/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-6/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-6/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-2/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-2/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-3/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-3/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-4/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-4/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-5/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-5/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-6/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-6/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-list/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-list/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-type-selector-placement/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-type-selector-placement/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-combinator/_config.js": [
+              {
+                "start": 6,
+                "end": 6
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-combinator/main.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-declaration/_config.js": [
+              {
+                "start": 6,
+                "end": 6
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-declaration/main.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/_config.js": [
+              {
+                "start": 7,
+                "end": 7
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/main.svelte": [
+              {
+                "start": 3,
+                "end": 3
+              },
+              {
+                "start": 6,
+                "end": 6
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-modifier/_config.js": [
+              {
+                "start": 6,
+                "end": 6
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-modifier/main.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-multiple/_config.js": [
+              {
+                "start": 6,
+                "end": 6
+              }
+            ],
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-multiple/main.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/css/samples/general-siblings-combinator-rendertag-global/_config.js": [
+              {
+                "start": 12,
+                "end": 12
+              }
+            ],
+            "packages/svelte/tests/css/samples/general-siblings-combinator-rendertag-global/expected.css": [
+              {
+                "start": 13,
+                "end": 13
+              }
+            ],
+            "packages/svelte/tests/css/samples/general-siblings-combinator-rendertag-global/input.svelte": [
+              {
+                "start": 15,
+                "end": 19
+              },
+              {
+                "start": 22,
+                "end": 22
+              }
+            ],
+            "packages/svelte/tests/css/samples/general-siblings-combinator-slot-global/_config.js": [
+              {
+                "start": 12,
+                "end": 12
+              }
+            ],
+            "packages/svelte/tests/css/samples/general-siblings-combinator-slot-global/expected.css": [
+              {
+                "start": 13,
+                "end": 13
+              }
+            ],
+            "packages/svelte/tests/css/samples/general-siblings-combinator-slot-global/input.svelte": [
+              {
+                "start": 15,
+                "end": 19
+              },
+              {
+                "start": 22,
+                "end": 22
+              }
+            ],
+            "packages/svelte/tests/css/samples/global-block/_config.js": [
+              {
+                "start": 8,
+                "end": 8
+              }
+            ],
+            "packages/svelte/tests/css/samples/global-block/expected.css": [
+              {
+                "start": 1,
+                "end": 1
+              },
+              {
+                "start": 13,
+                "end": 13
+              }
+            ],
+            "packages/svelte/tests/css/samples/global-block/input.svelte": [
+              {
+                "start": 4,
+                "end": 4
+              },
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 16,
+                "end": 16
+              }
+            ],
+            "packages/svelte/tests/css/samples/global-nested-block/_config.js": [
+              {
+                "start": 7,
+                "end": 7
+              },
+              {
+                "start": 21,
+                "end": 21
+              }
+            ],
+            "packages/svelte/tests/css/samples/global-nested-block/expected.css": [
+              {
+                "start": 3,
+                "end": 3
+              },
+              {
+                "start": 23,
+                "end": 23
+              },
+              {
+                "start": 29,
+                "end": 29
+              }
+            ],
+            "packages/svelte/tests/css/samples/global-nested-block/input.svelte": [
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 15,
+                "end": 15
+              },
+              {
+                "start": 21,
+                "end": 21
+              },
+              {
+                "start": 25,
+                "end": 25
+              },
+              {
+                "start": 31,
+                "end": 31
+              }
+            ],
+            "packages/svelte/tests/css/samples/global-with-child-combinator-2/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/css/samples/global-with-child-combinator/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/css/samples/global-with-class/input.svelte": [
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 8,
+                "end": 8
+              },
+              {
+                "start": 11,
+                "end": 11
+              }
+            ],
+            "packages/svelte/tests/css/samples/global-with-data-attribute/input.svelte": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/css/samples/global-with-nesting/input.svelte": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/_config.js": [
+              {
+                "start": 7,
+                "end": 7
+              }
+            ],
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/expected.css": [
+              {
+                "start": 1,
+                "end": 1
+              }
+            ],
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/css/samples/global/input.svelte": [
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 13,
+                "end": 13
+              }
+            ],
+            "packages/svelte/tests/css/samples/local-inside-global/input.svelte": [
+              {
+                "start": 4,
+                "end": 4
+              },
+              {
+                "start": 8,
+                "end": 8
+              }
+            ],
+            "packages/svelte/tests/css/samples/nested-css/input.svelte": [
+              {
+                "start": 79,
+                "end": 79
+              }
+            ],
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner-multiple/input.svelte": [
+              {
+                "start": 6,
+                "end": 6
+              }
+            ],
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-inner/input.svelte": [
+              {
+                "start": 6,
+                "end": 6
+              }
+            ],
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer-multiple/input.svelte": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-descendant-global-outer/input.svelte": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global-children/input.svelte": [
+              {
+                "start": 7,
+                "end": 7
+              }
+            ],
+            "packages/svelte/tests/css/samples/omit-scoping-attribute-global-descendants/input.svelte": [
+              {
+                "start": 7,
+                "end": 7
+              }
+            ],
+            "packages/svelte/tests/css/samples/siblings-combinator-global/_config.js": [
+              {
+                "start": 7,
+                "end": 7
+              },
+              {
+                "start": 21,
+                "end": 21
+              }
+            ],
+            "packages/svelte/tests/css/samples/siblings-combinator-global/expected.css": [
+              {
+                "start": 8,
+                "end": 9
+              }
+            ],
+            "packages/svelte/tests/css/samples/siblings-combinator-global/input.svelte": [
+              {
+                "start": 2,
+                "end": 7
+              },
+              {
+                "start": 9,
+                "end": 10
+              }
+            ],
+            "packages/svelte/tests/css/samples/supports-namespace/input.svelte": [
+              {
+                "start": 6,
+                "end": 6
+              },
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 16,
+                "end": 16
+              }
+            ],
+            "packages/svelte/tests/sourcemaps/samples/external/_config.js": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/errors.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              },
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 8,
+                "end": 8
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-3/errors.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-3/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              },
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-4/errors.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-4/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-5/errors.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-5/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-6/errors.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-6/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              },
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement/errors.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-2/errors.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-2/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              },
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 8,
+                "end": 8
+              },
+              {
+                "start": 11,
+                "end": 11
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-3/errors.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-3/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              },
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-4/errors.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-4/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-5/errors.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-5/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              },
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-6/errors.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-6/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              },
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-list/errors.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-list/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              },
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 8,
+                "end": 8
+              },
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 14,
+                "end": 14
+              },
+              {
+                "start": 17,
+                "end": 17
+              },
+              {
+                "start": 20,
+                "end": 20
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector/errors.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              },
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 8,
+                "end": 8
+              },
+              {
+                "start": 11,
+                "end": 11
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-type-selector-placement/errors.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/css-invalid-type-selector-placement/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              },
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 8,
+                "end": 8
+              },
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 14,
+                "end": 14
+              },
+              {
+                "start": 17,
+                "end": 17
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            ".changeset/README.md",
+            ".changeset/afraid-dogs-matter.md",
+            ".changeset/afraid-geckos-dance.md",
+            ".changeset/afraid-kids-hide.md",
+            ".changeset/afraid-moose-matter.md",
+            ".changeset/afraid-worms-drum.md",
+            ".changeset/angry-birds-fly.md",
+            ".changeset/angry-books-jam.md",
+            ".changeset/angry-plums-punch.md",
+            ".changeset/angry-wasps-help.md",
+            ".changeset/beige-cobras-smoke.md",
+            ".changeset/beige-flies-wash.md",
+            ".changeset/beige-gifts-appear.md",
+            ".changeset/beige-mirrors-listen.md",
+            ".changeset/beige-rabbits-shave.md",
+            ".changeset/beige-seas-share.md",
+            ".changeset/big-cars-serve.md",
+            ".changeset/big-eggs-flash.md",
+            ".changeset/big-eyes-carry.md",
+            ".changeset/big-geese-act.md",
+            ".changeset/big-moons-occur.md",
+            ".changeset/blue-ants-raise.md",
+            ".changeset/blue-lemons-wait.md",
+            ".changeset/blue-rules-juggle.md",
+            ".changeset/blue-timers-film.md",
+            ".changeset/blue-waves-sneeze.md",
+            ".changeset/brave-carrots-draw.md",
+            ".changeset/brave-gorillas-end.md",
+            ".changeset/brave-gorillas-fold.md",
+            ".changeset/brave-pigs-obey.md",
+            ".changeset/brave-points-sleep.md",
+            ".changeset/brave-shrimps-kiss.md",
+            ".changeset/brave-walls-destroy.md",
+            ".changeset/brave-walls-flow.md",
+            ".changeset/breezy-carrots-flash.md",
+            ".changeset/breezy-rules-beg.md",
+            ".changeset/breezy-waves-camp.md",
+            ".changeset/bright-berries-smell.md",
+            ".changeset/bright-falcons-float.md",
+            ".changeset/bright-needles-pretend.md",
+            ".changeset/bright-peas-juggle.md",
+            ".changeset/bright-snakes-sing.md",
+            ".changeset/brown-geckos-fry.md",
+            ".changeset/brown-houses-obey.md",
+            ".changeset/brown-months-fry.md",
+            ".changeset/brown-spoons-boil.md",
+            ".changeset/calm-buses-clap.md",
+            ".changeset/calm-pandas-vanish.md",
+            ".changeset/calm-ravens-sneeze.md",
+            ".changeset/chatty-beans-divide.md",
+            ".changeset/chatty-cups-drop.md",
+            ".changeset/chatty-ghosts-unite.md",
+            ".changeset/chatty-sloths-allow.md",
+            ".changeset/chatty-taxis-juggle.md",
+            ".changeset/chilled-pumas-invite.md",
+            ".changeset/chilled-seas-jog.md",
+            ".changeset/chilly-dolphins-lick.md",
+            ".changeset/chilly-laws-juggle.md",
+            ".changeset/chilly-pans-raise.md",
+            ".changeset/chilly-rocks-hug.md",
+            ".changeset/chilly-snakes-scream.md",
+            ".changeset/clean-cats-wave.md",
+            ".changeset/clean-eels-beg.md",
+            ".changeset/clean-melons-wash.md",
+            ".changeset/clever-chefs-relate.md",
+            ".changeset/clever-maps-travel.md",
+            ".changeset/clever-rockets-burn.md",
+            ".changeset/clever-sloths-push.md",
+            ".changeset/clever-stingrays-shout.md",
+            ".changeset/clever-toys-laugh.md",
+            ".changeset/cold-beans-tease.md",
+            ".changeset/cold-birds-own.md",
+            ".changeset/cold-cheetahs-judge.md",
+            ".changeset/cold-lamps-accept.md",
+            ".changeset/cold-masks-learn.md",
+            ".changeset/cold-shrimps-hug.md",
+            ".changeset/cold-teachers-turn.md",
+            ".changeset/config.json",
+            ".changeset/cool-actors-tan.md",
+            ".changeset/cool-ants-leave.md",
+            ".changeset/cool-comics-marry.md",
+            ".changeset/cool-jobs-scream.md",
+            ".changeset/cool-peas-lick.md",
+            ".changeset/cool-poems-watch.md",
+            ".changeset/cool-rabbits-tickle.md",
+            ".changeset/cool-roses-trade.md",
+            ".changeset/cuddly-pianos-drop.md",
+            ".changeset/cuddly-points-tickle.md",
+            ".changeset/curly-cooks-cheer.md",
+            ".changeset/curly-lizards-dream.md",
+            ".changeset/curvy-buses-laugh.md",
+            ".changeset/curvy-cups-cough.md",
+            ".changeset/curvy-flies-exercise.md",
+            ".changeset/curvy-ties-shout.md",
+            ".changeset/cyan-colts-raise.md",
+            ".changeset/cyan-ducks-teach.md",
+            ".changeset/cyan-flowers-destroy.md",
+            ".changeset/cyan-news-grow.md",
+            ".changeset/cyan-spies-grin.md",
+            ".changeset/cyan-squids-drive.md",
+            ".changeset/cyan-toes-share.md",
+            ".changeset/dirty-bats-punch.md",
+            ".changeset/dirty-donuts-yell.md",
+            ".changeset/dirty-eyes-itch.md",
+            ".changeset/dirty-garlics-design.md",
+            ".changeset/dirty-tips-add.md",
+            ".changeset/dry-clocks-grow.md",
+            ".changeset/dry-eggs-play.md",
+            ".changeset/dry-eggs-retire.md",
+            ".changeset/dry-fans-march.md",
+            ".changeset/dry-ghosts-prove.md",
+            ".changeset/dry-parrots-bathe.md",
+            ".changeset/dry-pillows-exist.md",
+            ".changeset/dull-coins-vanish.md",
+            ".changeset/dull-donkeys-smell.md",
+            ".changeset/dull-mangos-wave.md",
+            ".changeset/dull-pens-pay.md",
+            ".changeset/dull-pots-add.md",
+            ".changeset/dull-roses-relate.md",
+            ".changeset/dull-worms-relax.md",
+            ".changeset/early-ads-tie.md",
+            ".changeset/early-months-whisper.md",
+            ".changeset/eight-carrots-hunt.md",
+            ".changeset/eight-cougars-watch.md",
+            ".changeset/eight-hornets-punch.md",
+            ".changeset/eight-jeans-compare.md",
+            ".changeset/eight-pianos-raise.md",
+            ".changeset/eight-steaks-shout.md",
+            ".changeset/eighty-bikes-camp.md",
+            ".changeset/eighty-days-cheat.md",
+            ".changeset/eighty-lizards-notice.md",
+            ".changeset/eleven-avocados-walk.md",
+            ".changeset/eleven-beers-yell.md",
+            ".changeset/eleven-cows-judge.md",
+            ".changeset/eleven-cycles-applaud.md",
+            ".changeset/eleven-donuts-sit.md",
+            ".changeset/eleven-hounds-pump.md",
+            ".changeset/empty-bags-heal.md",
+            ".changeset/empty-bulldogs-exercise.md",
+            ".changeset/empty-coins-build.md",
+            ".changeset/empty-crabs-think.md",
+            ".changeset/empty-files-prove.md",
+            ".changeset/empty-flowers-change.md",
+            ".changeset/empty-geckos-pretend.md",
+            ".changeset/empty-horses-tell.md",
+            ".changeset/empty-tools-share.md",
+            ".changeset/fair-bags-smoke.md",
+            ".changeset/fair-beers-help.md",
+            ".changeset/fair-crabs-check.md",
+            ".changeset/fair-pianos-talk.md",
+            ".changeset/fair-spies-repeat.md",
+            ".changeset/famous-chairs-notice.md",
+            ".changeset/famous-falcons-melt.md",
+            ".changeset/famous-kiwis-thank.md",
+            ".changeset/famous-knives-sneeze.md",
+            ".changeset/famous-pants-pay.md",
+            ".changeset/fast-donkeys-pay.md",
+            ".changeset/fast-penguins-matter.md",
+            ".changeset/fast-toes-act.md",
+            ".changeset/fast-weeks-clean.md",
+            ".changeset/few-badgers-guess.md",
+            ".changeset/few-cheetahs-taste.md",
+            ".changeset/few-clouds-shop.md",
+            ".changeset/few-mugs-fail.md",
+            ".changeset/few-teachers-know.md",
+            ".changeset/few-zoos-own.md",
+            ".changeset/fifty-masks-give.md",
+            ".changeset/fifty-rice-wait.md",
+            ".changeset/fifty-steaks-float.md",
+            ".changeset/five-tigers-search.md",
+            ".changeset/flat-feet-visit.md",
+            ".changeset/flat-ghosts-fly.md",
+            ".changeset/flat-melons-protect.md",
+            ".changeset/flat-olives-live.md",
+            ".changeset/fluffy-colts-grin.md",
+            ".changeset/popular-apes-bathe.md",
+            ".changeset/popular-cameras-tie.md",
+            ".changeset/popular-cups-bathe.md",
+            ".changeset/popular-feet-rule.md",
+            ".changeset/popular-games-hug.md",
+            ".changeset/popular-ligers-perform.md",
+            ".changeset/popular-mangos-rest.md",
+            ".changeset/popular-roses-teach.md",
+            ".changeset/popular-walls-hunt.md",
+            ".changeset/pre.json",
+            ".changeset/pretty-ties-help.md",
+            ".changeset/proud-pets-hang.md",
+            ".changeset/proud-queens-sniff.md",
+            ".changeset/purple-dragons-peel.md",
+            ".changeset/quiet-apricots-dream.md",
+            ".changeset/quiet-berries-end.md",
+            ".changeset/quiet-berries-explode.md",
+            ".changeset/quiet-camels-mate.md",
+            ".changeset/quiet-cobras-smile.md",
+            ".changeset/quiet-crabs-nail.md",
+            ".changeset/quiet-timers-speak.md",
+            ".changeset/rare-insects-tell.md",
+            ".changeset/rare-mirrors-act.md",
+            ".changeset/rare-pears-whisper.md",
+            ".changeset/rare-worms-hunt.md",
+            ".changeset/real-guests-do.md",
+            ".changeset/real-items-suffer.md",
+            ".changeset/real-pandas-brush.md",
+            ".changeset/red-cycles-pretend.md",
+            ".changeset/red-doors-own.md",
+            ".changeset/red-feet-worry.md",
+            ".changeset/red-poets-study.md",
+            ".changeset/red-pots-pretend.md",
+            ".changeset/rich-cobras-exist.md",
+            ".changeset/rich-garlics-laugh.md",
+            ".changeset/rich-olives-yell.md",
+            ".changeset/rich-plums-thank.md",
+            ".changeset/rich-sheep-burn.md",
+            ".changeset/rich-tables-sing.md",
+            ".changeset/rich-taxis-hear.md",
+            ".changeset/rich-waves-mix.md",
+            ".changeset/rotten-bags-type.md",
+            ".changeset/rotten-buckets-develop.md",
+            ".changeset/rotten-experts-relax.md",
+            ".changeset/rotten-poems-applaud.md",
+            ".changeset/rotten-rules-invite.md",
+            ".changeset/rude-ghosts-tickle.md",
+            ".changeset/selfish-dragons-knock.md",
+            ".changeset/selfish-panthers-add.md",
+            ".changeset/selfish-socks-smile.md",
+            ".changeset/selfish-spies-help.md",
+            ".changeset/selfish-tools-hide.md",
+            ".changeset/serious-bobcats-carry.md",
+            ".changeset/serious-crabs-punch.md",
+            ".changeset/serious-goats-tap.md",
+            ".changeset/serious-gorillas-eat.md",
+            ".changeset/serious-kids-deliver.md",
+            ".changeset/serious-needles-joke.md",
+            ".changeset/serious-poems-brake.md",
+            ".changeset/serious-socks-cover.md",
+            ".changeset/serious-zebras-scream.md",
+            ".changeset/seven-bees-tell.md",
+            ".changeset/seven-deers-jam.md",
+            ".changeset/seven-garlics-serve.md",
+            ".changeset/seven-hornets-smile.md",
+            ".changeset/seven-jobs-sniff.md",
+            ".changeset/seven-masks-end.md",
+            ".changeset/seven-ravens-check.md",
+            ".changeset/shaggy-cameras-live.md",
+            ".changeset/shaggy-comics-jog.md",
+            ".changeset/sharp-gorillas-impress.md",
+            ".changeset/sharp-kids-happen.md",
+            ".changeset/sharp-tomatoes-learn.md",
+            ".changeset/shiny-baboons-play.md",
+            ".changeset/shiny-kangaroos-move.md",
+            ".changeset/shiny-mayflies-clean.md",
+            ".changeset/shiny-melons-love.md",
+            ".changeset/shiny-months-tease.md",
+            ".changeset/shiny-pillows-relax.md",
+            ".changeset/shiny-rats-heal.md",
+            ".changeset/shiny-shrimps-march.md",
+            ".changeset/shiny-starfishes-cross.md",
+            ".changeset/short-buses-camp.md",
+            ".changeset/short-countries-rush.md",
+            ".changeset/shy-fishes-drive.md",
+            ".changeset/shy-scissors-smile.md",
+            ".changeset/silent-apes-report.md",
+            ".changeset/silent-hats-stare.md",
+            ".changeset/silent-rabbits-join.md",
+            ".changeset/silly-ducks-mix.md",
+            ".changeset/silly-laws-happen.md",
+            ".changeset/silly-lies-film.md",
+            ".changeset/silly-ways-wash.md",
+            ".changeset/silver-points-approve.md",
+            ".changeset/silver-sheep-knock.md",
+            ".changeset/six-bears-trade.md",
+            ".changeset/six-boats-shave.md",
+            ".changeset/six-chicken-kneel.md",
+            ".changeset/six-gorillas-obey.md",
+            ".changeset/sixty-items-crash.md",
+            ".changeset/sixty-numbers-hope.md",
+            ".changeset/sixty-pandas-rush.md",
+            ".changeset/sixty-plants-cover.md",
+            ".changeset/sleepy-cats-eat.md",
+            ".changeset/sleepy-dogs-sit.md",
+            ".changeset/slimy-clouds-talk.md",
+            ".changeset/slimy-hairs-impress.md",
+            ".changeset/slimy-laws-explode.md",
+            ".changeset/slimy-onions-approve.md",
+            ".changeset/slimy-walls-draw.md",
+            ".changeset/slow-beds-shave.md",
+            ".changeset/slow-chefs-dream.md",
+            ".changeset/slow-kids-sparkle.md",
+            ".changeset/slow-ligers-enjoy.md",
+            ".changeset/slow-plums-chew.md",
+            ".changeset/slow-wombats-reply.md",
+            ".changeset/small-apples-eat.md",
+            ".changeset/small-chefs-sing.md",
+            ".changeset/small-owls-remain.md",
+            ".changeset/small-papayas-laugh.md",
+            ".changeset/small-sheep-type.md",
+            ".changeset/small-spiders-fail.md",
+            ".changeset/smart-cherries-leave.md",
+            ".changeset/smart-fans-crash.md",
+            ".changeset/smart-grapes-mate.md",
+            ".changeset/smart-parents-swim.md",
+            ".changeset/smart-spiders-fetch.md",
+            ".changeset/smart-turkeys-tell.md",
+            ".changeset/smart-zebras-pay.md",
+            ".changeset/smart-zoos-vanish.md",
+            ".changeset/smooth-kids-protect.md",
+            ".changeset/smooth-pens-protect.md",
+            ".changeset/smooth-rings-rush.md",
+            ".changeset/soft-clocks-remember.md",
+            ".changeset/soft-geese-learn.md",
+            ".changeset/soft-months-grab.md",
+            ".changeset/soft-tigers-wink.md",
+            ".changeset/sour-bags-fail.md",
+            ".changeset/sour-forks-stare.md",
+            ".changeset/sour-geese-listen.md",
+            ".changeset/sour-jeans-collect.md",
+            ".changeset/sour-rules-march.md",
+            ".changeset/sour-tomatoes-knock.md",
+            ".changeset/sour-weeks-fix.md",
+            ".changeset/spicy-jeans-deliver.md",
+            ".changeset/spicy-peas-vanish.md",
+            ".changeset/spicy-plums-admire.md",
+            ".changeset/spotty-crabs-give.md",
+            ".changeset/spotty-houses-search.md",
+            ".changeset/spotty-pens-agree.md",
+            ".changeset/spotty-rocks-destroy.md",
+            ".changeset/spotty-shrimps-hug.md",
+            ".changeset/spotty-spiders-compare.md",
+            ".changeset/spotty-turkeys-sparkle.md",
+            ".changeset/stale-books-perform.md",
+            ".changeset/stale-comics-look.md",
+            ".changeset/stale-fans-rest.md",
+            ".changeset/stale-jeans-refuse.md",
+            ".changeset/stale-nails-listen.md",
+            ".changeset/strange-apricots-happen.md",
+            ".changeset/strange-roses-brake.md",
+            ".changeset/strong-apricots-destroy.md",
+            ".changeset/strong-gifts-smoke.md",
+            ".changeset/strong-lemons-provide.md",
+            ".changeset/strong-pans-doubt.md",
+            ".changeset/stupid-parents-crash.md",
+            ".changeset/sweet-bottles-check.md",
+            ".changeset/sweet-mangos-beg.md",
+            ".changeset/sweet-pens-sniff.md",
+            ".changeset/swift-donkeys-perform.md",
+            ".changeset/swift-fans-stare.md",
+            ".changeset/swift-feet-juggle.md",
+            ".changeset/swift-knives-tie.md",
+            ".changeset/swift-poets-carry.md",
+            ".changeset/swift-rats-sing.md",
+            ".changeset/swift-ravens-hunt.md",
+            ".changeset/swift-seahorses-deliver.md",
+            ".changeset/tall-books-grin.md",
+            ".changeset/tall-dragons-switch.md",
+            ".changeset/tall-garlics-try.md",
+            ".changeset/tall-mugs-buy.md",
+            ".changeset/tall-shrimps-worry.md",
+            ".changeset/tall-tigers-wait.md",
+            ".changeset/tame-cycles-kneel.md",
+            ".changeset/tame-dots-battle.md",
+            ".changeset/tame-goats-bow.md",
+            ".changeset/tame-spies-drum.md",
+            ".changeset/tasty-cheetahs-appear.md",
+            ".changeset/tasty-numbers-perform.md",
+            ".changeset/tasty-steaks-smile.md",
+            ".changeset/ten-eels-move.md",
+            ".changeset/ten-foxes-repeat.md",
+            ".changeset/ten-geese-share.md",
+            ".changeset/ten-jokes-divide.md",
+            ".changeset/ten-peaches-sleep.md",
+            ".changeset/ten-singers-cough.md",
+            ".changeset/ten-teachers-travel.md",
+            ".changeset/ten-ties-repair.md",
+            ".changeset/ten-worms-reflect.md",
+            ".changeset/tender-lemons-judge.md",
+            ".changeset/tender-rocks-walk.md",
+            ".changeset/thick-cycles-rule.md",
+            ".changeset/thick-pans-tell.md",
+            ".changeset/thick-shirts-deliver.md",
+            ".changeset/thick-swans-type.md",
+            ".changeset/thin-colts-yawn.md",
+            ".changeset/thin-foxes-lick.md",
+            ".changeset/thin-spoons-float.md",
+            ".changeset/thin-years-rhyme.md",
+            ".changeset/thirty-dogs-whisper.md",
+            ".changeset/thirty-flies-push.md",
+            ".changeset/thirty-flowers-sit.md",
+            ".changeset/thirty-ghosts-fix.md",
+            ".changeset/thirty-impalas-repair.md",
+            ".changeset/thirty-pears-hug.md",
+            ".changeset/thirty-wombats-relax.md",
+            ".changeset/three-buses-sleep.md",
+            ".changeset/three-camels-sell.md",
+            ".changeset/three-foxes-relax.md",
+            ".changeset/three-icons-trade.md",
+            ".changeset/three-lions-visit.md",
+            ".changeset/three-papayas-buy.md",
+            ".changeset/three-rice-tie.md",
+            ".changeset/three-suits-grin.md",
+            ".changeset/tidy-buses-whisper.md",
+            ".changeset/tidy-chefs-taste.md",
+            ".changeset/tidy-deers-hope.md",
+            ".changeset/tidy-fans-relax.md",
+            ".changeset/tidy-lizards-happen.md",
+            ".changeset/tidy-starfishes-allow.md",
+            ".changeset/tiny-kings-whisper.md",
+            ".changeset/tiny-meals-deliver.md",
+            ".changeset/tiny-moose-kiss.md",
+            ".changeset/tiny-taxis-whisper.md",
+            ".changeset/tough-buckets-thank.md",
+            ".changeset/tough-radios-punch.md",
+            ".changeset/tough-tomatoes-explain.md",
+            ".changeset/tricky-avocados-play.md",
+            ".changeset/tricky-ears-shout.md",
+            ".changeset/tricky-laws-bathe.md",
+            ".changeset/twelve-beans-drive.md",
+            ".changeset/twelve-cows-learn.md",
+            ".changeset/twelve-dragons-join.md",
+            ".changeset/twelve-onions-juggle.md",
+            ".changeset/twelve-worms-jog.md",
+            ".changeset/twenty-gifts-develop.md",
+            ".changeset/two-brooms-fail.md",
+            ".changeset/two-candles-move.md",
+            ".changeset/two-dogs-accept.md",
+            ".changeset/two-dragons-yell.md",
+            ".changeset/two-falcons-buy.md",
+            ".changeset/unlucky-boxes-obey.md",
+            ".changeset/unlucky-steaks-warn.md",
+            ".changeset/unlucky-trees-lick.md",
+            ".changeset/violet-mails-trade.md",
+            ".changeset/violet-mugs-behave.md",
+            ".changeset/violet-pigs-jam.md",
+            ".changeset/warm-cherries-shake.md",
+            ".changeset/warm-waves-reply.md",
+            ".changeset/weak-drinks-speak.md",
+            ".changeset/weak-frogs-bow.md",
+            ".changeset/weak-terms-destroy.md",
+            ".changeset/wet-bats-exercise.md",
+            ".changeset/wet-games-fly.md",
+            ".changeset/wet-pears-remain.md",
+            ".changeset/wet-wombats-repeat.md",
+            ".changeset/wicked-bikes-matter.md",
+            ".changeset/wicked-carrots-explain.md",
+            ".changeset/wicked-clouds-exercise.md",
+            ".changeset/wicked-doors-train.md",
+            ".changeset/wicked-emus-drive.md",
+            ".changeset/wicked-hairs-cheer.md",
+            ".changeset/wicked-wasps-allow.md",
+            ".changeset/wicked-ways-reply.md",
+            ".changeset/wild-cows-chew.md",
+            ".changeset/wild-foxes-wonder.md",
+            ".changeset/wild-moose-compare.md",
+            ".changeset/wise-apples-care.md",
+            ".changeset/wise-dancers-hang.md",
+            ".changeset/wise-dodos-tell.md",
+            ".changeset/wise-donkeys-marry.md",
+            ".changeset/wise-jobs-admire.md",
+            ".changeset/wise-kids-wash.md",
+            ".changeset/wise-radios-exercise.md",
+            ".changeset/wise-ties-clap.md",
+            ".changeset/witty-bikes-shave.md",
+            ".changeset/witty-camels-warn.md",
+            ".changeset/witty-hornets-think.md",
+            ".changeset/witty-phones-retire.md",
+            ".changeset/witty-readers-provide.md",
+            ".changeset/witty-sloths-impress.md",
+            ".changeset/witty-steaks-dream.md",
+            ".changeset/witty-tomatoes-care.md",
+            ".changeset/witty-years-crash.md",
+            ".changeset/yellow-bananas-rhyme.md",
+            ".changeset/yellow-pugs-raise.md",
+            ".changeset/yellow-rockets-sit.md",
+            ".changeset/yellow-taxis-double.md",
+            ".changeset/yellow-trees-juggle.md",
+            ".changeset/young-ads-roll.md",
+            ".changeset/young-masks-refuse.md"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            ".changeset/dry-fans-march.md",
+            ".changeset/mean-numbers-cry.md",
+            ".changeset/serious-kids-deliver.md",
+            ".changeset/small-apples-eat.md",
+            ".changeset/sweet-pens-sniff.md",
+            ".changeset/thirty-pears-hug.md"
+          ],
+          "spans": {
+            ".changeset/dry-fans-march.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/mean-numbers-cry.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/serious-kids-deliver.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/small-apples-eat.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/sweet-pens-sniff.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            ".changeset/thirty-pears-hug.md": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/global-block/_config.js",
+            "packages/svelte/tests/css/samples/global-block/expected.css",
+            "packages/svelte/tests/css/samples/global-block/input.svelte",
+            "packages/svelte/tests/css/samples/global-keyframes-with-no-elements/expected.css",
+            "packages/svelte/tests/css/samples/global-keyframes-with-no-elements/input.svelte",
+            "packages/svelte/tests/css/samples/global-keyframes/expected.css",
+            "packages/svelte/tests/css/samples/global-keyframes/input.svelte",
+            "packages/svelte/tests/css/samples/global-nested-block/_config.js",
+            "packages/svelte/tests/css/samples/global-nested-block/expected.css",
+            "packages/svelte/tests/css/samples/global-nested-block/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-child-combinator-2/_config.js",
+            "packages/svelte/tests/css/samples/global-with-child-combinator-2/expected.css",
+            "packages/svelte/tests/css/samples/global-with-child-combinator-2/expected.html",
+            "packages/svelte/tests/css/samples/global-with-child-combinator-2/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-child-combinator/_config.js",
+            "packages/svelte/tests/css/samples/global-with-child-combinator/expected.css",
+            "packages/svelte/tests/css/samples/global-with-child-combinator/expected.html",
+            "packages/svelte/tests/css/samples/global-with-child-combinator/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-class/_config.js",
+            "packages/svelte/tests/css/samples/global-with-class/expected.css",
+            "packages/svelte/tests/css/samples/global-with-class/expected.html",
+            "packages/svelte/tests/css/samples/global-with-class/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-data-attribute/expected.css",
+            "packages/svelte/tests/css/samples/global-with-data-attribute/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-nesting/_config.js",
+            "packages/svelte/tests/css/samples/global-with-nesting/expected.css",
+            "packages/svelte/tests/css/samples/global-with-nesting/expected.html",
+            "packages/svelte/tests/css/samples/global-with-nesting/input.svelte",
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/_config.js",
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/expected.css",
+            "packages/svelte/tests/css/samples/global-with-unused-descendant/input.svelte",
+            "packages/svelte/tests/css/samples/global/expected.css",
+            "packages/svelte/tests/css/samples/global/input.svelte"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/svelte/CHANGELOG.md"
+          ],
+          "spans": {
+            "packages/svelte/CHANGELOG.md": [
+              {
+                "start": 131,
+                "end": 131
+              },
+              {
+                "start": 903,
+                "end": 903
+              },
+              {
+                "start": 953,
+                "end": 953
+              },
+              {
+                "start": 1653,
+                "end": 1653
+              },
+              {
+                "start": 1675,
+                "end": 1675
+              },
+              {
+                "start": 1835,
+                "end": 1835
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js": [
+              {
+                "start": 296,
+                "end": 360
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-analyze.js"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/global-with-class/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/global-with-class/input.svelte": [
+              {
+                "start": 1,
+                "end": 14
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/global-block/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/global-block/input.svelte": [
+              {
+                "start": 1,
+                "end": 21
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/global-block/expected.css"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/global-block/expected.css": [
+              {
+                "start": 1,
+                "end": 17
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/global-with-class/expected.css"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/global-with-class/expected.css": [
+              {
+                "start": 1,
+                "end": 9
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/css/samples/global-with-nesting/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/css/samples/global-with-nesting/input.svelte": [
+              {
+                "start": 1,
+                "end": 14
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/CHANGELOG.md"
+          ],
+          "spans": {
+            "packages/svelte/CHANGELOG.md": [
+              {
+                "start": 1,
+                "end": 140
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/validator/samples/css-invalid-combinator-selector-1/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-combinator-selector-1/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-combinator-selector-2/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-combinator-selector-2/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-combinator-selector-3/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-combinator-selector-3/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-combinator-selector-4/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-combinator-selector-4/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-2/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-3/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-3/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-4/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-4/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-5/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-5/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-6/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement-6/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-placement/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-2/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-2/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-3/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-3/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-4/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-4/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-5/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-5/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-6/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-6/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-list/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector-list/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-global-selector/input.svelte",
+            "packages/svelte/tests/validator/samples/css-invalid-type-selector-placement/errors.json",
+            "packages/svelte/tests/validator/samples/css-invalid-type-selector-placement/input.svelte",
+            "packages/svelte/tests/validator/samples/css-mismatched-quotes/_config.js",
+            "packages/svelte/tests/validator/samples/css-mismatched-quotes/errors.json",
+            "packages/svelte/tests/validator/samples/css-mismatched-quotes/input.svelte"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/main.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/main.svelte": [
+              {
+                "start": 1,
+                "end": 8
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/_config.js"
+          ],
+          "spans": {
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-invalid-selector/_config.js": [
+              {
+                "start": 1,
+                "end": 10
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-modifier/main.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/compiler-errors/samples/css-global-block-modifier/main.svelte": [
+              {
+                "start": 1,
+                "end": 3
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/3-transform/css/index.js": [
+              {
+                "start": 220,
+                "end": 220
+              },
+              {
+                "start": 228,
+                "end": 228
+              },
+              {
+                "start": 247,
+                "end": 247
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-warn.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/css/css-warn.js": [
+              {
+                "start": 1,
+                "end": 42
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/1-parse/read/style.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/1-parse/read/style.js": [
+              {
+                "start": 300,
+                "end": 340
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/1-parse/read/style.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/1-parse/read/style.js": [
+              {
+                "start": 340,
+                "end": 420
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            ".changeset/afraid-dogs-matter.md",
+            ".changeset/afraid-geckos-dance.md",
+            ".changeset/afraid-kids-hide.md",
+            ".changeset/afraid-moose-matter.md",
+            ".changeset/afraid-worms-drum.md",
+            ".changeset/angry-birds-fly.md",
+            ".changeset/angry-books-jam.md",
+            ".changeset/angry-plums-punch.md",
+            ".changeset/angry-wasps-help.md",
+            ".changeset/beige-cobras-smoke.md",
+            ".changeset/beige-flies-wash.md",
+            ".changeset/beige-gifts-appear.md",
+            ".changeset/beige-mirrors-listen.md",
+            ".changeset/beige-rabbits-shave.md",
+            ".changeset/beige-seas-share.md",
+            ".changeset/big-cars-serve.md",
+            ".changeset/big-eggs-flash.md",
+            ".changeset/big-eyes-carry.md",
+            ".changeset/big-geese-act.md",
+            ".changeset/big-moons-occur.md",
+            ".changeset/blue-ants-raise.md",
+            ".changeset/blue-lemons-wait.md",
+            ".changeset/blue-rules-juggle.md",
+            ".changeset/blue-timers-film.md",
+            ".changeset/blue-waves-sneeze.md",
+            ".changeset/brave-carrots-draw.md",
+            ".changeset/brave-gorillas-end.md",
+            ".changeset/brave-gorillas-fold.md",
+            ".changeset/brave-pigs-obey.md",
+            ".changeset/brave-points-sleep.md",
+            ".changeset/brave-shrimps-kiss.md",
+            ".changeset/brave-walls-destroy.md",
+            ".changeset/brave-walls-flow.md",
+            ".changeset/breezy-carrots-flash.md",
+            ".changeset/breezy-rules-beg.md",
+            ".changeset/breezy-waves-camp.md",
+            ".changeset/bright-berries-smell.md",
+            ".changeset/bright-falcons-float.md",
+            ".changeset/bright-needles-pretend.md",
+            ".changeset/bright-peas-juggle.md",
+            ".changeset/bright-snakes-sing.md",
+            ".changeset/brown-geckos-fry.md",
+            ".changeset/brown-houses-obey.md",
+            ".changeset/brown-months-fry.md",
+            ".changeset/brown-spoons-boil.md",
+            ".changeset/calm-buses-clap.md",
+            ".changeset/calm-pandas-vanish.md",
+            ".changeset/calm-ravens-sneeze.md",
+            ".changeset/chatty-beans-divide.md",
+            ".changeset/chatty-cups-drop.md",
+            ".changeset/chatty-ghosts-unite.md",
+            ".changeset/chatty-sloths-allow.md",
+            ".changeset/chatty-taxis-juggle.md",
+            ".changeset/chilled-pumas-invite.md",
+            ".changeset/chilled-seas-jog.md",
+            ".changeset/chilly-dolphins-lick.md",
+            ".changeset/chilly-laws-juggle.md",
+            ".changeset/chilly-pans-raise.md",
+            ".changeset/chilly-rocks-hug.md",
+            ".changeset/chilly-snakes-scream.md",
+            ".changeset/clean-cats-wave.md",
+            ".changeset/clean-eels-beg.md",
+            ".changeset/clean-melons-wash.md",
+            ".changeset/clever-chefs-relate.md",
+            ".changeset/clever-maps-travel.md",
+            ".changeset/clever-rockets-burn.md",
+            ".changeset/clever-sloths-push.md",
+            ".changeset/clever-stingrays-shout.md",
+            ".changeset/clever-toys-laugh.md",
+            ".changeset/cold-beans-tease.md",
+            ".changeset/cold-birds-own.md",
+            ".changeset/cold-cheetahs-judge.md",
+            ".changeset/cold-lamps-accept.md",
+            ".changeset/cold-masks-learn.md",
+            ".changeset/cold-shrimps-hug.md",
+            ".changeset/cold-teachers-turn.md",
+            ".changeset/config.json",
+            ".changeset/cool-actors-tan.md",
+            ".changeset/cool-ants-leave.md",
+            ".changeset/cool-comics-marry.md",
+            ".changeset/cool-jobs-scream.md",
+            ".changeset/cool-peas-lick.md",
+            ".changeset/cool-poems-watch.md",
+            ".changeset/cool-rabbits-tickle.md",
+            ".changeset/cool-roses-trade.md",
+            ".changeset/cuddly-pianos-drop.md",
+            ".changeset/cuddly-points-tickle.md",
+            ".changeset/curly-cooks-cheer.md",
+            ".changeset/curly-lizards-dream.md",
+            ".changeset/curvy-buses-laugh.md",
+            ".changeset/curvy-cups-cough.md",
+            ".changeset/curvy-flies-exercise.md",
+            ".changeset/curvy-ties-shout.md",
+            ".changeset/cyan-colts-raise.md",
+            ".changeset/cyan-ducks-teach.md",
+            ".changeset/cyan-flowers-destroy.md",
+            ".changeset/cyan-news-grow.md",
+            ".changeset/cyan-spies-grin.md",
+            ".changeset/cyan-squids-drive.md",
+            ".changeset/cyan-toes-share.md",
+            ".changeset/dirty-bats-punch.md",
+            ".changeset/dirty-donuts-yell.md",
+            ".changeset/dirty-eyes-itch.md",
+            ".changeset/dirty-garlics-design.md",
+            ".changeset/dirty-tips-add.md",
+            ".changeset/dry-clocks-grow.md",
+            ".changeset/dry-eggs-play.md",
+            ".changeset/dry-eggs-retire.md",
+            ".changeset/dry-fans-march.md",
+            ".changeset/dry-ghosts-prove.md",
+            ".changeset/dry-parrots-bathe.md",
+            ".changeset/dry-pillows-exist.md",
+            ".changeset/dull-coins-vanish.md",
+            ".changeset/dull-donkeys-smell.md",
+            ".changeset/dull-mangos-wave.md",
+            ".changeset/dull-pens-pay.md",
+            ".changeset/dull-pots-add.md",
+            ".changeset/dull-roses-relate.md",
+            ".changeset/dull-worms-relax.md",
+            ".changeset/early-ads-tie.md",
+            ".changeset/early-months-whisper.md",
+            ".changeset/eight-carrots-hunt.md",
+            ".changeset/eight-cougars-watch.md",
+            ".changeset/eight-hornets-punch.md",
+            ".changeset/eight-jeans-compare.md",
+            ".changeset/eight-pianos-raise.md",
+            ".changeset/eight-steaks-shout.md",
+            ".changeset/eighty-bikes-camp.md",
+            ".changeset/eighty-days-cheat.md",
+            ".changeset/eighty-lizards-notice.md",
+            ".changeset/eleven-avocados-walk.md",
+            ".changeset/eleven-beers-yell.md",
+            ".changeset/eleven-cows-judge.md",
+            ".changeset/eleven-cycles-applaud.md",
+            ".changeset/eleven-donuts-sit.md",
+            ".changeset/eleven-hounds-pump.md",
+            ".changeset/empty-bags-heal.md",
+            ".changeset/empty-bulldogs-exercise.md",
+            ".changeset/empty-coins-build.md",
+            ".changeset/empty-crabs-think.md",
+            ".changeset/empty-files-prove.md",
+            ".changeset/empty-flowers-change.md",
+            ".changeset/empty-geckos-pretend.md",
+            ".changeset/empty-horses-tell.md",
+            ".changeset/empty-tools-share.md",
+            ".changeset/fair-bags-smoke.md",
+            ".changeset/fair-beers-help.md",
+            ".changeset/fair-crabs-check.md",
+            ".changeset/fair-pianos-talk.md",
+            ".changeset/fair-spies-repeat.md",
+            ".changeset/famous-chairs-notice.md",
+            ".changeset/famous-falcons-melt.md",
+            ".changeset/famous-kiwis-thank.md",
+            ".changeset/famous-knives-sneeze.md",
+            ".changeset/famous-pants-pay.md",
+            ".changeset/fast-donkeys-pay.md",
+            ".changeset/fast-penguins-matter.md",
+            ".changeset/fast-toes-act.md",
+            ".changeset/fast-weeks-clean.md",
+            ".changeset/few-badgers-guess.md",
+            ".changeset/few-cheetahs-taste.md",
+            ".changeset/few-clouds-shop.md",
+            ".changeset/few-mugs-fail.md",
+            ".changeset/few-teachers-know.md",
+            ".changeset/few-zoos-own.md",
+            ".changeset/fifty-masks-give.md",
+            ".changeset/fifty-rice-wait.md",
+            ".changeset/fifty-steaks-float.md",
+            ".changeset/five-tigers-search.md",
+            ".changeset/flat-feet-visit.md",
+            ".changeset/flat-ghosts-fly.md",
+            ".changeset/flat-melons-protect.md",
+            ".changeset/flat-olives-live.md",
+            ".changeset/fluffy-colts-grin.md",
+            ".changeset/fluffy-dolls-share.md",
+            ".editorconfig",
+            ".gitattributes",
+            ".github/FUNDING.yml",
+            ".github/ISSUE_TEMPLATE.md",
+            ".github/ISSUE_TEMPLATE/bug_report.yml",
+            ".github/ISSUE_TEMPLATE/config.yml",
+            ".github/ISSUE_TEMPLATE/feature_request.yml",
+            ".github/PULL_REQUEST_TEMPLATE.md",
+            ".github/workflows/ci.yml",
+            ".github/workflows/ecosystem-ci-trigger.yml",
+            ".github/workflows/release.yml",
+            ".gitignore",
+            ".npmrc",
+            ".prettierignore",
+            ".prettierrc",
+            ".vscode/launch.json",
+            ".vscode/settings.json",
+            "CODE_OF_CONDUCT.md",
+            "CONTRIBUTING.md",
+            "FUNDING.json",
+            "LICENSE.md",
+            "README.md",
+            "benchmarking/benchmarks.js",
+            "benchmarking/benchmarks/kairo/kairo_avoidable.js",
+            "benchmarking/benchmarks/kairo/kairo_broad.js",
+            "benchmarking/benchmarks/kairo/kairo_deep.js",
+            "benchmarking/benchmarks/kairo/kairo_diamond.js",
+            "benchmarking/benchmarks/kairo/kairo_mux.js",
+            "benchmarking/benchmarks/kairo/kairo_repeated.js",
+            "benchmarking/benchmarks/kairo/kairo_triangle.js",
+            "benchmarking/benchmarks/kairo/kairo_unstable.js",
+            "benchmarking/benchmarks/kairo/util.js",
+            "benchmarking/benchmarks/mol_bench.js",
+            "benchmarking/benchmarks/sbench.js",
+            "benchmarking/compare/index.js",
+            "benchmarking/compare/runner.js",
+            "benchmarking/run.js",
+            "benchmarking/tsconfig.json",
+            "benchmarking/utils.js",
+            "documentation/blog/2016-11-26-frameworks-without-the-framework.md",
+            "documentation/blog/2017-08-07-the-easiest-way-to-get-started.md",
+            "documentation/blog/2017-09-06-the-zen-of-just-writing-css.md",
+            "documentation/blog/2017-12-31-sapper-towards-the-ideal-web-app-framework.md",
+            "documentation/blog/2018-04-18-version-2.md",
+            "documentation/blog/2018-12-26-svelte-css-in-js.md",
+            "documentation/blog/2018-12-27-virtual-dom-is-pure-overhead.md",
+            "documentation/blog/2019-01-31-svelte-on-the-changelog.md",
+            "documentation/blog/2019-04-15-setting-up-your-editor.md",
+            "documentation/blog/2019-04-16-svelte-for-new-developers.md",
+            "documentation/blog/2019-04-20-write-less-code.md",
+            "documentation/blog/2019-04-22-svelte-3-rethinking-reactivity.md",
+            "documentation/blog/2020-07-17-svelte-and-typescript.md",
+            "documentation/blog/2020-10-01-whats-new-in-svelte-october-2020.md",
+            "documentation/blog/2020-11-01-whats-new-in-svelte-november-2020.md",
+            "documentation/blog/2020-11-05-whats-the-deal-with-sveltekit.md",
+            "documentation/blog/2020-12-01-whats-new-in-svelte-december-2020.md",
+            "documentation/blog/2021-01-01-whats-new-in-svelte-january-2021.md",
+            "documentation/blog/2021-02-01-whats-new-in-svelte-february-2021.md",
+            "documentation/blog/2021-03-01-whats-new-in-svelte-march-2021.md",
+            "documentation/blog/2021-03-23-sveltekit-beta.md",
+            "documentation/blog/2021-04-01-whats-new-in-svelte-april-2021.md",
+            "documentation/blog/2021-05-01-whats-new-in-svelte-may-2021.md",
+            "documentation/blog/2021-06-01-whats-new-in-svelte-june-2021.md",
+            "documentation/blog/2021-07-01-whats-new-in-svelte-july-2021.md",
+            "documentation/blog/2021-08-01-whats-new-in-svelte-august-2021.md",
+            "documentation/blog/2021-09-01-whats-new-in-svelte-september-2021.md",
+            "documentation/blog/2021-10-01-whats-new-in-svelte-october-2021.md",
+            "documentation/blog/2021-11-01-whats-new-in-svelte-november-2021.md",
+            "documentation/blog/2021-12-01-whats-new-in-svelte-december-2021.md",
+            "documentation/blog/2022-01-01-whats-new-in-svelte-january-2022.md",
+            "documentation/blog/2022-01-13-accelerating-sveltes-development.md",
+            "documentation/blog/2022-02-01-whats-new-in-svelte-february-2022.md",
+            "documentation/blog/2022-03-01-whats-new-in-svelte-march-2022.md",
+            "documentation/blog/2022-04-01-whats-new-in-svelte-april-2022.md",
+            "documentation/blog/2022-05-01-whats-new-in-svelte-may-2022.md",
+            "documentation/blog/2022-06-01-whats-new-in-svelte-june-2022.md",
+            "documentation/blog/2022-07-01-whats-new-in-svelte-july-2022.md",
+            "documentation/blog/2022-08-01-whats-new-in-svelte-august-2022.md",
+            "documentation/blog/2022-09-01-whats-new-in-svelte-september-2022.md",
+            "documentation/blog/2022-10-01-whats-new-in-svelte-october-2022.md",
+            "documentation/blog/2022-11-01-whats-new-in-svelte-november-2022.md",
+            "documentation/blog/2022-12-01-whats-new-in-svelte-december-2022.md",
+            "documentation/blog/2022-12-14-announcing-sveltekit-1.0.md",
+            "documentation/blog/2023-01-01-whats-new-in-svelte-january-2023.md",
+            "documentation/blog/2023-02-01-whats-new-in-svelte-february-2023.md",
+            "documentation/blog/2023-02-21-streaming-snapshots-sveltekit.md",
+            "documentation/blog/2023-03-01-whats-new-in-svelte-march-2023.md",
+            "documentation/blog/2023-03-09-zero-config-type-safety.md",
+            "documentation/blog/2023-04-01-whats-new-in-svelte-april-2023.md",
+            "documentation/blog/2023-05-01-whats-new-in-svelte-may-2023.md",
+            "documentation/blog/2023-06-01-whats-new-in-svelte-june-2023.md",
+            "documentation/blog/2023-06-22-svelte-4.md",
+            "documentation/blog/2023-06-29-svelte-dev-overhaul.md",
+            "documentation/blog/2023-07-01-whats-new-in-svelte-july-2023.md",
+            "documentation/blog/2023-08-01-whats-new-in-svelte-august-2023.md",
+            "documentation/blog/2023-08-31-view-transitions.md",
+            "documentation/blog/2023-09-01-whats-new-in-svelte-september-2023.md",
+            "documentation/blog/2023-09-20-runes.md",
+            "documentation/blog/2023-10-01-hacktoberfest.md",
+            "documentation/blog/2023-10-01-whats-new-in-svelte-october-2023.md",
+            "documentation/blog/2023-11-01-whats-new-in-svelte-november-2023.md",
+            "documentation/docs/01-introduction/index.md",
+            "documentation/docs/02-template-syntax/01-component-fundamentals.md",
+            "documentation/docs/02-template-syntax/02-basic-markup.md",
+            "documentation/docs/02-template-syntax/03-control-flow.md",
+            "documentation/docs/02-template-syntax/04-snippets.md",
+            "documentation/docs/02-template-syntax/05-styles-and-classes.md",
+            "documentation/docs/02-template-syntax/06-transitions-and-animations.md",
+            "documentation/docs/02-template-syntax/07-actions.md",
+            "documentation/docs/02-template-syntax/08-bindings.md",
+            "documentation/docs/02-template-syntax/09-special-elements.md",
+            "documentation/docs/02-template-syntax/10-data-fetching.md",
+            "documentation/docs/02-template-syntax/index.md",
+            "documentation/docs/03-runes/01-state.md",
+            "documentation/docs/03-runes/02-side-effects.md",
+            "documentation/docs/03-runes/index.md",
+            "documentation/docs/05-misc/01-debugging.md",
+            "documentation/docs/05-misc/02-testing.md",
+            "documentation/docs/05-misc/03-typescript.md",
+            "documentation/docs/05-misc/04-custom-elements.md",
+            "documentation/docs/05-misc/05-reactivity-indepth.md",
+            "documentation/docs/05-misc/06-svelte-5-migration-guide.md",
+            "documentation/docs/05-misc/index.md",
+            "documentation/docs/98-reference/01-state.md",
+            "documentation/docs/98-reference/20-svelte.md",
+            "documentation/docs/98-reference/21-svelte-action.md",
+            "documentation/docs/98-reference/21-svelte-animate.md",
+            "documentation/docs/98-reference/21-svelte-compiler.md",
+            "documentation/docs/98-reference/21-svelte-easing.md",
+            "documentation/docs/98-reference/21-svelte-events.md",
+            "documentation/docs/98-reference/21-svelte-legacy.md",
+            "documentation/docs/98-reference/21-svelte-motion.md",
+            "documentation/docs/98-reference/21-svelte-reactivity.md",
+            "documentation/docs/98-reference/21-svelte-server.md",
+            "documentation/docs/98-reference/21-svelte-store.md",
+            "documentation/docs/98-reference/21-svelte-transition.md",
+            "documentation/docs/98-reference/index.md",
+            "documentation/docs/index.md",
+            "documentation/examples/21-miscellaneous/meta.json",
+            "documentation/examples/99-embeds/20181225-blog-svelte-css-in-js/App.svelte",
+            "documentation/examples/99-embeds/20181225-blog-svelte-css-in-js/Hero.svelte",
+            "documentation/examples/99-embeds/20181225-blog-svelte-css-in-js/meta.json",
+            "documentation/examples/99-embeds/20181225-blog-svelte-css-in-js/styles.js",
+            "documentation/examples/99-embeds/20190420-blog-write-less-code/App.svelte",
+            "documentation/examples/99-embeds/20190420-blog-write-less-code/meta.json",
+            "documentation/examples/99-embeds/meta.json",
+            "documentation/tutorial/19-next-steps/01-congratulations/text.md",
+            "documentation/tutorial/19-next-steps/meta.json",
+            "eslint.config.js",
+            "package.json",
+            "packages/svelte/tsconfig.generated.json",
+            "packages/svelte/tsconfig.json",
+            "packages/svelte/tsconfig.runtime.json",
+            "packages/svelte/types/index.d.ts",
+            "playgrounds/sandbox/.gitignore",
+            "playgrounds/sandbox/.prettierignore",
+            "playgrounds/sandbox/input/.gitkeep",
+            "playgrounds/sandbox/package.json",
+            "playgrounds/sandbox/run.js",
+            "playgrounds/sandbox/tsconfig.json",
+            "pnpm-lock.yaml",
+            "pnpm-workspace.yaml",
+            "sites/svelte-5-preview/static/favicon.png",
+            "sites/svelte-5-preview/svelte.config.js",
+            "sites/svelte-5-preview/vercel.json",
+            "sites/svelte-5-preview/vite.config.js",
+            "sites/svelte.dev/.env",
+            "sites/svelte.dev/.gitignore",
+            "sites/svelte.dev/.prettierignore",
+            "sites/svelte.dev/README.md",
+            "sites/svelte.dev/config.js",
+            "sites/svelte.dev/package.json",
+            "sites/svelte.dev/placeholder/index.html",
+            "sites/svelte.dev/static/robots.txt",
+            "sites/svelte.dev/static/svelte-logo-horizontal.svg",
+            "sites/svelte.dev/static/svelte-logo-mask.svg",
+            "sites/svelte.dev/static/svelte-logo-outline.svg",
+            "sites/svelte.dev/static/svelte-logo-vertical.svg",
+            "sites/svelte.dev/static/svelte-logo.svg",
+            "sites/svelte.dev/static/tutorial/dark-theme.css",
+            "sites/svelte.dev/static/tutorial/icons/email.svg",
+            "sites/svelte.dev/static/tutorial/icons/folder-open.svg",
+            "sites/svelte.dev/static/tutorial/icons/folder.svg",
+            "sites/svelte.dev/static/tutorial/icons/gif.svg",
+            "sites/svelte.dev/static/tutorial/icons/map-marker.svg",
+            "sites/svelte.dev/static/tutorial/icons/md.svg",
+            "sites/svelte.dev/static/tutorial/icons/xlsx.svg",
+            "sites/svelte.dev/static/tutorial/image.gif",
+            "sites/svelte.dev/static/tutorial/kitten.png",
+            "sites/svelte.dev/static/whos-using-svelte/1password.svg",
+            "sites/svelte.dev/static/whos-using-svelte/Schneider_Electric.svg",
+            "sites/svelte.dev/static/whos-using-svelte/alaskaairlines.svg",
+            "sites/svelte.dev/static/whos-using-svelte/avast.svg",
+            "sites/svelte.dev/static/whos-using-svelte/chess.svg",
+            "sites/svelte.dev/static/whos-using-svelte/fusioncharts.svg",
+            "sites/svelte.dev/static/whos-using-svelte/godaddy.svg",
+            "sites/svelte.dev/static/whos-using-svelte/ibm.svg",
+            "sites/svelte.dev/static/whos-using-svelte/les-echos.svg",
+            "sites/svelte.dev/static/whos-using-svelte/nyt.svg",
+            "sites/svelte.dev/static/whos-using-svelte/philips.svg",
+            "sites/svelte.dev/static/whos-using-svelte/rakuten.svg",
+            "sites/svelte.dev/static/whos-using-svelte/razorpay.svg",
+            "sites/svelte.dev/static/whos-using-svelte/square.svg",
+            "sites/svelte.dev/static/whos-using-svelte/transloadit.svg",
+            "sites/svelte.dev/svelte.config.js",
+            "sites/svelte.dev/tsconfig.json",
+            "sites/svelte.dev/vercel.json",
+            "sites/svelte.dev/vite.config.js",
+            "vitest.config.js"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            ".changeset/afraid-dogs-matter.md",
+            ".changeset/afraid-geckos-dance.md",
+            ".changeset/afraid-kids-hide.md",
+            ".changeset/afraid-moose-matter.md",
+            ".changeset/afraid-worms-drum.md",
+            ".changeset/angry-birds-fly.md",
+            ".changeset/angry-books-jam.md",
+            ".changeset/angry-plums-punch.md",
+            ".changeset/angry-wasps-help.md",
+            ".changeset/beige-cobras-smoke.md",
+            ".changeset/beige-flies-wash.md",
+            ".changeset/beige-gifts-appear.md",
+            ".changeset/beige-mirrors-listen.md",
+            ".changeset/beige-rabbits-shave.md",
+            ".changeset/beige-seas-share.md",
+            ".changeset/big-cars-serve.md",
+            ".changeset/big-eggs-flash.md",
+            ".changeset/big-eyes-carry.md",
+            ".changeset/big-geese-act.md",
+            ".changeset/big-moons-occur.md",
+            ".changeset/blue-ants-raise.md",
+            ".changeset/blue-lemons-wait.md",
+            ".changeset/blue-rules-juggle.md",
+            ".changeset/blue-timers-film.md",
+            ".changeset/blue-waves-sneeze.md",
+            ".changeset/brave-carrots-draw.md",
+            ".changeset/brave-gorillas-end.md",
+            ".changeset/brave-gorillas-fold.md",
+            ".changeset/brave-pigs-obey.md",
+            ".changeset/brave-points-sleep.md",
+            ".changeset/brave-shrimps-kiss.md",
+            ".changeset/brave-walls-destroy.md",
+            ".changeset/brave-walls-flow.md",
+            ".changeset/breezy-carrots-flash.md",
+            ".changeset/breezy-rules-beg.md",
+            ".changeset/breezy-waves-camp.md",
+            ".changeset/bright-berries-smell.md",
+            ".changeset/bright-falcons-float.md",
+            ".changeset/bright-needles-pretend.md",
+            ".changeset/bright-peas-juggle.md",
+            ".changeset/bright-snakes-sing.md",
+            ".changeset/brown-geckos-fry.md",
+            ".changeset/brown-houses-obey.md",
+            ".changeset/brown-months-fry.md",
+            ".changeset/brown-spoons-boil.md",
+            ".changeset/calm-buses-clap.md",
+            ".changeset/calm-pandas-vanish.md",
+            ".changeset/calm-ravens-sneeze.md",
+            ".changeset/chatty-beans-divide.md",
+            ".changeset/chatty-cups-drop.md",
+            ".changeset/chatty-ghosts-unite.md",
+            ".changeset/chatty-sloths-allow.md",
+            ".changeset/chatty-taxis-juggle.md",
+            ".changeset/chilled-pumas-invite.md",
+            ".changeset/chilled-seas-jog.md",
+            ".changeset/chilly-dolphins-lick.md",
+            ".changeset/chilly-laws-juggle.md",
+            ".changeset/chilly-pans-raise.md",
+            ".changeset/chilly-rocks-hug.md",
+            ".changeset/chilly-snakes-scream.md",
+            ".changeset/clean-cats-wave.md",
+            ".changeset/clean-eels-beg.md",
+            ".changeset/clean-melons-wash.md",
+            ".changeset/clever-chefs-relate.md",
+            ".changeset/clever-maps-travel.md",
+            ".changeset/clever-rockets-burn.md",
+            ".changeset/clever-sloths-push.md",
+            ".changeset/clever-stingrays-shout.md",
+            ".changeset/clever-toys-laugh.md",
+            ".changeset/cold-beans-tease.md",
+            ".changeset/cold-birds-own.md",
+            ".changeset/cold-cheetahs-judge.md",
+            ".changeset/cold-lamps-accept.md",
+            ".changeset/cold-masks-learn.md",
+            ".changeset/cold-shrimps-hug.md",
+            ".changeset/cold-teachers-turn.md",
+            ".changeset/cool-actors-tan.md",
+            ".changeset/cool-ants-leave.md",
+            ".changeset/cool-comics-marry.md",
+            ".changeset/cool-jobs-scream.md",
+            ".changeset/cool-peas-lick.md",
+            ".changeset/cool-poems-watch.md",
+            ".changeset/cool-rabbits-tickle.md",
+            ".changeset/cool-roses-trade.md",
+            ".changeset/cuddly-pianos-drop.md",
+            ".changeset/cuddly-points-tickle.md",
+            ".changeset/curly-cooks-cheer.md",
+            ".changeset/curly-lizards-dream.md",
+            ".changeset/curvy-buses-laugh.md",
+            ".changeset/curvy-cups-cough.md",
+            ".changeset/curvy-flies-exercise.md",
+            ".changeset/curvy-ties-shout.md",
+            ".changeset/cyan-colts-raise.md",
+            ".changeset/cyan-ducks-teach.md",
+            ".changeset/cyan-flowers-destroy.md",
+            ".changeset/cyan-news-grow.md",
+            ".changeset/cyan-spies-grin.md",
+            ".changeset/cyan-squids-drive.md",
+            ".changeset/cyan-toes-share.md",
+            ".changeset/dirty-bats-punch.md",
+            ".changeset/dirty-donuts-yell.md",
+            ".changeset/dirty-eyes-itch.md",
+            ".changeset/dirty-garlics-design.md",
+            ".changeset/dirty-tips-add.md",
+            ".changeset/dry-clocks-grow.md",
+            ".changeset/dry-eggs-play.md",
+            ".changeset/dry-eggs-retire.md",
+            ".changeset/dry-fans-march.md",
+            ".changeset/dry-ghosts-prove.md",
+            ".changeset/dry-parrots-bathe.md",
+            ".changeset/dry-pillows-exist.md",
+            ".changeset/dull-coins-vanish.md",
+            ".changeset/dull-donkeys-smell.md",
+            ".changeset/dull-mangos-wave.md",
+            ".changeset/dull-pens-pay.md",
+            ".changeset/dull-pots-add.md",
+            ".changeset/dull-roses-relate.md",
+            ".changeset/dull-worms-relax.md",
+            ".changeset/early-ads-tie.md",
+            ".changeset/early-months-whisper.md",
+            ".changeset/eight-carrots-hunt.md",
+            ".changeset/eight-cougars-watch.md",
+            ".changeset/eight-hornets-punch.md",
+            ".changeset/eight-jeans-compare.md",
+            ".changeset/eight-pianos-raise.md",
+            ".changeset/eight-steaks-shout.md",
+            ".changeset/eighty-bikes-camp.md",
+            ".changeset/eighty-days-cheat.md",
+            ".changeset/eighty-lizards-notice.md",
+            ".changeset/eleven-avocados-walk.md",
+            ".changeset/eleven-beers-yell.md",
+            ".changeset/eleven-cows-judge.md",
+            ".changeset/eleven-cycles-applaud.md",
+            ".changeset/eleven-donuts-sit.md",
+            ".changeset/eleven-hounds-pump.md",
+            ".changeset/empty-bags-heal.md",
+            ".changeset/empty-bulldogs-exercise.md",
+            ".changeset/empty-coins-build.md",
+            ".changeset/empty-crabs-think.md",
+            ".changeset/empty-files-prove.md",
+            ".changeset/empty-flowers-change.md",
+            ".changeset/empty-geckos-pretend.md",
+            ".changeset/empty-horses-tell.md",
+            ".changeset/empty-tools-share.md",
+            ".changeset/fair-bags-smoke.md",
+            ".changeset/fair-beers-help.md",
+            ".changeset/fair-crabs-check.md",
+            ".changeset/fair-pianos-talk.md",
+            ".changeset/fair-spies-repeat.md",
+            ".changeset/famous-chairs-notice.md",
+            ".changeset/famous-falcons-melt.md",
+            ".changeset/famous-kiwis-thank.md",
+            ".changeset/famous-knives-sneeze.md",
+            ".changeset/famous-pants-pay.md",
+            ".changeset/fast-donkeys-pay.md",
+            ".changeset/fast-penguins-matter.md",
+            ".changeset/fast-toes-act.md",
+            ".changeset/fast-weeks-clean.md",
+            ".changeset/few-badgers-guess.md",
+            ".changeset/few-cheetahs-taste.md",
+            ".changeset/few-clouds-shop.md",
+            ".changeset/few-mugs-fail.md",
+            ".changeset/few-teachers-know.md",
+            ".changeset/few-zoos-own.md",
+            ".changeset/fifty-masks-give.md",
+            ".changeset/fifty-rice-wait.md",
+            ".changeset/fifty-steaks-float.md",
+            ".changeset/five-tigers-search.md",
+            ".changeset/flat-feet-visit.md",
+            ".changeset/flat-ghosts-fly.md",
+            ".changeset/flat-melons-protect.md",
+            ".changeset/flat-olives-live.md",
+            ".changeset/fluffy-colts-grin.md",
+            ".changeset/fluffy-dolls-share.md",
+            ".changeset/fluffy-humans-worry.md",
+            ".changeset/fluffy-ravens-juggle.md",
+            ".changeset/forty-comics-invent.md",
+            ".changeset/forty-dogs-divide.md",
+            ".changeset/forty-dolls-wave.md",
+            ".changeset/forty-peaches-unite.md",
+            ".changeset/forty-suns-smile.md",
+            ".changeset/four-balloons-beam.md",
+            ".changeset/four-flies-hammer.md",
+            ".changeset/four-mice-hammer.md",
+            ".changeset/four-pugs-listen.md",
+            ".changeset/fresh-beds-wash.md",
+            ".changeset/fresh-dots-destroy.md",
+            ".changeset/fresh-impalas-bow.md",
+            ".changeset/fresh-walls-bathe.md",
+            ".changeset/fresh-weeks-trade.md",
+            ".changeset/fresh-wombats-learn.md",
+            ".changeset/fresh-zoos-burn.md",
+            ".changeset/friendly-candles-relate.md",
+            ".changeset/friendly-clouds-rhyme.md",
+            ".changeset/friendly-lies-camp.md",
+            ".changeset/funny-cooks-clean.md",
+            ".changeset/funny-dragons-double.md",
+            ".changeset/funny-ties-jump.md",
+            ".changeset/funny-trees-cry.md",
+            ".changeset/funny-wombats-argue.md",
+            ".changeset/fuzzy-bags-camp.md",
+            ".changeset/fuzzy-donuts-provide.md",
+            ".changeset/gentle-dolls-juggle.md",
+            ".changeset/gentle-eagles-walk.md",
+            ".changeset/gentle-sheep-hug.md",
+            ".changeset/gentle-spies-happen.md",
+            ".changeset/gentle-ties-fetch.md",
+            ".changeset/gentle-toys-chew.md",
+            ".changeset/gentle-trees-exercise.md",
+            ".changeset/gentle-wasps-pull.md",
+            ".changeset/giant-bananas-turn.md",
+            ".changeset/giant-jars-applaud.md",
+            ".changeset/giant-moons-own.md",
+            ".changeset/giant-planets-shake.md",
+            ".changeset/giant-plants-grin.md",
+            ".changeset/giant-roses-press.md",
+            ".changeset/gold-tools-nail.md",
+            ".changeset/good-buses-reply.md",
+            ".changeset/good-cars-visit.md",
+            ".changeset/good-pianos-jump.md",
+            ".changeset/good-plums-type.md",
+            ".changeset/good-rice-tap.md",
+            ".changeset/good-rivers-yawn.md",
+            ".changeset/good-roses-argue.md",
+            ".changeset/gorgeous-boxes-design.md",
+            ".changeset/gorgeous-hats-wonder.md",
+            ".changeset/gorgeous-monkeys-carry.md",
+            ".changeset/gorgeous-singers-rest.md",
+            ".changeset/great-fans-unite.md",
+            ".changeset/great-icons-retire.md",
+            ".changeset/great-plums-pretend.md",
+            ".changeset/green-eggs-approve.md",
+            ".changeset/green-fishes-lie.md",
+            ".changeset/green-hounds-play.md",
+            ".changeset/green-snails-tickle.md",
+            ".changeset/green-tigers-judge.md",
+            ".changeset/grumpy-avocados-fetch.md",
+            ".changeset/grumpy-insects-sleep.md",
+            ".changeset/grumpy-jars-sparkle.md",
+            ".changeset/happy-beds-scream.md",
+            ".changeset/happy-dogs-jump.md",
+            ".changeset/happy-lobsters-lick.md",
+            ".changeset/happy-moles-live.md",
+            ".changeset/happy-suits-film.md",
+            ".changeset/healthy-ants-film.md",
+            ".changeset/healthy-planes-vanish.md",
+            ".changeset/healthy-zebras-accept.md",
+            ".changeset/heavy-comics-move.md",
+            ".changeset/heavy-doors-applaud.md",
+            ".changeset/heavy-ducks-leave.md",
+            ".changeset/heavy-ears-rule.md",
+            ".changeset/heavy-feet-attend.md",
+            ".changeset/hip-balloons-begin.md",
+            ".changeset/hip-garlics-tap.md",
+            ".changeset/hip-months-breathe.md",
+            ".changeset/hip-pumpkins-boil.md",
+            ".changeset/honest-buses-add.md",
+            ".changeset/honest-dragons-turn.md",
+            ".changeset/honest-icons-change.md",
+            ".changeset/honest-nails-share.md",
+            ".changeset/honest-pans-kick.md",
+            ".changeset/hot-cooks-repair.md",
+            ".changeset/hot-jobs-tap.md",
+            ".changeset/hot-rivers-punch.md",
+            ".changeset/hot-sloths-clap.md",
+            ".changeset/hungry-boxes-relate.md",
+            ".changeset/hungry-dots-fry.md",
+            ".changeset/hungry-pants-push.md",
+            ".changeset/hungry-singers-share.md",
+            ".changeset/hungry-tips-unite.md",
+            ".changeset/hungry-trees-travel.md",
+            ".changeset/itchy-beans-melt.md",
+            ".changeset/itchy-beds-kneel.md",
+            ".changeset/itchy-bulldogs-tan.md",
+            ".changeset/itchy-eels-marry.md",
+            ".changeset/itchy-kings-deliver.md",
+            ".changeset/itchy-lemons-punch.md",
+            ".changeset/itchy-lions-wash.md",
+            ".changeset/itchy-panthers-shave.md",
+            ".changeset/itchy-peaches-compare.md",
+            ".changeset/itchy-pianos-marry.md",
+            ".changeset/itchy-terms-guess.md",
+            ".changeset/khaki-cheetahs-refuse.md",
+            ".changeset/khaki-cooks-develop.md",
+            ".changeset/khaki-ligers-sing.md",
+            ".changeset/khaki-mails-draw.md",
+            ".changeset/khaki-mails-scream.md",
+            ".changeset/khaki-monkeys-cry.md",
+            ".changeset/khaki-moose-arrive.md",
+            ".changeset/khaki-tomatoes-rule.md",
+            ".changeset/kind-baboons-approve.md",
+            ".changeset/kind-deers-lay.md",
+            ".changeset/kind-doors-grin.md",
+            ".changeset/kind-dots-sort.md",
+            ".changeset/kind-eagles-join.md",
+            ".changeset/kind-rings-flash.md",
+            ".changeset/kind-snakes-drive.md",
+            ".changeset/kind-spoons-return.md",
+            ".changeset/large-clouds-carry.md",
+            ".changeset/large-turkeys-deny.md",
+            ".changeset/large-waves-join.md",
+            ".changeset/late-bees-vanish.md",
+            ".changeset/late-crabs-lay.md",
+            ".changeset/late-grapes-judge.md",
+            ".changeset/late-peaches-mate.md",
+            ".changeset/late-zebras-argue.md",
+            ".changeset/lazy-knives-happen.md",
+            ".changeset/lazy-masks-sit.md",
+            ".changeset/lazy-months-knock.md",
+            ".changeset/lazy-spiders-think.md",
+            ".changeset/lemon-geese-call.md",
+            ".changeset/lemon-geese-drum.md",
+            ".changeset/lemon-meals-appear.md",
+            ".changeset/lemon-trees-act.md",
+            ".changeset/light-badgers-glow.md",
+            ".changeset/light-days-clean.md",
+            ".changeset/light-hounds-carry.md",
+            ".changeset/light-humans-hang.md",
+            ".changeset/light-penguins-invent.md",
+            ".changeset/light-pens-watch.md",
+            ".changeset/little-ligers-exist.md",
+            ".changeset/little-pans-jog.md",
+            ".changeset/little-seals-reflect.md",
+            ".changeset/long-buckets-lay.md",
+            ".changeset/long-carrots-sneeze.md",
+            ".changeset/long-crews-return.md",
+            ".changeset/long-humans-repair.md",
+            ".changeset/long-lobsters-mate.md",
+            ".changeset/loud-cheetahs-flow.md",
+            ".changeset/loud-insects-arrive.md",
+            ".changeset/loud-mugs-smile.md",
+            ".changeset/loud-numbers-flow.md",
+            ".changeset/loud-penguins-unite.md",
+            ".changeset/loud-ravens-drop.md",
+            ".changeset/loud-socks-look.md",
+            ".changeset/lovely-bugs-sneeze.md",
+            ".changeset/lovely-carpets-lick.md",
+            ".changeset/lovely-houses-own.md",
+            ".changeset/lovely-items-turn.md",
+            ".changeset/lovely-ravens-crash.md",
+            ".changeset/lovely-rules-eat.md",
+            ".changeset/lovely-zebras-own.md",
+            ".changeset/lucky-colts-remember.md",
+            ".changeset/lucky-geckos-swim.md",
+            ".changeset/lucky-schools-hang.md",
+            ".changeset/lucky-teachers-exist.md",
+            ".changeset/lucky-toes-begin.md",
+            ".changeset/many-rockets-give.md",
+            ".changeset/many-trees-fix.md",
+            ".changeset/mean-jokes-exist.md",
+            ".changeset/mean-numbers-cry.md",
+            ".changeset/metal-clouds-raise.md",
+            ".changeset/metal-lobsters-burn.md",
+            ".changeset/metal-pans-trade.md",
+            ".changeset/mighty-cooks-scream.md",
+            ".changeset/mighty-files-hammer.md",
+            ".changeset/mighty-frogs-obey.md",
+            ".changeset/mighty-paws-smash.md",
+            ".changeset/mighty-shoes-nail.md",
+            ".changeset/modern-apricots-promise.md",
+            ".changeset/modern-fishes-double.md",
+            ".changeset/moody-carrots-lay.md",
+            ".changeset/moody-frogs-exist.md",
+            ".changeset/moody-ghosts-buy.md",
+            ".changeset/moody-houses-argue.md",
+            ".changeset/moody-owls-cry.md",
+            ".changeset/moody-sheep-type.md",
+            ".changeset/moody-toys-relax.md",
+            ".changeset/nasty-carrots-develop.md",
+            ".changeset/nasty-glasses-begin.md",
+            ".changeset/nasty-lions-double.md",
+            ".changeset/nasty-mayflies-smoke.md",
+            ".changeset/nasty-yaks-peel.md",
+            ".changeset/neat-boats-shake.md",
+            ".changeset/neat-dingos-clap.md",
+            ".changeset/neat-files-rescue.md",
+            ".changeset/neat-jokes-beam.md",
+            ".changeset/nervous-berries-boil.md",
+            ".changeset/nervous-ducks-repeat.md",
+            ".changeset/nervous-spoons-relax.md",
+            ".changeset/nervous-turkeys-end.md",
+            ".changeset/new-boats-wait.md",
+            ".changeset/new-brooms-grin.md",
+            ".changeset/new-rabbits-flow.md",
+            ".changeset/nice-avocados-move.md",
+            ".changeset/nice-jobs-breathe.md",
+            ".changeset/nine-cooks-join.md",
+            ".changeset/ninety-days-visit.md",
+            ".changeset/ninety-dingos-walk.md",
+            ".changeset/ninety-dots-train.md",
+            ".changeset/ninety-rockets-battle.md",
+            ".changeset/odd-buckets-lie.md",
+            ".changeset/odd-needles-joke.md",
+            ".changeset/odd-schools-wait.md",
+            ".changeset/odd-shoes-cheat.md",
+            ".changeset/odd-taxis-retire.md",
+            ".changeset/old-flies-jog.md",
+            ".changeset/old-houses-drum.md",
+            ".changeset/old-jokes-deliver.md",
+            ".changeset/old-mails-sneeze.md",
+            ".changeset/tidy-chefs-taste.md",
+            ".changeset/tidy-deers-hope.md",
+            ".changeset/tidy-fans-relax.md",
+            ".changeset/tidy-lizards-happen.md",
+            ".changeset/tidy-starfishes-allow.md",
+            ".changeset/tiny-kings-whisper.md",
+            ".changeset/tiny-meals-deliver.md",
+            ".changeset/tiny-moose-kiss.md",
+            ".changeset/tiny-taxis-whisper.md",
+            ".changeset/tough-buckets-thank.md",
+            ".changeset/tough-radios-punch.md",
+            ".changeset/tough-tomatoes-explain.md",
+            ".changeset/tricky-avocados-play.md",
+            ".changeset/tricky-ears-shout.md",
+            ".changeset/tricky-laws-bathe.md",
+            ".changeset/twelve-beans-drive.md",
+            ".changeset/twelve-cows-learn.md",
+            ".changeset/twelve-dragons-join.md",
+            ".changeset/twelve-onions-juggle.md",
+            ".changeset/twelve-worms-jog.md",
+            ".changeset/twenty-gifts-develop.md",
+            ".changeset/two-brooms-fail.md",
+            ".changeset/two-candles-move.md",
+            ".changeset/two-dogs-accept.md",
+            ".changeset/two-dragons-yell.md",
+            ".changeset/two-falcons-buy.md",
+            ".changeset/unlucky-boxes-obey.md",
+            ".changeset/unlucky-steaks-warn.md",
+            ".changeset/unlucky-trees-lick.md",
+            ".changeset/violet-mails-trade.md",
+            ".changeset/violet-mugs-behave.md",
+            ".changeset/violet-pigs-jam.md",
+            ".changeset/warm-cherries-shake.md",
+            ".changeset/warm-waves-reply.md",
+            ".changeset/weak-drinks-speak.md",
+            ".changeset/weak-frogs-bow.md",
+            ".changeset/weak-terms-destroy.md",
+            ".changeset/wet-bats-exercise.md",
+            ".changeset/wet-games-fly.md",
+            ".changeset/wet-pears-remain.md",
+            ".changeset/wet-wombats-repeat.md",
+            ".changeset/wicked-bikes-matter.md",
+            ".changeset/wicked-carrots-explain.md",
+            ".changeset/wicked-clouds-exercise.md",
+            ".changeset/wicked-doors-train.md",
+            ".changeset/wicked-emus-drive.md",
+            ".changeset/wicked-hairs-cheer.md",
+            ".changeset/wicked-wasps-allow.md",
+            ".changeset/wicked-ways-reply.md",
+            ".changeset/wild-cows-chew.md",
+            ".changeset/wild-foxes-wonder.md",
+            ".changeset/wild-moose-compare.md",
+            ".changeset/wise-apples-care.md",
+            ".changeset/wise-dancers-hang.md",
+            ".changeset/wise-dodos-tell.md",
+            ".changeset/wise-donkeys-marry.md",
+            ".changeset/wise-jobs-admire.md",
+            ".changeset/wise-kids-wash.md",
+            ".changeset/wise-radios-exercise.md",
+            ".changeset/wise-ties-clap.md",
+            ".changeset/witty-bikes-shave.md",
+            ".changeset/witty-camels-warn.md",
+            ".changeset/witty-hornets-think.md",
+            ".changeset/witty-phones-retire.md",
+            ".changeset/witty-readers-provide.md",
+            ".changeset/witty-sloths-impress.md",
+            ".changeset/witty-steaks-dream.md",
+            ".changeset/witty-tomatoes-care.md",
+            ".changeset/witty-years-crash.md",
+            ".changeset/yellow-bananas-rhyme.md",
+            ".changeset/yellow-pugs-raise.md",
+            ".changeset/yellow-rockets-sit.md",
+            ".changeset/yellow-taxis-double.md",
+            ".changeset/yellow-trees-juggle.md",
+            ".changeset/young-ads-roll.md",
+            ".changeset/young-masks-refuse.md",
+            "CODE_OF_CONDUCT.md",
+            "README.md"
+          ],
+          "spans": {}
+        }
+      ],
+      "pred_files": [],
+      "pred_spans": {}
+    }
+  }
+]

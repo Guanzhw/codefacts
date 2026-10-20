@@ -1,0 +1,705 @@
+[
+  {
+    "instance_id": "sveltejs__svelte-10391",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "736d584f27963b4b35ef3617518cce4a48abe001",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "packages/svelte/src/compiler/errors.js",
+            "packages/svelte/src/compiler/index.js",
+            "packages/svelte/src/compiler/phases/1-parse/state/element.js",
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js",
+            "packages/svelte/src/compiler/types/template.d.ts",
+            "packages/svelte/src/internal/client/render.js",
+            "packages/svelte/src/internal/client/runtime.js",
+            "packages/svelte/src/internal/server/index.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/errors.js": [
+              {
+                "start": 519,
+                "end": 536
+              }
+            ],
+            "packages/svelte/src/compiler/index.js": [
+              {
+                "start": 18,
+                "end": 54
+              }
+            ],
+            "packages/svelte/src/compiler/phases/1-parse/state/element.js": [
+              {
+                "start": 25,
+                "end": 44
+              },
+              {
+                "start": 613,
+                "end": 647
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js": [
+              {
+                "start": 329,
+                "end": 412
+              }
+            ],
+            "packages/svelte/src/compiler/types/template.d.ts": [
+              {
+                "start": 155,
+                "end": 272
+              },
+              {
+                "start": 427,
+                "end": 466
+              }
+            ],
+            "packages/svelte/src/internal/client/render.js": [
+              {
+                "start": 72,
+                "end": 80
+              },
+              {
+                "start": 1382,
+                "end": 1408
+              },
+              {
+                "start": 1415,
+                "end": 1461
+              },
+              {
+                "start": 1469,
+                "end": 1475
+              },
+              {
+                "start": 1584,
+                "end": 1692
+              },
+              {
+                "start": 2154,
+                "end": 2178
+              },
+              {
+                "start": 2821,
+                "end": 2838
+              }
+            ],
+            "packages/svelte/src/internal/client/runtime.js": [
+              {
+                "start": 1505,
+                "end": 1517
+              }
+            ],
+            "packages/svelte/src/internal/server/index.js": [
+              {
+                "start": 446,
+                "end": 460
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/legacy.js",
+            "packages/svelte/src/compiler/phases/1-parse/state/element.js",
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js",
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js",
+            "packages/svelte/src/compiler/phases/3-transform/server/transform-server.js",
+            "packages/svelte/src/compiler/phases/scope.js",
+            "packages/svelte/src/compiler/types/template.d.ts"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/legacy.js": [
+              {
+                "start": 567,
+                "end": 567
+              }
+            ],
+            "packages/svelte/src/compiler/phases/1-parse/state/element.js": [
+              {
+                "start": 608,
+                "end": 608
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js": [
+              {
+                "start": 27,
+                "end": 27
+              },
+              {
+                "start": 491,
+                "end": 491
+              },
+              {
+                "start": 595,
+                "end": 595
+              }
+            ],
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js": [
+              {
+                "start": 780,
+                "end": 780
+              },
+              {
+                "start": 1904,
+                "end": 1904
+              },
+              {
+                "start": 2096,
+                "end": 2096
+              },
+              {
+                "start": 2833,
+                "end": 2833
+              },
+              {
+                "start": 2885,
+                "end": 2885
+              }
+            ],
+            "packages/svelte/src/compiler/phases/3-transform/server/transform-server.js": [
+              {
+                "start": 830,
+                "end": 830
+              },
+              {
+                "start": 1488,
+                "end": 1488
+              },
+              {
+                "start": 1525,
+                "end": 1525
+              },
+              {
+                "start": 1770,
+                "end": 1770
+              }
+            ],
+            "packages/svelte/src/compiler/phases/scope.js": [
+              {
+                "start": 34,
+                "end": 34
+              },
+              {
+                "start": 162,
+                "end": 162
+              },
+              {
+                "start": 298,
+                "end": 298
+              }
+            ],
+            "packages/svelte/src/compiler/types/template.d.ts": [
+              {
+                "start": 195,
+                "end": 196
+              },
+              {
+                "start": 261,
+                "end": 261
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/errors.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/errors.js": [
+              {
+                "start": 139,
+                "end": 139
+              },
+              {
+                "start": 190,
+                "end": 190
+              },
+              {
+                "start": 390,
+                "end": 390
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js": [
+              {
+                "start": 1,
+                "end": 60
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js": [
+              {
+                "start": 470,
+                "end": 640
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/errors.js",
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/errors.js": [
+              {
+                "start": 271,
+                "end": 271
+              },
+              {
+                "start": 276,
+                "end": 276
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js": [
+              {
+                "start": 502,
+                "end": 502
+              },
+              {
+                "start": 613,
+                "end": 613
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/errors.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/errors.js": [
+              {
+                "start": 255,
+                "end": 290
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js": [
+              {
+                "start": 760,
+                "end": 830
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js": [
+              {
+                "start": 1880,
+                "end": 2110
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js",
+            "packages/svelte/src/compiler/phases/3-transform/server/transform-server.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js": [
+              {
+                "start": 2909,
+                "end": 2909
+              }
+            ],
+            "packages/svelte/src/compiler/phases/3-transform/server/transform-server.js": [
+              {
+                "start": 1567,
+                "end": 1567
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/scope.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/scope.js": [
+              {
+                "start": 280,
+                "end": 320
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/3-transform/client/visitors/template.js": [
+              {
+                "start": 2880,
+                "end": 2990
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/3-transform/server/transform-server.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/3-transform/server/transform-server.js": [
+              {
+                "start": 1510,
+                "end": 1650
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/scope.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/scope.js": [
+              {
+                "start": 220,
+                "end": 300
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/tests/validator/samples/let-directive/errors.json"
+          ],
+          "spans": {
+            "packages/svelte/tests/validator/samples/let-directive/errors.json": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/scope.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/scope.js": [
+              {
+                "start": 285,
+                "end": 285
+              },
+              {
+                "start": 294,
+                "end": 294
+              },
+              {
+                "start": 361,
+                "end": 361
+              },
+              {
+                "start": 363,
+                "end": 363
+              },
+              {
+                "start": 372,
+                "end": 372
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/scope.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/scope.js": [
+              {
+                "start": 350,
+                "end": 395
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/svelte/tests/validator/samples/a11y-label-has-associated-control-2/input.svelte",
+            "packages/svelte/tests/validator/samples/component-slot-default-reserved/errors.json",
+            "packages/svelte/tests/validator/samples/component-slot-default-reserved/input.svelte",
+            "packages/svelte/tests/validator/samples/component-slot-dynamic-attribute/errors.json",
+            "packages/svelte/tests/validator/samples/component-slot-dynamic-attribute/input.svelte",
+            "packages/svelte/tests/validator/samples/component-slot-dynamic/errors.json",
+            "packages/svelte/tests/validator/samples/component-slot-dynamic/input.svelte",
+            "packages/svelte/tests/validator/samples/component-slotted-custom-element-2/errors.json",
+            "packages/svelte/tests/validator/samples/component-slotted-custom-element-2/input.svelte",
+            "packages/svelte/tests/validator/samples/component-slotted-custom-element/input.svelte",
+            "packages/svelte/tests/validator/samples/component-slotted-each-block/errors.json",
+            "packages/svelte/tests/validator/samples/component-slotted-each-block/input.svelte",
+            "packages/svelte/tests/validator/samples/component-slotted-if-block/errors.json",
+            "packages/svelte/tests/validator/samples/component-slotted-if-block/input.svelte",
+            "packages/svelte/tests/validator/samples/general-siblings-combinator-in-custom-element-selects-slot-fallback/input.svelte",
+            "packages/svelte/tests/validator/samples/general-siblings-combinator-in-custom-element-selects-slot-fallback/warnings.json",
+            "packages/svelte/tests/validator/samples/no-missing-declarations-for-same-node-let-variable/input.svelte",
+            "packages/svelte/tests/validator/samples/siblings-combinator-in-custom-element-selects-slot-fallback/input.svelte",
+            "packages/svelte/tests/validator/samples/siblings-combinator-in-custom-element-selects-slot-fallback/warnings.json",
+            "packages/svelte/tests/validator/samples/slot-attribute-invalid/errors.json",
+            "packages/svelte/tests/validator/samples/slot-attribute-invalid/input.svelte",
+            "packages/svelte/tests/validator/samples/slot-warning-ignore/input.svelte",
+            "packages/svelte/tests/validator/samples/slot-warning/input.svelte",
+            "packages/svelte/tests/validator/samples/slot-warning2/input.svelte"
+          ],
+          "spans": {
+            "packages/svelte/tests/validator/samples/a11y-label-has-associated-control-2/input.svelte": [
+              {
+                "start": 2,
+                "end": 2
+              }
+            ],
+            "packages/svelte/tests/validator/samples/component-slot-default-reserved/errors.json": [
+              {
+                "start": 3,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/component-slot-default-reserved/input.svelte": [
+              {
+                "start": 1,
+                "end": 1
+              }
+            ],
+            "packages/svelte/tests/validator/samples/component-slot-dynamic-attribute/errors.json": [
+              {
+                "start": 3,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/component-slot-dynamic-attribute/input.svelte": [
+              {
+                "start": 6,
+                "end": 6
+              }
+            ],
+            "packages/svelte/tests/validator/samples/component-slot-dynamic/errors.json": [
+              {
+                "start": 3,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/component-slot-dynamic/input.svelte": [
+              {
+                "start": 1,
+                "end": 1
+              }
+            ],
+            "packages/svelte/tests/validator/samples/component-slotted-custom-element-2/errors.json": [
+              {
+                "start": 3,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/component-slotted-custom-element-2/input.svelte": [
+              {
+                "start": 10,
+                "end": 10
+              }
+            ],
+            "packages/svelte/tests/validator/samples/component-slotted-custom-element/input.svelte": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 12,
+                "end": 12
+              }
+            ],
+            "packages/svelte/tests/validator/samples/component-slotted-each-block/errors.json": [
+              {
+                "start": 3,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/component-slotted-each-block/input.svelte": [
+              {
+                "start": 7,
+                "end": 7
+              }
+            ],
+            "packages/svelte/tests/validator/samples/component-slotted-if-block/errors.json": [
+              {
+                "start": 3,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/component-slotted-if-block/input.svelte": [
+              {
+                "start": 7,
+                "end": 7
+              }
+            ],
+            "packages/svelte/tests/validator/samples/general-siblings-combinator-in-custom-element-selects-slot-fallback/input.svelte": [
+              {
+                "start": 6,
+                "end": 6
+              },
+              {
+                "start": 8,
+                "end": 8
+              },
+              {
+                "start": 12,
+                "end": 12
+              }
+            ],
+            "packages/svelte/tests/validator/samples/general-siblings-combinator-in-custom-element-selects-slot-fallback/warnings.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/no-missing-declarations-for-same-node-let-variable/input.svelte": [
+              {
+                "start": 6,
+                "end": 6
+              }
+            ],
+            "packages/svelte/tests/validator/samples/siblings-combinator-in-custom-element-selects-slot-fallback/input.svelte": [
+              {
+                "start": 4,
+                "end": 4
+              },
+              {
+                "start": 6,
+                "end": 6
+              },
+              {
+                "start": 10,
+                "end": 10
+              }
+            ],
+            "packages/svelte/tests/validator/samples/siblings-combinator-in-custom-element-selects-slot-fallback/warnings.json": [
+              {
+                "start": 8,
+                "end": 8
+              }
+            ],
+            "packages/svelte/tests/validator/samples/slot-attribute-invalid/errors.json": [
+              {
+                "start": 3,
+                "end": 4
+              }
+            ],
+            "packages/svelte/tests/validator/samples/slot-attribute-invalid/input.svelte": [
+              {
+                "start": 1,
+                "end": 1
+              }
+            ],
+            "packages/svelte/tests/validator/samples/slot-warning-ignore/input.svelte": [
+              {
+                "start": 8,
+                "end": 8
+              }
+            ],
+            "packages/svelte/tests/validator/samples/slot-warning/input.svelte": [
+              {
+                "start": 7,
+                "end": 7
+              }
+            ],
+            "packages/svelte/tests/validator/samples/slot-warning2/input.svelte": [
+              {
+                "start": 8,
+                "end": 8
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/a11y.js",
+            "packages/svelte/src/compiler/phases/2-analyze/css/Selector.js",
+            "packages/svelte/src/compiler/phases/2-analyze/index.js",
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/a11y.js": [
+              {
+                "start": 1087,
+                "end": 1087
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/css/Selector.js": [
+              {
+                "start": 555,
+                "end": 555
+              },
+              {
+                "start": 568,
+                "end": 568
+              },
+              {
+                "start": 575,
+                "end": 575
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/index.js": [
+              {
+                "start": 895,
+                "end": 895
+              }
+            ],
+            "packages/svelte/src/compiler/phases/2-analyze/validation.js": [
+              {
+                "start": 600,
+                "end": 600
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/svelte/src/compiler/phases/2-analyze/index.js"
+          ],
+          "spans": {
+            "packages/svelte/src/compiler/phases/2-analyze/index.js": [
+              {
+                "start": 880,
+                "end": 915
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [],
+      "pred_spans": {}
+    }
+  }
+]

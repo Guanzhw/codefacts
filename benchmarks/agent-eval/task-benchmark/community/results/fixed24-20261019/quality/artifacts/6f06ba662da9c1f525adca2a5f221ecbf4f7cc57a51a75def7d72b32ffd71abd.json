@@ -1,0 +1,1236 @@
+[
+  {
+    "instance_id": "sveltejs__svelte-3394",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "798bb3f0da7f547eef007718b14a18d1c0d94e2f",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "src/compiler/compile/nodes/shared/Expression.ts",
+            "src/compiler/compile/render_dom/index.ts",
+            "src/compiler/compile/render_dom/wrappers/AwaitBlock.ts",
+            "src/compiler/compile/render_dom/wrappers/Body.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/Attribute.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/Binding.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/StyleAttribute.ts",
+            "src/compiler/compile/render_ssr/Renderer.ts",
+            "src/runtime/internal/utils.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 86,
+                "end": 92
+              },
+              {
+                "start": 102,
+                "end": 108
+              },
+              {
+                "start": 124,
+                "end": 143
+              },
+              {
+                "start": 155,
+                "end": 179
+              },
+              {
+                "start": 186,
+                "end": 192
+              },
+              {
+                "start": 207,
+                "end": 220
+              }
+            ],
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 11,
+                "end": 59
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/AwaitBlock.ts": [
+              {
+                "start": 117,
+                "end": 177
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Body.ts": [
+              {
+                "start": 1,
+                "end": 22
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Element/Attribute.ts": [
+              {
+                "start": 38,
+                "end": 133
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Element/Binding.ts": [
+              {
+                "start": 89,
+                "end": 181
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Element/StyleAttribute.ts": [
+              {
+                "start": 9,
+                "end": 68
+              },
+              {
+                "start": 173,
+                "end": 178
+              }
+            ],
+            "src/runtime/internal/utils.ts": [
+              {
+                "start": 1,
+                "end": 102
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/index.ts",
+            "src/runtime/internal/utils.ts",
+            "src/runtime/store/index.ts",
+            "test/js/samples/action-custom-event-handler/expected.js",
+            "test/js/samples/action/expected.js",
+            "test/js/samples/bind-online/expected.js",
+            "test/js/samples/bind-open/expected.js",
+            "test/js/samples/bind-width-height/expected.js",
+            "test/js/samples/collapses-text-around-comments/expected.js",
+            "test/js/samples/component-static-array/expected.js",
+            "test/js/samples/component-static/expected.js",
+            "test/js/samples/computed-collapsed-if/expected.js",
+            "test/js/samples/css-media-query/expected.js",
+            "test/js/samples/css-shadow-dom-keyframes/expected.js",
+            "test/js/samples/data-attribute/expected.js",
+            "test/js/samples/debug-empty/expected.js",
+            "test/js/samples/debug-foo-bar-baz-things/expected.js",
+            "test/js/samples/debug-foo/expected.js",
+            "test/js/samples/debug-hoisted/expected.js",
+            "test/js/samples/deconflict-builtins/expected.js",
+            "test/js/samples/deconflict-globals/expected.js",
+            "test/js/samples/dev-warning-missing-data-computed/expected.js",
+            "test/js/samples/dont-invalidate-this/expected.js",
+            "test/js/samples/dynamic-import/expected.js",
+            "test/js/samples/each-block-array-literal/expected.js",
+            "test/js/samples/each-block-changed-check/expected.js",
+            "test/js/samples/each-block-keyed-animated/expected.js",
+            "test/js/samples/each-block-keyed/expected.js",
+            "test/js/samples/event-handler-no-passive/expected.js",
+            "test/js/samples/event-modifiers/expected.js",
+            "test/js/samples/head-no-whitespace/expected.js",
+            "test/js/samples/hoisted-const/expected.js",
+            "test/js/samples/hoisted-let/expected.js",
+            "test/js/samples/if-block-no-update/expected.js",
+            "test/js/samples/if-block-simple/expected.js",
+            "test/js/samples/inline-style-optimized-multiple/expected.js",
+            "test/js/samples/inline-style-optimized-url/expected.js",
+            "test/js/samples/inline-style-optimized/expected.js",
+            "test/js/samples/inline-style-unoptimized/expected.js",
+            "test/js/samples/input-files/expected.js",
+            "test/js/samples/input-range/expected.js",
+            "test/js/samples/input-without-blowback-guard/expected.js",
+            "test/js/samples/instrumentation-script-if-no-block/expected.js",
+            "test/js/samples/instrumentation-script-x-equals-x/expected.js",
+            "test/js/samples/instrumentation-template-if-no-block/expected.js",
+            "test/js/samples/instrumentation-template-x-equals-x/expected.js",
+            "test/js/samples/legacy-input-type/expected.js",
+            "test/js/samples/media-bindings/expected.js",
+            "test/js/samples/non-imported-component/expected.js",
+            "test/js/samples/non-mutable-reference/expected.js",
+            "test/js/samples/reactive-values-non-topologically-ordered/expected.js",
+            "test/js/samples/reactive-values-non-writable-dependencies/expected.js",
+            "test/js/samples/select-dynamic-value/expected.js",
+            "test/js/samples/setup-method/expected.js",
+            "test/js/samples/svg-title/expected.js",
+            "test/js/samples/title/expected.js",
+            "test/js/samples/transition-local/expected.js",
+            "test/js/samples/transition-repeated-outro/expected.js",
+            "test/js/samples/unreferenced-state-not-invalidated/expected.js",
+            "test/js/samples/use-elements-as-anchors/expected.js",
+            "test/js/samples/window-binding-scroll/expected.js",
+            "test/store/index.js"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 96,
+                "end": 96
+              }
+            ],
+            "src/runtime/internal/utils.ts": [
+              {
+                "start": 37,
+                "end": 37
+              }
+            ],
+            "src/runtime/store/index.ts": [
+              {
+                "start": 1,
+                "end": 1
+              },
+              {
+                "start": 69,
+                "end": 69
+              }
+            ],
+            "test/js/samples/action-custom-event-handler/expected.js": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 70,
+                "end": 70
+              }
+            ],
+            "test/js/samples/action/expected.js": [
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 60,
+                "end": 60
+              }
+            ],
+            "test/js/samples/bind-online/expected.js": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 49,
+                "end": 49
+              }
+            ],
+            "test/js/samples/bind-open/expected.js": [
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 65,
+                "end": 65
+              }
+            ],
+            "test/js/samples/bind-width-height/expected.js": [
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 64,
+                "end": 64
+              }
+            ],
+            "test/js/samples/collapses-text-around-comments/expected.js": [
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 69,
+                "end": 69
+              }
+            ],
+            "test/js/samples/component-static-array/expected.js": [
+              {
+                "start": 8,
+                "end": 8
+              },
+              {
+                "start": 57,
+                "end": 57
+              }
+            ],
+            "test/js/samples/component-static/expected.js": [
+              {
+                "start": 8,
+                "end": 8
+              },
+              {
+                "start": 57,
+                "end": 57
+              }
+            ],
+            "test/js/samples/computed-collapsed-if/expected.js": [
+              {
+                "start": 6,
+                "end": 6
+              },
+              {
+                "start": 41,
+                "end": 41
+              }
+            ],
+            "test/js/samples/css-media-query/expected.js": [
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 50,
+                "end": 50
+              }
+            ],
+            "test/js/samples/css-shadow-dom-keyframes/expected.js": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 44,
+                "end": 44
+              }
+            ],
+            "test/js/samples/data-attribute/expected.js": [
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 64,
+                "end": 64
+              }
+            ],
+            "test/js/samples/debug-empty/expected.js": [
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 83,
+                "end": 83
+              }
+            ],
+            "test/js/samples/debug-foo-bar-baz-things/expected.js": [
+              {
+                "start": 12,
+                "end": 12
+              },
+              {
+                "start": 172,
+                "end": 172
+              }
+            ],
+            "test/js/samples/debug-foo/expected.js": [
+              {
+                "start": 12,
+                "end": 12
+              },
+              {
+                "start": 170,
+                "end": 170
+              }
+            ],
+            "test/js/samples/debug-hoisted/expected.js": [
+              {
+                "start": 6,
+                "end": 6
+              },
+              {
+                "start": 52,
+                "end": 52
+              }
+            ],
+            "test/js/samples/deconflict-builtins/expected.js": [
+              {
+                "start": 12,
+                "end": 12
+              },
+              {
+                "start": 129,
+                "end": 129
+              }
+            ],
+            "test/js/samples/deconflict-globals/expected.js": [
+              {
+                "start": 6,
+                "end": 6
+              },
+              {
+                "start": 38,
+                "end": 38
+              }
+            ],
+            "test/js/samples/dev-warning-missing-data-computed/expected.js": [
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 87,
+                "end": 87
+              }
+            ],
+            "test/js/samples/dont-invalidate-this/expected.js": [
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 47,
+                "end": 47
+              }
+            ],
+            "test/js/samples/dynamic-import/expected.js": [
+              {
+                "start": 8,
+                "end": 8
+              },
+              {
+                "start": 56,
+                "end": 56
+              }
+            ],
+            "test/js/samples/each-block-array-literal/expected.js": [
+              {
+                "start": 12,
+                "end": 12
+              },
+              {
+                "start": 132,
+                "end": 132
+              }
+            ],
+            "test/js/samples/each-block-changed-check/expected.js": [
+              {
+                "start": 13,
+                "end": 13
+              },
+              {
+                "start": 172,
+                "end": 172
+              }
+            ],
+            "test/js/samples/each-block-keyed-animated/expected.js": [
+              {
+                "start": 14,
+                "end": 14
+              },
+              {
+                "start": 147,
+                "end": 147
+              }
+            ],
+            "test/js/samples/each-block-keyed/expected.js": [
+              {
+                "start": 12,
+                "end": 12
+              },
+              {
+                "start": 115,
+                "end": 115
+              }
+            ],
+            "test/js/samples/event-handler-no-passive/expected.js": [
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 50,
+                "end": 50
+              }
+            ],
+            "test/js/samples/event-modifiers/expected.js": [
+              {
+                "start": 13,
+                "end": 13
+              },
+              {
+                "start": 74,
+                "end": 74
+              }
+            ],
+            "test/js/samples/head-no-whitespace/expected.js": [
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 45,
+                "end": 45
+              }
+            ],
+            "test/js/samples/hoisted-const/expected.js": [
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 47,
+                "end": 47
+              }
+            ],
+            "test/js/samples/hoisted-let/expected.js": [
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 47,
+                "end": 47
+              }
+            ],
+            "test/js/samples/if-block-no-update/expected.js": [
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 116,
+                "end": 116
+              }
+            ],
+            "test/js/samples/if-block-simple/expected.js": [
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 90,
+                "end": 90
+              }
+            ],
+            "test/js/samples/inline-style-optimized-multiple/expected.js": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 63,
+                "end": 63
+              }
+            ],
+            "test/js/samples/inline-style-optimized-url/expected.js": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 56,
+                "end": 56
+              }
+            ],
+            "test/js/samples/inline-style-optimized/expected.js": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 56,
+                "end": 56
+              }
+            ],
+            "test/js/samples/inline-style-unoptimized/expected.js": [
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 70,
+                "end": 70
+              }
+            ],
+            "test/js/samples/input-files/expected.js": [
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 61,
+                "end": 61
+              }
+            ],
+            "test/js/samples/input-range/expected.js": [
+              {
+                "start": 12,
+                "end": 12
+              },
+              {
+                "start": 71,
+                "end": 71
+              }
+            ],
+            "test/js/samples/input-without-blowback-guard/expected.js": [
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 65,
+                "end": 65
+              }
+            ],
+            "test/js/samples/instrumentation-script-if-no-block/expected.js": [
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 73,
+                "end": 73
+              }
+            ],
+            "test/js/samples/instrumentation-script-x-equals-x/expected.js": [
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 74,
+                "end": 74
+              }
+            ],
+            "test/js/samples/instrumentation-template-if-no-block/expected.js": [
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 73,
+                "end": 73
+              }
+            ],
+            "test/js/samples/instrumentation-template-x-equals-x/expected.js": [
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 71,
+                "end": 71
+              }
+            ],
+            "test/js/samples/legacy-input-type/expected.js": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 41,
+                "end": 41
+              }
+            ],
+            "test/js/samples/media-bindings/expected.js": [
+              {
+                "start": 13,
+                "end": 13
+              },
+              {
+                "start": 151,
+                "end": 151
+              }
+            ],
+            "test/js/samples/non-imported-component/expected.js": [
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 70,
+                "end": 70
+              }
+            ],
+            "test/js/samples/non-mutable-reference/expected.js": [
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 49,
+                "end": 49
+              }
+            ],
+            "test/js/samples/reactive-values-non-topologically-ordered/expected.js": [
+              {
+                "start": 6,
+                "end": 6
+              },
+              {
+                "start": 41,
+                "end": 41
+              }
+            ],
+            "test/js/samples/reactive-values-non-writable-dependencies/expected.js": [
+              {
+                "start": 6,
+                "end": 6
+              },
+              {
+                "start": 38,
+                "end": 38
+              }
+            ],
+            "test/js/samples/select-dynamic-value/expected.js": [
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 82,
+                "end": 82
+              }
+            ],
+            "test/js/samples/setup-method/expected.js": [
+              {
+                "start": 6,
+                "end": 6
+              },
+              {
+                "start": 29,
+                "end": 29
+              }
+            ],
+            "test/js/samples/svg-title/expected.js": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 45,
+                "end": 45
+              }
+            ],
+            "test/js/samples/title/expected.js": [
+              {
+                "start": 6,
+                "end": 6
+              },
+              {
+                "start": 43,
+                "end": 43
+              }
+            ],
+            "test/js/samples/transition-local/expected.js": [
+              {
+                "start": 12,
+                "end": 12
+              },
+              {
+                "start": 154,
+                "end": 154
+              }
+            ],
+            "test/js/samples/transition-repeated-outro/expected.js": [
+              {
+                "start": 12,
+                "end": 12
+              },
+              {
+                "start": 125,
+                "end": 125
+              }
+            ],
+            "test/js/samples/unreferenced-state-not-invalidated/expected.js": [
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 74,
+                "end": 74
+              }
+            ],
+            "test/js/samples/use-elements-as-anchors/expected.js": [
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 277,
+                "end": 277
+              }
+            ],
+            "test/js/samples/window-binding-scroll/expected.js": [
+              {
+                "start": 12,
+                "end": 12
+              },
+              {
+                "start": 84,
+                "end": 84
+              }
+            ],
+            "test/store/index.js": [
+              {
+                "start": 260,
+                "end": 260
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/index.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 85,
+                "end": 180
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 790,
+                "end": 900
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/index.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 156,
+                "end": 330
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/nodes/shared/Expression.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 60,
+                "end": 340
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/nodes/EventHandler.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/nodes/EventHandler.ts": [
+              {
+                "start": 55,
+                "end": 70
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/nodes/shared/Expression.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 340,
+                "end": 470
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts",
+            "src/compiler/compile/nodes/Binding.ts",
+            "src/compiler/compile/nodes/shared/Expression.ts",
+            "src/compiler/compile/render_dom/index.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts",
+            "src/compiler/interfaces.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 208,
+                "end": 208
+              },
+              {
+                "start": 368,
+                "end": 368
+              },
+              {
+                "start": 699,
+                "end": 699
+              },
+              {
+                "start": 760,
+                "end": 760
+              },
+              {
+                "start": 1161,
+                "end": 1161
+              },
+              {
+                "start": 1164,
+                "end": 1164
+              }
+            ],
+            "src/compiler/compile/nodes/Binding.ts": [
+              {
+                "start": 53,
+                "end": 53
+              },
+              {
+                "start": 63,
+                "end": 63
+              }
+            ],
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 186,
+                "end": 186
+              },
+              {
+                "start": 192,
+                "end": 192
+              }
+            ],
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 368,
+                "end": 368
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "src/compiler/interfaces.ts": [
+              {
+                "start": 125,
+                "end": 125
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/wrappers/Element/StyleAttribute.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/wrappers/Element/StyleAttribute.ts": [
+              {
+                "start": 176,
+                "end": 176
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/parse/state/tag.ts",
+            "src/runtime/internal/Component.ts",
+            "src/runtime/internal/await_block.ts",
+            "src/runtime/internal/scheduler.ts",
+            "src/runtime/internal/transitions.ts",
+            "src/runtime/internal/utils.ts",
+            "src/runtime/motion/tweened.ts",
+            "src/runtime/store/index.ts"
+          ],
+          "spans": {
+            "src/compiler/parse/state/tag.ts": [
+              {
+                "start": 485,
+                "end": 497
+              }
+            ],
+            "src/runtime/internal/Component.ts": [
+              {
+                "start": 1,
+                "end": 215
+              }
+            ],
+            "src/runtime/internal/await_block.ts": [
+              {
+                "start": 1,
+                "end": 43
+              }
+            ],
+            "src/runtime/internal/scheduler.ts": [
+              {
+                "start": 1,
+                "end": 81
+              }
+            ],
+            "src/runtime/internal/transitions.ts": [
+              {
+                "start": 19,
+                "end": 69
+              },
+              {
+                "start": 238,
+                "end": 336
+              }
+            ],
+            "src/runtime/internal/utils.ts": [
+              {
+                "start": 1,
+                "end": 102
+              }
+            ],
+            "src/runtime/motion/tweened.ts": [
+              {
+                "start": 54,
+                "end": 128
+              }
+            ],
+            "src/runtime/store/index.ts": [
+              {
+                "start": 61,
+                "end": 116
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "CHANGELOG.md"
+          ],
+          "spans": {
+            "CHANGELOG.md": [
+              {
+                "start": 91,
+                "end": 91
+              },
+              {
+                "start": 180,
+                "end": 180
+              },
+              {
+                "start": 226,
+                "end": 226
+              },
+              {
+                "start": 241,
+                "end": 241
+              },
+              {
+                "start": 1115,
+                "end": 1115
+              },
+              {
+                "start": 1134,
+                "end": 1134
+              },
+              {
+                "start": 1283,
+                "end": 1283
+              },
+              {
+                "start": 1287,
+                "end": 1287
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts",
+            "src/compiler/compile/nodes/Binding.ts",
+            "src/compiler/compile/nodes/shared/Expression.ts",
+            "src/compiler/compile/render_dom/index.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/Binding.ts",
+            "src/compiler/compile/render_dom/wrappers/InlineComponent/index.ts",
+            "src/compiler/compile/utils/get_object.ts",
+            "src/compiler/compile/utils/scope.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 22,
+                "end": 22
+              },
+              {
+                "start": 750,
+                "end": 750
+              },
+              {
+                "start": 753,
+                "end": 753
+              },
+              {
+                "start": 794,
+                "end": 794
+              },
+              {
+                "start": 1147,
+                "end": 1147
+              },
+              {
+                "start": 1152,
+                "end": 1152
+              },
+              {
+                "start": 1155,
+                "end": 1155
+              }
+            ],
+            "src/compiler/compile/nodes/Binding.ts": [
+              {
+                "start": 2,
+                "end": 2
+              },
+              {
+                "start": 41,
+                "end": 41
+              }
+            ],
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 12,
+                "end": 12
+              },
+              {
+                "start": 173,
+                "end": 173
+              },
+              {
+                "start": 176,
+                "end": 176
+              },
+              {
+                "start": 423,
+                "end": 423
+              },
+              {
+                "start": 445,
+                "end": 445
+              }
+            ],
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 180,
+                "end": 180
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Element/Binding.ts": [
+              {
+                "start": 3,
+                "end": 3
+              },
+              {
+                "start": 51,
+                "end": 51
+              },
+              {
+                "start": 57,
+                "end": 57
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/InlineComponent/index.ts": [
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 49,
+                "end": 49
+              }
+            ],
+            "src/compiler/compile/utils/get_object.ts": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "src/compiler/compile/utils/scope.ts": [
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 126,
+                "end": 126
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 690,
+                "end": 790
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 1120,
+                "end": 1185
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/utils/get_object.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/utils/get_object.ts": [
+              {
+                "start": 1,
+                "end": 8
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts": [
+              {
+                "start": 1,
+                "end": 10
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [],
+      "pred_spans": {}
+    }
+  }
+]

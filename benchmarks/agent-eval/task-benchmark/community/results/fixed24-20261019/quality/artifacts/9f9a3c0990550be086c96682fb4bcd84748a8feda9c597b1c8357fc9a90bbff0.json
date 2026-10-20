@@ -1,0 +1,2158 @@
+[
+  {
+    "instance_id": "clap-rs__clap-4248",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "baaee3d5105b66b8c3a3141f57013b58959a9fdd",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "clap_bench/benches/01_default.rs",
+            "clap_bench/benches/02_simple.rs",
+            "clap_bench/benches/03_complex.rs",
+            "clap_bench/benches/04_new_help.rs",
+            "clap_bench/benches/05_ripgrep.rs",
+            "clap_bench/benches/06_rustup.rs",
+            "clap_bench/src/lib.rs",
+            "clap_complete/examples/completion-derive.rs",
+            "clap_complete/examples/completion.rs",
+            "clap_complete/examples/dynamic.rs",
+            "clap_complete/src/dynamic.rs",
+            "clap_complete/src/generator/mod.rs",
+            "clap_complete/src/generator/utils.rs",
+            "clap_complete/src/lib.rs",
+            "clap_complete/src/macros.rs",
+            "clap_complete/src/shells/bash.rs",
+            "clap_complete/src/shells/elvish.rs",
+            "clap_complete/src/shells/fish.rs",
+            "clap_complete/src/shells/mod.rs",
+            "clap_complete/src/shells/powershell.rs",
+            "clap_complete/src/shells/shell.rs",
+            "clap_complete/src/shells/zsh.rs",
+            "clap_complete/tests/bash.rs",
+            "clap_complete/tests/common.rs",
+            "clap_complete/tests/dynamic.rs",
+            "clap_complete/tests/elvish.rs",
+            "clap_complete/tests/examples.rs",
+            "clap_complete/tests/fish.rs",
+            "clap_complete/tests/general.rs",
+            "clap_complete/tests/powershell.rs",
+            "clap_complete/tests/zsh.rs",
+            "clap_complete_fig/examples/fig_completion.rs",
+            "clap_complete_fig/src/fig.rs",
+            "clap_complete_fig/src/lib.rs",
+            "clap_complete_fig/tests/common.rs",
+            "clap_complete_fig/tests/fig.rs",
+            "clap_derive/src/attr.rs",
+            "clap_derive/src/derives/args.rs",
+            "clap_derive/src/derives/into_app.rs",
+            "clap_derive/src/derives/mod.rs",
+            "clap_derive/src/derives/parser.rs",
+            "clap_derive/src/derives/subcommand.rs",
+            "clap_derive/src/derives/value_enum.rs",
+            "clap_derive/src/dummies.rs",
+            "clap_derive/src/item.rs",
+            "clap_derive/src/lib.rs",
+            "clap_derive/src/utils/doc_comments.rs",
+            "clap_derive/src/utils/mod.rs",
+            "clap_derive/src/utils/spanned.rs",
+            "clap_derive/src/utils/ty.rs",
+            "clap_lex/src/lib.rs",
+            "clap_lex/tests/lexer.rs",
+            "clap_lex/tests/parsed.rs",
+            "clap_lex/tests/shorts.rs",
+            "clap_mangen/examples/man.rs",
+            "clap_mangen/src/lib.rs",
+            "clap_mangen/src/render.rs",
+            "clap_mangen/tests/common.rs",
+            "clap_mangen/tests/roff.rs",
+            "examples/cargo-example-derive.rs",
+            "examples/cargo-example.rs",
+            "examples/demo.rs",
+            "examples/derive_ref/augment_args.rs",
+            "examples/derive_ref/augment_subcommands.rs",
+            "examples/derive_ref/flatten_hand_args.rs",
+            "examples/derive_ref/hand_subcommand.rs",
+            "examples/escaped-positional-derive.rs",
+            "examples/escaped-positional.rs",
+            "examples/find.rs",
+            "examples/git-derive.rs",
+            "examples/git.rs",
+            "examples/multicall-busybox.rs",
+            "examples/multicall-hostname.rs",
+            "examples/pacman.rs",
+            "examples/repl.rs",
+            "examples/tutorial_builder/01_quick.rs",
+            "examples/tutorial_builder/02_app_settings.rs",
+            "examples/tutorial_builder/02_apps.rs",
+            "examples/tutorial_builder/02_crate.rs",
+            "examples/tutorial_builder/03_01_flag_bool.rs",
+            "examples/tutorial_builder/03_01_flag_count.rs",
+            "examples/tutorial_builder/03_02_option.rs",
+            "examples/tutorial_builder/03_02_option_mult.rs",
+            "examples/tutorial_builder/03_03_positional.rs",
+            "examples/tutorial_builder/03_03_positional_mult.rs",
+            "examples/tutorial_builder/03_04_subcommands.rs",
+            "examples/tutorial_builder/03_05_default_values.rs",
+            "examples/tutorial_builder/04_01_enum.rs",
+            "examples/tutorial_builder/04_01_possible.rs",
+            "examples/tutorial_builder/04_02_parse.rs",
+            "examples/tutorial_builder/04_02_validate.rs",
+            "examples/tutorial_builder/04_03_relations.rs",
+            "examples/tutorial_builder/04_04_custom.rs",
+            "examples/tutorial_builder/05_01_assert.rs",
+            "examples/tutorial_derive/01_quick.rs",
+            "examples/tutorial_derive/02_app_settings.rs",
+            "examples/tutorial_derive/02_apps.rs",
+            "examples/tutorial_derive/02_crate.rs",
+            "examples/tutorial_derive/03_01_flag_bool.rs",
+            "examples/tutorial_derive/03_01_flag_count.rs",
+            "examples/tutorial_derive/03_02_option.rs",
+            "examples/tutorial_derive/03_02_option_mult.rs",
+            "examples/tutorial_derive/03_03_positional.rs",
+            "examples/tutorial_derive/03_03_positional_mult.rs",
+            "examples/tutorial_derive/03_04_subcommands.rs",
+            "examples/tutorial_derive/03_04_subcommands_alt.rs",
+            "examples/tutorial_derive/03_05_default_values.rs",
+            "examples/tutorial_derive/04_01_enum.rs",
+            "examples/tutorial_derive/04_02_parse.rs",
+            "examples/tutorial_derive/04_02_validate.rs",
+            "examples/tutorial_derive/04_03_relations.rs",
+            "examples/tutorial_derive/04_04_custom.rs",
+            "examples/tutorial_derive/05_01_assert.rs",
+            "examples/typed-derive.rs",
+            "src/_cookbook/cargo_example.rs",
+            "src/_cookbook/cargo_example_derive.rs",
+            "src/_cookbook/escaped_positional.rs",
+            "src/_cookbook/escaped_positional_derive.rs",
+            "src/_cookbook/find.rs",
+            "src/_cookbook/git.rs",
+            "src/_cookbook/git_derive.rs",
+            "src/_cookbook/mod.rs",
+            "src/_cookbook/multicall_busybox.rs",
+            "src/_cookbook/multicall_hostname.rs",
+            "src/_cookbook/pacman.rs",
+            "src/_cookbook/repl.rs",
+            "src/_cookbook/typed_derive.rs",
+            "src/_derive/_tutorial.rs",
+            "src/_derive/mod.rs",
+            "src/_faq.rs",
+            "src/_features.rs",
+            "src/_tutorial.rs",
+            "src/bin/stdio-fixture.rs",
+            "src/builder/action.rs",
+            "src/builder/app_settings.rs",
+            "src/builder/arg.rs",
+            "src/builder/arg_group.rs",
+            "src/builder/arg_predicate.rs",
+            "src/builder/arg_settings.rs",
+            "src/builder/command.rs",
+            "src/builder/debug_asserts.rs",
+            "src/builder/mod.rs",
+            "src/builder/os_str.rs",
+            "src/builder/possible_value.rs",
+            "src/builder/range.rs",
+            "src/builder/resettable.rs",
+            "src/builder/str.rs",
+            "src/builder/styled_str.rs",
+            "src/builder/tests.rs",
+            "src/builder/value_hint.rs",
+            "src/builder/value_parser.rs",
+            "src/derive.rs",
+            "src/error/context.rs",
+            "src/error/format.rs",
+            "src/error/kind.rs",
+            "src/error/mod.rs",
+            "src/lib.rs",
+            "src/macros.rs",
+            "src/mkeymap.rs",
+            "src/output/fmt.rs",
+            "src/output/help.rs",
+            "src/output/help_template.rs",
+            "src/output/mod.rs",
+            "src/output/textwrap/core.rs",
+            "src/output/textwrap/mod.rs",
+            "src/output/textwrap/word_separators.rs",
+            "src/output/textwrap/wrap_algorithms.rs",
+            "src/output/usage.rs",
+            "src/parser/arg_matcher.rs",
+            "src/parser/error.rs",
+            "src/parser/features/mod.rs",
+            "src/parser/features/suggestions.rs",
+            "src/parser/matches/any_value.rs",
+            "src/parser/matches/arg_matches.rs",
+            "src/parser/matches/matched_arg.rs",
+            "src/parser/matches/mod.rs",
+            "src/parser/matches/value_source.rs",
+            "src/parser/mod.rs",
+            "src/parser/parser.rs",
+            "src/parser/validator.rs",
+            "src/util/color.rs",
+            "src/util/flat_map.rs",
+            "src/util/flat_set.rs",
+            "src/util/graph.rs",
+            "src/util/id.rs",
+            "src/util/mod.rs",
+            "src/util/str_to_bool.rs",
+            "tests/builder/action.rs",
+            "tests/builder/app_settings.rs",
+            "tests/builder/arg_aliases.rs",
+            "tests/builder/arg_aliases_short.rs",
+            "tests/builder/arg_matches.rs",
+            "tests/builder/borrowed.rs",
+            "tests/builder/cargo.rs",
+            "tests/builder/command.rs",
+            "tests/builder/conflicts.rs",
+            "tests/builder/default_missing_vals.rs",
+            "tests/builder/default_vals.rs",
+            "tests/builder/delimiters.rs",
+            "tests/builder/derive_order.rs",
+            "tests/builder/display_order.rs",
+            "tests/builder/double_require.rs",
+            "tests/builder/empty_values.rs",
+            "tests/builder/env.rs",
+            "tests/builder/error.rs",
+            "tests/builder/flag_subcommands.rs",
+            "tests/builder/flags.rs",
+            "tests/builder/global_args.rs",
+            "tests/builder/grouped_values.rs",
+            "tests/builder/groups.rs",
+            "tests/builder/help.rs",
+            "tests/builder/help_env.rs",
+            "tests/builder/hidden_args.rs",
+            "tests/builder/ignore_errors.rs",
+            "tests/builder/indices.rs",
+            "tests/builder/main.rs",
+            "tests/builder/multiple_occurrences.rs",
+            "tests/builder/multiple_values.rs",
+            "tests/builder/opts.rs",
+            "tests/builder/positionals.rs",
+            "tests/builder/posix_compatible.rs",
+            "tests/builder/possible_values.rs",
+            "tests/builder/propagate_globals.rs",
+            "tests/builder/require.rs",
+            "tests/builder/subcommands.rs",
+            "tests/builder/template_help.rs",
+            "tests/builder/tests.rs",
+            "tests/builder/unicode.rs",
+            "tests/builder/unique_args.rs",
+            "tests/builder/utf16.rs",
+            "tests/builder/utf8.rs",
+            "tests/builder/utils.rs",
+            "tests/builder/version.rs",
+            "tests/derive/app_name.rs",
+            "tests/derive/arguments.rs",
+            "tests/derive/author_version_about.rs",
+            "tests/derive/basic.rs",
+            "tests/derive/boxed.rs",
+            "tests/derive/custom_string_parsers.rs",
+            "tests/derive/default_value.rs",
+            "tests/derive/deny_warnings.rs",
+            "tests/derive/doc_comments_help.rs",
+            "tests/derive/explicit_name_no_renaming.rs",
+            "tests/derive/flags.rs",
+            "tests/derive/flatten.rs",
+            "tests/derive/generic.rs",
+            "tests/derive/groups.rs",
+            "tests/derive/help.rs",
+            "tests/derive/issues.rs",
+            "tests/derive/macros.rs",
+            "tests/derive/main.rs",
+            "tests/derive/naming.rs",
+            "tests/derive/nested_subcommands.rs",
+            "tests/derive/non_literal_attributes.rs",
+            "tests/derive/options.rs",
+            "tests/derive/privacy.rs",
+            "tests/derive/raw_bool_literal.rs",
+            "tests/derive/raw_idents.rs",
+            "tests/derive/rename_all_env.rs",
+            "tests/derive/skip.rs",
+            "tests/derive/subcommands.rs",
+            "tests/derive/type_alias_regressions.rs",
+            "tests/derive/utf8.rs",
+            "tests/derive/utils.rs",
+            "tests/derive/value_enum.rs",
+            "tests/derive_ui.rs",
+            "tests/derive_ui/bool_value_enum.rs",
+            "tests/derive_ui/clap_empty_attr.rs",
+            "tests/derive_ui/default_value_t_invalid.rs",
+            "tests/derive_ui/default_values_t_invalid.rs",
+            "tests/derive_ui/enum_flatten.rs",
+            "tests/derive_ui/enum_variant_not_args.rs",
+            "tests/derive_ui/external_subcommand_misuse.rs",
+            "tests/derive_ui/external_subcommand_wrong_type.rs",
+            "tests/derive_ui/flatten_and_methods.rs",
+            "tests/derive_ui/flatten_enum_in_struct.rs",
+            "tests/derive_ui/flatten_struct_in_enum.rs",
+            "tests/derive_ui/multiple_external_subcommand.rs",
+            "tests/derive_ui/non_existent_attr.rs",
+            "tests/derive_ui/rename_all_wrong_casing.rs",
+            "tests/derive_ui/skip_flatten.rs",
+            "tests/derive_ui/skip_subcommand.rs",
+            "tests/derive_ui/skip_with_other_options.rs",
+            "tests/derive_ui/skip_without_default.rs",
+            "tests/derive_ui/struct_subcommand.rs",
+            "tests/derive_ui/subcommand_and_flatten.rs",
+            "tests/derive_ui/subcommand_and_methods.rs",
+            "tests/derive_ui/subcommand_on_struct.rs",
+            "tests/derive_ui/subcommand_opt_opt.rs",
+            "tests/derive_ui/subcommand_opt_vec.rs",
+            "tests/derive_ui/tuple_struct.rs",
+            "tests/derive_ui/value_enum_non_unit.rs",
+            "tests/derive_ui/value_enum_on_struct.rs",
+            "tests/examples.rs",
+            "tests/macros.rs",
+            "tests/ui.rs"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "clap_complete/src/shells/elvish.rs",
+            "clap_complete/src/shells/powershell.rs",
+            "src/builder/arg.rs",
+            "src/builder/command.rs",
+            "src/builder/mod.rs",
+            "src/builder/possible_value.rs",
+            "src/builder/resettable.rs",
+            "src/builder/styled_str.rs",
+            "src/error/context.rs",
+            "src/error/format.rs",
+            "src/error/mod.rs",
+            "src/macros.rs",
+            "src/output/fmt.rs",
+            "src/output/help.rs",
+            "src/output/help_template.rs",
+            "src/output/textwrap/mod.rs",
+            "src/output/usage.rs",
+            "src/parser/validator.rs"
+          ],
+          "spans": {
+            "clap_complete/src/shells/elvish.rs": [
+              {
+                "start": 3,
+                "end": 3
+              },
+              {
+                "start": 63,
+                "end": 63
+              }
+            ],
+            "clap_complete/src/shells/powershell.rs": [
+              {
+                "start": 3,
+                "end": 3
+              },
+              {
+                "start": 68,
+                "end": 68
+              }
+            ],
+            "src/builder/arg.rs": [
+              {
+                "start": 19,
+                "end": 19
+              },
+              {
+                "start": 57,
+                "end": 58
+              },
+              {
+                "start": 2024,
+                "end": 2024
+              },
+              {
+                "start": 2086,
+                "end": 2086
+              },
+              {
+                "start": 3685,
+                "end": 3685
+              },
+              {
+                "start": 3700,
+                "end": 3700
+              },
+              {
+                "start": 4115,
+                "end": 4116
+              },
+              {
+                "start": 4129,
+                "end": 4130
+              }
+            ],
+            "src/builder/command.rs": [
+              {
+                "start": 18,
+                "end": 18
+              },
+              {
+                "start": 80,
+                "end": 85
+              },
+              {
+                "start": 89,
+                "end": 89
+              },
+              {
+                "start": 91,
+                "end": 91
+              },
+              {
+                "start": 96,
+                "end": 96
+              },
+              {
+                "start": 727,
+                "end": 727
+              },
+              {
+                "start": 754,
+                "end": 754
+              },
+              {
+                "start": 781,
+                "end": 781
+              },
+              {
+                "start": 807,
+                "end": 807
+              },
+              {
+                "start": 876,
+                "end": 876
+              },
+              {
+                "start": 1442,
+                "end": 1442
+              },
+              {
+                "start": 1467,
+                "end": 1467
+              },
+              {
+                "start": 1489,
+                "end": 1489
+              },
+              {
+                "start": 1511,
+                "end": 1511
+              },
+              {
+                "start": 1531,
+                "end": 1531
+              },
+              {
+                "start": 1551,
+                "end": 1551
+              },
+              {
+                "start": 1645,
+                "end": 1645
+              },
+              {
+                "start": 1682,
+                "end": 1682
+              },
+              {
+                "start": 1734,
+                "end": 1734
+              },
+              {
+                "start": 3215,
+                "end": 3215
+              },
+              {
+                "start": 3223,
+                "end": 3223
+              },
+              {
+                "start": 3337,
+                "end": 3337
+              },
+              {
+                "start": 3343,
+                "end": 3343
+              },
+              {
+                "start": 3349,
+                "end": 3349
+              },
+              {
+                "start": 3355,
+                "end": 3355
+              },
+              {
+                "start": 3662,
+                "end": 3662
+              },
+              {
+                "start": 3666,
+                "end": 3666
+              },
+              {
+                "start": 3671,
+                "end": 3671
+              },
+              {
+                "start": 4266,
+                "end": 4266
+              },
+              {
+                "start": 4282,
+                "end": 4282
+              },
+              {
+                "start": 4487,
+                "end": 4487
+              },
+              {
+                "start": 4497,
+                "end": 4497
+              },
+              {
+                "start": 4503,
+                "end": 4503
+              },
+              {
+                "start": 4505,
+                "end": 4505
+              }
+            ],
+            "src/builder/mod.rs": [
+              {
+                "start": 36,
+                "end": 36
+              }
+            ],
+            "src/builder/possible_value.rs": [
+              {
+                "start": 3,
+                "end": 3
+              },
+              {
+                "start": 33,
+                "end": 33
+              },
+              {
+                "start": 78,
+                "end": 78
+              },
+              {
+                "start": 151,
+                "end": 151
+              },
+              {
+                "start": 159,
+                "end": 159
+              }
+            ],
+            "src/builder/resettable.rs": [
+              {
+                "start": 7,
+                "end": 7
+              },
+              {
+                "start": 96,
+                "end": 97
+              },
+              {
+                "start": 171,
+                "end": 172
+              }
+            ],
+            "src/builder/styled_str.rs": [
+              {
+                "start": 3,
+                "end": 3
+              },
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 226,
+                "end": 226
+              },
+              {
+                "start": 228,
+                "end": 228
+              },
+              {
+                "start": 233,
+                "end": 233
+              },
+              {
+                "start": 235,
+                "end": 235
+              },
+              {
+                "start": 241,
+                "end": 241
+              },
+              {
+                "start": 243,
+                "end": 243
+              },
+              {
+                "start": 249,
+                "end": 249
+              },
+              {
+                "start": 251,
+                "end": 251
+              },
+              {
+                "start": 257,
+                "end": 257
+              },
+              {
+                "start": 259,
+                "end": 259
+              },
+              {
+                "start": 263,
+                "end": 263
+              },
+              {
+                "start": 269,
+                "end": 269
+              },
+              {
+                "start": 282,
+                "end": 282
+              }
+            ],
+            "src/error/context.rs": [
+              {
+                "start": 81,
+                "end": 81
+              },
+              {
+                "start": 93,
+                "end": 93
+              }
+            ],
+            "src/error/format.rs": [
+              {
+                "start": 7,
+                "end": 7
+              },
+              {
+                "start": 18,
+                "end": 18
+              },
+              {
+                "start": 31,
+                "end": 32
+              },
+              {
+                "start": 53,
+                "end": 54
+              },
+              {
+                "start": 68,
+                "end": 68
+              },
+              {
+                "start": 78,
+                "end": 78
+              },
+              {
+                "start": 85,
+                "end": 85
+              },
+              {
+                "start": 392,
+                "end": 394
+              },
+              {
+                "start": 415,
+                "end": 415
+              },
+              {
+                "start": 430,
+                "end": 430
+              }
+            ],
+            "src/error/mod.rs": [
+              {
+                "start": 20,
+                "end": 20
+              },
+              {
+                "start": 216,
+                "end": 216
+              },
+              {
+                "start": 274,
+                "end": 274
+              },
+              {
+                "start": 278,
+                "end": 278
+              },
+              {
+                "start": 286,
+                "end": 286
+              },
+              {
+                "start": 294,
+                "end": 294
+              },
+              {
+                "start": 311,
+                "end": 311
+              },
+              {
+                "start": 322,
+                "end": 322
+              },
+              {
+                "start": 331,
+                "end": 331
+              },
+              {
+                "start": 373,
+                "end": 373
+              },
+              {
+                "start": 393,
+                "end": 393
+              },
+              {
+                "start": 403,
+                "end": 403
+              },
+              {
+                "start": 415,
+                "end": 415
+              },
+              {
+                "start": 425,
+                "end": 425
+              },
+              {
+                "start": 437,
+                "end": 437
+              },
+              {
+                "start": 447,
+                "end": 447
+              },
+              {
+                "start": 459,
+                "end": 459
+              },
+              {
+                "start": 466,
+                "end": 466
+              },
+              {
+                "start": 473,
+                "end": 473
+              },
+              {
+                "start": 484,
+                "end": 484
+              },
+              {
+                "start": 496,
+                "end": 496
+              },
+              {
+                "start": 508,
+                "end": 508
+              },
+              {
+                "start": 527,
+                "end": 527
+              },
+              {
+                "start": 557,
+                "end": 557
+              },
+              {
+                "start": 576,
+                "end": 576
+              },
+              {
+                "start": 587,
+                "end": 587
+              },
+              {
+                "start": 597,
+                "end": 597
+              },
+              {
+                "start": 619,
+                "end": 619
+              },
+              {
+                "start": 631,
+                "end": 631
+              },
+              {
+                "start": 638,
+                "end": 638
+              },
+              {
+                "start": 689,
+                "end": 689
+              },
+              {
+                "start": 693,
+                "end": 693
+              },
+              {
+                "start": 707,
+                "end": 707
+              },
+              {
+                "start": 725,
+                "end": 726
+              }
+            ],
+            "src/macros.rs": [
+              {
+                "start": 651,
+                "end": 651
+              }
+            ],
+            "src/output/fmt.rs": [
+              {
+                "start": 1,
+                "end": 1
+              },
+              {
+                "start": 15,
+                "end": 15
+              },
+              {
+                "start": 27,
+                "end": 27
+              }
+            ],
+            "src/output/help.rs": [
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 9,
+                "end": 9
+              }
+            ],
+            "src/output/help_template.rs": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 27,
+                "end": 27
+              },
+              {
+                "start": 75,
+                "end": 75
+              },
+              {
+                "start": 87,
+                "end": 87
+              },
+              {
+                "start": 550,
+                "end": 550
+              },
+              {
+                "start": 829,
+                "end": 829
+              },
+              {
+                "start": 876,
+                "end": 876
+              },
+              {
+                "start": 936,
+                "end": 936
+              },
+              {
+                "start": 1011,
+                "end": 1011
+              }
+            ],
+            "src/output/textwrap/mod.rs": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "src/output/usage.rs": [
+              {
+                "start": 7,
+                "end": 7
+              },
+              {
+                "start": 36,
+                "end": 36
+              },
+              {
+                "start": 40,
+                "end": 40
+              },
+              {
+                "start": 48,
+                "end": 48
+              },
+              {
+                "start": 73,
+                "end": 73
+              },
+              {
+                "start": 75,
+                "end": 75
+              },
+              {
+                "start": 128,
+                "end": 128
+              },
+              {
+                "start": 130,
+                "end": 130
+              },
+              {
+                "start": 190,
+                "end": 190
+              },
+              {
+                "start": 197,
+                "end": 197
+              },
+              {
+                "start": 281,
+                "end": 281
+              },
+              {
+                "start": 289,
+                "end": 289
+              },
+              {
+                "start": 321,
+                "end": 321
+              }
+            ],
+            "src/parser/validator.rs": [
+              {
+                "start": 2,
+                "end": 2
+              },
+              {
+                "start": 190,
+                "end": 190
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/styled_str.rs"
+          ],
+          "spans": {
+            "src/builder/styled_str.rs": [
+              {
+                "start": 1,
+                "end": 300
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 700,
+                "end": 900
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/styled_str.rs"
+          ],
+          "spans": {
+            "src/builder/styled_str.rs": [
+              {
+                "start": 290,
+                "end": 315
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/error/format.rs"
+          ],
+          "spans": {
+            "src/error/format.rs": [
+              {
+                "start": 1,
+                "end": 120
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/fmt.rs"
+          ],
+          "spans": {
+            "src/output/fmt.rs": [
+              {
+                "start": 1,
+                "end": 91
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/error/mod.rs"
+          ],
+          "spans": {
+            "src/error/mod.rs": [
+              {
+                "start": 1,
+                "end": 220
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/error/mod.rs"
+          ],
+          "spans": {
+            "src/error/mod.rs": [
+              {
+                "start": 630,
+                "end": 740
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs",
+            "src/error/mod.rs",
+            "tests/builder/help.rs",
+            "tests/builder/positionals.rs",
+            "tests/builder/subcommands.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 870,
+                "end": 870
+              },
+              {
+                "start": 872,
+                "end": 873
+              },
+              {
+                "start": 876,
+                "end": 876
+              }
+            ],
+            "src/error/mod.rs": [
+              {
+                "start": 94,
+                "end": 94
+              }
+            ],
+            "tests/builder/help.rs": [
+              {
+                "start": 2661,
+                "end": 2661
+              }
+            ],
+            "tests/builder/positionals.rs": [
+              {
+                "start": 214,
+                "end": 214
+              },
+              {
+                "start": 220,
+                "end": 220
+              },
+              {
+                "start": 229,
+                "end": 229
+              },
+              {
+                "start": 240,
+                "end": 240
+              },
+              {
+                "start": 246,
+                "end": 246
+              }
+            ],
+            "tests/builder/subcommands.rs": [
+              {
+                "start": 346,
+                "end": 346
+              },
+              {
+                "start": 610,
+                "end": 610
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "tests/builder/help.rs",
+            "tests/builder/positionals.rs",
+            "tests/builder/subcommands.rs",
+            "tests/derive/app_name.rs"
+          ],
+          "spans": {
+            "tests/builder/help.rs": [
+              {
+                "start": 2661,
+                "end": 2661
+              }
+            ],
+            "tests/builder/positionals.rs": [
+              {
+                "start": 214,
+                "end": 214
+              },
+              {
+                "start": 220,
+                "end": 220
+              },
+              {
+                "start": 229,
+                "end": 229
+              },
+              {
+                "start": 240,
+                "end": 240
+              },
+              {
+                "start": 246,
+                "end": 246
+              }
+            ],
+            "tests/builder/subcommands.rs": [
+              {
+                "start": 346,
+                "end": 346
+              },
+              {
+                "start": 610,
+                "end": 610
+              }
+            ],
+            "tests/derive/app_name.rs": [
+              {
+                "start": 61,
+                "end": 61
+              },
+              {
+                "start": 72,
+                "end": 72
+              },
+              {
+                "start": 83,
+                "end": 83
+              },
+              {
+                "start": 94,
+                "end": 94
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "tests/builder/cargo.rs",
+            "tests/builder/command.rs",
+            "tests/builder/conflicts.rs",
+            "tests/builder/default_vals.rs",
+            "tests/builder/double_require.rs",
+            "tests/builder/env.rs",
+            "tests/builder/error.rs",
+            "tests/builder/help.rs",
+            "tests/builder/subcommands.rs",
+            "tests/builder/tests.rs",
+            "tests/builder/version.rs",
+            "tests/derive/custom_string_parsers.rs",
+            "tests/derive/default_value.rs",
+            "tests/derive/deny_warnings.rs",
+            "tests/derive/doc_comments_help.rs",
+            "tests/derive/flags.rs",
+            "tests/derive/help.rs",
+            "tests/derive/macros.rs",
+            "tests/derive/nested_subcommands.rs",
+            "tests/derive/non_literal_attributes.rs",
+            "tests/derive/options.rs",
+            "tests/derive/skip.rs",
+            "tests/derive/subcommands.rs",
+            "tests/macros.rs"
+          ],
+          "spans": {
+            "tests/builder/cargo.rs": [
+              {
+                "start": 40,
+                "end": 40
+              },
+              {
+                "start": 56,
+                "end": 56
+              },
+              {
+                "start": 70,
+                "end": 70
+              },
+              {
+                "start": 84,
+                "end": 84
+              },
+              {
+                "start": 97,
+                "end": 97
+              }
+            ],
+            "tests/builder/command.rs": [
+              {
+                "start": 27,
+                "end": 27
+              }
+            ],
+            "tests/builder/conflicts.rs": [
+              {
+                "start": 411,
+                "end": 411
+              },
+              {
+                "start": 445,
+                "end": 445
+              }
+            ],
+            "tests/builder/default_vals.rs": [
+              {
+                "start": 50,
+                "end": 50
+              }
+            ],
+            "tests/builder/double_require.rs": [
+              {
+                "start": 55,
+                "end": 55
+              },
+              {
+                "start": 74,
+                "end": 74
+              },
+              {
+                "start": 89,
+                "end": 89
+              }
+            ],
+            "tests/builder/env.rs": [
+              {
+                "start": 396,
+                "end": 396
+              }
+            ],
+            "tests/builder/error.rs": [
+              {
+                "start": 12,
+                "end": 12
+              },
+              {
+                "start": 75,
+                "end": 75
+              },
+              {
+                "start": 77,
+                "end": 77
+              }
+            ],
+            "tests/builder/help.rs": [
+              {
+                "start": 88,
+                "end": 88
+              },
+              {
+                "start": 2488,
+                "end": 2488
+              },
+              {
+                "start": 2490,
+                "end": 2490
+              }
+            ],
+            "tests/builder/subcommands.rs": [
+              {
+                "start": 521,
+                "end": 521
+              },
+              {
+                "start": 538,
+                "end": 538
+              }
+            ],
+            "tests/builder/tests.rs": [
+              {
+                "start": 457,
+                "end": 457
+              },
+              {
+                "start": 461,
+                "end": 461
+              },
+              {
+                "start": 470,
+                "end": 470
+              }
+            ],
+            "tests/builder/version.rs": [
+              {
+                "start": 50,
+                "end": 50
+              },
+              {
+                "start": 60,
+                "end": 60
+              },
+              {
+                "start": 70,
+                "end": 70
+              },
+              {
+                "start": 80,
+                "end": 80
+              },
+              {
+                "start": 90,
+                "end": 90
+              },
+              {
+                "start": 100,
+                "end": 100
+              }
+            ],
+            "tests/derive/custom_string_parsers.rs": [
+              {
+                "start": 86,
+                "end": 86
+              }
+            ],
+            "tests/derive/default_value.rs": [
+              {
+                "start": 65,
+                "end": 65
+              },
+              {
+                "start": 68,
+                "end": 68
+              },
+              {
+                "start": 77,
+                "end": 78
+              },
+              {
+                "start": 88,
+                "end": 89
+              },
+              {
+                "start": 99,
+                "end": 100
+              }
+            ],
+            "tests/derive/deny_warnings.rs": [
+              {
+                "start": 32,
+                "end": 32
+              },
+              {
+                "start": 49,
+                "end": 49
+              }
+            ],
+            "tests/derive/doc_comments_help.rs": [
+              {
+                "start": 244,
+                "end": 244
+              }
+            ],
+            "tests/derive/flags.rs": [
+              {
+                "start": 98,
+                "end": 98
+              },
+              {
+                "start": 122,
+                "end": 122
+              }
+            ],
+            "tests/derive/help.rs": [
+              {
+                "start": 228,
+                "end": 228
+              }
+            ],
+            "tests/derive/macros.rs": [
+              {
+                "start": 18,
+                "end": 18
+              }
+            ],
+            "tests/derive/nested_subcommands.rs": [
+              {
+                "start": 140,
+                "end": 140
+              }
+            ],
+            "tests/derive/non_literal_attributes.rs": [
+              {
+                "start": 49,
+                "end": 49
+              },
+              {
+                "start": 58,
+                "end": 58
+              },
+              {
+                "start": 67,
+                "end": 67
+              },
+              {
+                "start": 76,
+                "end": 76
+              },
+              {
+                "start": 89,
+                "end": 90
+              },
+              {
+                "start": 98,
+                "end": 99
+              },
+              {
+                "start": 117,
+                "end": 117
+              },
+              {
+                "start": 154,
+                "end": 154
+              }
+            ],
+            "tests/derive/options.rs": [
+              {
+                "start": 222,
+                "end": 222
+              },
+              {
+                "start": 389,
+                "end": 389
+              }
+            ],
+            "tests/derive/skip.rs": [
+              {
+                "start": 153,
+                "end": 153
+              }
+            ],
+            "tests/derive/subcommands.rs": [
+              {
+                "start": 46,
+                "end": 46
+              },
+              {
+                "start": 54,
+                "end": 54
+              },
+              {
+                "start": 101,
+                "end": 101
+              },
+              {
+                "start": 148,
+                "end": 148
+              },
+              {
+                "start": 155,
+                "end": 155
+              }
+            ],
+            "tests/macros.rs": [
+              {
+                "start": 49,
+                "end": 49
+              },
+              {
+                "start": 57,
+                "end": 57
+              },
+              {
+                "start": 65,
+                "end": 65
+              },
+              {
+                "start": 74,
+                "end": 74
+              },
+              {
+                "start": 88,
+                "end": 88
+              },
+              {
+                "start": 97,
+                "end": 97
+              },
+              {
+                "start": 106,
+                "end": 106
+              },
+              {
+                "start": 116,
+                "end": 116
+              },
+              {
+                "start": 195,
+                "end": 195
+              },
+              {
+                "start": 203,
+                "end": 203
+              },
+              {
+                "start": 211,
+                "end": 211
+              },
+              {
+                "start": 220,
+                "end": 220
+              },
+              {
+                "start": 233,
+                "end": 233
+              },
+              {
+                "start": 241,
+                "end": 241
+              },
+              {
+                "start": 249,
+                "end": 249
+              },
+              {
+                "start": 257,
+                "end": 257
+              },
+              {
+                "start": 265,
+                "end": 265
+              },
+              {
+                "start": 274,
+                "end": 274
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "tests/builder/help.rs"
+          ],
+          "spans": {
+            "tests/builder/help.rs": [
+              {
+                "start": 2650,
+                "end": 2700
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/arg.rs",
+            "src/builder/command.rs",
+            "src/error/mod.rs"
+          ],
+          "spans": {
+            "src/builder/arg.rs": [
+              {
+                "start": 4164,
+                "end": 4164
+              }
+            ],
+            "src/builder/command.rs": [
+              {
+                "start": 828,
+                "end": 828
+              },
+              {
+                "start": 834,
+                "end": 835
+              },
+              {
+                "start": 840,
+                "end": 840
+              },
+              {
+                "start": 858,
+                "end": 859
+              },
+              {
+                "start": 870,
+                "end": 870
+              },
+              {
+                "start": 872,
+                "end": 873
+              },
+              {
+                "start": 876,
+                "end": 876
+              },
+              {
+                "start": 4248,
+                "end": 4249
+              },
+              {
+                "start": 4504,
+                "end": 4504
+              }
+            ],
+            "src/error/mod.rs": [
+              {
+                "start": 94,
+                "end": 94
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 4470,
+                "end": 4520
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "CHANGELOG.md"
+          ],
+          "spans": {
+            "CHANGELOG.md": [
+              {
+                "start": 1,
+                "end": 120
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/error/format.rs"
+          ],
+          "spans": {
+            "src/error/format.rs": [
+              {
+                "start": 380,
+                "end": 450
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "CHANGELOG.md"
+          ],
+          "spans": {
+            "CHANGELOG.md": [
+              {
+                "start": 464,
+                "end": 465
+              },
+              {
+                "start": 1156,
+                "end": 1156
+              },
+              {
+                "start": 1192,
+                "end": 1192
+              },
+              {
+                "start": 1220,
+                "end": 1220
+              },
+              {
+                "start": 1281,
+                "end": 1281
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "CHANGELOG.md"
+          ],
+          "spans": {
+            "CHANGELOG.md": [
+              {
+                "start": 120,
+                "end": 360
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "Cargo.toml"
+          ],
+          "spans": {
+            "Cargo.toml": [
+              {
+                "start": 1,
+                "end": 120
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/mod.rs"
+          ],
+          "spans": {
+            "src/output/mod.rs": [
+              {
+                "start": 1,
+                "end": 23
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 1,
+                "end": 70
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 4230,
+                "end": 4270
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/help.rs"
+          ],
+          "spans": {
+            "src/output/help.rs": [
+              {
+                "start": 1,
+                "end": 43
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "Cargo.lock",
+            "Cargo.toml",
+            "src/builder/styled_str.rs",
+            "src/output/fmt.rs"
+          ],
+          "spans": {
+            "Cargo.lock": [
+              {
+                "start": 127,
+                "end": 127
+              },
+              {
+                "start": 860,
+                "end": 860
+              },
+              {
+                "start": 929,
+                "end": 929
+              }
+            ],
+            "Cargo.toml": [
+              {
+                "start": 70,
+                "end": 70
+              },
+              {
+                "start": 100,
+                "end": 100
+              }
+            ],
+            "src/builder/styled_str.rs": [
+              {
+                "start": 186,
+                "end": 186
+              },
+              {
+                "start": 188,
+                "end": 188
+              },
+              {
+                "start": 191,
+                "end": 191
+              },
+              {
+                "start": 202,
+                "end": 202
+              },
+              {
+                "start": 205,
+                "end": 205
+              },
+              {
+                "start": 208,
+                "end": 208
+              }
+            ],
+            "src/output/fmt.rs": [
+              {
+                "start": 37,
+                "end": 37
+              },
+              {
+                "start": 51,
+                "end": 51
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/error/mod.rs"
+          ],
+          "spans": {
+            "src/error/mod.rs": [
+              {
+                "start": 255,
+                "end": 340
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/mod.rs"
+          ],
+          "spans": {
+            "src/builder/mod.rs": [
+              {
+                "start": 1,
+                "end": 45
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/styled_str.rs"
+          ],
+          "spans": {
+            "src/builder/styled_str.rs": [
+              {
+                "start": 175,
+                "end": 200
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "Cargo.lock"
+          ],
+          "spans": {
+            "Cargo.lock": [
+              {
+                "start": 855,
+                "end": 900
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "tests/builder/positionals.rs"
+          ],
+          "spans": {
+            "tests/builder/positionals.rs": [
+              {
+                "start": 205,
+                "end": 250
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "tests/builder/subcommands.rs"
+          ],
+          "spans": {
+            "tests/builder/subcommands.rs": [
+              {
+                "start": 340,
+                "end": 355
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "tests/builder/utils.rs"
+          ],
+          "spans": {
+            "tests/builder/utils.rs": [
+              {
+                "start": 1,
+                "end": 80
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "tests/builder/error.rs"
+          ],
+          "spans": {
+            "tests/builder/error.rs": [
+              {
+                "start": 1,
+                "end": 30
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/styled_str.rs"
+          ],
+          "spans": {
+            "src/builder/styled_str.rs": [
+              {
+                "start": 282,
+                "end": 282
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs",
+            "src/error/mod.rs",
+            "tests/builder/help.rs",
+            "tests/builder/positionals.rs",
+            "tests/builder/subcommands.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 870,
+                "end": 870
+              },
+              {
+                "start": 872,
+                "end": 873
+              },
+              {
+                "start": 876,
+                "end": 876
+              }
+            ],
+            "src/error/mod.rs": [
+              {
+                "start": 94,
+                "end": 94
+              }
+            ],
+            "tests/builder/help.rs": [
+              {
+                "start": 2661,
+                "end": 2661
+              }
+            ],
+            "tests/builder/positionals.rs": [
+              {
+                "start": 214,
+                "end": 214
+              },
+              {
+                "start": 220,
+                "end": 220
+              },
+              {
+                "start": 229,
+                "end": 229
+              },
+              {
+                "start": 240,
+                "end": 240
+              },
+              {
+                "start": 246,
+                "end": 246
+              }
+            ],
+            "tests/builder/subcommands.rs": [
+              {
+                "start": 346,
+                "end": 346
+              },
+              {
+                "start": 610,
+                "end": 610
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/lib.rs"
+          ],
+          "spans": {
+            "src/lib.rs": [
+              {
+                "start": 149,
+                "end": 150
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/lib.rs"
+          ],
+          "spans": {
+            "src/lib.rs": [
+              {
+                "start": 1,
+                "end": 120
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/builder/command.rs"
+          ],
+          "spans": {
+            "src/builder/command.rs": [
+              {
+                "start": 711,
+                "end": 735
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/error/mod.rs"
+          ],
+          "spans": {
+            "src/error/mod.rs": [
+              {
+                "start": 673,
+                "end": 685
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "src/builder/command.rs",
+        "src/builder/styled_str.rs",
+        "src/error/mod.rs",
+        "tests/builder/positionals.rs",
+        "tests/builder/subcommands.rs"
+      ],
+      "pred_spans": {
+        "src/builder/command.rs": [
+          {
+            "start": 711,
+            "end": 883
+          }
+        ],
+        "src/builder/styled_str.rs": [
+          {
+            "start": 185,
+            "end": 235
+          }
+        ],
+        "src/error/mod.rs": [
+          {
+            "start": 171,
+            "end": 196
+          },
+          {
+            "start": 673,
+            "end": 684
+          }
+        ],
+        "tests/builder/positionals.rs": [
+          {
+            "start": 211,
+            "end": 247
+          }
+        ],
+        "tests/builder/subcommands.rs": [
+          {
+            "start": 340,
+            "end": 355
+          }
+        ]
+      }
+    }
+  }
+]

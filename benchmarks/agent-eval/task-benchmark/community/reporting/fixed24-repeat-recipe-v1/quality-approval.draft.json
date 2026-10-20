@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "kind": "closed-full288-quality-replay-approval",
+  "status": "draft",
+  "approvedBy": null,
+  "acceptedNumericManifestSha256": null,
+  "inputs": {
+    "summary": {
+      "path": null,
+      "sha256": null
+    },
+    "report": {
+      "path": null,
+      "sha256": null
+    },
+    "selection": {
+      "path": null,
+      "sha256": null
+    },
+    "producer": {
+      "path": null,
+      "sha256": "274b786d8cb7f1cb540ff7327daadd1e2dd7f5de11086ff79ad6d3e41b7fd1c7"
+    }
+  },
+  "publicAssets": {
+    "path": null,
+    "sha256": null
+  },
+  "metadataAudits": [],
+  "campaigns": [],
+  "tasks": [],
+  "cells": [],
+  "operatorDecisions": []
+}
