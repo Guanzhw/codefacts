@@ -765,6 +765,7 @@ impl CodeFacts {
             self.task_excerpts(
                 &hits,
                 &terms,
+                &query_identifiers(query),
                 &nodes,
                 &hashes,
                 &mut sources,
