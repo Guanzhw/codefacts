@@ -115,10 +115,15 @@ test('two real HTTP bridge children isolate cells, source tool works, ordinary s
 test('real ripgrep helper has direct start/exit/close receipts', { skip: !enabled ? 'SDK prerequisite missing' : !rgCommand ? 'Existing ripgrep not configured; helper calibration unavailable' : false }, async t => {
   const f = fixture(t), owner = await startHttpBridge(f); t.after(() => owner.close());
   const connection = await connect(owner.url);
-  assert.match((await connection.client.callTool({ name: 'source_list' })).content[0].text, /sample.js/);
-  await connection.close(); await owner.close();
+  try {
+    assert.match((await connection.client.callTool({ name: 'source_list' })).content[0].text, /sample.js/);
+    const noMatch = await connection.client.callTool({ name: 'source_search', arguments: { pattern: 'missing_symbol_for_lifecycle' } });
+    assert.notEqual(noMatch.isError, true);
+    assert.equal(noMatch.content[0].text, '');
+  } finally { await connection.close(); await owner.close(); }
   const ledger = events(owner.directory);
   assert.ok(ledger.some(row => row.type === 'child-close' && row.role === 'ripgrep'));
+  assert.ok(ledger.some(row => row.type === 'child-close' && row.role === 'ripgrep' && row.details.code === 1));
   assert.equal(evaluateLifecycle(ledger).status, 'PASS');
 });
 
