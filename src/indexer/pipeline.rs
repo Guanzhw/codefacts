@@ -182,11 +182,26 @@ impl<'a> IndexingPipeline<'a> {
         let skip_counts = FileSkipCounts::default();
 
         // ---- Pass 1: parse & extract nodes (parallel via rayon) ----
-        // The closure only captures `root`, `stored_hashes`, `skip_counts`,
-        // and `incremental` — all are Sync. No DB access here.
+        // Shared indexing and opt-in trace state are Sync. No DB access here.
+        if profile_refresh {
+            eprintln!(
+                "CODEFACTS_PROFILE_REFRESH_PASS files={} stored_hashes={} incremental={incremental} elapsed_ms={:.3}",
+                file_paths.len(), stored_hashes.len(), start.elapsed().as_secs_f64() * 1000.0
+            );
+        }
         let parsed: Vec<FileParseState> = file_paths
             .par_iter()
-            .filter_map(|abs_path| {
+            .enumerate()
+            .filter_map(|(file_index, abs_path)| {
+                let trace_file = |event: &str| {
+                    if profile_refresh && file_index < 2 {
+                        eprintln!(
+                            "CODEFACTS_PROFILE_REFRESH_FILE index={file_index} event={event} path={abs_path:?} elapsed_ms={:.3}",
+                            start.elapsed().as_secs_f64() * 1000.0
+                        );
+                    }
+                };
+                trace_file("worker-enter");
                 // Compute relative path
                 let rel_path = abs_path
                     .strip_prefix(root)
@@ -198,11 +213,14 @@ impl<'a> IndexingPipeline<'a> {
                 let metadata = match fs::metadata(abs_path) {
                     Ok(m) => m,
                     Err(_) => {
+                        trace_file("metadata-error");
                         skip_counts.unreadable.fetch_add(1, Ordering::Relaxed);
                         return None;
                     }
                 };
+                trace_file("metadata-return");
                 if metadata.len() > MAX_FILE_SIZE {
+                    trace_file("size-skipped");
                     skip_counts.too_large.fetch_add(1, Ordering::Relaxed);
                     return None;
                 }
@@ -211,13 +229,16 @@ impl<'a> IndexingPipeline<'a> {
                 let source_text = match fs::read_to_string(abs_path) {
                     Ok(s) => s,
                     Err(_) => {
+                        trace_file("read-error");
                         skip_counts.unreadable.fetch_add(1, Ordering::Relaxed);
                         return None;
                     }
                 };
+                trace_file("read-return");
 
                 // Content hash for incremental indexing
                 let content_hash = sha256_hex(&source_text);
+                trace_file("hash-return");
 
                 // Incremental: skip if unchanged (using pre-fetched hash map)
                 if incremental {
