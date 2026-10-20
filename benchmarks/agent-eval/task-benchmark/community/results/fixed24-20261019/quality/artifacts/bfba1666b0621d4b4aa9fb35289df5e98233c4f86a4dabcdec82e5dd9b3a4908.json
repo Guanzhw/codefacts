@@ -1,0 +1,445 @@
+[
+  {
+    "instance_id": "clap-rs__clap-2534",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "9e83a909fa26538bd6fbbf9babb5904827ca0be4",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "src/output/help.rs",
+            "tests/hidden_args.rs"
+          ],
+          "spans": {
+            "src/output/help.rs": [
+              {
+                "start": 449,
+                "end": 507
+              },
+              {
+                "start": 1087,
+                "end": 1101
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "clap_derive/src/dummies.rs",
+            "clap_derive/src/lib.rs",
+            "src/derive.rs",
+            "src/mkeymap.rs",
+            "src/output/help.rs"
+          ],
+          "spans": {
+            "clap_derive/src/dummies.rs": [
+              {
+                "start": 1,
+                "end": 88
+              }
+            ],
+            "clap_derive/src/lib.rs": [
+              {
+                "start": 73,
+                "end": 79
+              }
+            ],
+            "src/derive.rs": [
+              {
+                "start": 73,
+                "end": 73
+              },
+              {
+                "start": 136,
+                "end": 136
+              },
+              {
+                "start": 148,
+                "end": 148
+              },
+              {
+                "start": 209,
+                "end": 209
+              }
+            ],
+            "src/mkeymap.rs": [
+              {
+                "start": 9,
+                "end": 22
+              },
+              {
+                "start": 107,
+                "end": 115
+              }
+            ],
+            "src/output/help.rs": [
+              {
+                "start": 97,
+                "end": 138
+              },
+              {
+                "start": 157,
+                "end": 324
+              },
+              {
+                "start": 331,
+                "end": 343
+              },
+              {
+                "start": 449,
+                "end": 539
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "clap_generate/src/generators/shells/zsh.rs",
+            "src/output/help.rs",
+            "src/util/fnv.rs"
+          ],
+          "spans": {
+            "clap_generate/src/generators/shells/zsh.rs": [
+              {
+                "start": 396,
+                "end": 499
+              }
+            ],
+            "src/output/help.rs": [
+              {
+                "start": 20,
+                "end": 55
+              },
+              {
+                "start": 149,
+                "end": 176
+              },
+              {
+                "start": 449,
+                "end": 507
+              },
+              {
+                "start": 526,
+                "end": 539
+              },
+              {
+                "start": 680,
+                "end": 709
+              },
+              {
+                "start": 895,
+                "end": 909
+              },
+              {
+                "start": 977,
+                "end": 1090
+              },
+              {
+                "start": 1101,
+                "end": 1113
+              }
+            ],
+            "src/util/fnv.rs": [
+              {
+                "start": 1,
+                "end": 46
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/help.rs",
+            "src/util/fnv.rs"
+          ],
+          "spans": {
+            "src/output/help.rs": [
+              {
+                "start": 20,
+                "end": 55
+              },
+              {
+                "start": 58,
+                "end": 138
+              },
+              {
+                "start": 153,
+                "end": 172
+              },
+              {
+                "start": 199,
+                "end": 280
+              },
+              {
+                "start": 504,
+                "end": 539
+              },
+              {
+                "start": 784,
+                "end": 898
+              },
+              {
+                "start": 1010,
+                "end": 1018
+              },
+              {
+                "start": 1087,
+                "end": 1103
+              }
+            ],
+            "src/util/fnv.rs": [
+              {
+                "start": 1,
+                "end": 46
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "tests/hidden_args.rs"
+          ],
+          "spans": {
+            "tests/hidden_args.rs": [
+              {
+                "start": 2,
+                "end": 8
+              },
+              {
+                "start": 20,
+                "end": 45
+              },
+              {
+                "start": 53,
+                "end": 59
+              },
+              {
+                "start": 77,
+                "end": 135
+              },
+              {
+                "start": 149,
+                "end": 180
+              },
+              {
+                "start": 190,
+                "end": 221
+              },
+              {
+                "start": 224,
+                "end": 245
+              },
+              {
+                "start": 249,
+                "end": 272
+              },
+              {
+                "start": 278,
+                "end": 301
+              },
+              {
+                "start": 304,
+                "end": 414
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/parse/matches/matched_arg.rs",
+            "tests/help.rs"
+          ],
+          "spans": {
+            "src/parse/matches/matched_arg.rs": [
+              {
+                "start": 17,
+                "end": 29
+              },
+              {
+                "start": 32,
+                "end": 46
+              }
+            ],
+            "tests/help.rs": [
+              {
+                "start": 125,
+                "end": 131
+              },
+              {
+                "start": 741,
+                "end": 791
+              },
+              {
+                "start": 1360,
+                "end": 1378
+              },
+              {
+                "start": 1565,
+                "end": 1592
+              },
+              {
+                "start": 1766,
+                "end": 1803
+              },
+              {
+                "start": 2123,
+                "end": 2137
+              },
+              {
+                "start": 2425,
+                "end": 2431
+              },
+              {
+                "start": 2434,
+                "end": 2456
+              },
+              {
+                "start": 2459,
+                "end": 2481
+              },
+              {
+                "start": 2484,
+                "end": 2504
+              },
+              {
+                "start": 2530,
+                "end": 2559
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "clap_derive/src/attrs.rs",
+            "tests/help.rs"
+          ],
+          "spans": {
+            "clap_derive/src/attrs.rs": [
+              {
+                "start": 91,
+                "end": 111
+              },
+              {
+                "start": 780,
+                "end": 799
+              }
+            ],
+            "tests/help.rs": [
+              {
+                "start": 599,
+                "end": 605
+              },
+              {
+                "start": 1506,
+                "end": 1512
+              },
+              {
+                "start": 1521,
+                "end": 1527
+              },
+              {
+                "start": 1530,
+                "end": 1539
+              },
+              {
+                "start": 1546,
+                "end": 1555
+              },
+              {
+                "start": 1566,
+                "end": 1578
+              },
+              {
+                "start": 1590,
+                "end": 1602
+              },
+              {
+                "start": 1614,
+                "end": 1620
+              },
+              {
+                "start": 1628,
+                "end": 1634
+              },
+              {
+                "start": 1644,
+                "end": 1650
+              },
+              {
+                "start": 1659,
+                "end": 1691
+              },
+              {
+                "start": 1697,
+                "end": 1703
+              },
+              {
+                "start": 1834,
+                "end": 1868
+              },
+              {
+                "start": 1888,
+                "end": 1950
+              },
+              {
+                "start": 1987,
+                "end": 1993
+              },
+              {
+                "start": 2004,
+                "end": 2018
+              },
+              {
+                "start": 2025,
+                "end": 2033
+              },
+              {
+                "start": 2038,
+                "end": 2085
+              },
+              {
+                "start": 2318,
+                "end": 2346
+              },
+              {
+                "start": 2352,
+                "end": 2373
+              },
+              {
+                "start": 2382,
+                "end": 2404
+              },
+              {
+                "start": 2410,
+                "end": 2431
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "src/output/help.rs",
+        "tests/help.rs"
+      ],
+      "pred_spans": {
+        "src/output/help.rs": [
+          {
+            "start": 787,
+            "end": 895
+          },
+          {
+            "start": 1090,
+            "end": 1098
+          }
+        ],
+        "tests/help.rs": [
+          {
+            "start": 2320,
+            "end": 2501
+          }
+        ]
+      }
+    }
+  }
+]

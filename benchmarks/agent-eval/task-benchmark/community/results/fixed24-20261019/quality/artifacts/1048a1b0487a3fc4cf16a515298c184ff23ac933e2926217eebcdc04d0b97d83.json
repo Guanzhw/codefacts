@@ -1,0 +1,1118 @@
+[
+  {
+    "instance_id": "mui__material-ui-26807",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "f791d0473239ff2976a53052fe6ae130b746b7ae",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "packages/material-ui/src/Step/Step.d.ts",
+            "packages/material-ui/src/StepButton/StepButton.d.ts",
+            "packages/material-ui/src/StepLabel/StepLabel.d.ts",
+            "packages/material-ui/src/StepLabel/index.d.ts",
+            "packages/material-ui/src/index.d.ts",
+            "packages/material-ui/src/styles/components.d.ts",
+            "packages/material-ui/src/styles/overrides.d.ts",
+            "packages/material-ui/src/styles/props.d.ts"
+          ],
+          "spans": {
+            "packages/material-ui/src/Step/Step.d.ts": [
+              {
+                "start": 12,
+                "end": 12
+              }
+            ],
+            "packages/material-ui/src/StepButton/StepButton.d.ts": [
+              {
+                "start": 16,
+                "end": 16
+              }
+            ],
+            "packages/material-ui/src/StepLabel/StepLabel.d.ts": [
+              {
+                "start": 6,
+                "end": 6
+              },
+              {
+                "start": 8,
+                "end": 8
+              },
+              {
+                "start": 16,
+                "end": 16
+              },
+              {
+                "start": 44,
+                "end": 44
+              },
+              {
+                "start": 54,
+                "end": 54
+              },
+              {
+                "start": 56,
+                "end": 56
+              },
+              {
+                "start": 58,
+                "end": 58
+              }
+            ],
+            "packages/material-ui/src/StepLabel/index.d.ts": [
+              {
+                "start": 1,
+                "end": 2
+              }
+            ],
+            "packages/material-ui/src/index.d.ts": [
+              {
+                "start": 381,
+                "end": 382
+              }
+            ],
+            "packages/material-ui/src/styles/components.d.ts": [
+              {
+                "start": 379,
+                "end": 381
+              }
+            ],
+            "packages/material-ui/src/styles/overrides.d.ts": [
+              {
+                "start": 91,
+                "end": 91
+              },
+              {
+                "start": 217,
+                "end": 217
+              }
+            ],
+            "packages/material-ui/src/styles/props.d.ts": [
+              {
+                "start": 93,
+                "end": 93
+              },
+              {
+                "start": 215,
+                "end": 215
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/material-ui/src/StepLabel/StepLabel.d.ts",
+            "packages/material-ui/src/StepLabel/StepLabel.js",
+            "packages/material-ui/src/StepLabel/StepLabel.test.js",
+            "packages/material-ui/src/StepLabel/index.d.ts",
+            "packages/material-ui/src/StepLabel/index.js",
+            "packages/material-ui/src/StepLabel/stepLabelClasses.ts"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/material-ui/src/StepLabel/StepLabel.js"
+          ],
+          "spans": {
+            "packages/material-ui/src/StepLabel/StepLabel.js": [
+              {
+                "start": 1,
+                "end": 180
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/material-ui/src/StepLabel/StepLabel.d.ts"
+          ],
+          "spans": {
+            "packages/material-ui/src/StepLabel/StepLabel.d.ts": [
+              {
+                "start": 1,
+                "end": 58
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/material-ui/src/StepLabel/StepLabel.js"
+          ],
+          "spans": {
+            "packages/material-ui/src/StepLabel/StepLabel.js": [
+              {
+                "start": 180,
+                "end": 200
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/material-ui/src/Backdrop/Backdrop.js",
+            "packages/material-ui/src/Badge/Badge.js",
+            "packages/material-ui/src/FilledInput/FilledInput.js",
+            "packages/material-ui/src/Input/Input.js",
+            "packages/material-ui/src/InputBase/InputBase.js",
+            "packages/material-ui/src/ListItem/ListItem.js",
+            "packages/material-ui/src/Modal/Modal.js",
+            "packages/material-ui/src/Slider/Slider.js",
+            "packages/material-ui/src/Slider/Slider.test.js",
+            "packages/material-ui/src/TablePagination/TablePagination.test.js"
+          ],
+          "spans": {
+            "packages/material-ui/src/Backdrop/Backdrop.js": [
+              {
+                "start": 49,
+                "end": 49
+              },
+              {
+                "start": 75,
+                "end": 75
+              },
+              {
+                "start": 77,
+                "end": 77
+              },
+              {
+                "start": 79,
+                "end": 79
+              },
+              {
+                "start": 121,
+                "end": 121
+              }
+            ],
+            "packages/material-ui/src/Badge/Badge.js": [
+              {
+                "start": 196,
+                "end": 196
+              },
+              {
+                "start": 235,
+                "end": 235
+              },
+              {
+                "start": 237,
+                "end": 237
+              },
+              {
+                "start": 239,
+                "end": 239
+              },
+              {
+                "start": 243,
+                "end": 243
+              },
+              {
+                "start": 245,
+                "end": 245
+              },
+              {
+                "start": 304,
+                "end": 304
+              }
+            ],
+            "packages/material-ui/src/FilledInput/FilledInput.js": [
+              {
+                "start": 204,
+                "end": 204
+              }
+            ],
+            "packages/material-ui/src/Input/Input.js": [
+              {
+                "start": 128,
+                "end": 128
+              }
+            ],
+            "packages/material-ui/src/InputBase/InputBase.js": [
+              {
+                "start": 230,
+                "end": 230
+              },
+              {
+                "start": 480,
+                "end": 480
+              },
+              {
+                "start": 483,
+                "end": 483
+              },
+              {
+                "start": 598,
+                "end": 598
+              }
+            ],
+            "packages/material-ui/src/ListItem/ListItem.js": [
+              {
+                "start": 181,
+                "end": 181
+              },
+              {
+                "start": 240,
+                "end": 240
+              },
+              {
+                "start": 395,
+                "end": 395
+              }
+            ],
+            "packages/material-ui/src/Modal/Modal.js": [
+              {
+                "start": 62,
+                "end": 62
+              },
+              {
+                "start": 102,
+                "end": 102
+              },
+              {
+                "start": 104,
+                "end": 104
+              },
+              {
+                "start": 106,
+                "end": 106
+              },
+              {
+                "start": 162,
+                "end": 162
+              }
+            ],
+            "packages/material-ui/src/Slider/Slider.js": [
+              {
+                "start": 430,
+                "end": 430
+              },
+              {
+                "start": 454,
+                "end": 455
+              },
+              {
+                "start": 457,
+                "end": 457
+              },
+              {
+                "start": 459,
+                "end": 459
+              },
+              {
+                "start": 463,
+                "end": 463
+              },
+              {
+                "start": 465,
+                "end": 465
+              },
+              {
+                "start": 469,
+                "end": 469
+              },
+              {
+                "start": 471,
+                "end": 471
+              },
+              {
+                "start": 475,
+                "end": 475
+              },
+              {
+                "start": 477,
+                "end": 477
+              },
+              {
+                "start": 558,
+                "end": 558
+              }
+            ],
+            "packages/material-ui/src/Slider/Slider.test.js": [
+              {
+                "start": 220,
+                "end": 220
+              },
+              {
+                "start": 705,
+                "end": 705
+              },
+              {
+                "start": 722,
+                "end": 722
+              },
+              {
+                "start": 847,
+                "end": 847
+              }
+            ],
+            "packages/material-ui/src/TablePagination/TablePagination.test.js": [
+              {
+                "start": 48,
+                "end": 48
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/material-ui/src/StepLabel/StepLabel.js"
+          ],
+          "spans": {
+            "packages/material-ui/src/StepLabel/StepLabel.js": [
+              {
+                "start": 200,
+                "end": 234
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/material-ui/src/StepLabel/StepLabel.test.js"
+          ],
+          "spans": {
+            "packages/material-ui/src/StepLabel/StepLabel.test.js": [
+              {
+                "start": 1,
+                "end": 120
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/material-ui/src/Backdrop/Backdrop.d.ts",
+            "packages/material-ui/src/Badge/Badge.d.ts",
+            "packages/material-ui/src/InputBase/InputBase.d.ts",
+            "packages/material-ui/src/ListItem/ListItem.d.ts",
+            "packages/material-ui/src/Modal/Modal.d.ts",
+            "packages/material-ui/src/Slider/Slider.d.ts"
+          ],
+          "spans": {
+            "packages/material-ui/src/Backdrop/Backdrop.d.ts": [
+              {
+                "start": 39,
+                "end": 39
+              }
+            ],
+            "packages/material-ui/src/Badge/Badge.d.ts": [
+              {
+                "start": 52,
+                "end": 53
+              }
+            ],
+            "packages/material-ui/src/InputBase/InputBase.d.ts": [
+              {
+                "start": 56,
+                "end": 56
+              },
+              {
+                "start": 59,
+                "end": 59
+              },
+              {
+                "start": 66,
+                "end": 66
+              }
+            ],
+            "packages/material-ui/src/ListItem/ListItem.d.ts": [
+              {
+                "start": 100,
+                "end": 100
+              },
+              {
+                "start": 103,
+                "end": 103
+              }
+            ],
+            "packages/material-ui/src/Modal/Modal.d.ts": [
+              {
+                "start": 30,
+                "end": 30
+              }
+            ],
+            "packages/material-ui/src/Slider/Slider.d.ts": [
+              {
+                "start": 56,
+                "end": 62
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "docs/pages/api-docs/step-label.json",
+            "docs/src/pages/components/steppers/CustomizedSteppers.js",
+            "docs/src/pages/components/steppers/CustomizedSteppers.tsx",
+            "docs/src/pages/components/steppers/HorizontalLinearAlternativeLabelStepper.js",
+            "docs/src/pages/components/steppers/HorizontalLinearAlternativeLabelStepper.tsx",
+            "docs/src/pages/components/steppers/HorizontalLinearStepper.js",
+            "docs/src/pages/components/steppers/HorizontalLinearStepper.tsx",
+            "docs/src/pages/components/steppers/HorizontalStepperWithError.js",
+            "docs/src/pages/components/steppers/HorizontalStepperWithError.tsx",
+            "docs/src/pages/components/steppers/VerticalLinearStepper.js",
+            "docs/src/pages/components/steppers/VerticalLinearStepper.tsx",
+            "docs/src/pages/components/steppers/steppers-de.md",
+            "docs/src/pages/components/steppers/steppers-es.md",
+            "docs/src/pages/components/steppers/steppers-fr.md",
+            "docs/src/pages/components/steppers/steppers-ja.md",
+            "docs/src/pages/components/steppers/steppers-pt.md",
+            "docs/src/pages/components/steppers/steppers-ru.md",
+            "docs/src/pages/components/steppers/steppers-zh.md",
+            "docs/src/pages/components/steppers/steppers.md",
+            "docs/src/pages/getting-started/templates/checkout/Checkout.js",
+            "docs/src/pages/getting-started/templates/checkout/Checkout.tsx",
+            "docs/src/pages/guides/migration-v4/migration-v4-de.md",
+            "docs/src/pages/guides/migration-v4/migration-v4-es.md",
+            "docs/src/pages/guides/migration-v4/migration-v4-fr.md",
+            "docs/src/pages/guides/migration-v4/migration-v4-ja.md",
+            "docs/src/pages/guides/migration-v4/migration-v4-pt.md",
+            "docs/src/pages/guides/migration-v4/migration-v4-ru.md",
+            "docs/src/pages/guides/migration-v4/migration-v4-zh.md",
+            "docs/src/pages/guides/migration-v4/migration-v4.md",
+            "docs/translations/api-docs/step-button/step-button-de.json",
+            "docs/translations/api-docs/step-button/step-button-es.json",
+            "docs/translations/api-docs/step-button/step-button-fr.json",
+            "docs/translations/api-docs/step-button/step-button-ja.json",
+            "docs/translations/api-docs/step-button/step-button-pt.json",
+            "docs/translations/api-docs/step-button/step-button-ru.json",
+            "docs/translations/api-docs/step-button/step-button-zh.json",
+            "docs/translations/api-docs/step-button/step-button.json",
+            "docs/translations/api-docs/step/step-de.json",
+            "docs/translations/api-docs/step/step-es.json",
+            "docs/translations/api-docs/step/step-fr.json",
+            "docs/translations/api-docs/step/step-ja.json",
+            "docs/translations/api-docs/step/step-pt.json",
+            "docs/translations/api-docs/step/step-ru.json",
+            "docs/translations/api-docs/step/step-zh.json",
+            "docs/translations/api-docs/step/step.json"
+          ],
+          "spans": {
+            "docs/pages/api-docs/step-label.json": [
+              {
+                "start": 12,
+                "end": 12
+              },
+              {
+                "start": 28,
+                "end": 28
+              },
+              {
+                "start": 32,
+                "end": 32
+              }
+            ],
+            "docs/src/pages/components/steppers/CustomizedSteppers.js": [
+              {
+                "start": 7,
+                "end": 7
+              },
+              {
+                "start": 176,
+                "end": 176
+              },
+              {
+                "start": 183,
+                "end": 183
+              }
+            ],
+            "docs/src/pages/components/steppers/CustomizedSteppers.tsx": [
+              {
+                "start": 6,
+                "end": 6
+              },
+              {
+                "start": 148,
+                "end": 148
+              },
+              {
+                "start": 155,
+                "end": 155
+              }
+            ],
+            "docs/src/pages/components/steppers/HorizontalLinearAlternativeLabelStepper.js": [
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 19,
+                "end": 19
+              }
+            ],
+            "docs/src/pages/components/steppers/HorizontalLinearAlternativeLabelStepper.tsx": [
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 19,
+                "end": 19
+              }
+            ],
+            "docs/src/pages/components/steppers/HorizontalLinearStepper.js": [
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 73,
+                "end": 73
+              }
+            ],
+            "docs/src/pages/components/steppers/HorizontalLinearStepper.tsx": [
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 75,
+                "end": 75
+              }
+            ],
+            "docs/src/pages/components/steppers/HorizontalStepperWithError.js": [
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 32,
+                "end": 32
+              }
+            ],
+            "docs/src/pages/components/steppers/HorizontalStepperWithError.tsx": [
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 34,
+                "end": 34
+              }
+            ],
+            "docs/src/pages/components/steppers/VerticalLinearStepper.js": [
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 52,
+                "end": 52
+              },
+              {
+                "start": 60,
+                "end": 60
+              }
+            ],
+            "docs/src/pages/components/steppers/VerticalLinearStepper.tsx": [
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 52,
+                "end": 52
+              },
+              {
+                "start": 60,
+                "end": 60
+              }
+            ],
+            "docs/src/pages/components/steppers/steppers-de.md": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "docs/src/pages/components/steppers/steppers-es.md": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "docs/src/pages/components/steppers/steppers-fr.md": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "docs/src/pages/components/steppers/steppers-ja.md": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "docs/src/pages/components/steppers/steppers-pt.md": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "docs/src/pages/components/steppers/steppers-ru.md": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "docs/src/pages/components/steppers/steppers-zh.md": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "docs/src/pages/components/steppers/steppers.md": [
+              {
+                "start": 3,
+                "end": 3
+              }
+            ],
+            "docs/src/pages/getting-started/templates/checkout/Checkout.js": [
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 83,
+                "end": 83
+              }
+            ],
+            "docs/src/pages/getting-started/templates/checkout/Checkout.tsx": [
+              {
+                "start": 10,
+                "end": 10
+              },
+              {
+                "start": 83,
+                "end": 83
+              }
+            ],
+            "docs/src/pages/guides/migration-v4/migration-v4-de.md": [
+              {
+                "start": 972,
+                "end": 972
+              },
+              {
+                "start": 978,
+                "end": 978
+              },
+              {
+                "start": 989,
+                "end": 989
+              },
+              {
+                "start": 994,
+                "end": 994
+              }
+            ],
+            "docs/src/pages/guides/migration-v4/migration-v4-es.md": [
+              {
+                "start": 970,
+                "end": 970
+              },
+              {
+                "start": 976,
+                "end": 976
+              },
+              {
+                "start": 987,
+                "end": 987
+              },
+              {
+                "start": 992,
+                "end": 992
+              }
+            ],
+            "docs/src/pages/guides/migration-v4/migration-v4-fr.md": [
+              {
+                "start": 970,
+                "end": 970
+              },
+              {
+                "start": 976,
+                "end": 976
+              },
+              {
+                "start": 987,
+                "end": 987
+              },
+              {
+                "start": 992,
+                "end": 992
+              }
+            ],
+            "docs/src/pages/guides/migration-v4/migration-v4-ja.md": [
+              {
+                "start": 970,
+                "end": 970
+              },
+              {
+                "start": 976,
+                "end": 976
+              },
+              {
+                "start": 987,
+                "end": 987
+              },
+              {
+                "start": 992,
+                "end": 992
+              }
+            ],
+            "docs/src/pages/guides/migration-v4/migration-v4-pt.md": [
+              {
+                "start": 967,
+                "end": 967
+              },
+              {
+                "start": 973,
+                "end": 973
+              },
+              {
+                "start": 984,
+                "end": 984
+              },
+              {
+                "start": 989,
+                "end": 989
+              }
+            ],
+            "docs/src/pages/guides/migration-v4/migration-v4-ru.md": [
+              {
+                "start": 970,
+                "end": 970
+              },
+              {
+                "start": 976,
+                "end": 976
+              },
+              {
+                "start": 987,
+                "end": 987
+              },
+              {
+                "start": 992,
+                "end": 992
+              }
+            ],
+            "docs/src/pages/guides/migration-v4/migration-v4-zh.md": [
+              {
+                "start": 967,
+                "end": 967
+              },
+              {
+                "start": 973,
+                "end": 973
+              },
+              {
+                "start": 984,
+                "end": 984
+              },
+              {
+                "start": 989,
+                "end": 989
+              }
+            ],
+            "docs/src/pages/guides/migration-v4/migration-v4.md": [
+              {
+                "start": 1435,
+                "end": 1435
+              },
+              {
+                "start": 1441,
+                "end": 1441
+              },
+              {
+                "start": 1452,
+                "end": 1452
+              },
+              {
+                "start": 1457,
+                "end": 1457
+              }
+            ],
+            "docs/translations/api-docs/step-button/step-button-de.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "docs/translations/api-docs/step-button/step-button-es.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "docs/translations/api-docs/step-button/step-button-fr.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "docs/translations/api-docs/step-button/step-button-ja.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "docs/translations/api-docs/step-button/step-button-pt.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "docs/translations/api-docs/step-button/step-button-ru.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "docs/translations/api-docs/step-button/step-button-zh.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "docs/translations/api-docs/step-button/step-button.json": [
+              {
+                "start": 4,
+                "end": 4
+              }
+            ],
+            "docs/translations/api-docs/step/step-de.json": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "docs/translations/api-docs/step/step-es.json": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "docs/translations/api-docs/step/step-fr.json": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "docs/translations/api-docs/step/step-ja.json": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "docs/translations/api-docs/step/step-pt.json": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "docs/translations/api-docs/step/step-ru.json": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "docs/translations/api-docs/step/step-zh.json": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "docs/translations/api-docs/step/step.json": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/material-ui/src/ListItem/ListItem.d.ts"
+          ],
+          "spans": {
+            "packages/material-ui/src/ListItem/ListItem.d.ts": [
+              {
+                "start": 85,
+                "end": 120
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/material-ui/src/InputBase/InputBase.d.ts"
+          ],
+          "spans": {
+            "packages/material-ui/src/InputBase/InputBase.d.ts": [
+              {
+                "start": 40,
+                "end": 75
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "docs/pages/api-docs/step-label.json"
+          ],
+          "spans": {
+            "docs/pages/api-docs/step-label.json": [
+              {
+                "start": 1,
+                "end": 37
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/material-ui/src/StepLabel/StepLabel.test.js"
+          ],
+          "spans": {
+            "packages/material-ui/src/StepLabel/StepLabel.test.js": [
+              {
+                "start": 25,
+                "end": 26
+              },
+              {
+                "start": 58,
+                "end": 58
+              },
+              {
+                "start": 63,
+                "end": 64
+              },
+              {
+                "start": 172,
+                "end": 173
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "CHANGELOG.md"
+          ],
+          "spans": {
+            "CHANGELOG.md": [
+              {
+                "start": 1396,
+                "end": 1396
+              },
+              {
+                "start": 2782,
+                "end": 2782
+              },
+              {
+                "start": 3747,
+                "end": 3747
+              },
+              {
+                "start": 3753,
+                "end": 3753
+              },
+              {
+                "start": 3764,
+                "end": 3764
+              },
+              {
+                "start": 3769,
+                "end": 3769
+              },
+              {
+                "start": 10753,
+                "end": 10753
+              },
+              {
+                "start": 11013,
+                "end": 11013
+              },
+              {
+                "start": 11856,
+                "end": 11856
+              },
+              {
+                "start": 12625,
+                "end": 12625
+              },
+              {
+                "start": 13061,
+                "end": 13061
+              },
+              {
+                "start": 13934,
+                "end": 13934
+              },
+              {
+                "start": 13940,
+                "end": 13940
+              },
+              {
+                "start": 13942,
+                "end": 13942
+              },
+              {
+                "start": 13944,
+                "end": 13944
+              },
+              {
+                "start": 16304,
+                "end": 16304
+              },
+              {
+                "start": 16369,
+                "end": 16369
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/material-ui/src/StepLabel/StepLabel.js"
+          ],
+          "spans": {
+            "packages/material-ui/src/StepLabel/StepLabel.js": [
+              {
+                "start": 117,
+                "end": 186
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "packages/material-ui/src/StepLabel/StepLabel.d.ts",
+        "packages/material-ui/src/StepLabel/StepLabel.js",
+        "packages/material-ui/src/StepLabel/StepLabel.test.js"
+      ],
+      "pred_spans": {
+        "packages/material-ui/src/StepLabel/StepLabel.d.ts": [
+          {
+            "start": 8,
+            "end": 42
+          }
+        ],
+        "packages/material-ui/src/StepLabel/StepLabel.js": [
+          {
+            "start": 117,
+            "end": 186
+          },
+          {
+            "start": 188,
+            "end": 230
+          }
+        ],
+        "packages/material-ui/src/StepLabel/StepLabel.test.js": [
+          {
+            "start": 25,
+            "end": 46
+          }
+        ]
+      }
+    }
+  }
+]

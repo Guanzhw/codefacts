@@ -1,0 +1,443 @@
+[
+  {
+    "instance_id": "nushell__nushell-12901",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "bc098d5013ac2e7a953c0d7d115799972fee9e17",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "crates/nu-cmd-lang/src/core_commands/hide_env.rs",
+            "crates/nu-command/src/env/config/config_env.rs",
+            "crates/nu-command/src/env/export_env.rs",
+            "crates/nu-command/src/env/load_env.rs",
+            "crates/nu-command/src/env/source_env.rs",
+            "crates/nu-command/src/env/with_env.rs",
+            "crates/nu-protocol/src/process/child.rs",
+            "crates/nu-system/src/linux.rs",
+            "crates/nu-system/src/windows.rs"
+          ],
+          "spans": {
+            "crates/nu-cmd-lang/src/core_commands/hide_env.rs": [
+              {
+                "start": 1,
+                "end": 70
+              }
+            ],
+            "crates/nu-command/src/env/export_env.rs": [
+              {
+                "start": 1,
+                "end": 79
+              }
+            ],
+            "crates/nu-command/src/env/load_env.rs": [
+              {
+                "start": 1,
+                "end": 96
+              }
+            ],
+            "crates/nu-command/src/env/source_env.rs": [
+              {
+                "start": 6,
+                "end": 32
+              },
+              {
+                "start": 46,
+                "end": 52
+              },
+              {
+                "start": 87,
+                "end": 97
+              }
+            ],
+            "crates/nu-command/src/env/with_env.rs": [
+              {
+                "start": 3,
+                "end": 55
+              },
+              {
+                "start": 138,
+                "end": 157
+              }
+            ],
+            "crates/nu-protocol/src/process/child.rs": [
+              {
+                "start": 69,
+                "end": 98
+              },
+              {
+                "start": 158,
+                "end": 205
+              },
+              {
+                "start": 212,
+                "end": 241
+              }
+            ],
+            "crates/nu-system/src/linux.rs": [
+              {
+                "start": 11,
+                "end": 22
+              },
+              {
+                "start": 46,
+                "end": 57
+              },
+              {
+                "start": 151,
+                "end": 173
+              }
+            ],
+            "crates/nu-system/src/windows.rs": [
+              {
+                "start": 1022,
+                "end": 1076
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "crates/nu-engine/src/env.rs",
+            "crates/nu-json/src/error.rs",
+            "crates/nu-plugin-engine/src/context.rs",
+            "crates/nu-protocol/src/engine/stack.rs",
+            "crates/nu-protocol/src/value/mod.rs"
+          ],
+          "spans": {
+            "crates/nu-engine/src/env.rs": [
+              {
+                "start": 16,
+                "end": 22
+              },
+              {
+                "start": 95,
+                "end": 164
+              },
+              {
+                "start": 216,
+                "end": 232
+              },
+              {
+                "start": 334,
+                "end": 368
+              }
+            ],
+            "crates/nu-json/src/error.rs": [
+              {
+                "start": 163,
+                "end": 166
+              }
+            ],
+            "crates/nu-plugin-engine/src/context.rs": [
+              {
+                "start": 15,
+                "end": 63
+              },
+              {
+                "start": 75,
+                "end": 81
+              },
+              {
+                "start": 120,
+                "end": 128
+              },
+              {
+                "start": 230,
+                "end": 236
+              },
+              {
+                "start": 262,
+                "end": 272
+              }
+            ],
+            "crates/nu-protocol/src/engine/stack.rs": [
+              {
+                "start": 32,
+                "end": 57
+              },
+              {
+                "start": 231,
+                "end": 248
+              },
+              {
+                "start": 292,
+                "end": 338
+              },
+              {
+                "start": 442,
+                "end": 516
+              },
+              {
+                "start": 525,
+                "end": 533
+              },
+              {
+                "start": 631,
+                "end": 665
+              }
+            ],
+            "crates/nu-protocol/src/value/mod.rs": [
+              {
+                "start": 435,
+                "end": 443
+              },
+              {
+                "start": 464,
+                "end": 483
+              },
+              {
+                "start": 663,
+                "end": 689
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "crates/nu-cmd-extra/src/extra/strings/str_/case/str_.rs",
+            "crates/nu-command/src/env/config/utils.rs",
+            "crates/nu-command/src/strings/str_/case/str_.rs",
+            "crates/nu-command/src/system/run_external.rs",
+            "crates/nu-explore/src/registry/command.rs",
+            "crates/nu-protocol/src/engine/command.rs",
+            "crates/nu_plugin_example/src/commands/env.rs"
+          ],
+          "spans": {
+            "crates/nu-cmd-extra/src/extra/strings/str_/case/str_.rs": [
+              {
+                "start": 1,
+                "end": 44
+              }
+            ],
+            "crates/nu-command/src/env/config/utils.rs": [
+              {
+                "start": 1,
+                "end": 36
+              }
+            ],
+            "crates/nu-command/src/strings/str_/case/str_.rs": [
+              {
+                "start": 1,
+                "end": 44
+              }
+            ],
+            "crates/nu-command/src/system/run_external.rs": [
+              {
+                "start": 15,
+                "end": 69
+              },
+              {
+                "start": 77,
+                "end": 94
+              },
+              {
+                "start": 144,
+                "end": 157
+              },
+              {
+                "start": 513,
+                "end": 549
+              }
+            ],
+            "crates/nu-explore/src/registry/command.rs": [
+              {
+                "start": 1,
+                "end": 131
+              }
+            ],
+            "crates/nu-protocol/src/engine/command.rs": [
+              {
+                "start": 1,
+                "end": 159
+              }
+            ],
+            "crates/nu_plugin_example/src/commands/env.rs": [
+              {
+                "start": 1,
+                "end": 79
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "crates/nu-command/src/system/run_external.rs"
+          ],
+          "spans": {
+            "crates/nu-command/src/system/run_external.rs": [
+              {
+                "start": 69,
+                "end": 180
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "crates/nu-command/src/system/run_external.rs"
+          ],
+          "spans": {
+            "crates/nu-command/src/system/run_external.rs": [
+              {
+                "start": 455,
+                "end": 520
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "tests/overlays/mod.rs",
+            "tests/repl/test_engine.rs",
+            "tests/repl/test_hiding.rs",
+            "tests/shell/environment/env.rs",
+            "tests/shell/pipeline/commands/internal.rs"
+          ],
+          "spans": {
+            "tests/overlays/mod.rs": [
+              {
+                "start": 859,
+                "end": 859
+              },
+              {
+                "start": 966,
+                "end": 966
+              },
+              {
+                "start": 986,
+                "end": 986
+              },
+              {
+                "start": 1007,
+                "end": 1007
+              }
+            ],
+            "tests/repl/test_engine.rs": [
+              {
+                "start": 204,
+                "end": 204
+              },
+              {
+                "start": 212,
+                "end": 212
+              }
+            ],
+            "tests/repl/test_hiding.rs": [
+              {
+                "start": 23,
+                "end": 23
+              },
+              {
+                "start": 50,
+                "end": 50
+              },
+              {
+                "start": 122,
+                "end": 122
+              },
+              {
+                "start": 130,
+                "end": 130
+              },
+              {
+                "start": 138,
+                "end": 138
+              },
+              {
+                "start": 146,
+                "end": 146
+              },
+              {
+                "start": 172,
+                "end": 172
+              },
+              {
+                "start": 180,
+                "end": 180
+              },
+              {
+                "start": 308,
+                "end": 308
+              },
+              {
+                "start": 324,
+                "end": 324
+              },
+              {
+                "start": 340,
+                "end": 340
+              },
+              {
+                "start": 356,
+                "end": 356
+              },
+              {
+                "start": 372,
+                "end": 372
+              }
+            ],
+            "tests/shell/environment/env.rs": [
+              {
+                "start": 178,
+                "end": 178
+              }
+            ],
+            "tests/shell/pipeline/commands/internal.rs": [
+              {
+                "start": 312,
+                "end": 312
+              },
+              {
+                "start": 326,
+                "end": 326
+              },
+              {
+                "start": 340,
+                "end": 340
+              },
+              {
+                "start": 350,
+                "end": 350
+              },
+              {
+                "start": 364,
+                "end": 364
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "crates/nu-cmd-lang/src/core_commands/hide_env.rs",
+        "crates/nu-command/src/system/run_external.rs",
+        "crates/nu-protocol/src/engine/stack.rs"
+      ],
+      "pred_spans": {
+        "crates/nu-cmd-lang/src/core_commands/hide_env.rs": [
+          {
+            "start": 32,
+            "end": 61
+          }
+        ],
+        "crates/nu-command/src/system/run_external.rs": [
+          {
+            "start": 464,
+            "end": 514
+          }
+        ],
+        "crates/nu-protocol/src/engine/stack.rs": [
+          {
+            "start": 445,
+            "end": 472
+          }
+        ]
+      }
+    }
+  }
+]

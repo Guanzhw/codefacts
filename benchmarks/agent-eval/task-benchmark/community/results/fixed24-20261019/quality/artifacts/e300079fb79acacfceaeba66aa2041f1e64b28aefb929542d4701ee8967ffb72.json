@@ -1,0 +1,194 @@
+[
+  {
+    "dataset": "contextbench",
+    "id": "cli__cli-5698",
+    "repo": "cli/cli",
+    "base_commit": "d2683a1370c5f3d97eaa1e4a4a8cfbc32c1293c2",
+    "language": "go",
+    "split": "pilot"
+  },
+  {
+    "dataset": "contextbench",
+    "id": "cli__cli-9794",
+    "repo": "cli/cli",
+    "base_commit": "92ff87c6b77f055b0446430bf8cf65025f2c64a7",
+    "language": "go",
+    "split": "pilot"
+  },
+  {
+    "dataset": "contextbench",
+    "id": "cli__cli-3608",
+    "repo": "cli/cli",
+    "base_commit": "026b07d1cfbf23a3ccb4d4703a2496d65e177fcc",
+    "language": "go",
+    "split": "confirmation_holdout"
+  },
+  {
+    "dataset": "contextbench",
+    "id": "nushell__nushell-12901",
+    "repo": "nushell/nushell",
+    "base_commit": "580c60bb821af25f838edafd8461bb206d3419f3",
+    "language": "rust",
+    "split": "pilot"
+  },
+  {
+    "dataset": "contextbench",
+    "id": "clap-rs__clap-2534",
+    "repo": "clap-rs/clap",
+    "base_commit": "33c305ea6ff6cdda7796e57966374cb40633968f",
+    "language": "rust",
+    "split": "pilot"
+  },
+  {
+    "dataset": "contextbench",
+    "id": "clap-rs__clap-4248",
+    "repo": "clap-rs/clap",
+    "base_commit": "8e510650a98a528d3c016cfdfddbe67ae3a470a5",
+    "language": "rust",
+    "split": "confirmation_holdout"
+  },
+  {
+    "dataset": "contextbench",
+    "id": "sveltejs__svelte-12509",
+    "repo": "sveltejs/svelte",
+    "base_commit": "30b143cef0d5ea17a6edec33496681882eadce34",
+    "language": "javascript",
+    "split": "pilot"
+  },
+  {
+    "dataset": "contextbench",
+    "id": "sveltejs__svelte-3394",
+    "repo": "sveltejs/svelte",
+    "base_commit": "bb9a9efec275084983117adee52718b5a35376b6",
+    "language": "javascript",
+    "split": "pilot"
+  },
+  {
+    "dataset": "contextbench",
+    "id": "sveltejs__svelte-10391",
+    "repo": "sveltejs/svelte",
+    "base_commit": "b6fcc149b87720a431eb636ce291a0c0125b0bae",
+    "language": "javascript",
+    "split": "confirmation_holdout"
+  },
+  {
+    "dataset": "contextbench",
+    "id": "vuejs__core-11899",
+    "repo": "vuejs/core",
+    "base_commit": "d0b513eb463f580e29378e43d112ff6859aa366e",
+    "language": "typescript",
+    "split": "pilot"
+  },
+  {
+    "dataset": "contextbench",
+    "id": "mui__material-ui-26807",
+    "repo": "mui/material-ui",
+    "base_commit": "567e6cf97dce71eba9370e8c13519d206a98ffd2",
+    "language": "typescript",
+    "split": "pilot"
+  },
+  {
+    "dataset": "contextbench",
+    "id": "mui__material-ui-34229",
+    "repo": "mui/material",
+    "base_commit": "fa62bf35e109ede215cb8cbae66ba4d6a30fef60",
+    "language": "typescript",
+    "split": "confirmation_holdout"
+  },
+  {
+    "dataset": "swebench_multilingual",
+    "id": "hashicorp__terraform-35543",
+    "repo": "hashicorp/terraform",
+    "base_commit": "24833a2b062126a71ef30a86a6d1fc3823afdfdb",
+    "language": "go",
+    "split": "pilot"
+  },
+  {
+    "dataset": "swebench_multilingual",
+    "id": "caddyserver__caddy-4774",
+    "repo": "caddyserver/caddy",
+    "base_commit": "f7be0ee10131f25620a2f64af7e3ded43eae2049",
+    "language": "go",
+    "split": "pilot"
+  },
+  {
+    "dataset": "swebench_multilingual",
+    "id": "caddyserver__caddy-5995",
+    "repo": "caddyserver/caddy",
+    "base_commit": "c839a98ff527932fd14460829142c486f4531a7b",
+    "language": "go",
+    "split": "confirmation_holdout"
+  },
+  {
+    "dataset": "swebench_multilingual",
+    "id": "nushell__nushell-12901",
+    "repo": "nushell/nushell",
+    "base_commit": "cc9f41e553333b1ad0aa4185a912f7a52355a238",
+    "language": "rust",
+    "split": "pilot"
+  },
+  {
+    "dataset": "swebench_multilingual",
+    "id": "uutils__coreutils-6690",
+    "repo": "uutils/coreutils",
+    "base_commit": "af86aee6b86a99736ca304ff656d0e4c6d547333",
+    "language": "rust",
+    "split": "pilot"
+  },
+  {
+    "dataset": "swebench_multilingual",
+    "id": "tokio-rs__tokio-6603",
+    "repo": "tokio-rs/tokio",
+    "base_commit": "873cb8ae2fc291eaffbd71e3c83d17b2f0ed7abf",
+    "language": "rust",
+    "split": "confirmation_holdout"
+  },
+  {
+    "dataset": "swebench_multilingual",
+    "id": "preactjs__preact-3562",
+    "repo": "preactjs/preact",
+    "base_commit": "0b9a9275b47e446106e6e97c78011896f7db2a61",
+    "language": "javascript",
+    "split": "pilot"
+  },
+  {
+    "dataset": "swebench_multilingual",
+    "id": "axios__axios-5085",
+    "repo": "axios/axios",
+    "base_commit": "85740c3e7a1fa48346dfcbd4497f463ccb1c1b05",
+    "language": "javascript",
+    "split": "pilot"
+  },
+  {
+    "dataset": "swebench_multilingual",
+    "id": "preactjs__preact-3010",
+    "repo": "preactjs/preact",
+    "base_commit": "c12331064f4ea967641cd5e419204422af050fbb",
+    "language": "javascript",
+    "split": "confirmation_holdout"
+  },
+  {
+    "dataset": "swebench_multilingual",
+    "id": "vuejs__core-11899",
+    "repo": "vuejs/core",
+    "base_commit": "706d4ac1d0210b2d9134b3228280187fe02fc971",
+    "language": "typescript",
+    "split": "pilot"
+  },
+  {
+    "dataset": "swebench_multilingual",
+    "id": "facebook__docusaurus-9183",
+    "repo": "facebook/docusaurus",
+    "base_commit": "b96004e77ebfb23e7349fa495d2177008186bd42",
+    "language": "typescript",
+    "split": "pilot"
+  },
+  {
+    "dataset": "swebench_multilingual",
+    "id": "facebook__docusaurus-10130",
+    "repo": "facebook/docusaurus",
+    "base_commit": "02e38d8ccf7811af27a9c15ddbadf4d26cfc0eab",
+    "language": "typescript",
+    "split": "confirmation_holdout"
+  }
+]

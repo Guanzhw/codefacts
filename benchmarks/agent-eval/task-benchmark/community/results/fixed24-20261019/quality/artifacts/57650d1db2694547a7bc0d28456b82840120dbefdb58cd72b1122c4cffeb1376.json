@@ -1,0 +1,2496 @@
+[
+  {
+    "instance_id": "sveltejs__svelte-3394",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "798bb3f0da7f547eef007718b14a18d1c0d94e2f",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "src/compiler/compile/nodes/Action.ts",
+            "src/compiler/compile/nodes/Animation.ts",
+            "src/compiler/compile/nodes/Attribute.ts",
+            "src/compiler/compile/nodes/AwaitBlock.ts",
+            "src/compiler/compile/nodes/Binding.ts",
+            "src/compiler/compile/nodes/Body.ts",
+            "src/compiler/compile/nodes/CatchBlock.ts",
+            "src/compiler/compile/nodes/Class.ts",
+            "src/compiler/compile/nodes/Comment.ts",
+            "src/compiler/compile/nodes/DebugTag.ts",
+            "src/compiler/compile/nodes/EachBlock.ts",
+            "src/compiler/compile/nodes/Element.ts",
+            "src/compiler/compile/nodes/ElseBlock.ts",
+            "src/compiler/compile/nodes/EventHandler.ts",
+            "src/compiler/compile/nodes/Fragment.ts",
+            "src/compiler/compile/nodes/Head.ts",
+            "src/compiler/compile/nodes/IfBlock.ts",
+            "src/compiler/compile/nodes/InlineComponent.ts",
+            "src/compiler/compile/nodes/Let.ts",
+            "src/compiler/compile/nodes/MustacheTag.ts",
+            "src/compiler/compile/nodes/Options.ts",
+            "src/compiler/compile/nodes/PendingBlock.ts",
+            "src/compiler/compile/nodes/RawMustacheTag.ts",
+            "src/compiler/compile/nodes/Slot.ts",
+            "src/compiler/compile/nodes/Text.ts",
+            "src/compiler/compile/nodes/ThenBlock.ts",
+            "src/compiler/compile/nodes/Title.ts",
+            "src/compiler/compile/nodes/Transition.ts",
+            "src/compiler/compile/nodes/Window.ts",
+            "src/compiler/compile/nodes/interfaces.ts"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts",
+            "src/compiler/compile/nodes/shared/Expression.ts",
+            "src/compiler/compile/render_dom/index.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/index.ts",
+            "src/compiler/compile/render_dom/wrappers/InlineComponent/index.ts",
+            "src/compiler/compile/render_dom/wrappers/Window.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/bind_this.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 811,
+                "end": 811
+              },
+              {
+                "start": 815,
+                "end": 815
+              },
+              {
+                "start": 827,
+                "end": 827
+              },
+              {
+                "start": 830,
+                "end": 830
+              },
+              {
+                "start": 842,
+                "end": 842
+              }
+            ],
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 348,
+                "end": 348
+              },
+              {
+                "start": 433,
+                "end": 433
+              },
+              {
+                "start": 461,
+                "end": 461
+              }
+            ],
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 83,
+                "end": 83
+              },
+              {
+                "start": 85,
+                "end": 85
+              },
+              {
+                "start": 88,
+                "end": 88
+              },
+              {
+                "start": 193,
+                "end": 193
+              },
+              {
+                "start": 211,
+                "end": 211
+              },
+              {
+                "start": 225,
+                "end": 225
+              },
+              {
+                "start": 235,
+                "end": 235
+              },
+              {
+                "start": 264,
+                "end": 264
+              },
+              {
+                "start": 284,
+                "end": 284
+              },
+              {
+                "start": 346,
+                "end": 346
+              },
+              {
+                "start": 393,
+                "end": 393
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Element/index.ts": [
+              {
+                "start": 484,
+                "end": 484
+              },
+              {
+                "start": 697,
+                "end": 697
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/InlineComponent/index.ts": [
+              {
+                "start": 321,
+                "end": 321
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Window.ts": [
+              {
+                "start": 129,
+                "end": 129
+              },
+              {
+                "start": 173,
+                "end": 173
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/shared/bind_this.ts": [
+              {
+                "start": 27,
+                "end": 27
+              },
+              {
+                "start": 34,
+                "end": 34
+              },
+              {
+                "start": 38,
+                "end": 38
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts",
+            "src/compiler/compile/create_module.ts",
+            "src/compiler/compile/css/Selector.ts",
+            "src/compiler/compile/css/Stylesheet.ts",
+            "src/compiler/compile/css/gather_possible_values.ts",
+            "src/compiler/compile/index.ts",
+            "src/compiler/compile/nodes/Action.ts",
+            "src/compiler/compile/nodes/Animation.ts",
+            "src/compiler/compile/nodes/Attribute.ts",
+            "src/compiler/compile/nodes/AwaitBlock.ts",
+            "src/compiler/compile/nodes/Binding.ts",
+            "src/compiler/compile/nodes/Body.ts",
+            "src/compiler/compile/nodes/CatchBlock.ts",
+            "src/compiler/compile/nodes/Class.ts",
+            "src/compiler/compile/nodes/Comment.ts",
+            "src/compiler/compile/nodes/DebugTag.ts",
+            "src/compiler/compile/nodes/EachBlock.ts",
+            "src/compiler/compile/nodes/Element.ts",
+            "src/compiler/compile/nodes/ElseBlock.ts",
+            "src/compiler/compile/nodes/EventHandler.ts",
+            "src/compiler/compile/nodes/Fragment.ts",
+            "src/compiler/compile/nodes/Head.ts",
+            "src/compiler/compile/nodes/IfBlock.ts",
+            "src/compiler/compile/nodes/InlineComponent.ts",
+            "src/compiler/compile/nodes/Let.ts",
+            "src/compiler/compile/nodes/MustacheTag.ts",
+            "src/compiler/compile/nodes/Options.ts",
+            "src/compiler/compile/nodes/PendingBlock.ts",
+            "src/compiler/compile/nodes/RawMustacheTag.ts",
+            "src/compiler/compile/nodes/Slot.ts",
+            "src/compiler/compile/nodes/Text.ts",
+            "src/compiler/compile/nodes/ThenBlock.ts",
+            "src/compiler/compile/nodes/Title.ts",
+            "src/compiler/compile/nodes/Transition.ts",
+            "src/compiler/compile/nodes/Window.ts",
+            "src/compiler/compile/nodes/interfaces.ts",
+            "src/compiler/compile/nodes/shared/AbstractBlock.ts",
+            "src/compiler/compile/nodes/shared/Expression.ts",
+            "src/compiler/compile/nodes/shared/Node.ts",
+            "src/compiler/compile/nodes/shared/Tag.ts",
+            "src/compiler/compile/nodes/shared/TemplateScope.ts",
+            "src/compiler/compile/nodes/shared/map_children.ts",
+            "src/compiler/compile/render_dom/Block.ts",
+            "src/compiler/compile/render_dom/Renderer.ts",
+            "src/compiler/compile/render_dom/index.ts",
+            "src/compiler/compile/render_dom/wrappers/AwaitBlock.ts",
+            "src/compiler/compile/render_dom/wrappers/Body.ts",
+            "src/compiler/compile/render_dom/wrappers/DebugTag.ts",
+            "src/compiler/compile/render_dom/wrappers/EachBlock.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/Attribute.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/Binding.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/StyleAttribute.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/fix_attribute_casing.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/index.ts",
+            "src/compiler/compile/render_dom/wrappers/Fragment.ts",
+            "src/compiler/compile/render_dom/wrappers/Head.ts",
+            "src/compiler/compile/render_dom/wrappers/IfBlock.ts",
+            "src/compiler/compile/render_dom/wrappers/InlineComponent/index.ts",
+            "src/compiler/compile/render_dom/wrappers/MustacheTag.ts",
+            "src/compiler/compile/render_dom/wrappers/RawMustacheTag.ts",
+            "src/compiler/compile/render_dom/wrappers/Slot.ts",
+            "src/compiler/compile/render_dom/wrappers/Text.ts",
+            "src/compiler/compile/render_dom/wrappers/Title.ts",
+            "src/compiler/compile/render_dom/wrappers/Window.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/Tag.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/Wrapper.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/add_actions.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/add_event_handlers.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/bind_this.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/create_debugging_comment.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/get_context_merger.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts",
+            "src/compiler/compile/render_ssr/Renderer.ts",
+            "src/compiler/compile/render_ssr/handlers/AwaitBlock.ts",
+            "src/compiler/compile/render_ssr/handlers/Comment.ts",
+            "src/compiler/compile/render_ssr/handlers/DebugTag.ts",
+            "src/compiler/compile/render_ssr/handlers/EachBlock.ts",
+            "src/compiler/compile/render_ssr/handlers/Element.ts",
+            "src/compiler/compile/render_ssr/handlers/Head.ts",
+            "src/compiler/compile/render_ssr/handlers/HtmlTag.ts",
+            "src/compiler/compile/render_ssr/handlers/IfBlock.ts",
+            "src/compiler/compile/render_ssr/handlers/InlineComponent.ts",
+            "src/compiler/compile/render_ssr/handlers/Slot.ts",
+            "src/compiler/compile/render_ssr/handlers/Tag.ts",
+            "src/compiler/compile/render_ssr/handlers/Text.ts",
+            "src/compiler/compile/render_ssr/handlers/Title.ts",
+            "src/compiler/compile/render_ssr/handlers/shared/get_slot_scope.ts",
+            "src/compiler/compile/render_ssr/index.ts",
+            "src/compiler/compile/utils/CodeBuilder.ts",
+            "src/compiler/compile/utils/__test__.ts",
+            "src/compiler/compile/utils/add_to_set.ts",
+            "src/compiler/compile/utils/deindent.ts",
+            "src/compiler/compile/utils/flatten_reference.ts",
+            "src/compiler/compile/utils/get_name_from_filename.ts",
+            "src/compiler/compile/utils/get_object.ts",
+            "src/compiler/compile/utils/get_slot_data.ts",
+            "src/compiler/compile/utils/scope.ts",
+            "src/compiler/compile/utils/snip.ts",
+            "src/compiler/compile/utils/stringify.ts",
+            "src/compiler/compile/utils/stringify_attribute.ts",
+            "src/compiler/compile/utils/stringify_props.ts",
+            "src/compiler/compile/utils/tail.ts",
+            "src/compiler/compile/utils/unwrap_parens.ts"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "src/compiler/compile/nodes/shared/Expression.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 280,
+                "end": 490
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/index.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 150,
+                "end": 300
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 780,
+                "end": 860
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/runtime/internal/Component.ts",
+            "src/runtime/internal/animations.ts",
+            "src/runtime/internal/await_block.ts",
+            "src/runtime/internal/dom.ts",
+            "src/runtime/internal/environment.ts",
+            "src/runtime/internal/globals.ts",
+            "src/runtime/internal/index.ts",
+            "src/runtime/internal/keyed_each.ts",
+            "src/runtime/internal/lifecycle.ts",
+            "src/runtime/internal/loop.ts",
+            "src/runtime/internal/scheduler.ts",
+            "src/runtime/internal/spread.ts",
+            "src/runtime/internal/ssr.ts",
+            "src/runtime/internal/style_manager.ts",
+            "src/runtime/internal/transitions.ts",
+            "src/runtime/internal/utils.ts"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "src/compiler/compile/nodes/shared/Expression.ts",
+            "src/compiler/compile/render_dom/index.ts",
+            "src/runtime/internal/Component.ts",
+            "src/runtime/internal/scheduler.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 427,
+                "end": 427
+              },
+              {
+                "start": 431,
+                "end": 431
+              },
+              {
+                "start": 433,
+                "end": 433
+              }
+            ],
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 66,
+                "end": 66
+              },
+              {
+                "start": 187,
+                "end": 187
+              },
+              {
+                "start": 191,
+                "end": 191
+              },
+              {
+                "start": 193,
+                "end": 193
+              },
+              {
+                "start": 370,
+                "end": 370
+              },
+              {
+                "start": 432,
+                "end": 432
+              }
+            ],
+            "src/runtime/internal/Component.ts": [
+              {
+                "start": 1,
+                "end": 1
+              },
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 64,
+                "end": 66
+              },
+              {
+                "start": 68,
+                "end": 68
+              },
+              {
+                "start": 70,
+                "end": 70
+              },
+              {
+                "start": 98,
+                "end": 98
+              },
+              {
+                "start": 107,
+                "end": 107
+              }
+            ],
+            "src/runtime/internal/scheduler.ts": [
+              {
+                "start": 4,
+                "end": 4
+              },
+              {
+                "start": 40,
+                "end": 41
+              },
+              {
+                "start": 63,
+                "end": 63
+              },
+              {
+                "start": 74,
+                "end": 74
+              },
+              {
+                "start": 76,
+                "end": 77
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/index.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 296,
+                "end": 440
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/runtime/internal/Component.ts"
+          ],
+          "spans": {
+            "src/runtime/internal/Component.ts": [
+              {
+                "start": 55,
+                "end": 140
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/index.ts",
+            "src/runtime/internal/Component.ts",
+            "src/runtime/internal/utils.ts",
+            "src/runtime/store/index.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 96,
+                "end": 96
+              },
+              {
+                "start": 454,
+                "end": 454
+              },
+              {
+                "start": 493,
+                "end": 493
+              }
+            ],
+            "src/runtime/internal/Component.ts": [
+              {
+                "start": 17,
+                "end": 17
+              },
+              {
+                "start": 73,
+                "end": 73
+              },
+              {
+                "start": 86,
+                "end": 86
+              },
+              {
+                "start": 105,
+                "end": 105
+              }
+            ],
+            "src/runtime/internal/utils.ts": [
+              {
+                "start": 37,
+                "end": 37
+              },
+              {
+                "start": 41,
+                "end": 41
+              }
+            ],
+            "src/runtime/store/index.ts": [
+              {
+                "start": 1,
+                "end": 1
+              },
+              {
+                "start": 69,
+                "end": 69
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts",
+            "src/compiler/compile/nodes/Binding.ts",
+            "src/compiler/compile/nodes/shared/Expression.ts",
+            "src/compiler/compile/render_dom/index.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts",
+            "src/compiler/interfaces.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 208,
+                "end": 208
+              },
+              {
+                "start": 368,
+                "end": 368
+              },
+              {
+                "start": 699,
+                "end": 699
+              },
+              {
+                "start": 760,
+                "end": 760
+              },
+              {
+                "start": 1161,
+                "end": 1161
+              },
+              {
+                "start": 1164,
+                "end": 1164
+              }
+            ],
+            "src/compiler/compile/nodes/Binding.ts": [
+              {
+                "start": 53,
+                "end": 53
+              },
+              {
+                "start": 63,
+                "end": 63
+              }
+            ],
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 186,
+                "end": 186
+              },
+              {
+                "start": 192,
+                "end": 192
+              }
+            ],
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 368,
+                "end": 368
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "src/compiler/interfaces.ts": [
+              {
+                "start": 125,
+                "end": 125
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/nodes/shared/Expression.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 120,
+                "end": 280
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 700,
+                "end": 780
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 1130,
+                "end": 1185
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/runtime/internal/utils.ts"
+          ],
+          "spans": {
+            "src/runtime/internal/utils.ts": [
+              {
+                "start": 25,
+                "end": 60
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            ".editorconfig",
+            ".eslintignore",
+            ".eslintrc.js",
+            ".github/ISSUE_TEMPLATE.md",
+            ".github/ISSUE_TEMPLATE/bug_report.md",
+            ".github/ISSUE_TEMPLATE/feature_request.md",
+            ".github/ISSUE_TEMPLATE/questions-and-help.md",
+            ".github/PULL_REQUEST_TEMPLATE.md",
+            ".gitignore",
+            ".prettierrc",
+            ".travis.yml",
+            "CHANGELOG.md",
+            "LICENSE",
+            "README.md",
+            "appveyor.yml",
+            "banner.png",
+            "mocha.coverage.opts",
+            "mocha.opts",
+            "package-lock.json",
+            "package.json",
+            "register.js",
+            "rollup.config.js",
+            "site/src/routes/_components/Example.svelte",
+            "site/src/routes/_components/WhosUsingSvelte.svelte",
+            "site/src/routes/_error.svelte",
+            "site/src/routes/_layout.svelte",
+            "site/src/server.js",
+            "site/src/service-worker.js",
+            "site/src/template.html",
+            "site/src/user.js",
+            "site/src/utils/compat.js",
+            "site/src/utils/db.js",
+            "site/src/utils/events.js",
+            "site/src/utils/examples.js",
+            "site/src/utils/slug.js",
+            "site/static/examples/thumbnails/7guis-circles.jpg",
+            "site/static/examples/thumbnails/7guis-counter.jpg",
+            "site/static/examples/thumbnails/7guis-crud.jpg",
+            "site/static/examples/thumbnails/7guis-flight-booker.jpg",
+            "site/static/examples/thumbnails/7guis-temperature.jpg",
+            "site/static/examples/thumbnails/7guis-timer.jpg",
+            "site/static/examples/thumbnails/actions.jpg",
+            "site/static/examples/thumbnails/adding-parameters-to-actions.jpg",
+            "site/static/examples/thumbnails/adding-parameters-to-transitions.jpg",
+            "site/static/examples/thumbnails/animate.jpg",
+            "site/static/examples/thumbnails/area-chart.jpg",
+            "site/static/examples/thumbnails/auto-subscriptions.jpg",
+            "site/static/examples/thumbnails/await-blocks.jpg",
+            "site/static/examples/thumbnails/bar-chart.jpg",
+            "site/static/examples/thumbnails/bind-this.jpg",
+            "site/static/examples/thumbnails/checkbox-inputs.jpg",
+            "site/static/examples/thumbnails/class-shorthand.jpg",
+            "site/static/examples/thumbnails/classes.jpg",
+            "site/static/examples/thumbnails/clock.jpg",
+            "site/static/examples/thumbnails/component-bindings.jpg",
+            "site/static/examples/thumbnails/component-events.jpg",
+            "site/static/examples/thumbnails/context-api.jpg",
+            "site/static/examples/thumbnails/custom-css-transitions.jpg",
+            "site/static/examples/thumbnails/custom-js-transitions.jpg",
+            "site/static/examples/thumbnails/custom-stores.jpg",
+            "site/static/examples/thumbnails/debug.jpg",
+            "site/static/examples/thumbnails/declaring-props.jpg",
+            "site/static/examples/thumbnails/default-values.jpg",
+            "site/static/examples/thumbnails/deferred-transitions.jpg",
+            "site/static/examples/thumbnails/derived-stores.jpg",
+            "site/static/examples/thumbnails/dimensions.jpg",
+            "site/static/examples/thumbnails/dom-event-forwarding.jpg",
+            "site/static/examples/thumbnails/dom-events.jpg",
+            "site/static/examples/thumbnails/dynamic-attributes.jpg",
+            "site/static/examples/thumbnails/each-block-bindings.jpg",
+            "site/static/examples/thumbnails/each-blocks.jpg",
+            "site/static/examples/thumbnails/easing.jpg",
+            "site/static/examples/thumbnails/else-blocks.jpg",
+            "site/static/examples/thumbnails/else-if-blocks.jpg",
+            "site/static/examples/thumbnails/event-forwarding.jpg",
+            "site/static/examples/thumbnails/event-modifiers.jpg",
+            "site/static/examples/thumbnails/group-inputs.jpg",
+            "site/static/examples/thumbnails/hacker-news.jpg",
+            "site/static/examples/thumbnails/hello-world.jpg",
+            "site/static/examples/thumbnails/html-tags.jpg",
+            "site/static/examples/thumbnails/if-blocks.jpg",
+            "site/static/examples/thumbnails/immutable-data.jpg",
+            "site/static/examples/thumbnails/in-and-out.jpg",
+            "site/static/examples/thumbnails/inline-handlers.jpg",
+            "site/static/examples/thumbnails/keyed-each-blocks.jpg",
+            "site/static/examples/thumbnails/media-elements.jpg",
+            "site/static/examples/thumbnails/modal.jpg",
+            "site/static/examples/thumbnails/module-exports.jpg",
+            "site/static/examples/thumbnails/multiple-select-bindings.jpg",
+            "site/static/examples/thumbnails/named-slots.jpg",
+            "site/static/examples/thumbnails/nested-components.jpg",
+            "site/static/examples/thumbnails/numeric-inputs.jpg",
+            "site/static/examples/thumbnails/ondestroy.jpg",
+            "site/static/examples/thumbnails/onmount.jpg",
+            "site/static/examples/thumbnails/reactive-assignments.jpg",
+            "site/static/examples/thumbnails/reactive-declarations.jpg",
+            "site/static/examples/thumbnails/reactive-statements.jpg",
+            "site/static/examples/thumbnails/readable-stores.jpg",
+            "site/static/examples/thumbnails/scatterplot.jpg",
+            "site/static/examples/thumbnails/select-bindings.jpg",
+            "site/static/examples/thumbnails/sharing-code.jpg",
+            "site/static/examples/thumbnails/slot-fallbacks.jpg",
+            "site/static/examples/thumbnails/slot-props.jpg",
+            "site/static/examples/thumbnails/slots.jpg",
+            "site/static/examples/thumbnails/spread-props.jpg",
+            "site/static/examples/thumbnails/spring.jpg",
+            "site/static/examples/thumbnails/styling.jpg",
+            "site/static/examples/thumbnails/svelte-body.jpg",
+            "site/static/examples/thumbnails/svelte-component.jpg",
+            "site/static/examples/thumbnails/svelte-head.jpg",
+            "site/static/examples/thumbnails/svelte-self.jpg",
+            "site/static/examples/thumbnails/svelte-window-bindings.jpg",
+            "site/static/examples/thumbnails/svelte-window.jpg",
+            "site/static/examples/thumbnails/svg-transitions.jpg",
+            "site/static/examples/thumbnails/text-inputs.jpg",
+            "site/static/examples/thumbnails/textarea-inputs.jpg",
+            "site/static/examples/thumbnails/tick.jpg",
+            "site/static/examples/thumbnails/transition-events.jpg",
+            "site/static/examples/thumbnails/transition.jpg",
+            "site/static/examples/thumbnails/tweened.jpg",
+            "site/static/examples/thumbnails/update.jpg",
+            "site/static/examples/thumbnails/writable-stores.jpg",
+            "site/static/global.css",
+            "site/static/icons/arrow-right.svg",
+            "site/static/icons/check.svg",
+            "site/static/icons/chevron.svg",
+            "site/static/icons/collapse.svg",
+            "site/static/icons/download.svg",
+            "site/static/icons/dropdown.svg",
+            "site/static/icons/edit.svg",
+            "site/static/icons/expand.svg",
+            "site/static/icons/flip.svg",
+            "site/static/icons/fork.svg",
+            "site/static/icons/link.svg",
+            "site/static/icons/loading.svg",
+            "site/static/icons/save.svg",
+            "site/static/images/svelte-android-chrome-192.png",
+            "site/static/images/svelte-android-chrome-512.png",
+            "site/static/images/svelte-apple-touch-icon.png",
+            "site/static/images/svelte-mstile-150.png",
+            "site/static/images/twitter-card.png",
+            "site/static/logo-mask.svg",
+            "site/static/manifest.json",
+            "site/static/media/rethinking-best-practices.jpg",
+            "site/static/organisations/beyonk.svg",
+            "site/static/organisations/chess.svg",
+            "site/static/organisations/comigo.svg",
+            "site/static/organisations/datawrapper.svg",
+            "site/static/organisations/dbnomics.jpg",
+            "site/static/organisations/dbnomics.webp",
+            "site/static/organisations/deck.svg",
+            "site/static/organisations/from-now-on.png",
+            "site/static/organisations/godaddy.svg",
+            "site/static/organisations/healthtree.png",
+            "site/static/organisations/itslearning.svg",
+            "site/static/organisations/mustlab.png",
+            "site/static/organisations/nesta.svg",
+            "site/static/organisations/nonkosi.svg",
+            "site/static/organisations/nyt.svg",
+            "site/static/organisations/nzz.svg",
+            "site/static/organisations/open-state-foundation.svg",
+            "site/static/organisations/razorpay.svg",
+            "site/static/organisations/socialist-party.svg",
+            "site/static/organisations/stone.svg",
+            "site/static/organisations/strixcloud.svg",
+            "site/static/organisations/sucuri.png",
+            "site/static/organisations/thunderdome.svg",
+            "site/static/organisations/tokopedia.2x.png",
+            "site/static/organisations/tokopedia.3x.png",
+            "site/static/organisations/tokopedia.png",
+            "site/static/organisations/webdesq.svg",
+            "site/static/prism.css",
+            "site/static/svelte-logo-horizontal.svg",
+            "site/static/svelte-logo-mask.svg",
+            "site/static/svelte-logo-outline.svg",
+            "site/static/svelte-logo-vertical.svg",
+            "site/static/svelte-logo.svg",
+            "site/static/svelte-logotype.svg",
+            "site/static/tutorial/dark-theme.css",
+            "site/static/tutorial/icons/email.svg",
+            "site/static/tutorial/icons/folder-open.svg",
+            "site/static/tutorial/icons/folder.svg",
+            "site/static/tutorial/icons/gif.svg",
+            "site/static/tutorial/icons/map-marker.svg",
+            "site/static/tutorial/icons/md.svg",
+            "site/static/tutorial/icons/xlsx.svg",
+            "site/static/tutorial/image.gif",
+            "site/static/tutorial/kitten.png",
+            "site/static/tutorial/music/beethoven.mp3",
+            "site/static/tutorial/music/holst.mp3",
+            "site/static/tutorial/music/mozart.mp3",
+            "site/static/tutorial/music/satie.mp3",
+            "site/static/tutorial/music/strauss.mp3",
+            "site/test/utils/slug.js",
+            "src/runtime/ambient.ts",
+            "src/runtime/animate/index.ts",
+            "src/runtime/easing/index.ts",
+            "src/runtime/index.ts",
+            "src/runtime/internal/Component.ts",
+            "src/runtime/internal/animations.ts",
+            "src/runtime/internal/await_block.ts",
+            "src/runtime/internal/dom.ts",
+            "src/runtime/internal/environment.ts",
+            "src/runtime/internal/globals.ts",
+            "src/runtime/internal/index.ts",
+            "src/runtime/internal/keyed_each.ts",
+            "src/runtime/internal/lifecycle.ts",
+            "src/runtime/internal/loop.ts",
+            "src/runtime/internal/scheduler.ts",
+            "src/runtime/internal/spread.ts",
+            "src/runtime/internal/ssr.ts",
+            "src/runtime/internal/style_manager.ts",
+            "src/runtime/internal/transitions.ts",
+            "src/runtime/internal/utils.ts",
+            "src/runtime/motion/index.ts",
+            "src/runtime/motion/spring.ts",
+            "src/runtime/motion/tweened.ts",
+            "src/runtime/motion/utils.ts",
+            "src/runtime/store/index.ts",
+            "src/runtime/transition/index.ts",
+            "src/runtime/tsconfig.json",
+            "test/.eslintrc.json",
+            "test/css/samples/unknown-at-rule-with-following-rules/expected.css",
+            "test/css/samples/unknown-at-rule-with-following-rules/input.svelte",
+            "test/css/samples/unused-selector-leading/_config.js",
+            "test/css/samples/unused-selector-leading/expected.css",
+            "test/css/samples/unused-selector-leading/expected.html",
+            "test/css/samples/unused-selector-leading/input.svelte",
+            "test/css/samples/unused-selector-ternary/_config.js",
+            "test/css/samples/unused-selector-ternary/expected.css",
+            "test/css/samples/unused-selector-ternary/expected.html",
+            "test/css/samples/unused-selector-ternary/input.svelte",
+            "test/css/samples/unused-selector/_config.js",
+            "test/css/samples/unused-selector/expected.css",
+            "test/css/samples/unused-selector/expected.html",
+            "test/css/samples/unused-selector/input.svelte",
+            "test/custom-elements/samples/no-tag-warning/_config.js",
+            "test/custom-elements/samples/no-tag-warning/main.svelte",
+            "test/custom-elements/samples/no-tag-warning/test.js",
+            "test/custom-elements/samples/no-tag/_config.js",
+            "test/custom-elements/samples/no-tag/main.svelte",
+            "test/custom-elements/samples/no-tag/test.js",
+            "test/custom-elements/samples/oncreate/main.svelte",
+            "test/custom-elements/samples/oncreate/test.js",
+            "test/custom-elements/samples/props/main.svelte",
+            "test/custom-elements/samples/props/my-widget.svelte",
+            "test/custom-elements/samples/props/test.js",
+            "test/helpers.js",
+            "test/hydration/samples/if-block-false/_after.html",
+            "test/hydration/samples/if-block-false/_before.html",
+            "test/hydration/samples/if-block-false/_config.js",
+            "test/hydration/samples/if-block-false/main.svelte",
+            "test/hydration/samples/if-block-update/_after.html",
+            "test/hydration/samples/if-block-update/_before.html",
+            "test/hydration/samples/if-block-update/_config.js",
+            "test/hydration/samples/if-block-update/main.svelte",
+            "test/hydration/samples/raw/_after.html",
+            "test/hydration/samples/raw/_before.html",
+            "test/hydration/samples/raw/_config.js",
+            "test/hydration/samples/raw/main.svelte",
+            "test/hydration/samples/text-fallback/Nested.svelte",
+            "test/hydration/samples/text-fallback/_after.html",
+            "test/hydration/samples/text-fallback/_before.html",
+            "test/hydration/samples/text-fallback/main.svelte",
+            "test/hydration/samples/top-level-text/_after.html",
+            "test/hydration/samples/top-level-text/_before.html",
+            "test/hydration/samples/top-level-text/_config.js",
+            "test/hydration/samples/top-level-text/main.svelte",
+            "test/js/samples/each-block-keyed-animated/expected.js",
+            "test/js/samples/each-block-keyed-animated/input.svelte",
+            "test/js/samples/each-block-keyed/expected.js",
+            "test/js/samples/each-block-keyed/input.svelte",
+            "test/js/samples/event-handler-no-passive/expected.js",
+            "test/js/samples/event-handler-no-passive/input.svelte",
+            "test/js/samples/ssr-preserve-comments/_config.js",
+            "test/js/samples/ssr-preserve-comments/expected.js",
+            "test/js/samples/ssr-preserve-comments/input.svelte",
+            "test/js/samples/svg-title/expected.js",
+            "test/js/samples/svg-title/input.svelte",
+            "test/js/samples/title/expected.js",
+            "test/js/samples/title/input.svelte",
+            "test/js/samples/transition-local/expected.js",
+            "test/js/samples/transition-local/input.svelte",
+            "test/js/samples/transition-repeated-outro/expected.js",
+            "test/js/samples/transition-repeated-outro/input.svelte",
+            "test/js/samples/unreferenced-state-not-invalidated/expected.js",
+            "test/js/samples/unreferenced-state-not-invalidated/input.svelte",
+            "test/js/samples/use-elements-as-anchors/expected.js",
+            "test/js/samples/use-elements-as-anchors/input.svelte",
+            "test/js/samples/window-binding-scroll/expected.js",
+            "test/js/samples/window-binding-scroll/input.svelte",
+            "test/js/update.js",
+            "test/server-side-rendering/samples/raw-mustaches/_expected.html",
+            "test/server-side-rendering/samples/raw-mustaches/data.json",
+            "test/server-side-rendering/samples/raw-mustaches/main.svelte",
+            "test/server-side-rendering/samples/sanitize-name/[foo].svelte",
+            "test/server-side-rendering/samples/sanitize-name/_expected.html",
+            "test/server-side-rendering/samples/sanitize-name/main.svelte",
+            "test/server-side-rendering/samples/static-div/_expected.html",
+            "test/server-side-rendering/samples/static-div/main.svelte",
+            "test/server-side-rendering/samples/static-text/_expected.html",
+            "test/server-side-rendering/samples/static-text/main.svelte",
+            "test/server-side-rendering/samples/styles-nested/One.svelte",
+            "test/server-side-rendering/samples/styles-nested/Two.svelte",
+            "test/server-side-rendering/samples/styles-nested/_expected.css",
+            "test/server-side-rendering/samples/styles-nested/_expected.html",
+            "test/server-side-rendering/samples/styles-nested/main.svelte",
+            "test/server-side-rendering/samples/styles/_expected.css",
+            "test/server-side-rendering/samples/styles/_expected.html",
+            "test/server-side-rendering/samples/styles/main.svelte",
+            "test/server-side-rendering/samples/text-area-bind/_expected.html",
+            "test/server-side-rendering/samples/text-area-bind/main.svelte",
+            "test/server-side-rendering/samples/textarea-children/_expected.html",
+            "test/server-side-rendering/samples/textarea-children/main.svelte",
+            "test/server-side-rendering/samples/textarea-value/_expected.html",
+            "test/server-side-rendering/samples/textarea-value/main.svelte",
+            "test/server-side-rendering/samples/triple/_expected.html",
+            "test/server-side-rendering/samples/triple/main.svelte",
+            "test/setup.js",
+            "test/sourcemaps/index.js",
+            "test/sourcemaps/samples/basic/input.svelte",
+            "test/sourcemaps/samples/basic/test.js",
+            "test/sourcemaps/samples/binding-shorthand.skip/input.svelte",
+            "test/sourcemaps/samples/binding-shorthand.skip/test.js",
+            "test/sourcemaps/samples/binding/input.svelte",
+            "test/sourcemaps/samples/binding/test.js",
+            "test/sourcemaps/samples/css/input.svelte",
+            "test/sourcemaps/samples/css/test.js",
+            "test/sourcemaps/samples/each-block/input.svelte",
+            "test/sourcemaps/samples/each-block/test.js",
+            "test/sourcemaps/samples/script/input.svelte",
+            "test/sourcemaps/samples/script/test.js",
+            "test/sourcemaps/samples/static-no-script/input.svelte",
+            "test/sourcemaps/samples/static-no-script/test.js",
+            "test/stats/index.js",
+            "test/stats/samples/basic/_config.js",
+            "test/stats/samples/basic/input.svelte",
+            "test/store/index.js",
+            "test/vars/samples/$$props-logicless/_config.js",
+            "test/vars/samples/$$props-logicless/input.svelte",
+            "test/vars/samples/actions/_config.js",
+            "test/vars/samples/actions/input.svelte",
+            "test/vars/samples/animations/_config.js",
+            "test/vars/samples/animations/input.svelte",
+            "test/vars/samples/assumed-global/_config.js",
+            "test/vars/samples/assumed-global/input.svelte",
+            "test/vars/samples/component-namespaced/_config.js",
+            "test/vars/samples/component-namespaced/input.svelte",
+            "test/vars/samples/mutated-vs-reassigned-bindings/_config.js",
+            "test/vars/samples/mutated-vs-reassigned-bindings/input.svelte",
+            "test/vars/samples/mutated-vs-reassigned/_config.js",
+            "test/vars/samples/mutated-vs-reassigned/input.svelte",
+            "test/vars/samples/props/_config.js",
+            "test/vars/samples/props/input.svelte",
+            "test/vars/samples/store-referenced/_config.js",
+            "test/vars/samples/store-referenced/input.svelte",
+            "test/vars/samples/store-unreferenced/_config.js",
+            "test/vars/samples/store-unreferenced/input.svelte",
+            "test/vars/samples/template-references/_config.js",
+            "test/vars/samples/template-references/input.svelte",
+            "test/vars/samples/transitions/_config.js",
+            "test/vars/samples/transitions/input.svelte",
+            "test/vars/samples/undeclared/_config.js",
+            "test/vars/samples/undeclared/input.svelte",
+            "tsconfig.json"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "test/js/samples/action-custom-event-handler/expected.js",
+            "test/js/samples/bind-online/expected.js",
+            "test/js/samples/bind-open/expected.js",
+            "test/js/samples/bind-width-height/expected.js",
+            "test/js/samples/collapses-text-around-comments/expected.js",
+            "test/js/samples/computed-collapsed-if/expected.js",
+            "test/js/samples/data-attribute/expected.js",
+            "test/js/samples/debug-empty/expected.js",
+            "test/js/samples/debug-foo-bar-baz-things/expected.js",
+            "test/js/samples/debug-foo/expected.js",
+            "test/js/samples/deconflict-builtins/expected.js",
+            "test/js/samples/deconflict-globals/expected.js",
+            "test/js/samples/dev-warning-missing-data-computed/expected.js",
+            "test/js/samples/each-block-array-literal/expected.js",
+            "test/js/samples/each-block-changed-check/expected.js",
+            "test/js/samples/each-block-keyed-animated/expected.js",
+            "test/js/samples/each-block-keyed/expected.js",
+            "test/js/samples/if-block-no-update/expected.js",
+            "test/js/samples/if-block-simple/expected.js",
+            "test/js/samples/inline-style-optimized-multiple/expected.js",
+            "test/js/samples/inline-style-optimized-url/expected.js",
+            "test/js/samples/inline-style-optimized/expected.js",
+            "test/js/samples/inline-style-unoptimized/expected.js",
+            "test/js/samples/input-files/expected.js",
+            "test/js/samples/input-range/expected.js",
+            "test/js/samples/input-without-blowback-guard/expected.js",
+            "test/js/samples/instrumentation-script-if-no-block/expected.js",
+            "test/js/samples/instrumentation-script-x-equals-x/expected.js",
+            "test/js/samples/instrumentation-template-if-no-block/expected.js",
+            "test/js/samples/instrumentation-template-x-equals-x/expected.js",
+            "test/js/samples/media-bindings/expected.js",
+            "test/js/samples/reactive-values-non-topologically-ordered/expected.js",
+            "test/js/samples/reactive-values-non-writable-dependencies/expected.js",
+            "test/js/samples/select-dynamic-value/expected.js",
+            "test/js/samples/title/expected.js",
+            "test/js/samples/transition-local/expected.js",
+            "test/js/samples/transition-repeated-outro/expected.js",
+            "test/js/samples/unreferenced-state-not-invalidated/expected.js",
+            "test/js/samples/use-elements-as-anchors/expected.js",
+            "test/js/samples/window-binding-scroll/expected.js"
+          ],
+          "spans": {
+            "test/js/samples/action-custom-event-handler/expected.js": [
+              {
+                "start": 61,
+                "end": 61
+              }
+            ],
+            "test/js/samples/bind-online/expected.js": [
+              {
+                "start": 40,
+                "end": 40
+              }
+            ],
+            "test/js/samples/bind-open/expected.js": [
+              {
+                "start": 52,
+                "end": 52
+              },
+              {
+                "start": 56,
+                "end": 56
+              }
+            ],
+            "test/js/samples/bind-width-height/expected.js": [
+              {
+                "start": 49,
+                "end": 50
+              },
+              {
+                "start": 54,
+                "end": 55
+              }
+            ],
+            "test/js/samples/collapses-text-around-comments/expected.js": [
+              {
+                "start": 59,
+                "end": 59
+              }
+            ],
+            "test/js/samples/computed-collapsed-if/expected.js": [
+              {
+                "start": 32,
+                "end": 32
+              }
+            ],
+            "test/js/samples/data-attribute/expected.js": [
+              {
+                "start": 55,
+                "end": 55
+              }
+            ],
+            "test/js/samples/debug-empty/expected.js": [
+              {
+                "start": 74,
+                "end": 74
+              }
+            ],
+            "test/js/samples/debug-foo-bar-baz-things/expected.js": [
+              {
+                "start": 160,
+                "end": 163
+              }
+            ],
+            "test/js/samples/debug-foo/expected.js": [
+              {
+                "start": 160,
+                "end": 161
+              }
+            ],
+            "test/js/samples/deconflict-builtins/expected.js": [
+              {
+                "start": 120,
+                "end": 120
+              }
+            ],
+            "test/js/samples/deconflict-globals/expected.js": [
+              {
+                "start": 29,
+                "end": 29
+              }
+            ],
+            "test/js/samples/dev-warning-missing-data-computed/expected.js": [
+              {
+                "start": 74,
+                "end": 74
+              },
+              {
+                "start": 78,
+                "end": 78
+              }
+            ],
+            "test/js/samples/each-block-array-literal/expected.js": [
+              {
+                "start": 119,
+                "end": 123
+              }
+            ],
+            "test/js/samples/each-block-changed-check/expected.js": [
+              {
+                "start": 160,
+                "end": 163
+              }
+            ],
+            "test/js/samples/each-block-keyed-animated/expected.js": [
+              {
+                "start": 138,
+                "end": 138
+              }
+            ],
+            "test/js/samples/each-block-keyed/expected.js": [
+              {
+                "start": 106,
+                "end": 106
+              }
+            ],
+            "test/js/samples/if-block-no-update/expected.js": [
+              {
+                "start": 107,
+                "end": 107
+              }
+            ],
+            "test/js/samples/if-block-simple/expected.js": [
+              {
+                "start": 81,
+                "end": 81
+              }
+            ],
+            "test/js/samples/inline-style-optimized-multiple/expected.js": [
+              {
+                "start": 52,
+                "end": 54
+              }
+            ],
+            "test/js/samples/inline-style-optimized-url/expected.js": [
+              {
+                "start": 47,
+                "end": 47
+              }
+            ],
+            "test/js/samples/inline-style-optimized/expected.js": [
+              {
+                "start": 47,
+                "end": 47
+              }
+            ],
+            "test/js/samples/inline-style-unoptimized/expected.js": [
+              {
+                "start": 59,
+                "end": 61
+              }
+            ],
+            "test/js/samples/input-files/expected.js": [
+              {
+                "start": 48,
+                "end": 48
+              },
+              {
+                "start": 52,
+                "end": 52
+              }
+            ],
+            "test/js/samples/input-range/expected.js": [
+              {
+                "start": 58,
+                "end": 58
+              },
+              {
+                "start": 62,
+                "end": 62
+              }
+            ],
+            "test/js/samples/input-without-blowback-guard/expected.js": [
+              {
+                "start": 52,
+                "end": 52
+              },
+              {
+                "start": 56,
+                "end": 56
+              }
+            ],
+            "test/js/samples/instrumentation-script-if-no-block/expected.js": [
+              {
+                "start": 64,
+                "end": 64
+              }
+            ],
+            "test/js/samples/instrumentation-script-x-equals-x/expected.js": [
+              {
+                "start": 65,
+                "end": 65
+              }
+            ],
+            "test/js/samples/instrumentation-template-if-no-block/expected.js": [
+              {
+                "start": 64,
+                "end": 64
+              }
+            ],
+            "test/js/samples/instrumentation-template-x-equals-x/expected.js": [
+              {
+                "start": 63,
+                "end": 63
+              }
+            ],
+            "test/js/samples/media-bindings/expected.js": [
+              {
+                "start": 82,
+                "end": 83
+              },
+              {
+                "start": 88,
+                "end": 88
+              },
+              {
+                "start": 93,
+                "end": 93
+              },
+              {
+                "start": 98,
+                "end": 98
+              },
+              {
+                "start": 104,
+                "end": 105
+              },
+              {
+                "start": 110,
+                "end": 110
+              },
+              {
+                "start": 115,
+                "end": 115
+              },
+              {
+                "start": 119,
+                "end": 126
+              }
+            ],
+            "test/js/samples/reactive-values-non-topologically-ordered/expected.js": [
+              {
+                "start": 27,
+                "end": 27
+              },
+              {
+                "start": 31,
+                "end": 31
+              }
+            ],
+            "test/js/samples/reactive-values-non-writable-dependencies/expected.js": [
+              {
+                "start": 24,
+                "end": 25
+              }
+            ],
+            "test/js/samples/select-dynamic-value/expected.js": [
+              {
+                "start": 73,
+                "end": 73
+              }
+            ],
+            "test/js/samples/title/expected.js": [
+              {
+                "start": 34,
+                "end": 34
+              }
+            ],
+            "test/js/samples/transition-local/expected.js": [
+              {
+                "start": 144,
+                "end": 145
+              }
+            ],
+            "test/js/samples/transition-repeated-outro/expected.js": [
+              {
+                "start": 116,
+                "end": 116
+              }
+            ],
+            "test/js/samples/unreferenced-state-not-invalidated/expected.js": [
+              {
+                "start": 52,
+                "end": 52
+              },
+              {
+                "start": 65,
+                "end": 65
+              }
+            ],
+            "test/js/samples/use-elements-as-anchors/expected.js": [
+              {
+                "start": 264,
+                "end": 268
+              }
+            ],
+            "test/js/samples/window-binding-scroll/expected.js": [
+              {
+                "start": 71,
+                "end": 71
+              },
+              {
+                "start": 75,
+                "end": 75
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/utils/stringify_props.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/utils/stringify_props.ts": [
+              {
+                "start": 1,
+                "end": 11
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "src/compiler/compile/utils/get_object.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/utils/get_object.ts": [
+              {
+                "start": 1,
+                "end": 8
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/wrappers/shared/Tag.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/wrappers/shared/Tag.ts": [
+              {
+                "start": 1,
+                "end": 49
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts": [
+              {
+                "start": 1,
+                "end": 10
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/nodes/shared/Expression.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 1,
+                "end": 120
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "test/runtime/samples/binding-input-text-contextual-deconflicted/_config.js",
+            "test/runtime/samples/binding-this-each-block-property-component/_config.js",
+            "test/runtime/samples/binding-this-each-block-property/_config.js",
+            "test/store/index.js"
+          ],
+          "spans": {
+            "test/runtime/samples/binding-input-text-contextual-deconflicted/_config.js": [
+              {
+                "start": 30,
+                "end": 30
+              }
+            ],
+            "test/runtime/samples/binding-this-each-block-property-component/_config.js": [
+              {
+                "start": 10,
+                "end": 10
+              }
+            ],
+            "test/runtime/samples/binding-this-each-block-property/_config.js": [
+              {
+                "start": 10,
+                "end": 10
+              }
+            ],
+            "test/store/index.js": [
+              {
+                "start": 265,
+                "end": 265
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "test/runtime/samples/nested-transition-if-block-not-remounted/_config.js"
+          ],
+          "spans": {
+            "test/runtime/samples/nested-transition-if-block-not-remounted/_config.js": [
+              {
+                "start": 19,
+                "end": 19
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/nodes/shared/Expression.ts",
+            "src/compiler/compile/render_dom/index.ts",
+            "src/compiler/compile/render_dom/wrappers/DebugTag.ts",
+            "src/compiler/compile/render_dom/wrappers/EachBlock.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/Attribute.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/Binding.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/StyleAttribute.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/index.ts",
+            "src/compiler/compile/render_dom/wrappers/InlineComponent/index.ts",
+            "src/compiler/compile/render_dom/wrappers/Slot.ts",
+            "src/compiler/compile/render_dom/wrappers/Title.ts",
+            "src/compiler/compile/render_dom/wrappers/Window.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/Tag.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/add_actions.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 431,
+                "end": 431
+              },
+              {
+                "start": 433,
+                "end": 433
+              }
+            ],
+            "src/compiler/compile/render_dom/index.ts": [
+              {
+                "start": 66,
+                "end": 66
+              },
+              {
+                "start": 191,
+                "end": 191
+              },
+              {
+                "start": 193,
+                "end": 193
+              },
+              {
+                "start": 370,
+                "end": 370
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/DebugTag.ts": [
+              {
+                "start": 51,
+                "end": 51
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/EachBlock.ts": [
+              {
+                "start": 451,
+                "end": 451
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Element/Attribute.ts": [
+              {
+                "start": 155,
+                "end": 155
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Element/Binding.ts": [
+              {
+                "start": 102,
+                "end": 102
+              },
+              {
+                "start": 105,
+                "end": 105
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Element/StyleAttribute.ts": [
+              {
+                "start": 49,
+                "end": 49
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Element/index.ts": [
+              {
+                "start": 580,
+                "end": 580
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/InlineComponent/index.ts": [
+              {
+                "start": 192,
+                "end": 192
+              },
+              {
+                "start": 220,
+                "end": 220
+              },
+              {
+                "start": 235,
+                "end": 235
+              },
+              {
+                "start": 245,
+                "end": 245
+              },
+              {
+                "start": 275,
+                "end": 275
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Slot.ts": [
+              {
+                "start": 171,
+                "end": 171
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Title.ts": [
+              {
+                "start": 79,
+                "end": 79
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Window.ts": [
+              {
+                "start": 145,
+                "end": 145
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/shared/Tag.ts": [
+              {
+                "start": 32,
+                "end": 32
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/shared/add_actions.ts": [
+              {
+                "start": 35,
+                "end": 35
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 170,
+                "end": 400
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "test/js/samples/instrumentation-template-x-equals-x/input.svelte"
+          ],
+          "spans": {
+            "test/js/samples/instrumentation-template-x-equals-x/input.svelte": [
+              {
+                "start": 1,
+                "end": 7
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "test/js/samples/instrumentation-script-x-equals-x/input.svelte"
+          ],
+          "spans": {
+            "test/js/samples/instrumentation-script-x-equals-x/input.svelte": [
+              {
+                "start": 1,
+                "end": 12
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "test/js/samples/instrumentation-template-x-equals-x/expected.js"
+          ],
+          "spans": {
+            "test/js/samples/instrumentation-template-x-equals-x/expected.js": [
+              {
+                "start": 40,
+                "end": 75
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "test/js/samples/instrumentation-template-x-equals-x/input.svelte"
+          ],
+          "spans": {
+            "test/js/samples/instrumentation-template-x-equals-x/input.svelte": [
+              {
+                "start": 1,
+                "end": 7
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "test/js/samples/each-block-changed-check/input.svelte"
+          ],
+          "spans": {
+            "test/js/samples/each-block-changed-check/input.svelte": [
+              {
+                "start": 1,
+                "end": 20
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "test/js/samples/each-block-changed-check/expected.js"
+          ],
+          "spans": {
+            "test/js/samples/each-block-changed-check/expected.js": [
+              {
+                "start": 40,
+                "end": 120
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "package.json"
+          ],
+          "spans": {
+            "package.json": [
+              {
+                "start": 1,
+                "end": 60
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "CHANGELOG.md"
+          ],
+          "spans": {
+            "CHANGELOG.md": [
+              {
+                "start": 1,
+                "end": 60
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/nodes/shared/Expression.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 483,
+                "end": 521
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/nodes/EventHandler.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/nodes/EventHandler.ts": [
+              {
+                "start": 1,
+                "end": 40
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/nodes/EventHandler.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/nodes/EventHandler.ts": [
+              {
+                "start": 40,
+                "end": 70
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/css/Stylesheet.ts",
+            "src/compiler/compile/nodes/Body.ts",
+            "src/compiler/compile/nodes/Element.ts",
+            "src/compiler/compile/nodes/EventHandler.ts",
+            "src/compiler/compile/nodes/InlineComponent.ts",
+            "src/compiler/compile/nodes/Window.ts",
+            "src/compiler/compile/nodes/shared/Expression.ts",
+            "src/compiler/compile/render_dom/wrappers/Body.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/Binding.ts",
+            "src/compiler/compile/render_dom/wrappers/Element/index.ts",
+            "src/compiler/compile/render_dom/wrappers/InlineComponent/index.ts",
+            "src/compiler/compile/render_dom/wrappers/Window.ts",
+            "src/compiler/compile/render_dom/wrappers/shared/add_event_handlers.ts",
+            "src/compiler/compile/render_ssr/Renderer.ts",
+            "src/compiler/interfaces.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/css/Stylesheet.ts": [
+              {
+                "start": 96,
+                "end": 96
+              },
+              {
+                "start": 98,
+                "end": 98
+              },
+              {
+                "start": 243,
+                "end": 243
+              },
+              {
+                "start": 247,
+                "end": 247
+              }
+            ],
+            "src/compiler/compile/nodes/Body.ts": [
+              {
+                "start": 6,
+                "end": 6
+              },
+              {
+                "start": 11,
+                "end": 11
+              },
+              {
+                "start": 15,
+                "end": 15
+              }
+            ],
+            "src/compiler/compile/nodes/Element.ts": [
+              {
+                "start": 101,
+                "end": 101
+              },
+              {
+                "start": 176,
+                "end": 176
+              },
+              {
+                "start": 273,
+                "end": 273
+              },
+              {
+                "start": 651,
+                "end": 651
+              },
+              {
+                "start": 654,
+                "end": 656
+              },
+              {
+                "start": 662,
+                "end": 662
+              },
+              {
+                "start": 664,
+                "end": 664
+              },
+              {
+                "start": 671,
+                "end": 673
+              },
+              {
+                "start": 675,
+                "end": 675
+              },
+              {
+                "start": 679,
+                "end": 679
+              },
+              {
+                "start": 689,
+                "end": 689
+              },
+              {
+                "start": 696,
+                "end": 696
+              },
+              {
+                "start": 698,
+                "end": 698
+              }
+            ],
+            "src/compiler/compile/nodes/EventHandler.ts": [
+              {
+                "start": 13,
+                "end": 13
+              },
+              {
+                "start": 45,
+                "end": 45
+              },
+              {
+                "start": 59,
+                "end": 59
+              },
+              {
+                "start": 67,
+                "end": 68
+              }
+            ],
+            "src/compiler/compile/nodes/InlineComponent.ts": [
+              {
+                "start": 18,
+                "end": 18
+              },
+              {
+                "start": 70,
+                "end": 70
+              },
+              {
+                "start": 103,
+                "end": 104
+              },
+              {
+                "start": 106,
+                "end": 106
+              }
+            ],
+            "src/compiler/compile/nodes/Window.ts": [
+              {
+                "start": 21,
+                "end": 21
+              },
+              {
+                "start": 30,
+                "end": 30
+              }
+            ],
+            "src/compiler/compile/nodes/shared/Expression.ts": [
+              {
+                "start": 315,
+                "end": 315
+              },
+              {
+                "start": 498,
+                "end": 498
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Body.ts": [
+              {
+                "start": 10,
+                "end": 11
+              },
+              {
+                "start": 14,
+                "end": 14
+              },
+              {
+                "start": 18,
+                "end": 18
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Element/Binding.ts": [
+              {
+                "start": 22,
+                "end": 22
+              },
+              {
+                "start": 64,
+                "end": 64
+              },
+              {
+                "start": 235,
+                "end": 235
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Element/index.ts": [
+              {
+                "start": 18,
+                "end": 18
+              },
+              {
+                "start": 198,
+                "end": 198
+              },
+              {
+                "start": 205,
+                "end": 207
+              },
+              {
+                "start": 217,
+                "end": 217
+              },
+              {
+                "start": 313,
+                "end": 315
+              },
+              {
+                "start": 319,
+                "end": 319
+              },
+              {
+                "start": 324,
+                "end": 324
+              },
+              {
+                "start": 427,
+                "end": 427
+              },
+              {
+                "start": 430,
+                "end": 430
+              },
+              {
+                "start": 445,
+                "end": 445
+              },
+              {
+                "start": 463,
+                "end": 463
+              },
+              {
+                "start": 467,
+                "end": 467
+              },
+              {
+                "start": 470,
+                "end": 470
+              },
+              {
+                "start": 472,
+                "end": 472
+              },
+              {
+                "start": 476,
+                "end": 476
+              },
+              {
+                "start": 478,
+                "end": 478
+              },
+              {
+                "start": 482,
+                "end": 483
+              },
+              {
+                "start": 525,
+                "end": 525
+              },
+              {
+                "start": 619,
+                "end": 620
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/InlineComponent/index.ts": [
+              {
+                "start": 58,
+                "end": 60
+              },
+              {
+                "start": 330,
+                "end": 332
+              },
+              {
+                "start": 334,
+                "end": 334
+              },
+              {
+                "start": 357,
+                "end": 357
+              },
+              {
+                "start": 401,
+                "end": 401
+              },
+              {
+                "start": 441,
+                "end": 441
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/Window.ts": [
+              {
+                "start": 5,
+                "end": 5
+              },
+              {
+                "start": 48,
+                "end": 48
+              },
+              {
+                "start": 76,
+                "end": 76
+              },
+              {
+                "start": 106,
+                "end": 106
+              },
+              {
+                "start": 117,
+                "end": 117
+              },
+              {
+                "start": 122,
+                "end": 122
+              },
+              {
+                "start": 128,
+                "end": 128
+              },
+              {
+                "start": 134,
+                "end": 134
+              },
+              {
+                "start": 162,
+                "end": 162
+              },
+              {
+                "start": 166,
+                "end": 166
+              },
+              {
+                "start": 172,
+                "end": 172
+              },
+              {
+                "start": 178,
+                "end": 178
+              },
+              {
+                "start": 182,
+                "end": 183
+              }
+            ],
+            "src/compiler/compile/render_dom/wrappers/shared/add_event_handlers.ts": [
+              {
+                "start": 4,
+                "end": 4
+              },
+              {
+                "start": 7,
+                "end": 7
+              },
+              {
+                "start": 9,
+                "end": 13
+              },
+              {
+                "start": 15,
+                "end": 15
+              },
+              {
+                "start": 23,
+                "end": 23
+              },
+              {
+                "start": 27,
+                "end": 27
+              }
+            ],
+            "src/compiler/compile/render_ssr/Renderer.ts": [
+              {
+                "start": 1,
+                "end": 13
+              },
+              {
+                "start": 21,
+                "end": 21
+              },
+              {
+                "start": 61,
+                "end": 61
+              },
+              {
+                "start": 63,
+                "end": 64
+              },
+              {
+                "start": 67,
+                "end": 67
+              }
+            ],
+            "src/compiler/interfaces.ts": [
+              {
+                "start": 132,
+                "end": 132
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "test/js/samples/instrumentation-script-if-no-block/input.svelte",
+            "test/js/samples/instrumentation-script-x-equals-x/input.svelte",
+            "test/js/samples/instrumentation-template-if-no-block/input.svelte",
+            "test/js/samples/instrumentation-template-x-equals-x/input.svelte"
+          ],
+          "spans": {
+            "test/js/samples/instrumentation-script-if-no-block/input.svelte": [
+              {
+                "start": 9,
+                "end": 9
+              }
+            ],
+            "test/js/samples/instrumentation-script-x-equals-x/input.svelte": [
+              {
+                "start": 10,
+                "end": 10
+              }
+            ],
+            "test/js/samples/instrumentation-template-if-no-block/input.svelte": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ],
+            "test/js/samples/instrumentation-template-x-equals-x/input.svelte": [
+              {
+                "start": 5,
+                "end": 5
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "test/runtime/samples/transition-js-events-in-out/_config.js",
+            "test/runtime/samples/transition-js-events/_config.js"
+          ],
+          "spans": {
+            "test/runtime/samples/transition-js-events-in-out/_config.js": [
+              {
+                "start": 26,
+                "end": 26
+              },
+              {
+                "start": 51,
+                "end": 51
+              },
+              {
+                "start": 60,
+                "end": 60
+              }
+            ],
+            "test/runtime/samples/transition-js-events/_config.js": [
+              {
+                "start": 25,
+                "end": 25
+              },
+              {
+                "start": 50,
+                "end": 50
+              },
+              {
+                "start": 59,
+                "end": 59
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "src/compiler/interfaces.ts"
+          ],
+          "spans": {
+            "src/compiler/interfaces.ts": [
+              {
+                "start": 112,
+                "end": 137
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/utils/flatten_reference.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/utils/flatten_reference.ts": [
+              {
+                "start": 1,
+                "end": 30
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/utils/flatten_reference.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/utils/flatten_reference.ts": [
+              {
+                "start": 24,
+                "end": 31
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/wrappers/Element/Binding.ts",
+            "src/compiler/compile/utils/__test__.ts",
+            "src/compiler/compile/utils/flatten_reference.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/wrappers/Element/Binding.ts": [
+              {
+                "start": 216,
+                "end": 216
+              },
+              {
+                "start": 218,
+                "end": 218
+              },
+              {
+                "start": 220,
+                "end": 220
+              },
+              {
+                "start": 223,
+                "end": 223
+              }
+            ],
+            "src/compiler/compile/utils/__test__.ts": [
+              {
+                "start": 179,
+                "end": 179
+              }
+            ],
+            "src/compiler/compile/utils/flatten_reference.ts": [
+              {
+                "start": 30,
+                "end": 30
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/wrappers/Element/Binding.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/wrappers/Element/Binding.ts": [
+              {
+                "start": 60,
+                "end": 130
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/render_dom/wrappers/Element/Binding.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/render_dom/wrappers/Element/Binding.ts": [
+              {
+                "start": 200,
+                "end": 240
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 724,
+                "end": 724
+              },
+              {
+                "start": 992,
+                "end": 992
+              },
+              {
+                "start": 1041,
+                "end": 1041
+              },
+              {
+                "start": 1084,
+                "end": 1084
+              },
+              {
+                "start": 1112,
+                "end": 1112
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/compiler/compile/Component.ts"
+          ],
+          "spans": {
+            "src/compiler/compile/Component.ts": [
+              {
+                "start": 992,
+                "end": 1130
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "src/compiler/compile/Component.ts",
+        "src/compiler/compile/nodes/shared/Expression.ts",
+        "src/compiler/compile/render_dom/index.ts",
+        "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts",
+        "src/compiler/compile/utils/get_object.ts",
+        "src/runtime/internal/Component.ts",
+        "src/runtime/internal/utils.ts"
+      ],
+      "pred_spans": {
+        "src/compiler/compile/Component.ts": [
+          {
+            "start": 730,
+            "end": 772
+          },
+          {
+            "start": 811,
+            "end": 843
+          }
+        ],
+        "src/compiler/compile/nodes/shared/Expression.ts": [
+          {
+            "start": 165,
+            "end": 196
+          },
+          {
+            "start": 421,
+            "end": 481
+          }
+        ],
+        "src/compiler/compile/render_dom/index.ts": [
+          {
+            "start": 156,
+            "end": 255
+          }
+        ],
+        "src/compiler/compile/render_dom/wrappers/shared/is_dynamic.ts": [
+          {
+            "start": 1,
+            "end": 10
+          }
+        ],
+        "src/compiler/compile/utils/get_object.ts": [
+          {
+            "start": 1,
+            "end": 8
+          }
+        ],
+        "src/runtime/internal/Component.ts": [
+          {
+            "start": 64,
+            "end": 110
+          }
+        ],
+        "src/runtime/internal/utils.ts": [
+          {
+            "start": 37,
+            "end": 43
+          }
+        ]
+      }
+    }
+  }
+]

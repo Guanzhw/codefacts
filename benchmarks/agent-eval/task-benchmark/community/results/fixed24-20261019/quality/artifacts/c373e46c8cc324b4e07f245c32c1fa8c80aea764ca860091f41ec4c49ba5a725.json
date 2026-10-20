@@ -1,0 +1,342 @@
+{
+  "kind": "context",
+  "instance_id": "vuejs__core-11899",
+  "officialResult": {
+    "instance_id": "vuejs__core-11899",
+    "num_steps": 32,
+    "final": {
+      "file": {
+        "coverage": 0.3333333333333333,
+        "precision": 0.5,
+        "intersection": 1,
+        "gold_size": 3,
+        "pred_size": 2
+      },
+      "symbol": {
+        "coverage": 0.16666666666666666,
+        "precision": 0.5,
+        "intersection": 1,
+        "gold_size": 6,
+        "pred_size": 2
+      },
+      "span": {
+        "coverage": 0.03218319665789881,
+        "precision": 0.41025641025641024,
+        "intersection": 416,
+        "gold_size": 12926,
+        "pred_size": 1014
+      },
+      "line": {
+        "coverage": 0.03177966101694915,
+        "precision": 0.46875,
+        "intersection": 15,
+        "gold_size": 472,
+        "pred_size": 32
+      }
+    },
+    "trajectory": {
+      "steps": [
+        {
+          "step": 1,
+          "coverage": {
+            "file": 0,
+            "symbol": 0,
+            "span": 0,
+            "line": 0
+          }
+        },
+        {
+          "step": 2,
+          "coverage": {
+            "file": 0,
+            "symbol": 0,
+            "span": 0,
+            "line": 0
+          }
+        },
+        {
+          "step": 3,
+          "coverage": {
+            "file": 0,
+            "symbol": 0,
+            "span": 0,
+            "line": 0
+          }
+        },
+        {
+          "step": 4,
+          "coverage": {
+            "file": 0,
+            "symbol": 0,
+            "span": 0,
+            "line": 0
+          }
+        },
+        {
+          "step": 5,
+          "coverage": {
+            "file": 0.3333333333333333,
+            "symbol": 0.3333333333333333,
+            "span": 0.010057248955593378,
+            "line": 0.00847457627118644
+          }
+        },
+        {
+          "step": 6,
+          "coverage": {
+            "file": 0.3333333333333333,
+            "symbol": 0.3333333333333333,
+            "span": 0.010057248955593378,
+            "line": 0.00847457627118644
+          }
+        },
+        {
+          "step": 7,
+          "coverage": {
+            "file": 0.3333333333333333,
+            "symbol": 1,
+            "span": 0.3755222033111558,
+            "line": 0.3495762711864407
+          }
+        },
+        {
+          "step": 8,
+          "coverage": {
+            "file": 0.3333333333333333,
+            "symbol": 1,
+            "span": 0.3755222033111558,
+            "line": 0.3495762711864407
+          }
+        },
+        {
+          "step": 9,
+          "coverage": {
+            "file": 0.6666666666666666,
+            "symbol": 1,
+            "span": 0.41737583165712516,
+            "line": 0.3919491525423729
+          }
+        },
+        {
+          "step": 10,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.4190778276342256,
+            "line": 0.3940677966101695
+          }
+        },
+        {
+          "step": 11,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.4190778276342256,
+            "line": 0.3940677966101695
+          }
+        },
+        {
+          "step": 12,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.4190778276342256,
+            "line": 0.3940677966101695
+          }
+        },
+        {
+          "step": 13,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.4190778276342256,
+            "line": 0.3940677966101695
+          }
+        },
+        {
+          "step": 14,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.4190778276342256,
+            "line": 0.3940677966101695
+          }
+        },
+        {
+          "step": 15,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.4190778276342256,
+            "line": 0.3940677966101695
+          }
+        },
+        {
+          "step": 16,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.6830419309917994,
+            "line": 0.6461864406779662
+          }
+        },
+        {
+          "step": 17,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.6830419309917994,
+            "line": 0.6461864406779662
+          }
+        },
+        {
+          "step": 18,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.6830419309917994,
+            "line": 0.6461864406779662
+          }
+        },
+        {
+          "step": 19,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.6830419309917994,
+            "line": 0.6461864406779662
+          }
+        },
+        {
+          "step": 20,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.6830419309917994,
+            "line": 0.6461864406779662
+          }
+        },
+        {
+          "step": 21,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.6830419309917994,
+            "line": 0.6461864406779662
+          }
+        },
+        {
+          "step": 22,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.6830419309917994,
+            "line": 0.6461864406779662
+          }
+        },
+        {
+          "step": 23,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.6830419309917994,
+            "line": 0.6461864406779662
+          }
+        },
+        {
+          "step": 24,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.6830419309917994,
+            "line": 0.6461864406779662
+          }
+        },
+        {
+          "step": 25,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.6830419309917994,
+            "line": 0.6461864406779662
+          }
+        },
+        {
+          "step": 26,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.6830419309917994,
+            "line": 0.6461864406779662
+          }
+        },
+        {
+          "step": 27,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.6830419309917994,
+            "line": 0.6461864406779662
+          }
+        },
+        {
+          "step": 28,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.6830419309917994,
+            "line": 0.6461864406779662
+          }
+        },
+        {
+          "step": 29,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.6830419309917994,
+            "line": 0.6461864406779662
+          }
+        },
+        {
+          "step": 30,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.6830419309917994,
+            "line": 0.6461864406779662
+          }
+        },
+        {
+          "step": 31,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.6830419309917994,
+            "line": 0.6461864406779662
+          }
+        },
+        {
+          "step": 32,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.6830419309917994,
+            "line": 0.6461864406779662
+          }
+        }
+      ],
+      "auc_coverage": {
+        "file": 0.78125,
+        "symbol": 0.8333333333333333,
+        "span": 0.47858482902676747,
+        "line": 0.45180084745762694
+      },
+      "redundancy": {
+        "file": 0.11685393258426968,
+        "symbol": 0.33599999999999997,
+        "span": 0.23841382320991666,
+        "line": 0.2382510410469958
+      }
+    }
+  }
+}

@@ -1,0 +1,2017 @@
+[
+  {
+    "instance_id": "clap-rs__clap-2534",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "9e83a909fa26538bd6fbbf9babb5904827ca0be4",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "CHANGELOG.md",
+            "benches/05_ripgrep.rs",
+            "benches/06_rustup.rs",
+            "clap_derive/examples/env.rs",
+            "clap_up/src/lib.rs",
+            "src/mkeymap.rs",
+            "src/output/help.rs",
+            "src/output/usage.rs",
+            "src/parse/parser.rs",
+            "src/parse/validator.rs",
+            "src/util/argstr.rs",
+            "tests/hidden_args.rs"
+          ],
+          "spans": {
+            "CHANGELOG.md": [
+              {
+                "start": 40,
+                "end": 40
+              },
+              {
+                "start": 46,
+                "end": 63
+              }
+            ],
+            "benches/05_ripgrep.rs": [
+              {
+                "start": 297,
+                "end": 297
+              },
+              {
+                "start": 314,
+                "end": 325
+              }
+            ],
+            "benches/06_rustup.rs": [
+              {
+                "start": 24,
+                "end": 24
+              },
+              {
+                "start": 59,
+                "end": 69
+              }
+            ],
+            "clap_derive/examples/env.rs": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 15,
+                "end": 27
+              }
+            ],
+            "clap_up/src/lib.rs": [
+              {
+                "start": 9,
+                "end": 9
+              },
+              {
+                "start": 49,
+                "end": 58
+              }
+            ],
+            "src/mkeymap.rs": [
+              {
+                "start": 82,
+                "end": 84
+              }
+            ],
+            "src/output/help.rs": [
+              {
+                "start": 41,
+                "end": 48
+              },
+              {
+                "start": 69,
+                "end": 69
+              },
+              {
+                "start": 82,
+                "end": 97
+              },
+              {
+                "start": 100,
+                "end": 100
+              },
+              {
+                "start": 112,
+                "end": 122
+              },
+              {
+                "start": 156,
+                "end": 158
+              },
+              {
+                "start": 160,
+                "end": 162
+              },
+              {
+                "start": 176,
+                "end": 186
+              },
+              {
+                "start": 202,
+                "end": 210
+              },
+              {
+                "start": 529,
+                "end": 536
+              },
+              {
+                "start": 538,
+                "end": 547
+              },
+              {
+                "start": 553,
+                "end": 553
+              },
+              {
+                "start": 557,
+                "end": 566
+              },
+              {
+                "start": 787,
+                "end": 787
+              },
+              {
+                "start": 814,
+                "end": 825
+              },
+              {
+                "start": 909,
+                "end": 919
+              },
+              {
+                "start": 980,
+                "end": 980
+              },
+              {
+                "start": 1051,
+                "end": 1059
+              },
+              {
+                "start": 1090,
+                "end": 1098
+              }
+            ],
+            "src/output/usage.rs": [
+              {
+                "start": 45,
+                "end": 45
+              },
+              {
+                "start": 74,
+                "end": 86
+              },
+              {
+                "start": 215,
+                "end": 215
+              },
+              {
+                "start": 223,
+                "end": 228
+              },
+              {
+                "start": 330,
+                "end": 330
+              },
+              {
+                "start": 340,
+                "end": 350
+              }
+            ],
+            "src/parse/parser.rs": [
+              {
+                "start": 120,
+                "end": 120
+              },
+              {
+                "start": 125,
+                "end": 139
+              },
+              {
+                "start": 142,
+                "end": 142
+              },
+              {
+                "start": 167,
+                "end": 177
+              },
+              {
+                "start": 770,
+                "end": 770
+              },
+              {
+                "start": 788,
+                "end": 795
+              },
+              {
+                "start": 839,
+                "end": 839
+              },
+              {
+                "start": 842,
+                "end": 848
+              },
+              {
+                "start": 1154,
+                "end": 1154
+              },
+              {
+                "start": 1162,
+                "end": 1171
+              },
+              {
+                "start": 1173,
+                "end": 1173
+              },
+              {
+                "start": 1208,
+                "end": 1217
+              },
+              {
+                "start": 1845,
+                "end": 1845
+              },
+              {
+                "start": 1882,
+                "end": 1894
+              }
+            ],
+            "src/parse/validator.rs": [
+              {
+                "start": 79,
+                "end": 79
+              },
+              {
+                "start": 115,
+                "end": 123
+              },
+              {
+                "start": 654,
+                "end": 661
+              },
+              {
+                "start": 666,
+                "end": 666
+              },
+              {
+                "start": 685,
+                "end": 693
+              }
+            ],
+            "src/util/argstr.rs": [
+              {
+                "start": 83,
+                "end": 91
+              }
+            ],
+            "tests/hidden_args.rs": [
+              {
+                "start": 107,
+                "end": 120
+              },
+              {
+                "start": 193,
+                "end": 206
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/help.rs"
+          ],
+          "spans": {
+            "src/output/help.rs": [
+              {
+                "start": 112,
+                "end": 112
+              },
+              {
+                "start": 117,
+                "end": 117
+              },
+              {
+                "start": 122,
+                "end": 122
+              },
+              {
+                "start": 184,
+                "end": 184
+              },
+              {
+                "start": 213,
+                "end": 213
+              },
+              {
+                "start": 531,
+                "end": 531
+              },
+              {
+                "start": 793,
+                "end": 793
+              },
+              {
+                "start": 799,
+                "end": 799
+              },
+              {
+                "start": 805,
+                "end": 805
+              },
+              {
+                "start": 1090,
+                "end": 1091
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "clap_derive/src/attrs.rs",
+            "clap_derive/src/parse.rs",
+            "clap_derive/src/utils/ty.rs",
+            "clap_up/src/lib.rs",
+            "src/build/app/debug_asserts.rs",
+            "src/build/app/mod.rs",
+            "src/build/arg/mod.rs",
+            "src/output/help.rs",
+            "src/output/usage.rs",
+            "src/parse/features/suggestions.rs",
+            "src/parse/parser.rs",
+            "src/parse/validator.rs",
+            "tests/examples.rs"
+          ],
+          "spans": {
+            "clap_derive/src/attrs.rs": [
+              {
+                "start": 419,
+                "end": 419
+              },
+              {
+                "start": 823,
+                "end": 823
+              }
+            ],
+            "clap_derive/src/parse.rs": [
+              {
+                "start": 263,
+                "end": 263
+              }
+            ],
+            "clap_derive/src/utils/ty.rs": [
+              {
+                "start": 70,
+                "end": 70
+              },
+              {
+                "start": 110,
+                "end": 110
+              }
+            ],
+            "clap_up/src/lib.rs": [
+              {
+                "start": 106,
+                "end": 106
+              }
+            ],
+            "src/build/app/debug_asserts.rs": [
+              {
+                "start": 219,
+                "end": 219
+              }
+            ],
+            "src/build/app/mod.rs": [
+              {
+                "start": 142,
+                "end": 142
+              },
+              {
+                "start": 150,
+                "end": 150
+              },
+              {
+                "start": 159,
+                "end": 159
+              },
+              {
+                "start": 202,
+                "end": 202
+              },
+              {
+                "start": 208,
+                "end": 208
+              },
+              {
+                "start": 214,
+                "end": 214
+              },
+              {
+                "start": 220,
+                "end": 220
+              },
+              {
+                "start": 225,
+                "end": 225
+              },
+              {
+                "start": 230,
+                "end": 230
+              },
+              {
+                "start": 2206,
+                "end": 2206
+              },
+              {
+                "start": 2300,
+                "end": 2300
+              },
+              {
+                "start": 2323,
+                "end": 2323
+              },
+              {
+                "start": 2332,
+                "end": 2332
+              },
+              {
+                "start": 2340,
+                "end": 2340
+              },
+              {
+                "start": 2499,
+                "end": 2500
+              },
+              {
+                "start": 2509,
+                "end": 2509
+              },
+              {
+                "start": 2699,
+                "end": 2699
+              }
+            ],
+            "src/build/arg/mod.rs": [
+              {
+                "start": 4646,
+                "end": 4646
+              }
+            ],
+            "src/output/help.rs": [
+              {
+                "start": 184,
+                "end": 184
+              },
+              {
+                "start": 186,
+                "end": 186
+              },
+              {
+                "start": 209,
+                "end": 209
+              },
+              {
+                "start": 215,
+                "end": 215
+              },
+              {
+                "start": 531,
+                "end": 531
+              },
+              {
+                "start": 604,
+                "end": 604
+              },
+              {
+                "start": 623,
+                "end": 623
+              },
+              {
+                "start": 793,
+                "end": 793
+              },
+              {
+                "start": 799,
+                "end": 799
+              },
+              {
+                "start": 805,
+                "end": 805
+              },
+              {
+                "start": 834,
+                "end": 834
+              },
+              {
+                "start": 870,
+                "end": 870
+              },
+              {
+                "start": 901,
+                "end": 901
+              },
+              {
+                "start": 917,
+                "end": 917
+              },
+              {
+                "start": 1060,
+                "end": 1060
+              }
+            ],
+            "src/output/usage.rs": [
+              {
+                "start": 222,
+                "end": 224
+              },
+              {
+                "start": 290,
+                "end": 292
+              },
+              {
+                "start": 316,
+                "end": 319
+              },
+              {
+                "start": 408,
+                "end": 408
+              },
+              {
+                "start": 415,
+                "end": 418
+              },
+              {
+                "start": 427,
+                "end": 427
+              },
+              {
+                "start": 452,
+                "end": 453
+              },
+              {
+                "start": 455,
+                "end": 456
+              }
+            ],
+            "src/parse/features/suggestions.rs": [
+              {
+                "start": 20,
+                "end": 20
+              }
+            ],
+            "src/parse/parser.rs": [
+              {
+                "start": 125,
+                "end": 125
+              },
+              {
+                "start": 167,
+                "end": 167
+              },
+              {
+                "start": 219,
+                "end": 219
+              },
+              {
+                "start": 294,
+                "end": 294
+              },
+              {
+                "start": 357,
+                "end": 357
+              },
+              {
+                "start": 849,
+                "end": 849
+              },
+              {
+                "start": 880,
+                "end": 880
+              },
+              {
+                "start": 1243,
+                "end": 1243
+              },
+              {
+                "start": 1629,
+                "end": 1629
+              },
+              {
+                "start": 1880,
+                "end": 1880
+              }
+            ],
+            "src/parse/validator.rs": [
+              {
+                "start": 113,
+                "end": 113
+              },
+              {
+                "start": 184,
+                "end": 184
+              },
+              {
+                "start": 191,
+                "end": 191
+              },
+              {
+                "start": 210,
+                "end": 210
+              },
+              {
+                "start": 263,
+                "end": 263
+              },
+              {
+                "start": 278,
+                "end": 278
+              },
+              {
+                "start": 315,
+                "end": 315
+              },
+              {
+                "start": 334,
+                "end": 334
+              },
+              {
+                "start": 571,
+                "end": 571
+              },
+              {
+                "start": 639,
+                "end": 639
+              },
+              {
+                "start": 684,
+                "end": 684
+              }
+            ],
+            "tests/examples.rs": [
+              {
+                "start": 29,
+                "end": 29
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/help.rs"
+          ],
+          "spans": {
+            "src/output/help.rs": [
+              {
+                "start": 100,
+                "end": 160
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/help.rs"
+          ],
+          "spans": {
+            "src/output/help.rs": [
+              {
+                "start": 760,
+                "end": 910
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/help.rs"
+          ],
+          "spans": {
+            "src/output/help.rs": [
+              {
+                "start": 980,
+                "end": 1098
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/build/app/mod.rs"
+          ],
+          "spans": {
+            "src/build/app/mod.rs": [
+              {
+                "start": 195,
+                "end": 245
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/build/app/mod.rs"
+          ],
+          "spans": {
+            "src/build/app/mod.rs": [
+              {
+                "start": 96,
+                "end": 96
+              },
+              {
+                "start": 217,
+                "end": 218
+              },
+              {
+                "start": 220,
+                "end": 220
+              },
+              {
+                "start": 223,
+                "end": 225
+              },
+              {
+                "start": 228,
+                "end": 230
+              },
+              {
+                "start": 852,
+                "end": 852
+              },
+              {
+                "start": 1054,
+                "end": 1055
+              },
+              {
+                "start": 1061,
+                "end": 1061
+              },
+              {
+                "start": 1064,
+                "end": 1064
+              },
+              {
+                "start": 1066,
+                "end": 1066
+              },
+              {
+                "start": 1070,
+                "end": 1071
+              },
+              {
+                "start": 1073,
+                "end": 1074
+              },
+              {
+                "start": 1078,
+                "end": 1078
+              },
+              {
+                "start": 1080,
+                "end": 1080
+              },
+              {
+                "start": 1082,
+                "end": 1083
+              },
+              {
+                "start": 2850,
+                "end": 2850
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "tests/help.rs",
+            "tests/opts.rs"
+          ],
+          "spans": {
+            "tests/help.rs": [
+              {
+                "start": 1849,
+                "end": 1849
+              },
+              {
+                "start": 1903,
+                "end": 1903
+              },
+              {
+                "start": 1910,
+                "end": 1910
+              },
+              {
+                "start": 1913,
+                "end": 1913
+              },
+              {
+                "start": 1915,
+                "end": 1915
+              },
+              {
+                "start": 1920,
+                "end": 1920
+              },
+              {
+                "start": 1927,
+                "end": 1927
+              },
+              {
+                "start": 2321,
+                "end": 2321
+              },
+              {
+                "start": 2332,
+                "end": 2332
+              },
+              {
+                "start": 2355,
+                "end": 2355
+              },
+              {
+                "start": 2359,
+                "end": 2359
+              },
+              {
+                "start": 2385,
+                "end": 2385
+              },
+              {
+                "start": 2390,
+                "end": 2390
+              },
+              {
+                "start": 2413,
+                "end": 2413
+              },
+              {
+                "start": 2417,
+                "end": 2417
+              },
+              {
+                "start": 2437,
+                "end": 2437
+              },
+              {
+                "start": 2442,
+                "end": 2442
+              },
+              {
+                "start": 2462,
+                "end": 2462
+              },
+              {
+                "start": 2467,
+                "end": 2467
+              },
+              {
+                "start": 2487,
+                "end": 2487
+              },
+              {
+                "start": 2492,
+                "end": 2492
+              }
+            ],
+            "tests/opts.rs": [
+              {
+                "start": 558,
+                "end": 558
+              },
+              {
+                "start": 566,
+                "end": 566
+              },
+              {
+                "start": 568,
+                "end": 568
+              },
+              {
+                "start": 571,
+                "end": 571
+              },
+              {
+                "start": 573,
+                "end": 574
+              },
+              {
+                "start": 578,
+                "end": 578
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "tests/help.rs"
+          ],
+          "spans": {
+            "tests/help.rs": [
+              {
+                "start": 2430,
+                "end": 2530
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "src/build/app/mod.rs"
+          ],
+          "spans": {
+            "src/build/app/mod.rs": [
+              {
+                "start": 80,
+                "end": 130
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "tests/help.rs"
+          ],
+          "spans": {
+            "tests/help.rs": [
+              {
+                "start": 1840,
+                "end": 1930
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            ".github/FUNDING.yml",
+            ".github/ISSUE_TEMPLATE.md",
+            ".github/ISSUE_TEMPLATE/bug_report.yml",
+            ".github/ISSUE_TEMPLATE/config.yml",
+            ".github/ISSUE_TEMPLATE/documentation_issue.yml",
+            ".github/ISSUE_TEMPLATE/feature_request.yml",
+            ".github/PULL_REQUEST_TEMPLATE.md",
+            ".github/workflows/benchmark.yml",
+            ".github/workflows/ci.yml",
+            ".github/workflows/site.yml",
+            ".gitignore",
+            "CHANGELOG.md",
+            "CONTRIBUTING.md",
+            "Cargo.toml",
+            "FAQ.md",
+            "LICENSE-APACHE",
+            "LICENSE-MIT",
+            "README.md",
+            "benches/01_default.rs",
+            "benches/02_simple.rs",
+            "benches/03_complex.rs",
+            "benches/04_new_help.rs",
+            "benches/05_ripgrep.rs",
+            "benches/06_rustup.rs",
+            "bors.toml",
+            "clap.schema.json",
+            "clap_derive/Cargo.toml",
+            "clap_derive/README.md",
+            "clap_derive/examples/README.md",
+            "clap_derive/examples/after_help.rs",
+            "clap_derive/examples/arg_enum.rs",
+            "clap_derive/examples/at_least_two.rs",
+            "clap_derive/examples/basic.rs",
+            "clap_derive/examples/deny_missing_docs.rs",
+            "clap_derive/examples/doc_comments.rs",
+            "clap_derive/examples/enum_tuple.rs",
+            "clap_derive/examples/env.rs",
+            "clap_derive/examples/example.rs",
+            "clap_derive/examples/flatten.rs",
+            "clap_derive/examples/from_crate.rs",
+            "clap_derive/examples/git.rs",
+            "clap_derive/examples/group.rs",
+            "clap_derive/examples/keyvalue.rs",
+            "clap_derive/examples/negative_flag.rs",
+            "clap_derive/examples/rename_all.rs",
+            "clap_derive/examples/skip.rs",
+            "clap_derive/examples/subcommand_aliases.rs",
+            "clap_derive/examples/true_or_false.rs",
+            "clap_derive/examples/value_hints_derive.rs",
+            "clap_derive/src/attrs.rs",
+            "clap_derive/src/derives/arg_enum.rs",
+            "clap_derive/src/derives/args.rs",
+            "clap_derive/src/derives/clap.rs",
+            "clap_derive/src/derives/into_app.rs",
+            "clap_derive/src/derives/mod.rs",
+            "clap_derive/src/derives/subcommand.rs",
+            "clap_derive/src/dummies.rs",
+            "clap_derive/src/lib.rs",
+            "clap_derive/src/parse.rs",
+            "clap_derive/src/utils/doc_comments.rs",
+            "clap_derive/src/utils/mod.rs",
+            "clap_derive/src/utils/spanned.rs",
+            "clap_derive/src/utils/ty.rs",
+            "clap_derive/tests/app_name.rs",
+            "clap_derive/tests/arg_enum.rs",
+            "clap_derive/tests/argument_naming.rs",
+            "clap_derive/tests/arguments.rs",
+            "clap_derive/tests/author_version_about.rs",
+            "clap_derive/tests/basic.rs",
+            "clap_derive/tests/boxed.rs",
+            "clap_derive/tests/custom-string-parsers.rs",
+            "clap_derive/tests/default_value.rs",
+            "clap_derive/tests/deny-warnings.rs",
+            "clap_derive/tests/doc-comments-help.rs",
+            "clap_derive/tests/explicit_name_no_renaming.rs",
+            "clap_derive/tests/flags.rs",
+            "clap_derive/tests/flatten.rs",
+            "clap_derive/tests/issues.rs",
+            "clap_derive/tests/nested-subcommands.rs",
+            "clap_derive/tests/nested.rs",
+            "clap_derive/tests/non_literal_attributes.rs",
+            "clap_derive/tests/options.rs",
+            "clap_derive/tests/privacy.rs",
+            "clap_derive/tests/raw_bool_literal.rs",
+            "clap_derive/tests/raw_idents.rs",
+            "clap_derive/tests/rename_all_env.rs",
+            "clap_derive/tests/skip.rs",
+            "clap_derive/tests/special_types.rs",
+            "clap_derive/tests/subcommands.rs",
+            "clap_derive/tests/ui.rs",
+            "clap_derive/tests/ui/arg_enum_on_struct.rs",
+            "clap_derive/tests/ui/arg_enum_on_struct.stderr",
+            "clap_derive/tests/ui/bool_arg_enum.rs",
+            "clap_derive/tests/ui/bool_arg_enum.stderr",
+            "clap_derive/tests/ui/bool_default_value.rs",
+            "clap_derive/tests/ui/bool_default_value.stderr",
+            "clap_derive/tests/ui/bool_required.rs",
+            "clap_derive/tests/ui/bool_required.stderr",
+            "clap_derive/tests/ui/clap_empty_attr.rs",
+            "clap_derive/tests/ui/clap_empty_attr.stderr",
+            "clap_derive/tests/ui/enum_flatten.rs",
+            "clap_derive/tests/ui/enum_flatten.stderr",
+            "clap_derive/tests/ui/enum_variant_not_args.rs",
+            "clap_derive/tests/ui/enum_variant_not_args.stderr",
+            "clap_derive/tests/ui/external_subcommand_misuse.rs",
+            "clap_derive/tests/ui/external_subcommand_misuse.stderr",
+            "clap_derive/tests/ui/external_subcommand_wrong_type.rs",
+            "clap_derive/tests/ui/external_subcommand_wrong_type.stderr",
+            "clap_derive/tests/ui/flatten_and_methods.rs",
+            "clap_derive/tests/ui/flatten_and_methods.stderr",
+            "clap_derive/tests/ui/flatten_and_parse.rs",
+            "clap_derive/tests/ui/flatten_and_parse.stderr",
+            "clap_derive/tests/ui/flatten_on_subcommand.rs",
+            "clap_derive/tests/ui/flatten_on_subcommand.stderr",
+            "clap_derive/tests/ui/multiple_external_subcommand.rs",
+            "clap_derive/tests/ui/multiple_external_subcommand.stderr",
+            "clap_derive/tests/ui/non_existent_attr.rs",
+            "clap_derive/tests/ui/non_existent_attr.stderr",
+            "clap_derive/tests/ui/opt_opt_nonpositional.rs",
+            "clap_derive/tests/ui/opt_opt_nonpositional.stderr",
+            "clap_derive/tests/ui/opt_vec_nonpositional.rs",
+            "clap_derive/tests/ui/opt_vec_nonpositional.stderr",
+            "clap_derive/tests/ui/option_default_value.rs",
+            "clap_derive/tests/ui/option_default_value.stderr",
+            "clap_derive/tests/ui/option_required.rs",
+            "clap_derive/tests/ui/option_required.stderr",
+            "clap_derive/tests/ui/parse_empty_try_from_os.rs",
+            "clap_derive/tests/ui/parse_empty_try_from_os.stderr",
+            "clap_derive/tests/ui/parse_function_is_not_path.rs",
+            "clap_derive/tests/ui/parse_function_is_not_path.stderr",
+            "clap_derive/tests/ui/parse_literal_spec.rs",
+            "clap_derive/tests/ui/parse_literal_spec.stderr",
+            "clap_derive/tests/ui/parse_not_zero_args.rs",
+            "clap_derive/tests/ui/parse_not_zero_args.stderr",
+            "clap_derive/tests/ui/positional_bool.rs",
+            "clap_derive/tests/ui/positional_bool.stderr",
+            "clap_derive/tests/ui/raw.rs",
+            "clap_derive/tests/ui/raw.stderr",
+            "clap_derive/tests/ui/rename_all_wrong_casing.rs",
+            "clap_derive/tests/ui/rename_all_wrong_casing.stderr",
+            "clap_derive/tests/ui/skip_flatten.rs",
+            "clap_derive/tests/ui/skip_flatten.stderr",
+            "clap_derive/tests/ui/skip_subcommand.rs",
+            "clap_derive/tests/ui/skip_subcommand.stderr",
+            "clap_derive/tests/ui/skip_with_other_options.rs",
+            "clap_derive/tests/ui/skip_with_other_options.stderr",
+            "clap_derive/tests/ui/skip_without_default.rs",
+            "clap_derive/tests/ui/skip_without_default.stderr",
+            "clap_derive/tests/ui/struct_parse.rs",
+            "clap_derive/tests/ui/struct_parse.stderr",
+            "clap_derive/tests/ui/struct_subcommand.rs",
+            "clap_derive/tests/ui/struct_subcommand.stderr",
+            "clap_derive/tests/ui/subcommand_and_flatten.rs",
+            "clap_derive/tests/ui/subcommand_and_flatten.stderr",
+            "clap_derive/tests/ui/subcommand_and_methods.rs",
+            "clap_derive/tests/ui/subcommand_and_methods.stderr",
+            "clap_derive/tests/ui/subcommand_and_parse.rs",
+            "clap_derive/tests/ui/subcommand_and_parse.stderr",
+            "clap_derive/tests/ui/subcommand_on_struct.rs",
+            "clap_derive/tests/ui/subcommand_on_struct.stderr",
+            "clap_derive/tests/ui/subcommand_opt_opt.rs",
+            "clap_derive/tests/ui/subcommand_opt_opt.stderr",
+            "clap_derive/tests/ui/subcommand_opt_vec.rs",
+            "clap_derive/tests/ui/subcommand_opt_vec.stderr",
+            "clap_derive/tests/ui/tuple_struct.rs",
+            "clap_derive/tests/ui/tuple_struct.stderr",
+            "clap_derive/tests/utils.rs",
+            "clap_generate/Cargo.toml",
+            "clap_generate/README.md",
+            "clap_generate/examples/bash_completion.rs",
+            "clap_generate/examples/value_hints.rs",
+            "clap_generate/src/generators/mod.rs",
+            "clap_generate/src/generators/shells/bash.rs",
+            "clap_generate/src/generators/shells/elvish.rs",
+            "clap_generate/src/generators/shells/fish.rs",
+            "clap_generate/src/generators/shells/mod.rs",
+            "clap_generate/src/generators/shells/powershell.rs",
+            "clap_generate/src/generators/shells/zsh.rs",
+            "clap_generate/src/lib.rs",
+            "clap_generate/src/macros.rs",
+            "clap_generate/src/shell.rs",
+            "clap_generate/tests/completions/bash.rs",
+            "clap_generate/tests/completions/elvish.rs",
+            "clap_generate/tests/completions/fish.rs",
+            "clap_generate/tests/completions/mod.rs",
+            "clap_generate/tests/completions/powershell.rs",
+            "clap_generate/tests/completions/zsh.rs",
+            "clap_generate/tests/generate_completions.rs",
+            "clap_generate/tests/value_hints.rs",
+            "clap_generate/tests/version-numbers.rs",
+            "clap_up/Cargo.toml",
+            "clap_up/README.md",
+            "clap_up/src/lib.rs",
+            "count-tests.sh",
+            "examples/01a_quick_example.rs",
+            "examples/01b_quick_example.rs",
+            "examples/01c_quick_example.rs",
+            "examples/02_apps.rs",
+            "examples/03_args.rs",
+            "examples/04_using_matches.rs",
+            "examples/05_flag_args.rs",
+            "examples/06_positional_args.rs",
+            "examples/07_option_args.rs",
+            "examples/08_subcommands.rs",
+            "examples/09_auto_version.rs",
+            "examples/10_default_values.rs",
+            "examples/11_only_specific_values.rs",
+            "examples/12_typed_values.rs",
+            "examples/13_enum_values.rs",
+            "examples/14_groups.rs",
+            "examples/15_custom_validator.rs",
+            "examples/16_app_settings.rs",
+            "examples/17_yaml.rs",
+            "examples/17_yaml.yaml",
+            "examples/18_builder_macro.rs",
+            "examples/19_auto_authors.rs",
+            "examples/20_subcommands.rs",
+            "examples/21_aliases.rs",
+            "examples/22_stop_parsing_with_--.rs",
+            "examples/23_flag_subcommands_pacman.rs",
+            "justfile",
+            "site/.gitignore",
+            "site/config.toml",
+            "site/content/_index.md",
+            "site/static/CNAME",
+            "site/static/css/app.css",
+            "site/static/images/media/clap.png",
+            "site/static/js/app.js",
+            "site/templates/404.html",
+            "site/templates/anchor-link.html",
+            "site/templates/index.html",
+            "site/templates/shared/base.html",
+            "site/templates/shared/header.html",
+            "site/templates/shared/logo.html",
+            "src/build/app/debug_asserts.rs",
+            "src/build/app/mod.rs",
+            "src/build/app/settings.rs",
+            "src/build/app/tests.rs",
+            "src/build/arg/debug_asserts.rs",
+            "src/build/arg/mod.rs",
+            "src/build/arg/regex.rs",
+            "src/build/arg/settings.rs",
+            "src/build/arg/tests.rs",
+            "src/build/arg/value_hint.rs",
+            "src/build/arg_group.rs",
+            "src/build/macros.rs",
+            "src/build/mod.rs",
+            "src/build/usage_parser.rs",
+            "src/derive.rs",
+            "src/lib.rs",
+            "src/macros.rs",
+            "src/mkeymap.rs",
+            "src/output/fmt.rs",
+            "src/output/help.rs",
+            "src/output/mod.rs",
+            "src/output/usage.rs",
+            "src/parse/arg_matcher.rs",
+            "src/parse/errors.rs",
+            "src/parse/features/mod.rs",
+            "src/parse/features/suggestions.rs",
+            "src/parse/matches/arg_matches.rs",
+            "src/parse/matches/matched_arg.rs",
+            "src/parse/matches/mod.rs",
+            "src/parse/mod.rs",
+            "src/parse/parser.rs",
+            "src/parse/validator.rs",
+            "src/util/argstr.rs",
+            "src/util/fnv.rs",
+            "src/util/graph.rs",
+            "src/util/id.rs",
+            "src/util/mod.rs",
+            "src/util/str_to_bool.rs",
+            "src/util/termcolor.rs",
+            "tests/app_from_crate.rs",
+            "tests/app_settings.rs",
+            "tests/arg_aliases.rs",
+            "tests/arg_aliases_short.rs",
+            "tests/borrowed.rs",
+            "tests/cargo.rs",
+            "tests/conflicts.rs",
+            "tests/default_missing_vals.rs",
+            "tests/default_vals.rs",
+            "tests/delimiters.rs",
+            "tests/derive_order.rs",
+            "tests/empty_values.rs",
+            "tests/env.rs",
+            "tests/examples.rs",
+            "tests/fixtures/app.yaml",
+            "tests/fixtures/app_2space.yaml",
+            "tests/fixtures/app_field_not_string.yaml",
+            "tests/fixtures/app_regex.yaml",
+            "tests/fixtures/app_regex_invalid.yaml",
+            "tests/fixtures/app_setting_invalid.yaml",
+            "tests/fixtures/arg_field_not_string.yaml",
+            "tests/fixtures/arg_not_hash.yaml",
+            "tests/fixtures/arg_setting_invalid.yaml",
+            "tests/fixtures/extra_fields.yaml",
+            "tests/fixtures/extra_fields_invalid_app.yaml",
+            "tests/fixtures/extra_fields_invalid_arg.yaml",
+            "tests/fixtures/field_not_hash.yaml",
+            "tests/fixtures/name_not_string.yaml",
+            "tests/fixtures/not_hash.yaml",
+            "tests/flag_subcommands.rs",
+            "tests/flags.rs",
+            "tests/global_args.rs",
+            "tests/grouped_values.rs",
+            "tests/groups.rs",
+            "tests/help.rs",
+            "tests/hidden_args.rs",
+            "tests/ignore_errors.rs",
+            "tests/indices.rs",
+            "tests/macros.rs",
+            "tests/multiple_occurrences.rs",
+            "tests/multiple_values.rs",
+            "tests/opts.rs",
+            "tests/positionals.rs",
+            "tests/posix_compatible.rs",
+            "tests/possible_values.rs",
+            "tests/propagate_globals.rs",
+            "tests/require.rs",
+            "tests/subcommands.rs",
+            "tests/template_help.rs",
+            "tests/tests.rs",
+            "tests/unique_args.rs",
+            "tests/utf16.rs",
+            "tests/utf8.rs",
+            "tests/utils.rs",
+            "tests/validators.rs",
+            "tests/version-numbers.rs",
+            "tests/version.rs",
+            "tests/yaml.rs",
+            "v3_occ_vs_vals.md",
+            "v3_warn_cases.md"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "src/build/app/mod.rs",
+            "src/output/help.rs",
+            "src/output/usage.rs"
+          ],
+          "spans": {
+            "src/build/app/mod.rs": [
+              {
+                "start": 218,
+                "end": 218
+              },
+              {
+                "start": 224,
+                "end": 224
+              },
+              {
+                "start": 229,
+                "end": 229
+              }
+            ],
+            "src/output/help.rs": [
+              {
+                "start": 792,
+                "end": 792
+              },
+              {
+                "start": 798,
+                "end": 798
+              },
+              {
+                "start": 804,
+                "end": 804
+              },
+              {
+                "start": 1065,
+                "end": 1065
+              },
+              {
+                "start": 1068,
+                "end": 1068
+              }
+            ],
+            "src/output/usage.rs": [
+              {
+                "start": 73,
+                "end": 73
+              },
+              {
+                "start": 94,
+                "end": 94
+              },
+              {
+                "start": 332,
+                "end": 332
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/help.rs"
+          ],
+          "spans": {
+            "src/output/help.rs": [
+              {
+                "start": 160,
+                "end": 300
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "Cargo.toml"
+          ],
+          "spans": {
+            "Cargo.toml": [
+              {
+                "start": 1,
+                "end": 30
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/build/app/mod.rs"
+          ],
+          "spans": {
+            "src/build/app/mod.rs": [
+              {
+                "start": 1,
+                "end": 120
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "CHANGELOG.md"
+          ],
+          "spans": {
+            "CHANGELOG.md": [
+              {
+                "start": 1,
+                "end": 40
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/build/app/mod.rs"
+          ],
+          "spans": {
+            "src/build/app/mod.rs": [
+              {
+                "start": 104,
+                "end": 104
+              },
+              {
+                "start": 110,
+                "end": 110
+              },
+              {
+                "start": 116,
+                "end": 116
+              },
+              {
+                "start": 122,
+                "end": 122
+              },
+              {
+                "start": 135,
+                "end": 135
+              },
+              {
+                "start": 141,
+                "end": 141
+              },
+              {
+                "start": 147,
+                "end": 147
+              },
+              {
+                "start": 156,
+                "end": 156
+              },
+              {
+                "start": 165,
+                "end": 165
+              },
+              {
+                "start": 171,
+                "end": 171
+              },
+              {
+                "start": 177,
+                "end": 177
+              },
+              {
+                "start": 183,
+                "end": 183
+              },
+              {
+                "start": 189,
+                "end": 189
+              },
+              {
+                "start": 195,
+                "end": 195
+              },
+              {
+                "start": 201,
+                "end": 201
+              },
+              {
+                "start": 206,
+                "end": 206
+              },
+              {
+                "start": 212,
+                "end": 212
+              },
+              {
+                "start": 218,
+                "end": 218
+              },
+              {
+                "start": 224,
+                "end": 224
+              },
+              {
+                "start": 229,
+                "end": 229
+              },
+              {
+                "start": 246,
+                "end": 246
+              },
+              {
+                "start": 266,
+                "end": 266
+              },
+              {
+                "start": 296,
+                "end": 296
+              },
+              {
+                "start": 325,
+                "end": 325
+              },
+              {
+                "start": 1927,
+                "end": 1927
+              },
+              {
+                "start": 1944,
+                "end": 1944
+              },
+              {
+                "start": 2017,
+                "end": 2017
+              },
+              {
+                "start": 2202,
+                "end": 2202
+              },
+              {
+                "start": 2641,
+                "end": 2641
+              },
+              {
+                "start": 2645,
+                "end": 2645
+              },
+              {
+                "start": 2649,
+                "end": 2649
+              },
+              {
+                "start": 2705,
+                "end": 2705
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/build/app/mod.rs"
+          ],
+          "spans": {
+            "src/build/app/mod.rs": [
+              {
+                "start": 2635,
+                "end": 2720
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/help.rs"
+          ],
+          "spans": {
+            "src/output/help.rs": [
+              {
+                "start": 100,
+                "end": 100
+              },
+              {
+                "start": 176,
+                "end": 176
+              },
+              {
+                "start": 202,
+                "end": 202
+              },
+              {
+                "start": 259,
+                "end": 259
+              },
+              {
+                "start": 417,
+                "end": 417
+              },
+              {
+                "start": 434,
+                "end": 434
+              },
+              {
+                "start": 507,
+                "end": 507
+              },
+              {
+                "start": 665,
+                "end": 665
+              },
+              {
+                "start": 683,
+                "end": 683
+              },
+              {
+                "start": 696,
+                "end": 696
+              },
+              {
+                "start": 711,
+                "end": 711
+              },
+              {
+                "start": 787,
+                "end": 787
+              },
+              {
+                "start": 909,
+                "end": 909
+              },
+              {
+                "start": 955,
+                "end": 955
+              },
+              {
+                "start": 980,
+                "end": 980
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/output/help.rs"
+          ],
+          "spans": {
+            "src/output/help.rs": [
+              {
+                "start": 1,
+                "end": 70
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/mkeymap.rs"
+          ],
+          "spans": {
+            "src/mkeymap.rs": [
+              {
+                "start": 1,
+                "end": 140
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "CHANGELOG.md",
+            "src/build/app/mod.rs",
+            "src/build/arg/mod.rs",
+            "tests/help.rs"
+          ],
+          "spans": {
+            "CHANGELOG.md": [
+              {
+                "start": 227,
+                "end": 227
+              }
+            ],
+            "src/build/app/mod.rs": [
+              {
+                "start": 220,
+                "end": 220
+              },
+              {
+                "start": 225,
+                "end": 225
+              },
+              {
+                "start": 230,
+                "end": 230
+              },
+              {
+                "start": 1064,
+                "end": 1064
+              },
+              {
+                "start": 1071,
+                "end": 1071
+              },
+              {
+                "start": 1073,
+                "end": 1073
+              },
+              {
+                "start": 1082,
+                "end": 1082
+              }
+            ],
+            "src/build/arg/mod.rs": [
+              {
+                "start": 155,
+                "end": 155
+              },
+              {
+                "start": 4587,
+                "end": 4587
+              }
+            ],
+            "tests/help.rs": [
+              {
+                "start": 1915,
+                "end": 1915
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/build/app/mod.rs",
+            "src/build/app/settings.rs",
+            "src/build/arg/mod.rs",
+            "src/build/usage_parser.rs",
+            "src/derive.rs",
+            "src/mkeymap.rs",
+            "src/parse/errors.rs",
+            "src/parse/features/suggestions.rs",
+            "src/parse/matches/arg_matches.rs",
+            "src/parse/parser.rs",
+            "src/util/fnv.rs",
+            "src/util/graph.rs",
+            "src/util/id.rs"
+          ],
+          "spans": {
+            "src/build/app/mod.rs": [
+              {
+                "start": 334,
+                "end": 334
+              },
+              {
+                "start": 1102,
+                "end": 1102
+              },
+              {
+                "start": 1594,
+                "end": 1594
+              },
+              {
+                "start": 1641,
+                "end": 1641
+              },
+              {
+                "start": 1726,
+                "end": 1727
+              },
+              {
+                "start": 2018,
+                "end": 2018
+              },
+              {
+                "start": 2076,
+                "end": 2076
+              },
+              {
+                "start": 2103,
+                "end": 2103
+              },
+              {
+                "start": 2190,
+                "end": 2190
+              },
+              {
+                "start": 2320,
+                "end": 2321
+              },
+              {
+                "start": 2329,
+                "end": 2330
+              },
+              {
+                "start": 2659,
+                "end": 2659
+              },
+              {
+                "start": 2677,
+                "end": 2677
+              },
+              {
+                "start": 2916,
+                "end": 2916
+              }
+            ],
+            "src/build/app/settings.rs": [
+              {
+                "start": 284,
+                "end": 284
+              },
+              {
+                "start": 866,
+                "end": 866
+              }
+            ],
+            "src/build/arg/mod.rs": [
+              {
+                "start": 44,
+                "end": 45
+              },
+              {
+                "start": 861,
+                "end": 861
+              },
+              {
+                "start": 937,
+                "end": 937
+              },
+              {
+                "start": 2039,
+                "end": 2039
+              },
+              {
+                "start": 2111,
+                "end": 2112
+              },
+              {
+                "start": 2152,
+                "end": 2153
+              },
+              {
+                "start": 3435,
+                "end": 3435
+              },
+              {
+                "start": 4128,
+                "end": 4128
+              }
+            ],
+            "src/build/usage_parser.rs": [
+              {
+                "start": 118,
+                "end": 119
+              }
+            ],
+            "src/derive.rs": [
+              {
+                "start": 89,
+                "end": 89
+              },
+              {
+                "start": 100,
+                "end": 100
+              },
+              {
+                "start": 112,
+                "end": 112
+              },
+              {
+                "start": 124,
+                "end": 124
+              },
+              {
+                "start": 307,
+                "end": 307
+              },
+              {
+                "start": 316,
+                "end": 316
+              }
+            ],
+            "src/mkeymap.rs": [
+              {
+                "start": 75,
+                "end": 75
+              },
+              {
+                "start": 90,
+                "end": 90
+              }
+            ],
+            "src/parse/errors.rs": [
+              {
+                "start": 592,
+                "end": 592
+              }
+            ],
+            "src/parse/features/suggestions.rs": [
+              {
+                "start": 13,
+                "end": 13
+              },
+              {
+                "start": 28,
+                "end": 28
+              },
+              {
+                "start": 42,
+                "end": 42
+              }
+            ],
+            "src/parse/matches/arg_matches.rs": [
+              {
+                "start": 368,
+                "end": 368
+              },
+              {
+                "start": 421,
+                "end": 421
+              },
+              {
+                "start": 458,
+                "end": 458
+              },
+              {
+                "start": 511,
+                "end": 511
+              }
+            ],
+            "src/parse/parser.rs": [
+              {
+                "start": 69,
+                "end": 69
+              }
+            ],
+            "src/util/fnv.rs": [
+              {
+                "start": 14,
+                "end": 14
+              },
+              {
+                "start": 26,
+                "end": 26
+              }
+            ],
+            "src/util/graph.rs": [
+              {
+                "start": 20,
+                "end": 20
+              }
+            ],
+            "src/util/id.rs": [
+              {
+                "start": 81,
+                "end": 81
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/build/app/mod.rs",
+            "src/build/arg/mod.rs",
+            "src/build/usage_parser.rs"
+          ],
+          "spans": {
+            "src/build/app/mod.rs": [
+              {
+                "start": 2319,
+                "end": 2319
+              },
+              {
+                "start": 2328,
+                "end": 2328
+              }
+            ],
+            "src/build/arg/mod.rs": [
+              {
+                "start": 2110,
+                "end": 2110
+              },
+              {
+                "start": 2151,
+                "end": 2151
+              }
+            ],
+            "src/build/usage_parser.rs": [
+              {
+                "start": 117,
+                "end": 117
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/build/app/mod.rs"
+          ],
+          "spans": {
+            "src/build/app/mod.rs": [
+              {
+                "start": 2310,
+                "end": 2350
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "src/build/app/mod.rs"
+          ],
+          "spans": {
+            "src/build/app/mod.rs": [
+              {
+                "start": 1084,
+                "end": 1115
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "src/output/help.rs"
+      ],
+      "pred_spans": {
+        "src/output/help.rs": [
+          {
+            "start": 787,
+            "end": 895
+          }
+        ]
+      }
+    }
+  }
+]

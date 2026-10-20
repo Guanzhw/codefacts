@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "suiteId": "codefacts-agent-investigation-six-v1",
+  "scope": "Read-only source investigation in the supplied repository snapshot. Do not edit files, install dependencies, run tests, build, or use network access.",
+  "answerContract": "Answer each task in at most 300 words. Cite repository-relative paths and precise line ranges for factual claims. Use source and existing test definitions; do not claim tests were executed. State uncertainty where behavior depends on runtime input or user code.",
+  "tasks": [
+    {
+      "id": "router-01",
+      "corpus": "router",
+      "title": "Malformed URL behavior through find and lookup",
+      "question": "I maintain request error handling for this router. For a registered GET /hello/:id route and the malformed request URL /hello/%world, explain what a direct find call returns and what lookup executes, both with and without an onBadUrl option. Trace the relevant implementation path, identify existing tests that support the distinction, and relate it to the public README. Include the fallback behavior when no defaultRoute is configured."
+    },
+    {
+      "id": "router-02",
+      "corpus": "router",
+      "title": "Compiled lookup with asynchronous user constraints",
+      "question": "I am integrating a user-defined asynchronous constraint into a router that calls compile(). Explain how lookup with a done callback reaches constraint derivation and the selected route handler after compilation, and how that differs from lookup without a callback. Identify the existing asynchronous compiled-lookup test and its expected result. Explain which handler choice depends on request data or supplied callbacks, so a static call relationship alone cannot tell us the application's eventual handler."
+    },
+    {
+      "id": "globset-01",
+      "corpus": "globset",
+      "title": "Reusing match-result storage",
+      "question": "I want to reuse one Vec across many GlobSet matches. Explain whether matches_into appends or replaces prior results, what order and identity its returned numbers have, and what happens for an empty set or no matches. Trace how builder insertion and matching strategies preserve these identities. Point to existing tests or documented examples that check matching numbers and distinguish evidence in tests from behavior established by implementation."
+    },
+    {
+      "id": "globset-02",
+      "corpus": "globset",
+      "title": "Limiting single-star patterns to one directory component",
+      "question": "A caller uses globset and wants some/*/needle.txt to match one intermediate directory rather than arbitrarily many. Explain the default separator behavior, the setting that changes it, and why some/**/needle.txt can still express recursive matching. Trace the relevant builder-to-pattern behavior and cite existing positive and negative tests plus the public syntax documentation. Keep the answer about this crate's behavior rather than assuming shell glob rules."
+    },
+    {
+      "id": "ghcli-01",
+      "corpus": "ghcli",
+      "title": "Authentication preflight for commands and automation",
+      "question": "I am maintaining a command under the GitHub CLI root. Explain when the root authentication preflight rejects execution, what local evidence is sufficient to pass it, and how command/flag exemptions work. Describe the help shown on rejection in interactive, CI, and GitHub Actions contexts, including the codespace special case. Identify focused existing tests for authentication and exemptions, and state whether this preflight itself verifies credentials over the network."
+    },
+    {
+      "id": "ghcli-02",
+      "corpus": "ghcli",
+      "title": "Regular alias versus shell alias execution",
+      "question": "I am documenting alias execution. Explain how the root distinguishes regular aliases from shell aliases, how each command reaches execution, and how argument handling differs. Use the existing tests' regular alias with two positional substitutions and trailing arguments, and shell alias with extra arguments as concrete examples. Include the failure behavior for missing positional arguments or an unavailable shell, and cite the implementation and tests that establish it."
+    }
+  ]
+}

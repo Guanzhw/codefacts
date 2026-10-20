@@ -1,0 +1,340 @@
+{
+  "schedule": [
+    {
+      "id": "ctx-mui__material-ui-34229-qwen-candidate",
+      "taskId": "ctx-mui__material-ui-34229",
+      "modelKey": "qwen",
+      "arm": "candidate",
+      "ordinal": 1
+    },
+    {
+      "id": "ctx-cli__cli-3608-gpt-codefacts022",
+      "taskId": "ctx-cli__cli-3608",
+      "modelKey": "gpt",
+      "arm": "codefacts022",
+      "ordinal": 2
+    },
+    {
+      "id": "ctx-mui__material-ui-34229-gpt-candidate",
+      "taskId": "ctx-mui__material-ui-34229",
+      "modelKey": "gpt",
+      "arm": "candidate",
+      "ordinal": 3
+    },
+    {
+      "id": "ctx-sveltejs__svelte-3394-qwen-codegraph",
+      "taskId": "ctx-sveltejs__svelte-3394",
+      "modelKey": "qwen",
+      "arm": "codegraph",
+      "ordinal": 4
+    },
+    {
+      "id": "ctx-cli__cli-3608-gpt-ordinary",
+      "taskId": "ctx-cli__cli-3608",
+      "modelKey": "gpt",
+      "arm": "ordinary",
+      "ordinal": 5
+    },
+    {
+      "id": "ctx-sveltejs__svelte-3394-gpt-candidate",
+      "taskId": "ctx-sveltejs__svelte-3394",
+      "modelKey": "gpt",
+      "arm": "candidate",
+      "ordinal": 6
+    },
+    {
+      "id": "ctx-nushell__nushell-12901-qwen-codegraph",
+      "taskId": "ctx-nushell__nushell-12901",
+      "modelKey": "qwen",
+      "arm": "codegraph",
+      "ordinal": 7
+    },
+    {
+      "id": "ctx-sveltejs__svelte-3394-qwen-codefacts022",
+      "taskId": "ctx-sveltejs__svelte-3394",
+      "modelKey": "qwen",
+      "arm": "codefacts022",
+      "ordinal": 8
+    },
+    {
+      "id": "ctx-nushell__nushell-12901-gpt-codefacts022",
+      "taskId": "ctx-nushell__nushell-12901",
+      "modelKey": "gpt",
+      "arm": "codefacts022",
+      "ordinal": 9
+    },
+    {
+      "id": "ctx-cli__cli-3608-gpt-codegraph",
+      "taskId": "ctx-cli__cli-3608",
+      "modelKey": "gpt",
+      "arm": "codegraph",
+      "ordinal": 10
+    },
+    {
+      "id": "ctx-sveltejs__svelte-3394-qwen-ordinary",
+      "taskId": "ctx-sveltejs__svelte-3394",
+      "modelKey": "qwen",
+      "arm": "ordinary",
+      "ordinal": 11
+    },
+    {
+      "id": "ctx-nushell__nushell-12901-claude-codegraph",
+      "taskId": "ctx-nushell__nushell-12901",
+      "modelKey": "claude",
+      "arm": "codegraph",
+      "ordinal": 12
+    },
+    {
+      "id": "ctx-sveltejs__svelte-3394-qwen-candidate",
+      "taskId": "ctx-sveltejs__svelte-3394",
+      "modelKey": "qwen",
+      "arm": "candidate",
+      "ordinal": 13
+    },
+    {
+      "id": "ctx-nushell__nushell-12901-gpt-ordinary",
+      "taskId": "ctx-nushell__nushell-12901",
+      "modelKey": "gpt",
+      "arm": "ordinary",
+      "ordinal": 14
+    },
+    {
+      "id": "ctx-mui__material-ui-34229-gpt-codegraph",
+      "taskId": "ctx-mui__material-ui-34229",
+      "modelKey": "gpt",
+      "arm": "codegraph",
+      "ordinal": 15
+    },
+    {
+      "id": "ctx-cli__cli-3608-qwen-codegraph",
+      "taskId": "ctx-cli__cli-3608",
+      "modelKey": "qwen",
+      "arm": "codegraph",
+      "ordinal": 16
+    },
+    {
+      "id": "ctx-sveltejs__svelte-3394-gpt-codegraph",
+      "taskId": "ctx-sveltejs__svelte-3394",
+      "modelKey": "gpt",
+      "arm": "codegraph",
+      "ordinal": 17
+    },
+    {
+      "id": "ctx-nushell__nushell-12901-qwen-candidate",
+      "taskId": "ctx-nushell__nushell-12901",
+      "modelKey": "qwen",
+      "arm": "candidate",
+      "ordinal": 18
+    },
+    {
+      "id": "ctx-cli__cli-3608-claude-ordinary",
+      "taskId": "ctx-cli__cli-3608",
+      "modelKey": "claude",
+      "arm": "ordinary",
+      "ordinal": 19
+    },
+    {
+      "id": "ctx-cli__cli-3608-claude-candidate",
+      "taskId": "ctx-cli__cli-3608",
+      "modelKey": "claude",
+      "arm": "candidate",
+      "ordinal": 20
+    },
+    {
+      "id": "ctx-cli__cli-3608-claude-codegraph",
+      "taskId": "ctx-cli__cli-3608",
+      "modelKey": "claude",
+      "arm": "codegraph",
+      "ordinal": 21
+    },
+    {
+      "id": "ctx-nushell__nushell-12901-gpt-candidate",
+      "taskId": "ctx-nushell__nushell-12901",
+      "modelKey": "gpt",
+      "arm": "candidate",
+      "ordinal": 22
+    },
+    {
+      "id": "ctx-cli__cli-3608-qwen-ordinary",
+      "taskId": "ctx-cli__cli-3608",
+      "modelKey": "qwen",
+      "arm": "ordinary",
+      "ordinal": 23
+    },
+    {
+      "id": "ctx-nushell__nushell-12901-claude-ordinary",
+      "taskId": "ctx-nushell__nushell-12901",
+      "modelKey": "claude",
+      "arm": "ordinary",
+      "ordinal": 24
+    },
+    {
+      "id": "ctx-mui__material-ui-34229-gpt-ordinary",
+      "taskId": "ctx-mui__material-ui-34229",
+      "modelKey": "gpt",
+      "arm": "ordinary",
+      "ordinal": 25
+    },
+    {
+      "id": "ctx-sveltejs__svelte-3394-claude-candidate",
+      "taskId": "ctx-sveltejs__svelte-3394",
+      "modelKey": "claude",
+      "arm": "candidate",
+      "ordinal": 26
+    },
+    {
+      "id": "ctx-nushell__nushell-12901-qwen-ordinary",
+      "taskId": "ctx-nushell__nushell-12901",
+      "modelKey": "qwen",
+      "arm": "ordinary",
+      "ordinal": 27
+    },
+    {
+      "id": "ctx-sveltejs__svelte-3394-claude-ordinary",
+      "taskId": "ctx-sveltejs__svelte-3394",
+      "modelKey": "claude",
+      "arm": "ordinary",
+      "ordinal": 28
+    },
+    {
+      "id": "ctx-nushell__nushell-12901-qwen-codefacts022",
+      "taskId": "ctx-nushell__nushell-12901",
+      "modelKey": "qwen",
+      "arm": "codefacts022",
+      "ordinal": 29
+    },
+    {
+      "id": "ctx-mui__material-ui-34229-gpt-codefacts022",
+      "taskId": "ctx-mui__material-ui-34229",
+      "modelKey": "gpt",
+      "arm": "codefacts022",
+      "ordinal": 30
+    },
+    {
+      "id": "ctx-nushell__nushell-12901-claude-codefacts022",
+      "taskId": "ctx-nushell__nushell-12901",
+      "modelKey": "claude",
+      "arm": "codefacts022",
+      "ordinal": 31
+    },
+    {
+      "id": "ctx-sveltejs__svelte-3394-gpt-codefacts022",
+      "taskId": "ctx-sveltejs__svelte-3394",
+      "modelKey": "gpt",
+      "arm": "codefacts022",
+      "ordinal": 32
+    },
+    {
+      "id": "ctx-mui__material-ui-34229-claude-ordinary",
+      "taskId": "ctx-mui__material-ui-34229",
+      "modelKey": "claude",
+      "arm": "ordinary",
+      "ordinal": 33
+    },
+    {
+      "id": "ctx-cli__cli-3608-qwen-codefacts022",
+      "taskId": "ctx-cli__cli-3608",
+      "modelKey": "qwen",
+      "arm": "codefacts022",
+      "ordinal": 34
+    },
+    {
+      "id": "ctx-cli__cli-3608-qwen-candidate",
+      "taskId": "ctx-cli__cli-3608",
+      "modelKey": "qwen",
+      "arm": "candidate",
+      "ordinal": 35
+    },
+    {
+      "id": "ctx-mui__material-ui-34229-claude-codegraph",
+      "taskId": "ctx-mui__material-ui-34229",
+      "modelKey": "claude",
+      "arm": "codegraph",
+      "ordinal": 36
+    },
+    {
+      "id": "ctx-mui__material-ui-34229-claude-codefacts022",
+      "taskId": "ctx-mui__material-ui-34229",
+      "modelKey": "claude",
+      "arm": "codefacts022",
+      "ordinal": 37
+    },
+    {
+      "id": "ctx-sveltejs__svelte-3394-claude-codefacts022",
+      "taskId": "ctx-sveltejs__svelte-3394",
+      "modelKey": "claude",
+      "arm": "codefacts022",
+      "ordinal": 38
+    },
+    {
+      "id": "ctx-nushell__nushell-12901-claude-candidate",
+      "taskId": "ctx-nushell__nushell-12901",
+      "modelKey": "claude",
+      "arm": "candidate",
+      "ordinal": 39
+    },
+    {
+      "id": "ctx-mui__material-ui-34229-qwen-ordinary",
+      "taskId": "ctx-mui__material-ui-34229",
+      "modelKey": "qwen",
+      "arm": "ordinary",
+      "ordinal": 40
+    },
+    {
+      "id": "ctx-sveltejs__svelte-3394-gpt-ordinary",
+      "taskId": "ctx-sveltejs__svelte-3394",
+      "modelKey": "gpt",
+      "arm": "ordinary",
+      "ordinal": 41
+    },
+    {
+      "id": "ctx-mui__material-ui-34229-qwen-codegraph",
+      "taskId": "ctx-mui__material-ui-34229",
+      "modelKey": "qwen",
+      "arm": "codegraph",
+      "ordinal": 42
+    },
+    {
+      "id": "ctx-cli__cli-3608-claude-codefacts022",
+      "taskId": "ctx-cli__cli-3608",
+      "modelKey": "claude",
+      "arm": "codefacts022",
+      "ordinal": 43
+    },
+    {
+      "id": "ctx-mui__material-ui-34229-qwen-codefacts022",
+      "taskId": "ctx-mui__material-ui-34229",
+      "modelKey": "qwen",
+      "arm": "codefacts022",
+      "ordinal": 44
+    },
+    {
+      "id": "ctx-cli__cli-3608-gpt-candidate",
+      "taskId": "ctx-cli__cli-3608",
+      "modelKey": "gpt",
+      "arm": "candidate",
+      "ordinal": 45
+    },
+    {
+      "id": "ctx-nushell__nushell-12901-gpt-codegraph",
+      "taskId": "ctx-nushell__nushell-12901",
+      "modelKey": "gpt",
+      "arm": "codegraph",
+      "ordinal": 46
+    },
+    {
+      "id": "ctx-sveltejs__svelte-3394-claude-codegraph",
+      "taskId": "ctx-sveltejs__svelte-3394",
+      "modelKey": "claude",
+      "arm": "codegraph",
+      "ordinal": 47
+    },
+    {
+      "id": "ctx-mui__material-ui-34229-claude-candidate",
+      "taskId": "ctx-mui__material-ui-34229",
+      "modelKey": "claude",
+      "arm": "candidate",
+      "ordinal": 48
+    }
+  ]
+}

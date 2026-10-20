@@ -1,0 +1,432 @@
+{
+  "kind": "context",
+  "instance_id": "cli__cli-3608",
+  "officialResult": {
+    "instance_id": "cli__cli-3608",
+    "num_steps": 42,
+    "final": {
+      "file": {
+        "coverage": 1,
+        "precision": 1,
+        "intersection": 3,
+        "gold_size": 3,
+        "pred_size": 3
+      },
+      "symbol": {
+        "coverage": 0.8333333333333334,
+        "precision": 1,
+        "intersection": 5,
+        "gold_size": 6,
+        "pred_size": 5
+      },
+      "span": {
+        "coverage": 0.8332081141998497,
+        "precision": 0.7771548703573932,
+        "intersection": 1109,
+        "gold_size": 1331,
+        "pred_size": 1427
+      },
+      "line": {
+        "coverage": 0.6590909090909091,
+        "precision": 0.7073170731707317,
+        "intersection": 29,
+        "gold_size": 44,
+        "pred_size": 41
+      }
+    },
+    "trajectory": {
+      "steps": [
+        {
+          "step": 1,
+          "coverage": {
+            "file": 1,
+            "symbol": 0.8333333333333334,
+            "span": 0.4567993989481593,
+            "line": 0.45454545454545453
+          }
+        },
+        {
+          "step": 2,
+          "coverage": {
+            "file": 1,
+            "symbol": 0.8333333333333334,
+            "span": 0.8549962434259955,
+            "line": 0.7727272727272727
+          }
+        },
+        {
+          "step": 3,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.912847483095417,
+            "line": 0.8409090909090909
+          }
+        },
+        {
+          "step": 4,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.912847483095417,
+            "line": 0.8409090909090909
+          }
+        },
+        {
+          "step": 5,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.912847483095417,
+            "line": 0.8409090909090909
+          }
+        },
+        {
+          "step": 6,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.912847483095417,
+            "line": 0.8409090909090909
+          }
+        },
+        {
+          "step": 7,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.912847483095417,
+            "line": 0.8409090909090909
+          }
+        },
+        {
+          "step": 8,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.912847483095417,
+            "line": 0.8409090909090909
+          }
+        },
+        {
+          "step": 9,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.912847483095417,
+            "line": 0.8409090909090909
+          }
+        },
+        {
+          "step": 10,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.912847483095417,
+            "line": 0.8409090909090909
+          }
+        },
+        {
+          "step": 11,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.912847483095417,
+            "line": 0.8409090909090909
+          }
+        },
+        {
+          "step": 12,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.912847483095417,
+            "line": 0.8409090909090909
+          }
+        },
+        {
+          "step": 13,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.912847483095417,
+            "line": 0.8409090909090909
+          }
+        },
+        {
+          "step": 14,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.912847483095417,
+            "line": 0.8409090909090909
+          }
+        },
+        {
+          "step": 15,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.912847483095417,
+            "line": 0.8409090909090909
+          }
+        },
+        {
+          "step": 16,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.9609316303531179,
+            "line": 0.9772727272727273
+          }
+        },
+        {
+          "step": 17,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.9609316303531179,
+            "line": 0.9772727272727273
+          }
+        },
+        {
+          "step": 18,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.9609316303531179,
+            "line": 0.9772727272727273
+          }
+        },
+        {
+          "step": 19,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.9609316303531179,
+            "line": 0.9772727272727273
+          }
+        },
+        {
+          "step": 20,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.9609316303531179,
+            "line": 0.9772727272727273
+          }
+        },
+        {
+          "step": 21,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.9609316303531179,
+            "line": 0.9772727272727273
+          }
+        },
+        {
+          "step": 22,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.9609316303531179,
+            "line": 0.9772727272727273
+          }
+        },
+        {
+          "step": 23,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.9609316303531179,
+            "line": 0.9772727272727273
+          }
+        },
+        {
+          "step": 24,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.9609316303531179,
+            "line": 0.9772727272727273
+          }
+        },
+        {
+          "step": 25,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.9609316303531179,
+            "line": 0.9772727272727273
+          }
+        },
+        {
+          "step": 26,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.9609316303531179,
+            "line": 0.9772727272727273
+          }
+        },
+        {
+          "step": 27,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.9609316303531179,
+            "line": 0.9772727272727273
+          }
+        },
+        {
+          "step": 28,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.9609316303531179,
+            "line": 0.9772727272727273
+          }
+        },
+        {
+          "step": 29,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.9609316303531179,
+            "line": 0.9772727272727273
+          }
+        },
+        {
+          "step": 30,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 0.9609316303531179,
+            "line": 0.9772727272727273
+          }
+        },
+        {
+          "step": 31,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 1,
+            "line": 1
+          }
+        },
+        {
+          "step": 32,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 1,
+            "line": 1
+          }
+        },
+        {
+          "step": 33,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 1,
+            "line": 1
+          }
+        },
+        {
+          "step": 34,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 1,
+            "line": 1
+          }
+        },
+        {
+          "step": 35,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 1,
+            "line": 1
+          }
+        },
+        {
+          "step": 36,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 1,
+            "line": 1
+          }
+        },
+        {
+          "step": 37,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 1,
+            "line": 1
+          }
+        },
+        {
+          "step": 38,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 1,
+            "line": 1
+          }
+        },
+        {
+          "step": 39,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 1,
+            "line": 1
+          }
+        },
+        {
+          "step": 40,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 1,
+            "line": 1
+          }
+        },
+        {
+          "step": 41,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 1,
+            "line": 1
+          }
+        },
+        {
+          "step": 42,
+          "coverage": {
+            "file": 1,
+            "symbol": 1,
+            "span": 1,
+            "line": 1
+          }
+        }
+      ],
+      "auc_coverage": {
+        "file": 1,
+        "symbol": 0.9920634920634922,
+        "span": 0.9426854137597944,
+        "line": 0.9242424242424241
+      },
+      "redundancy": {
+        "file": 0.1522157996146436,
+        "symbol": 0.3423423423423423,
+        "span": 0.175407630497303,
+        "line": 0.13460253841015368
+      }
+    }
+  }
+}

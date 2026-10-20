@@ -1,0 +1,19 @@
+[
+  "/testbed/node_modules",
+  "/testbed/packages-private/vite-debug/node_modules",
+  "/testbed/packages-private/sfc-playground/node_modules",
+  "/testbed/packages-private/dts-built-test/node_modules",
+  "/testbed/packages-private/dts-test/node_modules",
+  "/testbed/packages-private/template-explorer/node_modules",
+  "/testbed/packages/runtime-core/node_modules",
+  "/testbed/packages/reactivity/node_modules",
+  "/testbed/packages/vue-compat/node_modules",
+  "/testbed/packages/vue/node_modules",
+  "/testbed/packages/compiler-dom/node_modules",
+  "/testbed/packages/runtime-test/node_modules",
+  "/testbed/packages/runtime-dom/node_modules",
+  "/testbed/packages/compiler-sfc/node_modules",
+  "/testbed/packages/server-renderer/node_modules",
+  "/testbed/packages/compiler-core/node_modules",
+  "/testbed/packages/compiler-ssr/node_modules"
+]

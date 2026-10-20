@@ -1,0 +1,1231 @@
+[
+  {
+    "instance_id": "mui__material-ui-34229",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "e4f2f9e5689127b3438cac196544bdfb2c6083ea",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "docs/data/joy/getting-started/templates/email/components/Menu.tsx",
+            "docs/src/modules/components/MuiProductSelector.tsx",
+            "packages/mui-base/src/MenuUnstyled/MenuUnstyledContext.ts",
+            "packages/mui-joy/src/Menu/Menu.tsx",
+            "packages/mui-material/src/Menu/Menu.js",
+            "packages/mui-material/src/Select/Select.js",
+            "packages/mui-material/src/Select/SelectInput.d.ts",
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "docs/data/joy/getting-started/templates/email/components/Menu.tsx": [
+              {
+                "start": 1,
+                "end": 87
+              }
+            ],
+            "docs/src/modules/components/MuiProductSelector.tsx": [
+              {
+                "start": 9,
+                "end": 60
+              }
+            ],
+            "packages/mui-base/src/MenuUnstyled/MenuUnstyledContext.ts": [
+              {
+                "start": 1,
+                "end": 18
+              }
+            ],
+            "packages/mui-joy/src/Menu/Menu.tsx": [
+              {
+                "start": 51,
+                "end": 165
+              }
+            ],
+            "packages/mui-material/src/Menu/Menu.js": [
+              {
+                "start": 63,
+                "end": 186
+              }
+            ],
+            "packages/mui-material/src/Select/Select.js": [
+              {
+                "start": 32,
+                "end": 102
+              }
+            ],
+            "packages/mui-material/src/Select/SelectInput.d.ts": [
+              {
+                "start": 1,
+                "end": 45
+              }
+            ],
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 18,
+                "end": 103
+              },
+              {
+                "start": 132,
+                "end": 162
+              },
+              {
+                "start": 192,
+                "end": 236
+              },
+              {
+                "start": 396,
+                "end": 417
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "docs/data/material/components/grid/FullWidthGrid.js",
+            "packages/mui-base/src/PopperUnstyled/PopperUnstyled.tsx",
+            "packages/mui-joy/src/Select/Select.tsx",
+            "packages/mui-joy/src/Select/SelectProps.ts",
+            "packages/mui-material/src/Popover/Popover.js",
+            "packages/mui-material/src/Select/Select.d.ts",
+            "packages/mui-material/src/Select/Select.js",
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "docs/data/material/components/grid/FullWidthGrid.js": [
+              {
+                "start": 1,
+                "end": 34
+              }
+            ],
+            "packages/mui-base/src/PopperUnstyled/PopperUnstyled.tsx": [
+              {
+                "start": 44,
+                "end": 60
+              },
+              {
+                "start": 74,
+                "end": 81
+              },
+              {
+                "start": 97,
+                "end": 131
+              },
+              {
+                "start": 141,
+                "end": 147
+              },
+              {
+                "start": 182,
+                "end": 188
+              }
+            ],
+            "packages/mui-joy/src/Select/Select.tsx": [
+              {
+                "start": 282,
+                "end": 365
+              }
+            ],
+            "packages/mui-joy/src/Select/SelectProps.ts": [
+              {
+                "start": 94,
+                "end": 131
+              }
+            ],
+            "packages/mui-material/src/Popover/Popover.js": [
+              {
+                "start": 54,
+                "end": 62
+              }
+            ],
+            "packages/mui-material/src/Select/Select.d.ts": [
+              {
+                "start": 163,
+                "end": 170
+              }
+            ],
+            "packages/mui-material/src/Select/Select.js": [
+              {
+                "start": 32,
+                "end": 128
+              }
+            ],
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 18,
+                "end": 103
+              },
+              {
+                "start": 132,
+                "end": 162
+              },
+              {
+                "start": 396,
+                "end": 417
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 146,
+                "end": 340
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 420,
+                "end": 560
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 100,
+                "end": 145
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 560,
+                "end": 600
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 148,
+                "end": 148
+              },
+              {
+                "start": 150,
+                "end": 150
+              },
+              {
+                "start": 175,
+                "end": 176
+              },
+              {
+                "start": 180,
+                "end": 180
+              },
+              {
+                "start": 218,
+                "end": 218
+              },
+              {
+                "start": 323,
+                "end": 323
+              },
+              {
+                "start": 479,
+                "end": 479
+              },
+              {
+                "start": 481,
+                "end": 482
+              },
+              {
+                "start": 549,
+                "end": 549
+              },
+              {
+                "start": 570,
+                "end": 570
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/Select.d.ts",
+            "packages/mui-material/src/Select/Select.js",
+            "packages/mui-material/src/Select/Select.spec.tsx",
+            "packages/mui-material/src/Select/Select.test.js",
+            "packages/mui-material/src/Select/SelectInput.d.ts",
+            "packages/mui-material/src/Select/SelectInput.js",
+            "packages/mui-material/src/Select/index.d.ts",
+            "packages/mui-material/src/Select/index.js",
+            "packages/mui-material/src/Select/selectClasses.ts"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/Select.test.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/Select.test.js": [
+              {
+                "start": 854,
+                "end": 854
+              },
+              {
+                "start": 861,
+                "end": 861
+              },
+              {
+                "start": 867,
+                "end": 867
+              },
+              {
+                "start": 874,
+                "end": 874
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/Select.test.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/Select.test.js": [
+              {
+                "start": 840,
+                "end": 890
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            ".browserslistrc",
+            ".circleci/config.yml",
+            ".codesandbox/ci.json",
+            ".editorconfig",
+            ".eslintignore",
+            ".eslintrc.js",
+            ".git-blame-ignore-revs",
+            ".gitattributes",
+            ".github/FUNDING.yml",
+            ".github/ISSUE_TEMPLATE/1.bug.yml",
+            ".github/ISSUE_TEMPLATE/2.feature.yml",
+            ".github/ISSUE_TEMPLATE/3.rfc.yml",
+            ".github/ISSUE_TEMPLATE/4.docs-feedback.yml",
+            ".github/ISSUE_TEMPLATE/config.yml",
+            ".github/PULL_REQUEST_TEMPLATE.md",
+            ".github/codeql/codeql-config.yml",
+            ".github/workflows/check-if-pr-has-label.yml",
+            ".github/workflows/ci-check.yml",
+            ".github/workflows/ci.yml",
+            ".github/workflows/codeql.yml",
+            ".github/workflows/maintenance.yml",
+            ".github/workflows/mark-duplicate.yml",
+            ".github/workflows/no-response.yml",
+            ".github/workflows/scorecards.yml",
+            ".github/workflows/support-stackoverflow.yml",
+            ".gitignore",
+            ".markdownlint-cli2.cjs",
+            ".mocharc.js",
+            ".stylelintrc.js",
+            ".tidelift.yml",
+            ".vscode/launch.json",
+            ".yarn/releases/yarn-1.22.19.js",
+            ".yarnrc",
+            "CHANGELOG.md",
+            "CHANGELOG.old.md",
+            "CONTRIBUTING.md",
+            "LICENSE",
+            "TYPESCRIPT_CONVENTION.md",
+            "babel.config.js",
+            "benchmark/browser/README.md",
+            "benchmark/browser/index.html",
+            "benchmark/browser/index.js",
+            "benchmark/browser/scenarios/box-baseline/index.js",
+            "benchmark/browser/scenarios/box-chakra-ui/index.js",
+            "benchmark/browser/scenarios/box-material-ui/index.js",
+            "benchmark/browser/scenarios/box-theme-ui/index.js",
+            "benchmark/browser/scenarios/components/index.js",
+            "benchmark/browser/scenarios/grid-material-ui/index.js",
+            "benchmark/browser/scenarios/grid-simple/index.js",
+            "benchmark/browser/scenarios/grid-system/index.js",
+            "benchmark/browser/scenarios/make-styles/index.js",
+            "benchmark/browser/scenarios/noop/index.js",
+            "benchmark/browser/scenarios/primitives/index.js",
+            "benchmark/browser/scenarios/styled-components-box-material-ui-system/index.js",
+            "benchmark/browser/scenarios/styled-components-box-styled-system/index.js",
+            "benchmark/browser/scenarios/styled-emotion/index.js",
+            "benchmark/browser/scenarios/styled-material-ui/index.js",
+            "benchmark/browser/scenarios/styled-sc/index.js",
+            "benchmark/browser/scenarios/table-cell/index.js",
+            "benchmark/browser/scripts/benchmark.js",
+            "benchmark/browser/utils/index.js",
+            "benchmark/browser/webpack.config.js",
+            "benchmark/package.json",
+            "benchmark/server/README.md",
+            "benchmark/server/scenarios/core.js",
+            "benchmark/server/scenarios/docs.js",
+            "benchmark/server/scenarios/server.js",
+            "benchmark/server/scenarios/styles.js",
+            "benchmark/server/scenarios/system.js",
+            "codecov.yml",
+            "crowdin.yml",
+            "dangerfile.js",
+            "docs/.env",
+            "docs/.link-check-errors.txt",
+            "docs/babel.config.js",
+            "docs/config.d.ts",
+            "docs/config.js",
+            "docs/data/system/spacing/Demo.js",
+            "docs/data/system/spacing/Demo.tsx",
+            "docs/data/system/spacing/HorizontalCentering.js",
+            "docs/data/system/spacing/HorizontalCentering.tsx",
+            "docs/data/system/spacing/spacing-pt.md",
+            "docs/data/system/spacing/spacing-zh.md",
+            "docs/data/system/spacing/spacing.md",
+            "docs/data/system/styled/BasicUsage.js",
+            "docs/data/system/styled/BasicUsage.tsx",
+            "docs/data/system/styled/BasicUsage.tsx.preview",
+            "docs/data/system/styled/ThemeUsage.js",
+            "docs/data/system/styled/ThemeUsage.tsx",
+            "docs/data/system/styled/ThemeUsage.tsx.preview",
+            "docs/data/system/styled/UsingOptions.js",
+            "docs/data/system/styled/UsingOptions.tsx",
+            "docs/data/system/styled/UsingOptions.tsx.preview",
+            "docs/data/system/styled/UsingWithSx.js",
+            "docs/data/system/styled/UsingWithSx.tsx",
+            "docs/data/system/styled/UsingWithSx.tsx.preview",
+            "docs/data/system/styled/styled-pt.md",
+            "docs/data/system/styled/styled-zh.md",
+            "docs/data/system/styled/styled.md",
+            "docs/data/system/typography/FontFamily.js",
+            "docs/data/system/typography/FontFamily.tsx",
+            "docs/data/system/typography/FontFamily.tsx.preview",
+            "docs/data/system/typography/FontSize.js",
+            "docs/data/system/typography/FontSize.tsx",
+            "docs/data/system/typography/FontSize.tsx.preview",
+            "docs/data/system/typography/FontStyle.js",
+            "docs/data/system/typography/FontStyle.tsx",
+            "docs/data/system/typography/FontStyle.tsx.preview",
+            "docs/data/system/typography/FontWeight.js",
+            "docs/data/system/typography/FontWeight.tsx",
+            "docs/data/system/typography/FontWeight.tsx.preview",
+            "docs/data/system/typography/LetterSpacing.js",
+            "docs/data/system/typography/LetterSpacing.tsx",
+            "docs/data/system/typography/LetterSpacing.tsx.preview",
+            "docs/data/system/typography/LineHeight.js",
+            "docs/data/system/typography/LineHeight.tsx",
+            "docs/data/system/typography/LineHeight.tsx.preview",
+            "docs/data/system/typography/TextAlignment.js",
+            "docs/data/system/typography/TextAlignment.tsx",
+            "docs/data/system/typography/TextAlignment.tsx.preview",
+            "docs/data/system/typography/TextTransform.js",
+            "docs/data/system/typography/TextTransform.tsx",
+            "docs/data/system/typography/TextTransform.tsx.preview",
+            "docs/data/system/typography/Variant.js",
+            "docs/data/system/typography/Variant.tsx",
+            "docs/data/system/typography/Variant.tsx.preview",
+            "docs/data/system/typography/typography-pt.md",
+            "docs/data/system/typography/typography-zh.md",
+            "docs/data/system/typography/typography.md",
+            "docs/lib/sourcing.ts",
+            "docs/next-env.d.ts",
+            "docs/next.config.js",
+            "docs/pages/_app.js",
+            "docs/pages/_document.js",
+            "docs/pages/templates.tsx",
+            "docs/pages/versions.js",
+            "docs/pages/x.tsx",
+            "docs/src/components/typography/GradientText.tsx",
+            "docs/src/components/typography/SectionHeadline.tsx",
+            "docs/src/components/x-grid/EditProgress.tsx",
+            "docs/src/components/x-grid/EditStatus.tsx",
+            "docs/src/components/x-grid/ProgressBar.tsx",
+            "docs/src/components/x-grid/Status.tsx",
+            "docs/src/pages.ts",
+            "docs/src/pages/production-error/ErrorDecoder.js",
+            "docs/src/pages/production-error/index-pt.md",
+            "docs/src/pages/production-error/index-zh.md",
+            "docs/src/pages/production-error/index.md",
+            "docs/src/pages/versions/LatestVersions.js",
+            "docs/src/pages/versions/ReleasedVersions.js",
+            "docs/src/pages/versions/VersionsContext.js",
+            "docs/src/pages/versions/versions-pt.md",
+            "docs/src/pages/versions/versions-zh.md",
+            "docs/src/pages/versions/versions.md",
+            "docs/src/pagesApi.js",
+            "docs/src/route.ts",
+            "docs/src/sw.js",
+            "docs/translations/api-docs/accordion-actions/accordion-actions-pt.json",
+            "docs/translations/api-docs/accordion-actions/accordion-actions-zh.json",
+            "docs/translations/api-docs/accordion-actions/accordion-actions.json",
+            "docs/translations/api-docs/accordion-details/accordion-details-pt.json",
+            "docs/translations/api-docs/accordion-details/accordion-details-zh.json",
+            "docs/translations/api-docs/accordion-details/accordion-details.json",
+            "docs/translations/api-docs/accordion-summary/accordion-summary-pt.json",
+            "docs/translations/api-docs/accordion-summary/accordion-summary-zh.json",
+            "docs/translations/api-docs/accordion-summary/accordion-summary.json",
+            "docs/translations/api-docs/accordion/accordion-pt.json",
+            "docs/translations/api-docs/accordion/accordion-zh.json",
+            "docs/translations/api-docs/accordion/accordion.json",
+            "docs/translations/api-docs/alert-title/alert-title-pt.json",
+            "docs/translations/api-docs/alert-title/alert-title-zh.json",
+            "docs/translations/api-docs/alert-title/alert-title.json",
+            "docs/translations/api-docs/alert/alert-pt.json",
+            "docs/translations/api-docs/alert/alert-zh.json",
+            "docs/translations/api-docs/alert/alert.json",
+            "docs/translations/api-docs/app-bar/app-bar-pt.json",
+            "docs/translations/api-docs/app-bar/app-bar-zh.json",
+            "docs/translations/api-docs/app-bar/app-bar.json",
+            "docs/translations/api-docs/autocomplete/autocomplete-pt.json",
+            "docs/translations/api-docs/autocomplete/autocomplete-zh.json",
+            "docs/translations/api-docs/autocomplete/autocomplete.json",
+            "docs/translations/api-docs/avatar-group/avatar-group-pt.json",
+            "docs/translations/api-docs/avatar-group/avatar-group-zh.json",
+            "docs/translations/api-docs/avatar-group/avatar-group.json",
+            "docs/translations/api-docs/avatar/avatar-pt.json",
+            "docs/translations/api-docs/avatar/avatar-zh.json",
+            "docs/translations/api-docs/avatar/avatar.json",
+            "docs/translations/api-docs/backdrop/backdrop-pt.json",
+            "docs/translations/api-docs/backdrop/backdrop-zh.json",
+            "docs/translations/api-docs/backdrop/backdrop.json",
+            "docs/translations/api-docs/card-header/card-header-pt.json",
+            "docs/translations/api-docs/card-header/card-header-zh.json",
+            "docs/translations/api-docs/card-header/card-header.json",
+            "docs/translations/api-docs/card-media/card-media-pt.json",
+            "docs/translations/api-docs/card-media/card-media-zh.json",
+            "docs/translations/api-docs/card-media/card-media.json",
+            "docs/translations/api-docs/fab/fab-pt.json",
+            "docs/translations/api-docs/fab/fab-zh.json",
+            "docs/translations/api-docs/fab/fab.json",
+            "docs/translations/api-docs/fade/fade-pt.json",
+            "docs/translations/api-docs/fade/fade-zh.json",
+            "docs/translations/api-docs/fade/fade.json",
+            "docs/translations/translations-pt.json",
+            "docs/translations/translations-zh.json",
+            "docs/translations/translations.json",
+            "docs/tsconfig.json",
+            "docs/tslint.json",
+            "docs/types/docs.d.ts",
+            "docs/types/fg-loadcss.d.ts",
+            "docs/types/icons.d.ts",
+            "examples/vitejs/.gitignore",
+            "examples/vitejs/README.md",
+            "examples/vitejs/index.html",
+            "examples/vitejs/package.json",
+            "examples/vitejs/src/App.jsx",
+            "examples/vitejs/src/Copyright.jsx",
+            "examples/vitejs/src/ProTip.jsx",
+            "examples/vitejs/src/main.jsx",
+            "examples/vitejs/src/theme.js",
+            "examples/vitejs/vite.config.js",
+            "lerna.json",
+            "modules/waterfall/Queue.mjs",
+            "modules/waterfall/README.md",
+            "modules/waterfall/retry.mjs",
+            "modules/waterfall/sleep.mjs",
+            "modules/waterfall/waitUntil.mjs",
+            "netlify.toml",
+            "netlify/functions/deploy-succeeded.js",
+            "test/bundling/README.md",
+            "test/bundling/fixtures/gatsby/testGatsbyIntegration.js",
+            "test/bundling/fixtures/next-webpack4/next-webpack.template",
+            "test/bundling/fixtures/next-webpack4/next.config.js",
+            "test/bundling/fixtures/next-webpack4/package.json",
+            "test/bundling/fixtures/next-webpack4/pages/development.js",
+            "test/bundling/fixtures/next-webpack4/testNextWebpack4Integration.js",
+            "test/bundling/fixtures/next-webpack5/next-webpack.template",
+            "test/bundling/fixtures/next-webpack5/package.json",
+            "test/bundling/fixtures/next-webpack5/pages/development.js",
+            "test/bundling/fixtures/next-webpack5/pages/next-webpack.fixture.js",
+            "test/bundling/fixtures/next-webpack5/testNextWebpack5Integration.js",
+            "test/bundling/fixtures/node-esm/development.js",
+            "test/bundling/fixtures/node-esm/node-esm.template",
+            "test/bundling/fixtures/node-esm/package.json",
+            "test/bundling/fixtures/snowpack/package.json",
+            "test/bundling/fixtures/snowpack/public/index.html",
+            "test/bundling/fixtures/snowpack/snowpack.config.js",
+            "test/bundling/fixtures/snowpack/snowpack.template",
+            "test/bundling/fixtures/snowpack/testSnowpackIntegration.js",
+            "test/bundling/fixtures/vite/index.html",
+            "test/bundling/fixtures/vite/package.json",
+            "test/bundling/fixtures/vite/testViteIntegration.js",
+            "test/bundling/fixtures/vite/vite.config.js",
+            "test/bundling/fixtures/vite/vite.template",
+            "test/bundling/scripts/createFixture.js",
+            "test/bundling/scripts/createTemplate.js",
+            "test/bundling/scripts/fixtureTemplateValues.js",
+            "test/bundling/scripts/package.json",
+            "test/bundling/scripts/packages.js",
+            "test/bundling/scripts/useBuildFromSource.js",
+            "test/cli.js",
+            "test/docs-regressions-before.png",
+            "test/docs-regressions-diff.png",
+            "test/e2e-website/README.md",
+            "test/e2e-website/material-color-playground.spec.ts",
+            "test/e2e-website/material-docs.spec.ts",
+            "test/e2e-website/material-icons.spec.ts",
+            "test/e2e-website/playwright.config.ts",
+            "test/e2e-website/products-drawer.spec.ts",
+            "test/e2e-website/styles-legacy.spec.ts",
+            "test/e2e/.mocharc.js",
+            "test/e2e/README.md",
+            "test/e2e/TestViewer.js",
+            "test/e2e/fixtures/FocusTrap/ClosedFocusTrap.tsx",
+            "test/e2e/fixtures/FocusTrap/DefaultOpenLazyFocusTrap.tsx",
+            "test/e2e/fixtures/FocusTrap/OpenFocusTrap.tsx",
+            "test/e2e/fixtures/Rating/BasicRating.tsx",
+            "test/e2e/fixtures/TextareaAutosize/TextareaAutosizeSuspense.tsx",
+            "test/e2e/index.js",
+            "test/e2e/index.test.ts",
+            "test/e2e/serve.json",
+            "test/e2e/template.html",
+            "test/e2e/webpack.config.js",
+            "test/karma.conf.js",
+            "test/regressions/README.md",
+            "test/regressions/TestViewer.js",
+            "test/regressions/fixtures/Button/FullWidthLoadingButtons.js",
+            "test/regressions/fixtures/Button/IconLabelButtons.js",
+            "test/regressions/fixtures/Button/MultilineButton.js",
+            "test/regressions/fixtures/ButtonJoy/VariantColorButtons.js",
+            "test/regressions/fixtures/ButtonNext/IconLabelButtonsNext.js",
+            "test/regressions/fixtures/ButtonNext/MultilineButtonNext.js",
+            "test/regressions/fixtures/CssBaseline/JoyCssBaseline.js",
+            "test/regressions/fixtures/CssBaseline/JoyScopedCssBaseline.js",
+            "test/regressions/fixtures/CssBaseline/MaterialCssBaseline.js",
+            "test/regressions/fixtures/CssBaseline/MaterialScopedCssBaseline.js",
+            "test/regressions/fixtures/CssVarsProvider/ColorSchemeSelector.js",
+            "test/regressions/fixtures/CssVarsProvider/CssVarsProviderJoy.js",
+            "test/regressions/fixtures/CssVarsProvider/DarkModeSpecificity.js",
+            "test/regressions/fixtures/CssVarsProvider/ForceColorSchemes.js",
+            "test/regressions/fixtures/CssVarsProvider/IndependentCssVarsProviders.js",
+            "test/regressions/fixtures/CssVarsProvider/MaterialUIDefaultDark.js",
+            "test/regressions/fixtures/CssVarsProvider/MaterialUIDefaultDarkToLight.js",
+            "test/regressions/fixtures/CssVarsProvider/NestedCssVarsProviders.js",
+            "test/regressions/fixtures/Dialog/AlertDialog.js",
+            "test/regressions/fixtures/Grid/StressGrid.js",
+            "test/regressions/fixtures/Grid/StressNestedGrid.js",
+            "test/regressions/fixtures/Input/InputLabels.js",
+            "test/regressions/fixtures/Input/Inputs.js",
+            "test/regressions/fixtures/InputNext/Inputs.js",
+            "test/regressions/fixtures/Menu/DenseMenu.js",
+            "test/regressions/fixtures/Menu/LongMenu.js",
+            "test/regressions/fixtures/Menu/MenuContentAnchors.js",
+            "test/regressions/fixtures/Menu/SimpleMenuList.js",
+            "test/regressions/fixtures/Radio/RadioIconSizeSmall.js",
+            "test/regressions/fixtures/Rating/FocusVisibleRating.js",
+            "test/regressions/fixtures/Rating/PreciseFocusVisibleRating.js",
+            "test/regressions/fixtures/Select/SelectAlignment.js",
+            "test/regressions/fixtures/Select/SelectChips.js",
+            "test/regressions/fixtures/Select/SelectMissingValue.js",
+            "test/regressions/fixtures/Select/SelectOverflow.js",
+            "test/regressions/fixtures/SelectJoy/GroupedOptionSelect.js",
+            "test/regressions/fixtures/Skeleton/SkeletonChildren.js",
+            "test/regressions/fixtures/Slider/SimpleDisabledSlider.js",
+            "test/regressions/fixtures/Snackbar/PositionedSnackbar.js",
+            "test/regressions/fixtures/Snackbar/PositionedSnackbarRtl.js",
+            "test/regressions/fixtures/SpeedDial/Directions.js",
+            "test/regressions/fixtures/StepIcon/BiggerStepIconREM.js",
+            "test/regressions/fixtures/StepLabel/AlternativeLabelOptionalText.js",
+            "test/regressions/fixtures/SvgIcon/CustomColorSvgIcon.js",
+            "test/regressions/fixtures/SwitchJoy/SwitchJoy.js",
+            "test/regressions/fixtures/Table/DenseCheckboxTable.js",
+            "test/regressions/fixtures/Tabs/RTLVerticalTabs.js",
+            "test/regressions/fixtures/TextField/BaselineAlignTextField.js",
+            "test/regressions/fixtures/TextField/FilledHiddenLabelInputAdornment.js",
+            "test/regressions/fixtures/TextField/FilledMultilineHiddenLabelTextField.js",
+            "test/regressions/fixtures/TextField/MultilineTextField.js",
+            "test/regressions/fixtures/TextField/OutlinedHiddenRequiredIndicator.js",
+            "test/regressions/fixtures/Textarea/Textarea.js",
+            "test/regressions/fixtures/Tooltip/PositionedTooltips.js",
+            "test/regressions/fixtures/Tooltip/PositionedTooltipsRtl.js",
+            "test/regressions/index.js",
+            "test/regressions/index.test.js",
+            "test/regressions/manual/README.md",
+            "test/regressions/manual/icons/AllIcons.js",
+            "test/regressions/serve.json",
+            "test/regressions/template.html",
+            "test/regressions/webpack.config.js",
+            "test/tsconfig.json",
+            "test/utils/KarmaReporterReactProfiler.js",
+            "test/utils/components.js",
+            "test/utils/createDOM.d.ts",
+            "test/utils/createDOM.js",
+            "test/utils/createDescribe.ts",
+            "test/utils/createMount.js",
+            "test/utils/createRenderer.test.js",
+            "test/utils/createRenderer.tsx",
+            "test/utils/createShallow.js",
+            "test/utils/describeConformance.tsx",
+            "test/utils/describeConformanceUnstyled.tsx",
+            "test/utils/findOutermostIntrinsic.js",
+            "test/utils/findOutermostIntrinsic.test.js",
+            "test/utils/fireDiscreteEvent.js",
+            "test/utils/focusVisible.ts",
+            "test/utils/getClasses.js",
+            "test/utils/index.js",
+            "test/utils/init.js",
+            "test/utils/initMatchers.test.js",
+            "test/utils/initMatchers.ts",
+            "test/utils/initPlaywrightMatchers.ts",
+            "test/utils/mochaHooks.js",
+            "test/utils/mochaHooks.test.js",
+            "test/utils/setup.js",
+            "test/utils/setupBabel.js",
+            "test/utils/setupBabelPlaywright.js",
+            "test/utils/setupJSDOM.js",
+            "test/utils/setupKarma.js",
+            "test/utils/until.js",
+            "test/utils/until.test.js",
+            "test/utils/userEvent.ts",
+            "tsconfig.json",
+            "tslint.json",
+            "vercel.json",
+            "webpackBaseConfig.js",
+            "yarn.lock"
+          ],
+          "spans": {}
+        },
+        {
+          "files": [
+            "CHANGELOG.md"
+          ],
+          "spans": {
+            "CHANGELOG.md": [
+              {
+                "start": 73,
+                "end": 73
+              },
+              {
+                "start": 281,
+                "end": 281
+              },
+              {
+                "start": 398,
+                "end": 398
+              },
+              {
+                "start": 410,
+                "end": 410
+              },
+              {
+                "start": 626,
+                "end": 626
+              },
+              {
+                "start": 902,
+                "end": 902
+              },
+              {
+                "start": 1006,
+                "end": 1006
+              },
+              {
+                "start": 1010,
+                "end": 1010
+              },
+              {
+                "start": 1061,
+                "end": 1061
+              },
+              {
+                "start": 1069,
+                "end": 1069
+              },
+              {
+                "start": 1373,
+                "end": 1373
+              },
+              {
+                "start": 1553,
+                "end": 1553
+              },
+              {
+                "start": 2365,
+                "end": 2365
+              },
+              {
+                "start": 2707,
+                "end": 2707
+              },
+              {
+                "start": 2882,
+                "end": 2882
+              },
+              {
+                "start": 2953,
+                "end": 2953
+              },
+              {
+                "start": 3159,
+                "end": 3159
+              },
+              {
+                "start": 3445,
+                "end": 3445
+              },
+              {
+                "start": 3507,
+                "end": 3507
+              },
+              {
+                "start": 3646,
+                "end": 3646
+              },
+              {
+                "start": 3673,
+                "end": 3673
+              },
+              {
+                "start": 3749,
+                "end": 3749
+              },
+              {
+                "start": 3751,
+                "end": 3751
+              },
+              {
+                "start": 4399,
+                "end": 4399
+              },
+              {
+                "start": 4603,
+                "end": 4603
+              },
+              {
+                "start": 4798,
+                "end": 4798
+              },
+              {
+                "start": 4878,
+                "end": 4878
+              },
+              {
+                "start": 5183,
+                "end": 5183
+              },
+              {
+                "start": 5568,
+                "end": 5568
+              },
+              {
+                "start": 5709,
+                "end": 5709
+              },
+              {
+                "start": 5805,
+                "end": 5805
+              },
+              {
+                "start": 6067,
+                "end": 6067
+              },
+              {
+                "start": 6392,
+                "end": 6392
+              },
+              {
+                "start": 6481,
+                "end": 6481
+              },
+              {
+                "start": 6501,
+                "end": 6503
+              },
+              {
+                "start": 6622,
+                "end": 6623
+              },
+              {
+                "start": 6704,
+                "end": 6705
+              },
+              {
+                "start": 6796,
+                "end": 6796
+              },
+              {
+                "start": 7576,
+                "end": 7576
+              },
+              {
+                "start": 7631,
+                "end": 7631
+              },
+              {
+                "start": 7730,
+                "end": 7730
+              },
+              {
+                "start": 7798,
+                "end": 7798
+              },
+              {
+                "start": 7920,
+                "end": 7920
+              },
+              {
+                "start": 8074,
+                "end": 8074
+              },
+              {
+                "start": 8468,
+                "end": 8468
+              },
+              {
+                "start": 8743,
+                "end": 8743
+              },
+              {
+                "start": 8872,
+                "end": 8872
+              },
+              {
+                "start": 8991,
+                "end": 8991
+              },
+              {
+                "start": 9924,
+                "end": 9924
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/package.json"
+          ],
+          "spans": {
+            "packages/mui-material/package.json": [
+              {
+                "start": 1,
+                "end": 40
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "CHANGELOG.md"
+          ],
+          "spans": {
+            "CHANGELOG.md": [
+              {
+                "start": 1844,
+                "end": 1844
+              },
+              {
+                "start": 2205,
+                "end": 2205
+              },
+              {
+                "start": 2332,
+                "end": 2332
+              },
+              {
+                "start": 2670,
+                "end": 2670
+              },
+              {
+                "start": 3382,
+                "end": 3382
+              },
+              {
+                "start": 4817,
+                "end": 4817
+              },
+              {
+                "start": 5222,
+                "end": 5222
+              },
+              {
+                "start": 5226,
+                "end": 5226
+              },
+              {
+                "start": 6479,
+                "end": 6479
+              },
+              {
+                "start": 7218,
+                "end": 7218
+              },
+              {
+                "start": 9547,
+                "end": 9547
+              },
+              {
+                "start": 9747,
+                "end": 9747
+              },
+              {
+                "start": 10285,
+                "end": 10285
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "CHANGELOG.md"
+          ],
+          "spans": {
+            "CHANGELOG.md": [
+              {
+                "start": 1,
+                "end": 120
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/mui-base/src/InputUnstyled/useInput.ts",
+            "packages/mui-base/src/InputUnstyled/useInput.types.ts",
+            "packages/mui-base/src/SliderUnstyled/useSlider.ts",
+            "packages/mui-base/src/SliderUnstyled/useSlider.types.ts",
+            "packages/mui-base/src/SwitchUnstyled/useSwitch.ts",
+            "packages/mui-base/src/SwitchUnstyled/useSwitch.types.ts",
+            "packages/mui-joy/src/Input/InputProps.ts",
+            "packages/mui-material/src/InputBase/InputBase.d.ts",
+            "packages/mui-material/src/InputBase/InputBase.js"
+          ],
+          "spans": {
+            "packages/mui-base/src/InputUnstyled/useInput.ts": [
+              {
+                "start": 61,
+                "end": 79
+              },
+              {
+                "start": 92,
+                "end": 146
+              },
+              {
+                "start": 162,
+                "end": 200
+              }
+            ],
+            "packages/mui-base/src/InputUnstyled/useInput.types.ts": [
+              {
+                "start": 1,
+                "end": 54
+              }
+            ],
+            "packages/mui-base/src/SliderUnstyled/useSlider.ts": [
+              {
+                "start": 636,
+                "end": 677
+              }
+            ],
+            "packages/mui-base/src/SliderUnstyled/useSlider.types.ts": [
+              {
+                "start": 1,
+                "end": 64
+              }
+            ],
+            "packages/mui-base/src/SwitchUnstyled/useSwitch.ts": [
+              {
+                "start": 97,
+                "end": 117
+              }
+            ],
+            "packages/mui-base/src/SwitchUnstyled/useSwitch.types.ts": [
+              {
+                "start": 1,
+                "end": 51
+              }
+            ],
+            "packages/mui-material/src/InputBase/InputBase.d.ts": [
+              {
+                "start": 5,
+                "end": 15
+              },
+              {
+                "start": 49,
+                "end": 58
+              },
+              {
+                "start": 74,
+                "end": 83
+              },
+              {
+                "start": 116,
+                "end": 127
+              },
+              {
+                "start": 199,
+                "end": 217
+              },
+              {
+                "start": 242,
+                "end": 252
+              }
+            ],
+            "packages/mui-material/src/InputBase/InputBase.js": [
+              {
+                "start": 241,
+                "end": 247
+              },
+              {
+                "start": 289,
+                "end": 309
+              },
+              {
+                "start": 347,
+                "end": 449
+              },
+              {
+                "start": 474,
+                "end": 483
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/InputBase/InputBase.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/InputBase/InputBase.js": [
+              {
+                "start": 490,
+                "end": 620
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "test/regressions/fixtures/Select/SelectOverflow.js"
+          ],
+          "spans": {
+            "test/regressions/fixtures/Select/SelectOverflow.js": [
+              {
+                "start": 1,
+                "end": 14
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "test/regressions/fixtures/Select/SelectAlignment.js"
+          ],
+          "spans": {
+            "test/regressions/fixtures/Select/SelectAlignment.js": [
+              {
+                "start": 1,
+                "end": 43
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/selectClasses.ts"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/selectClasses.ts": [
+              {
+                "start": 1,
+                "end": 53
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        },
+        {
+          "files": [
+            "packages/mui-material/src/InputBase/InputBase.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/InputBase/InputBase.js": [
+              {
+                "start": 1,
+                "end": 120
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/InputBase/InputBase.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/InputBase/InputBase.js": [
+              {
+                "start": 131,
+                "end": 131
+              },
+              {
+                "start": 509,
+                "end": 509
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [],
+      "pred_spans": {}
+    }
+  }
+]

@@ -1,0 +1,659 @@
+[
+  {
+    "instance_id": "cli__cli-9794",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "435ecd47c0228abd787523947e3a298024689d8d",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "pkg/cmd/extension/command.go",
+            "pkg/cmd/extension/command_test.go",
+            "pkg/cmd/extension/manager_test.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command.go": [
+              {
+                "start": 41,
+                "end": 41
+              },
+              {
+                "start": 43,
+                "end": 43
+              },
+              {
+                "start": 48,
+                "end": 48
+              },
+              {
+                "start": 80,
+                "end": 80
+              },
+              {
+                "start": 110,
+                "end": 110
+              },
+              {
+                "start": 215,
+                "end": 215
+              },
+              {
+                "start": 303,
+                "end": 303
+              },
+              {
+                "start": 306,
+                "end": 307
+              },
+              {
+                "start": 495,
+                "end": 495
+              },
+              {
+                "start": 572,
+                "end": 572
+              },
+              {
+                "start": 576,
+                "end": 576
+              },
+              {
+                "start": 643,
+                "end": 644
+              },
+              {
+                "start": 647,
+                "end": 647
+              },
+              {
+                "start": 668,
+                "end": 668
+              }
+            ],
+            "pkg/cmd/extension/command_test.go": [
+              {
+                "start": 54,
+                "end": 54
+              },
+              {
+                "start": 59,
+                "end": 59
+              },
+              {
+                "start": 73,
+                "end": 73
+              },
+              {
+                "start": 81,
+                "end": 81
+              },
+              {
+                "start": 91,
+                "end": 91
+              },
+              {
+                "start": 96,
+                "end": 96
+              },
+              {
+                "start": 110,
+                "end": 110
+              },
+              {
+                "start": 117,
+                "end": 117
+              },
+              {
+                "start": 127,
+                "end": 127
+              },
+              {
+                "start": 132,
+                "end": 132
+              },
+              {
+                "start": 146,
+                "end": 146
+              },
+              {
+                "start": 154,
+                "end": 154
+              },
+              {
+                "start": 174,
+                "end": 174
+              },
+              {
+                "start": 182,
+                "end": 182
+              },
+              {
+                "start": 200,
+                "end": 200
+              },
+              {
+                "start": 208,
+                "end": 208
+              },
+              {
+                "start": 215,
+                "end": 215
+              },
+              {
+                "start": 221,
+                "end": 221
+              },
+              {
+                "start": 232,
+                "end": 232
+              },
+              {
+                "start": 240,
+                "end": 240
+              },
+              {
+                "start": 243,
+                "end": 243
+              },
+              {
+                "start": 256,
+                "end": 256
+              },
+              {
+                "start": 259,
+                "end": 259
+              },
+              {
+                "start": 267,
+                "end": 267
+              },
+              {
+                "start": 285,
+                "end": 285
+              },
+              {
+                "start": 296,
+                "end": 296
+              },
+              {
+                "start": 300,
+                "end": 300
+              },
+              {
+                "start": 410,
+                "end": 411
+              },
+              {
+                "start": 427,
+                "end": 427
+              },
+              {
+                "start": 542,
+                "end": 543
+              },
+              {
+                "start": 559,
+                "end": 559
+              },
+              {
+                "start": 578,
+                "end": 579
+              },
+              {
+                "start": 587,
+                "end": 587
+              },
+              {
+                "start": 599,
+                "end": 599
+              },
+              {
+                "start": 615,
+                "end": 615
+              },
+              {
+                "start": 620,
+                "end": 620
+              },
+              {
+                "start": 623,
+                "end": 623
+              },
+              {
+                "start": 640,
+                "end": 640
+              },
+              {
+                "start": 645,
+                "end": 645
+              },
+              {
+                "start": 650,
+                "end": 650
+              },
+              {
+                "start": 652,
+                "end": 652
+              },
+              {
+                "start": 655,
+                "end": 655
+              },
+              {
+                "start": 673,
+                "end": 673
+              },
+              {
+                "start": 678,
+                "end": 678
+              },
+              {
+                "start": 683,
+                "end": 683
+              },
+              {
+                "start": 686,
+                "end": 686
+              },
+              {
+                "start": 688,
+                "end": 688
+              },
+              {
+                "start": 705,
+                "end": 705
+              },
+              {
+                "start": 710,
+                "end": 710
+              },
+              {
+                "start": 715,
+                "end": 715
+              },
+              {
+                "start": 718,
+                "end": 718
+              },
+              {
+                "start": 735,
+                "end": 735
+              },
+              {
+                "start": 740,
+                "end": 740
+              },
+              {
+                "start": 745,
+                "end": 745
+              },
+              {
+                "start": 748,
+                "end": 748
+              },
+              {
+                "start": 757,
+                "end": 757
+              },
+              {
+                "start": 765,
+                "end": 765
+              },
+              {
+                "start": 811,
+                "end": 811
+              },
+              {
+                "start": 824,
+                "end": 824
+              },
+              {
+                "start": 828,
+                "end": 828
+              },
+              {
+                "start": 832,
+                "end": 832
+              },
+              {
+                "start": 836,
+                "end": 836
+              },
+              {
+                "start": 971,
+                "end": 971
+              },
+              {
+                "start": 982,
+                "end": 982
+              },
+              {
+                "start": 990,
+                "end": 990
+              },
+              {
+                "start": 1000,
+                "end": 1000
+              },
+              {
+                "start": 1010,
+                "end": 1010
+              },
+              {
+                "start": 1033,
+                "end": 1034
+              },
+              {
+                "start": 1041,
+                "end": 1042
+              },
+              {
+                "start": 1049,
+                "end": 1050
+              },
+              {
+                "start": 1057,
+                "end": 1058
+              }
+            ],
+            "pkg/cmd/extension/manager_test.go": [
+              {
+                "start": 68,
+                "end": 69
+              },
+              {
+                "start": 72,
+                "end": 72
+              },
+              {
+                "start": 75,
+                "end": 75
+              },
+              {
+                "start": 80,
+                "end": 81
+              },
+              {
+                "start": 102,
+                "end": 102
+              },
+              {
+                "start": 105,
+                "end": 105
+              },
+              {
+                "start": 115,
+                "end": 115
+              },
+              {
+                "start": 121,
+                "end": 121
+              },
+              {
+                "start": 134,
+                "end": 134
+              },
+              {
+                "start": 139,
+                "end": 140
+              },
+              {
+                "start": 167,
+                "end": 168
+              },
+              {
+                "start": 171,
+                "end": 171
+              },
+              {
+                "start": 191,
+                "end": 192
+              },
+              {
+                "start": 201,
+                "end": 201
+              },
+              {
+                "start": 216,
+                "end": 217
+              },
+              {
+                "start": 232,
+                "end": 236
+              },
+              {
+                "start": 270,
+                "end": 274
+              },
+              {
+                "start": 307,
+                "end": 307
+              },
+              {
+                "start": 322,
+                "end": 322
+              },
+              {
+                "start": 338,
+                "end": 339
+              },
+              {
+                "start": 362,
+                "end": 363
+              },
+              {
+                "start": 386,
+                "end": 387
+              },
+              {
+                "start": 411,
+                "end": 411
+              },
+              {
+                "start": 429,
+                "end": 430
+              },
+              {
+                "start": 433,
+                "end": 433
+              },
+              {
+                "start": 439,
+                "end": 439
+              },
+              {
+                "start": 445,
+                "end": 445
+              },
+              {
+                "start": 451,
+                "end": 451
+              },
+              {
+                "start": 466,
+                "end": 466
+              },
+              {
+                "start": 474,
+                "end": 474
+              },
+              {
+                "start": 478,
+                "end": 478
+              },
+              {
+                "start": 481,
+                "end": 481
+              },
+              {
+                "start": 494,
+                "end": 494
+              },
+              {
+                "start": 497,
+                "end": 497
+              },
+              {
+                "start": 505,
+                "end": 505
+              },
+              {
+                "start": 511,
+                "end": 511
+              },
+              {
+                "start": 528,
+                "end": 528
+              },
+              {
+                "start": 536,
+                "end": 536
+              },
+              {
+                "start": 540,
+                "end": 540
+              },
+              {
+                "start": 543,
+                "end": 543
+              },
+              {
+                "start": 558,
+                "end": 558
+              },
+              {
+                "start": 561,
+                "end": 561
+              },
+              {
+                "start": 570,
+                "end": 570
+              },
+              {
+                "start": 576,
+                "end": 576
+              },
+              {
+                "start": 593,
+                "end": 593
+              },
+              {
+                "start": 601,
+                "end": 601
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command.go",
+            "pkg/cmd/extension/command_test.go",
+            "pkg/cmd/extension/manager.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command.go": [
+              {
+                "start": 26,
+                "end": 26
+              },
+              {
+                "start": 320,
+                "end": 320
+              },
+              {
+                "start": 642,
+                "end": 642
+              },
+              {
+                "start": 648,
+                "end": 648
+              }
+            ],
+            "pkg/cmd/extension/command_test.go": [
+              {
+                "start": 935,
+                "end": 937
+              },
+              {
+                "start": 955,
+                "end": 955
+              },
+              {
+                "start": 968,
+                "end": 968
+              },
+              {
+                "start": 977,
+                "end": 977
+              },
+              {
+                "start": 987,
+                "end": 987
+              },
+              {
+                "start": 997,
+                "end": 997
+              },
+              {
+                "start": 1007,
+                "end": 1007
+              },
+              {
+                "start": 1017,
+                "end": 1017
+              }
+            ],
+            "pkg/cmd/extension/manager.go": [
+              {
+                "start": 194,
+                "end": 194
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command.go": [
+              {
+                "start": 260,
+                "end": 360
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/command.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/command.go": [
+              {
+                "start": 620,
+                "end": 670
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/extension/manager.go"
+          ],
+          "spans": {
+            "pkg/cmd/extension/manager.go": [
+              {
+                "start": 180,
+                "end": 240
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [],
+      "pred_spans": {}
+    }
+  }
+]

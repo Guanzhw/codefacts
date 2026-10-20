@@ -1,0 +1,165 @@
+[
+  {
+    "instance_id": "cli__cli-3608",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "ffc897e622bf3bfe556f07605804184c36f18e71",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "api/client.go",
+            "api/queries_repo.go",
+            "internal/ghrepo/repo.go",
+            "pkg/cmd/repo/create/http.go",
+            "pkg/cmd/repo/fork/fork.go"
+          ],
+          "spans": {
+            "api/client.go": [
+              {
+                "start": 35,
+                "end": 44
+              },
+              {
+                "start": 107,
+                "end": 115
+              },
+              {
+                "start": 193,
+                "end": 240
+              }
+            ],
+            "api/queries_repo.go": [
+              {
+                "start": 15,
+                "end": 49
+              },
+              {
+                "start": 301,
+                "end": 338
+              }
+            ],
+            "internal/ghrepo/repo.go": [
+              {
+                "start": 1,
+                "end": 138
+              }
+            ],
+            "pkg/cmd/repo/create/http.go": [
+              {
+                "start": 1,
+                "end": 145
+              }
+            ],
+            "pkg/cmd/repo/fork/fork.go": [
+              {
+                "start": 22,
+                "end": 125
+              },
+              {
+                "start": 128,
+                "end": 162
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "api/queries_repo.go",
+            "context/remote.go",
+            "git/remote.go",
+            "internal/ghrepo/repo.go",
+            "pkg/cmd/repo/fork/fork.go",
+            "pkg/cmd/run/shared/shared.go"
+          ],
+          "spans": {
+            "api/queries_repo.go": [
+              {
+                "start": 15,
+                "end": 49
+              },
+              {
+                "start": 301,
+                "end": 338
+              }
+            ],
+            "context/remote.go": [
+              {
+                "start": 1,
+                "end": 111
+              }
+            ],
+            "git/remote.go": [
+              {
+                "start": 1,
+                "end": 149
+              }
+            ],
+            "internal/ghrepo/repo.go": [
+              {
+                "start": 1,
+                "end": 138
+              }
+            ],
+            "pkg/cmd/repo/fork/fork.go": [
+              {
+                "start": 22,
+                "end": 125
+              },
+              {
+                "start": 128,
+                "end": 164
+              },
+              {
+                "start": 204,
+                "end": 210
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "pkg/cmd/repo/fork/fork.go"
+          ],
+          "spans": {
+            "pkg/cmd/repo/fork/fork.go": [
+              {
+                "start": 117,
+                "end": 300
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "api/queries_repo.go",
+            "pkg/cmd/pr/create/create.go",
+            "pkg/cmd/repo/fork/fork.go"
+          ],
+          "spans": {
+            "api/queries_repo.go": [
+              {
+                "start": 315,
+                "end": 315
+              }
+            ],
+            "pkg/cmd/pr/create/create.go": [
+              {
+                "start": 677,
+                "end": 677
+              }
+            ],
+            "pkg/cmd/repo/fork/fork.go": [
+              {
+                "start": 172,
+                "end": 172
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [],
+      "pred_spans": {}
+    }
+  }
+]

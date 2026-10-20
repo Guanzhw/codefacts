@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "kind": "captured-quality-representative-validation",
+  "qualityPackageManifestSha256": "d3ec91c5592d883bc857c2cdfae3f78d59b24681693664da16472e1aca49355c",
+  "acceptedNumericManifestSha256": "d0e9da3fa65f3cb6b1aa1f7781284a9035d2804ba80526fa74c1fbe9a5cddcd7",
+  "sourceInventorySha256": "983c625677dfc2ee945a784878f7fc91007ddab4112e0e6bded5ea787bab3b4e",
+  "rootQualityApprovalSha256": "5596325aa3617406669e53abc13c7ba3e179f99d96baff77091461ce2ab9db57",
+  "selection": {
+    "ruleSourceSha256": "2eeae5a572f7906adfcc179d9fc20cd36056d7ad5567316e37f879fec6521df4",
+    "fixedBeforeCapturedResultInspection": true,
+    "order": "ASCII byte order of campaignId/slotId within each cohort",
+    "commonCriteria": [
+      "completed captured grade",
+      "available valid prediction and expected official report",
+      "zero packaged operational gaps"
+    ],
+    "contextCriteria": [
+      "valid final declaration",
+      "at least one tool-derived pred_steps region"
+    ],
+    "sweCriteria": [
+      "nonempty captured patch",
+      "at least one official test name"
+    ],
+    "excludes": [
+      "resolved outcome",
+      "metric values",
+      "model ranking",
+      "desired success"
+    ],
+    "replacementAfterFailure": false
+  },
+  "coverage": {
+    "capturedCells": 288,
+    "capturedOfficialResults": 254,
+    "capturedContextOfficialResults": 113,
+    "capturedSweOfficialResults": 141,
+    "contextOfficialRegrades": 1,
+    "sweOfficialRegrades": 0,
+    "full288OfficialRegradePassed": false
+  },
+  "context": {
+    "cellId": "claude-context/ctx-clap-rs__clap-2534-codefacts022",
+    "instanceId": "clap-rs__clap-2534",
+    "status": "official-regrade-matched-captured-result",
+    "gradeStatus": "completed",
+    "resolved": null,
+    "processExit": {
+      "code": 0,
+      "signal": null
+    },
+    "timedOut": false,
+    "timeoutMs": 1800000,
+    "durationMs": 1056.1372939999999,
+    "versions": {
+      "node": "24.16.0",
+      "python": "3.11.15"
+    },
+    "actualResult": {
+      "path": "context-result.json",
+      "sha256": "c205b60563d0b1680f675f92f6aa687cff3d48f3beee41cad21f7a88869f1ec9",
+      "bytes": 2130
+    },
+    "actualRawResultSha256": "85629cbaa1d90097eae625cb6b0007a8b661b5ffe94245ced429695edf19e7fa",
+    "actualRawReceiptSha256": "3079d7eacc3ecc98597adbbbb91c9b63dc46c2c4dbf6d7f3609ea3cf75899c4b",
+    "capturedRawResultSha256": "c5a25a9993989c9e1fa33242eaefa2c6778f204f598aedc8029f40125f9f5ac2",
+    "capturedExpectedArtifactSha256": "c205b60563d0b1680f675f92f6aa687cff3d48f3beee41cad21f7a88869f1ec9",
+    "projectedActualObjectHash": "e2a85155c856295ddc668823e9b3a1cb9705550323185710ec1db91c67410419",
+    "projectedCapturedObjectHash": "e2a85155c856295ddc668823e9b3a1cb9705550323185710ec1db91c67410419",
+    "allRetainedFieldsEqual": true,
+    "fieldsCompared": [
+      "instance_id",
+      "num_steps",
+      "all final numeric fields",
+      "ordered trajectory.steps with all four coverage values",
+      "all AUC fields",
+      "all redundancy fields"
+    ],
+    "numSteps": 4,
+    "sources": [
+      {
+        "role": "official.py",
+        "sha256": "2f8503f7397206c24585e3605962d6b2eefae5adb4a49ec60eadd2fd15997ef7",
+        "bytes": 17111
+      },
+      {
+        "role": "grade.mjs",
+        "sha256": "0b3ee7c0b871fc056f1058ef3f43b2a30d9d268611963a5ba1b8436681521427",
+        "bytes": 5886
+      },
+      {
+        "role": "prepare-inputs.py",
+        "sha256": "cfcbce852b721cbc85b3e094866c3f94d349c2bcc0d4c04a9a4f4198d614a96f",
+        "bytes": 16106
+      }
+    ],
+    "sourceEvidenceSha256": "088e75b61cee7f599ec3f5c01247479c770fed4e8191a1d96067b9170e5a9943",
+    "historicalEnvironmentEquality": "unverified",
+    "provenanceGaps": [
+      "historical-runtime-root-identity-unverified"
+    ]
+  },
+  "swe": {
+    "cellId": "claude-swe/swe-axios__axios-5085-codefacts022",
+    "instanceId": "axios__axios-5085",
+    "status": "not-executed",
+    "officialGraderExecuted": false,
+    "capturedOfficialResultsStatus": "141 original captured SWE official results retained; no SWE regrade added",
+    "currentPrerequisite": {
+      "status": "canonical-platform-manifest-not-bound-to-current-local-image",
+      "inspectionHttpStatus": 200,
+      "platform": "linux/amd64",
+      "expectedPlatformManifestDigest": "sha256:924c1bac3251b62b23a0db0692f7ed0759b1397e164982eedf12096a11393927",
+      "expectedConfigDigest": "sha256:0983ece7324e9c339264a15748f88231f1bdf0e8b6e56a441021c01b38de7b18",
+      "observedPlatformDescriptorDigest": "sha256:ff0254522e5379681e31a0868aeeeaa24f86bc400f0b8a809288ed7e62cf0134",
+      "observedLocalImageId": "sha256:ff0254522e5379681e31a0868aeeeaa24f86bc400f0b8a809288ed7e62cf0134",
+      "descriptorMatchesExpectedManifest": false,
+      "configAndLayerEquality": "unverified",
+      "versions": {
+        "docker": "29.1.3",
+        "dockerApi": "1.52",
+        "dockerSdk": "7.2.0",
+        "python": "3.12.13"
+      },
+      "errorCode": "canonical-image-identity-unavailable",
+      "error": "The corrected platform-specific lookup selected a descriptor different from the pinned canonical platform manifest."
+    },
+    "materialSourceLimitation": {
+      "status": "containerd-descriptor-image-IDs-not-supported",
+      "components": [
+        "prepare-inputs.py verify_image",
+        "replay.mjs compareCaptured"
+      ],
+      "currentAssumption": "Local image IDs equal the OCI config digest.",
+      "limitation": "The frozen verifier and comparator support config IDs only; Docker 29 containerd descriptor IDs are not supported by this package."
+    },
+    "evidence": [
+      {
+        "role": "initial-current-image-verifier-rejection",
+        "sha256": "6a592f709a966d80134360289680838b84c38d5dda3b8b2529b83211d4ce5cb5",
+        "bytes": 130
+      },
+      {
+        "role": "corrected-platform-specific-inspect",
+        "sha256": "75ac6fd9584cceb6f900fa2f4854b60a4110808b48f5adf9012dda05ddaaf80e",
+        "bytes": 4914
+      },
+      {
+        "role": "docker-containerd-store-identity",
+        "sha256": "75001467ae8b9c47ee79eb0927bc20951f1a32bb5b2ac2908a4f74cf49a79e5d",
+        "bytes": 1394
+      }
+    ],
+    "imagePulled": false,
+    "imageRetagged": false,
+    "substituteRepresentativeUsed": false,
+    "historicalImageExecution": null,
+    "historicalEnvironmentEquality": "unverified",
+    "provenanceGaps": [
+      "historical-runtime-root-identity-unverified",
+      "historical-cell-image-binding-unavailable"
+    ]
+  },
+  "provenanceLimits": {
+    "historicalRuntimeRootIdentityUnavailableCells": 288,
+    "historicalSweImageExecutionBindingUnavailableCells": 144,
+    "historicalEnvironmentEquality": "unverified",
+    "currentEvidenceBackfilledIntoHistory": false
+  },
+  "validationSourceHashes": {
+    "coreMjs": "3966338ad159fd3c8e16c2e350d9b6ee7d9dd7cbe1196be49a703fb329842668",
+    "prepareInputsPy": "cfcbce852b721cbc85b3e094866c3f94d349c2bcc0d4c04a9a4f4198d614a96f",
+    "replayMjs": "967290501645e07a395e2991b8386eb55dc90b93d5c0c9007b4bfc76433a57ef"
+  }
+}

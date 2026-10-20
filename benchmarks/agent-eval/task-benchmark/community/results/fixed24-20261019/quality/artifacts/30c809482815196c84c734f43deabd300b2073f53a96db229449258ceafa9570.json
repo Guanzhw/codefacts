@@ -1,0 +1,126 @@
+{
+  "kind": "context",
+  "instance_id": "clap-rs__clap-4248",
+  "officialResult": {
+    "instance_id": "clap-rs__clap-4248",
+    "num_steps": 8,
+    "final": {
+      "file": {
+        "coverage": 0.5,
+        "precision": 0.42857142857142855,
+        "intersection": 3,
+        "gold_size": 6,
+        "pred_size": 7
+      },
+      "symbol": {
+        "coverage": 0.4117647058823529,
+        "precision": 0.13725490196078433,
+        "intersection": 7,
+        "gold_size": 17,
+        "pred_size": 51
+      },
+      "span": {
+        "coverage": 0.045472597299444,
+        "precision": 0.015343383584589615,
+        "intersection": 229,
+        "gold_size": 5036,
+        "pred_size": 14925
+      },
+      "line": {
+        "coverage": 0.075,
+        "precision": 0.01956521739130435,
+        "intersection": 9,
+        "gold_size": 120,
+        "pred_size": 460
+      }
+    },
+    "trajectory": {
+      "steps": [
+        {
+          "step": 1,
+          "coverage": {
+            "file": 0.3333333333333333,
+            "symbol": 0.4117647058823529,
+            "span": 0.10087370929308975,
+            "line": 0.15833333333333333
+          }
+        },
+        {
+          "step": 2,
+          "coverage": {
+            "file": 0.5,
+            "symbol": 0.5294117647058824,
+            "span": 0.10206513105639396,
+            "line": 0.16666666666666666
+          }
+        },
+        {
+          "step": 3,
+          "coverage": {
+            "file": 0.5,
+            "symbol": 0.7058823529411765,
+            "span": 0.13840349483717235,
+            "line": 0.25
+          }
+        },
+        {
+          "step": 4,
+          "coverage": {
+            "file": 0.5,
+            "symbol": 0.7647058823529411,
+            "span": 0.2390786338363781,
+            "line": 0.375
+          }
+        },
+        {
+          "step": 5,
+          "coverage": {
+            "file": 0.5,
+            "symbol": 0.7647058823529411,
+            "span": 0.2390786338363781,
+            "line": 0.375
+          }
+        },
+        {
+          "step": 6,
+          "coverage": {
+            "file": 0.5,
+            "symbol": 0.8235294117647058,
+            "span": 0.2857426528991263,
+            "line": 0.425
+          }
+        },
+        {
+          "step": 7,
+          "coverage": {
+            "file": 0.5,
+            "symbol": 0.8235294117647058,
+            "span": 0.2857426528991263,
+            "line": 0.425
+          }
+        },
+        {
+          "step": 8,
+          "coverage": {
+            "file": 0.5,
+            "symbol": 0.8235294117647058,
+            "span": 0.2857426528991263,
+            "line": 0.425
+          }
+        }
+      ],
+      "auc_coverage": {
+        "file": 0.47916666666666663,
+        "symbol": 0.7058823529411764,
+        "span": 0.2095909451945989,
+        "line": 0.32499999999999996
+      },
+      "redundancy": {
+        "file": 0.6578947368421053,
+        "symbol": 0.5258467023172906,
+        "span": 0.44395413451695875,
+        "line": 0.4521181001283697
+      }
+    }
+  }
+}

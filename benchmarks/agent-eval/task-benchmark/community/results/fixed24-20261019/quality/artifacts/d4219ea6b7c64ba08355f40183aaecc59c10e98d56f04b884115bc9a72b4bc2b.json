@@ -1,0 +1,426 @@
+[
+  {
+    "instance_id": "mui__material-ui-34229",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "e4f2f9e5689127b3438cac196544bdfb2c6083ea",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "docs/data/joy/components/menu/SelectedMenu.js",
+            "docs/data/joy/getting-started/templates/email/components/Menu.tsx",
+            "packages/mui-base/src/PopperUnstyled/PopperUnstyled.tsx",
+            "packages/mui-joy/src/Menu/Menu.tsx",
+            "packages/mui-joy/src/Select/SelectProps.ts",
+            "packages/mui-material/src/Menu/Menu.js",
+            "packages/mui-material/src/Popover/Popover.js",
+            "packages/mui-material/src/Select/Select.d.ts",
+            "packages/mui-material/src/Select/SelectInput.d.ts",
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "docs/data/joy/components/menu/SelectedMenu.js": [
+              {
+                "start": 1,
+                "end": 63
+              }
+            ],
+            "docs/data/joy/getting-started/templates/email/components/Menu.tsx": [
+              {
+                "start": 1,
+                "end": 87
+              }
+            ],
+            "packages/mui-base/src/PopperUnstyled/PopperUnstyled.tsx": [
+              {
+                "start": 44,
+                "end": 64
+              },
+              {
+                "start": 74,
+                "end": 80
+              },
+              {
+                "start": 248,
+                "end": 321
+              }
+            ],
+            "packages/mui-joy/src/Menu/Menu.tsx": [
+              {
+                "start": 51,
+                "end": 165
+              }
+            ],
+            "packages/mui-material/src/Menu/Menu.js": [
+              {
+                "start": 63,
+                "end": 178
+              }
+            ],
+            "packages/mui-material/src/Popover/Popover.js": [
+              {
+                "start": 54,
+                "end": 62
+              }
+            ],
+            "packages/mui-material/src/Select/SelectInput.d.ts": [
+              {
+                "start": 40,
+                "end": 45
+              }
+            ],
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 18,
+                "end": 103
+              },
+              {
+                "start": 132,
+                "end": 162
+              },
+              {
+                "start": 396,
+                "end": 417
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 100,
+                "end": 300
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 300,
+                "end": 560
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 560,
+                "end": 620
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "docs/data/base/components/select/UseSelect.tsx",
+            "docs/data/material/components/app-bar/BackToTop.tsx",
+            "docs/data/material/components/app-bar/DrawerAppBar.tsx",
+            "docs/data/material/components/app-bar/ElevateAppBar.tsx",
+            "docs/data/material/components/app-bar/HideAppBar.tsx",
+            "docs/data/material/components/drawers/SwipeableEdgeDrawer.tsx",
+            "packages/mui-joy/src/Select/Select.tsx",
+            "packages/mui-joy/src/Select/SelectProps.ts",
+            "packages/mui-material/src/Select/Select.d.ts",
+            "packages/mui-material/src/Select/Select.js",
+            "packages/mui-material/src/Select/SelectInput.d.ts",
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "docs/data/base/components/select/UseSelect.tsx": [
+              {
+                "start": 137,
+                "end": 202
+              },
+              {
+                "start": 213,
+                "end": 218
+              }
+            ],
+            "docs/data/material/components/drawers/SwipeableEdgeDrawer.tsx": [
+              {
+                "start": 11,
+                "end": 23
+              },
+              {
+                "start": 39,
+                "end": 106
+              }
+            ],
+            "packages/mui-joy/src/Select/Select.tsx": [
+              {
+                "start": 282,
+                "end": 415
+              }
+            ],
+            "packages/mui-joy/src/Select/SelectProps.ts": [
+              {
+                "start": 94,
+                "end": 131
+              }
+            ],
+            "packages/mui-material/src/Select/Select.d.ts": [
+              {
+                "start": 163,
+                "end": 170
+              }
+            ],
+            "packages/mui-material/src/Select/Select.js": [
+              {
+                "start": 14,
+                "end": 128
+              }
+            ],
+            "packages/mui-material/src/Select/SelectInput.d.ts": [
+              {
+                "start": 1,
+                "end": 45
+              }
+            ],
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 97,
+                "end": 103
+              },
+              {
+                "start": 132,
+                "end": 154
+              },
+              {
+                "start": 190,
+                "end": 203
+              },
+              {
+                "start": 340,
+                "end": 346
+              },
+              {
+                "start": 368,
+                "end": 385
+              },
+              {
+                "start": 411,
+                "end": 417
+              },
+              {
+                "start": 427,
+                "end": 433
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/SelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/SelectInput.js": [
+              {
+                "start": 1,
+                "end": 21
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/InputBase/InputBase.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/InputBase/InputBase.js": [
+              {
+                "start": 263,
+                "end": 263
+              },
+              {
+                "start": 291,
+                "end": 291
+              },
+              {
+                "start": 307,
+                "end": 308
+              },
+              {
+                "start": 407,
+                "end": 407
+              },
+              {
+                "start": 434,
+                "end": 434
+              },
+              {
+                "start": 439,
+                "end": 440
+              },
+              {
+                "start": 479,
+                "end": 479
+              },
+              {
+                "start": 679,
+                "end": 679
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/Select.test.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/Select.test.js": [
+              {
+                "start": 693,
+                "end": 693
+              },
+              {
+                "start": 696,
+                "end": 696
+              },
+              {
+                "start": 704,
+                "end": 704
+              },
+              {
+                "start": 864,
+                "end": 864
+              },
+              {
+                "start": 877,
+                "end": 877
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/InputBase/InputBase.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/InputBase/InputBase.js": [
+              {
+                "start": 490,
+                "end": 620
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/Select/Select.test.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/Select/Select.test.js": [
+              {
+                "start": 680,
+                "end": 890
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "packages/mui-material/src/NativeSelect/NativeSelectInput.js"
+          ],
+          "spans": {
+            "packages/mui-material/src/NativeSelect/NativeSelectInput.js": [
+              {
+                "start": 21,
+                "end": 21
+              },
+              {
+                "start": 86,
+                "end": 86
+              },
+              {
+                "start": 88,
+                "end": 88
+              },
+              {
+                "start": 121,
+                "end": 121
+              }
+            ]
+          }
+        },
+        {
+          "files": [],
+          "spans": {}
+        }
+      ],
+      "pred_files": [
+        "packages/mui-material/src/InputBase/InputBase.js",
+        "packages/mui-material/src/Menu/Menu.js",
+        "packages/mui-material/src/Select/Select.js",
+        "packages/mui-material/src/Select/Select.test.js",
+        "packages/mui-material/src/Select/SelectInput.js"
+      ],
+      "pred_spans": {
+        "packages/mui-material/src/InputBase/InputBase.js": [
+          {
+            "start": 506,
+            "end": 567
+          }
+        ],
+        "packages/mui-material/src/Menu/Menu.js": [
+          {
+            "start": 159,
+            "end": 178
+          }
+        ],
+        "packages/mui-material/src/Select/Select.js": [
+          {
+            "start": 62,
+            "end": 125
+          }
+        ],
+        "packages/mui-material/src/Select/Select.test.js": [
+          {
+            "start": 693,
+            "end": 705
+          },
+          {
+            "start": 853,
+            "end": 879
+          }
+        ],
+        "packages/mui-material/src/Select/SelectInput.js": [
+          {
+            "start": 100,
+            "end": 133
+          },
+          {
+            "start": 146,
+            "end": 180
+          },
+          {
+            "start": 208,
+            "end": 237
+          },
+          {
+            "start": 478,
+            "end": 492
+          },
+          {
+            "start": 503,
+            "end": 578
+          }
+        ]
+      }
+    }
+  }
+]

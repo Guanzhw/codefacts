@@ -1,0 +1,513 @@
+[
+  {
+    "instance_id": "cli__cli-3608",
+    "repo_url": "__OPERATOR_REPO_ROOT__",
+    "commit": "ffc897e622bf3bfe556f07605804184c36f18e71",
+    "model_patch": "",
+    "traj_data": {
+      "pred_steps": [
+        {
+          "files": [
+            "api/client.go",
+            "api/queries_issue.go",
+            "api/queries_repo.go",
+            "internal/ghrepo/repo.go",
+            "pkg/cmd/issue/comment/comment.go",
+            "pkg/cmd/issue/edit/edit.go",
+            "pkg/cmd/issue/issue.go",
+            "pkg/cmd/issue/list/http.go",
+            "pkg/cmd/issue/shared/display.go",
+            "pkg/cmd/pr/shared/editable.go",
+            "pkg/cmd/repo/fork/fork.go",
+            "pkg/iostreams/iostreams.go"
+          ],
+          "spans": {
+            "api/client.go": [
+              {
+                "start": 35,
+                "end": 44
+              }
+            ],
+            "api/queries_issue.go": [
+              {
+                "start": 387,
+                "end": 405
+              }
+            ],
+            "api/queries_repo.go": [
+              {
+                "start": 312,
+                "end": 338
+              }
+            ],
+            "internal/ghrepo/repo.go": [
+              {
+                "start": 10,
+                "end": 20
+              },
+              {
+                "start": 31,
+                "end": 39
+              },
+              {
+                "start": 111,
+                "end": 138
+              }
+            ],
+            "pkg/cmd/issue/comment/comment.go": [
+              {
+                "start": 12,
+                "end": 19
+              },
+              {
+                "start": 47,
+                "end": 53
+              },
+              {
+                "start": 59,
+                "end": 79
+              }
+            ],
+            "pkg/cmd/issue/edit/edit.go": [
+              {
+                "start": 32,
+                "end": 38
+              },
+              {
+                "start": 113,
+                "end": 119
+              },
+              {
+                "start": 188,
+                "end": 250
+              }
+            ],
+            "pkg/cmd/issue/issue.go": [
+              {
+                "start": 16,
+                "end": 53
+              }
+            ],
+            "pkg/cmd/issue/list/http.go": [
+              {
+                "start": 129,
+                "end": 207
+              }
+            ],
+            "pkg/cmd/issue/shared/display.go": [
+              {
+                "start": 1,
+                "end": 70
+              }
+            ],
+            "pkg/cmd/pr/shared/editable.go": [
+              {
+                "start": 96,
+                "end": 107
+              },
+              {
+                "start": 120,
+                "end": 166
+              }
+            ],
+            "pkg/cmd/repo/fork/fork.go": [
+              {
+                "start": 43,
+                "end": 77
+              },
+              {
+                "start": 90,
+                "end": 118
+              }
+            ],
+            "pkg/iostreams/iostreams.go": [
+              {
+                "start": 194,
+                "end": 227
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "api/client.go",
+            "cmd/gen-docs/main.go",
+            "internal/ghrepo/repo.go",
+            "pkg/cmd/repo/create/http.go",
+            "pkg/cmd/repo/fork/fork.go",
+            "pkg/cmd/run/shared/shared.go",
+            "pkg/cmd/workflow/run/run.go",
+            "pkg/iostreams/iostreams.go"
+          ],
+          "spans": {
+            "api/client.go": [
+              {
+                "start": 35,
+                "end": 44
+              },
+              {
+                "start": 107,
+                "end": 115
+              }
+            ],
+            "cmd/gen-docs/main.go": [
+              {
+                "start": 1,
+                "end": 92
+              }
+            ],
+            "internal/ghrepo/repo.go": [
+              {
+                "start": 11,
+                "end": 19
+              },
+              {
+                "start": 31,
+                "end": 39
+              },
+              {
+                "start": 111,
+                "end": 138
+              }
+            ],
+            "pkg/cmd/repo/create/http.go": [
+              {
+                "start": 31,
+                "end": 48
+              },
+              {
+                "start": 58,
+                "end": 70
+              },
+              {
+                "start": 75,
+                "end": 81
+              },
+              {
+                "start": 91,
+                "end": 97
+              },
+              {
+                "start": 104,
+                "end": 110
+              },
+              {
+                "start": 124,
+                "end": 145
+              }
+            ],
+            "pkg/cmd/repo/fork/fork.go": [
+              {
+                "start": 22,
+                "end": 125
+              },
+              {
+                "start": 128,
+                "end": 162
+              }
+            ],
+            "pkg/cmd/run/shared/shared.go": [
+              {
+                "start": 42,
+                "end": 62
+              },
+              {
+                "start": 166,
+                "end": 189
+              },
+              {
+                "start": 255,
+                "end": 270
+              }
+            ],
+            "pkg/cmd/workflow/run/run.go": [
+              {
+                "start": 238,
+                "end": 330
+              }
+            ],
+            "pkg/iostreams/iostreams.go": [
+              {
+                "start": 194,
+                "end": 227
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "api/queries_repo.go",
+            "internal/run/run.go",
+            "pkg/cmd/repo/fork/fork.go",
+            "pkg/cmd/repo/fork/fork_test.go",
+            "pkg/cmd/run/shared/shared.go"
+          ],
+          "spans": {
+            "api/queries_repo.go": [
+              {
+                "start": 15,
+                "end": 49
+              },
+              {
+                "start": 90,
+                "end": 96
+              },
+              {
+                "start": 117,
+                "end": 165
+              },
+              {
+                "start": 172,
+                "end": 182
+              },
+              {
+                "start": 301,
+                "end": 338
+              }
+            ],
+            "internal/run/run.go": [
+              {
+                "start": 1,
+                "end": 84
+              }
+            ],
+            "pkg/cmd/repo/fork/fork.go": [
+              {
+                "start": 114,
+                "end": 308
+              }
+            ],
+            "pkg/cmd/repo/fork/fork_test.go": [
+              {
+                "start": 33,
+                "end": 39
+              },
+              {
+                "start": 48,
+                "end": 54
+              },
+              {
+                "start": 62,
+                "end": 68
+              },
+              {
+                "start": 71,
+                "end": 77
+              },
+              {
+                "start": 80,
+                "end": 86
+              },
+              {
+                "start": 90,
+                "end": 104
+              },
+              {
+                "start": 108,
+                "end": 116
+              },
+              {
+                "start": 121,
+                "end": 127
+              },
+              {
+                "start": 145,
+                "end": 175
+              },
+              {
+                "start": 178,
+                "end": 184
+              },
+              {
+                "start": 197,
+                "end": 351
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "api/client.go",
+            "api/queries_repo.go",
+            "internal/ghrepo/repo.go",
+            "pkg/cmd/repo/fork/fork_test.go"
+          ],
+          "spans": {
+            "api/client.go": [
+              {
+                "start": 107,
+                "end": 115
+              },
+              {
+                "start": 193,
+                "end": 233
+              }
+            ],
+            "api/queries_repo.go": [
+              {
+                "start": 15,
+                "end": 49
+              },
+              {
+                "start": 301,
+                "end": 338
+              }
+            ],
+            "internal/ghrepo/repo.go": [
+              {
+                "start": 1,
+                "end": 138
+              }
+            ],
+            "pkg/cmd/repo/fork/fork_test.go": [
+              {
+                "start": 145,
+                "end": 293
+              },
+              {
+                "start": 307,
+                "end": 313
+              },
+              {
+                "start": 356,
+                "end": 449
+              },
+              {
+                "start": 469,
+                "end": 498
+              },
+              {
+                "start": 624,
+                "end": 657
+              },
+              {
+                "start": 687,
+                "end": 698
+              }
+            ]
+          }
+        },
+        {
+          "files": [
+            "api/client.go",
+            "api/queries_repo.go",
+            "api/queries_repo_test.go"
+          ],
+          "spans": {
+            "api/client.go": [
+              {
+                "start": 107,
+                "end": 115
+              },
+              {
+                "start": 193,
+                "end": 233
+              }
+            ],
+            "api/queries_repo.go": [
+              {
+                "start": 15,
+                "end": 49
+              },
+              {
+                "start": 301,
+                "end": 338
+              }
+            ],
+            "api/queries_repo_test.go": [
+              {
+                "start": 11,
+                "end": 21
+              },
+              {
+                "start": 24,
+                "end": 31
+              },
+              {
+                "start": 35,
+                "end": 42
+              },
+              {
+                "start": 47,
+                "end": 54
+              },
+              {
+                "start": 58,
+                "end": 65
+              },
+              {
+                "start": 69,
+                "end": 76
+              },
+              {
+                "start": 79,
+                "end": 86
+              },
+              {
+                "start": 90,
+                "end": 143
+              },
+              {
+                "start": 150,
+                "end": 173
+              },
+              {
+                "start": 177,
+                "end": 184
+              },
+              {
+                "start": 187,
+                "end": 209
+              },
+              {
+                "start": 240,
+                "end": 298
+              },
+              {
+                "start": 319,
+                "end": 343
+              }
+            ]
+          }
+        }
+      ],
+      "pred_files": [
+        "api/queries_repo.go",
+        "pkg/cmd/repo/fork/fork.go",
+        "pkg/cmd/repo/fork/fork_test.go"
+      ],
+      "pred_spans": {
+        "api/queries_repo.go": [
+          {
+            "start": 303,
+            "end": 335
+          }
+        ],
+        "pkg/cmd/repo/fork/fork.go": [
+          {
+            "start": 25,
+            "end": 40
+          },
+          {
+            "start": 46,
+            "end": 114
+          },
+          {
+            "start": 117,
+            "end": 197
+          }
+        ],
+        "pkg/cmd/repo/fork/fork_test.go": [
+          {
+            "start": 148,
+            "end": 203
+          },
+          {
+            "start": 410,
+            "end": 446
+          }
+        ]
+      }
+    }
+  }
+]

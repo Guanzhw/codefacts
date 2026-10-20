@@ -1,0 +1,244 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "ABS_CAMPAIGN_ID",
+  "seed": "ABS_RANDOMIZATION_SEED",
+  "evidenceDir": "ABS_EVIDENCE_DIR",
+  "concurrency": 4,
+  "timeoutMs": 360000,
+  "maxOutputTokens": 16384,
+  "runtime": {
+    "dshRoot": "ABS_DSH_ROOT",
+    "node": "ABS_NODE_EXE",
+    "sdkRoot": "ABS_SDK_ROOT",
+    "rg": "ABS_RG_EXE",
+    "wsl": "ABS_WSL_EXE",
+    "wslDistro": "ABS_WSL_DISTRO",
+    "symlinkStrategy": "wsl-lx",
+    "contextSourceMode": "copy",
+    "contextGitMode": "boundary-only"
+  },
+  "arms": [
+    {
+      "id": "ordinary"
+    },
+    {
+      "id": "codefacts022",
+      "version": "0.2.2",
+      "executable": "ABS_CODEFACTS022_EXE"
+    },
+    {
+      "id": "candidate",
+      "version": "0.2.2",
+      "executable": "ABS_CANDIDATE_EXE"
+    },
+    {
+      "id": "codegraph",
+      "version": "1.6.2",
+      "node": "ABS_CODEGRAPH_NODE_EXE",
+      "cli": "ABS_CODEGRAPH_CLI"
+    }
+  ],
+  "models": [
+    {
+      "key": "qwen",
+      "id": "qwen3.8-flash",
+      "provider": "opencode-go",
+      "reasoningEffort": "high"
+    },
+    {
+      "key": "claude",
+      "id": "claude-haiku-5-5",
+      "provider": "opencode-go",
+      "reasoningEffort": "high"
+    },
+    {
+      "key": "gpt",
+      "id": "gpt-6-luna",
+      "provider": "opencode-go",
+      "reasoningEffort": "high"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "ctx-cli__cli-3608",
+      "instanceId": "cli__cli-3608",
+      "cohort": "context",
+      "language": "go",
+      "split": "confirmation_holdout",
+      "prompt": "Feature/fork repo to org\n\nThis commit adds functionality to fork a repository into an organization.\r\n\r\nCloses #1247\n\nInvestigation: Trace the fork command options through the REST request. Explain organization-targeted forks while preserving clone, remote and already-forked behavior. Identify production owners and command regression coverage.",
+      "repo": "cli/cli",
+      "baseCommit": "026b07d1cfbf23a3ccb4d4703a2496d65e177fcc",
+      "sourceRoot": "ABS_SOURCES_ROOT/cli__cli-3608/source",
+      "manifestFile": "ABS_SOURCES_ROOT/cli__cli-3608/manifest.json",
+      "sourceDigest": "7f10503d07d98fd3b3e9d4cf98da62689b3e3bb453f13ed87681ddf172042369",
+      "gates": [
+        {
+          "id": "options",
+          "file": "pkg/cmd/repo/fork/fork.go",
+          "start": 25,
+          "end": 180,
+          "criterion": "Explain option/flag propagation and ForkRepo caller; preserve clone and remote behavior.",
+          "sha256": "9ab7d05f6cda5700807bdc769752f0a6802dc1aaa4441e6f46b737a1d17d2f30"
+        },
+        {
+          "id": "request",
+          "file": "api/queries_repo.go",
+          "start": 314,
+          "end": 336,
+          "criterion": "Identify POST repos/owner/repo/forks and empty JSON body; identify currently absent organization propagation and explain the necessary proposed change.",
+          "sha256": "3f9f6feba6d4abcf1ac401c4a977ba84380b631da1723d983bbdd3dd36a90edd"
+        },
+        {
+          "id": "regression",
+          "file": "pkg/cmd/repo/fork/fork_test.go",
+          "start": 25,
+          "end": 144,
+          "criterion": "Identify option parsing test seam and specify organization present/absent plus clone/remote regression cases.",
+          "sha256": "acd54c7efa5b8c841acb12688d0331c1b3ce7cf6ab4bbdff5f52573d7e720c02"
+        }
+      ]
+    },
+    {
+      "id": "ctx-nushell__nushell-12901",
+      "instanceId": "nushell__nushell-12901",
+      "cohort": "context",
+      "language": "rust",
+      "split": "pilot",
+      "prompt": "Clear environment for child `Command`s\n\n# Description\r\nThere is a bug when `hide-env` is used on environment variables that were present at shell startup. Namely, child processes still inherit the hidden environment variable. This PR fixes #12900, fixes #11495, and fixes #7937.\r\n\r\n# Tests + Formatting\r\nAdded a test.\n\nInvestigation: Trace why hiding an environment variable present at shell startup still leaves it visible to an external child. Connect stack filtering, string conversion and process construction. Distinguish shell lookup tests from inherited-child regression.",
+      "repo": "nushell/nushell",
+      "baseCommit": "580c60bb821af25f838edafd8461bb206d3419f3",
+      "sourceRoot": "ABS_SOURCES_ROOT/nushell__nushell-12901/source",
+      "manifestFile": "ABS_SOURCES_ROOT/nushell__nushell-12901/manifest.json",
+      "sourceDigest": "21407a4406a5470182574c4809055230ef8c6058d812735615caad55f0b491a6",
+      "gates": [
+        {
+          "id": "filter",
+          "file": "crates/nu-protocol/src/engine/stack.rs",
+          "start": 289,
+          "end": 318,
+          "criterion": "Explain get_env_vars hidden filtering; distinguish engine startup environment and stack values.",
+          "sha256": "5c1e744e7a5e0b37d7ec5fed1b12b60cc92a19388a9294cf1449eb524f72b350"
+        },
+        {
+          "id": "conversion",
+          "file": "crates/nu-engine/src/env.rs",
+          "start": 144,
+          "end": 162,
+          "criterion": "Connect env_to_strings to filtered stack environment while preserving conversion/errors.",
+          "sha256": "501aee279fa75d6da4dad8597aee584a15eb1010de73e4da9c3c9127bcb26990"
+        },
+        {
+          "id": "process",
+          "file": "crates/nu-command/src/system/run_external.rs",
+          "start": 470,
+          "end": 500,
+          "criterion": "Explain envs overlay versus inherited keys and clear-then-set intended environment.",
+          "sha256": "33c2e9cb4b9918dbce01aa63f1054ccb8953e55bff401cf6f8348116aa81cd9c"
+        },
+        {
+          "id": "regression",
+          "file": "tests/shell/environment/env.rs",
+          "start": 122,
+          "end": 188,
+          "criterion": "Specify inherited-child hidden-variable, kept-variable and shell-only hide-env counterexamples.",
+          "sha256": "ea3c434b77cfe7c2316bbd0110ab33adb7906d699eda7814b883e25af708d7c9"
+        }
+      ]
+    },
+    {
+      "id": "ctx-sveltejs__svelte-3394",
+      "instanceId": "sveltejs__svelte-3394",
+      "cohort": "context",
+      "language": "javascript",
+      "split": "pilot",
+      "prompt": "View is not updated after change Array inside Object\n(version: 3.0.0-beta.20)\r\n\r\nThis is not update the view:\r\n```\r\nobj.arr = obj.arr.sort();\r\nobj.arr[0]++\r\nobj.arr[0] += 1\r\nobj.arr[0] = 2\r\nobj.arr2[0][0]++\r\nobj.arr2[0][0] = 3\r\n```\r\n[See repl](https://svelte.dev/repl/221d07d61d1b5ffedd6c7374b4735e14?version=3.0.0-beta.20)\r\n\r\nHow can I update the view manually?\n\n\nInvestigation: Determine whether nested object/array assignment and update reactivity is already supported in this snapshot. Connect compiler member handling, emitted invalidation and runtime dirty scheduling. Distinguish script and template expression paths; propose assignment, update and computed-member regressions. An unchanged-code conclusion is appropriate when supported by source.",
+      "repo": "sveltejs/svelte",
+      "baseCommit": "bb9a9efec275084983117adee52718b5a35376b6",
+      "sourceRoot": "ABS_SOURCES_ROOT/sveltejs__svelte-3394/source",
+      "manifestFile": "ABS_SOURCES_ROOT/sveltejs__svelte-3394/manifest.json",
+      "sourceDigest": "b301454d5d139ae2b53b518743ceed268473775fe2fa531a782a73a9a18dc4bf",
+      "gates": [
+        {
+          "id": "script",
+          "file": "src/compiler/compile/render_dom/index.ts",
+          "start": 175,
+          "end": 238,
+          "criterion": "Trace existing script member-base collection and emitted invalidations. Accept source-backed already-supported behavior and unchanged code; do not invent a missing member-expression path.",
+          "sha256": "c54961b08ed2ff0838c3bc9f7f71798af3baa19ccd2b69df58bbf585c364f8ec"
+        },
+        {
+          "id": "template",
+          "file": "src/compiler/compile/nodes/shared/Expression.ts",
+          "start": 421,
+          "end": 461,
+          "criterion": "Trace template/event assignments and updates; distinguish script transformation path.",
+          "sha256": "7b7899cd150e6ef78cfb5428b7031c8b585747cdcf858304542c1ff13ae9080d"
+        },
+        {
+          "id": "runtime",
+          "file": "src/runtime/internal/Component.ts",
+          "start": 101,
+          "end": 112,
+          "criterion": "Connect invalidate callback to ctx comparison and make_dirty; explain object mutation and comparison.",
+          "sha256": "8eaaeffed21c80c4072cd0fa615e405e43b82362eade625384feca09c874d208"
+        },
+        {
+          "id": "regression",
+          "file": "test/runtime/samples/assignment-to-computed-property/main.svelte",
+          "start": 1,
+          "end": 5,
+          "criterion": "Inspect computed-member fixture and specify DOM assertions for nested arrays, prefix/postfix updates and assignments.",
+          "sha256": "fd8e587854833eef4f70b02204f23db608916d4195eaf218d3ce59cdda1216a8"
+        }
+      ]
+    },
+    {
+      "id": "ctx-mui__material-ui-34229",
+      "instanceId": "mui__material-ui-34229",
+      "cohort": "context",
+      "language": "typescript",
+      "split": "confirmation_holdout",
+      "prompt": "[SelectInput] Update menu to use select wrapper as anchor\n\n- [x] I have followed (at least) the [PR section of the contributing guide](https://github.com/mui/material-ui/blob/HEAD/CONTRIBUTING.md#sending-a-pull-request).\r\n\r\nThis PR fixes #33559\r\nThis PR fixes #32958 too\r\n\r\nThe `Menu` component from `SelectInput` was updated to occupy the `Select` full width even when it has an adornment.\r\n\r\nBefore: \r\n![before](https://user-images.githubusercontent.com/30778707/189172715-46531d4e-7c07-4bea-927b-2a61207cf14f.png)\r\n\r\nAfter:\r\n![after](https://user-images.githubusercontent.com/30778707/189172743-6943c9c1-b870-4d96-8f88-a083cb0354ca.png)\n\nInvestigation: Diagnose Select menu width with an adornment. Trace display refs, width paths and Menu/Popover anchor handoff. Explain defaultOpen, controlled-open, autoWidth and explicit Paper style counterexamples; identify regression coverage.",
+      "repo": "mui/material",
+      "baseCommit": "fa62bf35e109ede215cb8cbae66ba4d6a30fef60",
+      "sourceRoot": "ABS_SOURCES_ROOT/mui__material-ui-34229/source",
+      "manifestFile": "ABS_SOURCES_ROOT/mui__material-ui-34229/manifest.json",
+      "sourceDigest": "8e99044024ad172a2a473edece74852e96e829d336bdef4d0d768249e89bbb36",
+      "gates": [
+        {
+          "id": "width",
+          "file": "packages/mui-material/src/Select/SelectInput.js",
+          "start": 146,
+          "end": 223,
+          "criterion": "Identify display ref and effect/update width paths; distinguish display node from wrapper.",
+          "sha256": "efce1546e4e20051fc90273d03bf3a34ce836c2abc5a932fef977e2ee6993577"
+        },
+        {
+          "id": "anchor",
+          "file": "packages/mui-material/src/Select/SelectInput.js",
+          "start": 475,
+          "end": 573,
+          "criterion": "Identify render-time width and anchorEl plus Paper style precedence; preserve autoWidth and overrides.",
+          "sha256": "efce1546e4e20051fc90273d03bf3a34ce836c2abc5a932fef977e2ee6993577"
+        },
+        {
+          "id": "handoff",
+          "file": "packages/mui-material/src/Menu/Menu.js",
+          "start": 140,
+          "end": 184,
+          "criterion": "Trace Menu to Popover handoff and anchor contract.",
+          "sha256": "2e5dfcbfa9cdeaa6d1b9abb7aa86e99b7d6f73a709bd9fcd625c9e5b5f4bcaa7"
+        },
+        {
+          "id": "regression",
+          "file": "packages/mui-material/src/Select/Select.test.js",
+          "start": 852,
+          "end": 880,
+          "criterion": "Inspect width/autoWidth tests and specify wrapper-adornment, defaultOpen and controlled-open regressions.",
+          "sha256": "0326c2b89e9f9713f1731a7d7dd513739f9af2cb45d25a3e8bc19f55aaa3f612"
+        }
+      ]
+    }
+  ],
+  "templateOnly": true
+}

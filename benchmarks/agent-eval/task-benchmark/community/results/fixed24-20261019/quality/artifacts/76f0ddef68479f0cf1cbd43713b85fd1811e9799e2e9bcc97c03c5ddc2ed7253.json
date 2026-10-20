@@ -1,0 +1,108 @@
+{
+  "kind": "context",
+  "instance_id": "sveltejs__svelte-3394",
+  "officialResult": {
+    "instance_id": "sveltejs__svelte-3394",
+    "num_steps": 6,
+    "final": {
+      "file": {
+        "coverage": 0.14285714285714285,
+        "precision": 0.3333333333333333,
+        "intersection": 1,
+        "gold_size": 7,
+        "pred_size": 3
+      },
+      "symbol": {
+        "coverage": 0.058823529411764705,
+        "precision": 0.125,
+        "intersection": 1,
+        "gold_size": 17,
+        "pred_size": 8
+      },
+      "span": {
+        "coverage": 0,
+        "precision": 0,
+        "intersection": 0,
+        "gold_size": 7388,
+        "pred_size": 4090
+      },
+      "line": {
+        "coverage": 0,
+        "precision": 0,
+        "intersection": 0,
+        "gold_size": 261,
+        "pred_size": 132
+      }
+    },
+    "trajectory": {
+      "steps": [
+        {
+          "step": 1,
+          "coverage": {
+            "file": 0.14285714285714285,
+            "symbol": 0.29411764705882354,
+            "span": 0.48321602598808877,
+            "line": 0.5095785440613027
+          }
+        },
+        {
+          "step": 2,
+          "coverage": {
+            "file": 0.14285714285714285,
+            "symbol": 0.29411764705882354,
+            "span": 0.5018949648077964,
+            "line": 0.5325670498084292
+          }
+        },
+        {
+          "step": 3,
+          "coverage": {
+            "file": 0.14285714285714285,
+            "symbol": 0.29411764705882354,
+            "span": 0.5018949648077964,
+            "line": 0.5325670498084292
+          }
+        },
+        {
+          "step": 4,
+          "coverage": {
+            "file": 0.2857142857142857,
+            "symbol": 0.29411764705882354,
+            "span": 0.5018949648077964,
+            "line": 0.5325670498084292
+          }
+        },
+        {
+          "step": 5,
+          "coverage": {
+            "file": 0.2857142857142857,
+            "symbol": 0.29411764705882354,
+            "span": 0.5018949648077964,
+            "line": 0.5325670498084292
+          }
+        },
+        {
+          "step": 6,
+          "coverage": {
+            "file": 0.42857142857142855,
+            "symbol": 0.35294117647058826,
+            "span": 0.5151597184623714,
+            "line": 0.5402298850574713
+          }
+        }
+      ],
+      "auc_coverage": {
+        "file": 0.23809523809523805,
+        "symbol": 0.303921568627451,
+        "span": 0.5009926006136076,
+        "line": 0.5300127713920818
+      },
+      "redundancy": {
+        "file": 0.25,
+        "symbol": 0.27519379844961245,
+        "span": 0.3019018359254574,
+        "line": 0.2836916622968012
+      }
+    }
+  }
+}

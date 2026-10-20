@@ -1,0 +1,31 @@
+{
+    "axios__axios-5085": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": true,
+        "infra_failure": false,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [
+                    "issues 5028 should handle set-cookie headers as an array"
+                ],
+                "failure": []
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "issues 4999 should not fail with query parsing"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

@@ -1,0 +1,14 @@
+{
+  "cohort": "context",
+  "pythonVersion": "3.11.15",
+  "requirements": "pyarrow==26.0.0\r\ntree-sitter==0.20.4\r\ntree-sitter-languages==1.10.2\r\n",
+  "requirementsSha256": "180dfad2a8e223ea75333713628eb0b4855148ca8443d1f1ee52d627fef9f188",
+  "environmentPinsSha256": "df14b1f8daa89ef1e7036ed4e7af7323366222a0905a8644d6da7777de3563fe",
+  "upstream": {
+    "repository": "https://github.com/EuniAI/ContextBench",
+    "revision": "1436c28a8eb95496da4ea69ad458b9f8a8eb7d61"
+  },
+  "identity": "version-pinned-reconstruction",
+  "packageArtifactHashes": "not-recorded",
+  "historicalRootIdentity": "unverified"
+}

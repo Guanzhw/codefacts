@@ -1,0 +1,13 @@
+{
+  "declarationStatus": "invalid-final-json",
+  "requests": 18,
+  "responses": 18,
+  "failedResponses": 1,
+  "locatorOnlyResponses": 0,
+  "unmappedByReason": {
+    "source-line-mismatch-or-truncated": {
+      "count": 1,
+      "bytes": 0
+    }
+  }
+}
