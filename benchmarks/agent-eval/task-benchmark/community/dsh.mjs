@@ -70,13 +70,13 @@ export function summarizeDshEvents(events, { provider, model, reasoningEffort,
 /** Run one fresh isolated DSH SDK session. The caller owns scheduling and source/version pinning. */
 export async function runDshAttempt({ installRoot, nodeCommand = process.execPath, attemptDir, root,
   provider = 'opencode-go', model = 'deepseek-v4.1-flash', reasoningEffort = 'high',
-  bridgeEntry, bridgeConfig, prompt, timeoutMs = 600000, probeOnly = false,
+  supportsStrictMode, bridgeEntry, bridgeConfig, prompt, timeoutMs = 600000, probeOnly = false,
   maxOutputTokens = DEFAULT_MAX_OUTPUT_TOKENS }) {
   attemptDir = path.resolve(attemptDir); root = path.resolve(root); installRoot = path.resolve(installRoot);
   if (!Number.isSafeInteger(maxOutputTokens) || maxOutputTokens <= 0) throw new Error('maxOutputTokens must be a positive safe integer');
   if (!probeOnly && typeof prompt !== 'string') throw new Error('prompt must be a string');
   if (!probeOnly && !process.env.OPENCODE_API_KEY) throw new Error('OPENCODE_API_KEY missing; no process started');
-  const overlay = makeDshOverlay({ attemptDir, root, provider, model, nodeCommand, bridgeEntry, bridgeConfig });
+  const overlay = makeDshOverlay({ attemptDir, root, provider, model, supportsStrictMode, nodeCommand, bridgeEntry, bridgeConfig });
   const { deriveTurnTokenUsage } = await import(pathToFileURL(path.join(installRoot,
     'node_modules/@deepseek-ai/dsh-token-meter/lib/types/client.js')).href);
   fs.mkdirSync(path.dirname(attemptDir), { recursive: true });

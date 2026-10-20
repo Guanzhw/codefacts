@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
-import { ARMS, buildSchedule, buildPrompt, validateManifest, assertFrozen, assertReusable, auditAttempt, main } from './campaign.mjs';
+import { ARMS, buildSchedule, buildPrompt, validateManifest, assertFrozen, assertReusable, auditAttempt, runSlot, main } from './campaign.mjs';
 import { canonicalEntries, readSourceManifest, verifySource, nativeConfig, assertNativeVersion } from './prepare.mjs';
 import { hash } from './rpc.mjs';
 
@@ -62,6 +62,42 @@ test('native configuration isolates 022 full setup from default model menu', () 
   assert.ok(!nativeConfig(arm, '/src', '/state').args.includes('--tools'));
   assert.equal(nativeConfig({ id: 'ordinary' }, '/src', '/state'), null);
   assert.ok(nativeConfig({ id: 'codegraph', node: '/node', cli: '/cg' }, '/src', '/state').args.includes('--no-watch'));
+});
+
+test('campaign forwards the selected model compatibility uniformly to every arm', async t => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'cf-campaign-compat-'));
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  const source = path.join(dir, 'source'); fs.mkdirSync(source);
+  fs.writeFileSync(path.join(source, 'README.md'), 'fixture\n');
+  const entries = [{ path: 'README.md', bytes: 8, sha256: hash('fixture\n') }];
+  const task = { id: 'fixture', corpus: 'fixture', question: 'Inspect source.' };
+  const menus = { ordinary: [], codefacts017: ['codefacts_map', 'codefacts_search', 'codefacts_outline', 'codefacts_expand', 'codefacts_path'],
+    codefacts022: ['codefacts_explore', 'codefacts_expand', 'codefacts_impact'], codegraph: ['codegraph_explore'] };
+  for (const supportsStrictMode of [undefined, false, true]) {
+    const model = { provider: 'fixture-provider', id: 'fixture-model', reasoningEffort: 'high',
+      ...(supportsStrictMode === undefined ? {} : { supportsStrictMode }) };
+    const manifest = { evidenceDir: path.join(dir, String(supportsStrictMode)), model, runtime: {},
+      corpora: [{ id: task.corpus, root: source }], arms: ARMS.map(id => ({ id })) };
+    const seen = [];
+    for (const arm of ARMS) {
+      const slot = { id: arm, arm, taskId: task.id, corpus: task.corpus, condition: 'natural-choice' };
+      await runSlot(manifest, {}, { tasks: [task] }, slot, 'attempts', {
+        prepareSlot: async (_manifest, _slot, attemptDir) => {
+          const root = path.join(attemptDir, 'source'); fs.cpSync(source, root, { recursive: true });
+          return { root, entries, bridgeConfig: path.join(attemptDir, 'bridge.json') };
+        },
+        runDshAttempt: async options => {
+          seen.push(options);
+          return { status: 'attempt-completed', headerAudit: true, exactTurnUsage: { totalTokens: 1 },
+            catalogs: [[...['source_list', 'source_search', 'source_read'], ...menus[arm]].map(name => ({ name: `mcp__repo__${name}` }))],
+            toolCalls: [{ name: 'mcp__repo__source_read' }] };
+        },
+      });
+    }
+    assert.equal(seen.length, ARMS.length);
+    assert.ok(seen.every(options => options.supportsStrictMode === supportsStrictMode));
+    assert.ok(seen.every(options => options.provider === model.provider && options.model === model.id));
+  }
 });
 test('actual MCP server version must match the arm before model dispatch', () => {
   assert.doesNotThrow(() => assertNativeVersion({ serverInfo: { version: '1.6.2' } }, { id: 'codegraph', version: '1.6.2' }));

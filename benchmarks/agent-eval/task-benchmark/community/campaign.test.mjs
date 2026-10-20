@@ -229,6 +229,25 @@ test('Docker sandbox uses no network/pull, constrained mount, fixed exec launche
   assert.deepEqual(sandbox.config.argsPrefix.slice(-2), ['bash', '-lc']); assert.equal(calls.length, 3);
 });
 
+test('community campaign forwards selected model compatibility to every arm', async t => {
+  const { manifest, task } = fixture(t);
+  for (const supportsStrictMode of [undefined, false, true]) {
+    manifest.model = { provider: 'fixture-provider', id: 'fixture-model', reasoningEffort: 'high',
+      ...(supportsStrictMode === undefined ? {} : { supportsStrictMode }) };
+    const seen = [];
+    for (const arm of ARMS) {
+      const slot = { id: `${String(supportsStrictMode)}-${arm}`, arm, taskId: task.id, cohort: task.cohort };
+      await runSlot(manifest, {}, slot, { prepareCommunitySlot: fakePrepare(), runDshAttempt: async options => {
+        seen.push(options);
+        return receipt(slot);
+      } });
+    }
+    assert.equal(seen.length, ARMS.length);
+    assert.ok(seen.every(options => options.supportsStrictMode === supportsStrictMode));
+    assert.ok(seen.every(options => options.provider === manifest.model.provider && options.model === manifest.model.id));
+  }
+});
+
 
 test('owned cleanup rejects removal failure, failed absence query, and a remaining container', async t => {
   for (const failure of ['remove', 'query', 'present']) {

@@ -30,6 +30,19 @@ test('SDK overlay isolates tools and forwards only explicit bridge configuration
   assert.throws(() => makeDshOverlay({ ...options, bridgeEntry: '/bridge' }), /supplied together/);
 });
 
+test('selected model preserves unset, false and true strict-field compatibility', () => {
+  const options = { attemptDir: '/tmp/attempt', root: '/tmp/repo', ...selection, nodeCommand: 'node' };
+  for (const supportsStrictMode of [undefined, false, true]) {
+    const rows = makeDshOverlay({ ...options, supportsStrictMode });
+    const provider = rows.at(-1).insert.find(row => row.id === 'eval-pi-ai').config.providers[selection.provider];
+    assert.deepEqual(provider.models, [{ id: selection.model,
+      ...(supportsStrictMode === undefined ? {} : { compat: { supportsStrictMode } }) }]);
+  }
+  for (const supportsStrictMode of [null, 'true', 1, {}]) {
+    assert.throws(() => makeDshOverlay({ ...options, supportsStrictMode }), /supportsStrictMode must be a boolean/);
+  }
+});
+
 test('success preserves authoritative full usage and unknown cache buckets', () => {
   const usage = { uncachedInputTokens: 5, outputTokens: 2, totalTokens: 107, cacheReadTokens: 100 };
   const result = summarizeDshEvents(complete('completed'), selection, () => usage);

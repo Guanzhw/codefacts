@@ -77,6 +77,8 @@ test('public template blocks use; builder preserves the fixed screen contract an
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'cf-screen-builder-'));
   try {
     const sourceManifest = configuredManifest(root), sourceFile = path.join(root, 'source-manifest.json');
+    sourceManifest.models[1].supportsStrictMode = false;
+    sourceManifest.models[2].supportsStrictMode = true;
     fs.writeFileSync(sourceFile, JSON.stringify(sourceManifest, null, 2) + '\n');
     const priorSchedule = schedule(sourceManifest);
     const sameArgs = buildArgs(root, sourceFile, { name: 'same', campaignId: 'fixture-same-seed', seed: sourceManifest.seed });
@@ -91,7 +93,7 @@ test('public template blocks use; builder preserves the fixed screen contract an
     assert.equal(same.seed, sourceManifest.seed);
     assert.equal(same.evidenceDir, path.join(root, 'same', 'evidence'));
     assert.deepEqual(schedule(same), priorSchedule);
-    assert.deepEqual(same.models.map(({ key, id }) => [key, id]), sourceManifest.models.map(({ key, id }) => [key, id]));
+    assert.deepEqual(same.models, sourceManifest.models);
     assert.deepEqual(same.tasks.map(({ id, instanceId, baseCommit, prompt, sourceDigest, gates }) => ({ id, instanceId, baseCommit, prompt, sourceDigest, gates })),
       sourceManifest.tasks.map(({ id, instanceId, baseCommit, prompt, sourceDigest, gates }) => ({ id, instanceId, baseCommit, prompt, sourceDigest, gates })));
     assert.equal(same.concurrency, 4); assert.equal(same.timeoutMs, 360000); assert.equal(same.maxOutputTokens, 16384);

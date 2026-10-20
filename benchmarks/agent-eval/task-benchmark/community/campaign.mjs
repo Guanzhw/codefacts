@@ -242,7 +242,7 @@ export async function runSlot(manifest, frozen, slot, dependencies = {}) {
       bridgeEvidenceDir: task.cohort === 'context' ? path.join(dir, 'inner-bridge') : path.join(dir, 'bridge'),
       setup: prepared.setup, prompt: buildPrompt(task), preparationAndSandboxMs: performance.now() - started }); writeJson(metaPath, meta);
     const receipt = await (dependencies.runDshAttempt ?? runDshAttempt)({ installRoot: manifest.runtime.dshRoot, nodeCommand: manifest.runtime.node, attemptDir: path.join(dir, 'dsh'), root: prepared.root,
-      provider: manifest.model.provider, model: manifest.model.id, reasoningEffort: manifest.model.reasoningEffort,
+      provider: manifest.model.provider, model: manifest.model.id, reasoningEffort: manifest.model.reasoningEffort, supportsStrictMode: manifest.model.supportsStrictMode,
       bridgeEntry, bridgeConfig, prompt: meta.prompt, timeoutMs: manifest.timeoutMs, maxOutputTokens: manifest.maxOutputTokens });
     // Test adapters may return a receipt without writing it; production DSH writes
     // this exact object itself. Persist all outcomes before patching/grading.
