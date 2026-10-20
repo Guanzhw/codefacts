@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
+import { createLifecycle, observeChild } from '../../lifecycle.mjs';
 
 // Cold preparation includes copy/hash passes and a full native map allowance.
 // The DSH timer still starts in runDshAttempt, with its own controlled shutdown.
@@ -39,12 +40,13 @@ async function terminateOwnedTree(child, scrub) {
 /** The returned promise settles after child close AND any owned-tree cleanup. */
 export async function startWorker({ node, script, args, out, deadlineMs, onMessage }) {
   fs.mkdirSync(out); // Exclusive worker identity; no implicit retry or overwrite.
+  const lifecycle = createLifecycle({ directory: path.join(out, 'lifecycle'), role: 'cell-worker-process', context: { out: path.resolve(out) } });
   const startedAt = new Date().toISOString(), startedMs = performance.now();
   const secret = process.env.OPENCODE_API_KEY;
   const scrub = value => secret ? String(value).split(secret).join('[REDACTED]') : String(value);
   const logs = Object.fromEntries(['stdout', 'stderr'].map(name => [name, { fd: fs.openSync(path.join(out, name + '.log'), 'wx'), bytes: 0, droppedBytes: 0, pending: '' }]));
   const frames = [];
-  let child, spawnError = null, timedOut = false, cleanup = null, bookkeepingError = null;
+  let child, ownership, spawnError = null, timedOut = false, cleanup = null, bookkeepingError = null;
   const writeLog = (name, bytes, final = false) => {
     const log = logs[name];
     log.pending += bytes.toString();
@@ -62,8 +64,10 @@ export async function startWorker({ node, script, args, out, deadlineMs, onMessa
     log.bytes += count; log.droppedBytes += value.length - count;
   };
   try {
-    child = spawn(node, [script, ...args], { windowsHide: true, shell: false, detached: process.platform !== 'win32', stdio: ['ignore', 'pipe', 'pipe', 'ipc'] });
-  } catch (error) { spawnError = scrub(error.message); }
+    child = spawn(node, [script, ...args], { windowsHide: true, shell: false, detached: process.platform !== 'win32', stdio: ['ignore', 'pipe', 'pipe', 'ipc'],
+      env: { ...process.env, TASK_BENCHMARK_WORKER_INSTANCE_ID: lifecycle.instanceId } });
+    ownership = observeChild(child, lifecycle);
+  } catch (error) { spawnError = scrub(error.message); lifecycle.event('spawn-error', { message: spawnError }); }
   let code = null, signal = null, closedAt = null, exitedAt = null, cleanupFinished = false, forcedPipeClose = null;
   if (child) {
     // Register close before bookkeeping: no start-receipt failure can release a live child.
@@ -74,6 +78,7 @@ export async function startWorker({ node, script, args, out, deadlineMs, onMessa
       // may still hold its pipe handles; retain cleanup failure, stop capture,
       // and obtain the actual root close instead of holding the wave forever.
       forcedPipeClose = { at: new Date().toISOString(), reason: 'root-exited-but-output-pipes-remain-open-after-cleanup' };
+      lifecycle.event('forced-pipe-close', { ...forcedPipeClose, unknownDescendants: true });
       child.stdout.destroy(); child.stderr.destroy();
     };
     child.once('exit', () => { exitedAt = new Date().toISOString(); closeExitedRootPipes(); });
@@ -86,10 +91,11 @@ export async function startWorker({ node, script, args, out, deadlineMs, onMessa
     });
     const timer = setTimeout(() => {
       timedOut = true;
+      lifecycle.event('cleanup-requested', { reason: 'worker-deadline', deadlineMs });
       const termination = process.platform === 'win32' && exitedAt
         ? Promise.resolve({ strategy: 'owned-pid-tree', pid: child.pid, skipped: true, reason: 'root-exited-descendants-untracked' })
         : terminateOwnedTree(child, scrub);
-      cleanup = termination.then(receipt => { cleanupFinished = true; closeExitedRootPipes(); return receipt; });
+      cleanup = termination.then(receipt => { lifecycle.event('cleanup-result', receipt); cleanupFinished = true; closeExitedRootPipes(); return receipt; });
     }, deadlineMs);
     try { save(path.join(out, 'start.json'), { pid: child.pid ?? null, controllerPid: process.pid, startedAt, deadlineMs }); }
     catch (error) { bookkeepingError = scrub(error.message); }
@@ -98,7 +104,7 @@ export async function startWorker({ node, script, args, out, deadlineMs, onMessa
     if (cleanup) cleanup = await cleanup;
   }
   for (const [name, log] of Object.entries(logs)) { writeLog(name, '', true); fs.closeSync(log.fd); }
-  const receipt = { pid: child?.pid ?? null, controllerPid: process.pid, startedAt, exitedAt, closedAt, forcedPipeClose, durationMs: performance.now() - startedMs,
+  const receipt = { instanceId: lifecycle.instanceId, lifecycleFile: lifecycle.file, pid: child?.pid ?? null, controllerPid: process.pid, startedAt, exitedAt, closedAt, forcedPipeClose, durationMs: performance.now() - startedMs,
     code, signal, spawnError, timedOut, deadlineMs, cleanup, bookkeepingError,
     logs: Object.fromEntries(Object.entries(logs).map(([name, { bytes, droppedBytes }]) => [name, { bytes, droppedBytes }])), frames };
   save(path.join(out, 'exit.json'), receipt);

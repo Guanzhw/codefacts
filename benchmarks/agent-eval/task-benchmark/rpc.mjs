@@ -3,6 +3,7 @@ import path from 'node:path';
 import { createRequire } from 'node:module';
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { createHash } from 'node:crypto';
+import { createLifecycle } from './lifecycle.mjs';
 
 export const hash = value => createHash('sha256').update(Buffer.isBuffer(value) || typeof value === 'string' ? value : JSON.stringify(value)).digest('hex');
 export const writeJson = (file, value) => fs.writeFileSync(file, JSON.stringify(value, null, 2) + '\n');
@@ -15,6 +16,8 @@ export function loadSdk(sdkRoot) {
     ...require(path.join(sdkRoot, 'dist/cjs/client/stdio.js')),
     ...require(path.join(sdkRoot, 'dist/cjs/server/index.js')),
     ...require(path.join(sdkRoot, 'dist/cjs/server/stdio.js')),
+    ...require(path.join(sdkRoot, 'dist/cjs/server/streamableHttp.js')),
+    ...require(path.join(sdkRoot, 'dist/cjs/client/streamableHttp.js')),
     ...require(path.join(sdkRoot, 'dist/cjs/types.js')),
     Ajv: require('ajv'),
   };
@@ -28,12 +31,16 @@ export function checkedFlags(env = {}) {
   return env;
 }
 
-export async function connectNative(sdk, config, evidenceDir, signal) {
+export async function connectNative(sdk, config, evidenceDir, signal, lifecycleOptions) {
   const client = new sdk.Client({ name: 'task-benchmark-native', version: '1' }, { capabilities: {} });
   const transport = new sdk.StdioClientTransport({ ...config, stderr: 'pipe' });
   const context = new AsyncLocalStorage();
   const calls = new Map();
   let closed;
+  const lifecycle = lifecycleOptions && createLifecycle({ ...lifecycleOptions, role: 'native-stdio' });
+  let nativePid = null, observedClose = false, started = false;
+  let resolveClose;
+  const actualClose = new Promise(resolve => { resolveClose = resolve; });
   const stderrFile = path.join(evidenceDir, 'native-stderr.log');
   fs.writeFileSync(stderrFile, '');
   transport.stderr.on('data', chunk => { fs.appendFileSync(stderrFile, chunk); });
@@ -45,7 +52,12 @@ export async function connectNative(sdk, config, evidenceDir, signal) {
     return entry;
   }
   const wire = {
-    start: () => transport.start(),
+    async start() {
+      try {
+        await transport.start(); started = true; nativePid = transport.pid;
+        lifecycle?.event('child-started', { pid: nativePid, evidence: 'public-stdio-transport-start' });
+      } catch (error) { lifecycle?.event('spawn-error', { message: error.message }); throw error; }
+    },
     close: () => transport.close(),
     async send(message) {
       const request = record('request', message);
@@ -61,12 +73,24 @@ export async function connectNative(sdk, config, evidenceDir, signal) {
     wire.onmessage?.(message);
   };
   transport.onerror = error => wire.onerror?.(error);
-  transport.onclose = () => wire.onclose?.();
+  transport.onclose = () => {
+    observedClose = true;
+    lifecycle?.event('child-close', { pid: nativePid, code: null, signal: null, terminationEscalated: null, evidence: 'public-stdio-transport-onclose' });
+    resolveClose(); wire.onclose?.();
+  };
   async function close() {
     closed ??= (async () => {
+      lifecycle?.event('close-requested');
       try { await client.close(); }
       finally {
         await transport.close();
+        lifecycle?.event('close-returned', { observedClose });
+        if (lifecycle && started && !observedClose) {
+          let timer;
+          try { await Promise.race([actualClose, new Promise((_, reject) => { timer = setTimeout(() => reject(new Error('Native close returned without observed child close within teardown allowance')), lifecycleOptions.closeTimeoutMs ?? 10_000); })]); }
+          catch (error) { lifecycle.event('close-await-timeout', { message: error.message }); throw error; }
+          finally { clearTimeout(timer); }
+        }
         signal?.removeEventListener('abort', abort);
       }
     })();
@@ -84,7 +108,7 @@ export async function connectNative(sdk, config, evidenceDir, signal) {
       tools.push(...page.tools);
       cursor = page.nextCursor;
     } while (cursor);
-    const metadata = { config, pid: transport.pid, serverInfo: client.getServerVersion(), capabilities: client.getServerCapabilities(),
+    const metadata = { config, pid: nativePid, ...(lifecycle ? { instanceId: lifecycle.instanceId } : {}), serverInfo: client.getServerVersion(), capabilities: client.getServerCapabilities(),
       instructions: client.getInstructions() ?? null, tools, instructionPolicy: 'Native server instructions and tool descriptions retained verbatim by bridge.' };
     writeJson(path.join(evidenceDir, 'native-metadata.json'), metadata);
     return {
@@ -96,6 +120,7 @@ export async function connectNative(sdk, config, evidenceDir, signal) {
       },
     };
   } catch (error) {
+    lifecycle?.event('startup-failed', { message: error.message, pid: nativePid });
     writeJson(path.join(evidenceDir, 'native-startup-error.json'), { message: error.message, config, pid: transport.pid });
     try { await close(); } catch (cleanupError) { console.error(`Native cleanup failed: ${cleanupError.message}`); }
     throw error;

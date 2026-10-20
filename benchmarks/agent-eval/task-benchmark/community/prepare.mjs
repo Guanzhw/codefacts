@@ -6,6 +6,7 @@ import https from 'node:https';
 import { performance } from 'node:perf_hooks';
 import { nativeConfig, assertNativeVersion, GENERATED } from '../prepare.mjs';
 import { loadSdk, connectNative, hash, writeJson } from '../rpc.mjs';
+import { createLifecycle, observeChild } from '../lifecycle.mjs';
 
 const order = (a, b) => a.path < b.path ? -1 : a.path > b.path ? 1 : 0;
 const excluded = file => file.split('/').some(part => GENERATED.test(part));
@@ -212,15 +213,19 @@ export async function downloadCommunitySources(plan, { sourcesDir, evidenceDir, 
   await Promise.all(Array.from({ length: concurrency }, worker)); return results;
 }
 
-async function command(command, args, cwd, timeoutMs = 120_000, env = {}) {
+async function command(command, args, cwd, timeoutMs = 120_000, env = {}, lifecycleOptions) {
   const inherited = Object.fromEntries(Object.entries(process.env).filter(([key]) => !/(?:API.?KEY|TOKEN|PASSWORD|SECRET|AUTHORIZATION|COOKIE|CREDENTIAL|^GIT_)/i.test(key)));
+  const lifecycle = lifecycleOptions && createLifecycle({ ...lifecycleOptions, role: 'codegraph-init' });
   const child = spawn(command, args, { cwd, windowsHide: true, env: { ...inherited, GIT_CONFIG_NOSYSTEM: '1', GIT_CONFIG_GLOBAL: process.platform === 'win32' ? 'NUL' : '/dev/null', ...env }, stdio: ['ignore', 'pipe', 'pipe'] });
+  const ownership = lifecycle && observeChild(child, lifecycle);
   const stdout = [], stderr = []; child.stdout.on('data', b => stdout.push(b)); child.stderr.on('data', b => stderr.push(b));
-  let timedOut = false; const timer = setTimeout(() => { timedOut = true; child.kill(); }, timeoutMs);
-  const result = await new Promise((resolve, reject) => { child.once('error', reject); child.once('close', (code, signal) => resolve({ code, signal })); }).finally(() => clearTimeout(timer));
-  const receipt = { command, args, cwd, ...result, timedOut, stdout: Buffer.concat(stdout).toString(), stderr: Buffer.concat(stderr).toString() };
+  let timedOut = false; const timer = setTimeout(() => { timedOut = true; ownership ? ownership.requestKill('SIGTERM', 'initialization-timeout') : child.kill(); }, timeoutMs);
+  let spawnError = null;
+  child.once('error', error => { spawnError = error.message; });
+  const result = await new Promise(resolve => child.once('close', (code, signal) => resolve({ code, signal }))).finally(() => clearTimeout(timer));
+  const receipt = { command, args, cwd, pid: child.pid ?? null, ...result, timedOut, spawnError, ...(lifecycle ? { instanceId: lifecycle.instanceId } : {}), stdout: Buffer.concat(stdout).toString(), stderr: Buffer.concat(stderr).toString() };
   Object.defineProperty(receipt, 'stdoutBytes', { value: Buffer.concat(stdout) });
-  if (result.code !== 0 || timedOut) throw Object.assign(new Error(`${command} failed (${result.code}): ${receipt.stderr}`), { receipt });
+  if (spawnError || result.code !== 0 || timedOut) throw Object.assign(new Error(`${command} failed (${result.code}): ${spawnError ?? receipt.stderr}`), { receipt });
   return receipt;
 }
 
@@ -315,12 +320,13 @@ export async function prepareCommunitySlot({ task, arm, runtime, dir, timeoutMs 
   }
   writeJson(path.join(setupDir, 'git-baseline.json'), { mode: gitMode, upstream: { repo: task.repo, baseCommit: task.baseCommit }, syntheticCommit: baselineCommit, receipts: gitReceipts });
   const sourcePreparationMs = performance.now() - started, indexStarted = performance.now(), state = path.join(dir, 'state.sqlite'), native = nativeConfig(arm, root, state);
+  const sourceFirst = runtime.bridgeTransport === 'streamable-http';
   let nativeReceipt = null;
   if (arm.id === 'codegraph') {
-    nativeReceipt = { init: await command(arm.node, ['--liftoff-only', '--disable-warning=ExperimentalWarning', arm.cli, 'init', root, '--yes'], root, timeoutMs, { CODEGRAPH_NO_DAEMON: '1', CODEGRAPH_NO_DOWNLOAD: '1', CODEGRAPH_TELEMETRY: '0', DO_NOT_TRACK: '1' }) };
+    nativeReceipt = { init: await command(arm.node, ['--liftoff-only', '--disable-warning=ExperimentalWarning', arm.cli, 'init', root, '--yes'], root, timeoutMs, { CODEGRAPH_NO_DAEMON: '1', CODEGRAPH_NO_DOWNLOAD: '1', CODEGRAPH_TELEMETRY: '0', DO_NOT_TRACK: '1' }, sourceFirst ? { directory: path.join(dir, 'lifecycle'), parentInstanceId: runtime.parentInstanceId ?? null, context: { phase: 'preparation' } } : undefined) };
     writeJson(path.join(setupDir, 'init-receipt.json'), nativeReceipt.init);
   }
-  if (native) {
+  if (native && !sourceFirst) {
     const client = await connectNative(loadSdk(runtime.sdkRoot), nativeConfig(arm, root, state, true), setupDir);
     try {
       assertNativeVersion(client.metadata, arm); nativeReceipt = { ...nativeReceipt, metadata: client.metadata };
@@ -338,7 +344,7 @@ export async function prepareCommunitySlot({ task, arm, runtime, dir, timeoutMs 
   if (gitMode !== 'boundary-only' && (await collectPatch(root)).length) throw new Error('Native setup changed baseline source');
   const sourceIdentity = { repo: task.repo, baseCommit: task.baseCommit, instanceId: task.instanceId, manifestFile, manifestSha256: hash(fs.readFileSync(manifestFile)), sourceHash: manifest.digest, syntheticCommit: baselineCommit };
   const indexDiskBytes = arm.id === 'codegraph' ? fs.readdirSync(root).filter(name => /^\.code-?graph/.test(name)).reduce((sum, name) => sum + logicalBytes(path.join(root, name)), 0) : [state, `${state}-wal`, `${state}-shm`].reduce((sum, file) => sum + logicalBytes(file), 0);
-  const setup = { durationMs: performance.now() - started, sourcePreparationMs, indexDurationMs, indexDiskBytes, sourceFiles: entries.length, sourceIdentity, sourceRepresentation, sourceMaterialization, gitMode, native: nativeReceipt, indexPolicy: arm.id === 'codegraph' ? 'Private generated .codegraph state excluded from patch; hooks disabled' : 'External SQLite state; hooks disabled' };
+  const setup = { durationMs: performance.now() - started, sourcePreparationMs, indexDurationMs, indexDiskBytes, sourceFiles: entries.length, sourceIdentity, sourceRepresentation, sourceMaterialization, gitMode, native: nativeReceipt, preparationPolicy: sourceFirst ? 'HTTP source-first: no native MCP process or semantic tool; CodeGraph required init only' : 'Legacy native preindex', indexPolicy: arm.id === 'codegraph' ? 'Private generated .codegraph state excluded from patch; hooks disabled' : 'External SQLite state; hooks disabled' };
   writeJson(path.join(dir, 'setup.json'), setup);
   const bridgeConfig = path.join(dir, 'bridge-config.json'); writeJson(bridgeConfig, { root, evidenceDir: path.join(dir, 'inner-bridge'), rgCommand: runtime.rg, sdkRoot: runtime.sdkRoot, arm: arm.id, native });
   return { root, setup, bridgeConfig, sourceIdentity, sourceHash: manifest.digest, entries };
