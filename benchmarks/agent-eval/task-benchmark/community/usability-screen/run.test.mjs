@@ -103,6 +103,34 @@ test('candidate uses existing CF prepare and DSH adapter contract with a private
   } finally { fs.rmSync(dir, { recursive: true }); }
 });
 
+test('screen forwards each selected model compatibility uniformly across four arms', async t => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'cf-screen-compat-'));
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  const config = { ...manifest, evidenceDir: dir, models: manifest.models.map((model, index) => ({ ...model,
+    ...(index === 0 ? {} : { supportsStrictMode: index === 2 }) })) };
+  const cells = schedule(config).filter(cell => cell.taskId === config.tasks[0].id);
+  const seen = [];
+  for (const cell of cells) {
+    await runCell(config, { manifestHash: 'fixture' }, cell, {
+      prepare: async options => {
+        const root = path.join(options.dir, 'source'); fs.mkdirSync(root);
+        return { root, bridgeConfig: path.join(options.dir, 'bridge-config.json'), setup: {}, entries: [] };
+      },
+      attempt: async options => {
+        seen.push({ arm: cell.arm, options });
+        return { status: 'attempt-completed', answer: '{"regions":[],"rationale":"fixture"}',
+          catalogs: [], actualRequestHeaders: [], toolCalls: [] };
+      },
+      verify: () => ({ verified: true }),
+    });
+  }
+  for (const model of config.models) {
+    const attempts = seen.filter(row => row.options.model === model.id);
+    assert.deepEqual(attempts.map(row => row.arm).sort(), ['candidate', 'codefacts022', 'codegraph', 'ordinary']);
+    assert.ok(attempts.every(({ options }) => options.supportsStrictMode === model.supportsStrictMode));
+  }
+});
+
 test('attempt failures remain explicit allocated outcomes without retry', async () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'cf-screen-failure-'));
   try {

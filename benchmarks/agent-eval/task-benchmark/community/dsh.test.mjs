@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { DEFAULT_MAX_OUTPUT_TOKENS, makeDshOverlay, runDshAttempt, summarizeDshEvents } from './dsh.mjs';
+import { runDshAttempt as runBaseDshAttempt } from '../dsh-adapter.mjs';
 
 const selection = { provider: 'opencode-go', model: 'deepseek-v4.1-flash', reasoningEffort: 'high' };
 const observed = { uncachedInputTokens: 5, outputTokens: 2, totalTokens: 107, cacheReadTokens: 100 };
@@ -188,6 +189,29 @@ function fakeSdk(directory, { terminalDelayMs = 0, shutdownDelayMs = 0 } = {}) {
   `);
   return installRoot;
 }
+
+test('both SDK run helpers persist the selected model compatibility in their overlay', async t => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'codefacts-dsh-compat-'));
+  t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
+  const installRoot = fakeSdk(directory);
+  for (const [name, run] of [['base', runBaseDshAttempt], ['community', runDshAttempt]]) {
+    for (const supportsStrictMode of [undefined, false, true]) {
+      const attemptDir = path.join(directory, `${name}-${String(supportsStrictMode)}`);
+      const receipt = await run({ installRoot, attemptDir, root: directory, ...selection,
+        supportsStrictMode, probeOnly: true, timeoutMs: 10000 });
+      assert.equal(receipt.status, 'probe-completed');
+      assert.equal(receipt.didPrompt, false);
+      const overlay = JSON.parse(fs.readFileSync(path.join(attemptDir, 'overlay.json')));
+      const provider = overlay.at(-1).insert.find(row => row.id === 'eval-pi-ai').config.providers[selection.provider];
+      assert.deepEqual(provider.models, [{ id: selection.model,
+        ...(supportsStrictMode === undefined ? {} : { compat: { supportsStrictMode } }) }]);
+    }
+    const attemptDir = path.join(directory, `${name}-invalid`);
+    await assert.rejects(run({ installRoot, attemptDir, root: directory, supportsStrictMode: null,
+      probeOnly: true }), /supportsStrictMode must be a boolean/);
+    assert.equal(fs.existsSync(attemptDir), false);
+  }
+});
 
 test('SDK process receives the configured allowance and startup probe is explicit', async t => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'codefacts-community-dsh-'));

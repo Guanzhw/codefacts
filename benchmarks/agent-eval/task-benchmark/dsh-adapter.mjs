@@ -7,13 +7,15 @@ import { performance } from 'node:perf_hooks';
 import { pathToFileURL } from 'node:url';
 
 /** The minimal SDK tree has no skills, shell, network or subagent tools after this overlay. */
-export function makeDshOverlay({ attemptDir, root, provider, model, nodeCommand, bridgeEntry, bridgeConfig }) {
+export function makeDshOverlay({ attemptDir, root, provider, model, supportsStrictMode, nodeCommand, bridgeEntry, bridgeConfig }) {
   if (Boolean(bridgeEntry) !== Boolean(bridgeConfig)) throw new Error('bridgeEntry and bridgeConfig must be supplied together');
+  if (supportsStrictMode !== undefined && typeof supportsStrictMode !== 'boolean') throw new Error('supportsStrictMode must be a boolean when supplied');
   const inserted = [
     { id: 'eval-credentials', name: '@deepseek-ai/dsh-credentials-local', config: { watch: false } },
     { id: 'eval-pi-ai', name: '@deepseek-ai/dsh-llm-pi-ai', config: { providers: {
       [provider]: { apiKeyEnv: 'OPENCODE_API_KEY', streamIdleTimeoutMs: 60000,
-        retryPolicy: { mode: 'normal', maxRetries: 0 }, models: [{ id: model }] },
+        retryPolicy: { mode: 'normal', maxRetries: 0 }, models: [{ id: model,
+          ...(supportsStrictMode === undefined ? {} : { compat: { supportsStrictMode } }) }] },
     } } },
   ];
   if (bridgeEntry) inserted.push({ id: 'eval-tools', name: '@deepseek-ai/dsh-mcp-client', config: {
@@ -77,11 +79,11 @@ export function summarizeDshEvents(events, { provider, model, reasoningEffort },
 /** Run one fresh isolated DSH SDK session. The caller owns scheduling and source/version pinning. */
 export async function runDshAttempt({ installRoot, nodeCommand = process.execPath, attemptDir, root,
   provider = 'opencode-go', model = 'deepseek-v4.1-flash', reasoningEffort = 'high',
-  bridgeEntry, bridgeConfig, prompt, timeoutMs = 600000, probeOnly = false }) {
+  supportsStrictMode, bridgeEntry, bridgeConfig, prompt, timeoutMs = 600000, probeOnly = false }) {
   attemptDir = path.resolve(attemptDir); root = path.resolve(root); installRoot = path.resolve(installRoot);
   if (!probeOnly && typeof prompt !== 'string') throw new Error('prompt must be a string');
   if (!probeOnly && !process.env.OPENCODE_API_KEY) throw new Error('OPENCODE_API_KEY missing; no process started');
-  const overlay = makeDshOverlay({ attemptDir, root, provider, model, nodeCommand, bridgeEntry, bridgeConfig });
+  const overlay = makeDshOverlay({ attemptDir, root, provider, model, supportsStrictMode, nodeCommand, bridgeEntry, bridgeConfig });
   const { deriveTurnTokenUsage } = await import(pathToFileURL(path.join(installRoot,
     'node_modules/@deepseek-ai/dsh-token-meter/lib/types/client.js')).href);
   fs.mkdirSync(path.dirname(attemptDir), { recursive: true });

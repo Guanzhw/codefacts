@@ -135,7 +135,7 @@ export function auditAttempt(receipt, arm, { canary = false } = {}) {
   return { catalogValid, sourceCalls, nativeCalls: nativeCalls.length, sourceBearingNativeResults, taskSucceeded: receipt.status === 'attempt-completed' && sourceCalls > 0, taskFailureReasons, infrastructureValid: reasons.length === 0, reasons };
 }
 
-async function runSlot(manifest, frozen, suite, slot, phase, deps) {
+export async function runSlot(manifest, frozen, suite, slot, phase, deps) {
   const dir = path.join(manifest.evidenceDir, phase, slot.id), metaPath = path.join(dir, 'slot-meta.json');
   if (fs.existsSync(dir)) { if (!fs.existsSync(metaPath)) throw new Error(`Allocated attempt is incomplete: ${slot.id}`); const meta = json(metaPath); assertReusable(meta, frozen, slot); return meta; }
   fs.mkdirSync(path.dirname(dir), { recursive: true }); fs.mkdirSync(dir);
@@ -148,7 +148,7 @@ async function runSlot(manifest, frozen, suite, slot, phase, deps) {
     const prepared = await deps.prepareSlot(manifest, slot, dir, corpus);
     const prompt = buildPrompt(suite, task, slot.condition);
     Object.assign(meta, { sourceRoot: prepared.root, sourceHash: prepared.sourceHash, prompt, setup: prepared.setup, status: 'prepared' }); writeJson(metaPath, meta);
-    const receipt = await deps.runDshAttempt({ installRoot: manifest.runtime.dshRoot, nodeCommand: manifest.runtime.node, attemptDir: path.join(dir, 'dsh'), root: prepared.root, provider: manifest.model.provider, model: manifest.model.id, reasoningEffort: manifest.model.reasoningEffort, bridgeEntry: path.join(HERE, 'bridge.mjs'), bridgeConfig: prepared.bridgeConfig, prompt, timeoutMs: manifest.timeoutMs });
+    const receipt = await deps.runDshAttempt({ installRoot: manifest.runtime.dshRoot, nodeCommand: manifest.runtime.node, attemptDir: path.join(dir, 'dsh'), root: prepared.root, provider: manifest.model.provider, model: manifest.model.id, reasoningEffort: manifest.model.reasoningEffort, supportsStrictMode: manifest.model.supportsStrictMode, bridgeEntry: path.join(HERE, 'bridge.mjs'), bridgeConfig: prepared.bridgeConfig, prompt, timeoutMs: manifest.timeoutMs });
     const audit = auditAttempt(receipt, slot.arm, { canary: phase === 'canary' });
     verifySource(corpus.root, prepared.entries); verifySource(prepared.root, prepared.entries, { exact: true });
     Object.assign(meta, { audit, status: !audit.infrastructureValid ? 'infrastructure-failed' : audit.taskSucceeded ? 'attempt-completed' : 'task-failed' }); writeJson(metaPath, meta);

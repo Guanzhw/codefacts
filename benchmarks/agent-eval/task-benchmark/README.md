@@ -82,6 +82,16 @@ downloads, telemetry and the daemon. These commands install no runtime packages.
 The DSH adapter requires `OPENCODE_API_KEY` in the operator environment for model
 calls; keep credentials out of manifests and committed artifacts.
 
+For a Responses endpoint that accepts the tool-definition `strict` field, set
+`model.supportsStrictMode: true` in a new campaign manifest (or on the selected
+entry in a screen's `models` array). The adapter forwards this boolean to DSH's
+`providers[provider].models[].compat.supportsStrictMode`. With the supported
+pi-ai serializer, this emits `strict:false` for ordinary JSON-schema tools and
+preserves their optional arguments. Leave the option unset for protocols that
+do not support it. Explicit `false` is preserved and disables emission of the
+wire field. The selected model setting applies equally to every arm, including
+ordinary source tools; freeze and verify the resulting requests before scoring.
+
 Replace every `X:/ABSOLUTE/...` placeholder below and in
 [manifest.example.json](manifest.example.json) with an absolute local path.
 On POSIX, use `/absolute/...` paths and the corresponding executable names.
