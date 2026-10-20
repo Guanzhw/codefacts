@@ -194,18 +194,24 @@ impl CodeFacts {
             start_line: options.start_line,
             end_line: None,
         });
+        let reads_are_batch = options.reads.is_some();
         if let Some(reads) = options
             .reads
             .or_else(|| single_read.as_ref().map(std::slice::from_ref))
         {
             let mut excerpts = Vec::new();
             let mut eof_notes = Vec::new();
-            for read in reads {
+            for (index, read) in reads.iter().enumerate() {
                 let path = self.relative_path(&read.file_path)?;
                 if !hashes.contains_key(&path) && !is_manifest(&path) {
-                    return Err(CodeFactsError::Mcp(
-                        "file_path must name indexed source or a package manifest".into(),
-                    ));
+                    let field = if reads_are_batch {
+                        format!("reads[{index}].file_path")
+                    } else {
+                        "file_path".to_string()
+                    };
+                    return Err(CodeFactsError::Mcp(format!(
+                        "{field} ({path:?}) must name indexed source or a package manifest"
+                    )));
                 }
                 let source =
                     self.exploration_source(&path, hashes.get(&path).map(String::as_str))?;
@@ -1368,6 +1374,70 @@ mod tests {
         assert!(response.contains("helper.ts:1-3"), "{response}");
         assert!(response.contains("direct static callee at entry.ts:79"));
         assert!(!response.contains("excerpt incomplete"));
+    }
+
+    #[test]
+    fn unindexed_source_read_errors_locate_the_input_field_and_normalized_path() {
+        let root = tempdir().unwrap();
+        let state = tempdir().unwrap();
+        fs::write(root.path().join("first.js"), "export const first = 1;\n").unwrap();
+        fs::write(
+            root.path().join("unsupported.svelte"),
+            "<script>const x = 1;</script>\n",
+        )
+        .unwrap();
+        fs::write(root.path().join("last.js"), "export const last = 1;\n").unwrap();
+        let facts =
+            CodeFacts::open_with_lsp(root.path(), state.path().join("facts.sqlite"), LspMode::Off)
+                .unwrap();
+
+        for bad_index in 0..3 {
+            let mut reads =
+                ["first.js", "unsupported.svelte", "last.js"].map(|file_path| ExploreRead {
+                    file_path: file_path.into(),
+                    start_line: None,
+                    end_line: None,
+                });
+            reads.swap(1, bad_index);
+            let error = facts
+                .explore(ExploreOptions {
+                    reads: Some(&reads),
+                    ..Default::default()
+                })
+                .unwrap_err()
+                .to_string();
+            assert!(
+                error.contains(&format!("reads[{bad_index}].file_path")),
+                "{error}"
+            );
+            assert!(error.contains("unsupported.svelte"), "{error}");
+            assert!(
+                error.contains("must name indexed source or a package manifest"),
+                "{error}"
+            );
+        }
+
+        let unsupported_path = root
+            .path()
+            .join("unsupported.svelte")
+            .to_string_lossy()
+            .into_owned();
+        let error = facts
+            .explore(ExploreOptions {
+                file_path: Some(&unsupported_path),
+                ..Default::default()
+            })
+            .unwrap_err()
+            .to_string();
+        assert!(
+            error.contains("file_path (\"unsupported.svelte\")"),
+            "{error}"
+        );
+        assert!(!error.contains("reads["), "{error}");
+        assert!(
+            error.contains("must name indexed source or a package manifest"),
+            "{error}"
+        );
     }
 
     #[test]
