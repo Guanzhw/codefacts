@@ -157,9 +157,7 @@ impl CodeFacts {
         }
         if options.file_path.is_some() && (options.query.is_some() || options.path_prefix.is_some())
         {
-            return Err(CodeFactsError::Mcp(
-                "file_path is a focused source read; omit query and path_prefix".into(),
-            ));
+            return Err(CodeFactsError::Mcp(explore_mode_conflict(&options)));
         }
         if let Some(reads) = options.reads {
             if reads.is_empty() || reads.len() > 8 {
@@ -172,10 +170,7 @@ impl CodeFacts {
                 || options.file_path.is_some()
                 || options.start_line.is_some()
             {
-                return Err(CodeFactsError::Mcp(
-                    "reads cannot be combined with query, path_prefix, file_path or start_line"
-                        .into(),
-                ));
+                return Err(CodeFactsError::Mcp(explore_mode_conflict(&options)));
             }
         }
         let scope = options
@@ -911,6 +906,24 @@ fn header(freshness: &Freshness, budget: usize) -> String {
     output
 }
 
+fn explore_mode_conflict(options: &ExploreOptions<'_>) -> String {
+    let fields = [
+        (options.query.is_some(), "query"),
+        (options.path_prefix.is_some(), "path_prefix"),
+        (options.file_path.is_some(), "file_path"),
+        (options.start_line.is_some(), "start_line"),
+        (options.reads.is_some(), "reads"),
+    ]
+    .into_iter()
+    .filter_map(|(supplied, field)| supplied.then_some(field))
+    .collect::<Vec<_>>()
+    .join(", ");
+
+    format!(
+        "Choose one explore mode: discovery (query/path_prefix), focused read (file_path with optional start_line), or batch read (reads). Supplied: {fields}."
+    )
+}
+
 fn is_manifest(path: &str) -> bool {
     matches!(path.rsplit('/').next(), Some("package.json" | "Cargo.toml"))
 }
@@ -1358,6 +1371,65 @@ mod tests {
     use super::*;
     use crate::lsp::LspMode;
     use tempfile::tempdir;
+
+    #[test]
+    fn mixed_modes_report_supplied_fields_before_indexing() {
+        let root = tempdir().unwrap();
+        let state = tempdir().unwrap();
+        let facts =
+            CodeFacts::open_with_lsp(root.path(), state.path().join("facts.sqlite"), LspMode::Off)
+                .unwrap();
+        let unopened_generation = facts.store.generation().unwrap();
+        let read = ExploreRead {
+            file_path: "src/private.rs".into(),
+            start_line: Some(3),
+            end_line: None,
+        };
+
+        for (options, expected) in [
+            (
+                ExploreOptions {
+                    query: Some("needle value"),
+                    path_prefix: Some("src/private"),
+                    file_path: Some("src/private.rs"),
+                    start_line: Some(3),
+                    reads: Some(std::slice::from_ref(&read)),
+                    max_bytes: Some(10_000),
+                },
+                "Choose one explore mode: discovery (query/path_prefix), focused read (file_path with optional start_line), or batch read (reads). Supplied: query, path_prefix, file_path, start_line, reads.",
+            ),
+            (
+                ExploreOptions {
+                    query: Some("needle value"),
+                    file_path: Some("src/private.rs"),
+                    ..Default::default()
+                },
+                "Choose one explore mode: discovery (query/path_prefix), focused read (file_path with optional start_line), or batch read (reads). Supplied: query, file_path.",
+            ),
+            (
+                ExploreOptions {
+                    file_path: Some("src/private.rs"),
+                    start_line: Some(3),
+                    reads: Some(std::slice::from_ref(&read)),
+                    ..Default::default()
+                },
+                "Choose one explore mode: discovery (query/path_prefix), focused read (file_path with optional start_line), or batch read (reads). Supplied: file_path, start_line, reads.",
+            ),
+        ] {
+            let error = facts.explore(options).unwrap_err();
+            let message = match error {
+                CodeFactsError::Mcp(message) => message,
+                other => panic!("mixed modes returned a non-MCP error: {other}"),
+            };
+            assert_eq!(message, expected);
+            assert!(!message.contains("needle value"));
+            assert!(!message.contains("src/private"));
+            assert!(!message.contains("max_bytes"));
+            assert!(facts.store.get_file_hashes().unwrap().is_empty());
+            assert!(facts.store.get_all_nodes().unwrap().is_empty());
+            assert_eq!(facts.store.generation().unwrap(), unopened_generation);
+        }
+    }
 
     #[test]
     fn explicit_variable_mentions_preserve_whole_identifiers_case_and_query_bound() {

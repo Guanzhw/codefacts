@@ -608,9 +608,7 @@ impl CodeFacts {
         }
         if options.file_path.is_some() && (options.query.is_some() || options.path_prefix.is_some())
         {
-            return Err(CodeFactsError::Mcp(
-                "file_path is a focused source read; omit query and path_prefix".into(),
-            ));
+            return Err(CodeFactsError::Mcp(explore_mode_conflict(&options)));
         }
         if let Some(reads) = options.reads {
             if reads.is_empty() || reads.len() > 8 {
@@ -623,10 +621,7 @@ impl CodeFacts {
                 || options.file_path.is_some()
                 || options.start_line.is_some()
             {
-                return Err(CodeFactsError::Mcp(
-                    "reads cannot be combined with query, path_prefix, file_path or start_line"
-                        .into(),
-                ));
+                return Err(CodeFactsError::Mcp(explore_mode_conflict(&options)));
             }
         }
         let scope = options
