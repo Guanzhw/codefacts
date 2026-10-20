@@ -1,0 +1,2 @@
+# Keep frozen benchmark producers and byte-bound evidence identical on checkout.
+benchmarks/agent-eval/task-benchmark/** text eol=lf

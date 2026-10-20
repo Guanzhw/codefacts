@@ -1,5 +1,14 @@
 # Agent task evaluation
 
+The [same-task source-investigation benchmark](task-benchmark/README.md) adds a
+serial DSH four-arm comparison of ordinary tools, CodeFacts 0.1.7/0.2.2 and
+CodeGraph 1.6.2, with blind grading and provider-token accounting. The default
+v2 suite clarifies mandatory prompt scope found missing in the preserved v1
+pilot. The [reviewed 96-attempt baseline](task-benchmark/results/2026-10-17-flash-v2/REPORT.md)
+retains 93 completed attempts and three upstream HTTP 400 failures without
+reruns. All 72 guided-use attempts completed; correctness and usage coverage
+precede paired efficiency comparisons.
+
 Development-only collection for the [product scorecard](../../docs/EVALUATION.md).
 The runner evaluates a Codex CLI agent with ordinary shell tools and
 configurable MCP arms, for read-only questions or edit-and-test tasks. The

@@ -1,0 +1,537 @@
+{
+  "schemaVersion": 1,
+  "status": "frozen before readiness model calls after root source review",
+  "suiteId": "codefacts-agent-investigation-six-v1",
+  "visibility": "HIDDEN evaluator-only; do not place in model workspace or task prompts",
+  "grading": {
+    "criterionCountPerTask": 4,
+    "criterionPass": "All semantically required components of a criterion must be correct and supported by appropriate cited source evidence; wording may vary.",
+    "fullyCorrect": "All four binary criteria pass AND no critical false claim.",
+    "criticalGate": "A materially asserted listed critical false claim fails fullyCorrect even when other criteria pass. Absence of an optional detail is not a false claim.",
+    "aggregate": "Report per-task 0-4 required criteria plus fullyCorrect 0/1 and criticalFalseClaim 0/1. Never compute a quality-adjusted speed number by dropping failures.",
+    "testEvidence": "Existing test definitions are source evidence only. This suite requires no test execution."
+  },
+  "tasks": [
+    {
+      "id": "router-01",
+      "criteria": [
+        {
+          "id": "C1",
+          "requirement": "For the registered method/tree, malformed decoding reaches _onBadUrl. With onBadUrl, find returns a non-null handle whose handler defers invoking onBadUrl; find itself does not invoke it.",
+          "anchors": [
+            {
+              "file": "index.js",
+              "startLine": 630,
+              "endLine": 642
+            },
+            {
+              "file": "index.js",
+              "startLine": 917,
+              "endLine": 926
+            },
+            {
+              "file": "test/on-bad-url.test.js",
+              "startLine": 6,
+              "endLine": 23
+            }
+          ],
+          "binary": true
+        },
+        {
+          "id": "C2",
+          "requirement": "lookup derives constraints, calls find, then callHandler. A supplied onBadUrl runs with the malformed path, req and res, rather than defaultRoute; cite the lookup test's /hello/%world assertion.",
+          "anchors": [
+            {
+              "file": "index.js",
+              "startLine": 575,
+              "endLine": 607
+            },
+            {
+              "file": "index.js",
+              "startLine": 917,
+              "endLine": 926
+            },
+            {
+              "file": "test/on-bad-url.test.js",
+              "startLine": 25,
+              "endLine": 41
+            }
+          ],
+          "binary": true
+        },
+        {
+          "id": "C3",
+          "requirement": "Without onBadUrl, _onBadUrl returns null; direct find returns null while lookup calls configured defaultRoute. With no defaultRoute, response becomes status 404 and end() is called.",
+          "anchors": [
+            {
+              "file": "index.js",
+              "startLine": 603,
+              "endLine": 607
+            },
+            {
+              "file": "index.js",
+              "startLine": 906,
+              "endLine": 920
+            },
+            {
+              "file": "test/on-bad-url.test.js",
+              "startLine": 43,
+              "endLine": 72
+            }
+          ],
+          "binary": true
+        },
+        {
+          "id": "C4",
+          "requirement": "Cite the README's malformed URL default/onBadUrl description and explain its request-dispatch behavior in relation to the distinct direct-find tests; do not treat README example's 400 as an automatic library status.",
+          "anchors": [
+            {
+              "file": "README.md",
+              "startLine": 75,
+              "endLine": 92
+            },
+            {
+              "file": "test/on-bad-url.test.js",
+              "startLine": 6,
+              "endLine": 72
+            }
+          ],
+          "binary": true
+        }
+      ],
+      "criticalFalseClaims": [
+        "find directly invokes configured defaultRoute or onBadUrl",
+        "Library automatically returns status 400 merely because onBadUrl is configured",
+        "Malformed request invokes registered ordinary route handler in this scenario"
+      ]
+    },
+    {
+      "id": "router-02",
+      "criteria": [
+        {
+          "id": "C1",
+          "requirement": "compile replaces instance find and lookup with _findCompiled and _lookupCompiled and compiles existing method trees; synchronous compiled lookup calls compiled.lookup directly after deriving constraints.",
+          "anchors": [
+            {
+              "file": "index.js",
+              "startLine": 803,
+              "endLine": 821
+            },
+            {
+              "file": "index.js",
+              "startLine": 838,
+              "endLine": 850
+            }
+          ],
+          "binary": true
+        },
+        {
+          "id": "C2",
+          "requirement": "A third-argument function or supplied done takes _lookupCompiled's Router.prototype.lookup.call fallback. That method normalizes ctx/done and derives constraints using a callback; derive error goes to done(err).",
+          "anchors": [
+            {
+              "file": "index.js",
+              "startLine": 575,
+              "endLine": 599
+            },
+            {
+              "file": "index.js",
+              "startLine": 838,
+              "endLine": 841
+            }
+          ],
+          "binary": true
+        },
+        {
+          "id": "C3",
+          "requirement": "After asynchronous derivation, the fallback uses this.find (therefore compiled find after compile), then this.callHandler and done(null,result); callHandler uses returned handle.handler, or default route for null. Request-derived constraints/user callbacks determine selected handler; exact arbitrary application handler is not statically fixed.",
+          "anchors": [
+            {
+              "file": "index.js",
+              "startLine": 593,
+              "endLine": 607
+            },
+            {
+              "file": "index.js",
+              "startLine": 803,
+              "endLine": 805
+            },
+            {
+              "file": "index.js",
+              "startLine": 826,
+              "endLine": 832
+            }
+          ],
+          "binary": true
+        },
+        {
+          "id": "C4",
+          "requirement": "Identify compile.test.js asynchronous test: user deriveConstraint setImmediate reads x-secret, two same-path alpha/beta constraints, request beta yields beta, no error, lookup remains _lookupCompiled.",
+          "anchors": [
+            {
+              "file": "test/compile.test.js",
+              "startLine": 236,
+              "endLine": 261
+            }
+          ],
+          "binary": true
+        }
+      ],
+      "criticalFalseClaims": [
+        "Supplying a done callback bypasses constraint derivation",
+        "All compiled lookup calls directly invoke compiled.lookup with no fallback",
+        "The named application's callback or runtime route can be uniquely determined from a static call edge alone"
+      ]
+    },
+    {
+      "id": "globset-01",
+      "criteria": [
+        {
+          "id": "C1",
+          "requirement": "matches_into constructs Candidate and delegates to matches_candidate_into, which clears the existing Vec before checking empty set; no matches or an empty set leaves the buffer empty rather than retaining old contents.",
+          "anchors": [
+            {
+              "file": "crates/globset/src/lib.rs",
+              "startLine": 419,
+              "endLine": 455
+            }
+          ],
+          "binary": true
+        },
+        {
+          "id": "C2",
+          "requirement": "Results are zero-based original pattern sequence/insertion indices, in ascending order with duplicate indices removed; not strategy iteration order, match positions, or ranking. Builder pushes patterns; build delegates to GlobSet::new, whose enumerate indices feed strategies.",
+          "anchors": [
+            {
+              "file": "crates/globset/src/lib.rs",
+              "startLine": 447,
+              "endLine": 455
+            },
+            {
+              "file": "crates/globset/src/lib.rs",
+              "startLine": 479,
+              "endLine": 501
+            },
+            {
+              "file": "crates/globset/src/lib.rs",
+              "startLine": 578,
+              "endLine": 588
+            }
+          ],
+          "binary": true
+        },
+        {
+          "id": "C3",
+          "requirement": "Matching visits every strategy and accumulates then sort/dedup, while matches allocates a fresh vector via matches_candidate and reaches same collector for nonempty sets. Explain how reusable caller storage avoids requiring matches' new result allocation.",
+          "anchors": [
+            {
+              "file": "crates/globset/src/lib.rs",
+              "startLine": 399,
+              "endLine": 416
+            },
+            {
+              "file": "crates/globset/src/lib.rs",
+              "startLine": 442,
+              "endLine": 455
+            }
+          ],
+          "binary": true
+        },
+        {
+          "id": "C4",
+          "requirement": "Identify set_works test: patterns src/**/*.rs, *.c, src/lib.rs, matching src/lib.rs returns indices 0 and 2. Attribute buffer clearing/empty-buffer/order contract to implementation/API docs, without claiming this test directly checks reused prefilled buffers.",
+          "anchors": [
+            {
+              "file": "crates/globset/src/lib.rs",
+              "startLine": 419,
+              "endLine": 455
+            },
+            {
+              "file": "crates/globset/src/lib.rs",
+              "startLine": 1140,
+              "endLine": 1166
+            }
+          ],
+          "binary": true
+        }
+      ],
+      "criticalFalseClaims": [
+        "matches_into preserves/appends prior vector entries",
+        "Indices are sorted by specificity or are 1-based",
+        "dedup means identical patterns can never have distinct insertion indices",
+        "Existing set_works test directly tests a reused prefilled Vec"
+      ]
+    },
+    {
+      "id": "globset-02",
+      "criteria": [
+        {
+          "id": "C1",
+          "requirement": "literal_separator defaults false, so ordinary * and ? can match slash; use GlobBuilder.literal_separator(true) before build to prohibit separators for these wildcard tokens.",
+          "anchors": [
+            {
+              "file": "crates/globset/src/glob.rs",
+              "startLine": 239,
+              "endLine": 247
+            },
+            {
+              "file": "crates/globset/src/glob.rs",
+              "startLine": 620,
+              "endLine": 625
+            }
+          ],
+          "binary": true
+        },
+        {
+          "id": "C2",
+          "requirement": "Builder stores option; token regex generation uses [^/]/[^/]* with literal_separator enabled and ./.* otherwise. Thus some/*/needle.txt is bounded to the intermediate component in the stated configuration.",
+          "anchors": [
+            {
+              "file": "crates/globset/src/glob.rs",
+              "startLine": 620,
+              "endLine": 625
+            },
+            {
+              "file": "crates/globset/src/glob.rs",
+              "startLine": 703,
+              "endLine": 715
+            }
+          ],
+          "binary": true
+        },
+        {
+          "id": "C3",
+          "requirement": "Explicit recursive **/ or /**/ tokens have their own generation, unaffected by the ordinary wildcard branch; public syntax documents zero-or-more directories for /**/. Use some/**/needle.txt for zero or multiple intervening directories.",
+          "anchors": [
+            {
+              "file": "crates/globset/src/glob.rs",
+              "startLine": 717,
+              "endLine": 725
+            },
+            {
+              "file": "crates/globset/src/lib.rs",
+              "startLine": 70,
+              "endLine": 82
+            },
+            {
+              "file": "crates/globset/src/glob.rs",
+              "startLine": 1406,
+              "endLine": 1409
+            }
+          ],
+          "binary": true
+        },
+        {
+          "id": "C4",
+          "requirement": "Cite positive recursive matchrec1-3 and negative SLASHLIT some/* cases matchrec31/32 (or equally relevant slash tests); note test macros build ordinary, strategic, and GlobSet matchers, so cited tests check actual matching behavior rather than only generated regex text.",
+          "anchors": [
+            {
+              "file": "crates/globset/src/glob.rs",
+              "startLine": 1143,
+              "endLine": 1170
+            },
+            {
+              "file": "crates/globset/src/glob.rs",
+              "startLine": 1174,
+              "endLine": 1200
+            },
+            {
+              "file": "crates/globset/src/glob.rs",
+              "startLine": 1406,
+              "endLine": 1409
+            },
+            {
+              "file": "crates/globset/src/glob.rs",
+              "startLine": 1550,
+              "endLine": 1562
+            }
+          ],
+          "binary": true
+        }
+      ],
+      "criticalFalseClaims": [
+        "literal_separator is enabled by default",
+        "literal_separator(true) prevents all recursive ** matching",
+        "Single-star necessarily has shell's separator semantics regardless of configuration"
+      ]
+    },
+    {
+      "id": "ghcli-01",
+      "criteria": [
+        {
+          "id": "C1",
+          "requirement": "Root PersistentPreRunE rejects only when IsAuthCheckEnabled && !CheckAuth; CheckAuth passes from HasEnvToken or nonempty configured Hosts. This function is a local presence/configuration gate, not a network validation of token correctness.",
+          "anchors": [
+            {
+              "file": "pkg/cmd/root/root.go",
+              "startLine": 83,
+              "endLine": 96
+            },
+            {
+              "file": "pkg/cmdutil/auth_check.go",
+              "startLine": 29,
+              "endLine": 39
+            }
+          ],
+          "binary": true
+        },
+        {
+          "id": "C2",
+          "requirement": "Help/completion names bypass; command annotation on command or visited non-root ancestor disables check; a flagged exemption applies to a set flag (Flags.Visit), not merely registration. Cite Test_IsAuthCheckEnabled cases distinguishing flag set and unset.",
+          "anchors": [
+            {
+              "file": "pkg/cmdutil/auth_check.go",
+              "startLine": 11,
+              "endLine": 26
+            },
+            {
+              "file": "pkg/cmdutil/auth_check.go",
+              "startLine": 41,
+              "endLine": 65
+            },
+            {
+              "file": "pkg/cmdutil/auth_check_test.go",
+              "startLine": 59,
+              "endLine": 118
+            }
+          ],
+          "binary": true
+        },
+        {
+          "id": "C3",
+          "requirement": "Rejection prints codespace-scope login for direct parent Use codespace; otherwise authHelp prioritizes GITHUB_ACTIONS == true, then nonempty CI, then interactive login/token help, and root returns AuthError.",
+          "anchors": [
+            {
+              "file": "pkg/cmd/root/root.go",
+              "startLine": 85,
+              "endLine": 93
+            },
+            {
+              "file": "pkg/cmd/root/help.go",
+              "startLine": 225,
+              "endLine": 243
+            }
+          ],
+          "binary": true
+        },
+        {
+          "id": "C4",
+          "requirement": "Identify Test_CheckAuth no-known-host/no-token false, environment GITHUB_TOKEN true, known host true, enterprise token true; cite focused source test. Cite existing exemption tests (command, unset flag, set flag) rather than claiming root integration/network tests were run.",
+          "anchors": [
+            {
+              "file": "pkg/cmdutil/auth_check_test.go",
+              "startLine": 12,
+              "endLine": 55
+            },
+            {
+              "file": "pkg/cmdutil/auth_check_test.go",
+              "startLine": 74,
+              "endLine": 118
+            }
+          ],
+          "binary": true
+        }
+      ],
+      "criticalFalseClaims": [
+        "CheckAuth makes a network request to validate credentials",
+        "Merely registering an exempt flag always skips authentication",
+        "All root commands always require stored credentials",
+        "CI help takes priority over GITHUB_ACTIONS=true"
+      ]
+    },
+    {
+      "id": "ghcli-02",
+      "criteria": [
+        {
+          "id": "C1",
+          "requirement": "Root selects shell constructor for valid configured expansion starting !, otherwise regular constructor. Regular RunE calls expandAlias, sets root args, and root.Execute; shell RunE calls expandShellAlias then exec.Command/PrepareCmd.Run with IO streams.",
+          "anchors": [
+            {
+              "file": "pkg/cmd/root/root.go",
+              "startLine": 207,
+              "endLine": 229
+            },
+            {
+              "file": "pkg/cmd/root/alias.go",
+              "startLine": 20,
+              "endLine": 40
+            },
+            {
+              "file": "pkg/cmd/root/alias.go",
+              "startLine": 53,
+              "endLine": 64
+            }
+          ],
+          "binary": true
+        },
+        {
+          "id": "C2",
+          "requirement": "Regular expansion substitutes numbered placeholders, shell-splits result and appends trailing extra args. Use test's issue list --author=$1 --label=$2 with vilmibm,epic,-R,monalisa/testing giving author/label plus trailing -R monalisa/testing; remaining $digit returns not-enough-arguments error.",
+          "anchors": [
+            {
+              "file": "pkg/cmd/root/alias.go",
+              "startLine": 80,
+              "endLine": 103
+            },
+            {
+              "file": "pkg/cmd/root/alias_test.go",
+              "startLine": 31,
+              "endLine": 52
+            }
+          ],
+          "binary": true
+        },
+        {
+          "id": "C3",
+          "requirement": "Shell expansion finds sh, strips leading !, creates [sh,-c,script] and if args adds -- then original args rather than Go performing numbered substitutions. Cite shell test expected /usr/bin/sh,-c,git branch checkout,--,123.",
+          "anchors": [
+            {
+              "file": "pkg/cmd/root/alias.go",
+              "startLine": 106,
+              "endLine": 124
+            },
+            {
+              "file": "pkg/cmd/root/alias_test.go",
+              "startLine": 75,
+              "endLine": 100
+            }
+          ],
+          "binary": true
+        },
+        {
+          "id": "C4",
+          "requirement": "Shell discovery failure propagates without execution; cite unable-to-find-sh test. Shell process exit error is wrapped ExternalCommandExitError; other execution errors wrapped failed-to-run message. Regular and shell aliases disable flag parsing and auth check.",
+          "anchors": [
+            {
+              "file": "pkg/cmd/root/alias.go",
+              "startLine": 29,
+              "endLine": 45
+            },
+            {
+              "file": "pkg/cmd/root/alias.go",
+              "startLine": 66,
+              "endLine": 76
+            },
+            {
+              "file": "pkg/cmd/root/alias.go",
+              "startLine": 112,
+              "endLine": 115
+            },
+            {
+              "file": "pkg/cmd/root/alias_test.go",
+              "startLine": 101,
+              "endLine": 120
+            }
+          ],
+          "binary": true
+        }
+      ],
+      "criticalFalseClaims": [
+        "Regular aliases always spawn a shell",
+        "Shell aliases use expandAlias's Go numbered replacement algorithm",
+        "Unavailable shell silently falls back to regular alias execution",
+        "Missing regular positional arguments are silently ignored"
+      ]
+    }
+  ]
+}
