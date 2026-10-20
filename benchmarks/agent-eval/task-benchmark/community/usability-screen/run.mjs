@@ -108,10 +108,12 @@ export async function runCell(manifest, frozen, cell, dependencies = {}) {
   const meta = { cell, model, freezeHash: digest(frozen), status: 'allocated', grade: { status: 'pending', resolved: null } };
   save(metaPath, meta, true);
   try {
-    const prepared = await (dependencies.prepare ?? prepareCommunitySlot)({ task, arm, runtime: manifest.runtime, dir, timeoutMs: manifest.timeoutMs });
+    const parentInstanceId = process.env.TASK_BENCHMARK_WORKER_INSTANCE_ID ?? null;
+    const prepared = await (dependencies.prepare ?? prepareCommunitySlot)({ task, arm, runtime: { ...manifest.runtime, parentInstanceId }, dir, timeoutMs: manifest.timeoutMs });
     const receipt = await (dependencies.attempt ?? runDshAttempt)({ installRoot: manifest.runtime.dshRoot, nodeCommand: manifest.runtime.node, attemptDir: path.join(dir, 'dsh'), root: prepared.root,
       provider: model.provider, model: model.id, reasoningEffort: model.reasoningEffort, supportsStrictMode: model.supportsStrictMode, bridgeEntry: path.join(HERE, '..', '..', 'bridge.mjs'), bridgeConfig: prepared.bridgeConfig,
-      prompt: buildPrompt(task), timeoutMs: manifest.timeoutMs, maxOutputTokens: manifest.maxOutputTokens });
+      prompt: buildPrompt(task), timeoutMs: manifest.timeoutMs, maxOutputTokens: manifest.maxOutputTokens,
+      bridgeTransport: manifest.runtime.bridgeTransport ?? 'stdio', parentInstanceId });
     const audit = auditAttempt(receipt, { ...cell, arm: arm.id, cohort: 'context' });
     const unchanged = (dependencies.verify ?? verifyCommunitySource)(prepared.root, prepared.entries);
     const { promptedAtMs, turnEndedAtMs } = receipt.timings ?? {};

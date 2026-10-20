@@ -4,6 +4,7 @@ import { spawn } from 'node:child_process';
 import { parseArgs } from 'node:util';
 import { fileURLToPath } from 'node:url';
 import { loadSdk, connectNative, checkedFlags, hash, writeJson } from './rpc.mjs';
+import { createLifecycle, observeChild } from './lifecycle.mjs';
 
 export const MAX_BYTES = 16 * 1024;
 export const MAX_READ_LINES = 300;
@@ -47,7 +48,7 @@ export function validateConfig(input) {
     if (!Array.isArray(args) || args.some(arg => typeof arg !== 'string')) throw new Error('native.args must be a string array');
     native = { command, args, cwd, env: checkedFlags({ ...checkedFlags(env), ...checkedFlags(input.nativeEnv) }) };
   } else if (input.nativeEnv && Object.keys(input.nativeEnv).length) throw new Error('ordinary has no nativeEnv');
-  return { root, evidenceDir, rgCommand, sdkRoot, arm: input.arm, native };
+  return { root, evidenceDir, rgCommand, sdkRoot, arm: input.arm, native, ...(input.lifecycle ? { lifecycle: input.lifecycle } : {}) };
 }
 
 function utf8Prefix(text, limit) {
@@ -81,8 +82,11 @@ export async function createBridge(input, { sdk = undefined, signal = undefined 
   const { root, evidenceDir, arm } = config;
   fs.mkdirSync(evidenceDir, { recursive: true });
   sdk ??= loadSdk(config.sdkRoot);
-  let native, server, closeTask;
-  const sourceChildren = new Set();
+  let native, closeTask;
+  const servers = new Set(), activeCalls = new Set();
+  const sourceChildren = new Map();
+  const lifecycle = config.lifecycle && createLifecycle({ ...config.lifecycle, role: 'bridge-service' });
+  const childOptions = lifecycle && { ...config.lifecycle, parentInstanceId: lifecycle.instanceId };
   const excludedFiles = new Set();
   if (config.native) {
     for (let i = 0; i < config.native.args.length - 1; i++) {
@@ -109,17 +113,20 @@ export async function createBridge(input, { sdk = undefined, signal = undefined 
       const relative = path.relative(root, excluded).replaceAll('\\', '/');
       rgArgs.push('--glob', `!/${relative}`, '--glob', `!/${relative}/**`, '--glob', `!/${relative}-*`);
     }
+    const receipt = lifecycle && createLifecycle({ ...childOptions, role: 'ripgrep' });
     const child = spawn(config.rgCommand, [...rgArgs, '--', '.'], { cwd: root, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'], env: sdk.getDefaultEnvironment() });
-    sourceChildren.add(child);
+    const ownership = receipt && observeChild(child, receipt);
+    sourceChildren.set(child, ownership);
+    const kill = reason => ownership ? ownership.requestKill('SIGTERM', reason) : child.kill();
     const chunks = [];
     let bytes = 0, stderr = '', truncated = false, timedOut = false;
     child.stdout.on('data', chunk => {
       const remaining = MAX_BYTES + 4 - bytes;
       if (remaining > 0) { const part = chunk.subarray(0, remaining); chunks.push(part); bytes += part.length; }
-      if (bytes > MAX_BYTES) { truncated = true; child.kill(); }
+      if (bytes > MAX_BYTES && !truncated) { truncated = true; kill('output-truncated'); }
     });
     child.stderr.on('data', chunk => { stderr = utf8Prefix(stderr + chunk.toString(), MAX_BYTES); });
-    const timer = setTimeout(() => { timedOut = true; child.kill(); }, 15_000);
+    const timer = setTimeout(() => { timedOut = true; kill('source-timeout'); }, 15_000);
     let exit;
     try {
       exit = await new Promise((resolve, reject) => { child.once('error', reject); child.once('close', (code, signal) => resolve({ code, signal })); });
@@ -153,16 +160,18 @@ export async function createBridge(input, { sdk = undefined, signal = undefined 
   async function close() {
     closeTask ??= (async () => {
       const children = [...sourceChildren];
-      for (const child of children) child.kill();
-      const outcomes = await Promise.allSettled([native?.close(), server?.close(), ...children.map(child => new Promise(resolve => child.once('close', resolve)))]);
+      for (const [child, ownership] of children) ownership ? ownership.requestKill('SIGTERM', 'bridge-shutdown') : child.kill();
+      const outcomes = await Promise.allSettled([...activeCalls, ...[...servers].map(server => server.close()), ...children.map(([child, ownership]) => ownership?.closed ?? new Promise(resolve => child.once('close', resolve)))]);
+      try { await native?.close(); } catch (error) { outcomes.push({ status: 'rejected', reason: error }); }
       const failure = outcomes.find(outcome => outcome.status === 'rejected');
+      lifecycle?.event(failure ? 'cleanup-failed' : 'instance-completed', failure ? { message: failure.reason.message } : {});
       if (failure) throw failure.reason;
     })();
     return closeTask;
   }
   try {
     signal?.throwIfAborted();
-    if (config.native) native = await connectNative(sdk, config.native, evidenceDir, signal);
+    if (config.native) native = await connectNative(sdk, config.native, evidenceDir, signal, childOptions);
     signal?.throwIfAborted();
     if (native) {
       const actual = native.tools.map(tool => tool.name);
@@ -176,7 +185,7 @@ export async function createBridge(input, { sdk = undefined, signal = undefined 
       sourceBounds: { textBytes: MAX_BYTES, readLines: MAX_READ_LINES }, native: native?.metadata ?? null,
       instructionPolicy: 'Native server instructions passed verbatim through MCP initialization when present. Native tool descriptions retained verbatim; root selectors fixed by bridge.' });
     let serial = 0;
-    async function callTool(params) {
+    async function dispatch(params) {
       const call = ++serial;
       const id = String(call).padStart(4, '0');
       const started = Date.now();
@@ -204,13 +213,23 @@ export async function createBridge(input, { sdk = undefined, signal = undefined 
         isError: response.isError ?? false, nativeResponseUnmodified: Boolean(forwarded && !error), ...(forwarded ? { native: nativeReceipt } : {}) });
       return response;
     }
-    server = new sdk.Server({ name: 'task-benchmark-readonly', version: '1' }, {
-      capabilities: { tools: {} },
-      ...(native?.metadata.instructions != null ? { instructions: native.metadata.instructions } : {}),
-    });
-    server.setRequestHandler(sdk.ListToolsRequestSchema, async () => ({ tools }));
-    server.setRequestHandler(sdk.CallToolRequestSchema, request => callTool(request.params));
-    return { config, tools, callTool, close, connect: () => server.connect(new sdk.StdioServerTransport()) };
+    function callTool(params) {
+      const task = dispatch(params); activeCalls.add(task);
+      task.then(() => activeCalls.delete(task), () => activeCalls.delete(task));
+      return task;
+    }
+    function createServer() {
+      const server = new sdk.Server({ name: 'task-benchmark-readonly', version: '1' }, {
+        capabilities: { tools: {} },
+        ...(native?.metadata.instructions != null ? { instructions: native.metadata.instructions } : {}),
+      });
+      server.setRequestHandler(sdk.ListToolsRequestSchema, async () => ({ tools }));
+      server.setRequestHandler(sdk.CallToolRequestSchema, request => callTool(request.params));
+      servers.add(server);
+      server.onclose = () => servers.delete(server);
+      return server;
+    }
+    return { config, tools, callTool, close, createServer, lifecycle, connect: () => createServer().connect(new sdk.StdioServerTransport()) };
   } catch (error) {
     try { await close(); } catch (cleanupError) { console.error(`Bridge cleanup failed: ${cleanupError.message}`); }
     throw error;

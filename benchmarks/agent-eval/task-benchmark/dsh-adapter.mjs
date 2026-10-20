@@ -7,8 +7,9 @@ import { performance } from 'node:perf_hooks';
 import { pathToFileURL } from 'node:url';
 
 /** The minimal SDK tree has no skills, shell, network or subagent tools after this overlay. */
-export function makeDshOverlay({ attemptDir, root, provider, model, supportsStrictMode, nodeCommand, bridgeEntry, bridgeConfig }) {
+export function makeDshOverlay({ attemptDir, root, provider, model, supportsStrictMode, nodeCommand, bridgeEntry, bridgeConfig, bridgeUrl }) {
   if (Boolean(bridgeEntry) !== Boolean(bridgeConfig)) throw new Error('bridgeEntry and bridgeConfig must be supplied together');
+  if (bridgeUrl && bridgeEntry) throw new Error('bridgeUrl and stdio bridge configuration are mutually exclusive');
   if (supportsStrictMode !== undefined && typeof supportsStrictMode !== 'boolean') throw new Error('supportsStrictMode must be a boolean when supplied');
   const inserted = [
     { id: 'eval-credentials', name: '@deepseek-ai/dsh-credentials-local', config: { watch: false } },
@@ -18,10 +19,10 @@ export function makeDshOverlay({ attemptDir, root, provider, model, supportsStri
           ...(supportsStrictMode === undefined ? {} : { compat: { supportsStrictMode } }) }] },
     } } },
   ];
-  if (bridgeEntry) inserted.push({ id: 'eval-tools', name: '@deepseek-ai/dsh-mcp-client', config: {
-    transport: 'stdio', serverName: 'repo', command: nodeCommand,
+  if (bridgeEntry || bridgeUrl) inserted.push({ id: 'eval-tools', name: '@deepseek-ai/dsh-mcp-client', config: {
+    ...(bridgeUrl ? { transport: 'streamable-http', url: bridgeUrl, headers: {} } : { transport: 'stdio', command: nodeCommand,
     args: [path.resolve(bridgeEntry), '--config', path.resolve(bridgeConfig)], cwd: root,
-    env: {}, toolCallTimeoutMs: 60000, failOnStartupError: true, reconnect: { enabled: false },
+    env: {} }), serverName: 'repo', toolCallTimeoutMs: 60000, failOnStartupError: true, reconnect: { enabled: false },
   } });
   return [
     ...['llm-deepseek', 'persistent-bash', 'persistent-pwsh', 'llm-retry', 'session-title', 'mcp-resources'].map(id => ({ id, disabled: true })),

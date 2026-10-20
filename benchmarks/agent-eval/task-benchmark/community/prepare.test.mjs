@@ -86,6 +86,26 @@ test('source verification reports unexpected source and byte drift', () => {
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });
 
+test('HTTP source-first CodeFacts preparation starts no native process or semantic tool', async t => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'community-http-source-first-'));
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  const sourceRoot = path.join(dir, 'snapshot', 'source'); fs.mkdirSync(sourceRoot, { recursive: true });
+  fs.writeFileSync(path.join(sourceRoot, 'sample.rs'), 'fn sample() {}\n');
+  const bytes = fs.readFileSync(path.join(sourceRoot, 'sample.rs'));
+  const entries = [{ path: 'sample.rs', bytes: bytes.length, sha256: hash(bytes), mode: '100644' }];
+  const task = { instanceId: 'fixture-http', repo: 'fixture/repo', baseCommit: 'a'.repeat(40), sourceRoot, cohort: 'context' };
+  writeJson(path.join(dir, 'snapshot', 'manifest.json'), { ...task, entries, digest: hash(entries) });
+  const runtime = { sdkRoot: path.join(dir, 'SDK-MUST-NOT-LOAD'), rg: path.join(dir, 'rg'), contextGitMode: 'boundary-only', bridgeTransport: 'streamable-http' };
+  for (const id of ['codefacts017', 'codefacts022']) {
+    const prepared = await prepareCommunitySlot({ task, arm: { id, executable: path.join(dir, 'NATIVE-MUST-NOT-START') }, runtime, dir: path.join(dir, id) });
+    assert.equal(prepared.setup.native, null);
+    assert.match(prepared.setup.preparationPolicy, /no native MCP process or semantic tool/);
+    assert.equal(fs.existsSync(path.join(dir, id, 'setup', 'native-wire.jsonl')), false);
+    assert.equal(fs.existsSync(path.join(dir, id, 'setup', 'map.json')), false);
+    assert.equal(JSON.parse(fs.readFileSync(prepared.bridgeConfig, 'utf8')).native.command, path.join(dir, 'NATIVE-MUST-NOT-START'));
+  }
+});
+
 test('read-only Context can share immutable bytes while repair sources remain independent', async t => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'community-materialize-'));
   t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
