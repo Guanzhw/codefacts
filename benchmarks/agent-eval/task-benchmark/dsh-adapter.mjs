@@ -3,8 +3,15 @@ import path from 'node:path';
 import readline from 'node:readline';
 import { spawn } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
+import { createRequire } from 'node:module';
 import { performance } from 'node:perf_hooks';
 import { pathToFileURL } from 'node:url';
+
+/** Resolve DSH's token-meter through its public client export from the installed SDK tree. */
+export function resolveDshTokenMeterClient(installRoot) {
+  const require = createRequire(path.join(path.resolve(installRoot), 'package.json'));
+  return pathToFileURL(require.resolve('@deepseek-ai/dsh-token-meter/client')).href;
+}
 
 /** The minimal SDK tree has no skills, shell, network or subagent tools after this overlay. */
 export function makeDshOverlay({ attemptDir, root, provider, model, supportsStrictMode, nodeCommand, bridgeEntry, bridgeConfig, bridgeUrl }) {
@@ -85,8 +92,7 @@ export async function runDshAttempt({ installRoot, nodeCommand = process.execPat
   if (!probeOnly && typeof prompt !== 'string') throw new Error('prompt must be a string');
   if (!probeOnly && !process.env.OPENCODE_API_KEY) throw new Error('OPENCODE_API_KEY missing; no process started');
   const overlay = makeDshOverlay({ attemptDir, root, provider, model, supportsStrictMode, nodeCommand, bridgeEntry, bridgeConfig });
-  const { deriveTurnTokenUsage } = await import(pathToFileURL(path.join(installRoot,
-    'node_modules/@deepseek-ai/dsh-token-meter/lib/types/client.js')).href);
+  const { deriveTurnTokenUsage } = await import(resolveDshTokenMeterClient(installRoot));
   fs.mkdirSync(path.dirname(attemptDir), { recursive: true });
   fs.mkdirSync(attemptDir); // Exclusive namespace: never overwrite an allocated attempt.
   const secret = process.env.OPENCODE_API_KEY;

@@ -4,8 +4,8 @@ import readline from 'node:readline';
 import { spawn } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { performance } from 'node:perf_hooks';
-import { pathToFileURL, fileURLToPath } from 'node:url';
-import { makeDshOverlay as makeBaseDshOverlay } from '../dsh-adapter.mjs';
+import { fileURLToPath } from 'node:url';
+import { makeDshOverlay as makeBaseDshOverlay, resolveDshTokenMeterClient } from '../dsh-adapter.mjs';
 import { recoverKnownUsage } from '../usage-recovery.mjs';
 import { startHttpBridge } from '../http-owner.mjs';
 import { createLifecycle, observeChild } from '../lifecycle.mjs';
@@ -122,8 +122,7 @@ export async function runDshAttempt(input) {
 
 async function runDshAttemptImpl({ installRoot, nodeCommand, attemptDir, root, provider, model, reasoningEffort,
   lifecycleOptions, prompt, timeoutMs, probeOnly, maxOutputTokens }, overlay) {
-  const { deriveTurnTokenUsage } = await import(pathToFileURL(path.join(installRoot,
-    'node_modules/@deepseek-ai/dsh-token-meter/lib/types/client.js')).href);
+  const { deriveTurnTokenUsage } = await import(resolveDshTokenMeterClient(installRoot));
   fs.mkdirSync(path.dirname(attemptDir), { recursive: true });
   fs.mkdirSync(attemptDir); // Exclusive namespace: never overwrite an allocated attempt.
   const secret = process.env.OPENCODE_API_KEY;

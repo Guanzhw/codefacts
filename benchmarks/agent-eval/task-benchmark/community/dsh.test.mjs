@@ -3,8 +3,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { DEFAULT_MAX_OUTPUT_TOKENS, makeDshOverlay, runDshAttempt, summarizeDshEvents } from './dsh.mjs';
-import { runDshAttempt as runBaseDshAttempt } from '../dsh-adapter.mjs';
+import { resolveDshTokenMeterClient, runDshAttempt as runBaseDshAttempt } from '../dsh-adapter.mjs';
 
 const selection = { provider: 'opencode-go', model: 'deepseek-v4.1-flash', reasoningEffort: 'high' };
 const observed = { uncachedInputTokens: 5, outputTokens: 2, totalTokens: 107, cacheReadTokens: 100 };
@@ -157,13 +158,22 @@ test('community overlay disables native tools added by SDK 0.2.1', () => {
   assert.throws(() => makeDshOverlay({ ...options, bridgeEntry: '/bridge' }), /supplied together/);
 });
 
-function fakeSdk(directory, { terminalDelayMs = 0, shutdownDelayMs = 0 } = {}) {
-  const installRoot = path.join(directory, 'sdk');
-  const meter = path.join(installRoot, 'node_modules/@deepseek-ai/dsh-token-meter/lib/types');
+function fakeSdk(directory, { terminalDelayMs = 0, shutdownDelayMs = 0, meterLayout = 'nested' } = {}) {
+  const installRoot = meterLayout === 'hoisted'
+    ? path.join(directory, 'prefix/node_modules/@deepseek-ai/dsh')
+    : path.join(directory, 'sdk');
+  const meterPackage = meterLayout === 'hoisted'
+    ? path.join(path.dirname(installRoot), 'dsh-token-meter')
+    : path.join(installRoot, 'node_modules/@deepseek-ai/dsh-token-meter');
+  const meter = path.join(meterPackage, 'lib/types');
   fs.mkdirSync(meter, { recursive: true });
-  fs.mkdirSync(path.join(installRoot, 'lib'));
+  fs.mkdirSync(path.join(installRoot, 'lib'), { recursive: true });
   fs.writeFileSync(path.join(installRoot, 'package.json'), '{"type":"module"}');
-  fs.writeFileSync(path.join(meter, '../../package.json'), '{"type":"module"}');
+  fs.writeFileSync(path.join(meterPackage, 'package.json'), JSON.stringify({
+    name: '@deepseek-ai/dsh-token-meter',
+    type: 'module',
+    exports: { './client': './lib/types/client.js', './package.json': './package.json' },
+  }));
   fs.writeFileSync(path.join(meter, 'client.js'), `export const deriveTurnTokenUsage = () => (${JSON.stringify(observed)});`);
   fs.writeFileSync(path.join(installRoot, 'lib/bin.js'), `
     import readline from 'node:readline';
@@ -209,6 +219,37 @@ test('both SDK run helpers persist the selected model compatibility in their ove
     const attemptDir = path.join(directory, `${name}-invalid`);
     await assert.rejects(run({ installRoot, attemptDir, root: directory, supportsStrictMode: null,
       probeOnly: true }), /supportsStrictMode must be a boolean/);
+    assert.equal(fs.existsSync(attemptDir), false);
+  }
+});
+
+test('both SDK helpers load the exported token-meter client from nested and hoisted npm layouts', async t => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'codefacts-dsh-resolution-'));
+  t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
+  for (const meterLayout of ['nested', 'hoisted']) {
+    const installRoot = fakeSdk(path.join(directory, meterLayout), { meterLayout });
+    const resolved = fileURLToPath(resolveDshTokenMeterClient(installRoot));
+    assert.equal(resolved, fs.realpathSync(path.join(meterLayout === 'hoisted'
+      ? path.dirname(installRoot) : installRoot, meterLayout === 'hoisted'
+        ? 'dsh-token-meter/lib/types/client.js' : 'node_modules/@deepseek-ai/dsh-token-meter/lib/types/client.js')));
+    for (const [name, run] of [['base', runBaseDshAttempt], ['community', runDshAttempt]]) {
+      const receipt = await run({ installRoot, attemptDir: path.join(directory, `${meterLayout}-${name}`),
+        root: directory, ...selection, probeOnly: true, timeoutMs: 10000 });
+      assert.equal(receipt.status, 'probe-completed', `${meterLayout} ${name}`);
+    }
+  }
+});
+
+test('missing token-meter export fails explicitly before allocating an attempt', async t => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'codefacts-dsh-missing-meter-'));
+  t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
+  const installRoot = path.join(directory, 'sdk');
+  fs.mkdirSync(installRoot);
+  fs.writeFileSync(path.join(installRoot, 'package.json'), '{"type":"module"}');
+  for (const [name, run] of [['base', runBaseDshAttempt], ['community', runDshAttempt]]) {
+    const attemptDir = path.join(directory, name);
+    await assert.rejects(run({ installRoot, attemptDir, root: directory, ...selection, probeOnly: true }), error =>
+      error.code === 'MODULE_NOT_FOUND' && error.message.includes('@deepseek-ai/dsh-token-meter/client'));
     assert.equal(fs.existsSync(attemptDir), false);
   }
 });
