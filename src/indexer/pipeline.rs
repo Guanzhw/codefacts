@@ -331,12 +331,11 @@ fn profile_refresh_pass1<T>(
             paths,
             root,
             start,
-            thread: Some(scope.spawn(move || loop {
-                match receiver.recv_timeout(Duration::from_secs(1)) {
-                    Err(mpsc::RecvTimeoutError::Timeout) => {
-                        progress.snapshot(paths, root, start, None);
-                    }
-                    _ => break,
+            thread: Some(scope.spawn(move || {
+                while let Err(mpsc::RecvTimeoutError::Timeout) =
+                    receiver.recv_timeout(Duration::from_secs(1))
+                {
+                    progress.snapshot(paths, root, start, None);
                 }
             })),
         };
