@@ -144,14 +144,26 @@ impl<'a> IndexingPipeline<'a> {
     /// Index an entire directory tree.
     pub fn index_directory(&self, options: &IndexOptions) -> Result<IndexResult> {
         let start = Instant::now();
+        let profile_refresh = std::env::var_os("CODEFACTS_PROFILE_REFRESH").is_some();
+        let trace = |phase: &str| {
+            if profile_refresh {
+                eprintln!(
+                    "CODEFACTS_PROFILE_REFRESH phase={phase} elapsed_ms={:.3}",
+                    start.elapsed().as_secs_f64() * 1000.0
+                );
+            }
+        };
+        trace("start");
         let root = &options.root_dir;
         // Schema migrations can retain old rows only long enough to discover
         // the repository; their relationship evidence is not trustworthy.
         // Force one source pass, then return to the incremental path.
         let incremental = options.incremental && !self.store.full_reindex_required()?;
+        trace("reindex-marker");
 
         // ---- Collect files ----
         let file_paths = collect_files(root)?;
+        trace("collect");
 
         let current_paths: HashSet<String> = file_paths
             .iter()
@@ -161,10 +173,12 @@ impl<'a> IndexingPipeline<'a> {
             })
             .map(|path| path.to_string_lossy().replace('\\', "/"))
             .collect();
+        trace("current-paths");
 
         // Pre-fetch all file hashes for incremental checks (before rayon).
         // This avoids touching the non-Sync Connection from parallel threads.
         let stored_hashes = self.store.get_file_hashes()?;
+        trace("stored-hashes");
         let skip_counts = FileSkipCounts::default();
 
         // ---- Pass 1: parse & extract nodes (parallel via rayon) ----
@@ -262,6 +276,7 @@ impl<'a> IndexingPipeline<'a> {
                 })
             })
             .collect();
+        trace("parse-sources");
 
         let reindexed_paths: HashSet<&str> = parsed
             .iter()
@@ -286,11 +301,13 @@ impl<'a> IndexingPipeline<'a> {
             removed_nodes.extend(self.store.get_nodes_by_file(path)?);
         }
         let removed_path_set: HashSet<&str> = removed_paths.iter().map(String::as_str).collect();
+        trace("removed-paths");
 
         // Source hashes have been checked. With no successful replacements or
         // deletions, incremental refresh has no facts or metadata to mutate.
         // Retain skip/failure counts even when the prior snapshot is partial.
         if incremental && parsed.is_empty() && removed_paths.is_empty() {
+            trace("unchanged-return");
             return Ok(IndexResult {
                 files_indexed: 0,
                 files_skipped: skip_counts.total(),
