@@ -107,9 +107,15 @@ traverses static relationships within that selected project.
 `explore` without arguments gives a repository orientation. A `query` selects
 source lexically, including documentation and package manifests, and returns
 bounded source cards and static relationships. `file_path`/`start_line` or a
-`reads` array selects explicit ranges for follow-up. Its `max_bytes` is a total
-UTF-8 response budget from 2,000 through 32,000 bytes (default 24,000), including
-metadata. Read source and hashes are checked against current disk content.
+`reads` array selects up to eight explicit ranges from indexed source or
+`package.json`/`Cargo.toml` for follow-up. Mixed batches retain verified ranges
+and identify unindexed or past-EOF inputs as unavailable; a single-range request
+with an unavailable input or a batch with no readable ranges returns an error.
+Verified ranges can still be incomplete or omitted by the response budget, as
+the text reports.
+Its `max_bytes` is a total UTF-8 response budget from 2,000 through 32,000 bytes
+(default 24,000), including metadata. Read source and hashes are checked against
+current disk content.
 Lexical matching can miss a paraphrased task; use concrete identifiers or paths.
 
 `impact` selects one confirmed symbol with `symbol` and optional `file_path`.
