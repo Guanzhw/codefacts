@@ -28,6 +28,83 @@ fn downgrade(database: &std::path::Path) {
 }
 
 #[test]
+fn directory_walk_failure_preserves_the_last_verified_snapshot() {
+    let workspace = tempdir().unwrap();
+    let repository = workspace.path().join("repository");
+    let relocated = workspace.path().join("relocated");
+    fs::create_dir(&repository).unwrap();
+    fs::write(
+        repository.join("target.py"),
+        "def target():\n    return 1\n",
+    )
+    .unwrap();
+    fs::write(
+        repository.join("caller.py"),
+        "from target import target\n\ndef caller():\n    return target()\n",
+    )
+    .unwrap();
+    let database = workspace.path().join("facts.sqlite");
+    let facts = CodeFacts::open_with_lsp(&repository, &database, LspMode::Off).unwrap();
+    let first = facts.map().unwrap();
+    assert_eq!(first["indexed_files"], 2);
+    assert!(first["relationships"].as_u64().unwrap() > 0);
+
+    let conn = Connection::open(&database).unwrap();
+    let snapshot = || {
+        [
+            "SELECT * FROM nodes ORDER BY id",
+            "SELECT * FROM edges ORDER BY id",
+            "SELECT * FROM file_hashes ORDER BY file_path",
+            "SELECT * FROM unresolved_refs ORDER BY id",
+            "SELECT * FROM index_metadata ORDER BY key",
+        ]
+        .map(|query| {
+            let mut statement = conn.prepare(query).unwrap();
+            let columns = statement.column_count();
+            statement
+                .query_map([], |row| {
+                    (0..columns)
+                        .map(|column| row.get::<_, rusqlite::types::Value>(column))
+                        .collect::<rusqlite::Result<Vec<_>>>()
+                })
+                .unwrap()
+                .collect::<rusqlite::Result<Vec<_>>>()
+                .unwrap()
+        })
+    };
+    let before = snapshot();
+
+    // A missing root produces a real walker error on every supported platform.
+    // Keep SQLite outside that root so its prior facts remain inspectable.
+    fs::rename(&repository, &relocated).unwrap();
+    let result = facts.map();
+    fs::rename(&relocated, &repository).unwrap();
+    let error = result.expect_err("discovery failure must abort the read workflow");
+    let message = error.to_string();
+    assert!(
+        message.contains("Failed to discover source files"),
+        "{message}"
+    );
+    assert!(
+        message.contains(&facts.root().display().to_string()),
+        "{message}"
+    );
+    assert_eq!(snapshot(), before);
+
+    let recovered = facts.map().unwrap();
+    assert_eq!(recovered["freshness"]["status"], "fresh");
+    assert_eq!(
+        recovered["freshness"]["generation"],
+        first["freshness"]["generation"]
+    );
+    assert_eq!(recovered["files_indexed_this_refresh"], 0);
+    assert_eq!(recovered["indexed_files"], 2);
+    assert_eq!(recovered["symbols"], first["symbols"]);
+    assert_eq!(recovered["relationships"], first["relationships"]);
+    assert_eq!(snapshot(), before);
+}
+
+#[test]
 fn fresh_partial_reuses_verified_files_and_retries_omissions() {
     let repository = tempdir().unwrap();
     let state = tempdir().unwrap();
