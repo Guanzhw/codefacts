@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { setTimeout as delay } from 'node:timers/promises';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { createBridge, MAX_BYTES, repairTools, validateConfig } from './bridge.mjs';
@@ -44,13 +45,22 @@ await server.connect(new sdk.StdioServerTransport());
   fs.writeFileSync(innerConfig, JSON.stringify({ root, evidenceDir: path.join(root, 'private-evidence'), sdkRoot, closedFile: path.join(tmp, 'inner-closed'), native: { cwd: root, args: ['--state', path.join(root, 'custom-index.db')] } }));
   const helper = path.join(tmp, 'sandbox.mjs');
   fs.writeFileSync(helper, `
+import fs from 'node:fs';
 const argv = process.argv.slice(2);
 const spec = JSON.parse(argv.at(-1));
 if (spec.ignoreTerm) process.on('SIGTERM', () => {});
 if (spec.inspect) console.log(JSON.stringify({ argv, secretInherited: Boolean(process.env.COMMUNITY_SECRET_SENTINEL) }));
 if (spec.stdout) process.stdout.write(spec.stdout.repeat(spec.repeat ?? 1));
 if (spec.stderr) process.stderr.write(spec.stderr.repeat(spec.repeat ?? 1));
-if (spec.endless) setInterval(() => {}, 1000);
+if (spec.releaseFile) {
+  const gate = setInterval(() => {
+    if (!fs.existsSync(spec.releaseFile)) return;
+    clearInterval(gate);
+    if (spec.ending) process.stdout.write(spec.ending);
+    process.exit(spec.exitCode ?? 0);
+  }, 10);
+}
+else if (spec.endless) setInterval(() => {}, 1000);
 else setTimeout(() => { if (spec.ending) process.stdout.write(spec.ending); process.exit(spec.exitCode ?? 0); }, spec.delayMs ?? 0);
 `);
   const config = { root, evidenceDir, sdkRoot, nodeCommand: process.execPath, innerBridgeEntry, innerConfig,
@@ -245,26 +255,38 @@ test('repository inspection and editing have a deterministic serialized source r
     ['operation-start:1', 'operation-end:1', 'operation-start:2', 'operation-end:2', 'operation-start:3', 'operation-end:3']);
 });
 
-test('sandbox is fixed argv with safe environment; jobs return early, poll incrementally and gate source', { skip: !enabled }, async t => {
+test('sandbox is fixed argv with safe environment; jobs return early, poll incrementally and gate source', { skip: !enabled, timeout: 30000 }, async t => {
   const f = fixture(t), bridge = await f.create({ execWaitMs: 50 });
   const prior = process.env.COMMUNITY_SECRET_SENTINEL;
   process.env.COMMUNITY_SECRET_SENTINEL = 'host-only-secret';
   f.closers.push(() => { if (prior === undefined) delete process.env.COMMUNITY_SECRET_SENTINEL; else process.env.COMMUNITY_SECRET_SENTINEL = prior; });
-  const command = JSON.stringify({ inspect: true, delayMs: 600, ending: 'ending\n', payload: '"; $(host-command) `host-command` & < >' });
-  const start = Date.now();
+  const releaseFile = path.join(f.tmp, 'sandbox-release');
+  // Always release the owned child before bridge cleanup on a failed assertion.
+  f.closers.push(() => fs.writeFileSync(releaseFile, 'release'));
+  const command = JSON.stringify({ inspect: true, releaseFile, ending: 'ending\n', payload: '"; $(host-command) `host-command` & < >' });
   const launched = await bridge.callTool({ name: 'source_exec', arguments: { command } });
-  assert.ok(Date.now() - start < 1000);
   const visible = JSON.parse(modelText(launched).split('\n')[0]);
   assert.equal(visible.status, 'running');
   const id = visible.job_id;
+  assert.equal(fs.existsSync(releaseFile), false);
+  assert.ok(!records(f.config, 'events.jsonl').some(record => record.type === 'sandbox-close' && record.job_id === id));
   assert.equal((await bridge.callTool({ name: 'source_list', arguments: {} })).isError, true);
   assert.equal((await bridge.callTool({ name: 'source_edit', arguments: { file_path: 'sample.js', old_text: '', new_text: '' } })).isError, true);
   assert.equal((await bridge.callTool({ name: 'source_exec', arguments: { command } })).isError, true);
   assert.equal((await bridge.callTool({ name: 'source_poll', arguments: { job_id: id, wait_ms: 10001 } })).isError, true);
-  const poll = await bridge.callTool({ name: 'source_poll', arguments: { job_id: id, wait_ms: 1000 } });
+  const pending = await bridge.callTool({ name: 'source_poll', arguments: { job_id: id, wait_ms: 0 } });
+  assert.equal(pending.structuredContent.status, 'running');
+  assert.doesNotMatch(launched.content[0].text + pending.content[0].text, /^ending$/m);
+  fs.writeFileSync(releaseFile, 'release');
+  // Completion is an observed event, not a deadline on a contended host.
+  while (!records(f.config, 'events.jsonl').some(record => record.type === 'sandbox-close' && record.job_id === id)) {
+    await delay(10, undefined, { signal: t.signal });
+  }
+  const poll = await bridge.callTool({ name: 'source_poll', arguments: { job_id: id, wait_ms: 0 } });
   assert.equal(poll.structuredContent.status, 'completed');
-  assert.match(poll.content[0].text, /ending/);
-  const output = launched.content[0].text + poll.content[0].text;
+  assert.match(poll.content[0].text, /^ending$/m);
+  const stdout = response => modelText(response).split('\nstdout:\n')[1].split('\nstderr:\n')[0];
+  const output = [launched, pending, poll].map(stdout).join('');
   assert.match(output, /"secretInherited":false/);
   const line = output.split('\n').find(value => value.startsWith('{"argv"'));
   assert.deepEqual(JSON.parse(line).argv, ['bash', '-lc', command]);
@@ -273,7 +295,7 @@ test('sandbox is fixed argv with safe environment; jobs return early, poll incre
   assert.equal(records(f.config, 'edits.jsonl').length, 0);
   const again = await bridge.callTool({ name: 'source_poll', arguments: { job_id: id, wait_ms: 0 } });
   assert.deepEqual(JSON.parse(modelText(again).split('\n')[0]), { job_id: id, status: 'completed', exit_code: 0 });
-  assert.doesNotMatch(again.content[0].text, /ending/);
+  assert.doesNotMatch(again.content[0].text, /^ending$/m);
   assert.equal((await bridge.callTool({ name: 'source_poll', arguments: { job_id: 'unknown' } })).isError, true);
   const lifecycle = records(f.config, 'events.jsonl').filter(record => record.job_id === id);
   assert.ok(lifecycle.some(record => record.type === 'sandbox-start'));
