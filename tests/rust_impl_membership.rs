@@ -348,24 +348,20 @@ fn missing_legacy_membership_is_absent_and_present_malformed_data_errors() {
             .is_err());
         assert!(store.get_nodes_by_file("fixture.rs").is_err());
     }
-    let owner_id: i64 = conn
-        .query_row("SELECT id FROM rust_impl_owners LIMIT 1", [], |row| {
-            row.get(0)
-        })
-        .unwrap();
-    conn.execute("UPDATE nodes SET rust_impl_owner_id=?1", [owner_id])
-        .unwrap();
     for mutation in [
         "UPDATE rust_impl_owners SET file_path='wrong.rs'",
         "UPDATE rust_impl_owners SET receiver=X'00'",
         "UPDATE rust_impl_owners SET start_line=-1",
         "UPDATE rust_impl_owners SET trait_name=X'00'",
     ] {
-        conn.execute_batch("SAVEPOINT malformed_owner").unwrap();
-        conn.execute(mutation, []).unwrap();
-        assert!(store.get_node(&node.id).is_err(), "{mutation}");
-        conn.execute_batch("ROLLBACK TO malformed_owner; RELEASE malformed_owner")
-            .unwrap();
+        let directory = tempdir().unwrap();
+        let database = directory.path().join("facts.sqlite");
+        let malformed_store = GraphStore::new(database.to_str().unwrap()).unwrap();
+        malformed_store.upsert_node(node).unwrap();
+        let malformed_conn = Connection::open(&database).unwrap();
+        // Commit the external mutation so the store's separate connection sees it.
+        malformed_conn.execute(mutation, []).unwrap();
+        assert!(malformed_store.get_node(&node.id).is_err(), "{mutation}");
     }
 }
 fn metadata(conn: &Connection, key: &str) -> String {
