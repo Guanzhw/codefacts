@@ -172,6 +172,9 @@ fn symbol(
         fields.insert("selector".into(), json!(selector));
     }
     evidence_details(&mut fields, &value["evidence"], false);
+    if let Some(membership) = value.get("rust_impl") {
+        fields.insert("rust_impl".into(), membership.clone());
+    }
     Value::Object(fields)
 }
 
@@ -209,6 +212,9 @@ fn relationships(value: &mut Value, counterpart: &str) {
     for value in value.as_array_mut().expect("relationship list") {
         let mut fields = edge(value);
         fields.insert(counterpart.into(), json!(symbol_ref(&value[counterpart])));
+        if let Some(owner) = value[counterpart].get("rust_impl") {
+            fields.insert(format!("{counterpart}_rust_impl"), owner.clone());
+        }
         let mut details = Map::new();
         evidence_details(&mut details, &value[counterpart]["evidence"], false);
         for (name, value) in details {
@@ -355,6 +361,11 @@ fn impact(fields: &mut Map<String, Value>, ids: &HashSet<String>) {
             "parent".into(),
             json!(symbol_ref(&entry["witness"][parent])),
         );
+        for endpoint in ["from", "to"] {
+            if let Some(owner) = entry["witness"][endpoint].get("rust_impl") {
+                row.insert(format!("{endpoint}_rust_impl"), owner.clone());
+            }
+        }
         let evidence = edge(&entry["witness"]);
         let mut witness = format!(
             "{} @ {}",

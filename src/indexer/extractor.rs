@@ -16,13 +16,16 @@
 //! - Handles all six node kinds and all six edge kinds defined in `types.rs`.
 
 use std::collections::{HashMap, HashSet};
+use std::sync::Arc;
 
 use streaming_iterator::StreamingIterator as _;
 use tree_sitter::{QueryCursor, QueryMatch, Tree};
 
 use crate::error::Result;
 use crate::indexer::parser::CodeParser;
-use crate::types::{make_node_id, CodeEdge, CodeNode, EdgeKind, Language, NodeKind};
+use crate::types::{
+    make_node_id, CodeEdge, CodeNode, EdgeKind, Language, NodeKind, RustImplMembership,
+};
 
 // ---------------------------------------------------------------------------
 // Capture name -> NodeKind mapping
@@ -262,6 +265,7 @@ impl Extractor {
 
         let mut nodes: Vec<CodeNode> = Vec::new();
         let mut seen: HashMap<String, usize> = HashMap::new();
+        let mut rust_impls = HashMap::new();
 
         let mut matches = cursor.matches(&query, tree.root_node(), source_bytes);
         while let Some(m) = matches.next() {
@@ -343,6 +347,11 @@ impl Extractor {
             let start_line = def_node.start_position().row as u32 + 1;
             let end_line = def_node.end_position().row as u32 + 1;
 
+            let rust_impl = if language == Language::Rust {
+                rust_impl_membership(def_node, source_bytes, &mut rust_impls)
+            } else {
+                None
+            };
             let id = make_node_id(kind, file_path, &name, start_line);
 
             // Check if the node is exported (walk parent chain for export_statement).
@@ -405,6 +414,7 @@ impl Extractor {
                         documentation,
                         exported: Some(exported),
                         is_local,
+                        rust_impl,
                     };
                 }
                 continue;
@@ -426,6 +436,7 @@ impl Extractor {
                 documentation,
                 exported: Some(exported),
                 is_local,
+                rust_impl,
             });
         }
 
@@ -1466,9 +1477,41 @@ fn rust_item_source(node: &tree_sitter::Node, source_bytes: &[u8]) -> String {
     attributes.join("\n")
 }
 
-/// Return the lexical Rust module path for an item.  This gives a function in
-/// `mod tests` an explicit, source-derived scope without changing the public
-/// symbol name used for ordinary Rust lookups.
+/// Only direct methods of a syntactically complete impl have membership.
+fn rust_impl_membership(
+    node: &tree_sitter::Node,
+    source_bytes: &[u8],
+    owners: &mut HashMap<usize, Arc<RustImplMembership>>,
+) -> Option<Arc<RustImplMembership>> {
+    if node.kind() != "function_item" {
+        return None;
+    }
+    let body = node.parent()?;
+    let owner = body.parent()?;
+    if body.kind() != "declaration_list" || owner.kind() != "impl_item" || owner.has_error() {
+        return None;
+    }
+    let receiver = owner.child_by_field_name("type")?;
+    Some(
+        owners
+            .entry(owner.id())
+            .or_insert_with(|| {
+                Arc::new(RustImplMembership {
+                    receiver: node_text(&receiver, source_bytes),
+                    trait_name: owner
+                        .child_by_field_name("trait")
+                        .map(|trait_node| node_text(&trait_node, source_bytes)),
+                    start_line: owner.start_position().row as u32 + 1,
+                    start_column: owner.start_position().column as u32,
+                    end_line: owner.end_position().row as u32 + 1,
+                    end_column: owner.end_position().column as u32,
+                })
+            })
+            .clone(),
+    )
+}
+
+/// Return the lexical Rust module path without changing the public raw name.
 fn rust_module_path(node: &tree_sitter::Node, source_bytes: &[u8]) -> Option<String> {
     let mut modules = Vec::new();
     let mut current = node.parent();
@@ -2613,16 +2656,6 @@ class UserService {
 
     #[test]
     fn qualified_name_for_rust_impl_methods() {
-        // In Rust, `impl Point { fn new() {} }` — the struct definition ends
-        // before the impl block. But tree-sitter query captures map the impl
-        // block methods as Method nodes and the impl block itself typically
-        // includes a Class-like capture. The containment logic finds the
-        // enclosing container for Method nodes.
-        //
-        // If the struct and impl are separate, methods may only be enclosed
-        // by the impl block (if it's captured as a Class-like node). The
-        // Rust query captures the struct as a Class and the impl methods as
-        // Methods. The impl block itself gets a class capture named "Point".
         let source = r#"
 struct Point {
     x: f64,
@@ -2641,38 +2674,32 @@ impl Point {
 "#;
         let nodes = parse_and_extract_nodes_file(source, Language::Rust, "lib.rs");
 
-        // Debug: understand what nodes exist and their ranges
         let point_nodes: Vec<_> = nodes.iter().filter(|n| n.name == "Point").collect();
-        let method_nodes: Vec<_> = nodes
+        let methods: Vec<_> = nodes
             .iter()
             .filter(|n| n.kind == NodeKind::Method)
             .collect();
-
-        // Rust impl methods should have Point as enclosing Class (the impl
-        // block's class capture). If there are two "Point" nodes (struct +
-        // impl), the tightest enclosing one is used.
-        for method in &method_nodes {
-            // Check if any Point node encloses this method
-            let enclosed = point_nodes
-                .iter()
-                .any(|p| p.start_line <= method.start_line && method.end_line <= p.end_line);
-            if enclosed {
-                assert!(
-                    method.qualified_name.is_some(),
-                    "method {} should have qualified_name, got None (method lines {}-{}, Point nodes: {:?})",
-                    method.name,
-                    method.start_line,
-                    method.end_line,
-                    point_nodes.iter().map(|p| (p.start_line, p.end_line, &p.kind)).collect::<Vec<_>>()
-                );
-            }
+        assert_eq!(point_nodes.len(), 1);
+        assert_eq!(point_nodes[0].kind, NodeKind::Struct);
+        assert_eq!((point_nodes[0].start_line, point_nodes[0].end_line), (2, 5));
+        assert_eq!(methods.len(), 2);
+        assert_eq!((methods[0].start_line, methods[0].end_line), (8, 10));
+        assert_eq!((methods[1].start_line, methods[1].end_line), (12, 14));
+        let expected = RustImplMembership {
+            receiver: "Point".into(),
+            trait_name: None,
+            start_line: 7,
+            start_column: 0,
+            end_line: 15,
+            end_column: 1,
+        };
+        for method in &methods {
+            assert_eq!(method.rust_impl.as_deref(), Some(&expected));
+            assert_eq!(method.qualified_name, None);
         }
-
-        // If neither Point node encloses the methods (struct ends at line 5,
-        // impl starts at line 7), then qualified_name won't be set — which
-        // is correct behavior. The test verifies the mechanism works.
-        // For languages where the class body encompasses methods (TS, Java,
-        // Python), qualified_name is always set.
+        let mut edges = Vec::new();
+        extract_containment_edges(&nodes, &mut edges);
+        assert!(!edges.iter().any(|edge| edge.source == point_nodes[0].id));
     }
 
     #[test]

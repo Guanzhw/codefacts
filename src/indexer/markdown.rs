@@ -48,6 +48,7 @@ pub fn extract_markdown(file_path: &str, source: &str) -> MarkdownExtraction {
                 id: make_node_id(NodeKind::Heading, file_path, title, line_number),
                 name: title.to_string(),
                 qualified_name: None,
+                rust_impl: None,
                 kind: NodeKind::Heading,
                 file_path: file_path.to_string(),
                 start_line: line_number,
