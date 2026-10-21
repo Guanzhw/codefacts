@@ -1283,6 +1283,45 @@ impl CodeFacts {
                 byte_limit_reached = true;
                 if text.is_empty() {
                     let end = line.floor_char_boundary(line.len().min(max_bytes));
+                    // Keep ordinary line-aligned excerpts, including export
+                    // prefixes and indentation. If earlier declarations use
+                    // the entire budget, return a labeled AST-column fragment
+                    // instead of substituting their text for this definition.
+                    if end <= node.start_column as usize {
+                        let start = node.start_column as usize;
+                        let line_end = line.trim_end_matches(['\r', '\n']).len();
+                        let definition_end = if start_line == definition_end_line {
+                            node.end_column as usize
+                        } else {
+                            line_end
+                        };
+                        let Some(fragment) = line
+                            .get(start..definition_end)
+                            .filter(|fragment| definition_end <= line_end && !fragment.is_empty())
+                        else {
+                            return Ok(json!({
+                                "status": "unavailable",
+                                "message": "The indexed definition columns are not valid UTF-8 byte boundaries in the verified source line.",
+                            }));
+                        };
+                        let fragment_end =
+                            fragment.floor_char_boundary(fragment.len().min(max_bytes));
+                        let text = &fragment[..fragment_end];
+                        return Ok(json!({
+                            "status": "ok",
+                            "excerpt_kind": "column_fragment",
+                            "start_line": start_line,
+                            "end_line": start_line,
+                            "start_column": start,
+                            "end_column": start + text.len(),
+                            "definition_end_line": definition_end_line,
+                            "text": text,
+                            "byte_length": text.len(),
+                            "leading_context_omitted": true,
+                            "truncated": true,
+                            "message": "Leading line context is omitted; columns are zero-based UTF-8 byte offsets with an exclusive end. Read the full source range for surrounding context.",
+                        }));
+                    }
                     text.push_str(&line[..end]);
                     if end > 0 {
                         returned_end_line = line_number;
@@ -1904,5 +1943,43 @@ mod tests {
             .expect("read changed definition source");
         assert_eq!(excerpt["status"], "changed_during_query");
         assert!(excerpt.get("text").is_none());
+    }
+
+    #[test]
+    fn definition_column_fragments_refuse_invalid_stored_ranges() {
+        let repository = tempdir().unwrap();
+        let source = format!(
+            "const pad = \"{}\"; function target() {{ return 42; }}\r\n",
+            "界".repeat(1800),
+        );
+        fs::write(repository.path().join("target.ts"), &source).unwrap();
+        let facts =
+            CodeFacts::open(repository.path(), repository.path().join("facts.sqlite")).unwrap();
+        facts.map().unwrap();
+        let mut node = match facts.resolve_symbol("target", Some("target.ts")).unwrap() {
+            SymbolResolution::One(node) => node,
+            _ => panic!("target should resolve exactly"),
+        };
+        let start = node.start_column;
+        let end = node.end_column;
+        let mid_character = source
+            .char_indices()
+            .find(|(offset, ch)| *offset >= 4096 && ch.len_utf8() > 1)
+            .unwrap()
+            .0 as u32
+            + 1;
+        for (start, end) in [
+            (start, start),
+            (start, source.len() as u32 + 1),
+            (mid_character, end),
+        ] {
+            node.start_column = start;
+            node.end_column = end;
+            let excerpt = facts
+                .definition_source(&node, MAX_DEFINITION_SOURCE_RESPONSE_LEN)
+                .unwrap();
+            assert_eq!(excerpt["status"], "unavailable");
+            assert!(excerpt.get("text").is_none());
+        }
     }
 }
