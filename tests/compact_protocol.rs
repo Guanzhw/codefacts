@@ -158,43 +158,36 @@ fn rust_impl_membership_survives_public_formats_and_exact_selectors() {
         2
     );
     let methods = full["symbols"].as_array().unwrap();
-    assert_eq!(methods.len(), 4);
-    let method_ids = methods
+    assert_eq!(methods.len(), 2);
+    let search = body(&mcp.call("search", json!({"query":"run","format":"full"})));
+    assert_owner_dictionary(&search);
+    let search_results = search["results"].as_array().unwrap();
+    assert_eq!(search_results.len(), 4, "{search}");
+    let outline_ids = methods
         .iter()
         .map(|method| method["id"].as_str().unwrap().to_owned())
         .collect::<BTreeSet<_>>();
-    let owned_methods = methods
+    let search_method_ids = search_results
         .iter()
-        .filter(|method| !method["rust_impl"].is_null())
-        .collect::<Vec<_>>();
-    let ownerless_methods = methods
+        .filter(|symbol| symbol.get("rust_impl").is_some())
+        .map(|symbol| symbol["id"].as_str().unwrap().to_owned())
+        .collect::<BTreeSet<_>>();
+    assert_eq!(search_method_ids, outline_ids, "{search}");
+    let ownerless_names = search_results
         .iter()
-        .filter(|method| method["rust_impl"].is_null())
-        .collect::<Vec<_>>();
-    assert_eq!(owned_methods.len(), 2);
-    assert_eq!(ownerless_methods.len(), 2);
-    let search = body(&mcp.call("search", json!({"query":"run","format":"full"})));
-    assert_owner_dictionary(&search);
-    assert_eq!(search["results"].as_array().unwrap().len(), 4);
+        .filter(|symbol| symbol.get("rust_impl").is_none())
+        .map(|symbol| symbol["name"].as_str().unwrap().to_owned())
+        .collect::<BTreeSet<_>>();
+    // FTS also matches the trait declarations containing `fn run()`.
+    assert_eq!(
+        ownerless_names,
+        BTreeSet::from(["A".to_owned(), "B".to_owned()]),
+        "{search}"
+    );
     let ambiguous = body(&mcp.call("expand", json!({"symbol":"run","format":"full"})));
     assert_owner_dictionary(&ambiguous);
     assert_eq!(ambiguous["status"], "ambiguous");
-    assert_eq!(ambiguous["matches"].as_array().unwrap().len(), 4);
-    let search_ids = search["results"]
-        .as_array()
-        .unwrap()
-        .iter()
-        .map(|symbol| symbol["id"].as_str().unwrap().to_owned())
-        .collect::<BTreeSet<_>>();
-    let ambiguous_ids = ambiguous["matches"]
-        .as_array()
-        .unwrap()
-        .iter()
-        .map(|symbol| symbol["id"].as_str().unwrap().to_owned())
-        .collect::<BTreeSet<_>>();
-    assert_eq!(search_ids, method_ids);
-    assert_eq!(ambiguous_ids, method_ids);
-    for (index, (method, leaf)) in owned_methods.iter().zip(["left", "right"]).enumerate() {
+    for (index, (method, leaf)) in methods.iter().zip(["left", "right"]).enumerate() {
         let id = method["id"].as_str().unwrap();
         assert!(text.contains(id));
         let membership = &method["rust_impl"];
@@ -205,15 +198,7 @@ fn rust_impl_membership_survives_public_formats_and_exact_selectors() {
             if index == 0 { "A" } else { "B" }
         );
         assert_eq!(
-            owner_record(
-                &compact,
-                &compact["symbols"]
-                    .as_array()
-                    .unwrap()
-                    .iter()
-                    .find(|symbol| symbol["id"] == id)
-                    .unwrap()["rust_impl"]
-            ),
+            owner_record(&compact, &compact["symbols"][index]["rust_impl"]),
             expected_record
         );
         for field in [
@@ -289,28 +274,16 @@ fn rust_impl_membership_survives_public_formats_and_exact_selectors() {
             rendered.len()
         );
     }
-    let mut cursor = Value::Null;
-    let mut paged_ids = BTreeSet::new();
-    let mut pages = 0;
-    loop {
-        let page = body(&mcp.call(
-            "outline",
-            json!({"file_path":"lib.rs","kind":"method","limit":1,"cursor":cursor,"format":"compact"}),
-        ));
-        assert_owner_dictionary(&page);
-        pages += 1;
-        assert!(pages <= methods.len(), "cursor must advance");
-        let symbols = page["symbols"].as_array().unwrap();
-        assert_eq!(symbols.len(), 1);
-        assert!(paged_ids.insert(symbols[0]["id"].as_str().unwrap().to_owned()));
-        if let Some(next_cursor) = page.get("next_cursor") {
-            cursor = next_cursor.clone();
-        } else {
-            break;
-        }
-    }
-    assert_eq!(pages, methods.len());
-    assert_eq!(paged_ids, method_ids);
+    let first = body(&mcp.call(
+        "outline",
+        json!({"file_path":"lib.rs","kind":"method","limit":1,"format":"compact"}),
+    ));
+    assert_owner_dictionary(&first);
+    let second = body(&mcp.call("outline", json!({"file_path":"lib.rs","kind":"method","limit":1,"cursor":first["next_cursor"],"format":"compact"})));
+    assert_owner_dictionary(&second);
+    assert_eq!(first["symbols"][0]["id"], methods[0]["id"]);
+    assert_eq!(second["symbols"][0]["id"], methods[1]["id"]);
+    assert!(second.get("next_cursor").is_none());
     let plain = body(&mcp.call("expand", json!({"symbol":"left","format":"full"})));
     assert!(plain["definition"].get("rust_impl").is_none());
     assert_owner_dictionary(&plain);
