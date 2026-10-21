@@ -702,7 +702,8 @@ impl CodeFacts {
             return Ok(finish(output, budget));
         }
 
-        let nodes = self.store.get_all_nodes()?;
+        let nodes;
+        let _read_scope;
         let manifests = self.exploration_manifests(&hashes)?;
         let scoped_files: BTreeSet<_> = hashes
             .keys()
@@ -729,7 +730,6 @@ impl CodeFacts {
                     "query needs at least one searchable code or behavior term".into(),
                 ));
             }
-            card_query_echo(&mut output, &terms, budget);
             let indexed = self.store.retrieval_hashes()?;
             let current: HashSet<_> = hashes.keys().chain(manifests.iter()).cloned().collect();
             for path in indexed.keys().filter(|p| !current.contains(*p)) {
@@ -758,6 +758,8 @@ impl CodeFacts {
                 }
             }
             let hits = self.store.search_retrieval(query, scope.as_deref(), 96)?;
+            _read_scope = self.store.read_scope()?;
+            nodes = self.store.get_all_nodes()?;
             self.task_excerpts(
                 &hits,
                 &terms,
@@ -769,6 +771,8 @@ impl CodeFacts {
                 &mut ranked_candidates,
             )?
         } else {
+            _read_scope = self.store.read_scope()?;
+            nodes = self.store.get_all_nodes()?;
             self.orientation_excerpts(
                 &nodes,
                 &scoped_files,
@@ -796,7 +800,11 @@ impl CodeFacts {
             );
         }
         if excerpts.is_empty() {
-            output.push_str("No matching verified source excerpts. Refine the query or path scope; this does not establish absence.\n");
+            let message = "No matching verified source excerpts. Refine the query or path scope; this does not establish absence.\n";
+            if let Some(query) = options.query {
+                card_query_echo(&mut output, &query_terms(query), budget, message.len());
+            }
+            output.push_str(message);
         } else if let Some(query) = options.query {
             render_cards(
                 &mut output,
@@ -954,4 +962,698 @@ impl CodeFacts {
         selected.truncate(36);
         Ok(selected)
     }
+}
+
+// Frozen source-only mechanism fixture from the impl-consumer design. The
+// distinctive execute body has no lexical match and no call from its anchors.
+const ARCHIVE_ENV_FIXTURE: &str = r#"pub struct ArchiveEnv;
+pub trait Command {
+    fn name(&self) -> &str;
+    fn signature(&self) -> &str;
+    fn usage(&self) -> &str;
+    fn examples(&self) -> &str;
+    fn execute(&self, state: &mut State, keys: &[&str], tolerant: bool) -> Result<(), &'static str>;
+}
+impl Command for ArchiveEnv {
+    fn name(&self) -> &str { "archive-env" }
+    fn signature(&self) -> &str { "archive-env [names]" }
+    fn usage(&self) -> &str { "Archive environment variables." }
+    fn examples(&self) -> &str { "archive-env SAMPLE_KEY" }
+    fn execute(&self, state: &mut State, keys: &[&str], tolerant: bool) -> Result<(), &'static str> {
+        for key in keys {
+            let taken = state.take(key);
+            if !taken && !tolerant {
+                return Err("missing-key-marker");
+            }
+        }
+        state.finalize();
+        Ok(())
+    }
+}
+
+pub struct State;
+impl State {
+    fn take(&mut self, _key: &str) -> bool { false }
+    fn finalize(&mut self) {}
+}
+
+// Same receiver, separate inherent block: not a direct sibling of Command methods.
+impl ArchiveEnv {
+    fn execute(&self) -> &'static str { "wrong-inherent-marker" }
+}
+
+pub trait Inspect { fn name(&self) -> &str; fn execute(&self) -> &str; }
+impl Inspect for ArchiveEnv {
+    fn name(&self) -> &str { "archive-env diagnostic" }
+    fn execute(&self) -> &str { "wrong-trait-marker" }
+}
+
+mod other {
+    pub struct ArchiveEnv;
+    impl ArchiveEnv {
+        fn name(&self) -> &str { "archive-env other" }
+        fn execute(&self) -> &str { "wrong-module-marker" }
+    }
+}
+
+fn nested() {
+    struct Local;
+    impl Local {
+        fn name(&self) -> &str { "archive-env nested" }
+        fn execute(&self) -> &str { "nested-owner-marker" }
+    }
+    fn helper() -> &'static str { "not-a-direct-member-marker" }
+}
+
+fn unicode_columns() { let _label = "中文"; struct Left; struct Right; impl Left { fn name(&self) -> &str { "left-marker" } } impl Right { fn name(&self) -> &str { "right-marker" } } }
+"#;
+
+#[test]
+fn rust_impl_group_delivers_an_unmatched_sibling_from_only_admitted_shares() {
+    let noise = (0..33)
+        .map(|i| format!("fn unrelated{i:02}() {{}}\n"))
+        .collect::<String>();
+    let (_root, _state, facts) = fixture(&[("lib.rs", ARCHIVE_ENV_FIXTURE), ("noise.rs", &noise)]);
+    let nodes = facts.store.get_all_nodes().unwrap();
+    let direct: Vec<_> = nodes
+        .iter()
+        .filter(|node| {
+            node.rust_impl
+                .as_ref()
+                .is_some_and(|owner| owner.start_line == 9)
+        })
+        .collect();
+    assert_eq!(direct.len(), 5);
+    assert_eq!(
+        direct
+            .iter()
+            .map(|node| node.name.as_str())
+            .collect::<BTreeSet<_>>(),
+        BTreeSet::from(["name", "signature", "usage", "examples", "execute"])
+    );
+    let execute = direct.iter().find(|node| node.name == "execute").unwrap();
+    let owner = execute.rust_impl.as_ref().unwrap();
+    assert_eq!(
+        (
+            owner.start_line,
+            owner.start_column,
+            owner.end_line,
+            owner.end_column
+        ),
+        (9, 0, 24, 1)
+    );
+    assert!(direct.iter().all(
+        |node| node.rust_impl.as_ref().unwrap().owner_key(&node.file_path)
+            == owner.owner_key(&execute.file_path)
+    ));
+    let terms = query_terms("archive-env command implementation environment variables");
+    assert_eq!(
+        line_score(
+            &owner_source(&ARCHIVE_ENV_FIXTURE.lines().collect::<Vec<_>>(), execute),
+            &terms
+        ),
+        0
+    );
+
+    let by_id = nodes.iter().map(|node| (node.id.as_str(), node)).collect();
+    let named = |name: &str| direct.iter().find(|node| node.name == name).unwrap();
+    let unrelated: Vec<_> = nodes
+        .iter()
+        .filter(|node| node.file_path == "noise.rs")
+        .collect();
+    assert_eq!(unrelated.len(), 33);
+    let mut selected = unrelated[..20]
+        .iter()
+        .map(|node| node_excerpt(node, "implementation".into()))
+        .collect::<Vec<_>>();
+    for name in ["name", "signature", "usage", "examples"] {
+        selected.push(node_excerpt(named(name), "implementation".into()));
+    }
+    selected.extend(
+        unrelated[20..32]
+            .iter()
+            .map(|node| node_excerpt(node, "implementation".into())),
+    );
+    let original = card_sequence(
+        selected,
+        vec![node_excerpt(unrelated[32], "implementation".into())],
+    );
+    assert_eq!(original.len(), 36);
+    assert!(original
+        .iter()
+        .all(|(excerpt, _)| excerpt.node_id.as_deref() != Some(execute.id.as_str())));
+    let planned = plan_source_cards(original.clone(), &by_id);
+    assert_eq!(planned.len(), 33);
+    assert_eq!(planned.iter().map(|card| card.weight).sum::<usize>(), 36);
+    assert_eq!(planned[20].weight, 4);
+    assert_eq!(
+        planned[20].anchor.node_id.as_deref(),
+        Some(named("name").id.as_str())
+    );
+    assert_eq!(
+        planned[..20]
+            .iter()
+            .map(|card| card.anchor.node_id.as_deref())
+            .collect::<Vec<_>>(),
+        original[..20]
+            .iter()
+            .map(|(excerpt, _)| excerpt.node_id.as_deref())
+            .collect::<Vec<_>>()
+    );
+    assert_eq!(
+        planned
+            .iter()
+            .filter(|card| card.impl_range.is_none())
+            .map(|card| card.anchor.node_id.as_deref().unwrap())
+            .collect::<Vec<_>>(),
+        unrelated[..32]
+            .iter()
+            .map(|node| node.id.as_str())
+            .collect::<Vec<_>>()
+    );
+    assert!(!planned
+        .iter()
+        .any(|card| card.anchor.node_id.as_deref() == Some(unrelated[32].id.as_str())));
+
+    let sources = HashMap::from([
+        (
+            "lib.rs".into(),
+            Source {
+                hash: String::new(),
+                text: ARCHIVE_ENV_FIXTURE.into(),
+            },
+        ),
+        (
+            "noise.rs".into(),
+            Source {
+                hash: String::new(),
+                text: noise,
+            },
+        ),
+    ]);
+    let mut output = String::new();
+    render_cards(&mut output, original, &nodes, &terms, &sources, 24_000).unwrap();
+    assert!(
+        output.contains("## lib.rs:9:0-24:1 | Rust impl source\n[complete]"),
+        "{output}"
+    );
+    assert!(output.contains("4 admitted candidates"));
+    for (index, line) in ARCHIVE_ENV_FIXTURE.lines().enumerate().skip(8).take(16) {
+        assert_eq!(
+            output.matches(&format!("{}: {line}\n", index + 1)).count(),
+            1,
+            "{output}"
+        );
+    }
+    for marker in ["state.take(key)", "missing-key-marker", "state.finalize()"] {
+        assert!(output.contains(marker), "{output}");
+    }
+    assert!(output.len() <= 24_000);
+    let singleton = plan_source_cards(
+        vec![(node_excerpt(named("name"), "implementation".into()), false)],
+        &by_id,
+    );
+    assert_eq!(singleton.len(), 1);
+    assert_eq!(singleton[0].weight, 1);
+}
+
+#[test]
+fn rust_impl_hydration_matches_oracle_and_independently_delivers_execute_body() {
+    let (_root, _state, facts) = fixture(&[("lib.rs", ARCHIVE_ENV_FIXTURE)]);
+    assert_public_parity(
+        &facts,
+        "archive-env command implementation environment variables",
+        None,
+    );
+    assert_public_parity(
+        &facts,
+        "archive-env command implementation environment variables",
+        Some("lib.rs"),
+    );
+    for budget in [24_000, 32_000] {
+        let output = facts
+            .explore(ExploreOptions {
+                query: Some("archive-env command implementation environment variables"),
+                max_bytes: Some(budget),
+                ..Default::default()
+            })
+            .unwrap();
+        assert!(
+            output.contains("## lib.rs:9:0-24:1 | Rust impl source\n[complete]"),
+            "{output}"
+        );
+        for line in [
+            "16:             let taken = state.take(key);\n",
+            "18:                 return Err(\"missing-key-marker\");\n",
+            "21:         state.finalize();\n",
+            "22:         Ok(())\n",
+        ] {
+            assert!(output.contains(line), "{output}");
+        }
+        assert!(output.len() <= budget);
+    }
+}
+
+#[test]
+fn rust_impl_plan_keeps_exact_owners_nested_members_and_unicode_columns_distinct() {
+    for source in [
+        ARCHIVE_ENV_FIXTURE.to_string(),
+        ARCHIVE_ENV_FIXTURE.replace('\n', "\r\n"),
+    ] {
+        let (_root, _state, facts) = fixture(&[("lib.rs", &source)]);
+        let nodes = facts.store.get_all_nodes().unwrap();
+        let by_id = nodes.iter().map(|node| (node.id.as_str(), node)).collect();
+        let members: Vec<_> = nodes
+            .iter()
+            .filter(|node| node.rust_impl.is_some())
+            .collect();
+        assert_eq!(members.len(), 16);
+        let owners = members
+            .iter()
+            .map(|node| node.rust_impl.as_ref().unwrap().owner_key(&node.file_path))
+            .collect::<HashSet<_>>();
+        let planned = plan_source_cards(
+            card_sequence(
+                members
+                    .iter()
+                    .map(|node| node_excerpt(node, "implementation".into()))
+                    .collect(),
+                Vec::new(),
+            ),
+            &by_id,
+        );
+        assert_eq!(planned.len(), owners.len());
+        assert_eq!(planned.len(), 8);
+        assert_eq!(planned.iter().map(|card| card.weight).sum::<usize>(), 16);
+        for name in ["helper", "nested", "unicode_columns"] {
+            assert!(nodes
+                .iter()
+                .filter(|node| node.name == name)
+                .all(|node| node.rust_impl.is_none()));
+            assert!(nodes.iter().any(|node| node.name == name));
+        }
+        let unicode_line = source.lines().last().unwrap();
+        let line_number = source.lines().count() as u32;
+        let same_line = planned
+            .iter()
+            .filter(|card| {
+                card.impl_range
+                    .is_some_and(|(start, _, _, _)| start == line_number)
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(same_line.len(), 2);
+        assert_eq!(
+            same_line[0].impl_range.unwrap().1 as usize,
+            unicode_line.find("impl Left").unwrap()
+        );
+        assert_eq!(
+            same_line[1].impl_range.unwrap().1 as usize,
+            unicode_line.find("impl Right").unwrap()
+        );
+        let originals = card_sequence(
+            members
+                .iter()
+                .filter(|node| node.start_line == line_number)
+                .map(|node| node_excerpt(node, "implementation".into()))
+                .collect(),
+            Vec::new(),
+        );
+        let sources = HashMap::from([(
+            "lib.rs".into(),
+            Source {
+                hash: String::new(),
+                text: source.clone(),
+            },
+        )]);
+        let mut output = String::new();
+        render_cards(&mut output, originals, &nodes, &[], &sources, 2000).unwrap();
+        for card in same_line {
+            let (start, column, end, end_column) = card.impl_range.unwrap();
+            assert!(
+                output.contains(&format!(
+                    "## lib.rs:{start}:{column}-{end}:{end_column} | Rust impl source"
+                )),
+                "{output}"
+            );
+        }
+        assert_eq!(
+            output
+                .matches(&format!("{line_number}: {unicode_line}\n"))
+                .count(),
+            2
+        );
+        assert!(output.contains("boundary lines can include adjacent context"));
+        assert!(output.len() <= 2000);
+    }
+}
+
+#[test]
+fn rust_impl_huge_header_and_512_members_keep_one_share_and_anchor_preview() {
+    let receiver = "Huge".repeat(8192);
+    let mut source = format!("struct {receiver};\nimpl {receiver} {{\n");
+    for index in 0..511 {
+        let _ = writeln!(
+            source,
+            "    fn sibling_{index}(&self) {{ let value = {index}; }}"
+        );
+    }
+    source.push_str("    fn needle(&self) { anchor_marker(); }\n}\n");
+    let (_root, _state, facts) = fixture(&[("large.rs", &source)]);
+    let nodes = facts.store.get_all_nodes().unwrap();
+    let members: Vec<_> = nodes
+        .iter()
+        .filter(|node| node.rust_impl.is_some())
+        .collect();
+    assert_eq!(members.len(), 512);
+    let anchor = members.iter().find(|node| node.name == "needle").unwrap();
+    assert_eq!(anchor.start_line, 514);
+    let by_id = nodes.iter().map(|node| (node.id.as_str(), node)).collect();
+    let original = vec![(node_excerpt(anchor, "implementation".into()), false)];
+    let planned = plan_source_cards(original.clone(), &by_id);
+    assert_eq!(planned.len(), 1);
+    assert_eq!(planned[0].weight, 1);
+    let sources = HashMap::from([(
+        "large.rs".into(),
+        Source {
+            hash: String::new(),
+            text: source.clone(),
+        },
+    )]);
+    for budget in [2000, 24_000, 32_000] {
+        let mut output = String::new();
+        render_cards(
+            &mut output,
+            original.clone(),
+            &nodes,
+            &["needle".into()],
+            &sources,
+            budget,
+        )
+        .unwrap();
+        assert!(
+            output.contains("## large.rs:2:0-515:1 | Rust impl source\n[preview]"),
+            "{output}"
+        );
+        assert!(output.contains("514:     fn needle(&self) { anchor_marker(); }\n"));
+        assert!(output.contains("1 admitted candidates"));
+        assert!(!output.contains(&receiver));
+        assert!(!output.contains("2: impl"));
+        assert!(output.len() <= budget);
+        for line in output.lines() {
+            if let Some((number, actual)) = line.split_once(": ") {
+                if let Ok(number) = number.parse::<usize>() {
+                    assert_eq!(actual, source.lines().nth(number - 1).unwrap());
+                }
+            }
+        }
+    }
+}
+
+#[test]
+fn exploration_read_scope_reuses_owners_after_retrieval_writes() {
+    let (_root, _state, facts) = fixture(&[("lib.rs", ARCHIVE_ENV_FIXTURE)]);
+    let query = "archive-env command implementation environment variables";
+    // The first call creates and fills the derived retrieval tables before the
+    // response's read scope. Repeated calls must retain that written index.
+    let first = facts
+        .explore(ExploreOptions {
+            query: Some(query),
+            ..Default::default()
+        })
+        .unwrap();
+    let indexed = facts.store.retrieval_hashes().unwrap();
+    assert!(!indexed.is_empty());
+    let before = facts.store.impl_owner_query_count();
+    let second = facts
+        .explore(ExploreOptions {
+            query: Some(query),
+            ..Default::default()
+        })
+        .unwrap();
+    let queries = facts.store.impl_owner_query_count() - before;
+    assert_eq!(
+        queries, 1,
+        "one file's owners hydrate only once for the complete query response"
+    );
+    assert_eq!(first, second);
+    assert_eq!(facts.store.retrieval_hashes().unwrap(), indexed);
+    let before = facts.store.impl_owner_query_count();
+    facts.explore(ExploreOptions::default()).unwrap();
+    assert_eq!(
+        facts.store.impl_owner_query_count() - before,
+        1,
+        "orientation keeps its full snapshot through related node reads"
+    );
+}
+
+#[test]
+fn rust_impl_groups_use_file_identity_and_query_scope() {
+    let (_root, _state, facts) = fixture(&[
+        ("one/lib.rs", ARCHIVE_ENV_FIXTURE),
+        ("two/lib.rs", ARCHIVE_ENV_FIXTURE),
+    ]);
+    let nodes = facts.store.get_all_nodes().unwrap();
+    let by_id = nodes.iter().map(|node| (node.id.as_str(), node)).collect();
+    let members: Vec<_> = nodes
+        .iter()
+        .filter(|node| {
+            node.rust_impl
+                .as_ref()
+                .is_some_and(|owner| owner.start_line == 9)
+                && node.name == "name"
+        })
+        .collect();
+    assert_eq!(members.len(), 2);
+    let planned = plan_source_cards(
+        card_sequence(
+            members
+                .iter()
+                .map(|node| node_excerpt(node, "implementation".into()))
+                .collect(),
+            vec![],
+        ),
+        &by_id,
+    );
+    assert_eq!(planned.len(), 2);
+    assert!(planned.iter().all(|card| card.weight == 1));
+    for budget in [2000, 24_000, 32_000] {
+        let output = facts
+            .explore(ExploreOptions {
+                query: Some("archive-env command implementation environment variables"),
+                path_prefix: Some("one/lib.rs"),
+                max_bytes: Some(budget),
+                ..Default::default()
+            })
+            .unwrap();
+        assert!(output.contains("one/lib.rs"));
+        assert!(!output.contains("## two/lib.rs:"));
+        assert!(output.len() <= budget);
+    }
+}
+
+#[test]
+fn rust_impl_one_long_physical_line_has_bounded_metadata_and_no_partial_source() {
+    let receiver = "Huge".repeat(8192);
+    let source = format!("struct {receiver};\nimpl {receiver} {{ fn needle(&self) {{}} }}\n");
+    let (_root, _state, facts) = fixture(&[("line.rs", &source)]);
+    let nodes = facts.store.get_all_nodes().unwrap();
+    let anchor = nodes.iter().find(|node| node.name == "needle").unwrap();
+    assert!(anchor.rust_impl.is_some());
+    let original = vec![(node_excerpt(anchor, "implementation".into()), false)];
+    let sources = HashMap::from([(
+        "line.rs".into(),
+        Source {
+            hash: String::new(),
+            text: source.clone(),
+        },
+    )]);
+    for budget in [2000, 24_000, 32_000] {
+        let mut output = String::new();
+        render_cards(
+            &mut output,
+            original.clone(),
+            &nodes,
+            &["needle".into()],
+            &sources,
+            budget,
+        )
+        .unwrap();
+        assert!(
+            output.contains("[source omitted] same-impl source context via method needle at 2:"),
+            "{output}"
+        );
+        assert!(!output.contains("2: impl"));
+        assert!(!output.contains(&receiver));
+        assert!(output.len() < 1000);
+    }
+}
+
+#[test]
+fn long_query_echo_reserves_actual_impl_metadata_after_real_extraction() {
+    let source = "struct A;\nimpl A {\n    fn needle() {}\n}\n";
+    let (_root, _state, facts) = fixture(&[("lib.rs", source)]);
+    let nodes = facts.store.get_all_nodes().unwrap();
+    let needle = nodes.iter().find(|node| node.name == "needle").unwrap();
+    assert_eq!(needle.kind, NodeKind::Method);
+    let owner = needle.rust_impl.as_ref().unwrap();
+    assert_eq!(
+        (
+            owner.start_line,
+            owner.start_column,
+            owner.end_line,
+            owner.end_column
+        ),
+        (2, 0, 4, 1)
+    );
+    let query = format!("{} needle", "b".repeat(1500));
+    assert_eq!(query.len(), 1507);
+    let terms = query_terms(&query);
+    assert_eq!(terms.len(), 2);
+    assert!(terms.iter().any(|term| term == "needle"));
+    let orientation = facts
+        .explore(ExploreOptions {
+            max_bytes: Some(2000),
+            ..Default::default()
+        })
+        .unwrap();
+
+    // This is the production query/retrieval/storage/render path. A successful
+    // empty result cannot satisfy the source-card and whole-source assertions.
+    let output = facts
+        .explore(ExploreOptions {
+            query: Some(&query),
+            max_bytes: Some(2000),
+            ..Default::default()
+        })
+        .unwrap();
+    let assert_source = |output: &str| {
+        assert!(output.len() <= 2000);
+        assert!(
+            output.contains("Freshness: fresh | generation "),
+            "{output}"
+        );
+        assert!(
+            output.contains("Lexical candidate term echo omitted by byte budget.\n"),
+            "{output}"
+        );
+        assert!(!output.contains(&"b".repeat(1500)));
+        assert!(
+            output.contains("## lib.rs:2:0-4:1 | Rust impl source\n[complete]"),
+            "{output}"
+        );
+        for (number, line) in source.lines().enumerate().skip(1) {
+            assert!(
+                output.contains(&format!("{}: {line}\n", number + 1)),
+                "{output}"
+            );
+        }
+        assert!(!output.contains("No matching verified source excerpts"));
+        assert!(!output.contains("[response truncated"));
+    };
+    assert_source(&output);
+    assert_eq!(
+        output,
+        facts
+            .explore_full_store_oracle(ExploreOptions {
+                query: Some(&query),
+                max_bytes: Some(2000),
+                ..Default::default()
+            })
+            .unwrap()
+    );
+
+    // Keep the exact review header for a platform-independent reproduction of
+    // the old 1921-byte admission versus 2054-byte grouped mandatory metadata.
+    let mut fixed_header = "CodeFacts exploration\nRoot: C:\\Temp\\fixture\nFreshness: fresh | generation 1 | UTF-8 response budget 2000 bytes\nScope: . | 1 indexed source/manifest files\n".to_string();
+    assert_eq!(fixed_header.len(), 154);
+    let echo = format!("Lexical candidates for: {}\n\n", terms.join(", "));
+    assert_eq!(
+        fixed_header.len() + echo.len() + CARD_FOOTER.len() + card_omission(36).len(),
+        1921
+    );
+    let hashes = facts.store.get_file_hashes().unwrap();
+    let sources = HashMap::from([(
+        "lib.rs".into(),
+        Source {
+            hash: hashes["lib.rs"].clone(),
+            text: source.into(),
+        },
+    )]);
+    render_cards(
+        &mut fixed_header,
+        card_sequence(vec![node_excerpt(needle, "implementation".into())], vec![]),
+        &nodes,
+        &terms,
+        &sources,
+        2000,
+    )
+    .unwrap();
+    assert_source(&fixed_header);
+
+    let after = facts
+        .explore(ExploreOptions {
+            max_bytes: Some(2000),
+            ..Default::default()
+        })
+        .unwrap();
+    assert_eq!(orientation, after);
+    assert!(!after.contains("Lexical candidates for:"));
+    assert!(!after.contains("term echo omitted"));
+    assert!(!after.contains("Rust impl source"));
+    assert!(after.len() <= 2000);
+}
+
+#[test]
+fn ordinary_query_echo_and_orientation_keep_their_non_grouped_paths() {
+    let source = "export function needle() {}\n";
+    let (_root, _state, facts) = fixture(&[("entry.ts", source)]);
+    let nodes = facts.store.get_all_nodes().unwrap();
+    assert!(nodes.iter().any(|node| node.name == "needle"));
+    assert!(nodes.iter().all(|node| node.rust_impl.is_none()));
+    let before = facts
+        .explore(ExploreOptions {
+            max_bytes: Some(2000),
+            ..Default::default()
+        })
+        .unwrap();
+    for query in ["needle".to_string(), format!("{} needle", "b".repeat(1500))] {
+        let output = facts
+            .explore(ExploreOptions {
+                query: Some(&query),
+                max_bytes: Some(2000),
+                ..Default::default()
+            })
+            .unwrap();
+        assert!(output.len() <= 2000);
+        assert!(output.contains("Freshness: fresh | generation "));
+        assert!(output.contains("symbol ranges cover full owners"));
+        assert!(!output.contains("Rust impl source"));
+        assert!(!output.contains("whole boundary lines can include adjacent context"));
+        assert_eq!(
+            output,
+            facts
+                .explore_full_store_oracle(ExploreOptions {
+                    query: Some(&query),
+                    max_bytes: Some(2000),
+                    ..Default::default()
+                })
+                .unwrap()
+        );
+        if query == "needle" {
+            assert!(output.contains("Lexical candidates for: needle\n\n"));
+            assert!(output.contains("## entry.ts:1-1 | function needle\n[complete]"));
+            assert!(output.contains("1: export function needle() {}\n"));
+        }
+    }
+    let after = facts
+        .explore(ExploreOptions {
+            max_bytes: Some(2000),
+            ..Default::default()
+        })
+        .unwrap();
+    assert_eq!(before, after);
+    assert!(!after.contains("Lexical candidates for:"));
+    assert!(!after.contains("term echo omitted"));
+    assert!(!after.contains("Rust impl source"));
+    assert!(after.len() <= 2000);
 }
