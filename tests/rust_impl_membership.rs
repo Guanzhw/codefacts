@@ -8,7 +8,7 @@ use codefacts::{
     types::{CodeEdge, CodeNode, EdgeKind, Language, NodeKind, RustImplMembership},
 };
 use rusqlite::Connection;
-use serde_json::{json, Value};
+use serde_json::Value;
 use tempfile::tempdir;
 
 const SAME_LINE: &str = "struct P; trait A { fn run(); } trait B { fn run(); } impl A for P { fn run() { left(); } } impl B for P { fn run() { right(); } } fn left() {} fn right() {}";
