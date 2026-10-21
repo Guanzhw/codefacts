@@ -73,6 +73,329 @@ fn body(result: &Value) -> Value {
     decoded
 }
 
+fn owner_refs(value: &Value, refs: &mut BTreeSet<String>) {
+    match value {
+        Value::Object(fields) => {
+            if let Some(owner_ref) = fields.get("owner_ref").and_then(Value::as_str) {
+                refs.insert(owner_ref.to_owned());
+            }
+            for (name, value) in fields {
+                if name != "rust_impl_owners" {
+                    owner_refs(value, refs);
+                }
+            }
+        }
+        Value::Array(values) => {
+            for value in values {
+                owner_refs(value, refs);
+            }
+        }
+        _ => {}
+    }
+}
+
+fn assert_owner_dictionary(response: &Value) {
+    let mut refs = BTreeSet::new();
+    owner_refs(response, &mut refs);
+    if refs.is_empty() {
+        assert!(
+            response.get("rust_impl_owners").is_none(),
+            "unreferenced owner dictionary: {response}"
+        );
+        return;
+    }
+    let owners = response["rust_impl_owners"]
+        .as_object()
+        .expect("owner references require a root dictionary");
+    for owner_ref in &refs {
+        assert!(
+            owners.contains_key(owner_ref),
+            "missing {owner_ref}: {response}"
+        );
+    }
+    assert_eq!(
+        owners.keys().cloned().collect::<BTreeSet<_>>(),
+        refs,
+        "owner dictionary must not contain unreferenced records"
+    );
+}
+
+fn owner_record(response: &Value, membership: &Value) -> Value {
+    let owner_ref = membership["owner_ref"]
+        .as_str()
+        .expect("membership owner reference");
+    response["rust_impl_owners"][owner_ref].clone()
+}
+
+#[test]
+fn rust_impl_membership_survives_public_formats_and_exact_selectors() {
+    let root = tempdir().unwrap();
+    let state = tempdir().unwrap();
+    let source = "struct P; trait A { fn run(); } trait B { fn run(); } impl A for P { fn run() { left(); } } impl B for P { fn run() { right(); } } fn left() {} fn right() {}";
+    fs::write(root.path().join("lib.rs"), source).unwrap();
+    let mut mcp = Mcp::new(root.path(), &state.path().join("facts.sqlite"));
+    let full = body(&mcp.call(
+        "outline",
+        json!({"file_path":"lib.rs","kind":"method","format":"full"}),
+    ));
+    assert_owner_dictionary(&full);
+    let compact = body(&mcp.call(
+        "outline",
+        json!({"file_path":"lib.rs","kind":"method","format":"compact"}),
+    ));
+    assert_owner_dictionary(&compact);
+    let markdown = mcp.call(
+        "outline",
+        json!({"file_path":"lib.rs","kind":"method","format":"markdown"}),
+    );
+    assert_eq!(markdown["isError"], false);
+    let text = markdown["content"][0]["text"].as_str().unwrap();
+    assert!(text.contains("rust_impl_owners"));
+    assert_eq!(
+        text.lines()
+            .filter(|line| line.starts_with("### impl_"))
+            .count(),
+        2
+    );
+    let methods = full["symbols"].as_array().unwrap();
+    assert_eq!(methods.len(), 2);
+    let search = body(&mcp.call("search", json!({"query":"run","format":"full"})));
+    assert_owner_dictionary(&search);
+    assert_eq!(search["results"].as_array().unwrap().len(), 2);
+    let ambiguous = body(&mcp.call("expand", json!({"symbol":"run","format":"full"})));
+    assert_owner_dictionary(&ambiguous);
+    assert_eq!(ambiguous["status"], "ambiguous");
+    for (index, (method, leaf)) in methods.iter().zip(["left", "right"]).enumerate() {
+        let id = method["id"].as_str().unwrap();
+        assert!(text.contains(id));
+        let membership = &method["rust_impl"];
+        let expected_record = owner_record(&full, membership);
+        assert_eq!(expected_record["receiver"], "P");
+        assert_eq!(
+            expected_record["trait_name"],
+            if index == 0 { "A" } else { "B" }
+        );
+        assert_eq!(
+            owner_record(&compact, &compact["symbols"][index]["rust_impl"]),
+            expected_record
+        );
+        for field in [
+            "file_path",
+            "receiver",
+            "trait_name",
+            "start_line",
+            "start_column",
+            "end_line",
+            "end_column",
+        ] {
+            assert!(text.contains(field), "{text}");
+            let value = &expected_record[field];
+            if let Some(value) = value.as_str() {
+                assert!(text.contains(value), "missing {value} in {text}");
+            } else {
+                assert!(
+                    text.contains(&value.to_string()),
+                    "missing {value} in {text}"
+                );
+            }
+        }
+        for (response, collection) in [
+            (&search, search["results"].as_array().unwrap()),
+            (&ambiguous, ambiguous["matches"].as_array().unwrap()),
+        ] {
+            assert_eq!(
+                owner_record(
+                    response,
+                    &collection.iter().find(|symbol| symbol["id"] == id).unwrap()["rust_impl"]
+                ),
+                expected_record
+            );
+        }
+        let expanded = body(&mcp.call("expand", json!({"symbol":id,"format":"full"})));
+        assert_owner_dictionary(&expanded);
+        let compact_expanded = body(&mcp.call("expand", json!({"symbol":id,"format":"compact"})));
+        assert_owner_dictionary(&compact_expanded);
+        let markdown_expanded = mcp.call("expand", json!({"symbol":id,"format":"markdown"}));
+        assert_eq!(markdown_expanded["isError"], false);
+        assert_eq!(
+            owner_record(&expanded, &expanded["definition"]["rust_impl"]),
+            expected_record
+        );
+        assert_eq!(
+            owner_record(
+                &compact_expanded,
+                &compact_expanded["definition"]["rust_impl"]
+            ),
+            expected_record
+        );
+        assert_eq!(expanded["callees"][0]["to"]["name"], leaf);
+        assert_eq!(expanded["definition"]["evidence"], method["evidence"]);
+        let rendered = markdown_expanded["content"][0]["text"].as_str().unwrap();
+        assert!(rendered.contains("rust_impl"));
+        assert!(rendered.contains("receiver: P"));
+        assert!(rendered.contains("rust_impl_owners"));
+        assert!(rendered.lines().any(|line| line.starts_with("### impl_")));
+        assert!(rendered.contains("file_path: lib.rs"));
+        assert!(rendered.contains(expected_record["trait_name"].as_str().unwrap()));
+        for field in ["start_line", "start_column", "end_line", "end_column"] {
+            assert!(rendered.contains(field), "{rendered}");
+            assert!(
+                rendered.contains(&expected_record[field].to_string()),
+                "{rendered}"
+            );
+        }
+        assert!(rendered.len() <= 16_384);
+        eprintln!(
+            "Rust impl expand {id}: full={} compact={} markdown={} bytes",
+            expanded.to_string().len(),
+            compact_expanded.to_string().len(),
+            rendered.len()
+        );
+    }
+    let first = body(&mcp.call(
+        "outline",
+        json!({"file_path":"lib.rs","kind":"method","limit":1,"format":"compact"}),
+    ));
+    assert_owner_dictionary(&first);
+    let second = body(&mcp.call("outline", json!({"file_path":"lib.rs","kind":"method","limit":1,"cursor":first["next_cursor"],"format":"compact"})));
+    assert_owner_dictionary(&second);
+    assert_eq!(first["symbols"][0]["id"], methods[0]["id"]);
+    assert_eq!(second["symbols"][0]["id"], methods[1]["id"]);
+    assert!(second.get("next_cursor").is_none());
+    let plain = body(&mcp.call("expand", json!({"symbol":"left","format":"full"})));
+    assert!(plain["definition"].get("rust_impl").is_none());
+    assert_owner_dictionary(&plain);
+    eprintln!(
+        "Rust impl outline: full={} compact={} markdown={} bytes",
+        full.to_string().len(),
+        compact.to_string().len(),
+        text.len()
+    );
+}
+
+#[test]
+fn repeated_rust_impl_membership_remains_complete_across_budgeted_callee_pages() {
+    let root = tempdir().unwrap();
+    let state = tempdir().unwrap();
+    let mut source = String::from("struct P;\nimpl P {\n fn entry() {\n");
+    for index in 0..80 {
+        source.push_str(&format!("  leaf_{index:03}();\n"));
+    }
+    source.push_str(" }\n");
+    for index in 0..80 {
+        source.push_str(&format!(" fn leaf_{index:03}() {{}}\n"));
+    }
+    source.push_str("}\n");
+    fs::write(root.path().join("lib.rs"), source).unwrap();
+    let mut mcp = Mcp::new(root.path(), &state.path().join("facts.sqlite"));
+    for format in ["full", "compact", "markdown"] {
+        let mut cursor = Value::Null;
+        let mut seen = BTreeSet::new();
+        let mut pages = 0;
+        loop {
+            let result = mcp.call("expand", json!({"symbol":"entry","section":"callees","format":format,"limit":50,"cursor":cursor}));
+            assert_eq!(result["isError"], false, "{result}");
+            let text = result["content"][0]["text"].as_str().unwrap();
+            pages += 1;
+            assert!(pages <= 80, "cursor must advance");
+            if format == "markdown" {
+                assert!(text.len() <= 16_384);
+                assert!(text.contains("rust_impl_owners"));
+                assert_eq!(
+                    text.lines()
+                        .filter(|line| line.starts_with("### impl_"))
+                        .count(),
+                    1
+                );
+                assert!(text.contains("to_rust_impl.owner_ref"), "{text}");
+                assert!(text.contains("|to|"), "{text}");
+                assert!(text.contains("method:lib.rs:leaf_"), "{text}");
+                for index in 0..80 {
+                    if text.contains(&format!("method:lib.rs:leaf_{index:03}:")) {
+                        assert!(seen.insert(format!("leaf_{index:03}")), "duplicate {index}");
+                    }
+                }
+                // Human relationship endpoints intentionally stay concise;
+                // the selected definition still carries the canonical owner.
+                assert!(text.contains("rust_impl"));
+                cursor = text
+                    .lines()
+                    .find_map(|line| line.strip_prefix("- callees: "))
+                    .map(Value::from)
+                    .unwrap_or(Value::Null);
+            } else {
+                let page = body(&result);
+                assert_owner_dictionary(&page);
+                assert_eq!(page["rust_impl_owners"].as_object().unwrap().len(), 1);
+                for relation in page["callees"].as_array().unwrap() {
+                    assert_eq!(
+                        owner_record(&page, &relation["to"]["rust_impl"]),
+                        owner_record(&page, &page["definition"]["rust_impl"])
+                    );
+                    assert!(seen.insert(relation["to"]["name"].as_str().unwrap().to_owned()));
+                }
+                cursor = page["next"]["callees"].clone();
+                if format == "compact" {
+                    assert!(text.len() <= 16_384);
+                    assert!(page["callees"]
+                        .as_array()
+                        .unwrap()
+                        .iter()
+                        .all(|relation| relation.get("from").is_none()));
+                }
+            }
+            eprintln!(
+                "Repeated Rust impl {format} page {pages}: {} bytes",
+                text.len()
+            );
+            if cursor.is_null() {
+                break;
+            }
+        }
+        assert_eq!(seen.len(), 80, "{format}");
+        assert!(pages >= 2, "{format}");
+    }
+    let callers = mcp.call(
+        "expand",
+        json!({"symbol":"leaf_000","section":"callers","format":"markdown"}),
+    );
+    let caller_text = callers["content"][0]["text"].as_str().unwrap();
+    assert!(caller_text.contains("rust_impl_owners"));
+    assert!(
+        caller_text.contains("from_rust_impl.owner_ref"),
+        "{caller_text}"
+    );
+    assert!(caller_text.contains("|from|"), "{caller_text}");
+    assert!(caller_text.contains("method:lib.rs:entry"), "{caller_text}");
+}
+
+#[test]
+fn oversized_rust_impl_spelling_keeps_full_facts_and_explicit_budget_failure() {
+    let root = tempdir().unwrap();
+    let state = tempdir().unwrap();
+    let trait_name = format!("Trait{}", "x".repeat(17_000));
+    fs::write(
+        root.path().join("lib.rs"),
+        format!("struct P; impl {trait_name} for P {{ fn run() {{}} }}"),
+    )
+    .unwrap();
+    let mut mcp = Mcp::new(root.path(), &state.path().join("facts.sqlite"));
+    let full = body(&mcp.call("expand", json!({"symbol":"run","format":"full"})));
+    assert_owner_dictionary(&full);
+    assert_eq!(
+        owner_record(&full, &full["definition"]["rust_impl"])["trait_name"],
+        trait_name
+    );
+    for format in ["compact", "markdown"] {
+        let response = mcp.call("expand", json!({"symbol":"run","format":format}));
+        assert_eq!(response["isError"], true);
+        assert!(response["content"][0]["text"]
+            .as_str()
+            .unwrap()
+            .contains("One fact exceeds the response text budget"));
+    }
+}
+
 #[test]
 fn compact_relations_preserve_all_call_sites_with_bounded_continuations() {
     let root = tempdir().unwrap();

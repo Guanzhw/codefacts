@@ -121,3 +121,57 @@ fn share_hashes(value: &mut Value, hashes: &mut Map<String, Value>) {
         _ => {}
     }
 }
+
+#[cfg(test)]
+mod rust_impl_tests {
+    use super::*;
+    use crate::{lsp::LspMode, service::CodeFacts};
+
+    #[test]
+    fn parsed_membership_has_identical_projection_values_in_every_format() {
+        let repository = tempfile::tempdir().unwrap();
+        let state = tempfile::tempdir().unwrap();
+        std::fs::write(
+            repository.path().join("fixture.rs"),
+            "struct P; impl Trait for P { fn run() {} }",
+        )
+        .unwrap();
+        let facts = CodeFacts::open_with_lsp(
+            repository.path(),
+            state.path().join("facts.sqlite"),
+            LspMode::Off,
+        )
+        .unwrap();
+        for (workflow, full, pointer) in [
+            (
+                "outline",
+                facts.outline("fixture.rs", Some(50)).unwrap(),
+                "/symbols/1/rust_impl",
+            ),
+            (
+                "search",
+                facts.search("run", Some(50)).unwrap(),
+                "/results/0/rust_impl",
+            ),
+            (
+                "expand",
+                facts.expand("run", None, Some(50)).unwrap(),
+                "/definition/rust_impl",
+            ),
+        ] {
+            let expected = full.pointer(pointer).unwrap();
+            let owner_ref = expected["owner_ref"].as_str().unwrap();
+            let owner = &full["rust_impl_owners"][owner_ref];
+            assert_eq!(owner["receiver"], "P");
+            assert_eq!(owner["trait_name"], "Trait");
+            for format in [Format::Full, Format::Compact, Format::Markdown] {
+                let presented = format.present_for(workflow, full.clone());
+                assert_eq!(presented.pointer(pointer).unwrap(), expected);
+                assert_eq!(presented["rust_impl_owners"][owner_ref], *owner);
+                let bytes = format.text(&presented).len();
+                assert!(bytes < 16 * 1024);
+                eprintln!("Rust impl {workflow}: {bytes} presentation bytes");
+            }
+        }
+    }
+}

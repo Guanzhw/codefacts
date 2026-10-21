@@ -22,9 +22,12 @@ use crate::types::{CodeEdge, CodeNode, EdgeKind, NodeKind};
 mod expand;
 mod explore;
 mod impact;
+mod rust_impl;
 pub use expand::ExpandSection;
 pub use explore::{ExploreOptions, ExploreRead};
 pub use impact::ImpactOptions;
+use rust_impl::RustImplProjection;
+pub use rust_impl::RustImplReference;
 
 const DEFAULT_LIMIT: usize = 20;
 const MAX_LIMIT: usize = 50;
@@ -112,6 +115,8 @@ pub struct SymbolFact {
     pub kind: String,
     pub language: String,
     pub evidence: Evidence,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub rust_impl: Option<RustImplReference>,
 }
 
 #[derive(Debug, Serialize)]
@@ -402,142 +407,147 @@ impl CodeFacts {
         limit: Option<usize>,
     ) -> Result<Value> {
         let freshness = self.refresh()?;
-        let limit = bounded_limit(limit);
-        let context_limit = if detail == SearchDetail::Context {
-            context_limit.clamp(1, MAX_CONTEXT_LIMIT)
-        } else {
-            DEFAULT_CONTEXT_LIMIT
-        };
-        let path_prefix = path_prefix
-            .map(|prefix| self.normalized_path_prefix(prefix))
-            .transpose()?
-            .flatten();
-        let filters = SearchFilters {
-            kind,
-            path_prefix: path_prefix.as_deref(),
-            symbol_scope,
-        };
-        let scope = page_scope(&[
-            "search",
-            &freshness.repository_root,
-            query,
-            kind.map(|kind| kind.as_str()).unwrap_or(""),
-            path_prefix.as_deref().unwrap_or(""),
-            symbol_scope.as_str(),
-            detail.as_str(),
-            &context_limit.to_string(),
-        ]);
-        let offset = match page_offset(cursor, offset, freshness.generation, &scope)? {
-            PageOffset::Current(offset) => offset,
-            PageOffset::Stale => {
+        let _read = self.store.read_scope()?;
+        let owners = &RustImplProjection::default();
+        let result = (|| {
+            let limit = bounded_limit(limit);
+            let context_limit = if detail == SearchDetail::Context {
+                context_limit.clamp(1, MAX_CONTEXT_LIMIT)
+            } else {
+                DEFAULT_CONTEXT_LIMIT
+            };
+            let path_prefix = path_prefix
+                .map(|prefix| self.normalized_path_prefix(prefix))
+                .transpose()?
+                .flatten();
+            let filters = SearchFilters {
+                kind,
+                path_prefix: path_prefix.as_deref(),
+                symbol_scope,
+            };
+            let scope = page_scope(&[
+                "search",
+                &freshness.repository_root,
+                query,
+                kind.map(|kind| kind.as_str()).unwrap_or(""),
+                path_prefix.as_deref().unwrap_or(""),
+                symbol_scope.as_str(),
+                detail.as_str(),
+                &context_limit.to_string(),
+            ]);
+            let offset = match page_offset(cursor, offset, freshness.generation, &scope)? {
+                PageOffset::Current(offset) => offset,
+                PageOffset::Stale => {
+                    return Ok(json!({
+                        "freshness": freshness,
+                        "status": "stale_cursor",
+                        "query": query,
+                        "scope": symbol_scope.as_str(),
+                        "results": [],
+                        "next_cursor": Value::Null,
+                        "next_offset": Value::Null,
+                        "message": "The index changed after this page was issued. Restart the search from the first page so every result comes from one snapshot.",
+                    }));
+                }
+            };
+            let Some(fts_query) = fts_query(query) else {
                 return Ok(json!({
                     "freshness": freshness,
-                    "status": "stale_cursor",
+                    "status": "ok",
                     "query": query,
                     "scope": symbol_scope.as_str(),
                     "results": [],
+                    "offset": offset,
                     "next_cursor": Value::Null,
                     "next_offset": Value::Null,
-                    "message": "The index changed after this page was issued. Restart the search from the first page so every result comes from one snapshot.",
+                    "message": "Search needs at least one identifier or word; raw grep is not supported."
                 }));
+            };
+
+            // A symbol-name lookup is stronger evidence than a full-text match.
+            // Put exact names first so a common identifier does not get pushed out
+            // of the bounded FTS result set by comments, signatures, or file paths.
+            // Filtering and paging happen after this ordering is established.
+            let exact_nodes = self.exact_search_nodes(query, filters)?;
+            let exact_count = exact_nodes.len();
+            let exact_node_ids = exact_nodes
+                .iter()
+                .map(|node| node.id.clone())
+                .collect::<Vec<_>>();
+
+            // Fetch one additional item to say whether the caller can continue.
+            let page_capacity = limit.saturating_add(1);
+            let mut nodes = if offset < exact_count {
+                exact_nodes
+                    .into_iter()
+                    .skip(offset)
+                    .take(page_capacity)
+                    .collect::<Vec<_>>()
+            } else {
+                Vec::new()
+            };
+
+            if nodes.len() < page_capacity {
+                let fts_offset = offset.saturating_sub(exact_count);
+                let remaining = page_capacity - nodes.len();
+                nodes.extend(self.search_fts_nodes(
+                    &fts_query,
+                    filters,
+                    &exact_node_ids,
+                    fts_offset,
+                    remaining,
+                )?);
             }
-        };
-        let Some(fts_query) = fts_query(query) else {
-            return Ok(json!({
+
+            let has_more = nodes.len() > limit;
+            nodes.truncate(limit);
+            let context_entries = if detail == SearchDetail::Context {
+                nodes
+                    .iter()
+                    .take(context_limit)
+                    .map(|node| self.context_entry(owners, node))
+                    .collect::<Result<Vec<_>>>()?
+            } else {
+                Vec::new()
+            };
+            let context_entries_truncated =
+                detail == SearchDetail::Context && nodes.len() > context_entries.len();
+            let results = nodes
+                .iter()
+                .map(|node| self.symbol_fact(owners, node))
+                .collect::<Result<Vec<_>>>()?;
+
+            let mut result = json!({
                 "freshness": freshness,
-                "status": "ok",
                 "query": query,
                 "scope": symbol_scope.as_str(),
-                "results": [],
+                "results": results,
                 "offset": offset,
-                "next_cursor": Value::Null,
-                "next_offset": Value::Null,
-                "message": "Search needs at least one identifier or word; raw grep is not supported."
-            }));
-        };
-
-        // A symbol-name lookup is stronger evidence than a full-text match.
-        // Put exact names first so a common identifier does not get pushed out
-        // of the bounded FTS result set by comments, signatures, or file paths.
-        // Filtering and paging happen after this ordering is established.
-        let exact_nodes = self.exact_search_nodes(query, filters)?;
-        let exact_count = exact_nodes.len();
-        let exact_node_ids = exact_nodes
-            .iter()
-            .map(|node| node.id.clone())
-            .collect::<Vec<_>>();
-
-        // Fetch one additional item to say whether the caller can continue.
-        let page_capacity = limit.saturating_add(1);
-        let mut nodes = if offset < exact_count {
-            exact_nodes
-                .into_iter()
-                .skip(offset)
-                .take(page_capacity)
-                .collect::<Vec<_>>()
-        } else {
-            Vec::new()
-        };
-
-        if nodes.len() < page_capacity {
-            let fts_offset = offset.saturating_sub(exact_count);
-            let remaining = page_capacity - nodes.len();
-            nodes.extend(self.search_fts_nodes(
-                &fts_query,
-                filters,
-                &exact_node_ids,
-                fts_offset,
-                remaining,
-            )?);
-        }
-
-        let has_more = nodes.len() > limit;
-        nodes.truncate(limit);
-        let context_entries = if detail == SearchDetail::Context {
-            nodes
-                .iter()
-                .take(context_limit)
-                .map(|node| self.context_entry(node))
-                .collect::<Result<Vec<_>>>()?
-        } else {
-            Vec::new()
-        };
-        let context_entries_truncated =
-            detail == SearchDetail::Context && nodes.len() > context_entries.len();
-        let results = nodes
-            .iter()
-            .map(|node| self.symbol_fact(node))
-            .collect::<Result<Vec<_>>>()?;
-
-        let mut result = json!({
-            "freshness": freshness,
-            "query": query,
-            "scope": symbol_scope.as_str(),
-            "results": results,
-            "offset": offset,
-            "next_cursor": has_more.then(|| encode_page_cursor(freshness.generation, offset.saturating_add(limit), &scope)).transpose()?,
-            "next_offset": has_more.then_some(offset.saturating_add(limit)),
-            "bounded_by": limit,
-        });
-        if detail == SearchDetail::Context {
-            let object = result
-                .as_object_mut()
-                .expect("search results are always JSON objects");
-            object.insert("context_entries".into(), Value::Array(context_entries));
-            object.insert(
-                "context_entries_truncated".into(),
-                Value::Bool(context_entries_truncated),
-            );
-            object.insert(
-                "context_bounded_by".into(),
-                json!({
-                    "entries": context_limit,
-                    "relationships_per_entry": CONTEXT_RELATIONSHIP_LIMIT,
-                    "source_bytes_per_entry": MAX_DEFINITION_SOURCE_RESPONSE_LEN,
-                }),
-            );
-        }
-        Ok(result)
+                "next_cursor": has_more.then(|| encode_page_cursor(freshness.generation, offset.saturating_add(limit), &scope)).transpose()?,
+                "next_offset": has_more.then_some(offset.saturating_add(limit)),
+                "bounded_by": limit,
+            });
+            if detail == SearchDetail::Context {
+                let object = result
+                    .as_object_mut()
+                    .expect("search results are always JSON objects");
+                object.insert("context_entries".into(), Value::Array(context_entries));
+                object.insert(
+                    "context_entries_truncated".into(),
+                    Value::Bool(context_entries_truncated),
+                );
+                object.insert(
+                    "context_bounded_by".into(),
+                    json!({
+                        "entries": context_limit,
+                        "relationships_per_entry": CONTEXT_RELATIONSHIP_LIMIT,
+                        "source_bytes_per_entry": MAX_DEFINITION_SOURCE_RESPONSE_LEN,
+                    }),
+                );
+            }
+            Ok(result)
+        })();
+        result.map(|value| owners.finish(value))
     }
 
     pub fn outline(&self, file_path: &str, limit: Option<usize>) -> Result<Value> {
@@ -584,66 +594,74 @@ impl CodeFacts {
         limit: Option<usize>,
     ) -> Result<Value> {
         let freshness = self.refresh()?;
-        let file_path = self.relative_path(file_path)?;
-        let limit = bounded_limit(limit);
-        let page_scope = page_scope(&[
-            "outline",
-            &freshness.repository_root,
-            &file_path,
-            kind.map(|kind| kind.as_str()).unwrap_or(""),
-            symbol_scope.as_str(),
-        ]);
-        let offset = match page_offset(cursor, offset, freshness.generation, &page_scope)? {
-            PageOffset::Current(offset) => offset,
-            PageOffset::Stale => {
-                return Ok(json!({
-                    "freshness": freshness,
-                    "status": "stale_cursor",
-                    "file_path": file_path,
-                    "kind": kind.map(|kind| kind.as_str()),
-                    "scope": symbol_scope.as_str(),
-                    "symbols": [],
-                    "next_cursor": Value::Null,
-                    "next_offset": Value::Null,
-                    "message": "The index changed after this page was issued. Restart the outline from the first page so every result comes from one snapshot.",
-                }));
-            }
-        };
-        let file_nodes = self.store.get_nodes_by_file(&file_path)?;
-        let mut nodes = file_nodes
-            .iter()
-            .filter(|node| {
-                kind.is_none_or(|kind| node.kind == kind)
-                    && (symbol_scope == SymbolScope::All || !is_local_variable(node, &file_nodes))
-            })
-            .collect::<Vec<_>>();
-        nodes.sort_by_key(|node| (node.start_line, node.start_column));
-        let page_end = offset.saturating_add(limit);
-        let truncated = nodes.len() > page_end;
-        let symbols = if offset < nodes.len() {
-            let source_hash = self.source_hash(&file_path)?;
-            nodes
+        let _read = self.store.read_scope()?;
+        let owners = &RustImplProjection::default();
+        let result = (|| {
+            let file_path = self.relative_path(file_path)?;
+            let limit = bounded_limit(limit);
+            let page_scope = page_scope(&[
+                "outline",
+                &freshness.repository_root,
+                &file_path,
+                kind.map(|kind| kind.as_str()).unwrap_or(""),
+                symbol_scope.as_str(),
+            ]);
+            let offset = match page_offset(cursor, offset, freshness.generation, &page_scope)? {
+                PageOffset::Current(offset) => offset,
+                PageOffset::Stale => {
+                    return Ok(json!({
+                        "freshness": freshness,
+                        "status": "stale_cursor",
+                        "file_path": file_path,
+                        "kind": kind.map(|kind| kind.as_str()),
+                        "scope": symbol_scope.as_str(),
+                        "symbols": [],
+                        "next_cursor": Value::Null,
+                        "next_offset": Value::Null,
+                        "message": "The index changed after this page was issued. Restart the outline from the first page so every result comes from one snapshot.",
+                    }));
+                }
+            };
+            let file_nodes = self.store.get_nodes_by_file(&file_path)?;
+            let mut nodes = file_nodes
                 .iter()
-                .skip(offset)
-                .take(limit)
-                .map(|node| Self::symbol_fact_with_source_hash(node, source_hash.clone()))
-                .collect::<Vec<_>>()
-        } else {
-            Vec::new()
-        };
+                .filter(|node| {
+                    kind.is_none_or(|kind| node.kind == kind)
+                        && (symbol_scope == SymbolScope::All
+                            || !is_local_variable(node, &file_nodes))
+                })
+                .collect::<Vec<_>>();
+            nodes.sort_by_key(|node| (node.start_line, node.start_column));
+            let page_end = offset.saturating_add(limit);
+            let truncated = nodes.len() > page_end;
+            let symbols = if offset < nodes.len() {
+                let source_hash = self.source_hash(&file_path)?;
+                nodes
+                    .iter()
+                    .skip(offset)
+                    .take(limit)
+                    .map(|node| {
+                        Self::symbol_fact_with_source_hash(owners, node, source_hash.clone())
+                    })
+                    .collect::<Vec<_>>()
+            } else {
+                Vec::new()
+            };
 
-        Ok(json!({
-            "freshness": freshness,
-            "file_path": file_path,
-            "kind": kind.map(|kind| kind.as_str()),
-            "scope": symbol_scope.as_str(),
-            "symbols": symbols,
-            "offset": offset,
-            "next_cursor": truncated.then(|| encode_page_cursor(freshness.generation, page_end, &page_scope)).transpose()?,
-            "next_offset": truncated.then_some(page_end),
-            "truncated": truncated,
-            "bounded_by": limit,
-        }))
+            Ok(json!({
+                "freshness": freshness,
+                "file_path": file_path,
+                "kind": kind.map(|kind| kind.as_str()),
+                "scope": symbol_scope.as_str(),
+                "symbols": symbols,
+                "offset": offset,
+                "next_cursor": truncated.then(|| encode_page_cursor(freshness.generation, page_end, &page_scope)).transpose()?,
+                "next_offset": truncated.then_some(page_end),
+                "truncated": truncated,
+                "bounded_by": limit,
+            }))
+        })();
+        result.map(|value| owners.finish(value))
     }
 
     pub fn expand(
@@ -653,55 +671,63 @@ impl CodeFacts {
         limit: Option<usize>,
     ) -> Result<Value> {
         let freshness = self.refresh()?;
-        let limit = bounded_limit(limit);
-        let resolution = self.resolve_symbol(symbol, file_path)?;
-        let node = match resolution {
-            SymbolResolution::NotFound => {
-                return Ok(json!({
-                    "freshness": freshness,
-                    "status": "not_found",
-                    "symbol": symbol,
-                    "message": "No indexed symbol matches this identifier."
-                }));
-            }
-            SymbolResolution::Ambiguous(matches) => {
-                return Ok(json!({
-                    "freshness": freshness,
-                    "status": "ambiguous",
-                    "symbol": symbol,
-                    "matches": matches,
-                    "message": "Use an exact symbol id or add file_path; CodeFacts does not guess."
-                }));
-            }
-            SymbolResolution::One(node) => node,
-        };
+        let _read = self.store.read_scope()?;
+        let owners = &RustImplProjection::default();
+        let result = (|| {
+            let limit = bounded_limit(limit);
+            let resolution = self.resolve_symbol(owners, symbol, file_path)?;
+            let node = match resolution {
+                SymbolResolution::NotFound => {
+                    return Ok(json!({
+                        "freshness": freshness,
+                        "status": "not_found",
+                        "symbol": symbol,
+                        "message": "No indexed symbol matches this identifier."
+                    }));
+                }
+                SymbolResolution::Ambiguous(matches) => {
+                    return Ok(json!({
+                        "freshness": freshness,
+                        "status": "ambiguous",
+                        "symbol": symbol,
+                        "matches": matches,
+                        "message": "Use an exact symbol id or add file_path; CodeFacts does not guess."
+                    }));
+                }
+                SymbolResolution::One(node) => node,
+            };
 
-        let callers = self.relationships_to(&node, true, Some(EdgeKind::Calls), limit)?;
-        let callees = self.relationships_to(&node, false, Some(EdgeKind::Calls), limit)?;
-        let references = self.relationships_to(&node, true, Some(EdgeKind::References), limit)?;
-        let outbound_references =
-            self.relationships_to(&node, false, Some(EdgeKind::References), limit)?;
-        let tests = self.related_tests(&node, limit)?;
-        let semantic_references = self.semantic_references(&node, limit)?;
-        let section = markdown_section(&node);
-        let source = self.definition_source(&node, MAX_DEFINITION_SOURCE_RESPONSE_LEN)?;
+            let callers =
+                self.relationships_to(owners, &node, true, Some(EdgeKind::Calls), limit)?;
+            let callees =
+                self.relationships_to(owners, &node, false, Some(EdgeKind::Calls), limit)?;
+            let references =
+                self.relationships_to(owners, &node, true, Some(EdgeKind::References), limit)?;
+            let outbound_references =
+                self.relationships_to(owners, &node, false, Some(EdgeKind::References), limit)?;
+            let tests = self.related_tests(owners, &node, limit)?;
+            let semantic_references = self.semantic_references(&node, limit)?;
+            let section = markdown_section(&node);
+            let source = self.definition_source(&node, MAX_DEFINITION_SOURCE_RESPONSE_LEN)?;
 
-        Ok(json!({
-            "freshness": freshness,
-            "status": "ok",
-            "definition": self.symbol_fact(&node)?,
-            "source": source,
-            "section": section,
-            "callers": callers,
-            "callees": callees,
-            "references": {
-                "inbound": references,
-                "outbound": outbound_references,
-                "semantic": semantic_references,
-            },
-            "tests": tests,
-            "bounded_by": limit,
-        }))
+            Ok(json!({
+                "freshness": freshness,
+                "status": "ok",
+                "definition": self.symbol_fact(owners, &node)?,
+                "source": source,
+                "section": section,
+                "callers": callers,
+                "callees": callees,
+                "references": {
+                    "inbound": references,
+                    "outbound": outbound_references,
+                    "semantic": semantic_references,
+                },
+                "tests": tests,
+                "bounded_by": limit,
+            }))
+        })();
+        result.map(|value| owners.finish(value))
     }
 
     pub fn path(&self, from: &str, to: &str, limit: Option<usize>) -> Result<Value> {
@@ -719,84 +745,89 @@ impl CodeFacts {
         limit: Option<usize>,
     ) -> Result<Value> {
         let freshness = self.refresh()?;
-        let limit = bounded_limit(limit);
-        let from = match self.resolve_symbol(from, from_file_path)? {
-            SymbolResolution::One(node) => node,
-            other => return self.path_resolution_result(freshness, "from", other),
-        };
-        let to = match self.resolve_symbol(to, to_file_path)? {
-            SymbolResolution::One(node) => node,
-            other => return self.path_resolution_result(freshness, "to", other),
-        };
+        let _read = self.store.read_scope()?;
+        let owners = &RustImplProjection::default();
+        let result = (|| {
+            let limit = bounded_limit(limit);
+            let from = match self.resolve_symbol(owners, from, from_file_path)? {
+                SymbolResolution::One(node) => node,
+                other => return self.path_resolution_result(freshness, "from", other),
+            };
+            let to = match self.resolve_symbol(owners, to, to_file_path)? {
+                SymbolResolution::One(node) => node,
+                other => return self.path_resolution_result(freshness, "to", other),
+            };
 
-        if from.id == to.id {
-            return Ok(json!({
-                "freshness": freshness,
-                "status": "ok",
-                "path": [self.symbol_fact(&from)?],
-                "relationships": [],
-            }));
-        }
-
-        let mut queue = VecDeque::from([from.id.clone()]);
-        let mut previous = HashMap::<String, (String, CodeEdge)>::new();
-        let mut visited = HashSet::from([from.id.clone()]);
-
-        while !queue.is_empty() {
-            if visited.len() >= PATH_SEARCH_VISIT_LIMIT {
-                break;
+            if from.id == to.id {
+                return Ok(json!({
+                    "freshness": freshness,
+                    "status": "ok",
+                    "path": [self.symbol_fact(owners, &from)?],
+                    "relationships": [],
+                }));
             }
-            // Query only the current breadth-first frontier. This preserves
-            // shortest-path semantics without loading every node and edge in
-            // a large repository for each MCP request.
-            let frontier_size = queue
-                .len()
-                .min(PATH_SEARCH_VISIT_LIMIT.saturating_sub(visited.len()));
-            let frontier = queue.drain(..frontier_size).collect::<Vec<_>>();
-            let edges = self
-                .store
-                .get_confirmed_outgoing_edges(&frontier, EdgeKind::Calls.as_str())?;
-            for edge in edges {
+
+            let mut queue = VecDeque::from([from.id.clone()]);
+            let mut previous = HashMap::<String, (String, CodeEdge)>::new();
+            let mut visited = HashSet::from([from.id.clone()]);
+
+            while !queue.is_empty() {
                 if visited.len() >= PATH_SEARCH_VISIT_LIMIT {
                     break;
                 }
-                if visited.insert(edge.target.clone()) {
-                    previous.insert(edge.target.clone(), (edge.source.clone(), edge.clone()));
-                    if edge.target == to.id {
-                        let (nodes, relationships) =
-                            self.reconstruct_path(&from.id, &to.id, &previous)?;
-                        if nodes.len() > limit {
+                // Query only the current breadth-first frontier. This preserves
+                // shortest-path semantics without loading every node and edge in
+                // a large repository for each MCP request.
+                let frontier_size = queue
+                    .len()
+                    .min(PATH_SEARCH_VISIT_LIMIT.saturating_sub(visited.len()));
+                let frontier = queue.drain(..frontier_size).collect::<Vec<_>>();
+                let edges = self
+                    .store
+                    .get_confirmed_outgoing_edges(&frontier, EdgeKind::Calls.as_str())?;
+                for edge in edges {
+                    if visited.len() >= PATH_SEARCH_VISIT_LIMIT {
+                        break;
+                    }
+                    if visited.insert(edge.target.clone()) {
+                        previous.insert(edge.target.clone(), (edge.source.clone(), edge.clone()));
+                        if edge.target == to.id {
+                            let (nodes, relationships) =
+                                self.reconstruct_path(owners, &from.id, &to.id, &previous)?;
+                            if nodes.len() > limit {
+                                return Ok(json!({
+                                    "freshness": freshness,
+                                    "status": "path_too_long",
+                                    "from": self.symbol_fact(owners, &from)?,
+                                    "to": self.symbol_fact(owners, &to)?,
+                                    "path_length": nodes.len(),
+                                    "maximum_path_length": limit,
+                                    "relationship_kind": "calls",
+                                    "message": "A shortest static calls path was found, but returning it would exceed the response limit. Increase limit up to 50 or inspect intermediate symbols with expand.",
+                                }));
+                            }
                             return Ok(json!({
                                 "freshness": freshness,
-                                "status": "path_too_long",
-                                "from": self.symbol_fact(&from)?,
-                                "to": self.symbol_fact(&to)?,
-                                "path_length": nodes.len(),
-                                "maximum_path_length": limit,
+                                "status": "ok",
+                                "path": nodes,
+                                "relationships": relationships,
                                 "relationship_kind": "calls",
-                                "message": "A shortest static calls path was found, but returning it would exceed the response limit. Increase limit up to 50 or inspect intermediate symbols with expand.",
                             }));
                         }
-                        return Ok(json!({
-                            "freshness": freshness,
-                            "status": "ok",
-                            "path": nodes,
-                            "relationships": relationships,
-                            "relationship_kind": "calls",
-                        }));
+                        queue.push_back(edge.target.clone());
                     }
-                    queue.push_back(edge.target.clone());
                 }
             }
-        }
 
-        Ok(json!({
-            "freshness": freshness,
-            "status": "no_static_path",
-            "from": self.symbol_fact(&from)?,
-            "to": self.symbol_fact(&to)?,
-            "message": "No bounded static calls path was found. This does not establish runtime unreachability.",
-        }))
+            Ok(json!({
+                "freshness": freshness,
+                "status": "no_static_path",
+                "from": self.symbol_fact(owners, &from)?,
+                "to": self.symbol_fact(owners, &to)?,
+                "message": "No bounded static calls path was found. This does not establish runtime unreachability.",
+            }))
+        })();
+        result.map(|value| owners.finish(value))
     }
 
     fn unresolved_reference_report(&self) -> Result<Value> {
@@ -939,17 +970,17 @@ impl CodeFacts {
     /// Enrich one search candidate without starting optional LSP processes.
     /// The entry intentionally exposes direct static facts only; semantic
     /// references remain an explicit `expand` request with their own status.
-    fn context_entry(&self, node: &CodeNode) -> Result<Value> {
+    fn context_entry(&self, owners: &RustImplProjection, node: &CodeNode) -> Result<Value> {
         Ok(json!({
-            "symbol": self.symbol_fact(node)?,
+            "symbol": self.symbol_fact(owners, node)?,
             "source": self.definition_source(node, MAX_DEFINITION_SOURCE_RESPONSE_LEN)?,
-            "callers": self.relationships_to(node, true, Some(EdgeKind::Calls), CONTEXT_RELATIONSHIP_LIMIT)?,
-            "callees": self.relationships_to(node, false, Some(EdgeKind::Calls), CONTEXT_RELATIONSHIP_LIMIT)?,
+            "callers": self.relationships_to(owners, node, true, Some(EdgeKind::Calls), CONTEXT_RELATIONSHIP_LIMIT)?,
+            "callees": self.relationships_to(owners, node, false, Some(EdgeKind::Calls), CONTEXT_RELATIONSHIP_LIMIT)?,
             "references": {
-                "inbound": self.relationships_to(node, true, Some(EdgeKind::References), CONTEXT_RELATIONSHIP_LIMIT)?,
-                "outbound": self.relationships_to(node, false, Some(EdgeKind::References), CONTEXT_RELATIONSHIP_LIMIT)?,
+                "inbound": self.relationships_to(owners, node, true, Some(EdgeKind::References), CONTEXT_RELATIONSHIP_LIMIT)?,
+                "outbound": self.relationships_to(owners, node, false, Some(EdgeKind::References), CONTEXT_RELATIONSHIP_LIMIT)?,
             },
-            "tests": self.related_tests(node, CONTEXT_RELATIONSHIP_LIMIT)?,
+            "tests": self.related_tests(owners, node, CONTEXT_RELATIONSHIP_LIMIT)?,
         }))
     }
 
@@ -979,6 +1010,7 @@ impl CodeFacts {
 
     fn reconstruct_path(
         &self,
+        owners: &RustImplProjection,
         from: &str,
         to: &str,
         previous: &HashMap<String, (String, CodeEdge)>,
@@ -1002,7 +1034,7 @@ impl CodeFacts {
             let node = self.store.get_node(id)?.ok_or_else(|| {
                 CodeFactsError::Other(format!("path contains missing node: {id}"))
             })?;
-            nodes.push(self.symbol_fact(&node)?);
+            nodes.push(self.symbol_fact(owners, &node)?);
         }
         let relationships = edges
             .iter()
@@ -1011,7 +1043,12 @@ impl CodeFacts {
         Ok((nodes, relationships))
     }
 
-    fn resolve_symbol(&self, symbol: &str, file_path: Option<&str>) -> Result<SymbolResolution> {
+    fn resolve_symbol(
+        &self,
+        owners: &RustImplProjection,
+        symbol: &str,
+        file_path: Option<&str>,
+    ) -> Result<SymbolResolution> {
         if let Some(node) = self.store.get_node(symbol)? {
             return Ok(SymbolResolution::One(node));
         }
@@ -1027,7 +1064,7 @@ impl CodeFacts {
                 matches
                     .iter()
                     .take(MAX_LIMIT)
-                    .map(|node| self.symbol_fact(node))
+                    .map(|node| self.symbol_fact(owners, node))
                     .collect::<Result<Vec<_>>>()?,
             )),
         }
@@ -1035,6 +1072,7 @@ impl CodeFacts {
 
     fn relationships_to(
         &self,
+        owners: &RustImplProjection,
         node: &CodeNode,
         incoming: bool,
         kind: Option<EdgeKind>,
@@ -1063,16 +1101,21 @@ impl CodeFacts {
             {
                 continue;
             }
-            relationships.push(self.relationship_fact(edge)?);
+            relationships.push(self.relationship_fact(owners, edge)?);
         }
         Ok(relationships)
     }
 
-    fn related_tests(&self, node: &CodeNode, limit: usize) -> Result<Vec<SymbolFact>> {
+    fn related_tests(
+        &self,
+        owners: &RustImplProjection,
+        node: &CodeNode,
+        limit: usize,
+    ) -> Result<Vec<SymbolFact>> {
         self.store
             .get_related_test_nodes(&node.id, &node.name, &node.file_path, limit)?
             .iter()
-            .map(|candidate| self.symbol_fact(candidate))
+            .map(|candidate| self.symbol_fact(owners, candidate))
             .collect()
     }
 
@@ -1153,7 +1196,11 @@ impl CodeFacts {
         }
     }
 
-    fn relationship_fact(&self, edge: &CodeEdge) -> Result<RelationshipFact> {
+    fn relationship_fact(
+        &self,
+        owners: &RustImplProjection,
+        edge: &CodeEdge,
+    ) -> Result<RelationshipFact> {
         let from = self.store.get_node(&edge.source)?.ok_or_else(|| {
             CodeFactsError::Other(format!("relationship source is missing: {}", edge.source))
         })?;
@@ -1162,8 +1209,8 @@ impl CodeFacts {
         })?;
         Ok(RelationshipFact {
             kind: edge.kind.as_str().to_string(),
-            from: self.symbol_fact(&from)?,
-            to: self.symbol_fact(&to)?,
+            from: self.symbol_fact(owners, &from)?,
+            to: self.symbol_fact(owners, &to)?,
             evidence: self.edge_evidence(edge)?,
             resolution: edge
                 .metadata
@@ -1195,20 +1242,26 @@ impl CodeFacts {
         })
     }
 
-    fn symbol_fact(&self, node: &CodeNode) -> Result<SymbolFact> {
+    fn symbol_fact(&self, owners: &RustImplProjection, node: &CodeNode) -> Result<SymbolFact> {
         Ok(Self::symbol_fact_with_source_hash(
+            owners,
             node,
             self.source_hash(&node.file_path)?,
         ))
     }
 
-    fn symbol_fact_with_source_hash(node: &CodeNode, source_hash: Option<String>) -> SymbolFact {
+    fn symbol_fact_with_source_hash(
+        owners: &RustImplProjection,
+        node: &CodeNode,
+        source_hash: Option<String>,
+    ) -> SymbolFact {
         SymbolFact {
             id: node.id.clone(),
             name: node.name.clone(),
             qualified_name: node.qualified_name.clone(),
             kind: node.kind.as_str().to_string(),
             language: node.language.as_str().to_string(),
+            rust_impl: owners.register(node),
             evidence: Evidence {
                 file_path: node.file_path.clone(),
                 start_line: node.start_line,
@@ -1786,6 +1839,7 @@ mod tests {
             documentation: None,
             exported: Some(true),
             is_local: false,
+            rust_impl: None,
         }
     }
 
@@ -1891,7 +1945,7 @@ mod tests {
             .expect("open source-backed facts");
         facts.map().expect("seed source hash");
         let node = match facts
-            .resolve_symbol("target", Some("lib.rs"))
+            .resolve_symbol(&RustImplProjection::default(), "target", Some("lib.rs"))
             .expect("resolve indexed symbol")
         {
             SymbolResolution::One(node) => node,

@@ -4,7 +4,7 @@ use std::collections::{HashSet, VecDeque};
 
 use serde_json::{json, Value};
 
-use super::{bounded_limit, CodeFacts, SymbolResolution};
+use super::{bounded_limit, CodeFacts, RustImplProjection, SymbolResolution};
 use crate::error::{CodeFactsError, Result};
 use crate::graph::store::{detect_is_test_node, ImpactFileSnapshot};
 use crate::types::{CodeEdge, CodeNode, EdgeKind, NodeKind};
@@ -58,116 +58,121 @@ impl CodeFacts {
             ));
         }
         let freshness = self.refresh()?;
-        let limit = bounded_limit(options.limit);
-        let definition = match self.resolve_symbol(options.symbol, options.file_path)? {
-            SymbolResolution::One(node) => node,
-            SymbolResolution::NotFound => {
-                return Ok(json!({
-                    "freshness": freshness,
-                    "status": "not_found",
-                    "symbol": options.symbol,
-                    "message": "No indexed symbol matches this identifier.",
-                }));
-            }
-            SymbolResolution::Ambiguous(matches) => {
-                return Ok(json!({
-                    "freshness": freshness,
-                    "status": "ambiguous",
-                    "symbol": options.symbol,
-                    "matches": matches,
-                    "message": "Use an exact symbol id or add file_path; CodeFacts does not guess.",
-                }));
-            }
-        };
+        let _read = self.store.read_scope()?;
+        let owners = &RustImplProjection::default();
+        let result = (|| {
+            let limit = bounded_limit(options.limit);
+            let definition = match self.resolve_symbol(owners, options.symbol, options.file_path)? {
+                SymbolResolution::One(node) => node,
+                SymbolResolution::NotFound => {
+                    return Ok(json!({
+                        "freshness": freshness,
+                        "status": "not_found",
+                        "symbol": options.symbol,
+                        "message": "No indexed symbol matches this identifier.",
+                    }));
+                }
+                SymbolResolution::Ambiguous(matches) => {
+                    return Ok(json!({
+                        "freshness": freshness,
+                        "status": "ambiguous",
+                        "symbol": options.symbol,
+                        "matches": matches,
+                        "message": "Use an exact symbol id or add file_path; CodeFacts does not guess.",
+                    }));
+                }
+            };
 
-        let mut queue = VecDeque::from([(ImpactEndpoint::Symbol(definition.clone()), 0)]);
-        let mut visited = HashSet::from([definition.id.clone()]);
-        let mut affected = Vec::new();
-        let mut tests = Vec::new();
-        let mut edges_examined = 0;
-        let mut depth_limit_reached = false;
-        let mut node_limit_reached = false;
-        let mut edge_limit_reached = false;
+            let mut queue = VecDeque::from([(ImpactEndpoint::Symbol(definition.clone()), 0)]);
+            let mut visited = HashSet::from([definition.id.clone()]);
+            let mut affected = Vec::new();
+            let mut tests = Vec::new();
+            let mut edges_examined = 0;
+            let mut depth_limit_reached = false;
+            let mut node_limit_reached = false;
+            let mut edge_limit_reached = false;
 
-        'traversal: while let Some((current, distance)) = queue.pop_front() {
-            let remaining = EDGE_WORK_LIMIT - edges_examined;
-            let edges = self.store.get_confirmed_impact_edges(
-                current.id(),
-                current.include_members(),
-                remaining + 1,
-            )?;
-            let has_more_edges = edges.len() > remaining;
-            for edge in edges.into_iter().take(remaining) {
-                edges_examined += 1;
-                let forward = edge.kind == EdgeKind::Contains;
-                let next_id = if forward { &edge.target } else { &edge.source };
-                if visited.contains(next_id) {
-                    continue;
+            'traversal: while let Some((current, distance)) = queue.pop_front() {
+                let remaining = EDGE_WORK_LIMIT - edges_examined;
+                let edges = self.store.get_confirmed_impact_edges(
+                    current.id(),
+                    current.include_members(),
+                    remaining + 1,
+                )?;
+                let has_more_edges = edges.len() > remaining;
+                for edge in edges.into_iter().take(remaining) {
+                    edges_examined += 1;
+                    let forward = edge.kind == EdgeKind::Contains;
+                    let next_id = if forward { &edge.target } else { &edge.source };
+                    if visited.contains(next_id) {
+                        continue;
+                    }
+                    // Inspect the depth frontier too: reaching max_depth alone
+                    // does not prove that a deeper caller was omitted.
+                    if distance == max_depth {
+                        depth_limit_reached = true;
+                        continue;
+                    }
+                    // Filling the last output slot alone is not truncation. Only
+                    // an additional distinct reachable symbol proves a cutoff.
+                    if affected.len() == limit {
+                        node_limit_reached = true;
+                        break 'traversal;
+                    }
+                    let reached = self.impact_endpoint(next_id, edge.kind == EdgeKind::Imports)?;
+                    let (from, to) = if forward {
+                        (&current, &reached)
+                    } else {
+                        (&reached, &current)
+                    };
+                    let entry = json!({
+                        "symbol": self.impact_endpoint_fact(owners, &reached)?,
+                        "distance": distance + 1,
+                        "witness": self.impact_relationship_fact(owners, &edge, from, to)?,
+                        "witness_direction": if forward { "forward" } else { "reverse" },
+                    });
+                    if reached.is_test() {
+                        tests.push(entry.clone());
+                    }
+                    affected.push(entry);
+                    visited.insert(reached.id().to_string());
+                    queue.push_back((reached, distance + 1));
                 }
-                // Inspect the depth frontier too: reaching max_depth alone
-                // does not prove that a deeper caller was omitted.
-                if distance == max_depth {
-                    depth_limit_reached = true;
-                    continue;
+                if has_more_edges {
+                    edge_limit_reached = true;
+                    break;
                 }
-                // Filling the last output slot alone is not truncation. Only
-                // an additional distinct reachable symbol proves a cutoff.
-                if affected.len() == limit {
-                    node_limit_reached = true;
-                    break 'traversal;
-                }
-                let reached = self.impact_endpoint(next_id, edge.kind == EdgeKind::Imports)?;
-                let (from, to) = if forward {
-                    (&current, &reached)
-                } else {
-                    (&reached, &current)
-                };
-                let entry = json!({
-                    "symbol": self.impact_endpoint_fact(&reached)?,
-                    "distance": distance + 1,
-                    "witness": self.impact_relationship_fact(&edge, from, to)?,
-                    "witness_direction": if forward { "forward" } else { "reverse" },
-                });
-                if reached.is_test() {
-                    tests.push(entry.clone());
-                }
-                affected.push(entry);
-                visited.insert(reached.id().to_string());
-                queue.push_back((reached, distance + 1));
             }
-            if has_more_edges {
-                edge_limit_reached = true;
-                break;
-            }
-        }
 
-        let exhausted = !depth_limit_reached && !node_limit_reached && !edge_limit_reached;
-        Ok(json!({
-            "freshness": freshness,
-            "status": "ok",
-            "definition": self.symbol_fact(&definition)?,
-            "relationship_kinds": ["calls", "references", "extends", "implements", "imports", "contains"],
-            "scope": {
-                "reverse_dependencies": ["calls", "references", "extends", "implements", "imports"],
-                "forward_container_members": "contains",
-                "hop_cost": 1,
-                "import_file_anchors": "indexed file snapshots; no inferred file-to-symbol membership",
-            },
-            "affected": affected,
-            "tests": tests,
-            "max_depth": max_depth,
-            "bounded_by": limit,
-            "truncated": !exhausted,
-            "traversal": {
-                "exhausted": exhausted,
-                "depth_limit_reached": depth_limit_reached,
-                "node_limit_reached": node_limit_reached,
-                "edge_limit_reached": edge_limit_reached,
-                "edges_examined": edges_examined,
-                "edge_work_limit": EDGE_WORK_LIMIT,
-            },
-            "message": "Impact follows stored confirmed static dependencies in reverse and container membership forward, counting every transition as one hop. Imports can reach indexed file snapshots; file anchors continue over stored Imports edges and file-to-symbol membership is not inferred. Heuristic and unresolved bindings are excluded; extraction gaps and runtime dispatch can omit dependencies. Tests are reachable test-associated symbols, not a runnable-test list.",
-        }))
+            let exhausted = !depth_limit_reached && !node_limit_reached && !edge_limit_reached;
+            Ok(json!({
+                "freshness": freshness,
+                "status": "ok",
+                "definition": self.symbol_fact(owners, &definition)?,
+                "relationship_kinds": ["calls", "references", "extends", "implements", "imports", "contains"],
+                "scope": {
+                    "reverse_dependencies": ["calls", "references", "extends", "implements", "imports"],
+                    "forward_container_members": "contains",
+                    "hop_cost": 1,
+                    "import_file_anchors": "indexed file snapshots; no inferred file-to-symbol membership",
+                },
+                "affected": affected,
+                "tests": tests,
+                "max_depth": max_depth,
+                "bounded_by": limit,
+                "truncated": !exhausted,
+                "traversal": {
+                    "exhausted": exhausted,
+                    "depth_limit_reached": depth_limit_reached,
+                    "node_limit_reached": node_limit_reached,
+                    "edge_limit_reached": edge_limit_reached,
+                    "edges_examined": edges_examined,
+                    "edge_work_limit": EDGE_WORK_LIMIT,
+                },
+                "message": "Impact follows stored confirmed static dependencies in reverse and container membership forward, counting every transition as one hop. Imports can reach indexed file snapshots; file anchors continue over stored Imports edges and file-to-symbol membership is not inferred. Heuristic and unresolved bindings are excluded; extraction gaps and runtime dispatch can omit dependencies. Tests are reachable test-associated symbols, not a runnable-test list.",
+            }))
+        })();
+        result.map(|value| owners.finish(value))
     }
 
     fn impact_endpoint(&self, id: &str, import_endpoint: bool) -> Result<ImpactEndpoint> {
@@ -184,9 +189,15 @@ impl CodeFacts {
         )))
     }
 
-    fn impact_endpoint_fact(&self, endpoint: &ImpactEndpoint) -> Result<Value> {
+    fn impact_endpoint_fact(
+        &self,
+        owners: &RustImplProjection,
+        endpoint: &ImpactEndpoint,
+    ) -> Result<Value> {
         match endpoint {
-            ImpactEndpoint::Symbol(node) => Ok(serde_json::to_value(self.symbol_fact(node)?)?),
+            ImpactEndpoint::Symbol(node) => {
+                Ok(serde_json::to_value(self.symbol_fact(owners, node)?)?)
+            }
             ImpactEndpoint::File(snapshot) => Ok(json!({
                 "id": snapshot.id, "name": snapshot.file_path, "qualified_name": null,
                 "kind": "file", "language": snapshot.language,
@@ -200,6 +211,7 @@ impl CodeFacts {
 
     fn impact_relationship_fact(
         &self,
+        owners: &RustImplProjection,
         edge: &CodeEdge,
         from: &ImpactEndpoint,
         to: &ImpactEndpoint,
@@ -208,11 +220,11 @@ impl CodeFacts {
             (from, to),
             (ImpactEndpoint::Symbol(_), ImpactEndpoint::Symbol(_))
         ) {
-            return Ok(serde_json::to_value(self.relationship_fact(edge)?)?);
+            return Ok(serde_json::to_value(self.relationship_fact(owners, edge)?)?);
         }
         let mut relationship = json!({
-            "kind": edge.kind.as_str(), "from": self.impact_endpoint_fact(from)?,
-            "to": self.impact_endpoint_fact(to)?, "evidence": self.edge_evidence(edge)?,
+            "kind": edge.kind.as_str(), "from": self.impact_endpoint_fact(owners, from)?,
+            "to": self.impact_endpoint_fact(owners, to)?, "evidence": self.edge_evidence(edge)?,
         });
         if let Some(resolution) = edge
             .metadata
@@ -296,6 +308,7 @@ mod tests {
             id: id.into(),
             name: id.into(),
             qualified_name: None,
+            rust_impl: None,
             kind,
             file_path: file.into(),
             start_line: 1,

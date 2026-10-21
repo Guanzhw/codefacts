@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+
+- Rust impl methods expose optional `rust_impl.owner_ref` in symbol facts.
+  Its response-local key selects one record in the root `rust_impl_owners`
+  dictionary, containing the file, exact receiver and trait spellings and actual
+  syntactically complete impl block's half-open range (1-based lines,
+  0-based UTF-8 byte columns).
+  File plus impl range identifies one syntactic block; these spellings do not
+  resolve types or dispatch. Method definition ranges, qualified names and
+  existing IDs are preserved, including same-line collision disambiguation.
+  These dictionary keys are not symbol selectors. Extraction shares each owner
+  in memory; SQLite stores each owner once outside the symbol graph.
+- Extraction version 11 triggers one full source reindex to populate membership
+  for existing databases. The successful refresh advances the generation and
+  invalidates earlier snapshot cursors; failed refreshes retain prior facts
+  and the pending rebuild marker atomically.
+
 ## 0.2.2 — 2026-10-16
 
 - MCP queries default to readable Markdown, matching direct CLI queries.

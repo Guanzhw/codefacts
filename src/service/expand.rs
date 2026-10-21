@@ -104,7 +104,9 @@ impl CodeFacts {
             ));
         }
         let freshness = self.refresh()?;
-        let node = match self.resolve_symbol(symbol, file_path)? {
+        let _read = self.store.read_scope()?;
+        let owners = &RustImplProjection::default();
+        let node = match self.resolve_symbol(owners, symbol, file_path)? {
             SymbolResolution::One(node) => node,
             other => {
                 let result = match other {
@@ -117,9 +119,9 @@ impl CodeFacts {
                     SymbolResolution::One(_) => unreachable!(),
                 };
                 return if format != Format::Full {
-                    bounded_resolution_result(result, format)
+                    bounded_resolution_result(owners, result, format)
                 } else {
-                    Ok(result)
+                    Ok(owners.finish(result))
                 };
             }
         };
@@ -157,15 +159,15 @@ impl CodeFacts {
                     "message": "The index or semantic references changed. Restart expand without a cursor.",
                 });
                 return if format != Format::Full {
-                    bounded_resolution_result(result, format)
+                    bounded_resolution_result(owners, result, format)
                 } else {
-                    Ok(result)
+                    Ok(owners.finish(result))
                 };
             }
         };
         let limit = bounded_limit(limit);
         let mut result = json!({
-            "freshness": freshness, "status": "ok", "definition": self.symbol_fact(&node)?,
+            "freshness": freshness, "status": "ok", "definition": self.symbol_fact(owners, &node)?,
             "section": section.as_str(), "bounded_by": limit,
         });
         if section == ExpandSection::All {
@@ -192,6 +194,7 @@ impl CodeFacts {
                         EdgeKind::References
                     };
                     serde_json::to_value(self.relationship_page(
+                        owners,
                         &node,
                         incoming,
                         kind,
@@ -204,7 +207,7 @@ impl CodeFacts {
                         .checked_add(limit + 1)
                         .ok_or_else(|| CodeFactsError::Mcp("Invalid cursor offset".into()))?;
                     json!(self
-                        .related_tests(&node, end)?
+                        .related_tests(owners, &node, end)?
                         .into_iter()
                         .skip(offset)
                         .collect::<Vec<_>>())
@@ -277,7 +280,7 @@ impl CodeFacts {
             }
             result["truncated"] = json!(!next.is_empty());
             result["next"] = Value::Object(next);
-            let mut presented = format.present_for("expand", result.clone());
+            let mut presented = owners.finish(format.present_for("expand", result.clone()));
             if format == Format::Full {
                 return Ok(presented);
             }
@@ -352,6 +355,7 @@ impl CodeFacts {
 
     fn relationship_page(
         &self,
+        owners: &RustImplProjection,
         node: &CodeNode,
         incoming: bool,
         kind: EdgeKind,
@@ -375,7 +379,7 @@ impl CodeFacts {
                 skipped += 1;
                 continue;
             }
-            relationships.push(self.relationship_fact(&edge)?);
+            relationships.push(self.relationship_fact(owners, &edge)?);
             if relationships.len() == limit {
                 break;
             }
@@ -395,9 +399,13 @@ fn note_semantic_omission(result: &mut Value, count: usize) {
     );
 }
 
-fn bounded_resolution_result(mut result: Value, format: Format) -> Result<Value> {
+fn bounded_resolution_result(
+    owners: &RustImplProjection,
+    mut result: Value,
+    format: Format,
+) -> Result<Value> {
     loop {
-        let mut presented = format.present_for("expand", result.clone());
+        let mut presented = owners.finish(format.present_for("expand", result.clone()));
         presented["max_bytes"] = json!(COMPACT_EXPAND_BYTES);
         if format.text(&presented).len() <= COMPACT_EXPAND_BYTES {
             return Ok(presented);

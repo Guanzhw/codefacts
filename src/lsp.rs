@@ -749,6 +749,7 @@ mod tests {
             id: "function:src/lib.rs:target:1".to_string(),
             name: name.to_string(),
             qualified_name: None,
+            rust_impl: None,
             kind: crate::types::NodeKind::Function,
             file_path: "src/lib.rs".to_string(),
             start_line: 1,

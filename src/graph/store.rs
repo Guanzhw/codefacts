@@ -4,15 +4,19 @@
 //! `prepare_cached` for automatic statement caching — the Rust equivalent
 //! of the TS version's eagerly-prepared statement map.
 
-use std::collections::{BTreeMap, BTreeSet, HashMap};
+use std::{
+    cell::RefCell,
+    collections::{BTreeMap, BTreeSet, HashMap},
+    sync::Arc,
+};
 
 use rusqlite::types::Value as SqlValue;
-use rusqlite::{params, params_from_iter, Connection};
+use rusqlite::{params, params_from_iter, Connection, OptionalExtension, Transaction};
 
-use crate::db::converters::{row_to_code_edge, row_to_code_node};
+use crate::db::converters::{row_to_code_edge, row_to_stored_node, StoredNode};
 use crate::db::schema::initialize_database;
 use crate::error::Result;
-use crate::types::{CodeEdge, CodeNode, Language, NodeKind, UnresolvedRef};
+use crate::types::{CodeEdge, CodeNode, Language, NodeKind, RustImplMembership, UnresolvedRef};
 
 // ---------------------------------------------------------------------------
 // GraphStats
@@ -60,6 +64,30 @@ pub(crate) struct ImpactFileSnapshot {
 /// ergonomic (no upfront prepare step, no lifetime gymnastics).
 pub struct GraphStore {
     pub(super) conn: Connection,
+    impl_read: RefCell<Option<HashMap<i64, StoredImplOwner>>>,
+    #[cfg(test)]
+    impl_owner_queries: std::cell::Cell<usize>,
+}
+
+struct StoredImplOwner {
+    file_path: String,
+    membership: Arc<RustImplMembership>,
+}
+
+/// A cache and snapshot live only for one read phase. Dropping a nested scope
+/// never clears its caller's cache or ends a caller-owned transaction.
+pub(crate) struct NodeReadScope<'a> {
+    store: &'a GraphStore,
+    _transaction: Option<Transaction<'a>>,
+    owns_cache: bool,
+}
+
+impl Drop for NodeReadScope<'_> {
+    fn drop(&mut self) {
+        if self.owns_cache {
+            self.store.impl_read.borrow_mut().take();
+        }
+    }
 }
 
 impl std::fmt::Debug for GraphStore {
@@ -73,8 +101,8 @@ impl std::fmt::Debug for GraphStore {
 // ---------------------------------------------------------------------------
 
 const UPSERT_NODE_SQL: &str = "\
-INSERT INTO nodes (id, type, name, qualified_name, file_path, start_line, end_line, language, signature, doc_comment, source_hash, metadata, name_tokens, is_test, start_column, end_column, body_in_signature)
-VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, 1)
+INSERT INTO nodes (id, type, name, qualified_name, file_path, start_line, end_line, language, signature, doc_comment, source_hash, metadata, name_tokens, is_test, start_column, end_column, body_in_signature, rust_impl_owner_id)
+VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, 1, ?17)
 ON CONFLICT(id) DO UPDATE SET
   type = excluded.type,
   name = excluded.name,
@@ -91,7 +119,8 @@ ON CONFLICT(id) DO UPDATE SET
   metadata = excluded.metadata,
   name_tokens = excluded.name_tokens,
   is_test = excluded.is_test,
-  body_in_signature = excluded.body_in_signature";
+  body_in_signature = excluded.body_in_signature,
+  rust_impl_owner_id = excluded.rust_impl_owner_id";
 
 const UPSERT_EDGE_SQL: &str = "\
 INSERT INTO edges (source_id, target_id, type, file_path, line, target_name, properties, location_in_columns)
@@ -439,13 +468,164 @@ fn split_identifier_words(name: &str) -> Vec<String> {
 // ---------------------------------------------------------------------------
 
 impl GraphStore {
+    #[cfg(test)]
+    pub(crate) fn impl_owner_query_count(&self) -> usize {
+        self.impl_owner_queries.get()
+    }
+
+    /// Share owner hydration across a complete response or a standalone getter.
+    /// Read-only snapshots use DEFERRED and never commit a caller transaction.
+    pub fn with_read_snapshot<T>(&self, read: impl FnOnce(&Self) -> Result<T>) -> Result<T> {
+        let _scope = self.read_scope()?;
+        read(self)
+    }
+
+    pub(crate) fn read_scope(&self) -> Result<NodeReadScope<'_>> {
+        let owns_cache = self.impl_read.borrow().is_none();
+        let transaction = if owns_cache && self.conn.is_autocommit() {
+            Some(self.conn.unchecked_transaction()?)
+        } else {
+            None
+        };
+        if owns_cache {
+            *self.impl_read.borrow_mut() = Some(HashMap::new());
+        }
+        Ok(NodeReadScope {
+            store: self,
+            _transaction: transaction,
+            owns_cache,
+        })
+    }
+
+    fn hydrate_nodes(&self, pending: Vec<StoredNode>) -> Result<Vec<CodeNode>> {
+        let missing = {
+            let cache = self.impl_read.borrow();
+            let cache = cache.as_ref().expect("node read scope");
+            pending
+                .iter()
+                .filter_map(|node| node.rust_impl_owner_id)
+                .filter(|id| !cache.contains_key(id))
+                .collect::<BTreeSet<_>>()
+                .into_iter()
+                .collect::<Vec<_>>()
+        };
+        for ids in missing.chunks(500) {
+            let placeholders = vec!["?"; ids.len()].join(",");
+            let mut statement = self.conn.prepare_cached(&format!(
+                "SELECT id,file_path,start_line,start_column,end_line,end_column,receiver,trait_name FROM rust_impl_owners WHERE id IN ({placeholders})"
+            ))?;
+            let owners = statement
+                .query_map(params_from_iter(ids.iter()), |row| {
+                    Ok((
+                        row.get::<_, i64>(0)?,
+                        StoredImplOwner {
+                            file_path: row.get(1)?,
+                            membership: Arc::new(RustImplMembership {
+                                start_line: row.get(2)?,
+                                start_column: row.get(3)?,
+                                end_line: row.get(4)?,
+                                end_column: row.get(5)?,
+                                receiver: row.get(6)?,
+                                trait_name: row.get(7)?,
+                            }),
+                        },
+                    ))
+                })?
+                .collect::<rusqlite::Result<Vec<_>>>()?;
+            #[cfg(test)]
+            self.impl_owner_queries
+                .set(self.impl_owner_queries.get() + 1);
+            self.impl_read
+                .borrow_mut()
+                .as_mut()
+                .expect("node read scope")
+                .extend(owners);
+        }
+        let cache = self.impl_read.borrow();
+        let cache = cache.as_ref().expect("node read scope");
+        pending
+            .into_iter()
+            .map(|mut pending| {
+                if let Some(id) = pending.rust_impl_owner_id {
+                    let owner = cache.get(&id).ok_or_else(|| {
+                        crate::error::CodeFactsError::Other(format!("missing Rust impl owner {id}"))
+                    })?;
+                    if owner.file_path != pending.node.file_path {
+                        return Err(crate::error::CodeFactsError::Other(format!(
+                            "Rust impl owner {id} belongs to another file"
+                        )));
+                    }
+                    pending.node.rust_impl = Some(owner.membership.clone());
+                }
+                Ok(pending.node)
+            })
+            .collect()
+    }
+
+    fn upsert_impl_owners(
+        &self,
+        nodes: &[CodeNode],
+    ) -> Result<HashMap<crate::types::RustImplOwnerKey, i64>> {
+        let mut ids = HashMap::new();
+        let mut statement = self.conn.prepare_cached(
+            "INSERT INTO rust_impl_owners(file_path,start_line,start_column,end_line,end_column,receiver,trait_name) VALUES(?1,?2,?3,?4,?5,?6,?7) ON CONFLICT(file_path,start_line,start_column,end_line,end_column) DO UPDATE SET receiver=excluded.receiver,trait_name=excluded.trait_name RETURNING id"
+        )?;
+        // The extractor owns contents for each file/range key. Independent
+        // callers must provide the same canonical record for a shared key.
+        for node in nodes {
+            if let Some(owner) = &node.rust_impl {
+                let key = owner.owner_key(&node.file_path);
+                if let std::collections::hash_map::Entry::Vacant(entry) = ids.entry(key) {
+                    let id = statement.query_row(
+                        params![
+                            node.file_path,
+                            owner.start_line,
+                            owner.start_column,
+                            owner.end_line,
+                            owner.end_column,
+                            owner.receiver,
+                            owner.trait_name
+                        ],
+                        |row| row.get(0),
+                    )?;
+                    entry.insert(id);
+                }
+            }
+        }
+        Ok(ids)
+    }
+
+    fn previous_impl_owners(&self, nodes: &[CodeNode]) -> Result<Vec<i64>> {
+        let mut ids = BTreeSet::new();
+        for nodes in nodes.chunks(500) {
+            let placeholders = vec!["?"; nodes.len()].join(",");
+            let mut statement = self.conn.prepare_cached(&format!("SELECT DISTINCT rust_impl_owner_id FROM nodes WHERE id IN ({placeholders}) AND rust_impl_owner_id IS NOT NULL"))?;
+            ids.extend(
+                statement
+                    .query_map(params_from_iter(nodes.iter().map(|node| &node.id)), |row| {
+                        row.get::<_, i64>(0)
+                    })?
+                    .collect::<rusqlite::Result<Vec<_>>>()?,
+            );
+        }
+        Ok(ids.into_iter().collect())
+    }
+
+    fn remove_orphan_impl_owners(&self, ids: &[i64]) -> Result<()> {
+        for ids in ids.chunks(500) {
+            let placeholders = vec!["?"; ids.len()].join(",");
+            self.conn.execute(&format!("DELETE FROM rust_impl_owners WHERE id IN ({placeholders}) AND NOT EXISTS(SELECT 1 FROM nodes WHERE nodes.rust_impl_owner_id=rust_impl_owners.id)"), params_from_iter(ids.iter()))?;
+        }
+        Ok(())
+    }
+
     /// Open (or create) the database at `db_path`, apply the schema, and
     /// return a ready-to-use store.
     pub fn new(db_path: &str) -> Result<Self> {
         let conn = initialize_database(db_path)?;
         // Ensure the unique index on edges exists so upsert works correctly.
         conn.execute_batch(ENSURE_EDGE_UNIQUE_INDEX_SQL)?;
-        Ok(Self { conn })
+        Ok(Self::from_connection(conn))
     }
 
     /// Wrap an already-open connection. Useful in tests where the caller
@@ -455,7 +635,12 @@ impl GraphStore {
         // been applied yet this will silently fail, but it's the caller's
         // responsibility to ensure the schema is present.
         let _ = conn.execute_batch(ENSURE_EDGE_UNIQUE_INDEX_SQL);
-        Self { conn }
+        Self {
+            conn,
+            impl_read: RefCell::new(None),
+            #[cfg(test)]
+            impl_owner_queries: std::cell::Cell::new(0),
+        }
     }
 
     /// Run a group of graph mutations as one transaction owned by the store.
@@ -465,6 +650,11 @@ impl GraphStore {
     where
         F: FnOnce(&Self) -> Result<T>,
     {
+        if self.impl_read.borrow().is_some() {
+            return Err(crate::error::CodeFactsError::Other(
+                "cannot mutate during a node read snapshot".into(),
+            ));
+        }
         if !self.conn.is_autocommit() {
             return operation(self);
         }
@@ -533,28 +723,7 @@ impl GraphStore {
 
     /// Insert or update a single code node.
     pub fn upsert_node(&self, node: &CodeNode) -> Result<()> {
-        let name_tokens = build_name_tokens(&node.name, node.qualified_name.as_deref());
-        let is_test = detect_is_test_node(node);
-        let mut stmt = self.conn.prepare_cached(UPSERT_NODE_SQL)?;
-        stmt.execute(params![
-            node.id,
-            node.kind.as_str(),
-            node.name,
-            node.qualified_name,
-            node.file_path,
-            node.start_line,
-            node.end_line,
-            node.language.as_str(),
-            node.body,                     // signature column
-            node.documentation,            // doc_comment column
-            compute_simple_hash(&node.id), // source_hash
-            build_node_metadata(node),     // metadata JSON
-            name_tokens,                   // pre-split identifier tokens
-            is_test as i32,                // is_test flag
-            node.start_column,
-            node.end_column,
-        ])?;
-        Ok(())
+        self.upsert_nodes(std::slice::from_ref(node))
     }
 
     /// Insert or update a single code edge.
@@ -579,6 +748,8 @@ impl GraphStore {
     /// Batch-insert nodes atomically.
     pub fn upsert_nodes(&self, nodes: &[CodeNode]) -> Result<()> {
         self.with_transaction(|store| {
+            let previous = store.previous_impl_owners(nodes)?;
+            let owners = store.upsert_impl_owners(nodes)?;
             let mut stmt = store.conn.prepare_cached(UPSERT_NODE_SQL)?;
             for node in nodes {
                 let name_tokens = build_name_tokens(&node.name, node.qualified_name.as_deref());
@@ -600,8 +771,18 @@ impl GraphStore {
                     is_test as i32,
                     node.start_column,
                     node.end_column,
+                    node.rust_impl
+                        .as_ref()
+                        .map(|owner| owners[&owner.owner_key(&node.file_path)]),
                 ])?;
             }
+            let orphan_candidates = previous
+                .into_iter()
+                .chain(owners.into_values())
+                .collect::<BTreeSet<_>>()
+                .into_iter()
+                .collect::<Vec<_>>();
+            store.remove_orphan_impl_owners(&orphan_candidates)?;
             Ok(())
         })
     }
@@ -642,30 +823,11 @@ impl GraphStore {
             let mut del_nodes = store.conn.prepare_cached(DELETE_NODES_BY_FILE_SQL)?;
             del_nodes.execute(params![file_path])?;
 
-            // Insert replacements.
-            let mut ins_node = store.conn.prepare_cached(UPSERT_NODE_SQL)?;
-            for node in nodes {
-                let name_tokens = build_name_tokens(&node.name, node.qualified_name.as_deref());
-                let is_test = detect_is_test_node(node);
-                ins_node.execute(params![
-                    node.id,
-                    node.kind.as_str(),
-                    node.name,
-                    node.qualified_name,
-                    node.file_path,
-                    node.start_line,
-                    node.end_line,
-                    node.language.as_str(),
-                    node.body,
-                    node.documentation,
-                    compute_simple_hash(&node.id),
-                    build_node_metadata(node),
-                    name_tokens,
-                    is_test as i32,
-                    node.start_column,
-                    node.end_column,
-                ])?;
-            }
+            store.conn.execute(
+                "DELETE FROM rust_impl_owners WHERE file_path=?1",
+                [file_path],
+            )?;
+            store.upsert_nodes(nodes)?;
             let mut ins_edge = store.conn.prepare_cached(UPSERT_EDGE_SQL)?;
             for edge in edges {
                 ins_edge.execute(params![
@@ -691,6 +853,10 @@ impl GraphStore {
             del_edges.execute(params![file_path])?;
             let mut del_nodes = store.conn.prepare_cached(DELETE_NODES_BY_FILE_SQL)?;
             del_nodes.execute(params![file_path])?;
+            store.conn.execute(
+                "DELETE FROM rust_impl_owners WHERE file_path=?1",
+                [file_path],
+            )?;
             Ok(())
         })
     }
@@ -704,6 +870,10 @@ impl GraphStore {
             del_edges.execute(params![file_path])?;
             let mut del_nodes = store.conn.prepare_cached(DELETE_NODES_BY_FILE_SQL)?;
             del_nodes.execute(params![file_path])?;
+            store.conn.execute(
+                "DELETE FROM rust_impl_owners WHERE file_path=?1",
+                [file_path],
+            )?;
             Ok(())
         })
     }
@@ -714,15 +884,12 @@ impl GraphStore {
 
     /// Retrieve a single node by its ID, or `None` if it doesn't exist.
     pub fn get_node(&self, id: &str) -> Result<Option<CodeNode>> {
+        let _scope = self.read_scope()?;
         let mut stmt = self
             .conn
             .prepare_cached("SELECT * FROM nodes WHERE id = ?1")?;
-        let mut rows = stmt.query_and_then(params![id], row_to_code_node)?;
-        match rows.next() {
-            Some(Ok(node)) => Ok(Some(node)),
-            Some(Err(e)) => Err(e.into()),
-            None => Ok(None),
-        }
+        let stored = stmt.query_row(params![id], row_to_stored_node).optional()?;
+        Ok(self.hydrate_nodes(stored.into_iter().collect())?.pop())
     }
 
     // -------------------------------------------------------------------
@@ -743,15 +910,17 @@ impl GraphStore {
     // Adapted from CodeGraph 1.6.2 getNodesByIds (6560052a6f856855d3f71eee838fd66ccfa4285d).
     // Use the canonical converter and restore full-store order across batches.
     fn get_nodes_by_keys(&self, column: &str, keys: &[String]) -> Result<Vec<CodeNode>> {
+        let _scope = self.read_scope()?;
         let unique: Vec<_> = keys.iter().collect::<BTreeSet<_>>().into_iter().collect();
         let mut nodes = Vec::new();
         for batch in unique.chunks(500) {
             let placeholders = vec!["?"; batch.len()].join(",");
             let sql = format!("SELECT * FROM nodes WHERE {column} IN ({placeholders})");
             let mut stmt = self.conn.prepare_cached(&sql)?;
-            let rows = stmt.query_and_then(params_from_iter(batch.iter()), row_to_code_node)?;
+            let rows = stmt.query_and_then(params_from_iter(batch.iter()), row_to_stored_node)?;
             nodes.extend(rows.collect::<std::result::Result<Vec<_>, _>>()?);
         }
+        let mut nodes = self.hydrate_nodes(nodes)?;
         nodes.sort_by(|a, b| {
             (&a.file_path, a.start_line, a.start_column, &a.id).cmp(&(
                 &b.file_path,
@@ -765,35 +934,38 @@ impl GraphStore {
 
     /// Get every node whose `file_path` matches.
     pub fn get_nodes_by_file(&self, file_path: &str) -> Result<Vec<CodeNode>> {
+        let _scope = self.read_scope()?;
         let mut stmt = self.conn.prepare_cached(
             "SELECT * FROM nodes WHERE file_path = ?1 \
                  ORDER BY start_line, start_column, id",
         )?;
-        let rows = stmt.query_and_then(params![file_path], row_to_code_node)?;
-        rows.collect::<std::result::Result<Vec<_>, _>>()
-            .map_err(Into::into)
+        let rows = stmt.query_and_then(params![file_path], row_to_stored_node)?;
+        let pending = rows.collect::<std::result::Result<Vec<_>, _>>()?;
+        self.hydrate_nodes(pending)
     }
 
     /// Get every node whose `name` matches.
     pub fn get_nodes_by_name(&self, name: &str) -> Result<Vec<CodeNode>> {
+        let _scope = self.read_scope()?;
         let mut stmt = self.conn.prepare_cached(
             "SELECT * FROM nodes WHERE name = ?1 \
                  ORDER BY file_path, start_line, start_column, id",
         )?;
-        let rows = stmt.query_and_then(params![name], row_to_code_node)?;
-        rows.collect::<std::result::Result<Vec<_>, _>>()
-            .map_err(Into::into)
+        let rows = stmt.query_and_then(params![name], row_to_stored_node)?;
+        let pending = rows.collect::<std::result::Result<Vec<_>, _>>()?;
+        self.hydrate_nodes(pending)
     }
 
     /// Get every node whose `type` column matches `kind`.
     pub fn get_nodes_by_type(&self, kind: &str) -> Result<Vec<CodeNode>> {
+        let _scope = self.read_scope()?;
         let mut stmt = self.conn.prepare_cached(
             "SELECT * FROM nodes WHERE type = ?1 \
                  ORDER BY file_path, start_line, start_column, id",
         )?;
-        let rows = stmt.query_and_then(params![kind], row_to_code_node)?;
-        rows.collect::<std::result::Result<Vec<_>, _>>()
-            .map_err(Into::into)
+        let rows = stmt.query_and_then(params![kind], row_to_stored_node)?;
+        let pending = rows.collect::<std::result::Result<Vec<_>, _>>()?;
+        self.hydrate_nodes(pending)
     }
 
     // -------------------------------------------------------------------
@@ -971,6 +1143,7 @@ impl GraphStore {
         node_file_path: &str,
         limit: usize,
     ) -> Result<Vec<CodeNode>> {
+        let _scope = self.read_scope()?;
         let sql_limit = i64::try_from(limit).map_err(|_| {
             crate::error::CodeFactsError::Other("test result limit is too large".into())
         })?;
@@ -993,10 +1166,10 @@ impl GraphStore {
         )?;
         let rows = stmt.query_and_then(
             params![node_id, node_name, node_file_path, sql_limit],
-            row_to_code_node,
+            row_to_stored_node,
         )?;
-        rows.collect::<std::result::Result<Vec<_>, _>>()
-            .map_err(Into::into)
+        let pending = rows.collect::<std::result::Result<Vec<_>, _>>()?;
+        self.hydrate_nodes(pending)
     }
 
     /// Load the persisted source hashes used by incremental indexing.
@@ -1054,6 +1227,7 @@ impl GraphStore {
     /// Search the derived FTS index while preserving the source-backed node
     /// ordering and structural filters used by the service layer.
     pub fn search_fts_nodes(&self, options: FtsSearchOptions<'_>) -> Result<Vec<CodeNode>> {
+        let _scope = self.read_scope()?;
         let mut query = String::from(
             "SELECT nodes.* FROM fts_nodes
              JOIN nodes ON nodes.rowid = fts_nodes.rowid
@@ -1114,9 +1288,9 @@ impl GraphStore {
         values.push(SqlValue::Integer(sql_offset));
 
         let mut statement = self.conn.prepare_cached(&query)?;
-        let rows = statement.query_and_then(params_from_iter(values.iter()), row_to_code_node)?;
-        rows.collect::<std::result::Result<Vec<_>, _>>()
-            .map_err(Into::into)
+        let rows = statement.query_and_then(params_from_iter(values.iter()), row_to_stored_node)?;
+        let pending = rows.collect::<std::result::Result<Vec<_>, _>>()?;
+        self.hydrate_nodes(pending)
     }
 
     /// Load source-spelled static edges whose target name may have changed
@@ -1243,12 +1417,13 @@ impl GraphStore {
 
     /// Return every node in the graph.
     pub fn get_all_nodes(&self) -> Result<Vec<CodeNode>> {
+        let _scope = self.read_scope()?;
         let mut stmt = self.conn.prepare_cached(
             "SELECT * FROM nodes ORDER BY file_path, start_line, start_column, id",
         )?;
-        let rows = stmt.query_and_then([], row_to_code_node)?;
-        rows.collect::<std::result::Result<Vec<_>, _>>()
-            .map_err(Into::into)
+        let rows = stmt.query_and_then([], row_to_stored_node)?;
+        let pending = rows.collect::<std::result::Result<Vec<_>, _>>()?;
+        self.hydrate_nodes(pending)
     }
 
     /// Return every edge in the graph.
@@ -1445,6 +1620,140 @@ mod tests {
     }
 
     #[test]
+    fn owner_reads_join_caller_transaction_and_rollback_all_refs() {
+        use crate::indexer::{extractor::Extractor, parser::CodeParser};
+        let store = setup();
+        let source = "impl P { fn one() {} fn two() {} }";
+        let tree = CodeParser::new().parse(source, Language::Rust).unwrap();
+        let nodes = Extractor::extract_nodes(&tree, "fixture.rs", Language::Rust, source).unwrap();
+        store.conn.execute_batch("BEGIN IMMEDIATE").unwrap();
+        store.upsert_nodes(&nodes).unwrap();
+        let first = store.get_node(&nodes[0].id).unwrap().unwrap();
+        assert!(first.rust_impl.is_some());
+        assert!(!store.conn.is_autocommit());
+        store.conn.execute_batch("ROLLBACK").unwrap();
+        assert!(store.get_all_nodes().unwrap().is_empty());
+        assert_eq!(
+            store
+                .conn
+                .query_row("SELECT COUNT(*) FROM rust_impl_owners", [], |row| row
+                    .get::<_, i64>(0))
+                .unwrap(),
+            0
+        );
+        store.upsert_nodes(&nodes).unwrap();
+        let before = store.impl_owner_query_count();
+        store
+            .with_read_snapshot(|store| {
+                let all = store.get_nodes_by_file("fixture.rs")?;
+                let one = store.get_node(&nodes[0].id)?.unwrap();
+                assert!(Arc::ptr_eq(
+                    all[0].rust_impl.as_ref().unwrap(),
+                    one.rust_impl.as_ref().unwrap()
+                ));
+                Ok(())
+            })
+            .unwrap();
+        assert_eq!(store.impl_owner_query_count() - before, 1);
+        assert!(store.impl_read.borrow().is_none());
+    }
+
+    #[test]
+    fn duplicate_node_ids_clean_superseded_owners_and_keep_sibling_references() {
+        use crate::indexer::{extractor::Extractor, parser::CodeParser};
+        let source_a = "impl P { fn run() {} fn sibling() {} }";
+        let tree_a = CodeParser::new().parse(source_a, Language::Rust).unwrap();
+        let nodes_a =
+            Extractor::extract_nodes(&tree_a, "fixture.rs", Language::Rust, source_a).unwrap();
+        let method_a = nodes_a.iter().find(|node| node.name == "run").unwrap();
+        let sibling_a = nodes_a.iter().find(|node| node.name == "sibling").unwrap();
+        let source_b = "impl Q { fn run() {} }";
+        let tree_b = CodeParser::new().parse(source_b, Language::Rust).unwrap();
+        let nodes_b =
+            Extractor::extract_nodes(&tree_b, "fixture.rs", Language::Rust, source_b).unwrap();
+        let method_b = &nodes_b[0];
+        assert_eq!(method_a.id, method_b.id);
+        assert_ne!(method_a.rust_impl, method_b.rust_impl);
+        let owner_receivers = |store: &GraphStore| {
+            store
+                .conn
+                .prepare("SELECT receiver FROM rust_impl_owners ORDER BY receiver")
+                .unwrap()
+                .query_map([], |row| row.get::<_, String>(0))
+                .unwrap()
+                .collect::<rusqlite::Result<Vec<_>>>()
+                .unwrap()
+        };
+
+        let store = setup();
+        let mut ownerless = method_a.clone();
+        ownerless.rust_impl = None;
+        store.upsert_nodes(&[method_a.clone(), ownerless]).unwrap();
+        assert!(store
+            .get_node(&method_a.id)
+            .unwrap()
+            .unwrap()
+            .rust_impl
+            .is_none());
+        assert!(owner_receivers(&store).is_empty());
+        assert_eq!(store.get_node_count().unwrap(), 1);
+
+        let store = setup();
+        store
+            .upsert_nodes(&[method_a.clone(), method_b.clone()])
+            .unwrap();
+        let last = store.get_node(&method_a.id).unwrap().unwrap();
+        assert_eq!(last.rust_impl, method_b.rust_impl);
+        assert_eq!(last.body, method_b.body);
+        assert_eq!(last.end_column, method_b.end_column);
+        assert_eq!(owner_receivers(&store), vec!["Q"]);
+        assert_eq!(store.get_node_count().unwrap(), 1);
+
+        let store = setup();
+        store
+            .upsert_nodes(&[method_a.clone(), sibling_a.clone(), method_b.clone()])
+            .unwrap();
+        assert_eq!(
+            store.get_node(&method_a.id).unwrap().unwrap().rust_impl,
+            method_b.rust_impl
+        );
+        assert_eq!(
+            store.get_node(&sibling_a.id).unwrap().unwrap().rust_impl,
+            sibling_a.rust_impl
+        );
+        assert_eq!(owner_receivers(&store), vec!["P", "Q"]);
+        assert_eq!(store.get_node_count().unwrap(), 2);
+    }
+
+    #[test]
+    fn distinct_owners_use_bounded_batches_and_indexed_orphan_checks() {
+        use crate::indexer::{extractor::Extractor, parser::CodeParser};
+        let store = setup();
+        let mut source = String::new();
+        for index in 0..513 {
+            source.push_str(&format!("impl P {{ fn method_{index}() {{}} }}\n"));
+        }
+        let tree = CodeParser::new().parse(&source, Language::Rust).unwrap();
+        let nodes = Extractor::extract_nodes(&tree, "fixture.rs", Language::Rust, &source).unwrap();
+        store.upsert_nodes(&nodes).unwrap();
+        let before = store.impl_owner_query_count();
+        let returned = store.get_all_nodes().unwrap();
+        assert_eq!(returned.len(), 513);
+        assert_eq!(store.impl_owner_query_count() - before, 2);
+        let plan = store
+            .conn
+            .prepare("EXPLAIN QUERY PLAN SELECT 1 FROM nodes WHERE rust_impl_owner_id=?1")
+            .unwrap()
+            .query_map([1], |row| row.get::<_, String>(3))
+            .unwrap()
+            .collect::<rusqlite::Result<Vec<_>>>()
+            .unwrap();
+        assert!(plan
+            .iter()
+            .any(|line| line.contains("idx_nodes_rust_impl_owner")));
+    }
+
+    #[test]
     fn batched_node_hydration_preserves_converter_fields_and_global_order() {
         let store = setup();
         let mut nodes = Vec::new();
@@ -1606,6 +1915,7 @@ mod tests {
             documentation: Some(format!("Docs for {}", name)),
             exported: Some(true),
             is_local: false,
+            rust_impl: None,
         }
     }
 
@@ -2895,6 +3205,7 @@ mod tests {
             documentation: None,
             exported: None,
             is_local: false,
+            rust_impl: None,
         };
         store.upsert_node(&node).unwrap();
         let got = store.get_node("n1").unwrap().unwrap();
