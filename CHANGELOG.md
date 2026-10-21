@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Query exploration groups admitted Rust methods by their exact impl source
+  range and pools only those members' source shares, returning fitting impls
+  once or an explicit bounded preview with the original method anchor.
 - Rust impl methods expose optional `rust_impl.owner_ref` in symbol facts.
   Its response-local key selects one record in the root `rust_impl_owners`
   dictionary, containing the file, exact receiver and trait spellings and actual
