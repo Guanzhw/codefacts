@@ -6,7 +6,9 @@
 
 use std::collections::{BTreeMap, HashMap, HashSet, VecDeque};
 use std::fs;
+use std::io::Read;
 use std::path::{Component, Path, PathBuf};
+use std::time::Instant;
 
 use base64::{engine::general_purpose::STANDARD_NO_PAD, Engine as _};
 use serde::{Deserialize, Serialize};
@@ -142,6 +144,184 @@ pub struct SemanticLocationFact {
     pub evidence: Evidence,
     pub start_column: u32,
     pub end_column: u32,
+    pub source_validation: &'static str,
+}
+
+const SEMANTIC_VALIDATION_MAX_FILES: usize = 64;
+const SEMANTIC_VALIDATION_MAX_BYTES: usize = 2 * 1024 * 1024;
+const SEMANTIC_VALIDATION_MAX_LOCATIONS: usize = 16_384;
+
+fn check_semantic_deadline(deadline: Instant) -> std::result::Result<(), String> {
+    if Instant::now() >= deadline {
+        return Err("semantic location validation exceeded the shared LSP deadline; static facts remain available".into());
+    }
+    Ok(())
+}
+
+#[cfg(windows)]
+fn semantic_comparable_path(path: &Path) -> PathBuf {
+    let mut components = path.components();
+    if let Some(Component::Prefix(prefix)) = components.next() {
+        if let std::path::Prefix::VerbatimDisk(drive) = prefix.kind() {
+            let mut comparable = PathBuf::from(format!("{}:", drive as char));
+            for component in components {
+                comparable.push(component.as_os_str());
+            }
+            return comparable;
+        }
+    }
+    path.to_path_buf()
+}
+
+fn semantic_lexical_relative(root: &Path, path: &Path) -> Option<PathBuf> {
+    #[cfg(windows)]
+    let (root, path) = (
+        semantic_comparable_path(root),
+        semantic_comparable_path(path),
+    );
+    path.strip_prefix(root).ok().map(Path::to_path_buf)
+}
+
+/// A flat index avoids rescanning source for each provider-controlled location.
+struct SemanticSourceSnapshot {
+    line_starts: Vec<usize>,
+    utf16_boundaries: Vec<u32>,
+}
+
+impl SemanticSourceSnapshot {
+    fn from_source(source: &str, deadline: Instant) -> std::result::Result<Self, String> {
+        let mut snapshot = Self {
+            line_starts: Vec::new(),
+            utf16_boundaries: Vec::new(),
+        };
+        let mut add_line = |line: &str| -> std::result::Result<(), String> {
+            check_semantic_deadline(deadline)?;
+            snapshot.line_starts.push(snapshot.utf16_boundaries.len());
+            snapshot.utf16_boundaries.push(0);
+            let mut column = 0;
+            for (index, character) in line.chars().enumerate() {
+                if index % 4096 == 0 {
+                    check_semantic_deadline(deadline)?;
+                }
+                column += character.len_utf16() as u32;
+                snapshot.utf16_boundaries.push(column);
+            }
+            Ok(())
+        };
+        let bytes = source.as_bytes();
+        let mut start = 0;
+        let mut position = 0;
+        while position < bytes.len() {
+            if position % 4096 == 0 {
+                check_semantic_deadline(deadline)?;
+            }
+            if matches!(bytes[position], b'\r' | b'\n') {
+                add_line(&source[start..position])?;
+                if bytes[position] == b'\r' && bytes.get(position + 1) == Some(&b'\n') {
+                    position += 1;
+                }
+                start = position + 1;
+            }
+            position += 1;
+        }
+        // LSP retains the final empty line after a newline, including CRLF.
+        add_line(&source[start..])?;
+        Ok(snapshot)
+    }
+
+    fn valid_position(&self, line: u32, column: u32) -> bool {
+        let Some(&start) = self.line_starts.get(line as usize) else {
+            return false;
+        };
+        let end = self
+            .line_starts
+            .get(line as usize + 1)
+            .copied()
+            .unwrap_or(self.utf16_boundaries.len());
+        self.utf16_boundaries[start..end]
+            .binary_search(&column)
+            .is_ok()
+    }
+
+    fn validate(&self, location: &lsp::LspLocation) -> std::result::Result<(), String> {
+        if (location.end_line, location.end_character)
+            < (location.start_line, location.start_character)
+        {
+            return Err("semantic provider returned a reversed source range".into());
+        }
+        if !self.valid_position(location.start_line, location.start_character)
+            || !self.valid_position(location.end_line, location.end_character)
+        {
+            return Err("semantic provider returned a position outside indexed source or inside a UTF-16 surrogate pair".into());
+        }
+        Ok(())
+    }
+}
+
+#[derive(Default)]
+struct SemanticSourceCache {
+    snapshots: HashMap<String, SemanticSourceSnapshot>,
+    loaded_bytes: usize,
+}
+
+impl SemanticSourceCache {
+    fn validate(
+        &mut self,
+        root: &Path,
+        file_path: &str,
+        expected_hash: &str,
+        location: &lsp::LspLocation,
+        deadline: Instant,
+    ) -> std::result::Result<(), String> {
+        check_semantic_deadline(deadline)?;
+        if !self.snapshots.contains_key(file_path) {
+            if self.snapshots.len() >= SEMANTIC_VALIDATION_MAX_FILES {
+                return Err("semantic location validation exceeded the 64-file budget; static facts remain available".into());
+            }
+            let absolute = root
+                .join(file_path)
+                .canonicalize()
+                .map_err(|_| format!("could not resolve indexed semantic source: {file_path}"))?;
+            if !absolute.starts_with(root) {
+                return Err(format!(
+                    "indexed semantic source left the repository: {file_path}"
+                ));
+            }
+            let metadata = fs::metadata(&absolute)
+                .map_err(|_| format!("could not inspect indexed semantic source: {file_path}"))?;
+            if !metadata.is_file() {
+                return Err(format!(
+                    "indexed semantic source is not a regular file: {file_path}"
+                ));
+            }
+            let remaining = SEMANTIC_VALIDATION_MAX_BYTES - self.loaded_bytes;
+            if metadata.len() > remaining as u64 {
+                return Err("semantic location validation exceeded the 2 MiB source budget; static facts remain available".into());
+            }
+            check_semantic_deadline(deadline)?;
+            let mut bytes = Vec::with_capacity(metadata.len() as usize);
+            fs::File::open(&absolute)
+                .and_then(|file| file.take(remaining as u64 + 1).read_to_end(&mut bytes))
+                .map_err(|_| format!("could not read indexed semantic source: {file_path}"))?;
+            check_semantic_deadline(deadline)?;
+            if bytes.len() > remaining {
+                return Err("semantic location validation exceeded the 2 MiB source budget; static facts remain available".into());
+            }
+            if hex::encode(Sha256::digest(&bytes)) != expected_hash {
+                return Err(format!(
+                    "indexed semantic source changed after indexing: {file_path}"
+                ));
+            }
+            self.loaded_bytes += bytes.len();
+            let source = String::from_utf8(bytes)
+                .map_err(|_| format!("indexed semantic source is not valid UTF-8: {file_path}"))?;
+            self.snapshots.insert(
+                file_path.into(),
+                SemanticSourceSnapshot::from_source(&source, deadline)?,
+            );
+        }
+        self.snapshots[file_path].validate(location)
+    }
 }
 
 #[derive(Debug, Serialize)]
@@ -686,7 +866,7 @@ impl CodeFacts {
         let section = markdown_section(&node);
         let source = self.definition_source(&node, MAX_DEFINITION_SOURCE_RESPONSE_LEN)?;
 
-        Ok(json!({
+        let mut result = json!({
             "freshness": freshness,
             "status": "ok",
             "definition": self.symbol_fact(&node)?,
@@ -701,7 +881,10 @@ impl CodeFacts {
             },
             "tests": tests,
             "bounded_by": limit,
-        }))
+        });
+        self.annotate_test_associations(&node, &mut result)?;
+        crate::presentation::refresh_neighborhood_metadata(&mut result);
+        Ok(result)
     }
 
     pub fn path(&self, from: &str, to: &str, limit: Option<usize>) -> Result<Value> {
@@ -937,10 +1120,10 @@ impl CodeFacts {
     }
 
     /// Enrich one search candidate without starting optional LSP processes.
-    /// The entry intentionally exposes direct static facts only; semantic
+    /// The entry exposes direct indexed facts, including labeled candidates; semantic
     /// references remain an explicit `expand` request with their own status.
     fn context_entry(&self, node: &CodeNode) -> Result<Value> {
-        Ok(json!({
+        let mut result = json!({
             "symbol": self.symbol_fact(node)?,
             "source": self.definition_source(node, MAX_DEFINITION_SOURCE_RESPONSE_LEN)?,
             "callers": self.relationships_to(node, true, Some(EdgeKind::Calls), CONTEXT_RELATIONSHIP_LIMIT)?,
@@ -950,7 +1133,10 @@ impl CodeFacts {
                 "outbound": self.relationships_to(node, false, Some(EdgeKind::References), CONTEXT_RELATIONSHIP_LIMIT)?,
             },
             "tests": self.related_tests(node, CONTEXT_RELATIONSHIP_LIMIT)?,
-        }))
+        });
+        self.annotate_test_associations(node, &mut result)?;
+        crate::presentation::refresh_neighborhood_metadata(&mut result);
+        Ok(result)
     }
 
     fn path_resolution_result(
@@ -1055,7 +1241,7 @@ impl CodeFacts {
 
             // Extractors retain unresolved static references as edges so the
             // fact store can represent uncertainty. MCP relationship results
-            // only expose confirmed symbol-to-symbol facts, however: a target
+            // require indexed endpoints, while binding may remain heuristic: a target
             // that no longer exists after refresh must not turn `expand` into
             // an internal error or be presented as a confirmed relationship.
             if self.store.get_node(&edge.source)?.is_none()
@@ -1076,8 +1262,48 @@ impl CodeFacts {
             .collect()
     }
 
+    fn annotate_test_associations(&self, node: &CodeNode, result: &mut Value) -> Result<()> {
+        let ids = result["tests"]
+            .as_array()
+            .into_iter()
+            .flatten()
+            .filter_map(|test| test["id"].as_str().map(str::to_owned))
+            .collect::<Vec<_>>();
+        if ids.is_empty() {
+            return Ok(());
+        }
+        let witnesses = self.store.get_related_test_witnesses(&node.id, &ids)?;
+        let associations = ids
+            .into_iter()
+            .map(|id| {
+                let Some(edge) = witnesses.get(&id) else {
+                    // Explanatory lookup must never remove an already selected test.
+                    return Ok(json!({"test_id": id, "witness_status": "unavailable"}));
+                };
+                let direction = if edge.source == node.id && edge.target == node.id {
+                    "self"
+                } else if edge.source == id {
+                    "test_to_symbol"
+                } else {
+                    "symbol_to_test"
+                };
+                Ok(json!({
+                    "test_id": id, "direction": direction, "kind": edge.kind.as_str(),
+                    "evidence": self.edge_evidence(edge)?,
+                }))
+            })
+            .collect::<Result<Vec<_>>>()?;
+        result["test_associations"] = json!(associations);
+        Ok(())
+    }
+
     fn semantic_references(&self, node: &CodeNode, limit: usize) -> Result<Value> {
-        match self.lsp.references(&self.root, node) {
+        let file_hashes = if self.lsp.needs_indexed_snapshot(node) {
+            self.store.get_file_hashes()?
+        } else {
+            HashMap::new()
+        };
+        match self.lsp.references(&self.root, node, &file_hashes) {
             SemanticReferenceResult::Disabled => Ok(json!({
                 "status": "disabled",
                 "message": "Semantic LSP references are disabled by --lsp off.",
@@ -1105,10 +1331,25 @@ impl CodeFacts {
             SemanticReferenceResult::Success {
                 provider,
                 locations,
+                workspace,
+                deadline,
             } => {
+                if let Err(message) = check_semantic_deadline(deadline) {
+                    return Ok(json!({"status":"failed", "provider":provider, "message":message}));
+                }
+                if locations.len() > SEMANTIC_VALIDATION_MAX_LOCATIONS {
+                    return Ok(json!({"status":"failed", "provider":provider,
+                        "message":"semantic location validation exceeded the 16384-location budget; static facts remain available"}));
+                }
                 let mut facts = Vec::with_capacity(locations.len().min(limit));
                 let mut omitted_locations = 0usize;
+                let mut sources = SemanticSourceCache::default();
                 for location in locations {
+                    if let Err(message) = check_semantic_deadline(deadline) {
+                        return Ok(
+                            json!({"status":"failed", "provider":provider, "message":message}),
+                        );
+                    }
                     if facts.len() == limit {
                         omitted_locations += 1;
                         continue;
@@ -1117,40 +1358,76 @@ impl CodeFacts {
                         omitted_locations += 1;
                         continue;
                     };
-                    let Ok(file_path) = self.relative_path(&path.to_string_lossy()) else {
+                    let Some(file_path) = self.indexed_semantic_path(&path, &file_hashes) else {
                         // A semantic answer can legitimately include a standard
                         // library or dependency location. CodeFacts only returns
                         // repository facts with an indexed source hash.
                         omitted_locations += 1;
                         continue;
                     };
-                    let Some(source_hash) = self.source_hash(&file_path)? else {
-                        omitted_locations += 1;
-                        continue;
-                    };
+                    let source_hash = &file_hashes[&file_path];
+                    if let Err(message) =
+                        sources.validate(&self.root, &file_path, source_hash, &location, deadline)
+                    {
+                        return Ok(
+                            json!({"status":"failed", "provider":provider, "message":message}),
+                        );
+                    }
                     facts.push(SemanticLocationFact {
                         evidence: Evidence {
                             file_path,
-                            start_line: location.start_line.saturating_add(1),
-                            end_line: location.end_line.saturating_add(1),
-                            source_hash: Some(source_hash),
+                            start_line: location.start_line + 1,
+                            end_line: location.end_line + 1,
+                            source_hash: Some(source_hash.clone()),
                             extractor: format!("lsp:{provider}"),
                             confidence: "semantic".to_string(),
                         },
                         start_column: location.start_character,
                         end_column: location.end_character,
+                        source_validation: "current_hash_and_utf16_range_verified",
                     });
+                }
+                if let Err(message) = check_semantic_deadline(deadline) {
+                    return Ok(json!({"status":"failed", "provider":provider, "message":message}));
                 }
                 Ok(json!({
                     "status": "ok",
                     "provider": provider,
                     "position_encoding": "utf-16",
+                    "workspace": workspace,
                     "locations": facts,
                     "truncated": omitted_locations > 0,
                     "omitted_locations": omitted_locations,
                 }))
             }
         }
+    }
+
+    fn indexed_semantic_path(
+        &self,
+        path: &Path,
+        file_hashes: &HashMap<String, String>,
+    ) -> Option<String> {
+        // Prefer an indexed lexical path so a deleted file or a changed symlink
+        // is a validation failure, rather than silently becoming unindexed.
+        if let Some(relative) = semantic_lexical_relative(&self.root, path) {
+            let mut normalized = PathBuf::new();
+            for component in relative.components() {
+                match component {
+                    Component::Normal(part) => normalized.push(part),
+                    Component::CurDir => {}
+                    Component::ParentDir if normalized.pop() => {}
+                    _ => return None,
+                }
+            }
+            let candidate = normalized.to_string_lossy().replace('\\', "/");
+            if file_hashes.contains_key(&candidate) {
+                return Some(candidate);
+            }
+        }
+        self.relative_path(&path.to_string_lossy())
+            .ok()
+            .filter(|file| file_hashes.contains_key(file))
     }
 
     fn relationship_fact(&self, edge: &CodeEdge) -> Result<RelationshipFact> {
@@ -1283,6 +1560,45 @@ impl CodeFacts {
                 byte_limit_reached = true;
                 if text.is_empty() {
                     let end = line.floor_char_boundary(line.len().min(max_bytes));
+                    // Keep ordinary line-aligned excerpts, including export
+                    // prefixes and indentation. If earlier declarations use
+                    // the entire budget, return a labeled AST-column fragment
+                    // instead of substituting their text for this definition.
+                    if end <= node.start_column as usize {
+                        let start = node.start_column as usize;
+                        let line_end = line.trim_end_matches(['\r', '\n']).len();
+                        let definition_end = if start_line == definition_end_line {
+                            node.end_column as usize
+                        } else {
+                            line_end
+                        };
+                        let Some(fragment) = line
+                            .get(start..definition_end)
+                            .filter(|fragment| definition_end <= line_end && !fragment.is_empty())
+                        else {
+                            return Ok(json!({
+                                "status": "unavailable",
+                                "message": "The indexed definition columns are not valid UTF-8 byte boundaries in the verified source line.",
+                            }));
+                        };
+                        let fragment_end =
+                            fragment.floor_char_boundary(fragment.len().min(max_bytes));
+                        let text = &fragment[..fragment_end];
+                        return Ok(json!({
+                            "status": "ok",
+                            "excerpt_kind": "column_fragment",
+                            "start_line": start_line,
+                            "end_line": start_line,
+                            "start_column": start,
+                            "end_column": start + text.len(),
+                            "definition_end_line": definition_end_line,
+                            "text": text,
+                            "byte_length": text.len(),
+                            "leading_context_omitted": true,
+                            "truncated": true,
+                            "message": "Leading line context is omitted; columns are zero-based UTF-8 byte offsets with an exclusive end. Read the full source range for surrounding context.",
+                        }));
+                    }
                     text.push_str(&line[..end]);
                     if end > 0 {
                         returned_end_line = line_number;
@@ -1765,6 +2081,163 @@ fn confidence_for(node: &CodeNode) -> &'static str {
 }
 
 #[cfg(test)]
+mod semantic_validation_tests {
+    use super::*;
+    use std::time::Duration;
+    use tempfile::tempdir;
+
+    fn location(
+        start_line: u32,
+        start_character: u32,
+        end_line: u32,
+        end_character: u32,
+    ) -> lsp::LspLocation {
+        lsp::LspLocation {
+            uri: "file:///unused".into(),
+            start_line,
+            start_character,
+            end_line,
+            end_character,
+        }
+    }
+
+    #[test]
+    fn semantic_ranges_use_utf16_boundaries_and_lsp_newlines() {
+        let deadline = Instant::now() + Duration::from_secs(30);
+        let source = SemanticSourceSnapshot::from_source("😀x\r\nz\rt\n", deadline).unwrap();
+        for (line, column) in [(0, 0), (0, 2), (0, 3), (1, 1), (2, 1), (3, 0)] {
+            assert!(source.valid_position(line, column));
+        }
+        for (line, column) in [(0, 1), (0, 4), (1, 2), (3, 1), (4, 0), (u32::MAX, 0)] {
+            assert!(!source.valid_position(line, column));
+        }
+        assert!(source.validate(&location(0, 2, 2, 1)).is_ok());
+        assert!(source.validate(&location(0, 1, 0, 2)).is_err());
+        assert!(source.validate(&location(2, 1, 0, 2)).is_err());
+        assert!(source.validate(&location(0, 3, 0, 2)).is_err());
+        let empty = SemanticSourceSnapshot::from_source("", deadline).unwrap();
+        assert!(empty.valid_position(0, 0));
+        assert!(!empty.valid_position(0, 1));
+        assert!(!empty.valid_position(1, 0));
+    }
+
+    #[test]
+    fn semantic_source_cache_checks_hash_and_reads_each_indexed_file_once() {
+        let directory = tempdir().unwrap();
+        let root = directory.path().canonicalize().unwrap();
+        let source = "😀x\r\nnext\n";
+        fs::write(root.join("app.py"), source).unwrap();
+        let hash = hex::encode(Sha256::digest(source.as_bytes()));
+        let deadline = Instant::now() + Duration::from_secs(30);
+        let mut cache = SemanticSourceCache::default();
+        cache
+            .validate(&root, "app.py", &hash, &location(0, 0, 0, 2), deadline)
+            .unwrap();
+        assert_eq!(cache.loaded_bytes, source.len());
+        fs::write(root.join("app.py"), "changed").unwrap();
+        // The rest of this request uses its already validated source snapshot.
+        cache
+            .validate(&root, "app.py", &hash, &location(1, 0, 1, 4), deadline)
+            .unwrap();
+        assert_eq!(cache.snapshots.len(), 1);
+        assert_eq!(cache.loaded_bytes, source.len());
+        let mut next_request = SemanticSourceCache::default();
+        assert!(next_request
+            .validate(&root, "app.py", &hash, &location(0, 0, 0, 1), deadline)
+            .unwrap_err()
+            .contains("changed after indexing"));
+        fs::remove_file(root.join("app.py")).unwrap();
+        assert!(next_request
+            .validate(&root, "app.py", &hash, &location(0, 0, 0, 1), deadline)
+            .unwrap_err()
+            .contains("could not resolve"));
+    }
+
+    #[test]
+    fn semantic_validation_budgets_fail_explicitly_before_unbounded_reads() {
+        let directory = tempdir().unwrap();
+        let root = directory.path().canonicalize().unwrap();
+        let deadline = Instant::now() + Duration::from_secs(30);
+        let hash = hex::encode(Sha256::digest(b"x"));
+        let mut cache = SemanticSourceCache::default();
+        for index in 0..SEMANTIC_VALIDATION_MAX_FILES {
+            let file = format!("{index}.py");
+            fs::write(root.join(&file), "x").unwrap();
+            cache
+                .validate(&root, &file, &hash, &location(0, 0, 0, 1), deadline)
+                .unwrap();
+        }
+        fs::write(root.join("extra.py"), "x").unwrap();
+        assert!(cache
+            .validate(&root, "extra.py", &hash, &location(0, 0, 0, 1), deadline)
+            .unwrap_err()
+            .contains("64-file budget"));
+        fs::write(
+            root.join("large.py"),
+            vec![b'x'; SEMANTIC_VALIDATION_MAX_BYTES + 1],
+        )
+        .unwrap();
+        let mut cache = SemanticSourceCache::default();
+        assert!(cache
+            .validate(&root, "large.py", &hash, &location(0, 0, 0, 1), deadline)
+            .unwrap_err()
+            .contains("2 MiB source budget"));
+        assert_eq!(cache.loaded_bytes, 0);
+        let expired = Instant::now() - Duration::from_secs(1);
+        assert!(cache
+            .validate(&root, "extra.py", &hash, &location(0, 0, 0, 1), expired)
+            .unwrap_err()
+            .contains("shared LSP deadline"));
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn deleted_windows_uri_with_plain_drive_remains_an_indexed_validation_failure() {
+        let directory = tempdir().unwrap();
+        let root = directory.path().canonicalize().unwrap();
+        let state = tempdir().unwrap();
+        let source = "def target():\n    return 1\n";
+        fs::write(root.join("app.py"), source).unwrap();
+        let facts =
+            CodeFacts::open_with_lsp(&root, state.path().join("facts.sqlite"), LspMode::Off)
+                .unwrap();
+        facts.expand("target", None, Some(20)).unwrap();
+        let hashes = facts.store.get_file_hashes().unwrap();
+        let plain = semantic_comparable_path(&root.join("app.py"));
+        let encoded = plain
+            .to_string_lossy()
+            .replace('\\', "/")
+            .bytes()
+            .map(|byte| {
+                if byte.is_ascii_alphanumeric() || b"-_.~/:".contains(&byte) {
+                    (byte as char).to_string()
+                } else {
+                    format!("%{byte:02X}")
+                }
+            })
+            .collect::<String>();
+        let decoded = lsp::path_from_file_uri(&format!("file:///{encoded}")).unwrap();
+        assert!(
+            matches!(decoded.components().next(), Some(Component::Prefix(prefix))
+            if matches!(prefix.kind(), std::path::Prefix::Disk(_)))
+        );
+        fs::remove_file(root.join("app.py")).unwrap();
+        let file = facts.indexed_semantic_path(&decoded, &hashes).unwrap();
+        assert_eq!(file, "app.py");
+        let error = SemanticSourceCache::default()
+            .validate(
+                &root,
+                &file,
+                &hashes[&file],
+                &location(0, 4, 0, 10),
+                Instant::now() + Duration::from_secs(30),
+            )
+            .unwrap_err();
+        assert!(error.contains("could not resolve"), "{error}");
+    }
+}
+
+#[cfg(test)]
 mod tests {
     use super::*;
     use crate::types::{Language, NodeKind};
@@ -1904,5 +2377,43 @@ mod tests {
             .expect("read changed definition source");
         assert_eq!(excerpt["status"], "changed_during_query");
         assert!(excerpt.get("text").is_none());
+    }
+
+    #[test]
+    fn definition_column_fragments_refuse_invalid_stored_ranges() {
+        let repository = tempdir().unwrap();
+        let source = format!(
+            "const pad = \"{}\"; function target() {{ return 42; }}\r\n",
+            "界".repeat(1800),
+        );
+        fs::write(repository.path().join("target.ts"), &source).unwrap();
+        let facts =
+            CodeFacts::open(repository.path(), repository.path().join("facts.sqlite")).unwrap();
+        facts.map().unwrap();
+        let mut node = match facts.resolve_symbol("target", Some("target.ts")).unwrap() {
+            SymbolResolution::One(node) => node,
+            _ => panic!("target should resolve exactly"),
+        };
+        let start = node.start_column;
+        let end = node.end_column;
+        let mid_character = source
+            .char_indices()
+            .find(|(offset, ch)| *offset >= 4096 && ch.len_utf8() > 1)
+            .unwrap()
+            .0 as u32
+            + 1;
+        for (start, end) in [
+            (start, start),
+            (start, source.len() as u32 + 1),
+            (mid_character, end),
+        ] {
+            node.start_column = start;
+            node.end_column = end;
+            let excerpt = facts
+                .definition_source(&node, MAX_DEFINITION_SOURCE_RESPONSE_LEN)
+                .unwrap();
+            assert_eq!(excerpt["status"], "unavailable");
+            assert!(excerpt.get("text").is_none());
+        }
     }
 }

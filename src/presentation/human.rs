@@ -73,24 +73,17 @@ pub(super) fn project(workflow: &str, mut value: Value) -> Value {
     value
 }
 
-// A visible same-name/file collision needs exact selection IDs even when line
+// A visible same-name collision needs exact selection IDs even when file or line
 // ranges differ. Ambiguous resolution candidates always retain their IDs.
 fn disambiguated_ids(value: &Value) -> HashSet<String> {
-    fn visit(value: &Value, groups: &mut HashMap<(String, String), HashSet<String>>) {
+    fn visit(value: &Value, groups: &mut HashMap<String, HashSet<String>>) {
         match value {
             Value::Object(fields) => {
-                if let (Some(id), Some(name), Some(file)) = (
+                if let (Some(id), Some(name)) = (
                     fields.get("id").and_then(Value::as_str),
                     fields.get("name").and_then(Value::as_str),
-                    fields
-                        .get("evidence")
-                        .and_then(|v| v.get("file_path"))
-                        .and_then(Value::as_str),
                 ) {
-                    groups
-                        .entry((name.into(), file.into()))
-                        .or_default()
-                        .insert(id.into());
+                    groups.entry(name.into()).or_default().insert(id.into());
                 }
                 for value in fields.values() {
                     visit(value, groups);
@@ -182,19 +175,15 @@ fn symbol(
     Value::Object(fields)
 }
 
-fn symbol_ref(value: &Value, ids: &HashSet<String>) -> String {
-    let projected = symbol(value, None, ids, false);
-    let mut text = format!(
-        "{} @ {}",
-        projected["symbol"].as_str().unwrap(),
-        projected["at"].as_str().unwrap()
-    );
-    if let Some(id) = projected.get("id").and_then(Value::as_str) {
-        text.push_str(&format!(" [{id}]"));
-    } else if let Some(selector) = projected.get("selector").and_then(Value::as_str) {
-        text.push_str(&format!(" [selector: {selector}]"));
+fn symbol_ref(value: &Value) -> String {
+    // RelationshipFact endpoints are stored symbols, so their exact IDs are
+    // accepted unchanged by expand/impact even when the raw name is ambiguous
+    // outside this response. Impact also has indexed file snapshot endpoints;
+    // these are traversal anchors, not resolve_symbol inputs.
+    if value["kind"] == "file" {
+        return format!("file snapshot @ {}", locator(&value["evidence"], None));
     }
-    text
+    value["id"].as_str().expect("symbol id").to_owned()
 }
 
 fn symbol_list(value: &mut Value, file: Option<&str>, ids: &HashSet<String>, force_ids: bool) {
@@ -210,20 +199,19 @@ fn edge(value: &Value) -> Map<String, Value> {
     }
     fields.insert("callsite".into(), json!(locator(&value["evidence"], None)));
     evidence_details(&mut fields, &value["evidence"], true);
+    if value["evidence"]["confidence"] == "heuristic" {
+        fields.insert("binding".into(), json!("candidate"));
+    }
     if let Some(resolution) = value.get("resolution") {
         fields.insert("resolution".into(), resolution.clone());
     }
     fields
 }
 
-fn relationships(value: &mut Value, counterpart: &str, ids: &HashSet<String>) {
+fn relationships(value: &mut Value, counterpart: &str) {
     for value in value.as_array_mut().expect("relationship list") {
         let mut fields = edge(value);
-        // Counterpart definition and actual callsite are independent locations.
-        fields.insert(
-            counterpart.into(),
-            json!(symbol_ref(&value[counterpart], ids)),
-        );
+        fields.insert(counterpart.into(), json!(symbol_ref(&value[counterpart])));
         let mut details = Map::new();
         evidence_details(&mut details, &value[counterpart]["evidence"], false);
         for (name, value) in details {
@@ -239,13 +227,13 @@ fn neighborhood(fields: &mut Map<String, Value>, ids: &HashSet<String>) {
     }
     for (section, counterpart) in [("callers", "from"), ("callees", "to")] {
         if let Some(edges) = fields.get_mut(section) {
-            relationships(edges, counterpart, ids);
+            relationships(edges, counterpart);
         }
     }
     if let Some(references) = fields.get_mut("references").and_then(Value::as_object_mut) {
         for (section, counterpart) in [("inbound", "from"), ("outbound", "to")] {
             if let Some(edges) = references.get_mut(section) {
-                relationships(edges, counterpart, ids);
+                relationships(edges, counterpart);
             }
         }
         if let Some(semantic) = references
@@ -259,6 +247,9 @@ fn neighborhood(fields: &mut Map<String, Value>, ids: &HashSet<String>) {
                     for name in ["start_column", "end_column"] {
                         fields.insert(name.into(), location[name].clone());
                     }
+                    if let Some(validation) = location.get("source_validation") {
+                        fields.insert("source_validation".into(), validation.clone());
+                    }
                     evidence_details(&mut fields, &location["evidence"], true);
                     *location = Value::Object(fields);
                 }
@@ -267,6 +258,20 @@ fn neighborhood(fields: &mut Map<String, Value>, ids: &HashSet<String>) {
     }
     if let Some(tests) = fields.get_mut("tests") {
         symbol_list(tests, None, ids, false);
+    }
+    if let Some(associations) = fields
+        .get_mut("test_associations")
+        .and_then(Value::as_array_mut)
+    {
+        for association in associations {
+            if let Some(evidence) = association.get("evidence") {
+                let mut row = association.as_object().expect("test association").clone();
+                row.remove("evidence");
+                row.insert("at".into(), json!(locator(evidence, None)));
+                evidence_details(&mut row, evidence, true);
+                *association = Value::Object(row);
+            }
+        }
     }
     let duplicate_section = fields
         .get("source")
@@ -368,7 +373,7 @@ fn impact(fields: &mut Map<String, Value>, ids: &HashSet<String>) {
         };
         row.insert(
             "parent".into(),
-            json!(symbol_ref(&entry["witness"][parent], ids)),
+            json!(symbol_ref(&entry["witness"][parent])),
         );
         let evidence = edge(&entry["witness"]);
         let mut witness = format!(
@@ -490,19 +495,25 @@ mod tests {
     }
 
     #[test]
-    fn exact_ids_survive_ambiguity_and_same_file_overloads() {
+    fn exact_ids_survive_ambiguity_across_files_and_same_file_overloads() {
         let mut first = symbol_fact("entry", "lib.rs", 2);
         first["qualified_name"] = json!("First::entry");
         let mut second = symbol_fact("entry", "lib.rs", 20);
         second["qualified_name"] = json!("Second::entry");
-        let page = project("search", json!({"results":[first.clone(), second.clone()]}));
+        let third = symbol_fact("entry", "other.rs", 1);
+        let page = project(
+            "search",
+            json!({"results":[first.clone(), second.clone(), third.clone()]}),
+        );
         assert_eq!(page["results"][0]["id"], first["id"]);
         assert_eq!(page["results"][1]["id"], second["id"]);
+        assert_eq!(page["results"][2]["id"], third["id"]);
         assert!(page["results"][0].get("selector").is_none());
         assert!(page["results"][1].get("selector").is_none());
-        let ids = disambiguated_ids(&json!([first.clone(), second.clone()]));
-        assert!(symbol_ref(&first, &ids).contains(first["id"].as_str().unwrap()));
-        assert!(!symbol_ref(&first, &ids).contains("selector:"));
+        assert_eq!(symbol_ref(&first), first["id"].as_str().unwrap());
+        let across_files = project("search", json!({"results":[first.clone(), third.clone()]}));
+        assert_eq!(across_files["results"][0]["id"], first["id"]);
+        assert_eq!(across_files["results"][1]["id"], third["id"]);
         let ambiguous = project(
             "expand",
             json!({"status":"ambiguous", "matches":[first.clone()]}),
@@ -562,9 +573,7 @@ mod tests {
                 facts.expand(qualified_name, Some(file), Some(20)).unwrap()["status"],
                 "not_found"
             );
-            assert!(
-                symbol_ref(canonical, &HashSet::new()).contains(&format!("[selector: {raw_name}]"))
-            );
+            assert_eq!(symbol_ref(canonical), canonical["id"].as_str().unwrap());
         }
     }
 
@@ -602,7 +611,8 @@ mod tests {
             "static"
         );
         let text = markdown(&page);
-        assert!(text.contains("Owner::target @ target.rs:40-41"));
+        assert_eq!(edge["to"], candidate["id"]);
+        assert!(text.contains(candidate["id"].as_str().unwrap()));
         assert!(text.contains("read failed"));
         assert!(text.contains("page-cursor"));
         assert!(page["context_entries"][1]["source"]["truncated"]
@@ -619,31 +629,34 @@ mod tests {
         let test = symbol_fact("test_member", "tests.rs", 3);
         let file = json!({"id":"file:import.rs", "name":"import.rs", "kind":"file", "language":"rust",
             "evidence":{"file_path":"import.rs", "extractor":"index-file-snapshot", "confidence":"confirmed"}});
+        let mut later_file = file.clone();
+        later_file["id"] = json!("file:later.rs");
+        later_file["name"] = json!("later.rs");
+        later_file["evidence"]["file_path"] = json!("later.rs");
         let mut contains = relation(&root, &member, 1);
         contains["kind"] = json!("contains");
         let test_entry = json!({"symbol":test, "distance":2, "witness_direction":"reverse", "witness":relation(&test, &member, 5)});
         let mut imports = relation(&file, &member, 9);
         imports["kind"] = json!("imports");
+        let mut file_import = relation(&later_file, &file, 10);
+        file_import["kind"] = json!("imports");
         let page = project(
             "impact",
             json!({"definition":root, "affected":[
             {"symbol":member, "distance":1, "witness_direction":"forward", "witness":contains},
-            test_entry.clone(), {"symbol":file, "distance":2, "witness_direction":"reverse", "witness":imports}],
+            test_entry.clone(), {"symbol":file, "distance":2, "witness_direction":"reverse", "witness":imports},
+            {"symbol":later_file, "distance":3, "witness_direction":"reverse", "witness":file_import}],
             "tests":[test_entry], "scope":{"hop_cost":1}, "relationship_kinds":["calls", "contains"],
             "traversal":{"depth_limit_reached":true}, "truncated":true, "message":"Static extraction can omit dependencies; tests are test-associated symbols."}),
         );
         assert_eq!(page["tests"], json!({"affected_entries":[2]}));
         assert_eq!(page["affected"][0]["direction"], "forward");
-        assert_eq!(
-            page["affected"][0]["parent"],
-            "function Container @ lib.rs:1-2"
-        );
+        assert_eq!(page["affected"][0]["parent"], root["id"]);
         assert_eq!(page["affected"][1]["direction"], "reverse");
-        assert_eq!(
-            page["affected"][1]["parent"],
-            "function member @ lib.rs:4-5"
-        );
+        assert_eq!(page["affected"][1]["parent"], member["id"]);
         assert_eq!(page["affected"][2]["at"], "import.rs");
+        assert_eq!(symbol_ref(&file), "file snapshot @ import.rs");
+        assert_eq!(page["affected"][3]["parent"], "file snapshot @ import.rs");
         assert!(page["affected"][0]["witness"]
             .as_str()
             .unwrap()

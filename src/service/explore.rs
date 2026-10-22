@@ -1273,6 +1273,32 @@ fn card_sequence(selected: Vec<Excerpt>, ranked: Vec<Excerpt>) -> Vec<(Excerpt, 
     sequence
 }
 
+fn single_line_card_fragment(excerpt: &Excerpt, node: &CodeNode, lines: &[&str]) -> Option<String> {
+    // Keep whole-line reads and previews intact. Only a real single-line owner
+    // can attribute omitted boundary context to exact parser byte columns.
+    if node.kind == NodeKind::Heading
+        || node.file_path != excerpt.path
+        || node.start_line != excerpt.start
+        || node.end_line != excerpt.end
+        || excerpt.start != excerpt.end
+    {
+        return None;
+    }
+    let line = lines.get(excerpt.start.checked_sub(1)? as usize)?;
+    let start = node.start_column as usize;
+    let end = node.end_column as usize;
+    if start >= end || (start == 0 && end == line.len()) {
+        return None;
+    }
+    let source = line.get(start..end)?;
+    // This is deliberately distinct from `N: whole line`, including for
+    // consumers that recognize only exact, numbered source-line exposure.
+    Some(format!(
+        "{}:{start}..{end} [column fragment; UTF-8 byte columns, 0-based, end-exclusive; surrounding line context omitted]: {source}\n",
+        excerpt.start
+    ))
+}
+
 fn render_cards(
     output: &mut String,
     cards: Vec<(Excerpt, bool)>,
@@ -1380,6 +1406,17 @@ fn render_cards(
                 } else if index >= 2 {
                     break;
                 }
+            }
+        }
+        if preview.is_empty() {
+            let fragment = excerpt
+                .node_id
+                .as_deref()
+                .and_then(|id| by_id.get(id))
+                .and_then(|node| single_line_card_fragment(excerpt, node, &lines))
+                .filter(|fragment| fragment.len() <= allocation);
+            if let Some(fragment) = fragment {
+                preview = fragment;
             }
         }
         output.push_str(&frames[index].0);
@@ -2580,6 +2617,98 @@ mod tests {
         assert!(response.contains("[source omitted] implementation"));
         assert!(!response.contains("1: 中文"));
         assert!(response.len() <= 2000);
+    }
+
+    #[test]
+    fn cards_reject_invalid_utf8_columns_and_keep_headings_line_based() {
+        let prefix = "中文".repeat(1000);
+        let definition = "fn needle() {}";
+        let text = format!("{prefix}{definition}\n");
+        let sources = card_source("fixture.rs", &text);
+        let mut node = card_node("owner", "needle", "fixture.rs", 1, 1);
+        node.start_column = prefix.len() as u32;
+        node.end_column = (prefix.len() + definition.len()) as u32;
+        for invalid in ["utf8", "past_end", "reversed", "heading"] {
+            let mut node = node.clone();
+            match invalid {
+                "utf8" => node.start_column = 1,
+                "past_end" => node.end_column += 1,
+                "reversed" => node.end_column = node.start_column,
+                "heading" => node.kind = NodeKind::Heading,
+                _ => unreachable!(),
+            }
+            let mut response = String::new();
+            render_cards(
+                &mut response,
+                card_sequence(
+                    vec![card_excerpt("fixture.rs", 1, 1, Some("owner"))],
+                    vec![],
+                ),
+                &[node],
+                &[],
+                &sources,
+                2000,
+            )
+            .unwrap();
+            assert!(response.contains("[source omitted] implementation"));
+            assert!(!response.contains("column fragment"));
+            assert!(!response.contains(definition));
+            assert!(response.len() <= 2000);
+        }
+    }
+
+    #[test]
+    fn column_previews_keep_each_cards_original_source_share() {
+        let prefix = " ".repeat(3000);
+        let small = "fn small() {}";
+        let large = format!("fn large() {{ /*{}*/ }}", "x".repeat(1300));
+        let sources = card_source("fixture.rs", &format!("{prefix}{small}\n{prefix}{large}\n"));
+        let nodes = [small, &large]
+            .into_iter()
+            .enumerate()
+            .map(|(index, definition)| {
+                let name = if index == 0 { "small" } else { "large" };
+                let mut node =
+                    card_node(name, name, "fixture.rs", index as u32 + 1, index as u32 + 1);
+                node.start_column = prefix.len() as u32;
+                node.end_column = (prefix.len() + definition.len()) as u32;
+                node
+            })
+            .collect::<Vec<_>>();
+        let mut alone = String::new();
+        render_cards(
+            &mut alone,
+            card_sequence(
+                vec![card_excerpt("fixture.rs", 2, 2, Some("large"))],
+                vec![],
+            ),
+            &nodes,
+            &[],
+            &sources,
+            2000,
+        )
+        .unwrap();
+        assert!(alone.contains(&large));
+        let mut shared = String::new();
+        render_cards(
+            &mut shared,
+            card_sequence(
+                vec![
+                    card_excerpt("fixture.rs", 1, 1, Some("small")),
+                    card_excerpt("fixture.rs", 2, 2, Some("large")),
+                ],
+                vec![],
+            ),
+            &nodes,
+            &[],
+            &sources,
+            2000,
+        )
+        .unwrap();
+        assert!(shared.contains(small));
+        assert!(shared.contains("[source omitted] implementation"));
+        assert!(!shared.contains(&large));
+        assert!(shared.len() <= 2000);
     }
 
     #[test]

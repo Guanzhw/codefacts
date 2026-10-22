@@ -267,7 +267,9 @@ fn child_priority(name: &str) -> u8 {
 fn inline_value(value: &Value, table_cell: bool) -> String {
     match value {
         Value::String(text) if plain_string(text) => text.to_owned(),
-        Value::String(text) if !text.is_empty() && !text.chars().any(char::is_whitespace) => {
+        // Inline code already marks a literal string. Added JSON quotes would
+        // become part of a copied selector, including IDs with spaces.
+        Value::String(text) if !text.is_empty() && !text.contains(['\n', '\r']) => {
             inline_code(text, table_cell)
         }
         Value::String(text) => inline_code(
@@ -605,6 +607,21 @@ mod tests {
         assert!(markdown.contains("- qualified_name: `a|b`"), "{markdown}");
         assert!(markdown.contains("|heading|`` `api` ``|"), "{markdown}");
         assert!(markdown.contains("|heading|`a\\|b`|"), "{markdown}");
+    }
+
+    #[test]
+    fn single_line_strings_are_copyable_without_json_quote_characters() {
+        let selector = "heading:README.md:Use | `api` now:4";
+        let markdown = render(&json!({"id": selector, "relations":[{"to":selector}]}));
+        assert!(
+            markdown.contains("- id: ``heading:README.md:Use | `api` now:4``"),
+            "{markdown}"
+        );
+        assert!(
+            markdown.contains("|``heading:README.md:Use \\| `api` now:4``|"),
+            "{markdown}"
+        );
+        assert!(!markdown.contains('"'), "{markdown}");
     }
 
     #[test]

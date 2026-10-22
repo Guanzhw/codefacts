@@ -12,15 +12,20 @@
 //!   wrappers we create a fresh parser on every call. This is cheap — `Parser::new()`
 //!   is a single allocation and `set_language` is a pointer swap.
 //!
-//! - **Query compilation on demand.** `.scm` query compilation takes roughly
-//!   1 ms per language. For a first pass this is negligible. A `OnceCell`-based
-//!   cache can be layered on later without changing the public API.
+//! - **Shared immutable extraction queries.** Extraction compiles each language's
+//!   embedded query on first use and shares it across files and passes. Each
+//!   extraction keeps its own query cursor.
 //!
 //! - **Language detection by extension.** Delegates to [`Language::from_extension`],
 //!   keeping the mapping in one canonical place.
 
 use crate::error::{CodeFactsError, Result};
 use crate::types::Language;
+use std::collections::HashMap;
+use std::sync::{Arc, LazyLock, Mutex};
+
+static EXTRACTION_QUERIES: LazyLock<Mutex<HashMap<Language, Arc<tree_sitter::Query>>>> =
+    LazyLock::new(|| Mutex::new(HashMap::new()));
 
 /// Thin wrapper around native tree-sitter parsing and query compilation.
 ///
@@ -111,9 +116,8 @@ impl CodeParser {
     /// Compile the `.scm` query source for `language` into a
     /// [`tree_sitter::Query`].
     ///
-    /// Query compilation is fast (~1 ms), so we compile fresh each time.
-    /// If profiling shows this is a bottleneck, wrap with a static
-    /// `OnceLock<HashMap<Language, Query>>` — the public API stays the same.
+    /// Returns a fresh owned query. Extraction uses an internal shared query
+    /// while this public API retains independent ownership for callers.
     pub fn load_query(language: Language) -> Result<tree_sitter::Query> {
         if language == Language::Markdown {
             return Err(CodeFactsError::Parse(
@@ -125,6 +129,20 @@ impl CodeParser {
         tree_sitter::Query::new(&ts_lang, source).map_err(|e| {
             CodeFactsError::Parse(format!("Query compilation error for {language}: {e}"))
         })
+    }
+
+    /// Share one immutable extraction query per language. The language enum and
+    /// embedded query sources bound the cache for the lifetime of the process.
+    pub(crate) fn cached_query(language: Language) -> Result<Arc<tree_sitter::Query>> {
+        let mut queries = EXTRACTION_QUERIES
+            .lock()
+            .expect("extraction query cache lock poisoned");
+        if let Some(query) = queries.get(&language) {
+            return Ok(Arc::clone(query));
+        }
+        let query = Arc::new(Self::load_query(language)?);
+        queries.insert(language, Arc::clone(&query));
+        Ok(query)
     }
 
     /// Detect the [`Language`] for a file path based on its extension.
@@ -1271,6 +1289,84 @@ in {
     }
 
     // -- Query compilation -------------------------------------------------
+
+    #[test]
+    fn cached_queries_match_fresh_captures_across_sources_and_threads() {
+        use streaming_iterator::StreamingIterator as _;
+
+        type Capture = (u32, std::ops::Range<usize>);
+        type Match = (usize, Vec<Capture>);
+
+        fn captures(
+            query: &tree_sitter::Query,
+            tree: &tree_sitter::Tree,
+            source: &str,
+        ) -> Vec<Match> {
+            let mut cursor = tree_sitter::QueryCursor::new();
+            let mut matches = cursor.matches(query, tree.root_node(), source.as_bytes());
+            let mut result = Vec::new();
+            while let Some(m) = matches.next() {
+                result.push((
+                    m.pattern_index,
+                    m.captures
+                        .iter()
+                        .map(|capture| (capture.index, capture.node.byte_range()))
+                        .collect(),
+                ));
+            }
+            result
+        }
+
+        let cases = [
+            (
+                Language::TypeScript,
+                "export function first() { second(); }",
+            ),
+            (Language::TypeScript, "class Service { run() { first(); } }"),
+            (
+                Language::Tsx,
+                "export function View() { return <Panel />; }",
+            ),
+            (
+                Language::Tsx,
+                "const Other = () => <section>hello</section>;",
+            ),
+            (Language::Python, "def first():\n    second()\n"),
+            (
+                Language::Python,
+                "class Service:\n    def run(self):\n        first()\n",
+            ),
+            (Language::Rust, "fn first() { second(); }"),
+            (
+                Language::Rust,
+                "struct Service; impl Service { fn run() { first(); } }",
+            ),
+        ];
+        let barrier = std::sync::Barrier::new(cases.len());
+        std::thread::scope(|scope| {
+            let handles: Vec<_> = cases
+                .into_iter()
+                .map(|(language, source)| {
+                    let barrier = &barrier;
+                    scope.spawn(move || {
+                        barrier.wait();
+                        let tree = CodeParser::new().parse(source, language).unwrap();
+                        assert!(!tree.root_node().has_error(), "{language}: {source}");
+                        let fresh = CodeParser::load_query(language).unwrap();
+                        let expected = captures(&fresh, &tree, source);
+                        assert!(!expected.is_empty(), "{language}: {source}");
+                        let cached = CodeParser::cached_query(language).unwrap();
+                        assert_eq!(cached.capture_names(), fresh.capture_names());
+                        assert_eq!(cached.pattern_count(), fresh.pattern_count());
+                        assert_eq!(captures(&cached, &tree, source), expected);
+                    })
+                })
+                .collect();
+            for handle in handles {
+                handle.join().unwrap();
+            }
+        });
+    }
 
     #[test]
     fn load_query_succeeds_for_all_languages() {

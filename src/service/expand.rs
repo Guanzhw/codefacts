@@ -251,6 +251,9 @@ impl CodeFacts {
                 more,
             });
         }
+        // Explain only this selected page, never the prefix fetched for a
+        // continuation. Presentation drops witnesses alongside budgeted tests.
+        self.annotate_test_associations(&node, &mut result)?;
         loop {
             let mut next = serde_json::Map::new();
             for page in &pages {
@@ -539,7 +542,7 @@ mod tests {
                 .unwrap();
             assert!(Format::Markdown.text(&page).len() <= COMPACT_EXPAND_BYTES);
             for relationship in page["callees"].as_array().unwrap() {
-                assert_eq!(relationship["to"], "function helper @ lib.rs:83");
+                assert_eq!(relationship["to"], "function:lib.rs:helper:83");
                 assert!(sites.insert(relationship["callsite"].as_str().unwrap().to_owned()));
             }
             let Some(next) = page["next"]["callees"].as_str() else {

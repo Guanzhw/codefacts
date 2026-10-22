@@ -107,6 +107,125 @@ fn has(text: &str, facts: &[&str]) {
     }
 }
 
+// Read the visible contents of a GFM table cell, including literal code spans.
+// This copies the returned value rather than constructing a selector from facts.
+fn table_column(text: &str, section: &str, column: &str) -> Vec<String> {
+    fn cells(line: &str) -> Vec<String> {
+        let mut cells = vec![String::new()];
+        let mut escaped = false;
+        for character in line.trim_matches('|').chars() {
+            if character == '|' && !escaped {
+                cells.push(String::new());
+            } else {
+                cells.last_mut().unwrap().push(character);
+            }
+            escaped = character == '\\' && !escaped;
+        }
+        cells
+    }
+    let mut lines = text.lines().skip_while(|line| {
+        !line.starts_with('#') || line.trim_start_matches('#').trim() != section
+    });
+    lines.next().expect("returned section");
+    let header = lines.next().expect("table header");
+    let column = cells(header)
+        .iter()
+        .position(|name| name == column)
+        .expect("selector column");
+    assert!(lines.next().unwrap().starts_with("|---"));
+    lines
+        .take_while(|line| line.starts_with('|'))
+        .map(|line| {
+            let row = cells(line);
+            let cell = row[column].trim();
+            let fence = cell.chars().take_while(|c| *c == '`').count();
+            cell[fence..cell.len() - fence].trim().replace("\\|", "|")
+        })
+        .collect()
+}
+
+#[test]
+fn returned_relation_selectors_roundtrip_to_exact_symbols_over_stdio() {
+    let root = tempdir().unwrap();
+    let file = "worker [one]`tick`.py";
+    fs::write(
+        root.path().join(file),
+        "def helper():\n    return 1\ndef helper_again():\n    return 2\nclass First:\n    def run_with_input(self):\n        return helper()\nclass Second:\n    def run_with_input(self):\n        return helper_again()\n",
+    )
+    .unwrap();
+    fs::write(
+        root.path().join("other.py"),
+        "class Third:\n    def run_with_input(self):\n        return 3\n",
+    )
+    .unwrap();
+    fs::write(
+        root.path().join("README.md"),
+        "# Guide\n[child](#use-api-now)\n\n## Use | `api` now\nDetails.\n",
+    )
+    .unwrap();
+    for modern in [false, true] {
+        let state = tempdir().unwrap();
+        let mut mcp = Mcp::new(root.path(), &state.path().join("facts.sqlite"), modern);
+        let ambiguous = mcp.call(
+            "expand",
+            json!({"symbol":"run_with_input", "format":"full"}),
+        );
+        assert_eq!(machine(&ambiguous)["status"], "ambiguous");
+        assert_eq!(machine(&ambiguous)["matches"].as_array().unwrap().len(), 3);
+
+        for helper in ["helper", "helper_again"] {
+            let full = mcp.call("expand", json!({"symbol":helper, "format":"full"}));
+            let callers = machine(&full)["callers"].as_array().unwrap();
+            assert_eq!(
+                callers.len(),
+                1,
+                "one visible caller despite global ambiguity"
+            );
+            let expected = callers[0]["from"]["id"].as_str().unwrap();
+            assert!(expected.starts_with("method:"), "{expected}");
+            let response = mcp.call("expand", json!({"symbol":helper}));
+            let selectors = table_column(text(&response), "callers", "from");
+            assert_eq!(selectors, [expected]);
+            let selector = &selectors[0];
+            for tool in ["expand", "impact"] {
+                let follow_up = mcp.call(tool, json!({"symbol":selector, "format":"full"}));
+                assert_eq!(machine(&follow_up)["status"], "ok", "{follow_up}");
+                assert_eq!(machine(&follow_up)["definition"]["id"], expected);
+            }
+            let caller = mcp.call("expand", json!({"symbol":selector}));
+            let callees = table_column(text(&caller), "callees", "to");
+            assert_eq!(
+                callees,
+                [machine(&full)["definition"]["id"].as_str().unwrap()]
+            );
+            let impact = mcp.call("impact", json!({"symbol":helper}));
+            let parents = table_column(text(&impact), "affected", "parent");
+            assert_eq!(parents, callees);
+        }
+
+        // Heading IDs contain spaces, a pipe, and backticks; qualification stays
+        // reading context, while the returned exact ID is the follow-up input.
+        let full = mcp.call("expand", json!({"symbol":"Guide", "format":"full"}));
+        let expected = machine(&full)["references"]["outbound"][0]["to"]["id"]
+            .as_str()
+            .unwrap();
+        let response = mcp.call("expand", json!({"symbol":"Guide"}));
+        let selectors = table_column(text(&response), "outbound", "to");
+        assert_eq!(selectors, [expected]);
+        for tool in ["expand", "impact"] {
+            let follow_up = mcp.call(tool, json!({"symbol":selectors[0], "format":"full"}));
+            assert_eq!(machine(&follow_up)["status"], "ok", "{follow_up}");
+            assert_eq!(machine(&follow_up)["definition"]["id"], expected);
+        }
+        let target = mcp.call("expand", json!({"symbol":selectors[0]}));
+        let inbound = table_column(text(&target), "inbound", "from");
+        assert_eq!(
+            inbound,
+            [machine(&full)["definition"]["id"].as_str().unwrap()]
+        );
+    }
+}
+
 #[test]
 fn omitted_format_is_text_only_for_all_seven_workflows_in_both_protocol_eras() {
     let root = tempdir().unwrap();
