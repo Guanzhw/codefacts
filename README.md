@@ -80,7 +80,7 @@ available as a direct CLI command.
 | Tool | MCP profiles | Purpose |
 | --- | --- | --- |
 | `explore` | default, all, explore | Budgeted repository orientation, lexical task-to-source discovery and explicit source-range reads with verified hashes. |
-| `expand` | default, all | One definition with a verified bounded source excerpt, plus callers, callees with explicit confidence, references, related tests, Markdown section text, and optional semantic references. |
+| `expand` | default, all | One definition with a verified bounded source excerpt, plus callers, callees with explicit confidence, references, test-associated symbols, Markdown section text, and optional semantic references. |
 | `impact` | default, all | Bounded transitive static dependents, container members, shortest witness relationships and reachable test-associated symbols. |
 | `map` | all | Repository structure, explicit language file/symbol counts, deferred LSP-provider status, and bounded unresolved-reference evidence. |
 | `search` | all | Indexed symbols, endpoints, and Markdown documentation headings through FTS; optionally narrow by kind, path prefix, or local-detail scope, or request bounded context for the highest-ranked candidates, and continue on one snapshot. |
@@ -134,7 +134,7 @@ helpers in test files and does not imply a runnable test list.
 bounded structural exploration, use `detail: "context"` with an optional
 `context_limit` from 1 through 3: the regular `results` array remains unchanged
 and a separate `context_entries` array adds the verified definition excerpt plus
-direct static callers, callees, references, and related tests for the
+direct static callers, callees, references, and test-associated symbols for the
 highest-ranked candidates. Each excerpt is capped at 4 KiB and is returned only
 when its current on-disk file hash still matches the fact evidence; otherwise
 the entry states that the source changed during the query. A mixed query that
@@ -176,6 +176,29 @@ for its single resolved symbol in the overview (`section: "all"`). Check each re
 calls without type binding remain heuristic candidates, including when only one
 same-named definition exists. Semantic references retain their separate
 availability/status contract.
+
+### Interpreting relationship evidence
+
+Use CodeFacts for definitions, static callers/references, test-associated symbols
+and cross-module navigation. For an unfamiliar repository, use `explore`; for a
+known symbol, `expand` can be the first request. A direct caller is one graph hop,
+not a promise of resolved receiver types. Check each relationship's `confidence`
+and `resolution`: an unbound receiver can produce same-name method candidates,
+even when only one such method is indexed. Exact symbol IDs disambiguate the
+selected definition; they do not prove the receiver's runtime type.
+
+`relationship_notes` explains candidate bindings present in the returned page.
+`test_associations` gives a direct non-heuristic witness for the returned
+`tests`. Test classification and association are static evidence, not coverage,
+a test execution result, or a complete runnable-test list. Names and same-file
+location affect ordering, not inclusion without an indexed relationship.
+
+Use source, ordinary text search, type checks and relevant tests to confirm
+dynamic dispatch, callbacks, props, asynchronous return values, data flow and
+business behavior. Start `impact` with a small depth and inspect its witnesses
+and depth/node/work cutoffs. Increasing depth does not repair a node cutoff;
+`traversal.exhausted` only describes the eligible indexed subgraph, including
+when no truncation occurred. It never establishes complete runtime impact.
 
 ### Response formats
 
@@ -485,19 +508,57 @@ separate default external state files, keyed by their canonical root. Set
 ### Optional LSP enrichment
 
 `codefacts mcp` defaults to `--lsp auto`. It never installs or configures a
-language server; it detects a separately installed supported server on `PATH`
-and uses an isolated stdio session only while expanding a matching symbol.
-`map` lists relevant providers as `deferred` without launching external
-processes; `expand` performs and caches the availability probe only for a
-matching supported symbol. That version probe has a 200 ms interactive budget;
-use `--lsp off` to skip it entirely. `expand.references.semantic`
-returns separately labeled semantic locations when the request succeeds.
+language server. It detects supported user-installed commands on `PATH` and
+uses an isolated, bounded stdio session for semantic reference locations when
+`expand` selects a matching symbol. `map` reports deferred provider status
+without launching a server; command detection and a successful reference query
+are separate outcomes. Use `--lsp off` to prevent LSP probes and child processes
+while retaining the static index and workflows.
 
-The initial providers are `rust-analyzer` for Rust and
-`typescript-language-server` for TypeScript/JavaScript. TypeScript projects
-need a compatible `typescript` installation that provides `tsserver`; a local
-workspace installation takes precedence. Use `--lsp off` to prevent all LSP
-probing and child processes while retaining the same static facts.
+| Source languages | Optional provider command |
+| --- | --- |
+| Rust | `rust-analyzer` |
+| JavaScript, JSX, TypeScript, TSX | `typescript-language-server` |
+| Python | `pyright-langserver` |
+| Go | `gopls` |
+| C, C++ | `clangd` |
+| Bash | `bash-language-server` |
+
+Install any chosen server independently before starting CodeFacts. npm-based
+providers use their `.cmd` launchers on Windows. The TypeScript server also needs
+a compatible `typescript` installation providing `tsserver`; a local workspace
+installation takes precedence. Pyright's `pyright` command performs independent
+type checking; the `pyright-langserver` entry point provides LSP references.
+CodeFacts does not run type checks or import their diagnostics into its graph.
+Other parsed languages retain static analysis without an integrated LSP provider.
+
+`expand.references.semantic` reports the actual query status and separately
+labeled locations. Unsupported languages, missing commands, unavailable
+capabilities, initialization errors and timeouts are explicit outcomes rather
+than successful empty reference lists. Semantic columns use UTF-16 code units;
+AST source-column fragments use UTF-8 bytes. These coordinate systems are not
+interchangeable. Semantic references do not rewrite stored calls, upgrade
+heuristic edges, or make `impact` a complete semantic/runtime call graph.
+Here `semantic` identifies provider-supplied evidence, not a guarantee of type
+binding. Accuracy depends on the server and project; Bash references can use
+name-based matching and still need source confirmation for ambiguous names.
+
+The client primes each session with hash-verified indexed source documents from
+the selected provider's language family, selected definition first, then paths
+in order. It opens at most 64 documents and 2 MiB of source. The semantic result
+reports the loaded scope and any omissions; a bounded workspace is not a complete
+project reference set. clangd and rust-analyzer sessions wait for their readiness
+events before requesting references. Indexed returned locations require a current
+source hash and valid UTF-16 range; external or unindexed locations are omitted.
+
+The client answers the supported read-only configuration requests and rejects
+workspace edits. Provider sessions and message queues have explicit bounds;
+server startup or reference failures leave static workflows available. Optional
+servers have their own project configuration, caches and telemetry settings;
+CodeFacts does not change those settings, create project configuration files or
+install server dependencies. See the
+[layered LSP acceptance standard](docs/LSP-ACCEPTANCE.md) for the distinction
+between detection, real references, static facts and independent type checking.
 
 No repository hooks, watchers, background server, generated agent instructions, or prompt injection are installed or started. CodeFacts serves both initialization-based clients and stateless MCP `2026-07-28` clients; its `initialize` and `server/discover` responses deliberately omit `instructions`, so it never tells a host agent to prefer it or injects context into the agent's prompt.
 

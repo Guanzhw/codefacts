@@ -46,7 +46,7 @@ The native runtime exposes these read-only MCP workflows:
 1. `map` — repository structure, language mix, and high-level symbol counts.
 2. `search` — symbols, endpoints, and documentation headings; not raw grep.
 3. `outline` — symbols or headings in one file.
-4. `expand` — a symbol's definition, callers, callees, references, and tests.
+4. `expand` — a symbol's definition, callers, callees, references, and test-associated symbols.
 5. `path` — the shortest static relationship path between confirmed symbols.
 6. `explore` — bounded lexical source discovery, repository orientation and
    explicit source-range reads with current hashes.

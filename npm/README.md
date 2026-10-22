@@ -89,6 +89,26 @@ readable Markdown. Use `--format compact` or `--format full` for JSON;
 `explore` returns bounded text. Same-name symbols return disambiguation candidates;
 select an exact ID or add `--file`. Run `<command> --help` for options.
 
+## Static evidence and optional language servers
+
+Direct callers are one-hop static relationships; inspect confidence and receiver
+resolution before treating a same-name candidate as a confirmed call. Returned
+`tests` are statically associated symbols, not coverage or a complete runnable
+list. `impact` follows bounded confirmed stored relationships; inspect depth,
+node and work cutoffs. An exhausted indexed subgraph is not complete runtime
+impact. Use source and relevant tests to confirm dynamic behavior.
+
+`--lsp auto` can use separately installed `rust-analyzer`,
+`typescript-language-server` (JavaScript/TypeScript), `pyright-langserver`
+(Python), `gopls` (Go), `clangd` (C/C++) and `bash-language-server` (Bash).
+CodeFacts does not install them. Python's independent `pyright` type-checking
+command is not the language-server entry point. `--lsp off` keeps static
+analysis without starting providers. Actual semantic reference status is
+reported separately; it does not upgrade heuristic calls or change static
+impact relationships. Provider-supplied references are not a guarantee of type
+binding; Bash name matching can still need source confirmation. See the project
+README for requirements and validation.
+
 See the [project README](https://github.com/Guanzhw/codefacts#readme) for
 Claude Code and OpenCode configurations, trust model, and manual binary
 installation.
