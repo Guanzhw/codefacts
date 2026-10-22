@@ -64,7 +64,7 @@ struct SectionPage {
 }
 
 impl CodeFacts {
-    /// Compact mode bounds the final JSON body, including hashes and cursors.
+    /// Compact mode bounds the final JSON body, including cursors.
     /// Full mode retains nested evidence for existing structured consumers.
     pub fn expand_page(
         &self,
@@ -301,8 +301,8 @@ impl CodeFacts {
                 return Ok(presented);
             }
 
-            // Trim the largest section first. Re-project to retain only hashes
-            // referenced by this page, and count the selected rendered text.
+            // Trim the largest section first, then re-project and count the
+            // selected rendered text.
             let largest = pages
                 .iter_mut()
                 .filter(|page| {

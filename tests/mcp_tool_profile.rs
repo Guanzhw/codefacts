@@ -117,7 +117,15 @@ fn impact_is_source_backed_and_reports_cutoffs_in_both_protocol_eras() {
                 assert_eq!(facts["affected"][0]["witness"]["to"]["name"], "sink");
                 assert_eq!(facts, &serde_json::from_str::<Value>(text).unwrap());
                 if format == "compact" {
-                    assert!(facts["source_hashes"]["fixture.go"].is_string());
+                    assert!(facts.get("source_hashes").is_none());
+                    assert!(facts["definition"]["evidence"].get("source_hash").is_none());
+                    assert_eq!(facts["definition"]["evidence"]["file_path"], "fixture.go");
+                    assert_eq!(
+                        facts["affected"][0]["witness"]["evidence"]["file_path"],
+                        "fixture.go"
+                    );
+                } else {
+                    assert!(facts["definition"]["evidence"]["source_hash"].is_string());
                 }
             }
             let bounded = &responses[1]["result"]["structuredContent"];

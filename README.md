@@ -193,11 +193,12 @@ Small exploration owners include complete source when it fits; otherwise the
 result labels the preview and its omitted owner lines. Source hashing and disk
 verification remain internal.
 
-Clients that require the previous machine-readable result shapes should request
+Clients that need machine-readable results should request
 `format: "compact"` or `format: "full"` explicitly on structured workflows.
-These modes retain their existing schemas, hash fields and JSON in both
-`content[0].text` and `structuredContent`; `full` retains its complete evidence
-detail. `explore` remains text-only. This changes the omitted-format MCP
+These modes return JSON in both `content[0].text` and `structuredContent`;
+`full` retains its complete evidence detail and hash fields. The Compact JSON
+changes below intentionally revise its previous hash and repeated-path contract.
+`explore` remains text-only. This changes the omitted-format MCP
 contract, so JSON clients should select their format explicitly.
 
 #### Explicit Compact JSON
@@ -205,13 +206,21 @@ contract, so JSON clients should select their format explicitly.
 In a Compact `expand` neighborhood, `definition` is the relationship anchor.
 Callers and inbound references omit the repeated `to`; callees and outbound
 references omit the repeated `from`. The remaining endpoint and call-site
-evidence keep their original field names. A search `context_entries`
-neighborhood uses its own `symbol` as the anchor. `path` retains its
-ordered-node/edge representation. Shared source hashes remain in
-`source_hashes[file_path]`.
+evidence keep their original field names. Each neighborhood has a top-level
+`file_path` taken from its anchor definition. Any nested evidence or location
+that omits `file_path` inherits this neighborhood default, including when an
+adjacent endpoint has a different explicit path. Cross-file paths remain
+explicit. A search `context_entries` neighborhood uses its own `symbol` as the
+anchor and has its own `file_path`; defaults never carry between entries or
+into the top-level search results. Other structured workflows retain their
+paths; `path` retains its ordered-node/edge representation.
+
+Compact JSON omits all `source_hash` and `source_hashes` fields. Internal source
+verification, freshness and cursor snapshot checks still use hashes. Request
+`format: "full"` when externally consumed hash evidence is required.
 
 Compact `expand` responses are capped at **16 KiB of serialized JSON text**,
-including shared hashes and cursors. `limit` is a per-section maximum; the total
+including cursors. `limit` is a per-section maximum; the total
 budget may return fewer entries. A nonempty `next` maps unfinished section names
 to cursors. Continue only the section needed, with the same symbol and optional
 file disambiguator, for example:
