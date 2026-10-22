@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.3.0 — 2026-10-22
+
+- Add optional semantic-reference providers for Python, Go, C/C++ and Bash,
+  alongside Rust and JavaScript/TypeScript. Provider discovery, protocol support
+  and actual reference results remain distinct; servers are user-installed.
+- Handle read-only server requests, enforce bounded LSP sessions and frames,
+  preserve UTF-16 positions and exact source-symbol selection, and clean up
+  provider process trees on failure. Semantic references remain separate from
+  the static graph. Prime a bounded, hash-verified indexed document set, wait for
+  provider readiness where required, and verify returned indexed source ranges.
+- Explain heuristic receiver/name candidates and expose bounded direct
+  relationship witnesses for returned test-associated symbols. Test association
+  is not execution or coverage; relationship confidence remains explicit.
+- Return attributed single-line AST column previews in exploration when the
+  original whole-line preview is empty and the complete column range fits its
+  existing card share. Whole-line reads and multi-line previews retain their
+  contracts and source budgets.
+- Record the first invalid final source region's index, original parsed range
+  fields, available line count and rejection reason in benchmark diagnostics,
+  retaining invalid/null scoring and historical results.
+- Keep the default three MCP tools and offline static workflows. These changes
+  establish no new complete-runtime-graph, task-speed or performance claim.
+
 ## 0.2.3 — 2026-10-22
 
 - When unrelated declarations at the start of a long line consume the source

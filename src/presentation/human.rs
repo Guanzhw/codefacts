@@ -199,6 +199,9 @@ fn edge(value: &Value) -> Map<String, Value> {
     }
     fields.insert("callsite".into(), json!(locator(&value["evidence"], None)));
     evidence_details(&mut fields, &value["evidence"], true);
+    if value["evidence"]["confidence"] == "heuristic" {
+        fields.insert("binding".into(), json!("candidate"));
+    }
     if let Some(resolution) = value.get("resolution") {
         fields.insert("resolution".into(), resolution.clone());
     }
@@ -244,6 +247,9 @@ fn neighborhood(fields: &mut Map<String, Value>, ids: &HashSet<String>) {
                     for name in ["start_column", "end_column"] {
                         fields.insert(name.into(), location[name].clone());
                     }
+                    if let Some(validation) = location.get("source_validation") {
+                        fields.insert("source_validation".into(), validation.clone());
+                    }
                     evidence_details(&mut fields, &location["evidence"], true);
                     *location = Value::Object(fields);
                 }
@@ -252,6 +258,20 @@ fn neighborhood(fields: &mut Map<String, Value>, ids: &HashSet<String>) {
     }
     if let Some(tests) = fields.get_mut("tests") {
         symbol_list(tests, None, ids, false);
+    }
+    if let Some(associations) = fields
+        .get_mut("test_associations")
+        .and_then(Value::as_array_mut)
+    {
+        for association in associations {
+            if let Some(evidence) = association.get("evidence") {
+                let mut row = association.as_object().expect("test association").clone();
+                row.remove("evidence");
+                row.insert("at".into(), json!(locator(evidence, None)));
+                evidence_details(&mut row, evidence, true);
+                *association = Value::Object(row);
+            }
+        }
     }
     let duplicate_section = fields
         .get("source")
