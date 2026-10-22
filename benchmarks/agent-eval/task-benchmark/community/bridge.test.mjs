@@ -162,14 +162,22 @@ test('reconnecting in the same evidence directory keeps only the current raw cat
   assert.deepEqual(fs.readFileSync(wireFile).subarray(0, history.length), history);
 });
 
-test('text-only outer MCP client can poll a silent job and observe nonzero completion', { skip: !enabled }, async t => {
+test('text-only outer MCP client can poll a silent job and observe nonzero completion', { skip: !enabled, timeout: 30000 }, async t => {
   const f = fixture(t), sdk = loadSdk(sdkRoot);
   const outerConfig = path.join(f.tmp, 'outer.json');
   fs.writeFileSync(outerConfig, JSON.stringify(f.config));
   const clientEvidence = path.join(f.tmp, 'client-evidence'); fs.mkdirSync(clientEvidence);
   const outer = await connectNative(sdk, { command: process.execPath, args: [bridgeEntry, '--config', outerConfig], cwd: f.root, env: {} }, clientEvidence);
   f.closers.push(() => outer.close());
-  const launched = await outer.callTool({ name: 'source_exec', arguments: { command: JSON.stringify({ delayMs: 1800, ending: 'finished\n' }) } }, {});
+  const releaseFile = path.join(f.tmp, 'silent-release'), failureRelease = path.join(f.tmp, 'failure-release');
+  // LIFO cleanup releases both owned children before closing the outer MCP.
+  f.closers.push(() => { for (const gate of [releaseFile, failureRelease]) fs.writeFileSync(gate, 'release'); });
+  const waitForClose = async jobId => {
+    while (!records(f.config, 'events.jsonl').some(record => record.type === 'sandbox-close' && record.job_id === jobId)) {
+      await delay(10, undefined, { signal: t.signal });
+    }
+  };
+  const launched = await outer.callTool({ name: 'source_exec', arguments: { command: JSON.stringify({ releaseFile, ending: 'finished\n' }) } }, {});
   const visible = modelText(launched);
   const state = JSON.parse(visible.split('\n')[0]);
   assert.equal(state.status, 'running');
@@ -177,17 +185,35 @@ test('text-only outer MCP client can poll a silent job and observe nonzero compl
   assert.match(state.job_id, /^[\da-f-]{36}$/);
   assert.equal(visible.split('\n').slice(1).join('\n'), 'stdout:\n\nstderr:\n');
   assert.equal(launched.structuredContent.job_id, state.job_id);
-  const polled = await outer.callTool({ name: 'source_poll', arguments: { job_id: state.job_id, wait_ms: 5000 } }, {});
+  const pending = await outer.callTool({ name: 'source_poll', arguments: { job_id: state.job_id, wait_ms: 0 } }, {});
+  assert.deepEqual(JSON.parse(modelText(pending).split('\n')[0]), state);
+  assert.equal(modelText(pending).split('\n').slice(1).join('\n'), 'stdout:\n\nstderr:\n');
+  assert.equal(fs.existsSync(releaseFile), false);
+  assert.ok(!records(f.config, 'events.jsonl').some(record => record.type === 'sandbox-close' && record.job_id === state.job_id));
+  fs.writeFileSync(releaseFile, 'release');
+  await waitForClose(state.job_id);
+  const polled = await outer.callTool({ name: 'source_poll', arguments: { job_id: state.job_id, wait_ms: 0 } }, {});
   assert.deepEqual(JSON.parse(modelText(polled).split('\n')[0]), { ...state, status: 'completed', exit_code: 0 });
-  assert.match(modelText(polled), /finished/);
+  assert.match(modelText(polled), /^finished$/m);
+  const again = await outer.callTool({ name: 'source_poll', arguments: { job_id: state.job_id, wait_ms: 0 } }, {});
+  assert.deepEqual(JSON.parse(modelText(again).split('\n')[0]), { ...state, status: 'completed', exit_code: 0 });
+  assert.equal(modelText(again).split('\n').slice(1).join('\n'), 'stdout:\n\nstderr:\n');
   assert.equal((await outer.callTool({ name: 'source_read', arguments: { file_path: 'sample.js' } }, {})).isError, undefined);
-  const failed = await outer.callTool({ name: 'source_exec', arguments: { command: JSON.stringify({ stderr: 'test failure\n', exitCode: 7 }) } }, {});
-  const failureState = JSON.parse(modelText(failed).split('\n')[0]);
-  assert.equal(failureState.status, 'completed');
-  assert.equal(failureState.exit_code, 7);
+  const failedLaunch = await outer.callTool({ name: 'source_exec', arguments: { command: JSON.stringify({ releaseFile: failureRelease, stderr: 'test failure\n', exitCode: 7 }) } }, {});
+  const failureState = JSON.parse(modelText(failedLaunch).split('\n')[0]);
+  assert.equal(failureState.status, 'running');
+  assert.equal(failureState.exit_code, null);
   assert.match(failureState.job_id, /^[\da-f-]{36}$/);
-  assert.match(modelText(failed), /test failure/);
+  assert.equal(fs.existsSync(failureRelease), false);
+  fs.writeFileSync(failureRelease, 'release');
+  await waitForClose(failureState.job_id);
+  const failed = await outer.callTool({ name: 'source_poll', arguments: { job_id: failureState.job_id, wait_ms: 0 } }, {});
+  assert.deepEqual(JSON.parse(modelText(failed).split('\n')[0]), { ...failureState, status: 'completed', exit_code: 7 });
+  assert.equal([failedLaunch, failed].map(modelText).join('\n').match(/^test failure$/gm)?.length, 1);
   assert.equal(failed.isError, true);
+  await outer.close();
+  assert.equal(fs.readFileSync(path.join(f.tmp, 'inner-closed'), 'utf8'), 'closed');
+  assert.ok(records(f.config, 'events.jsonl').some(record => record.type === 'cleanup-complete'));
 });
 
 test('unique UTF-8 edits, new files, deletion and exact byte/version receipts', { skip: !enabled }, async t => {
