@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.1 — 2026-10-23
+
+- Preserve verified explicit source ranges when an `explore.reads` batch also
+  contains unindexed inputs. Report unavailable input indexes and bounded
+  details while retaining EOF notices, source order, existing containment
+  deduplication and byte budgets. Invalid ranges, paths outside the repository
+  and actual file-read failures remain explicit errors.
+- Make the benchmark's silent outer-MCP job fixture deterministic with release
+  gates and actual process-close events. Keep pending polls, incremental output,
+  nonzero exits and cleanup checks without depending on fixed process delays.
+
 ## 0.3.0 — 2026-10-22
 
 - Add optional semantic-reference providers for Python, Go, C/C++ and Bash,
