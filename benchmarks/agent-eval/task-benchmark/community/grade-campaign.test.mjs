@@ -82,6 +82,46 @@ test('integration fixture: failed model Context attempt keeps missing declaratio
   assert.equal(diagnostics.requests, 1); assert.equal(diagnostics.declarationStatus, 'missing-final-declaration');
 });
 
+test('invalid final region diagnostics reach the grade without invoking the official grader', async t => {
+  const f = fixture(t);
+  const region = { file_path: './x.js', start_line: 2, end_line: 99 };
+  f.receipt.answer = JSON.stringify({ regions: [{ file_path: 'x.js', start_line: 1, end_line: 1 }, region], rationale: 'fixture' });
+  const grade = await f.grader()(f.input());
+  assert.equal(grade.status, 'invalid-final-region');
+  assert.equal(grade.metrics, null);
+  assert.equal(grade.resolved, null);
+  assert.equal(grade.missingFinalDeclaration, true);
+  assert.equal(grade.modelTaskCompleted, true);
+  assert.equal(f.calls.length, 0);
+  const diagnostics = JSON.parse(fs.readFileSync(path.join(grade.outputDir, 'trace-diagnostics.json')));
+  assert.equal(diagnostics.declarationStatus, 'invalid-final-region');
+  assert.deepEqual(diagnostics.invalidFinalRegion,
+    { index: 1, regionType: 'object', region, availableSourceLines: 2, reason: 'end-after-eof' });
+  const prediction = JSON.parse(fs.readFileSync(grade.predictionsPath))[0];
+  assert.deepEqual(prediction.traj_data.pred_files, []);
+  assert.deepEqual(prediction.traj_data.pred_spans, {});
+  assert.deepEqual(prediction.traj_data.pred_steps,
+    [{ files: ['x.js'], spans: { 'x.js': [{ start: 1, end: 1 }] } }]);
+});
+
+test('invalid final region with deep extra fields remains a persisted ungraded terminal result', async t => {
+  const f = fixture(t), deep = '{"next":'.repeat(20_000) + '0' + '}'.repeat(20_000);
+  f.receipt.answer = `{"regions":[{"file_path":"x.js","start_line":1,"end_line":3,"extra":${deep}}],"rationale":"synthetic malformed input"}`;
+  const grade = await f.grader()(f.input());
+  assert.equal(grade.status, 'invalid-final-region');
+  assert.equal(grade.resolved, null); assert.equal(grade.metrics, null);
+  assert.equal(grade.missingFinalDeclaration, true); assert.equal(grade.modelTaskCompleted, true);
+  assert.equal(f.calls.length, 0);
+  const diagnostics = JSON.parse(fs.readFileSync(path.join(grade.outputDir, 'trace-diagnostics.json')));
+  assert.deepEqual(diagnostics.invalidFinalRegion, { index: 0, regionType: 'object',
+    region: { file_path: 'x.js', start_line: 1, end_line: 3 }, availableSourceLines: 2, reason: 'end-after-eof' });
+  assert.deepEqual(diagnostics.unmapped, []); assert.deepEqual(diagnostics.unmappedByReason, {});
+  const prediction = JSON.parse(fs.readFileSync(grade.predictionsPath))[0];
+  assert.deepEqual(prediction.traj_data.pred_files, []); assert.deepEqual(prediction.traj_data.pred_spans, {});
+  assert.deepEqual(prediction.traj_data.pred_steps,
+    [{ files: ['x.js'], spans: { 'x.js': [{ start: 1, end: 1 }] } }]);
+});
+
 test('integration fixture: failed partial SWE model patch is scored without changing model outcome', async t => {
   const f = fixture(t, 'swe', 'task-failed'), grade = await f.grader()(f.input());
   assert.equal(grade.status, 'completed'); assert.equal(grade.resolved, false);

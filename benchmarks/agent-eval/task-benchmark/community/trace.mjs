@@ -46,6 +46,22 @@ function contentText(response) {
   return (response.content ?? []).filter(block => block.type === 'text' && typeof block.text === 'string').map(block => block.text);
 }
 
+function rejectedRegion(region) {
+  // Project only the parsed range fields. Composite values and special numbers
+  // use explicit markers so diagnostics stay JSON-writable without losing type.
+  const field = value => {
+    if (value !== null && typeof value === 'object') return { type: Array.isArray(value) ? 'array' : 'object', omitted: true };
+    if (typeof value === 'number' && (!Number.isFinite(value) || Object.is(value, -0))) {
+      return { type: 'number', value: Object.is(value, -0) ? '-0' : String(value), omitted: true };
+    }
+    return value;
+  };
+  const regionType = region === null ? 'null' : Array.isArray(region) ? 'array' : typeof region;
+  return { regionType, region: regionType === 'object'
+    ? Object.fromEntries(['file_path', 'start_line', 'end_line'].filter(key => Object.hasOwn(region, key)).map(key => [key, field(region[key])]))
+    : field(region) };
+}
+
 /** Convert only an exact final JSON object (optionally one JSON fence). */
 export function parseDeclaration(answer, root) {
   const text = typeof answer === 'string' ? answer.trim() : '';
@@ -58,11 +74,21 @@ export function parseDeclaration(answer, root) {
     return { declaration: null, reason: 'invalid-final-schema' };
   }
   const source = sourceStore(root), spans = {}, files = new Set();
-  for (const region of parsed.regions) {
+  for (const [index, region] of parsed.regions.entries()) {
     const entry = source(region?.file_path);
-    if (!entry || !Number.isSafeInteger(region.start_line) || !Number.isSafeInteger(region.end_line) ||
-      region.start_line < 1 || region.end_line < region.start_line || region.end_line > entry.lines.length) {
-      return { declaration: null, reason: 'invalid-final-region' };
+    let rejection = null;
+    if (!entry) rejection = 'source-unavailable';
+    else if (!Number.isSafeInteger(region.start_line)) rejection = 'invalid-start-line';
+    else if (!Number.isSafeInteger(region.end_line)) rejection = 'invalid-end-line';
+    else if (region.start_line < 1) rejection = 'start-before-first-line';
+    else if (region.end_line < region.start_line) rejection = 'end-before-start';
+    else if (region.end_line > entry.lines.length) rejection = 'end-after-eof';
+    if (rejection) {
+      // Keep the entire declaration invalid. This first rejection explains the
+      // original model input without normalizing or repairing its source range.
+      return { declaration: null, reason: 'invalid-final-region', invalidFinalRegion: {
+        index, ...rejectedRegion(region), availableSourceLines: entry?.lines.length ?? null, reason: rejection,
+      } };
     }
     files.add(entry.file);
     (spans[entry.file] ??= []).push({ start: region.start_line, end: region.end_line });
@@ -211,7 +237,7 @@ export function extractTrace({ root, bridgeDir, task, answer }) {
     calls.push({ call: id, tool: name, status: 'mapped', files: files.size,
       lines: Object.values(compact).flat().reduce((sum, span) => sum + span.end - span.start + 1, 0) });
   }
-  const { declaration, reason } = parseDeclaration(answer, root);
+  const { declaration, reason, invalidFinalRegion } = parseDeclaration(answer, root);
   const prediction = { instance_id: task.instanceId, repo_url: task.repo, commit: task.baseCommit, model_patch: '',
     traj_data: { pred_steps: steps, pred_files: declaration?.files ?? [], pred_spans: declaration?.spans ?? {} } };
   const byReason = {};
@@ -223,5 +249,6 @@ export function extractTrace({ root, bridgeDir, task, answer }) {
     diagnostics: { protocol: 'readonly-localization', revisionMapping: 'pristine-source-no-edits',
       requests: requestFiles.length, responses, failedResponses, locatorOnlyResponses,
       declarationStatus: reason ?? 'valid', declarationRationale: declaration?.rationale ?? null,
+      ...(invalidFinalRegion ? { invalidFinalRegion } : {}),
       unmapped, unmappedByReason: byReason, calls } };
 }
