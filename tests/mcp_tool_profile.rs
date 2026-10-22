@@ -275,6 +275,16 @@ fn batch_source_reads_pass_ranges_through_both_protocol_eras() {
         "# Outside\n\nSelected documentation\n",
     )
     .unwrap();
+    fs::write(
+        repository.path().join("package.json"),
+        "{\"name\":\"read-manifest\"}\n",
+    )
+    .unwrap();
+    fs::write(
+        repository.path().join("Cargo.toml"),
+        "[package]\nname = \"read-manifest\"\nversion = \"0.1.0\"\n",
+    )
+    .unwrap();
     for modern in [false, true] {
         let responses = run_server(
             Some("explore"),
@@ -286,7 +296,9 @@ fn batch_source_reads_pass_ranges_through_both_protocol_eras() {
                     json!({"name":"explore", "arguments":{
                         "repository_root":repository.path(), "reads":[
                             {"file_path":"src/lib.rs", "start_line":2, "end_line":2},
-                            {"file_path":"README.md", "start_line":3, "end_line":3}
+                            {"file_path":"README.md", "start_line":3, "end_line":3},
+                            {"file_path":"package.json"},
+                            {"file_path":"Cargo.toml", "start_line":2, "end_line":2}
                         ], "max_bytes":4000
                     }}),
                     modern,
@@ -318,6 +330,8 @@ fn batch_source_reads_pass_ranges_through_both_protocol_eras() {
             .unwrap();
         assert!(text.contains("pub fn chosen() {}"), "{text}");
         assert!(text.contains("Selected documentation"), "{text}");
+        assert!(text.contains("1: {\"name\":\"read-manifest\"}"), "{text}");
+        assert!(text.contains("2: name = \"read-manifest\""), "{text}");
         assert!(!text.contains("outside-before"), "{text}");
         assert!(!text.contains("outside-after"), "{text}");
         assert!(!text.contains("# Outside"), "{text}");
@@ -337,11 +351,18 @@ fn eof_ranges_preserve_available_batch_evidence_in_both_protocol_eras() {
     let source = "// before\npub fn chosen() {}\n// last\n";
     fs::write(repository.path().join("lib.rs"), source).unwrap();
     fs::write(repository.path().join("README.md"), "# Fixture\nEvidence\n").unwrap();
+    fs::write(
+        repository.path().join("fixture.json"),
+        "{\"fixture_payload\":true}\n",
+    )
+    .unwrap();
     for modern in [false, true] {
         let cases = [
             json!([
                 {"file_path":"lib.rs", "start_line":4, "end_line":8},
+                {"file_path":"fixture.json", "start_line":1, "end_line":1},
                 {"file_path":"lib.rs", "start_line":2, "end_line":8},
+                {"file_path":"lib.rs", "start_line":3, "end_line":3},
                 {"file_path":"README.md", "start_line":2, "end_line":2}
             ]),
             json!([{"file_path":"lib.rs", "start_line":4}]),
@@ -350,6 +371,10 @@ fn eof_ranges_preserve_available_batch_evidence_in_both_protocol_eras() {
             json!([{"file_path":"lib.rs", "start_line":0, "end_line":8}]),
             json!([{"file_path":"../outside.rs", "start_line":1, "end_line":8}]),
             json!([{"file_path":"missing.rs", "start_line":1, "end_line":8}]),
+            json!([{"file_path":"fixture.json"}]),
+            json!([{"file_path":"fixture.json"}, {"file_path":"missing.json"}]),
+            json!([{"file_path":"lib.rs"}, {"file_path":"fixture.json", "start_line":2, "end_line":1}]),
+            json!([{"file_path":"lib.rs"}, {"file_path":"package.json"}]),
         ];
         let responses = run_server(
             Some("explore"),
@@ -383,6 +408,31 @@ fn eof_ranges_preserve_available_batch_evidence_in_both_protocol_eras() {
         assert!(text.contains("lib.rs:2-3"), "{text}");
         assert!(text.contains("2: pub fn chosen() {}\n3: // last"), "{text}");
         assert!(text.contains("2: Evidence"), "{text}");
+        assert_eq!(text.matches("3: // last").count(), 1, "{text}");
+        assert!(
+            text.find("2: pub fn chosen() {}").unwrap() < text.find("2: Evidence").unwrap(),
+            "{text}"
+        );
+        assert!(
+            text.contains("5 requested; 3 verified ranges; unavailable indexes: [0, 1]"),
+            "{text}"
+        );
+        assert!(
+            text.contains("reads[1].file_path (\"fixture.json\")"),
+            "{text}"
+        );
+        assert!(
+            text.contains("must name indexed source or a package manifest"),
+            "{text}"
+        );
+        assert!(!text.contains("fixture_payload"), "{text}");
+        let result = &responses[0]["result"];
+        assert_eq!(result["content"].as_array().unwrap().len(), 1);
+        assert_eq!(result["content"][0]["type"], "text");
+        assert!(result.get("structuredContent").is_none());
+        if modern {
+            assert_eq!(result["resultType"], "complete");
+        }
         assert!(
             !text.contains(&hex::encode(Sha256::digest(source.as_bytes()))),
             "{text}"
