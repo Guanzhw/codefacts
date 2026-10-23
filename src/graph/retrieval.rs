@@ -5,10 +5,12 @@
 //! actual source before returning evidence.
 
 use std::collections::{HashMap, HashSet};
+use std::io::Write;
 
+use flate2::{write::ZlibEncoder, Compression, Decompress, FlushDecompress, Status};
 use rusqlite::params;
 
-use crate::error::Result;
+use crate::error::{CodeFactsError, Result};
 
 use super::store::{split_identifier, GraphStore};
 
@@ -17,34 +19,37 @@ const CHUNK_OVERLAP: usize = 6;
 const MAX_QUERY_TERMS: usize = 24;
 pub(crate) const MAX_QUERY_CHARS: usize = 8192;
 const MAX_MATCHES: usize = 256;
+const STORAGE_FORMAT: &str = "contentless-zlib-v1";
+// Older executables sharing this database can recreate these owned triggers.
+// Retire them inside each write transaction, before any chunk mutation.
+const RETIRE_LEGACY_TRIGGERS: &str = "
+DROP TRIGGER IF EXISTS retrieval_chunks_ai;
+DROP TRIGGER IF EXISTS retrieval_chunks_ad;
+";
 
 const SCHEMA: &str = "
 CREATE TABLE IF NOT EXISTS retrieval_files (
     file_path TEXT PRIMARY KEY,
     source_hash TEXT NOT NULL
 );
-CREATE TABLE IF NOT EXISTS retrieval_chunks (
+CREATE TABLE retrieval_chunks (
     id INTEGER PRIMARY KEY,
     file_path TEXT NOT NULL,
     start_line INTEGER NOT NULL,
     end_line INTEGER NOT NULL,
-    source_words TEXT NOT NULL,
-    path_words TEXT NOT NULL
+    source_words_zlib BLOB NOT NULL,
+    path_words_zlib BLOB NOT NULL
 );
-CREATE INDEX IF NOT EXISTS idx_retrieval_chunks_file ON retrieval_chunks(file_path);
-CREATE VIRTUAL TABLE IF NOT EXISTS retrieval_fts USING fts5(
+CREATE INDEX idx_retrieval_chunks_file ON retrieval_chunks(file_path);
+CREATE VIRTUAL TABLE retrieval_fts USING fts5(
     source_words, path_words,
-    content='retrieval_chunks', content_rowid='id',
+    content='',
     tokenize='porter unicode61'
 );
-CREATE TRIGGER IF NOT EXISTS retrieval_chunks_ai AFTER INSERT ON retrieval_chunks BEGIN
-    INSERT INTO retrieval_fts(rowid, source_words, path_words)
-    VALUES (new.id, new.source_words, new.path_words);
-END;
-CREATE TRIGGER IF NOT EXISTS retrieval_chunks_ad AFTER DELETE ON retrieval_chunks BEGIN
-    INSERT INTO retrieval_fts(retrieval_fts, rowid, source_words, path_words)
-    VALUES ('delete', old.id, old.source_words, old.path_words);
-END;
+CREATE TABLE retrieval_metadata (
+    id INTEGER PRIMARY KEY CHECK (id = 1),
+    storage_format TEXT NOT NULL
+);
 ";
 
 /// A ranked source-chunk location, without a stored source payload.
@@ -58,8 +63,143 @@ pub struct SourceMatch {
 }
 
 impl GraphStore {
+    fn retrieval_schema_is_current(&self) -> Result<bool> {
+        let has_marker: bool = self.conn.query_row(
+            "SELECT EXISTS(SELECT 1 FROM sqlite_schema WHERE name = 'retrieval_metadata')",
+            [],
+            |row| row.get(0),
+        )?;
+        if !has_marker {
+            return Ok(false);
+        }
+        let format: String = self.conn.query_row(
+            "SELECT storage_format FROM retrieval_metadata WHERE id = 1",
+            [],
+            |row| row.get(0),
+        )?;
+        if format != STORAGE_FORMAT {
+            return Err(CodeFactsError::Other(format!(
+                "unsupported retrieval storage format: {format}"
+            )));
+        }
+        Ok(true)
+    }
+
     fn ensure_retrieval_schema(&self) -> Result<()> {
-        self.conn.execute_batch(SCHEMA)?;
+        if self.retrieval_schema_is_current()? {
+            return Ok(());
+        }
+        self.with_transaction(|store| {
+            if store.retrieval_schema_is_current()? {
+                return Ok(());
+            }
+            let legacy: bool = store.conn.query_row(
+                "SELECT EXISTS(SELECT 1 FROM sqlite_schema WHERE name = 'retrieval_chunks')",
+                [],
+                |row| row.get(0),
+            )?;
+            if legacy {
+                store.conn.execute_batch(RETIRE_LEGACY_TRIGGERS)?;
+                store.conn.execute_batch(
+                    "DROP TABLE retrieval_fts;
+                     ALTER TABLE retrieval_chunks RENAME TO retrieval_chunks_legacy;
+                     DROP INDEX idx_retrieval_chunks_file;",
+                )?;
+            }
+            store.conn.execute_batch(SCHEMA)?;
+            if legacy {
+                // Convert the exact stored words, without rereading source or
+                // changing chunk IDs, locations, or the caller-verified hashes.
+                // Stream rows to bound migration memory to one chunk at a time.
+                {
+                    let mut statement = store.conn.prepare(
+                        "SELECT id, file_path, start_line, end_line, source_words, path_words \
+                         FROM retrieval_chunks_legacy ORDER BY id",
+                    )?;
+                    let mut rows = statement.query([])?;
+                    while let Some(row) = rows.next()? {
+                        let source_words: String = row.get(4)?;
+                        let path_words: String = row.get(5)?;
+                        store.insert_retrieval_chunk(
+                            Some(row.get(0)?),
+                            &row.get::<_, String>(1)?,
+                            (row.get(2)?, row.get(3)?),
+                            &source_words,
+                            &path_words,
+                        )?;
+                    }
+                }
+                // Freed pages can be reused; dropping the old storage does not
+                // shrink the database file or run a global VACUUM.
+                store
+                    .conn
+                    .execute_batch("DROP TABLE retrieval_chunks_legacy")?;
+            }
+            store.conn.execute(
+                "INSERT INTO retrieval_metadata (id, storage_format) VALUES (1, ?1)",
+                [STORAGE_FORMAT],
+            )?;
+            Ok(())
+        })
+    }
+
+    fn insert_retrieval_chunk(
+        &self,
+        id: Option<i64>,
+        file_path: &str,
+        line_bounds: (u32, u32),
+        source_words: &str,
+        path_words: &str,
+    ) -> Result<()> {
+        let source_blob = compress_words(source_words)?;
+        let path_blob = compress_words(path_words)?;
+        self.conn
+            .prepare_cached(
+                "INSERT INTO retrieval_chunks \
+             (id, file_path, start_line, end_line, source_words_zlib, path_words_zlib) \
+             VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
+            )?
+            .execute(params![
+                id,
+                file_path,
+                line_bounds.0,
+                line_bounds.1,
+                source_blob,
+                path_blob
+            ])?;
+        let id = self.conn.last_insert_rowid();
+        self.conn
+            .prepare_cached(
+                "INSERT INTO retrieval_fts (rowid, source_words, path_words) VALUES (?1, ?2, ?3)",
+            )?
+            .execute(params![id, source_words, path_words])?;
+        Ok(())
+    }
+
+    fn delete_retrieval_chunks(&self, file_path: &str) -> Result<()> {
+        {
+            let mut statement = self.conn.prepare_cached(
+                "SELECT id, source_words_zlib, path_words_zlib FROM retrieval_chunks \
+                 WHERE file_path = ?1 ORDER BY id",
+            )?;
+            let mut rows = statement.query([file_path])?;
+            let mut delete = self.conn.prepare_cached(
+                "INSERT INTO retrieval_fts (retrieval_fts, rowid, source_words, path_words) \
+                 VALUES ('delete', ?1, ?2, ?3)",
+            )?;
+            while let Some(row) = rows.next()? {
+                let id: i64 = row.get(0)?;
+                let source_words = decompress_words(&row.get::<_, Vec<u8>>(1)?)?;
+                let path_words = decompress_words(&row.get::<_, Vec<u8>>(2)?)?;
+                // Legacy contentless FTS requires the exact original terms to
+                // remove both postings and the BM25 corpus token counts.
+                delete.execute(params![id, source_words, path_words])?;
+            }
+        }
+        self.conn.execute(
+            "DELETE FROM retrieval_chunks WHERE file_path = ?1",
+            [file_path],
+        )?;
         Ok(())
     }
 
@@ -75,30 +215,23 @@ impl GraphStore {
 
     /// Replace a file's recall chunks atomically using caller-hash-verified source.
     pub fn upsert_retrieval_source(&self, file_path: &str, hash: &str, source: &str) -> Result<()> {
-        self.ensure_retrieval_schema()?;
         let lines: Vec<&str> = source.lines().collect();
         let path_words = normalize_words(file_path);
         self.with_transaction(|store| {
-            store.conn.execute(
-                "DELETE FROM retrieval_chunks WHERE file_path = ?1",
-                [file_path],
-            )?;
-            let mut statement = store.conn.prepare_cached(
-                "INSERT INTO retrieval_chunks \
-                 (file_path, start_line, end_line, source_words, path_words) \
-                 VALUES (?1, ?2, ?3, ?4, ?5)",
-            )?;
+            store.ensure_retrieval_schema()?;
+            store.conn.execute_batch(RETIRE_LEGACY_TRIGGERS)?;
+            store.delete_retrieval_chunks(file_path)?;
             let mut start = 0;
             while start < lines.len() {
                 let end = (start + CHUNK_LINES).min(lines.len());
                 let source_words = normalize_words(&lines[start..end].join("\n"));
-                statement.execute(params![
+                store.insert_retrieval_chunk(
+                    None,
                     file_path,
-                    (start + 1) as u32,
-                    end as u32,
-                    source_words,
-                    path_words
-                ])?;
+                    ((start + 1) as u32, end as u32),
+                    &source_words,
+                    &path_words,
+                )?;
                 if end == lines.len() {
                     break;
                 }
@@ -115,12 +248,10 @@ impl GraphStore {
 
     /// Remove both a file's recall chunks and its recorded source hash.
     pub fn delete_retrieval_source(&self, file_path: &str) -> Result<()> {
-        self.ensure_retrieval_schema()?;
         self.with_transaction(|store| {
-            store.conn.execute(
-                "DELETE FROM retrieval_chunks WHERE file_path = ?1",
-                [file_path],
-            )?;
+            store.ensure_retrieval_schema()?;
+            store.conn.execute_batch(RETIRE_LEGACY_TRIGGERS)?;
+            store.delete_retrieval_chunks(file_path)?;
             store.conn.execute(
                 "DELETE FROM retrieval_files WHERE file_path = ?1",
                 [file_path],
@@ -171,6 +302,50 @@ impl GraphStore {
             },
         )?;
         Ok(rows.collect::<rusqlite::Result<Vec<_>>>()?)
+    }
+}
+
+fn compress_words(words: &str) -> Result<Vec<u8>> {
+    let mut encoder = ZlibEncoder::new(Vec::new(), Compression::new(3));
+    encoder.write_all(words.as_bytes())?;
+    Ok(encoder.finish()?)
+}
+
+/// Stored bytes are a boundary: reject truncated, trailing, checksum-invalid,
+/// or non-UTF-8 data rather than supply incorrect old terms to FTS deletion.
+fn decompress_words(bytes: &[u8]) -> Result<String> {
+    let mut decoder = Decompress::new(true);
+    let mut output = Vec::new();
+    let mut buffer = [0; 8192];
+    loop {
+        let before_in = decoder.total_in();
+        let before_out = decoder.total_out();
+        let status = decoder
+            .decompress(
+                &bytes[before_in as usize..],
+                &mut buffer,
+                FlushDecompress::None,
+            )
+            .map_err(|error| {
+                CodeFactsError::Other(format!("invalid retrieval zlib data: {error}"))
+            })?;
+        let produced = (decoder.total_out() - before_out) as usize;
+        output.extend_from_slice(&buffer[..produced]);
+        if status == Status::StreamEnd {
+            if decoder.total_in() != bytes.len() as u64 {
+                return Err(CodeFactsError::Other(
+                    "trailing bytes in retrieval zlib data".into(),
+                ));
+            }
+            return String::from_utf8(output).map_err(|error| {
+                CodeFactsError::Other(format!("invalid retrieval UTF-8 data: {error}"))
+            });
+        }
+        if before_in == decoder.total_in() && produced == 0 {
+            return Err(CodeFactsError::Other(
+                "incomplete retrieval zlib data".into(),
+            ));
+        }
     }
 }
 
@@ -286,6 +461,10 @@ fn is_task_filler(term: &str) -> bool {
             | "implemented"
     )
 }
+
+#[cfg(test)]
+#[path = "retrieval_storage_tests.rs"]
+mod storage_tests;
 
 #[cfg(test)]
 mod tests {
