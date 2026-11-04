@@ -196,28 +196,36 @@ impl CodeFacts {
         {
             let mut excerpts = Vec::new();
             let mut eof_notes = Vec::new();
+            let mut unindexed_notes = Vec::new();
+            let mut unavailable = Vec::new();
             for (index, read) in reads.iter().enumerate() {
                 let path = self.relative_path(&read.file_path)?;
-                if !hashes.contains_key(&path) && !is_manifest(&path) {
-                    let field = if reads_are_batch {
-                        format!("reads[{index}].file_path")
-                    } else {
-                        "file_path".to_string()
-                    };
-                    return Err(CodeFactsError::Mcp(format!(
-                        "{field} ({path:?}) must name indexed source or a package manifest"
-                    )));
-                }
-                let source =
-                    self.exploration_source(&path, hashes.get(&path).map(String::as_str))?;
-                let file_end = source.text.lines().count() as u32;
                 let start = read.start_line.unwrap_or(1);
                 if start == 0 || read.end_line.is_some_and(|end| end == 0 || start > end) {
                     return Err(CodeFactsError::Mcp(
                         format!("invalid source range for {path}: use positive start_line and end_line with start_line <= end_line"),
                     ));
                 }
+                if !hashes.contains_key(&path) && !is_manifest(&path) {
+                    let field = if reads_are_batch {
+                        format!("reads[{index}].file_path")
+                    } else {
+                        "file_path".to_string()
+                    };
+                    if reads.len() == 1 {
+                        return Err(CodeFactsError::Mcp(format!(
+                            "{field} ({path:?}) must name indexed source or a package manifest"
+                        )));
+                    }
+                    unavailable.push(index);
+                    unindexed_notes.push(format!("{field} ({path:?})"));
+                    continue;
+                }
+                let source =
+                    self.exploration_source(&path, hashes.get(&path).map(String::as_str))?;
+                let file_end = source.text.lines().count() as u32;
                 if start > file_end {
+                    unavailable.push(index);
                     eof_notes.push(format!(
                         "{path}: start_line {start} is past EOF {file_end}; requested range unavailable"
                     ));
@@ -241,17 +249,32 @@ impl CodeFacts {
                 });
             }
             if excerpts.is_empty() {
+                let mut reasons = eof_notes;
+                if !unindexed_notes.is_empty() {
+                    reasons.push(format!(
+                        "{} must name indexed source or a package manifest",
+                        unindexed_notes.join(", ")
+                    ));
+                }
                 return Err(CodeFactsError::Mcp(format!(
                     "no readable source ranges: {}",
-                    eof_notes.join("; ")
+                    reasons.join("; ")
                 )));
             }
-            if !eof_notes.is_empty() {
-                let _ = writeln!(output, "EOF notes ({}):", eof_notes.len());
-                for note in eof_notes {
-                    let _ = writeln!(output, "- {note}");
-                }
+            if reads_are_batch && reads.len() > 1 && !unavailable.is_empty() {
+                let _ = writeln!(
+                    output,
+                    "Batch reads: {} requested; {} verified ranges; unavailable indexes: {unavailable:?}.",
+                    reads.len(), excerpts.len()
+                );
             }
+            render_read_notes(
+                &mut output,
+                "Unavailable input paths (must name indexed source or a package manifest)",
+                &unindexed_notes,
+                budget,
+            );
+            render_read_notes(&mut output, "EOF notes", &eof_notes, budget);
             render_excerpts(&mut output, excerpts, &sources, budget, false);
             return Ok(finish(output, budget));
         }
@@ -1073,6 +1096,23 @@ fn excerpt_key(excerpt: &Excerpt) -> String {
         .unwrap_or_else(|| format!("{}:{}:{}", excerpt.path, excerpt.start, excerpt.end))
 }
 
+// Keep input status ahead of source without allowing long path details to
+// consume the response. The batch summary retains every unavailable index.
+fn render_read_notes(output: &mut String, label: &str, notes: &[String], budget: usize) {
+    if notes.is_empty() {
+        return;
+    }
+    let _ = writeln!(output, "{label} ({}):", notes.len());
+    let omitted = "- Additional read details omitted by byte budget.\n";
+    for note in notes {
+        if output.len() + note.len() + 3 + omitted.len() > budget / 2 {
+            output.push_str(omitted);
+            break;
+        }
+        let _ = writeln!(output, "- {note}");
+    }
+}
+
 fn render_excerpts(
     output: &mut String,
     excerpts: Vec<Excerpt>,
@@ -1233,6 +1273,32 @@ fn card_sequence(selected: Vec<Excerpt>, ranked: Vec<Excerpt>) -> Vec<(Excerpt, 
     sequence
 }
 
+fn single_line_card_fragment(excerpt: &Excerpt, node: &CodeNode, lines: &[&str]) -> Option<String> {
+    // Keep whole-line reads and previews intact. Only a real single-line owner
+    // can attribute omitted boundary context to exact parser byte columns.
+    if node.kind == NodeKind::Heading
+        || node.file_path != excerpt.path
+        || node.start_line != excerpt.start
+        || node.end_line != excerpt.end
+        || excerpt.start != excerpt.end
+    {
+        return None;
+    }
+    let line = lines.get(excerpt.start.checked_sub(1)? as usize)?;
+    let start = node.start_column as usize;
+    let end = node.end_column as usize;
+    if start >= end || (start == 0 && end == line.len()) {
+        return None;
+    }
+    let source = line.get(start..end)?;
+    // This is deliberately distinct from `N: whole line`, including for
+    // consumers that recognize only exact, numbered source-line exposure.
+    Some(format!(
+        "{}:{start}..{end} [column fragment; UTF-8 byte columns, 0-based, end-exclusive; surrounding line context omitted]: {source}\n",
+        excerpt.start
+    ))
+}
+
 fn render_cards(
     output: &mut String,
     cards: Vec<(Excerpt, bool)>,
@@ -1340,6 +1406,17 @@ fn render_cards(
                 } else if index >= 2 {
                     break;
                 }
+            }
+        }
+        if preview.is_empty() {
+            let fragment = excerpt
+                .node_id
+                .as_deref()
+                .and_then(|id| by_id.get(id))
+                .and_then(|node| single_line_card_fragment(excerpt, node, &lines))
+                .filter(|fragment| fragment.len() <= allocation);
+            if let Some(fragment) = fragment {
+                preview = fragment;
             }
         }
         output.push_str(&frames[index].0);
@@ -1723,13 +1800,13 @@ mod tests {
     }
 
     #[test]
-    fn unindexed_source_read_errors_locate_the_input_field_and_normalized_path() {
+    fn mixed_reads_preserve_source_order_and_locate_unindexed_inputs() {
         let root = tempdir().unwrap();
         let state = tempdir().unwrap();
         fs::write(root.path().join("first.js"), "export const first = 1;\n").unwrap();
         fs::write(
-            root.path().join("unsupported.svelte"),
-            "<script>const x = 1;</script>\n",
+            root.path().join("unsupported.json"),
+            "{\"secret_fixture\":true}\n",
         )
         .unwrap();
         fs::write(root.path().join("last.js"), "export const last = 1;\n").unwrap();
@@ -1739,12 +1816,67 @@ mod tests {
 
         for bad_index in 0..3 {
             let mut reads =
-                ["first.js", "unsupported.svelte", "last.js"].map(|file_path| ExploreRead {
+                ["first.js", "unsupported.json", "last.js"].map(|file_path| ExploreRead {
                     file_path: file_path.into(),
                     start_line: None,
                     end_line: None,
                 });
             reads.swap(1, bad_index);
+            let output = facts
+                .explore(ExploreOptions {
+                    reads: Some(&reads),
+                    ..Default::default()
+                })
+                .unwrap();
+            assert!(
+                output.contains("3 requested; 2 verified ranges"),
+                "{output}"
+            );
+            assert!(
+                output.contains(&format!("unavailable indexes: [{bad_index}]")),
+                "{output}"
+            );
+            assert!(
+                output.contains(&format!(
+                    "reads[{bad_index}].file_path (\"unsupported.json\")"
+                )),
+                "{output}"
+            );
+            assert!(
+                output.contains("must name indexed source or a package manifest"),
+                "{output}"
+            );
+            assert!(output.contains("Freshness: fresh"), "{output}");
+            assert!(!output.contains("secret_fixture"), "{output}");
+            let code: Vec<_> = reads
+                .iter()
+                .filter(|read| read.file_path.ends_with(".js"))
+                .map(|read| {
+                    if read.file_path == "first.js" {
+                        "1: export const first = 1;"
+                    } else {
+                        "1: export const last = 1;"
+                    }
+                })
+                .collect();
+            assert!(
+                output.find(code[0]).unwrap() < output.find(code[1]).unwrap(),
+                "{output}"
+            );
+        }
+
+        for paths in [
+            vec!["unsupported.json"],
+            vec!["unsupported.json", "absent.json"],
+        ] {
+            let reads: Vec<_> = paths
+                .into_iter()
+                .map(|path| ExploreRead {
+                    file_path: path.into(),
+                    start_line: None,
+                    end_line: None,
+                })
+                .collect();
             let error = facts
                 .explore(ExploreOptions {
                     reads: Some(&reads),
@@ -1753,19 +1885,49 @@ mod tests {
                 .unwrap_err()
                 .to_string();
             assert!(
-                error.contains(&format!("reads[{bad_index}].file_path")),
+                error.contains("reads[0].file_path (\"unsupported.json\")"),
                 "{error}"
             );
-            assert!(error.contains("unsupported.svelte"), "{error}");
             assert!(
                 error.contains("must name indexed source or a package manifest"),
                 "{error}"
             );
+            if reads.len() == 2 {
+                assert!(error.contains("no readable source ranges"), "{error}");
+                assert!(
+                    error.contains("reads[1].file_path (\"absent.json\")"),
+                    "{error}"
+                );
+            }
         }
-
+        for (start, end) in [(0, 1), (2, 1), (1, 0)] {
+            let reads = [
+                ExploreRead {
+                    file_path: "first.js".into(),
+                    start_line: None,
+                    end_line: None,
+                },
+                ExploreRead {
+                    file_path: "unsupported.json".into(),
+                    start_line: Some(start),
+                    end_line: Some(end),
+                },
+            ];
+            let error = facts
+                .explore(ExploreOptions {
+                    reads: Some(&reads),
+                    ..Default::default()
+                })
+                .unwrap_err()
+                .to_string();
+            assert!(
+                error.contains("invalid source range for unsupported.json"),
+                "{error}"
+            );
+        }
         let unsupported_path = root
             .path()
-            .join("unsupported.svelte")
+            .join("unsupported.json")
             .to_string_lossy()
             .into_owned();
         let error = facts
@@ -1776,7 +1938,7 @@ mod tests {
             .unwrap_err()
             .to_string();
         assert!(
-            error.contains("file_path (\"unsupported.svelte\")"),
+            error.contains("file_path (\"unsupported.json\")"),
             "{error}"
         );
         assert!(!error.contains("reads["), "{error}");
@@ -1784,6 +1946,92 @@ mod tests {
             error.contains("must name indexed source or a package manifest"),
             "{error}"
         );
+    }
+
+    #[test]
+    fn mixed_read_status_survives_long_details_and_utf8_source_budgets() {
+        let root = tempdir().unwrap();
+        let state = tempdir().unwrap();
+        let source = (1..=5000)
+            .map(|line| format!("// 中文 evidence {line}\n"))
+            .collect::<String>();
+        fs::write(root.path().join("large.rs"), source).unwrap();
+        fs::write(root.path().join("small.rs"), "// overlap evidence\n").unwrap();
+        fs::write(
+            root.path().join("giant.rs"),
+            format!("// {}\n", "文".repeat(12000)),
+        )
+        .unwrap();
+        let facts =
+            CodeFacts::open_with_lsp(root.path(), state.path().join("facts.sqlite"), LspMode::Off)
+                .unwrap();
+        let long_path = format!("{}fixture.json", "目录/".repeat(1200));
+        let reads: Vec<_> = [
+            long_path.as_str(),
+            "large.rs",
+            "absent.json",
+            "small.rs",
+            "small.rs",
+            "small.rs",
+            long_path.as_str(),
+            long_path.as_str(),
+        ]
+        .into_iter()
+        .enumerate()
+        .map(|(index, path)| ExploreRead {
+            file_path: path.into(),
+            start_line: Some(if index == 3 { 2 } else { 1 }),
+            end_line: None,
+        })
+        .collect();
+        for budget in [2000, 24000, 32000] {
+            let output = facts
+                .explore(ExploreOptions {
+                    reads: Some(&reads),
+                    max_bytes: Some(budget),
+                    ..Default::default()
+                })
+                .unwrap();
+            assert!(output.len() <= budget, "{} > {budget}", output.len());
+            assert!(
+                output.contains(
+                    "8 requested; 3 verified ranges; unavailable indexes: [0, 2, 3, 6, 7]"
+                ),
+                "{output}"
+            );
+            assert!(
+                output.contains("must name indexed source or a package manifest"),
+                "{output}"
+            );
+            assert!(
+                output.contains("details omitted by byte budget"),
+                "{output}"
+            );
+            assert!(output.contains("start_line 2 is past EOF 1"), "{output}");
+            assert!(output.contains("1: // 中文 evidence 1"), "{output}");
+            assert!(output.contains("excerpt incomplete"), "{output}");
+            assert!(output.contains("Freshness: fresh"), "{output}");
+        }
+        let reads = ["absent.json", "giant.rs", "small.rs"].map(|path| ExploreRead {
+            file_path: path.into(),
+            start_line: None,
+            end_line: None,
+        });
+        let output = facts
+            .explore(ExploreOptions {
+                reads: Some(&reads),
+                max_bytes: Some(2000),
+                ..Default::default()
+            })
+            .unwrap();
+        assert!(output.len() <= 2000, "{output}");
+        assert!(output.contains("unavailable indexes: [0]"), "{output}");
+        assert!(output.contains("giant.rs:1: line does not fit"), "{output}");
+        assert!(
+            output.contains("Not fully returned (1 ranges):\ngiant.rs:1-1"),
+            "{output}"
+        );
+        assert!(output.contains("1: // overlap evidence"), "{output}");
     }
 
     #[test]
@@ -2370,6 +2618,98 @@ mod tests {
         assert!(response.contains("[source omitted] implementation"));
         assert!(!response.contains("1: 中文"));
         assert!(response.len() <= 2000);
+    }
+
+    #[test]
+    fn cards_reject_invalid_utf8_columns_and_keep_headings_line_based() {
+        let prefix = "中文".repeat(1000);
+        let definition = "fn needle() {}";
+        let text = format!("{prefix}{definition}\n");
+        let sources = card_source("fixture.rs", &text);
+        let mut node = card_node("owner", "needle", "fixture.rs", 1, 1);
+        node.start_column = prefix.len() as u32;
+        node.end_column = (prefix.len() + definition.len()) as u32;
+        for invalid in ["utf8", "past_end", "reversed", "heading"] {
+            let mut node = node.clone();
+            match invalid {
+                "utf8" => node.start_column = 1,
+                "past_end" => node.end_column += 1,
+                "reversed" => node.end_column = node.start_column,
+                "heading" => node.kind = NodeKind::Heading,
+                _ => unreachable!(),
+            }
+            let mut response = String::new();
+            render_cards(
+                &mut response,
+                card_sequence(
+                    vec![card_excerpt("fixture.rs", 1, 1, Some("owner"))],
+                    vec![],
+                ),
+                &[node],
+                &[],
+                &sources,
+                2000,
+            )
+            .unwrap();
+            assert!(response.contains("[source omitted] implementation"));
+            assert!(!response.contains("column fragment"));
+            assert!(!response.contains(definition));
+            assert!(response.len() <= 2000);
+        }
+    }
+
+    #[test]
+    fn column_previews_keep_each_cards_original_source_share() {
+        let prefix = " ".repeat(3000);
+        let small = "fn small() {}";
+        let large = format!("fn large() {{ /*{}*/ }}", "x".repeat(1300));
+        let sources = card_source("fixture.rs", &format!("{prefix}{small}\n{prefix}{large}\n"));
+        let nodes = [small, &large]
+            .into_iter()
+            .enumerate()
+            .map(|(index, definition)| {
+                let name = if index == 0 { "small" } else { "large" };
+                let mut node =
+                    card_node(name, name, "fixture.rs", index as u32 + 1, index as u32 + 1);
+                node.start_column = prefix.len() as u32;
+                node.end_column = (prefix.len() + definition.len()) as u32;
+                node
+            })
+            .collect::<Vec<_>>();
+        let mut alone = String::new();
+        render_cards(
+            &mut alone,
+            card_sequence(
+                vec![card_excerpt("fixture.rs", 2, 2, Some("large"))],
+                vec![],
+            ),
+            &nodes,
+            &[],
+            &sources,
+            2000,
+        )
+        .unwrap();
+        assert!(alone.contains(&large));
+        let mut shared = String::new();
+        render_cards(
+            &mut shared,
+            card_sequence(
+                vec![
+                    card_excerpt("fixture.rs", 1, 1, Some("small")),
+                    card_excerpt("fixture.rs", 2, 2, Some("large")),
+                ],
+                vec![],
+            ),
+            &nodes,
+            &[],
+            &sources,
+            2000,
+        )
+        .unwrap();
+        assert!(shared.contains(small));
+        assert!(shared.contains("[source omitted] implementation"));
+        assert!(!shared.contains(&large));
+        assert!(shared.len() <= 2000);
     }
 
     #[test]

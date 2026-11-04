@@ -133,3 +133,103 @@ fn source_text_that_resembles_removed_metadata_is_preserved_after_refresh() {
         assert!(response.contains("Freshness: fresh"));
     }
 }
+
+#[test]
+fn single_line_owners_fit_as_attributed_column_previews() {
+    for (file, preamble, definition) in [
+        ("entry.rs", "", "pub fn needle() {}"),
+        ("entry.go", "package fixture\r\n", "func Needle() {}"),
+        ("entry.js", "", "function needle() { return '中文'; }"),
+        (
+            "entry.ts",
+            "",
+            "function needle(): string { return '中文'; }",
+        ),
+    ] {
+        let root = tempdir().unwrap();
+        let state = tempdir().unwrap();
+        let prefix = format!("/*{}*/ ", "中文".repeat(900));
+        // TypeScript's parser can include a trailing comment in its definition
+        // span; a distinct next declaration gives this owner a short AST range.
+        let suffix = if file.ends_with(".ts") {
+            format!("; const trailing = '{}';", "tail".repeat(900))
+        } else {
+            format!(" /*{}*/", "tail".repeat(900))
+        };
+        let source = format!("{preamble}{prefix}{definition}{suffix}\r\n");
+        fs::write(root.path().join(file), &source).unwrap();
+        let facts =
+            CodeFacts::open_with_lsp(root.path(), state.path().join("facts.sqlite"), LspMode::Off)
+                .unwrap();
+        let line = if preamble.is_empty() { 1 } else { 2 };
+        let response = facts
+            .explore(ExploreOptions {
+                query: Some("needle"),
+                max_bytes: Some(2000),
+                ..Default::default()
+            })
+            .unwrap();
+        assert!(response.contains("[preview] implementation"), "{response}");
+        assert!(response.contains(definition), "{response}");
+        assert!(
+            response.contains(&format!(
+                "{line}:{}..{} ",
+                prefix.len(),
+                prefix.len() + definition.len()
+            )),
+            "{response}"
+        );
+        assert!(response.contains("UTF-8 byte columns, 0-based, end-exclusive"));
+        assert!(response.contains("surrounding line context omitted"));
+        assert!(!response.lines().any(|line| line.starts_with("[complete]")));
+        assert!(!response.contains("tailtail"));
+        assert!(response.len() <= 2000);
+
+        let read = facts
+            .explore(ExploreOptions {
+                reads: Some(&[ExploreRead {
+                    file_path: file.into(),
+                    start_line: Some(line),
+                    end_line: Some(line),
+                }]),
+                max_bytes: Some(2000),
+                ..Default::default()
+            })
+            .unwrap();
+        assert!(read.contains("line does not fit"), "{read}");
+        assert!(!read.contains("column fragment"));
+        assert!(!read.contains(definition));
+
+        let large = facts
+            .explore(ExploreOptions {
+                query: Some("needle"),
+                max_bytes: Some(24_000),
+                ..Default::default()
+            })
+            .unwrap();
+        assert!(large.contains("[complete] implementation"), "{large}");
+        assert!(large.contains(&format!("{line}: {prefix}{definition}{suffix}\n")));
+        assert!(!large.contains("column fragment"));
+    }
+}
+
+#[test]
+fn oversized_single_line_owner_is_not_shortened_to_force_a_preview() {
+    let source = format!(
+        "/*{}*/ pub fn needle() {{ let value = \"{}\"; }}\n",
+        "prefix".repeat(900),
+        "x".repeat(3000)
+    );
+    let (_root, _state, facts) = fixture(&source);
+    let response = facts
+        .explore(ExploreOptions {
+            query: Some("needle"),
+            max_bytes: Some(2000),
+            ..Default::default()
+        })
+        .unwrap();
+    assert!(response.contains("[source omitted] implementation"));
+    assert!(!response.contains("column fragment"));
+    assert!(!response.contains("pub fn needle()"));
+    assert!(response.len() <= 2000);
+}
