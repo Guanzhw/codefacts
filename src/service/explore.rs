@@ -2573,6 +2573,7 @@ mod tests {
             id: id.into(),
             name: name.into(),
             qualified_name: None,
+            rust_impl: None,
             kind: NodeKind::Function,
             file_path: path.into(),
             start_line: start,
