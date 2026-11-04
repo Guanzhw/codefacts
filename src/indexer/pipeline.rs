@@ -15,9 +15,12 @@
 
 use std::collections::{HashMap, HashSet};
 use std::fs;
+use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicUsize, Ordering};
-use std::time::Instant;
+use std::sync::{mpsc, Mutex};
+use std::thread::{self, ScopedJoinHandle};
+use std::time::{Duration, Instant};
 
 use ignore::WalkBuilder;
 use rayon::prelude::*;
@@ -127,6 +130,221 @@ impl FileSkipCounts {
     }
 }
 
+// Pass 1 diagnostics only: worker locks never span file work or stderr output.
+#[derive(Clone, Copy)]
+enum RefreshPhase {
+    Prepare,
+    Metadata,
+    Read,
+    Hash,
+    Compare,
+    Parse,
+    Extract,
+    Markdown,
+}
+
+const REFRESH_PHASE_NAMES: [&str; 8] = [
+    "prepare", "metadata", "read", "hash", "compare", "parse", "extract", "markdown",
+];
+
+#[derive(Clone, Copy)]
+struct RefreshActiveFile {
+    index: usize,
+    phase: RefreshPhase,
+    file_started: Instant,
+    phase_started: Instant,
+}
+
+#[derive(Clone, Copy, Default)]
+struct RefreshWorker {
+    completed: usize,
+    reprocess_started: usize,
+    active: Option<RefreshActiveFile>,
+}
+
+struct RefreshProgress {
+    slots: Vec<Mutex<RefreshWorker>>,
+    untracked_files: AtomicUsize,
+}
+
+struct RefreshFile<'a>(Option<&'a Mutex<RefreshWorker>>);
+
+impl<'a> RefreshFile<'a> {
+    fn enter(progress: Option<&'a RefreshProgress>, index: usize) -> Self {
+        let slot = progress.and_then(|progress| {
+            let slot = rayon::current_thread_index().and_then(|i| progress.slots.get(i));
+            if slot.is_none() {
+                progress.untracked_files.fetch_add(1, Ordering::Relaxed);
+            }
+            slot
+        });
+        if let Some(slot) = slot {
+            let now = Instant::now();
+            slot.lock().unwrap().active = Some(RefreshActiveFile {
+                index,
+                phase: RefreshPhase::Prepare,
+                file_started: now,
+                phase_started: now,
+            });
+        }
+        Self(slot)
+    }
+
+    fn phase(&self, phase: RefreshPhase) {
+        if let Some(slot) = self.0 {
+            let now = Instant::now();
+            let mut worker = slot.lock().unwrap();
+            let active = worker.active.as_mut().unwrap();
+            active.phase = phase;
+            active.phase_started = now;
+        }
+    }
+
+    fn reprocess(&self) {
+        if let Some(slot) = self.0 {
+            slot.lock().unwrap().reprocess_started += 1;
+        }
+    }
+}
+
+impl Drop for RefreshFile<'_> {
+    fn drop(&mut self) {
+        if let Some(slot) = self.0 {
+            if !thread::panicking() {
+                let mut worker = slot.lock().unwrap();
+                worker.completed += 1;
+                worker.active = None;
+            }
+        }
+    }
+}
+
+impl RefreshProgress {
+    fn snapshot(&self, paths: &[PathBuf], root: &Path, start: Instant, final_run: Option<bool>) {
+        let mut completed = 0;
+        let mut reprocess_started = 0;
+        let mut phases = [0; 8];
+        let mut unavailable = 0;
+        let mut longest: Option<RefreshActiveFile> = None;
+        for slot in &self.slots {
+            // Copy scalar state, then release the lock before aggregation/output.
+            let worker = match slot.try_lock() {
+                Ok(worker) => *worker,
+                Err(_) => {
+                    unavailable += 1;
+                    continue;
+                }
+            };
+            completed += worker.completed;
+            reprocess_started += worker.reprocess_started;
+            if let Some(active) = worker.active {
+                phases[active.phase as usize] += 1;
+                if longest.is_none_or(|old| active.file_started < old.file_started) {
+                    longest = Some(active);
+                }
+            }
+        }
+        let untracked = self.untracked_files.load(Ordering::Relaxed);
+        let partial = unavailable != 0 || untracked != 0;
+        let active: usize = phases.iter().sum();
+        let incomplete = final_run.is_some_and(|unwinding| {
+            unwinding || partial || completed != paths.len() || active != 0
+        });
+        let phase_counts = REFRESH_PHASE_NAMES
+            .iter()
+            .zip(phases)
+            .map(|(name, count)| format!("{name}:{count}"))
+            .collect::<Vec<_>>()
+            .join(",");
+        let now = Instant::now();
+        let detail = longest.map_or_else(
+            || "longest_index=none longest_phase=none file_ms=0 phase_ms=0 path=\"\" truncated=false".into(),
+            |file| {
+                let relative = paths[file.index]
+                    .strip_prefix(root)
+                    .expect("collect_files returns paths rooted at root")
+                    .to_string_lossy();
+                let mut chars = relative.chars();
+                let path: String = chars.by_ref().take(128).map(|c| if c == '\\' { '/' } else { c }).collect();
+                let truncated = chars.next().is_some();
+                format!(
+                    "longest_index={} longest_phase={} file_ms={} phase_ms={} path={path:?} truncated={truncated}",
+                    file.index, REFRESH_PHASE_NAMES[file.phase as usize],
+                    now.duration_since(file.file_started).as_millis(),
+                    now.duration_since(file.phase_started).as_millis(),
+                )
+            },
+        );
+        // Debug formatting escapes control characters; 128 Unicode chars keep the line <2 KiB.
+        let _ = writeln!(
+            std::io::stderr(),
+            "CODEFACTS_PROFILE_REFRESH_PROGRESS t_ms={} completed={completed} total={} slots={} active={active} phases={phase_counts} reprocess_started={reprocess_started} {detail} unavailable_slots={unavailable} untracked_files={untracked} partial={partial} final={} incomplete={incomplete}",
+            start.elapsed().as_millis(), paths.len(), self.slots.len(), final_run.is_some(),
+        );
+    }
+}
+
+struct RefreshMonitor<'scope> {
+    stop: Option<mpsc::Sender<()>>,
+    thread: Option<ScopedJoinHandle<'scope, ()>>,
+    progress: &'scope RefreshProgress,
+    paths: &'scope [PathBuf],
+    root: &'scope Path,
+    start: Instant,
+}
+
+impl Drop for RefreshMonitor<'_> {
+    fn drop(&mut self) {
+        if let Some(stop) = self.stop.take() {
+            let _ = stop.send(());
+        }
+        if let Some(thread) = self.thread.take() {
+            let _ = thread.join();
+        }
+        self.progress
+            .snapshot(self.paths, self.root, self.start, Some(thread::panicking()));
+    }
+}
+
+fn profile_refresh_pass1<T>(
+    enabled: bool,
+    paths: &[PathBuf],
+    root: &Path,
+    start: Instant,
+    run: impl FnOnce(Option<&RefreshProgress>) -> T,
+) -> T {
+    if !enabled {
+        return run(None);
+    }
+    let progress = RefreshProgress {
+        slots: (0..rayon::current_num_threads())
+            .map(|_| Mutex::new(RefreshWorker::default()))
+            .collect(),
+        untracked_files: AtomicUsize::new(0),
+    };
+    thread::scope(|scope| {
+        let (stop, receiver) = mpsc::channel();
+        let progress = &progress;
+        let monitor = RefreshMonitor {
+            stop: Some(stop),
+            progress,
+            paths,
+            root,
+            start,
+            thread: Some(scope.spawn(move || {
+                while let Err(mpsc::RecvTimeoutError::Timeout) =
+                    receiver.recv_timeout(Duration::from_secs(1))
+                {
+                    progress.snapshot(paths, root, start, None);
+                }
+            })),
+        };
+        let result = run(Some(progress));
+        drop(monitor);
+        result
+    })
+}
+
 // ---------------------------------------------------------------------------
 // Pipeline
 // ---------------------------------------------------------------------------
@@ -144,14 +362,26 @@ impl<'a> IndexingPipeline<'a> {
     /// Index an entire directory tree.
     pub fn index_directory(&self, options: &IndexOptions) -> Result<IndexResult> {
         let start = Instant::now();
+        let profile_refresh = std::env::var_os("CODEFACTS_PROFILE_REFRESH").is_some();
+        let trace = |phase: &str| {
+            if profile_refresh {
+                eprintln!(
+                    "CODEFACTS_PROFILE_REFRESH phase={phase} elapsed_ms={:.3}",
+                    start.elapsed().as_secs_f64() * 1000.0
+                );
+            }
+        };
+        trace("start");
         let root = &options.root_dir;
         // Schema migrations can retain old rows only long enough to discover
         // the repository; their relationship evidence is not trustworthy.
         // Force one source pass, then return to the incremental path.
         let incremental = options.incremental && !self.store.full_reindex_required()?;
+        trace("reindex-marker");
 
         // ---- Collect files ----
         let file_paths = collect_files(root)?;
+        trace("collect");
 
         let current_paths: HashSet<String> = file_paths
             .iter()
@@ -161,107 +391,133 @@ impl<'a> IndexingPipeline<'a> {
             })
             .map(|path| path.to_string_lossy().replace('\\', "/"))
             .collect();
+        trace("current-paths");
 
         // Pre-fetch all file hashes for incremental checks (before rayon).
         // This avoids touching the non-Sync Connection from parallel threads.
         let stored_hashes = self.store.get_file_hashes()?;
+        trace("stored-hashes");
         let skip_counts = FileSkipCounts::default();
 
         // ---- Pass 1: parse & extract nodes (parallel via rayon) ----
-        // The closure only captures `root`, `stored_hashes`, `skip_counts`,
-        // and `incremental` — all are Sync. No DB access here.
-        let parsed: Vec<FileParseState> = file_paths
-            .par_iter()
-            .filter_map(|abs_path| {
-                // Compute relative path
-                let rel_path = abs_path
-                    .strip_prefix(root)
-                    .expect("collect_files returns paths rooted at root")
-                    .to_string_lossy()
-                    .replace('\\', "/");
+        // Shared indexing and opt-in trace state are Sync. No DB access here.
+        if profile_refresh {
+            eprintln!(
+                "CODEFACTS_PROFILE_REFRESH_PASS files={} stored_hashes={} incremental={incremental} elapsed_ms={:.3}",
+                file_paths.len(), stored_hashes.len(), start.elapsed().as_secs_f64() * 1000.0
+            );
+        }
+        let parsed: Vec<FileParseState> =
+            profile_refresh_pass1(profile_refresh, &file_paths, root, start, |progress| {
+                file_paths
+                    .par_iter()
+                    .enumerate()
+                    .filter_map(|(file_index, abs_path)| {
+                        let file_progress = RefreshFile::enter(progress, file_index);
+                        // Compute relative path
+                        let rel_path = abs_path
+                            .strip_prefix(root)
+                            .expect("collect_files returns paths rooted at root")
+                            .to_string_lossy()
+                            .replace('\\', "/");
 
-                // Check file size
-                let metadata = match fs::metadata(abs_path) {
-                    Ok(m) => m,
-                    Err(_) => {
-                        skip_counts.unreadable.fetch_add(1, Ordering::Relaxed);
-                        return None;
-                    }
-                };
-                if metadata.len() > MAX_FILE_SIZE {
-                    skip_counts.too_large.fetch_add(1, Ordering::Relaxed);
-                    return None;
-                }
-
-                // Read source text
-                let source_text = match fs::read_to_string(abs_path) {
-                    Ok(s) => s,
-                    Err(_) => {
-                        skip_counts.unreadable.fetch_add(1, Ordering::Relaxed);
-                        return None;
-                    }
-                };
-
-                // Content hash for incremental indexing
-                let content_hash = sha256_hex(&source_text);
-
-                // Incremental: skip if unchanged (using pre-fetched hash map)
-                if incremental {
-                    if let Some(stored) = stored_hashes.get(&rel_path) {
-                        if stored == &content_hash {
-                            skip_counts.unchanged.fetch_add(1, Ordering::Relaxed);
-                            return None;
-                        }
-                    }
-                }
-
-                // Detect language
-                let language = CodeParser::detect_language(&rel_path)
-                    .expect("collect_files returns supported source paths");
-
-                let (mut nodes, endpoints, markdown_edges, tree) = if language == Language::Markdown
-                {
-                    let extraction = extract_markdown(&rel_path, &source_text);
-                    (extraction.nodes, Vec::new(), extraction.edges, None)
-                } else {
-                    // Parse with a thread-local Parser (Parser is NOT Send/Sync)
-                    let parser = CodeParser::new();
-                    let tree = match parser.parse(&source_text, language) {
-                        Ok(t) => t,
-                        Err(_) => {
-                            skip_counts.parse_failed.fetch_add(1, Ordering::Relaxed);
-                            return None;
-                        }
-                    };
-                    let nodes =
-                        match Extractor::extract_nodes(&tree, &rel_path, language, &source_text) {
-                            Ok(n) => n,
+                        // Check file size
+                        file_progress.phase(RefreshPhase::Metadata);
+                        let metadata = match fs::metadata(abs_path) {
+                            Ok(m) => m,
                             Err(_) => {
-                                skip_counts.extract_failed.fetch_add(1, Ordering::Relaxed);
+                                skip_counts.unreadable.fetch_add(1, Ordering::Relaxed);
                                 return None;
                             }
                         };
-                    (
-                        nodes,
-                        extract_endpoints(&rel_path, language, &source_text, &tree),
-                        Vec::new(),
-                        Some(tree),
-                    )
-                };
-                nodes.extend(endpoints.iter().map(|binding| binding.endpoint.clone()));
+                        if metadata.len() > MAX_FILE_SIZE {
+                            skip_counts.too_large.fetch_add(1, Ordering::Relaxed);
+                            return None;
+                        }
 
-                Some(FileParseState {
-                    relative_path: rel_path,
-                    language,
-                    content_hash,
-                    source_text,
-                    nodes,
-                    endpoints,
-                    markdown_edges,
-                    tree,
-                })
-            })
-            .collect();
+                        // Read source text
+                        file_progress.phase(RefreshPhase::Read);
+                        let source_text = match fs::read_to_string(abs_path) {
+                            Ok(s) => s,
+                            Err(_) => {
+                                skip_counts.unreadable.fetch_add(1, Ordering::Relaxed);
+                                return None;
+                            }
+                        };
+
+                        // Content hash for incremental indexing
+                        file_progress.phase(RefreshPhase::Hash);
+                        let content_hash = sha256_hex(&source_text);
+                        file_progress.phase(RefreshPhase::Compare);
+
+                        // Incremental: skip if unchanged (using pre-fetched hash map)
+                        if incremental {
+                            if let Some(stored) = stored_hashes.get(&rel_path) {
+                                if stored == &content_hash {
+                                    skip_counts.unchanged.fetch_add(1, Ordering::Relaxed);
+                                    return None;
+                                }
+                            }
+                        }
+
+                        file_progress.reprocess();
+
+                        // Detect language
+                        let language = CodeParser::detect_language(&rel_path)
+                            .expect("collect_files returns supported source paths");
+
+                        let (mut nodes, endpoints, markdown_edges, tree) =
+                            if language == Language::Markdown {
+                                file_progress.phase(RefreshPhase::Markdown);
+                                let extraction = extract_markdown(&rel_path, &source_text);
+                                (extraction.nodes, Vec::new(), extraction.edges, None)
+                            } else {
+                                // Parse with a thread-local Parser (Parser is NOT Send/Sync)
+                                file_progress.phase(RefreshPhase::Parse);
+                                let parser = CodeParser::new();
+                                let tree = match parser.parse(&source_text, language) {
+                                    Ok(t) => t,
+                                    Err(_) => {
+                                        skip_counts.parse_failed.fetch_add(1, Ordering::Relaxed);
+                                        return None;
+                                    }
+                                };
+                                file_progress.phase(RefreshPhase::Extract);
+                                let nodes = match Extractor::extract_nodes(
+                                    &tree,
+                                    &rel_path,
+                                    language,
+                                    &source_text,
+                                ) {
+                                    Ok(n) => n,
+                                    Err(_) => {
+                                        skip_counts.extract_failed.fetch_add(1, Ordering::Relaxed);
+                                        return None;
+                                    }
+                                };
+                                (
+                                    nodes,
+                                    extract_endpoints(&rel_path, language, &source_text, &tree),
+                                    Vec::new(),
+                                    Some(tree),
+                                )
+                            };
+                        nodes.extend(endpoints.iter().map(|binding| binding.endpoint.clone()));
+
+                        Some(FileParseState {
+                            relative_path: rel_path,
+                            language,
+                            content_hash,
+                            source_text,
+                            nodes,
+                            endpoints,
+                            markdown_edges,
+                            tree,
+                        })
+                    })
+                    .collect()
+            });
+        trace("parse-sources");
 
         let reindexed_paths: HashSet<&str> = parsed
             .iter()
@@ -286,11 +542,13 @@ impl<'a> IndexingPipeline<'a> {
             removed_nodes.extend(self.store.get_nodes_by_file(path)?);
         }
         let removed_path_set: HashSet<&str> = removed_paths.iter().map(String::as_str).collect();
+        trace("removed-paths");
 
         // Source hashes have been checked. With no successful replacements or
         // deletions, incremental refresh has no facts or metadata to mutate.
         // Retain skip/failure counts even when the prior snapshot is partial.
         if incremental && parsed.is_empty() && removed_paths.is_empty() {
+            trace("unchanged-return");
             return Ok(IndexResult {
                 files_indexed: 0,
                 files_skipped: skip_counts.total(),
@@ -961,6 +1219,111 @@ mod tests {
     use crate::db::schema::initialize_database;
     use crate::types::EdgeKind;
     use std::fs;
+
+    #[test]
+    fn refresh_progress_counts_normal_early_returns_and_reprocessing_once() {
+        let pool = rayon::ThreadPoolBuilder::new()
+            .num_threads(2)
+            .build()
+            .unwrap();
+        pool.install(|| {
+            let paths: Vec<_> = (0..8)
+                .map(|i| Path::new(".").join(format!("{i}.rs")))
+                .collect();
+            profile_refresh_pass1(true, &paths, Path::new("."), Instant::now(), |progress| {
+                let progress = progress.unwrap();
+                let results: Vec<_> = (0..8)
+                    .into_par_iter()
+                    .filter_map(|index| {
+                        let file = RefreshFile::enter(Some(progress), index);
+                        file.phase(RefreshPhase::Read);
+                        if index % 2 == 0 {
+                            return None;
+                        }
+                        file.reprocess();
+                        file.phase(RefreshPhase::Extract);
+                        Some(index)
+                    })
+                    .collect();
+                assert_eq!(results.len(), 4);
+                let workers: Vec<_> = progress
+                    .slots
+                    .iter()
+                    .map(|slot| *slot.lock().unwrap())
+                    .collect();
+                assert_eq!(
+                    workers.iter().map(|worker| worker.completed).sum::<usize>(),
+                    8
+                );
+                assert_eq!(
+                    workers
+                        .iter()
+                        .map(|worker| worker.reprocess_started)
+                        .sum::<usize>(),
+                    4
+                );
+                assert!(workers.iter().all(|worker| worker.active.is_none()));
+                assert_eq!(progress.untracked_files.load(Ordering::Relaxed), 0);
+            });
+        });
+    }
+
+    #[test]
+    fn refresh_file_unwind_is_not_normal_completion() {
+        let pool = rayon::ThreadPoolBuilder::new()
+            .num_threads(1)
+            .build()
+            .unwrap();
+        pool.install(|| {
+            let progress = RefreshProgress {
+                slots: vec![Mutex::new(RefreshWorker::default())],
+                untracked_files: AtomicUsize::new(0),
+            };
+            let result = std::panic::catch_unwind(|| {
+                let _file = RefreshFile::enter(Some(&progress), 0);
+                panic!("simulated file panic");
+            });
+            assert!(result.is_err());
+            let worker = progress.slots[0].lock().unwrap();
+            assert_eq!(worker.completed, 0);
+            assert!(worker.active.is_some());
+        });
+    }
+
+    #[test]
+    fn refresh_monitor_wakes_and_joins_on_normal_return_and_unwind() {
+        for unwind in [false, true] {
+            let joined = std::sync::atomic::AtomicBool::new(false);
+            let progress = RefreshProgress {
+                slots: vec![],
+                untracked_files: AtomicUsize::new(0),
+            };
+            let result = std::panic::catch_unwind(|| {
+                thread::scope(|scope| {
+                    let (stop, receiver) = mpsc::channel();
+                    let joined = &joined;
+                    let monitor = RefreshMonitor {
+                        stop: Some(stop),
+                        thread: Some(scope.spawn(move || {
+                            receiver.recv().unwrap();
+                            joined.store(true, Ordering::SeqCst);
+                        })),
+                        progress: &progress,
+                        paths: &[],
+                        root: Path::new("."),
+                        start: Instant::now(),
+                    };
+                    if unwind {
+                        panic!("simulated collect panic");
+                    }
+                    drop(monitor);
+                    assert!(joined.load(Ordering::SeqCst));
+                })
+            });
+            assert_eq!(result.is_err(), unwind);
+            assert!(joined.load(Ordering::SeqCst));
+        }
+    }
 
     fn setup_test_project() -> (tempfile::TempDir, GraphStore) {
         let tmp = tempfile::tempdir().unwrap();
