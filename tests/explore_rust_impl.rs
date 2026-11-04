@@ -285,6 +285,37 @@ fn query_delivers_unmatched_sibling_source_and_keeps_original_method_selectors()
 }
 
 #[test]
+fn query_keeps_both_admitted_methods_across_an_oversized_comment() {
+    let root = tempdir().unwrap();
+    let state = tempdir().unwrap();
+    let source = format!(
+        "struct Pair;\nimpl Pair {{\n    fn firstneedle(&self) {{ first_marker(); }}\n    // {}\n    fn secondneedle(&self) {{ second_marker(); }}\n}}\n",
+        "x".repeat(40_000)
+    );
+    fs::write(root.path().join("lib.rs"), &source).unwrap();
+    let mut mcp = Mcp::new(root.path(), &state.path().join("facts.sqlite"));
+    for budget in [2_000, 24_000, 32_000] {
+        let text = mcp.explore("firstneedle secondneedle", budget);
+        assert_eq!(text.matches("| Rust impl source\n").count(), 1, "{text}");
+        assert!(
+            text.contains("[preview] same-impl source context"),
+            "{text}"
+        );
+        assert!(text.contains("2 admitted candidates"), "{text}");
+        for number in [3, 5] {
+            let line = source.lines().nth(number - 1).unwrap();
+            assert_eq!(
+                text.matches(&format!("{number}: {line}\n")).count(),
+                1,
+                "{text}"
+            );
+        }
+        assert!(text.contains("[... source lines omitted ...]"), "{text}");
+        assert!(!text.contains("4:     // "), "{text}");
+    }
+}
+
+#[test]
 fn same_line_impl_cards_use_utf8_byte_columns_and_preserve_physical_lines() {
     let left = r#"impl Left { fn name(&self) -> &str { "left-marker" } }"#;
     let right = r#"impl Right { fn name(&self) -> &str { "right-marker" } }"#;

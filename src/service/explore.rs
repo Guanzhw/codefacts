@@ -58,6 +58,7 @@ struct Excerpt {
 /// already-admitted members contribute source shares to an impl card.
 struct SourceCard {
     anchor: Excerpt,
+    additional_anchors: Vec<Excerpt>,
     deferred: bool,
     impl_range: Option<(u32, u32, u32, u32)>,
     weight: usize,
@@ -86,6 +87,7 @@ fn plan_source_cards(
         if let Some((node, owner)) = owner {
             let key = owner.owner_key(&node.file_path);
             if let Some(&index) = owners.get(&key) {
+                planned[index].additional_anchors.push(anchor);
                 planned[index].weight += 1;
                 planned[index].deferred &= deferred;
                 continue;
@@ -94,6 +96,7 @@ fn plan_source_cards(
         }
         planned.push(SourceCard {
             anchor,
+            additional_anchors: Vec::new(),
             deferred,
             impl_range,
             weight: 1,
@@ -1439,10 +1442,19 @@ fn render_cards(
                 let _ = writeln!(preview, "{line}: {}", lines[(line - 1) as usize]);
             }
         } else {
-            // Keep the identity and strongest lexical evidence first, then
-            // spend the remaining share on surrounding whole source lines.
+            // Keep every admitted member's identity and strongest lexical
+            // evidence before spending its pooled share on impl context.
             let initial = if card.impl_range.is_some() {
-                vec![focus, excerpt.start, start]
+                std::iter::once(excerpt)
+                    .chain(&card.additional_anchors)
+                    .flat_map(|member| {
+                        [
+                            best_line(&lines, member.start, member.end, terms),
+                            member.start,
+                        ]
+                    })
+                    .chain(std::iter::once(start))
+                    .collect()
             } else {
                 vec![excerpt.start, focus]
             };

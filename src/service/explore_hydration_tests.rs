@@ -1308,6 +1308,66 @@ fn rust_impl_plan_keeps_exact_owners_nested_members_and_unicode_columns_distinct
 }
 
 #[test]
+fn rust_impl_preview_keeps_both_admitted_anchors_across_an_oversized_line() {
+    let source = format!(
+        "struct Pair;\nimpl Pair {{\n    fn first(&self) {{\n        first_needle();\n    }}\n    // {}\n    fn second(&self) {{\n        second_needle();\n    }}\n}}\n",
+        "x".repeat(40_000)
+    );
+    let (_root, _state, facts) = fixture(&[("lib.rs", &source)]);
+    let nodes = facts.store.get_all_nodes().unwrap();
+    let by_id = nodes.iter().map(|node| (node.id.as_str(), node)).collect();
+    let originals = ["first", "second"]
+        .into_iter()
+        .map(|name| {
+            let member = nodes.iter().find(|node| node.name == name).unwrap();
+            (node_excerpt(member, "implementation".into()), false)
+        })
+        .collect::<Vec<_>>();
+    let planned = plan_source_cards(originals.clone(), &by_id);
+    assert_eq!(planned.len(), 1);
+    assert_eq!(planned[0].weight, 2);
+    assert_eq!(planned[0].additional_anchors.len(), 1);
+    let sources = HashMap::from([(
+        "lib.rs".into(),
+        Source {
+            hash: String::new(),
+            text: source.clone(),
+        },
+    )]);
+    for budget in [2_000, 24_000, 32_000] {
+        let mut output = String::new();
+        render_cards(
+            &mut output,
+            originals.clone(),
+            &nodes,
+            &["first_needle".into(), "second_needle".into()],
+            &sources,
+            budget,
+        )
+        .unwrap();
+        assert!(
+            output.contains("[preview] same-impl source context"),
+            "{output}"
+        );
+        assert!(output.contains("2 admitted candidates"), "{output}");
+        for number in [3, 4, 7, 8] {
+            let line = source.lines().nth(number - 1).unwrap();
+            assert_eq!(
+                output.matches(&format!("{number}: {line}\n")).count(),
+                1,
+                "{output}"
+            );
+        }
+        assert!(
+            output.contains("[... source lines omitted ...]"),
+            "{output}"
+        );
+        assert!(!output.contains("6: "), "{output}");
+        assert!(output.len() <= budget);
+    }
+}
+
+#[test]
 fn rust_impl_huge_header_and_512_members_keep_one_share_and_anchor_preview() {
     let receiver = "Huge".repeat(8192);
     let mut source = format!("struct {receiver};\nimpl {receiver} {{\n");
