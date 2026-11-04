@@ -68,12 +68,12 @@ impl GraphStore {
         operation: impl FnOnce(&Self) -> Result<T>,
     ) -> Result<T> {
         if !self.conn.is_autocommit() {
-            return operation(self);
+            return self.with_transaction(operation);
         }
 
         // Reserve the writer before schema reads establish a WAL snapshot.
         let transaction = Transaction::new_unchecked(&self.conn, TransactionBehavior::Immediate)?;
-        let value = operation(self)?;
+        let value = self.with_transaction(operation)?;
         transaction.commit()?;
         Ok(value)
     }
