@@ -468,7 +468,8 @@ impl CodeFacts {
             if !self.load_exploration_source(&hit.file_path, hashes, sources, gaps) {
                 continue;
             }
-            let lines: Vec<_> = sources[&hit.file_path].text.lines().collect();
+            // Parser columns include CR bytes and can end on the final empty row.
+            let lines: Vec<_> = sources[&hit.file_path].text.split('\n').collect();
             let file_nodes = by_file
                 .get(hit.file_path.as_str())
                 .map(Vec::as_slice)
@@ -496,7 +497,17 @@ impl CodeFacts {
             });
             let mut found = false;
             for node in owners {
-                let body = owner_source(&lines, node);
+                let Some(body) = owner_source(&lines, node) else {
+                    gaps.push(format!(
+                        "{}:{}-{}: invalid source span for {} {}",
+                        node.file_path,
+                        node.start_line,
+                        node.end_line,
+                        node.kind.as_str(),
+                        node.name
+                    ));
+                    continue;
+                };
                 let score = line_score(&body, terms);
                 if score == 0 {
                     continue;
@@ -1056,28 +1067,34 @@ fn explicit_variable_container(node: &CodeNode, mentions: &HashSet<String>) -> b
         && mentions.contains(&node.name)
 }
 
-fn owner_source(lines: &[&str], node: &CodeNode) -> String {
+fn owner_source(lines: &[&str], node: &CodeNode) -> Option<String> {
+    if node.start_line > node.end_line {
+        return None;
+    }
+    let start = node.start_line.checked_sub(1)? as usize;
+    let owner_lines = lines.get(start..node.end_line as usize)?;
     // Markdown headings are line-based owners; their extractor has no column spans.
     if node.kind == NodeKind::Heading {
-        return lines[(node.start_line - 1) as usize..node.end_line as usize].join("\n");
+        return Some(owner_lines.join("\n"));
     }
-    (node.start_line..=node.end_line)
-        .map(|line| {
-            let text = lines[(line - 1) as usize];
-            let start = if line == node.start_line {
+    owner_lines
+        .iter()
+        .enumerate()
+        .map(|(index, text)| {
+            let start = if index == 0 {
                 node.start_column as usize
             } else {
                 0
             };
-            let end = if line == node.end_line {
+            let end = if index + 1 == owner_lines.len() {
                 node.end_column as usize
             } else {
                 text.len()
             };
-            &text[start..end]
+            text.get(start..end)
         })
-        .collect::<Vec<_>>()
-        .join("\n")
+        .collect::<Option<Vec<_>>>()
+        .map(|lines| lines.join("\n"))
 }
 
 fn add_excerpt(selected: &mut Vec<Excerpt>, seen: &mut HashSet<String>, excerpt: Excerpt) -> bool {
@@ -1134,9 +1151,12 @@ fn render_excerpts(
             "\n## {}:{}-{} | {}\n",
             excerpt.path, excerpt.start, excerpt.end, excerpt.reason
         );
-        let lines: Vec<_> = source.text.lines().collect();
+        let lines: Vec<_> = source.text.split('\n').collect();
         let body = (excerpt.start..=excerpt.end)
-            .map(|line| format!("{line}: {}\n", lines[(line - 1) as usize]))
+            .map(|line| {
+                let text = lines[(line - 1) as usize];
+                format!("{line}: {}\n", text.strip_suffix('\r').unwrap_or(text))
+            })
             .collect::<String>();
         if output.len() + heading.len() + body.len() + reserve <= budget {
             output.push_str(&heading);
@@ -1172,7 +1192,8 @@ fn render_excerpts(
             );
             let mut partial = String::new();
             for line in start..=excerpt.end {
-                let rendered = format!("{line}: {}\n", lines[(line - 1) as usize]);
+                let text = lines[(line - 1) as usize];
+                let rendered = format!("{line}: {}\n", text.strip_suffix('\r').unwrap_or(text));
                 if output.len()
                     + partial_heading.len()
                     + partial.len()
@@ -1368,10 +1389,13 @@ fn render_cards(
     let allocation = (budget - metadata_bytes).checked_div(retained).unwrap_or(0);
     for (index, (excerpt, _)) in cards.iter().take(retained).enumerate() {
         let source = &sources[&excerpt.path];
-        let lines: Vec<_> = source.text.lines().collect();
+        let lines: Vec<_> = source.text.split('\n').collect();
         let focus = best_line(&lines, excerpt.start, excerpt.end, terms);
         let body = (excerpt.start..=excerpt.end)
-            .map(|line| format!("{line}: {}\n", lines[(line - 1) as usize]))
+            .map(|line| {
+                let text = lines[(line - 1) as usize];
+                format!("{line}: {}\n", text.strip_suffix('\r').unwrap_or(text))
+            })
             .collect::<String>();
         let mut preview = String::new();
         let mut delivered = Vec::new();
@@ -1398,7 +1422,12 @@ fn render_cards(
                     if index > 0 && line > candidate_lines[index - 1] + 1 {
                         candidate.push_str("[... source lines omitted ...]\n");
                     }
-                    let _ = writeln!(candidate, "{line}: {}", lines[(line - 1) as usize]);
+                    let text = lines[(line - 1) as usize];
+                    let _ = writeln!(
+                        candidate,
+                        "{line}: {}",
+                        text.strip_suffix('\r').unwrap_or(text)
+                    );
                 }
                 if candidate.len() <= allocation {
                     preview = candidate;
@@ -1505,6 +1534,137 @@ mod tests {
             assert!(facts.store.get_file_hashes().unwrap().is_empty());
             assert!(facts.store.get_all_nodes().unwrap().is_empty());
             assert_eq!(facts.store.generation().unwrap(), unopened_generation);
+        }
+    }
+
+    #[test]
+    fn parser_owner_source_preserves_crlf_and_terminal_rows() {
+        for source in [
+            "def userid():\n    return \"中文\" # request headers\n    # userid\n",
+            "def userid():\r\n    return \"中文\" # request headers\r\n    # userid\r\n",
+            "def userid():\n    return \"中文\" # request headers\r\n    # userid\r\n",
+        ] {
+            let root = tempdir().unwrap();
+            let state = tempdir().unwrap();
+            fs::write(root.path().join("headers.py"), source).unwrap();
+            let facts = CodeFacts::open_with_lsp(
+                root.path(),
+                state.path().join("facts.sqlite"),
+                LspMode::Off,
+            )
+            .unwrap();
+            facts.refresh().unwrap();
+            let nodes = facts.store.get_all_nodes().unwrap();
+            let owner = nodes.iter().find(|node| node.name == "userid").unwrap();
+            assert_eq!(owner.kind, NodeKind::Function);
+            assert_eq!(owner.end_line, 3);
+            assert_eq!(
+                owner.end_column as usize,
+                source.split('\n').nth(2).unwrap().len()
+            );
+            assert_eq!(
+                owner_source(&source.split('\n').collect::<Vec<_>>(), owner).unwrap(),
+                source.strip_suffix('\n').unwrap()
+            );
+            let response = facts
+                .explore(ExploreOptions {
+                    query: Some("userid,userId,user_id,DI headers,request headers"),
+                    ..Default::default()
+                })
+                .unwrap();
+            assert!(
+                response.contains("headers.py:1-3 | function userid"),
+                "{response}"
+            );
+            assert!(response.contains("2:     return \"中文\" # request headers"));
+            assert!(!response.contains("Source gaps"), "{response}");
+            assert_eq!(
+                serde_json::to_value(nodes).unwrap(),
+                serde_json::to_value(facts.store.get_all_nodes().unwrap()).unwrap()
+            );
+        }
+
+        let root = tempdir().unwrap();
+        let state = tempdir().unwrap();
+        let source = "#define userid(x) ((x)+1)\n";
+        fs::write(root.path().join("headers.c"), source).unwrap();
+        let facts =
+            CodeFacts::open_with_lsp(root.path(), state.path().join("facts.sqlite"), LspMode::Off)
+                .unwrap();
+        facts.refresh().unwrap();
+        let nodes = facts.store.get_all_nodes().unwrap();
+        let owner = nodes.iter().find(|node| node.name == "userid").unwrap();
+        assert_eq!(
+            (owner.start_line, owner.end_line, owner.end_column),
+            (1, 2, 0)
+        );
+        assert_eq!(
+            owner_source(&source.split('\n').collect::<Vec<_>>(), owner).unwrap(),
+            source
+        );
+    }
+
+    #[test]
+    fn invalid_owner_spans_report_a_source_gap() {
+        let root = tempdir().unwrap();
+        let state = tempdir().unwrap();
+        let source = "def userid():\n    return \"中文\"\n";
+        fs::write(root.path().join("headers.py"), source).unwrap();
+        let facts =
+            CodeFacts::open_with_lsp(root.path(), state.path().join("facts.sqlite"), LspMode::Off)
+                .unwrap();
+        facts.refresh().unwrap();
+        let nodes = facts.store.get_all_nodes().unwrap();
+        let owner = nodes.iter().find(|node| node.name == "userid").unwrap();
+        let hashes = facts.store.get_file_hashes().unwrap();
+        for invalid in [
+            "utf8",
+            "past_column",
+            "reverse_columns",
+            "zero_line",
+            "past_line",
+            "reverse_lines",
+        ] {
+            let mut node = owner.clone();
+            match invalid {
+                "utf8" => node.end_column = 13,
+                "past_column" => node.end_column = 100,
+                "reverse_columns" => {
+                    node.end_line = node.start_line;
+                    node.start_column = 5;
+                    node.end_column = 4;
+                }
+                "zero_line" => node.start_line = 0,
+                "past_line" => node.end_line = 100,
+                "reverse_lines" => {
+                    node.start_line = 2;
+                    node.end_line = 1;
+                }
+                _ => unreachable!(),
+            }
+            let mut gaps = Vec::new();
+            let excerpts = facts
+                .task_excerpts(
+                    &[SourceMatch {
+                        file_path: "headers.py".into(),
+                        start_line: 1,
+                        end_line: 2,
+                        score: 1.0,
+                    }],
+                    &query_terms("userid"),
+                    &query_identifiers("userid"),
+                    &[node],
+                    &hashes,
+                    &mut HashMap::new(),
+                    &mut gaps,
+                    &mut Vec::new(),
+                )
+                .unwrap();
+            assert_eq!(gaps.len(), 1, "{invalid}: {gaps:?}");
+            assert!(gaps[0].contains("invalid source span for function userid"));
+            assert_eq!(excerpts.len(), 1);
+            assert!(excerpts[0].node_id.is_none());
+            assert!(excerpts[0].reason.contains("owner unavailable"));
         }
     }
 
@@ -1667,7 +1827,7 @@ mod tests {
             .find(|node| node.name == "SelectInput")
             .unwrap();
         assert_eq!(
-            owner_source(&source.lines().collect::<Vec<_>>(), selected_input),
+            owner_source(&source.split('\n').collect::<Vec<_>>(), selected_input).unwrap(),
             "SelectInput = arbitraryFactory()"
         );
         let candidates = |query: &str| {
