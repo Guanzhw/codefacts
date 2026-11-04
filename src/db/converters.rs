@@ -14,12 +14,35 @@ use crate::types::{CodeEdge, CodeNode, EdgeKind, Language, NodeKind};
 // ---------------------------------------------------------------------------
 
 /// Convert a `rusqlite::Row` from a `SELECT * FROM nodes` query into a
-/// [`CodeNode`].
+/// [`CodeNode`] when it has no normalized owner reference. Owned nodes require
+/// GraphStore's batched hydration and must not escape as partial public nodes.
 ///
 /// Fields are read by column name. Flagged rows borrow their signature to
 /// restore the same UTF-8 body prefix of at most 4096 bytes; legacy rows keep
 /// their original metadata body value or absence.
 pub fn row_to_code_node(row: &Row<'_>) -> rusqlite::Result<CodeNode> {
+    let stored = row_to_stored_node(row)?;
+    if stored.rust_impl_owner_id.is_some() {
+        return Err(rusqlite::Error::FromSqlConversionFailure(
+            row.as_ref().column_index("rust_impl_owner_id")?,
+            rusqlite::types::Type::Integer,
+            Box::new(std::io::Error::new(
+                std::io::ErrorKind::InvalidData,
+                "Rust impl owners require GraphStore hydration",
+            )),
+        ));
+    }
+    Ok(stored.node)
+}
+
+pub(crate) struct StoredNode {
+    pub node: CodeNode,
+    pub rust_impl_owner_id: Option<i64>,
+}
+
+/// Lean node conversion. GraphStore hydrates the distinct owner references
+/// within one read snapshot before returning any public CodeNode.
+pub(crate) fn row_to_stored_node(row: &Row<'_>) -> rusqlite::Result<StoredNode> {
     let id: String = row.get("id")?;
     let kind_str: String = row.get("type")?;
     let name: String = row.get("name")?;
@@ -52,25 +75,30 @@ pub fn row_to_code_node(row: &Row<'_>) -> rusqlite::Result<CodeNode> {
     };
 
     let exported = meta.get("exported").and_then(|v| v.as_bool());
+    let rust_impl_owner_id = row.get("rust_impl_owner_id")?;
 
     let kind = NodeKind::from_str_loose(&kind_str).unwrap_or(NodeKind::Variable);
     let language = Language::from_str_loose(&language_str).unwrap_or(Language::TypeScript);
 
-    Ok(CodeNode {
-        id,
-        name,
-        qualified_name,
-        kind,
-        file_path,
-        start_line,
-        end_line,
-        start_column,
-        end_column,
-        language,
-        body,
-        documentation: doc_comment,
-        exported,
-        is_local: meta.get("local").and_then(|v| v.as_bool()).unwrap_or(false),
+    Ok(StoredNode {
+        node: CodeNode {
+            id,
+            name,
+            qualified_name,
+            kind,
+            file_path,
+            start_line,
+            end_line,
+            start_column,
+            end_column,
+            language,
+            body,
+            documentation: doc_comment,
+            exported,
+            is_local: meta.get("local").and_then(|v| v.as_bool()).unwrap_or(false),
+            rust_impl: None,
+        },
+        rust_impl_owner_id,
     })
 }
 

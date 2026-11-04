@@ -9,6 +9,7 @@ fn node(id: &str, name: &str, path: &str, kind: NodeKind, start: u32, end: u32) 
         id: id.into(),
         name: name.into(),
         qualified_name: Some(format!("owner.{name}")),
+        rust_impl: None,
         kind,
         file_path: path.into(),
         start_line: start,

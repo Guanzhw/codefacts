@@ -606,6 +606,41 @@ mod tests {
     }
 
     #[test]
+    fn read_snapshot_rejects_retrieval_mutations_without_changing_hashes_or_terms() {
+        let store = store();
+        store
+            .upsert_retrieval_source("a.rs", "old", "nectarine")
+            .unwrap();
+        let hashes = store.retrieval_hashes().unwrap();
+        let matches = store.search_retrieval("nectarine", None, 10).unwrap();
+        assert_eq!(matches.len(), 1);
+        store
+            .with_read_snapshot(|store| {
+                let replacement = store
+                    .upsert_retrieval_source("a.rs", "new", "apricot")
+                    .unwrap_err();
+                assert!(replacement
+                    .to_string()
+                    .contains("cannot mutate during a node read snapshot"));
+                let deletion = store.delete_retrieval_source("a.rs").unwrap_err();
+                assert!(deletion
+                    .to_string()
+                    .contains("cannot mutate during a node read snapshot"));
+                Ok(())
+            })
+            .unwrap();
+        assert_eq!(store.retrieval_hashes().unwrap(), hashes);
+        assert_eq!(
+            store.search_retrieval("nectarine", None, 10).unwrap(),
+            matches
+        );
+        assert!(store
+            .search_retrieval("apricot", None, 10)
+            .unwrap()
+            .is_empty());
+    }
+
+    #[test]
     fn chunks_preserve_line_bounds_and_overlap() {
         let store = store();
         let mut lines = vec!["unrelated"; 75];
