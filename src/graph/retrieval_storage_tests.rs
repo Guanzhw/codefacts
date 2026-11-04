@@ -597,3 +597,83 @@ fn new_writes_retire_legacy_triggers_recreated_by_an_old_reader() {
         assert_eq!(count, 0);
     }
 }
+
+#[test]
+fn concurrent_retrieval_writes_and_migration_wait_before_reading_schema() {
+    use std::cell::RefCell;
+
+    thread_local! {
+        static WRITER: RefCell<Option<GraphStore>> = const { RefCell::new(None) };
+    }
+
+    fn commit_writer(attempt: i32) -> bool {
+        if attempt != 0 {
+            return false;
+        }
+        WRITER.with(|writer| {
+            writer
+                .borrow()
+                .as_ref()
+                .unwrap()
+                .conn
+                .execute_batch("COMMIT")
+                .unwrap();
+        });
+        true
+    }
+
+    for legacy in [false, true] {
+        for operation in ["upsert", "delete", "migrate"] {
+            if !legacy && operation == "migrate" {
+                continue;
+            }
+            let directory = tempfile::tempdir().unwrap();
+            let path = directory.path().join("concurrent.db");
+            let writer = GraphStore::new(path.to_str().unwrap()).unwrap();
+            if legacy {
+                writer.conn.execute_batch(LEGACY_SCHEMA).unwrap();
+                legacy_upsert(&writer, "target.rs", "old", "nectarine").unwrap();
+            } else {
+                writer
+                    .upsert_retrieval_source("target.rs", "old", "nectarine")
+                    .unwrap();
+            }
+            let contender = GraphStore::from_connection(Connection::open(&path).unwrap());
+            writer.conn.execute_batch("BEGIN IMMEDIATE").unwrap();
+            writer
+                .upsert_retrieval_source("writer.rs", "committed", "apricot")
+                .unwrap();
+            WRITER.with(|slot| *slot.borrow_mut() = Some(writer));
+            // SQLite calls this only when the contender can wait for the writer.
+            // A deferred read-to-write upgrade instead returns BUSY immediately.
+            contender.conn.busy_handler(Some(commit_writer)).unwrap();
+            let result = match operation {
+                "upsert" => contender.upsert_retrieval_source("target.rs", "new", "jitter"),
+                "delete" => contender.delete_retrieval_source("target.rs"),
+                "migrate" => contender.retrieval_hashes().map(|_| ()),
+                _ => unreachable!(),
+            };
+            let writer = WRITER.with(|slot| slot.borrow_mut().take().unwrap());
+            let committed = writer.conn.is_autocommit();
+            drop(writer);
+            contender.conn.busy_handler(None).unwrap();
+            result.unwrap_or_else(|error| panic!("{legacy}/{operation}: {error}"));
+            assert!(
+                committed,
+                "{legacy}/{operation} did not wait for the writer"
+            );
+            let hashes = contender.retrieval_hashes().unwrap();
+            assert_eq!(hashes["writer.rs"], "committed");
+            assert_eq!(
+                contender.search_retrieval("apricot", None, 10).unwrap()[0].file_path,
+                "writer.rs"
+            );
+            match operation {
+                "upsert" => assert_eq!(hashes["target.rs"], "new"),
+                "delete" => assert!(!hashes.contains_key("target.rs")),
+                "migrate" => assert_eq!(hashes["target.rs"], "old"),
+                _ => unreachable!(),
+            }
+        }
+    }
+}

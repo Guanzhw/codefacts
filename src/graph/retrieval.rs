@@ -8,7 +8,7 @@ use std::collections::{HashMap, HashSet};
 use std::io::Write;
 
 use flate2::{write::ZlibEncoder, Compression, Decompress, FlushDecompress, Status};
-use rusqlite::params;
+use rusqlite::{params, Transaction, TransactionBehavior};
 
 use crate::error::{CodeFactsError, Result};
 
@@ -63,6 +63,21 @@ pub struct SourceMatch {
 }
 
 impl GraphStore {
+    fn with_retrieval_transaction<T>(
+        &self,
+        operation: impl FnOnce(&Self) -> Result<T>,
+    ) -> Result<T> {
+        if !self.conn.is_autocommit() {
+            return operation(self);
+        }
+
+        // Reserve the writer before schema reads establish a WAL snapshot.
+        let transaction = Transaction::new_unchecked(&self.conn, TransactionBehavior::Immediate)?;
+        let value = operation(self)?;
+        transaction.commit()?;
+        Ok(value)
+    }
+
     fn retrieval_schema_is_current(&self) -> Result<bool> {
         let has_marker: bool = self.conn.query_row(
             "SELECT EXISTS(SELECT 1 FROM sqlite_schema WHERE name = 'retrieval_metadata')",
@@ -89,7 +104,7 @@ impl GraphStore {
         if self.retrieval_schema_is_current()? {
             return Ok(());
         }
-        self.with_transaction(|store| {
+        self.with_retrieval_transaction(|store| {
             if store.retrieval_schema_is_current()? {
                 return Ok(());
             }
@@ -217,7 +232,7 @@ impl GraphStore {
     pub fn upsert_retrieval_source(&self, file_path: &str, hash: &str, source: &str) -> Result<()> {
         let lines: Vec<&str> = source.lines().collect();
         let path_words = normalize_words(file_path);
-        self.with_transaction(|store| {
+        self.with_retrieval_transaction(|store| {
             store.ensure_retrieval_schema()?;
             store.conn.execute_batch(RETIRE_LEGACY_TRIGGERS)?;
             store.delete_retrieval_chunks(file_path)?;
@@ -248,7 +263,7 @@ impl GraphStore {
 
     /// Remove both a file's recall chunks and its recorded source hash.
     pub fn delete_retrieval_source(&self, file_path: &str) -> Result<()> {
-        self.with_transaction(|store| {
+        self.with_retrieval_transaction(|store| {
             store.ensure_retrieval_schema()?;
             store.conn.execute_batch(RETIRE_LEGACY_TRIGGERS)?;
             store.delete_retrieval_chunks(file_path)?;
