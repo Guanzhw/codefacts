@@ -30,6 +30,11 @@ use crate::types::{CodeNode, Language};
 const PROBE_TIMEOUT: Duration = Duration::from_millis(200);
 // One shared deadline covers initialization, server requests, writes and refs.
 const SESSION_TIMEOUT: Duration = Duration::from_secs(4);
+// Windows taskkill must enumerate the process tree; real Pyright cleanup can
+// exceed 250 ms before it reports successful termination.
+#[cfg(windows)]
+const CLEANUP_TIMEOUT: Duration = Duration::from_secs(1);
+#[cfg(not(windows))]
 const CLEANUP_TIMEOUT: Duration = Duration::from_millis(250);
 const MAX_MESSAGE_BYTES: usize = 8 * 1024 * 1024;
 const MAX_HEADER_BYTES: usize = 16 * 1024;
@@ -1161,37 +1166,45 @@ fn terminate_process_tree(mut child: Child, deadline: Instant) -> std::result::R
             use std::os::windows::process::CommandExt;
             command.creation_flags(0x0800_0000);
         }
-        let mut result =
-            Err("LSP cleanup could not confirm Windows process-tree termination".to_string());
-        if let Ok(mut killer) = command
+        match command
             .args(["/T", "/F", "/PID", &child.id().to_string()])
             .stdin(Stdio::null())
             .stdout(Stdio::null())
             .stderr(Stdio::null())
             .spawn()
         {
-            loop {
+            Err(error) => Err(format!(
+                "LSP cleanup could not start Windows taskkill: {error}"
+            )),
+            Ok(mut killer) => loop {
                 match killer.try_wait() {
                     Ok(Some(status)) => {
-                        if status.success() {
-                            result = Ok(());
-                        }
-                        break;
+                        break if status.success() {
+                            Ok(())
+                        } else {
+                            Err(format!(
+                                "LSP cleanup Windows taskkill exited unsuccessfully: {status}"
+                            ))
+                        };
                     }
                     Ok(None) if Instant::now() < deadline => thread::sleep(
                         deadline
                             .saturating_duration_since(Instant::now())
                             .min(Duration::from_millis(1)),
                     ),
-                    _ => {
+                    status => {
                         let _ = killer.kill();
                         let _ = reap_until(killer, deadline);
-                        break;
+                        break Err(match status {
+                            Err(error) => {
+                                format!("LSP cleanup could not observe Windows taskkill: {error}")
+                            }
+                            _ => "LSP cleanup timed out waiting for Windows taskkill".into(),
+                        });
                     }
                 }
-            }
+            },
         }
-        result
     };
     let _ = child.kill();
     let result = reap_until(child, deadline);

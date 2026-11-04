@@ -19,7 +19,7 @@ const documents = new Map();
 let blocked = false;
 let bytes = Buffer.alloc(0);
 
-if (mode === 'blocked-write') {
+if (mode === 'blocked-write' || mode === 'cleanup-tree') {
   // Ordinary inherited process-group membership matters: cleanup must include
   // this descendant, not just the npm-style launcher and server parent.
   const child = spawn(process.execPath, ['-e', `
@@ -77,6 +77,11 @@ function handle(message) {
     return;
   }
   if (message.method !== 'textDocument/references') return;
+  if (mode === 'cleanup-tree' && !fs.existsSync(heartbeat)) {
+    // Return only after the descendant has actually run.
+    setTimeout(() => handle(message), 10);
+    return;
+  }
   if (mode === 'error') {
     send({ id: message.id, error: { code: -32603, message: 'fixture reference failure',
       data: { ignored: 'x'.repeat(100_000) } } });

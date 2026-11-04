@@ -461,6 +461,30 @@ fn native_optional_lsp_failures_preserve_static_facts() {
 }
 
 #[test]
+#[cfg(windows)]
+fn native_optional_lsp_success_terminates_windows_wrapper_and_descendant() {
+    for _ in 0..3 {
+        let fixture = Fixture::new(false);
+        let mut mcp = Mcp::new(&fixture, "cleanup-tree");
+        let started = Instant::now();
+        let body = structured(&mcp.expand(Some("full")));
+        assert!(started.elapsed() < Duration::from_secs(12));
+        static_facts_survive(&body);
+        assert_eq!(body["references"]["semantic"]["status"], "ok", "{body}");
+        assert!(fixture
+            .audit()
+            .iter()
+            .any(|event| event["event"] == "descendant"));
+        // Check while MCP is still alive: its exit must not mask LSP leaks.
+        fixture.assert_processes_stopped();
+        let heartbeat = fs::read(&fixture.heartbeat).expect("descendant actually ran");
+        assert!(!heartbeat.is_empty());
+        thread::sleep(Duration::from_millis(150));
+        assert_eq!(fs::read(&fixture.heartbeat).unwrap(), heartbeat);
+    }
+}
+
+#[test]
 fn native_optional_lsp_blocked_write_is_bounded_and_terminates_descendants() {
     let fixture = Fixture::new(true);
     let mut mcp = Mcp::new(&fixture, "blocked-write");
