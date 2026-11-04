@@ -1069,7 +1069,11 @@ fn rust_impl_group_delivers_an_unmatched_sibling_from_only_admitted_shares() {
     let terms = query_terms("archive-env command implementation environment variables");
     assert_eq!(
         line_score(
-            &owner_source(&ARCHIVE_ENV_FIXTURE.lines().collect::<Vec<_>>(), execute),
+            &owner_source(
+                &ARCHIVE_ENV_FIXTURE.split('\n').collect::<Vec<_>>(),
+                execute
+            )
+            .unwrap(),
             &terms
         ),
         0
@@ -1373,7 +1377,8 @@ fn rust_impl_preview_keeps_both_admitted_fragments_after_an_oversized_prefix() {
         "struct Pair;\nimpl Pair {{ /*{}*/ fn firstneedle(&self) {{}} fn secondneedle(&self) {{}}\n{}}}\n",
         "中".repeat(14_000),
         "    // incidental context\n".repeat(2_000)
-    );
+    )
+    .replace('\n', "\r\n");
     let (_root, _state, facts) = fixture(&[("lib.rs", &source)]);
     let nodes = facts.store.get_all_nodes().unwrap();
     let members = ["firstneedle", "secondneedle"]
@@ -1414,13 +1419,14 @@ fn rust_impl_preview_keeps_both_admitted_fragments_after_an_oversized_prefix() {
             let fragment = single_line_card_fragment(
                 &node_excerpt(member, "implementation".into()),
                 member,
-                &source.lines().collect::<Vec<_>>(),
+                &source.split('\n').collect::<Vec<_>>(),
             )
             .unwrap();
             assert_eq!(output.matches(&fragment).count(), 1, "{output}");
         }
         assert!(!output.contains("2: impl"), "{output}");
         assert!(!output.contains("中"), "{output}");
+        assert!(!output.contains('\r'), "{output}");
         assert!(output.len() <= budget);
     }
 }
