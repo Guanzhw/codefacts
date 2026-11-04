@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.4.0 — 2026-11-05
 
 - Rust impl methods expose optional `rust_impl.owner_ref` in symbol facts.
   Its response-local key selects one record in the root `rust_impl_owners`
@@ -16,6 +16,12 @@
   for existing databases. The successful refresh advances the generation and
   invalidates earlier snapshot cursors; failed refreshes retain prior facts
   and the pending rebuild marker atomically.
+- Preserve tree-sitter row and UTF-8 byte-column coordinates for CRLF sources
+  and parser spans ending on the final empty row. Exploration no longer
+  panics on these ranges, including C preprocessor macros. (#38)
+- Give Windows LSP process-tree cleanup a one-second budget so real Pyright
+  descendants can terminate, and report taskkill startup, exit and timeout
+  failures explicitly. (#39)
 
 ## 0.3.1 — 2026-10-23
 
