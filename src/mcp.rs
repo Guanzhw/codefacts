@@ -564,13 +564,13 @@ fn tool_definitions(tools: ToolProfile) -> Vec<Value> {
                 "repository_root": repository_root_schema(),
                 "query": string_schema("Task/behavior description or code terms; omit for repository orientation"),
                 "path_prefix": string_schema("Optional repository-relative file or directory scope"),
-                "file_path": string_schema("Read a known repository-relative source file; omit query/path_prefix"),
+                "file_path": string_schema("Read a known repository-relative indexed source file or package.json/Cargo.toml; omit query/path_prefix"),
                 "start_line": { "type": "integer", "minimum": 1, "description": "Starting line for file_path follow-up, default 1" },
                 "reads": {
                     "type": "array", "minItems": 1, "maxItems": 8,
-                    "description": "Read repository-relative source ranges together; omit query, path_prefix, file_path and start_line. Ranges starting past EOF are reported unavailable; other ranges remain readable.",
+                    "description": "Read up to eight repository-relative ranges from indexed source or package.json/Cargo.toml; omit query, path_prefix, file_path and start_line. In a batch, unindexed inputs and ranges starting past EOF are unavailable; verified siblings remain readable within max_bytes. No readable ranges is an error.",
                     "items": schema(json!({
-                        "file_path": string_schema("Repository-relative source file"),
+                        "file_path": string_schema("Repository-relative indexed source file or package.json/Cargo.toml"),
                         "start_line": { "type": "integer", "minimum": 1, "description": "First line, default 1" },
                         "end_line": { "type": "integer", "minimum": 1, "description": "Inclusive last line, clipped to EOF with a notice; omit to read onward within the response budget" }
                     }), &["file_path"])
