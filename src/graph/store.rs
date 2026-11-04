@@ -999,6 +999,69 @@ impl GraphStore {
             .map_err(Into::into)
     }
 
+    /// Explain only an already selected page of tests, without changing its
+    /// membership or order. Two pair-selective queries return at most one edge
+    /// per test and direction; they never enumerate the full graph.
+    pub(crate) fn get_related_test_witnesses(
+        &self,
+        node_id: &str,
+        test_ids: &[String],
+    ) -> Result<HashMap<String, CodeEdge>> {
+        if test_ids.len() > 50 {
+            return Err(crate::error::CodeFactsError::Other(
+                "test witness page exceeds 50 symbols".into(),
+            ));
+        }
+        if test_ids.is_empty() {
+            return Ok(HashMap::new());
+        }
+        let selected = (2..test_ids.len() + 2)
+            .map(|index| format!("(?{index})"))
+            .collect::<Vec<_>>()
+            .join(",");
+        let values = std::iter::once(node_id)
+            .chain(test_ids.iter().map(String::as_str))
+            .collect::<Vec<_>>();
+        let mut witnesses = HashMap::new();
+        for (source, target) in [("selected.test_id", "?1"), ("?1", "selected.test_id")] {
+            let sql = format!(
+                "WITH selected(test_id) AS (VALUES {selected}) \
+                 SELECT selected.test_id AS associated_test_id, edge.* \
+                 FROM selected JOIN edges edge ON edge.id = ( \
+                   SELECT candidate.id FROM edges candidate \
+                     INDEXED BY idx_edges_source_target_type_location \
+                   WHERE candidate.source_id = {source} AND candidate.target_id = {target} \
+                     AND COALESCE(json_extract(candidate.properties, '$.confidence'), 'static') <> 'heuristic' \
+                   ORDER BY candidate.type, candidate.file_path, candidate.line, candidate.id LIMIT 1 \
+                 )"
+            );
+            let mut statement = self.conn.prepare_cached(&sql)?;
+            let mut rows = statement.query(params_from_iter(values.iter()))?;
+            while let Some(row) = rows.next()? {
+                let test_id: String = row.get("associated_test_id")?;
+                // Compare persisted values, including ID, before legacy location
+                // envelopes are decoded. The same key orders both directions.
+                let key = (
+                    row.get::<_, String>("type")?,
+                    row.get::<_, Option<String>>("file_path")?,
+                    row.get::<_, Option<i64>>("line")?,
+                    row.get::<_, i64>("id")?,
+                );
+                let edge = row_to_code_edge(row)?;
+                let existing = witnesses
+                    .entry(test_id)
+                    .or_insert_with(|| (key.clone(), edge.clone()));
+                if key < existing.0 {
+                    *existing = (key, edge);
+                }
+            }
+        }
+        Ok(witnesses
+            .into_iter()
+            .map(|(id, (_, edge))| (id, edge))
+            .collect())
+    }
+
     /// Load the persisted source hashes used by incremental indexing.
     pub fn get_file_hashes(&self) -> Result<HashMap<String, String>> {
         let mut statement = self
@@ -1890,6 +1953,74 @@ mod tests {
             .unwrap();
         assert_eq!(self_related.len(), 1);
         assert_eq!(self_related[0].id, "same-a");
+    }
+
+    #[test]
+    fn test_witnesses_are_pair_selective_nonheuristic_and_deterministic() {
+        let store = setup();
+        let mut nodes = vec![
+            make_node("prod", "run", "app.py", NodeKind::Function, 1),
+            make_node("a", "test_a", "app.py", NodeKind::Function, 2),
+            make_node("b", "test_b", "app.py", NodeKind::Function, 3),
+            make_node("self", "test_self", "app.py", NodeKind::Function, 4),
+            make_node("other", "test_other", "app.py", NodeKind::Function, 5),
+        ];
+        for node in &mut nodes {
+            node.language = Language::Python;
+        }
+        store.upsert_nodes(&nodes).unwrap();
+        let mut uncertain = make_edge("b", "prod", EdgeKind::Calls, "app.py", 1);
+        uncertain.metadata = Some(HashMap::from([("confidence".into(), "heuristic".into())]));
+        store
+            .upsert_edges(&[
+                make_edge("a", "prod", EdgeKind::References, "app.py", 1),
+                make_edge("a", "prod", EdgeKind::Calls, "app.py", 20),
+                make_edge("prod", "a", EdgeKind::Calls, "app.py", 10),
+                uncertain,
+                make_edge("b", "prod", EdgeKind::References, "app.py", 30),
+                make_edge("other", "prod", EdgeKind::Calls, "app.py", 2),
+                make_edge("self", "self", EdgeKind::Calls, "app.py", 4),
+            ])
+            .unwrap();
+        let before = store
+            .get_related_test_nodes("prod", "run", "app.py", 50)
+            .unwrap();
+        assert_eq!(
+            before
+                .iter()
+                .map(|node| node.id.as_str())
+                .collect::<Vec<_>>(),
+            ["a", "b", "other"]
+        );
+        let witnesses = store
+            .get_related_test_witnesses("prod", &["b".into(), "a".into(), "missing".into()])
+            .unwrap();
+        assert_eq!(witnesses.len(), 2);
+        assert!(!witnesses.contains_key("other"));
+        assert_eq!(witnesses["a"].source, "prod");
+        assert_eq!(witnesses["a"].line, 10);
+        assert_eq!(witnesses["b"].kind, EdgeKind::References);
+        let after = store
+            .get_related_test_nodes("prod", "run", "app.py", 50)
+            .unwrap();
+        assert_eq!(
+            serde_json::to_value(before).unwrap(),
+            serde_json::to_value(after).unwrap()
+        );
+        assert_eq!(
+            store
+                .get_related_test_witnesses("self", &["self".into()])
+                .unwrap()
+                .len(),
+            1
+        );
+        assert!(store
+            .get_related_test_witnesses("prod", &[])
+            .unwrap()
+            .is_empty());
+        assert!(store
+            .get_related_test_witnesses("prod", &vec!["a".into(); 51])
+            .is_err());
     }
 
     #[test]

@@ -251,6 +251,9 @@ impl CodeFacts {
                 more,
             });
         }
+        // Explain only this selected page, never the prefix fetched for a
+        // continuation. Presentation drops witnesses alongside budgeted tests.
+        self.annotate_test_associations(&node, &mut result)?;
         loop {
             let mut next = serde_json::Map::new();
             for page in &pages {

@@ -276,3 +276,178 @@ fn source_truncation_is_explicit_even_within_a_single_definition_line() {
         }
     }
 }
+
+#[test]
+fn source_budget_reaches_late_definitions_with_explicit_column_fragments() {
+    let root = tempdir().unwrap();
+    let state = tempdir().unwrap();
+    let padding = "界".repeat(1800);
+    let cases = [
+        (
+            "target.ts",
+            format!("const pad = \"{padding}\"; export function target() {{ return 42; }}\n"),
+            1,
+        ),
+        (
+            "target.js",
+            format!("const pad = \"{padding}\"; export function target() {{ return 42; }}\n"),
+            1,
+        ),
+        (
+            "lib.rs",
+            format!("const PAD: &str = \"{padding}\"; pub fn target() -> i32 {{ 42 }}\n"),
+            1,
+        ),
+        (
+            "target.go",
+            format!(
+                "package fixture\nconst pad = \"{padding}\"; func target() int {{ return 42 }}\n"
+            ),
+            2,
+        ),
+    ];
+    for (file, source, _) in &cases {
+        fs::write(root.path().join(file), source).unwrap();
+    }
+    let mut mcp = Mcp::new(root.path(), &state.path().join("facts.sqlite"));
+    for (file, source, line) in cases {
+        for format in ["compact", "full"] {
+            let search = body(&mcp.call(
+                "search",
+                json!({"query":"target", "path_prefix":file, "detail":"context", "format":format}),
+            ));
+            let expanded = body(&mcp.call(
+                "expand",
+                json!({"symbol":"target", "file_path":file, "format":format}),
+            ));
+            assert_eq!(expanded["status"], "ok");
+            for excerpt in [&search["context_entries"][0]["source"], &expanded["source"]] {
+                assert_eq!(excerpt["status"], "ok", "{file}/{format}");
+                assert_eq!(excerpt["excerpt_kind"], "column_fragment");
+                assert_eq!(excerpt["start_line"], line);
+                assert_eq!(excerpt["end_line"], line);
+                assert_eq!(excerpt["definition_end_line"], line);
+                let start = excerpt["start_column"].as_u64().unwrap() as usize;
+                let end = excerpt["end_column"].as_u64().unwrap() as usize;
+                assert!(start >= 4096);
+                let text = excerpt["text"].as_str().unwrap();
+                assert!(text.contains("target"));
+                assert!(!text.contains("pad"));
+                assert!(text.len() <= 4096);
+                assert_eq!(excerpt["byte_length"], text.len());
+                assert_eq!(text, &source.lines().nth(line - 1).unwrap()[start..end]);
+                assert_eq!(excerpt["leading_context_omitted"], true);
+                assert_eq!(excerpt["truncated"], true);
+            }
+            let hash = hex::encode(Sha256::digest(source.as_bytes()));
+            if format == "full" {
+                assert_eq!(expanded["definition"]["evidence"]["source_hash"], hash);
+            } else {
+                assert_eq!(expanded["source_hashes"][file], hash);
+            }
+        }
+    }
+}
+
+#[test]
+fn definition_column_fragments_preserve_the_source_budget_boundary() {
+    let root = tempdir().unwrap();
+    let state = tempdir().unwrap();
+    let mut mcp = Mcp::new(root.path(), &state.path().join("facts.sqlite"));
+    for start in [4095, 4096, 4097] {
+        let source = format!(
+            "const pad = \"{}\"; function target() {{ return 42; }}",
+            "x".repeat(start - "const pad = \"\"; ".len()),
+        );
+        fs::write(root.path().join("target.js"), &source).unwrap();
+        let result = body(&mcp.call("expand", json!({"symbol":"target", "format":"full"})));
+        assert_eq!(result["status"], "ok");
+        assert_eq!(result["source"]["status"], "ok");
+        if start == 4095 {
+            assert!(result["source"].get("excerpt_kind").is_none());
+            assert_eq!(result["source"]["text"], &source[..4096]);
+        } else {
+            assert_eq!(result["source"]["excerpt_kind"], "column_fragment");
+            assert_eq!(result["source"]["start_column"], start);
+            assert_eq!(result["source"]["text"], "function target() { return 42; }");
+            assert_eq!(result["source"]["leading_context_omitted"], true);
+            assert_eq!(result["source"]["truncated"], true);
+        }
+    }
+}
+
+#[test]
+fn same_line_method_selectors_keep_their_own_source_fragments() {
+    let root = tempdir().unwrap();
+    let state = tempdir().unwrap();
+    let source = format!(
+        "const pad = \"{}\"; class Alpha {{ run() {{ return 1; }} }} class Beta {{ run() {{ return 2; }} }}\r\n",
+        "界".repeat(1800),
+    );
+    fs::write(root.path().join("methods.ts"), &source).unwrap();
+    let mut mcp = Mcp::new(root.path(), &state.path().join("facts.sqlite"));
+    let ambiguous = body(&mcp.call("expand", json!({"symbol":"run", "format":"full"})));
+    assert_eq!(ambiguous["status"], "ambiguous");
+    let matches = ambiguous["matches"].as_array().unwrap();
+    assert_eq!(matches.len(), 2);
+    assert_ne!(matches[0]["id"], matches[1]["id"]);
+    let mut excerpts = BTreeSet::new();
+    for symbol in matches {
+        let result = body(&mcp.call("expand", json!({"symbol":symbol["id"], "format":"full"})));
+        assert_eq!(result["status"], "ok");
+        assert_eq!(result["definition"]["id"], symbol["id"]);
+        let excerpt = &result["source"];
+        let text = excerpt["text"].as_str().unwrap();
+        let start = excerpt["start_column"].as_u64().unwrap() as usize;
+        let end = excerpt["end_column"].as_u64().unwrap() as usize;
+        assert_eq!(text, &source[start..end]);
+        assert_eq!(excerpt["excerpt_kind"], "column_fragment");
+        assert_eq!(excerpt["truncated"], true);
+        excerpts.insert(text.to_owned());
+    }
+    assert_eq!(
+        excerpts,
+        BTreeSet::from([
+            "run() { return 1; }".to_owned(),
+            "run() { return 2; }".to_owned()
+        ])
+    );
+}
+
+#[test]
+fn column_fragments_keep_utf8_and_crlf_multiline_coordinates() {
+    let root = tempdir().unwrap();
+    let state = tempdir().unwrap();
+    let mut mcp = Mcp::new(root.path(), &state.path().join("facts.sqlite"));
+    let prefix = format!("const pad = \"{}\"; ", "x".repeat(5000));
+    for definition in [
+        "function target() {\r\n  return 42;\r\n}\r\n".to_owned(),
+        format!(
+            "function target() {{ return \"{}\"; }}\r\n",
+            "界".repeat(1800)
+        ),
+    ] {
+        let source = format!("{prefix}{definition}");
+        fs::write(root.path().join("target.ts"), &source).unwrap();
+        let result = body(&mcp.call("expand", json!({"symbol":"target", "format":"full"})));
+        let excerpt = &result["source"];
+        let start = excerpt["start_column"].as_u64().unwrap() as usize;
+        let end = excerpt["end_column"].as_u64().unwrap() as usize;
+        let text = excerpt["text"].as_str().unwrap();
+        assert_eq!(excerpt["excerpt_kind"], "column_fragment");
+        assert_eq!(excerpt["start_line"], 1);
+        assert_eq!(excerpt["end_line"], 1);
+        assert_eq!(excerpt["definition_end_line"], definition.lines().count());
+        assert_eq!(text, &source[start..end]);
+        assert!(!text.contains(['\r', '\n']));
+        assert!(text.len() <= 4096);
+        assert_eq!(excerpt["byte_length"], text.len());
+        assert_eq!(excerpt["truncated"], true);
+        assert_eq!(excerpt["leading_context_omitted"], true);
+        if definition.lines().count() > 1 {
+            assert_eq!(text, "function target() {");
+        } else {
+            assert!(text.ends_with('界'));
+        }
+    }
+}

@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { setTimeout as delay } from 'node:timers/promises';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { createBridge, MAX_BYTES, repairTools, validateConfig } from './bridge.mjs';
@@ -44,13 +45,22 @@ await server.connect(new sdk.StdioServerTransport());
   fs.writeFileSync(innerConfig, JSON.stringify({ root, evidenceDir: path.join(root, 'private-evidence'), sdkRoot, closedFile: path.join(tmp, 'inner-closed'), native: { cwd: root, args: ['--state', path.join(root, 'custom-index.db')] } }));
   const helper = path.join(tmp, 'sandbox.mjs');
   fs.writeFileSync(helper, `
+import fs from 'node:fs';
 const argv = process.argv.slice(2);
 const spec = JSON.parse(argv.at(-1));
 if (spec.ignoreTerm) process.on('SIGTERM', () => {});
 if (spec.inspect) console.log(JSON.stringify({ argv, secretInherited: Boolean(process.env.COMMUNITY_SECRET_SENTINEL) }));
 if (spec.stdout) process.stdout.write(spec.stdout.repeat(spec.repeat ?? 1));
 if (spec.stderr) process.stderr.write(spec.stderr.repeat(spec.repeat ?? 1));
-if (spec.endless) setInterval(() => {}, 1000);
+if (spec.releaseFile) {
+  const gate = setInterval(() => {
+    if (!fs.existsSync(spec.releaseFile)) return;
+    clearInterval(gate);
+    if (spec.ending) process.stdout.write(spec.ending);
+    process.exit(spec.exitCode ?? 0);
+  }, 10);
+}
+else if (spec.endless) setInterval(() => {}, 1000);
 else setTimeout(() => { if (spec.ending) process.stdout.write(spec.ending); process.exit(spec.exitCode ?? 0); }, spec.delayMs ?? 0);
 `);
   const config = { root, evidenceDir, sdkRoot, nodeCommand: process.execPath, innerBridgeEntry, innerConfig,
@@ -152,14 +162,22 @@ test('reconnecting in the same evidence directory keeps only the current raw cat
   assert.deepEqual(fs.readFileSync(wireFile).subarray(0, history.length), history);
 });
 
-test('text-only outer MCP client can poll a silent job and observe nonzero completion', { skip: !enabled }, async t => {
+test('text-only outer MCP client can poll a silent job and observe nonzero completion', { skip: !enabled, timeout: 30000 }, async t => {
   const f = fixture(t), sdk = loadSdk(sdkRoot);
   const outerConfig = path.join(f.tmp, 'outer.json');
   fs.writeFileSync(outerConfig, JSON.stringify(f.config));
   const clientEvidence = path.join(f.tmp, 'client-evidence'); fs.mkdirSync(clientEvidence);
   const outer = await connectNative(sdk, { command: process.execPath, args: [bridgeEntry, '--config', outerConfig], cwd: f.root, env: {} }, clientEvidence);
   f.closers.push(() => outer.close());
-  const launched = await outer.callTool({ name: 'source_exec', arguments: { command: JSON.stringify({ delayMs: 1800, ending: 'finished\n' }) } }, {});
+  const releaseFile = path.join(f.tmp, 'silent-release'), failureRelease = path.join(f.tmp, 'failure-release');
+  // LIFO cleanup releases both owned children before closing the outer MCP.
+  f.closers.push(() => { for (const gate of [releaseFile, failureRelease]) fs.writeFileSync(gate, 'release'); });
+  const waitForClose = async jobId => {
+    while (!records(f.config, 'events.jsonl').some(record => record.type === 'sandbox-close' && record.job_id === jobId)) {
+      await delay(10, undefined, { signal: t.signal });
+    }
+  };
+  const launched = await outer.callTool({ name: 'source_exec', arguments: { command: JSON.stringify({ releaseFile, ending: 'finished\n' }) } }, {});
   const visible = modelText(launched);
   const state = JSON.parse(visible.split('\n')[0]);
   assert.equal(state.status, 'running');
@@ -167,17 +185,35 @@ test('text-only outer MCP client can poll a silent job and observe nonzero compl
   assert.match(state.job_id, /^[\da-f-]{36}$/);
   assert.equal(visible.split('\n').slice(1).join('\n'), 'stdout:\n\nstderr:\n');
   assert.equal(launched.structuredContent.job_id, state.job_id);
-  const polled = await outer.callTool({ name: 'source_poll', arguments: { job_id: state.job_id, wait_ms: 5000 } }, {});
+  const pending = await outer.callTool({ name: 'source_poll', arguments: { job_id: state.job_id, wait_ms: 0 } }, {});
+  assert.deepEqual(JSON.parse(modelText(pending).split('\n')[0]), state);
+  assert.equal(modelText(pending).split('\n').slice(1).join('\n'), 'stdout:\n\nstderr:\n');
+  assert.equal(fs.existsSync(releaseFile), false);
+  assert.ok(!records(f.config, 'events.jsonl').some(record => record.type === 'sandbox-close' && record.job_id === state.job_id));
+  fs.writeFileSync(releaseFile, 'release');
+  await waitForClose(state.job_id);
+  const polled = await outer.callTool({ name: 'source_poll', arguments: { job_id: state.job_id, wait_ms: 0 } }, {});
   assert.deepEqual(JSON.parse(modelText(polled).split('\n')[0]), { ...state, status: 'completed', exit_code: 0 });
-  assert.match(modelText(polled), /finished/);
+  assert.match(modelText(polled), /^finished$/m);
+  const again = await outer.callTool({ name: 'source_poll', arguments: { job_id: state.job_id, wait_ms: 0 } }, {});
+  assert.deepEqual(JSON.parse(modelText(again).split('\n')[0]), { ...state, status: 'completed', exit_code: 0 });
+  assert.equal(modelText(again).split('\n').slice(1).join('\n'), 'stdout:\n\nstderr:\n');
   assert.equal((await outer.callTool({ name: 'source_read', arguments: { file_path: 'sample.js' } }, {})).isError, undefined);
-  const failed = await outer.callTool({ name: 'source_exec', arguments: { command: JSON.stringify({ stderr: 'test failure\n', exitCode: 7 }) } }, {});
-  const failureState = JSON.parse(modelText(failed).split('\n')[0]);
-  assert.equal(failureState.status, 'completed');
-  assert.equal(failureState.exit_code, 7);
+  const failedLaunch = await outer.callTool({ name: 'source_exec', arguments: { command: JSON.stringify({ releaseFile: failureRelease, stderr: 'test failure\n', exitCode: 7 }) } }, {});
+  const failureState = JSON.parse(modelText(failedLaunch).split('\n')[0]);
+  assert.equal(failureState.status, 'running');
+  assert.equal(failureState.exit_code, null);
   assert.match(failureState.job_id, /^[\da-f-]{36}$/);
-  assert.match(modelText(failed), /test failure/);
+  assert.equal(fs.existsSync(failureRelease), false);
+  fs.writeFileSync(failureRelease, 'release');
+  await waitForClose(failureState.job_id);
+  const failed = await outer.callTool({ name: 'source_poll', arguments: { job_id: failureState.job_id, wait_ms: 0 } }, {});
+  assert.deepEqual(JSON.parse(modelText(failed).split('\n')[0]), { ...failureState, status: 'completed', exit_code: 7 });
+  assert.equal([failedLaunch, failed].map(modelText).join('\n').match(/^test failure$/gm)?.length, 1);
   assert.equal(failed.isError, true);
+  await outer.close();
+  assert.equal(fs.readFileSync(path.join(f.tmp, 'inner-closed'), 'utf8'), 'closed');
+  assert.ok(records(f.config, 'events.jsonl').some(record => record.type === 'cleanup-complete'));
 });
 
 test('unique UTF-8 edits, new files, deletion and exact byte/version receipts', { skip: !enabled }, async t => {
@@ -245,26 +281,38 @@ test('repository inspection and editing have a deterministic serialized source r
     ['operation-start:1', 'operation-end:1', 'operation-start:2', 'operation-end:2', 'operation-start:3', 'operation-end:3']);
 });
 
-test('sandbox is fixed argv with safe environment; jobs return early, poll incrementally and gate source', { skip: !enabled }, async t => {
+test('sandbox is fixed argv with safe environment; jobs return early, poll incrementally and gate source', { skip: !enabled, timeout: 30000 }, async t => {
   const f = fixture(t), bridge = await f.create({ execWaitMs: 50 });
   const prior = process.env.COMMUNITY_SECRET_SENTINEL;
   process.env.COMMUNITY_SECRET_SENTINEL = 'host-only-secret';
   f.closers.push(() => { if (prior === undefined) delete process.env.COMMUNITY_SECRET_SENTINEL; else process.env.COMMUNITY_SECRET_SENTINEL = prior; });
-  const command = JSON.stringify({ inspect: true, delayMs: 600, ending: 'ending\n', payload: '"; $(host-command) `host-command` & < >' });
-  const start = Date.now();
+  const releaseFile = path.join(f.tmp, 'sandbox-release');
+  // Always release the owned child before bridge cleanup on a failed assertion.
+  f.closers.push(() => fs.writeFileSync(releaseFile, 'release'));
+  const command = JSON.stringify({ inspect: true, releaseFile, ending: 'ending\n', payload: '"; $(host-command) `host-command` & < >' });
   const launched = await bridge.callTool({ name: 'source_exec', arguments: { command } });
-  assert.ok(Date.now() - start < 1000);
   const visible = JSON.parse(modelText(launched).split('\n')[0]);
   assert.equal(visible.status, 'running');
   const id = visible.job_id;
+  assert.equal(fs.existsSync(releaseFile), false);
+  assert.ok(!records(f.config, 'events.jsonl').some(record => record.type === 'sandbox-close' && record.job_id === id));
   assert.equal((await bridge.callTool({ name: 'source_list', arguments: {} })).isError, true);
   assert.equal((await bridge.callTool({ name: 'source_edit', arguments: { file_path: 'sample.js', old_text: '', new_text: '' } })).isError, true);
   assert.equal((await bridge.callTool({ name: 'source_exec', arguments: { command } })).isError, true);
   assert.equal((await bridge.callTool({ name: 'source_poll', arguments: { job_id: id, wait_ms: 10001 } })).isError, true);
-  const poll = await bridge.callTool({ name: 'source_poll', arguments: { job_id: id, wait_ms: 1000 } });
+  const pending = await bridge.callTool({ name: 'source_poll', arguments: { job_id: id, wait_ms: 0 } });
+  assert.equal(pending.structuredContent.status, 'running');
+  assert.doesNotMatch(launched.content[0].text + pending.content[0].text, /^ending$/m);
+  fs.writeFileSync(releaseFile, 'release');
+  // Completion is an observed event, not a deadline on a contended host.
+  while (!records(f.config, 'events.jsonl').some(record => record.type === 'sandbox-close' && record.job_id === id)) {
+    await delay(10, undefined, { signal: t.signal });
+  }
+  const poll = await bridge.callTool({ name: 'source_poll', arguments: { job_id: id, wait_ms: 0 } });
   assert.equal(poll.structuredContent.status, 'completed');
-  assert.match(poll.content[0].text, /ending/);
-  const output = launched.content[0].text + poll.content[0].text;
+  assert.match(poll.content[0].text, /^ending$/m);
+  const stdout = response => modelText(response).split('\nstdout:\n')[1].split('\nstderr:\n')[0];
+  const output = [launched, pending, poll].map(stdout).join('');
   assert.match(output, /"secretInherited":false/);
   const line = output.split('\n').find(value => value.startsWith('{"argv"'));
   assert.deepEqual(JSON.parse(line).argv, ['bash', '-lc', command]);
@@ -273,7 +321,7 @@ test('sandbox is fixed argv with safe environment; jobs return early, poll incre
   assert.equal(records(f.config, 'edits.jsonl').length, 0);
   const again = await bridge.callTool({ name: 'source_poll', arguments: { job_id: id, wait_ms: 0 } });
   assert.deepEqual(JSON.parse(modelText(again).split('\n')[0]), { job_id: id, status: 'completed', exit_code: 0 });
-  assert.doesNotMatch(again.content[0].text, /ending/);
+  assert.doesNotMatch(again.content[0].text, /^ending$/m);
   assert.equal((await bridge.callTool({ name: 'source_poll', arguments: { job_id: 'unknown' } })).isError, true);
   const lifecycle = records(f.config, 'events.jsonl').filter(record => record.job_id === id);
   assert.ok(lifecycle.some(record => record.type === 'sandbox-start'));
