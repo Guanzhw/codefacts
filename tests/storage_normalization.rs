@@ -302,6 +302,7 @@ fn node(id: usize, body: Option<String>) -> CodeNode {
         id: format!("node-{id}"),
         name: format!("Function{id}"),
         qualified_name: Some(format!("Module.Function{id}")),
+        rust_impl: None,
         kind: NodeKind::Function,
         file_path: "src/定义.rs".into(),
         start_line: id as u32 + 1,

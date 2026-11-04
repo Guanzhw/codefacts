@@ -463,6 +463,7 @@ mod tests {
             id: id.to_string(),
             name: name.to_string(),
             qualified_name: None,
+            rust_impl: None,
             kind,
             file_path: file.to_string(),
             start_line: 1,

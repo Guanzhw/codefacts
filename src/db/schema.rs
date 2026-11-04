@@ -9,7 +9,7 @@ use rusqlite::{Connection, OptionalExtension};
 /// complete or changes their meaning even though the SQLite table shape is
 /// unchanged. Existing indexes then make one safe full source pass instead of
 /// silently serving pre-change facts from unchanged file hashes.
-const FACT_EXTRACTION_VERSION: &str = "10";
+const FACT_EXTRACTION_VERSION: &str = "11";
 
 // ---------------------------------------------------------------------------
 // DDL constants — kept as separate strings so each statement can be executed
@@ -36,6 +36,19 @@ CREATE TABLE IF NOT EXISTS nodes (
   name_tokens TEXT,
   is_test INTEGER NOT NULL DEFAULT 0,
   body_in_signature INTEGER NOT NULL DEFAULT 0
+)";
+
+const CREATE_RUST_IMPL_OWNERS: &str = "\
+CREATE TABLE IF NOT EXISTS rust_impl_owners (
+  id INTEGER PRIMARY KEY,
+  file_path TEXT NOT NULL,
+  start_line INTEGER NOT NULL,
+  start_column INTEGER NOT NULL,
+  end_line INTEGER NOT NULL,
+  end_column INTEGER NOT NULL,
+  receiver TEXT NOT NULL,
+  trait_name TEXT,
+  UNIQUE(file_path, start_line, start_column, end_line, end_column)
 )";
 
 const CREATE_EDGES: &str = "\
@@ -153,6 +166,22 @@ pub fn initialize_database(db_path: &str) -> rusqlite::Result<Connection> {
     conn.execute_batch(CREATE_FILE_HASHES)?;
     conn.execute_batch(CREATE_UNRESOLVED_REFS)?;
     conn.execute_batch(CREATE_INDEX_METADATA)?;
+    // Owner schema and the extraction-version/rebuild marker advance together.
+    // A failed initializer must not mark old source facts as the new version.
+    let migration = conn.unchecked_transaction()?;
+    conn.execute_batch(CREATE_RUST_IMPL_OWNERS)?;
+    let has_impl_owner = conn
+        .prepare("PRAGMA table_info(nodes)")?
+        .query_map([], |row| row.get::<_, String>(1))?
+        .collect::<rusqlite::Result<Vec<_>>>()?
+        .iter()
+        .any(|column| column == "rust_impl_owner_id");
+    if !has_impl_owner {
+        conn.execute_batch("ALTER TABLE nodes ADD COLUMN rust_impl_owner_id INTEGER")?;
+    }
+    conn.execute_batch(
+        "CREATE INDEX IF NOT EXISTS idx_nodes_rust_impl_owner ON nodes(rust_impl_owner_id)",
+    )?;
 
     // -- Migrations -------------------------------------------------------
     // Edge occurrence/evidence columns cannot be reconstructed faithfully
@@ -179,6 +208,7 @@ pub fn initialize_database(db_path: &str) -> rusqlite::Result<Connection> {
             [],
         )?;
     }
+    migration.commit()?;
 
     // -- Indexes ----------------------------------------------------------
     for ddl in CREATE_INDEXES {
@@ -340,6 +370,53 @@ mod tests {
     /// Helper: initialize an in-memory database and return the connection.
     fn setup() -> Connection {
         initialize_database(":memory:").expect("schema creation should succeed on :memory:")
+    }
+
+    #[test]
+    fn owner_schema_and_version_marker_roll_back_together_on_upgrade_failure() {
+        let database = NamedTempFile::new().unwrap();
+        let path = database.path().to_str().unwrap();
+        let conn = initialize_database(path).unwrap();
+        conn.execute_batch("DROP INDEX idx_nodes_rust_impl_owner; ALTER TABLE nodes DROP COLUMN rust_impl_owner_id; DROP TABLE rust_impl_owners;
+            UPDATE index_metadata SET value='10' WHERE key='fact_extraction_version';
+            UPDATE index_metadata SET value='0' WHERE key='full_reindex_required';
+            CREATE TRIGGER fail_owner_upgrade BEFORE UPDATE OF value ON index_metadata WHEN OLD.key='full_reindex_required' BEGIN SELECT RAISE(ABORT, 'injected owner upgrade failure'); END;").unwrap();
+        assert!(initialize_database(path)
+            .unwrap_err()
+            .to_string()
+            .contains("injected owner upgrade failure"));
+        assert_eq!(
+            conn.query_row(
+                "SELECT value FROM index_metadata WHERE key='fact_extraction_version'",
+                [],
+                |row| row.get::<_, String>(0)
+            )
+            .unwrap(),
+            "10"
+        );
+        assert!(!object_exists(&conn, "table", "rust_impl_owners"));
+        let columns = conn
+            .prepare("PRAGMA table_info(nodes)")
+            .unwrap()
+            .query_map([], |row| row.get::<_, String>(1))
+            .unwrap()
+            .collect::<rusqlite::Result<Vec<_>>>()
+            .unwrap();
+        assert!(!columns.iter().any(|column| column == "rust_impl_owner_id"));
+        conn.execute_batch("DROP TRIGGER fail_owner_upgrade")
+            .unwrap();
+        let upgraded = initialize_database(path).unwrap();
+        assert!(object_exists(&upgraded, "table", "rust_impl_owners"));
+        assert_eq!(
+            upgraded
+                .query_row(
+                    "SELECT value FROM index_metadata WHERE key='full_reindex_required'",
+                    [],
+                    |row| row.get::<_, String>(0)
+                )
+                .unwrap(),
+            "1"
+        );
     }
 
     /// Helper: query sqlite_master for a given type and name.
