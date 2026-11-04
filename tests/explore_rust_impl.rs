@@ -320,8 +320,9 @@ fn query_keeps_both_admitted_method_fragments_after_an_oversized_prefix() {
     let root = tempdir().unwrap();
     let state = tempdir().unwrap();
     let source = format!(
-        "struct Pair;\nimpl Pair {{ /*{}*/ fn firstneedle(&self) {{ first_marker(); }} fn secondneedle(&self) {{ second_marker(); }}\n}}\n",
-        "中".repeat(14_000)
+        "struct Pair;\nimpl Pair {{ /*{}*/ fn firstneedle(&self) {{ first_marker(); }} fn secondneedle(&self) {{ second_marker(); }}\n{}}}\n",
+        "中".repeat(14_000),
+        "    // incidental context\n".repeat(2_000)
     );
     fs::write(root.path().join("lib.rs"), &source).unwrap();
     let mut mcp = Mcp::new(root.path(), &state.path().join("facts.sqlite"));

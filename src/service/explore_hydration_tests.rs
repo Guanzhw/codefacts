@@ -1370,8 +1370,9 @@ fn rust_impl_preview_keeps_both_admitted_anchors_across_an_oversized_line() {
 #[test]
 fn rust_impl_preview_keeps_both_admitted_fragments_after_an_oversized_prefix() {
     let source = format!(
-        "struct Pair;\nimpl Pair {{ /*{}*/ fn firstneedle(&self) {{}} fn secondneedle(&self) {{}}\n}}\n",
-        "中".repeat(14_000)
+        "struct Pair;\nimpl Pair {{ /*{}*/ fn firstneedle(&self) {{}} fn secondneedle(&self) {{}}\n{}}}\n",
+        "中".repeat(14_000),
+        "    // incidental context\n".repeat(2_000)
     );
     let (_root, _state, facts) = fixture(&[("lib.rs", &source)]);
     let nodes = facts.store.get_all_nodes().unwrap();
@@ -1404,7 +1405,10 @@ fn rust_impl_preview_keeps_both_admitted_fragments_after_an_oversized_prefix() {
             "{output}"
         );
         assert!(output.contains("2 admitted candidates"), "{output}");
-        assert!(output.contains("3: }\n"), "{output}");
+        assert!(
+            output.contains("3:     // incidental context\n"),
+            "{output}"
+        );
         assert_eq!(output.matches("[column fragment;").count(), 2, "{output}");
         for member in members {
             let fragment = single_line_card_fragment(

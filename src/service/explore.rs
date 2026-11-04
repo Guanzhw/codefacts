@@ -1519,39 +1519,67 @@ fn render_cards(
                             member.start,
                         ]
                     })
-                    .chain(std::iter::once(start))
                     .collect()
             } else {
                 vec![excerpt.start, focus]
             };
-            let required = initial.len();
-            for (index, line) in initial
+            let mut initial = initial.into_iter();
+            let mut context = card
+                .impl_range
+                .map(|_| start)
                 .into_iter()
                 .chain(focus + 1..=excerpt.end)
                 .chain((excerpt.start + 1..focus).rev())
                 .chain(excerpt.end + 1..=end)
-                .chain((start + 1..excerpt.start).rev())
-                .enumerate()
-            {
-                if delivered.contains(&line) {
-                    continue;
+                .chain((start + 1..excerpt.start).rev());
+            let mut fragments = String::new();
+            let mut fragment_lines = HashSet::new();
+            let mut source_bytes = 0;
+            for (required, candidates) in [
+                (true, &mut initial as &mut dyn Iterator<Item = u32>),
+                (false, &mut context as &mut dyn Iterator<Item = u32>),
+            ] {
+                for line in candidates {
+                    if delivered.contains(&line) || fragment_lines.contains(&line) {
+                        continue;
+                    }
+                    let mut candidate_lines = delivered.clone();
+                    candidate_lines.push(line);
+                    candidate_lines.sort_unstable();
+                    let candidate_bytes = candidate_lines
+                        .iter()
+                        .map(|&line| numbered_line_bytes(line, &lines))
+                        .sum::<usize>()
+                        + candidate_lines
+                            .windows(2)
+                            .filter(|pair| pair[1] > pair[0] + 1)
+                            .count()
+                            * "[... source lines omitted ...]\n".len()
+                        + fragments.len();
+                    if candidate_bytes <= allocation {
+                        delivered = candidate_lines;
+                        source_bytes = candidate_bytes;
+                    } else if !required && line != start {
+                        break;
+                    }
                 }
-                let mut candidate_lines = delivered.clone();
-                candidate_lines.push(line);
-                candidate_lines.sort_unstable();
-                let candidate_bytes = candidate_lines
-                    .iter()
-                    .map(|&line| numbered_line_bytes(line, &lines))
-                    .sum::<usize>()
-                    + candidate_lines
-                        .windows(2)
-                        .filter(|pair| pair[1] > pair[0] + 1)
-                        .count()
-                        * "[... source lines omitted ...]\n".len();
-                if candidate_bytes <= allocation {
-                    delivered = candidate_lines;
-                } else if index >= required {
-                    break;
+                if required {
+                    for member in std::iter::once(excerpt).chain(&card.additional_anchors) {
+                        if delivered.contains(&member.start) {
+                            continue;
+                        }
+                        let Some(node) = member.node_id.as_deref().and_then(|id| by_id.get(id))
+                        else {
+                            continue;
+                        };
+                        if let Some(fragment) = single_line_card_fragment(member, node, &lines)
+                            .filter(|fragment| source_bytes + fragment.len() <= allocation)
+                        {
+                            source_bytes += fragment.len();
+                            fragments.push_str(&fragment);
+                            fragment_lines.insert(member.start);
+                        }
+                    }
                 }
             }
             for (index, &line) in delivered.iter().enumerate() {
@@ -1560,21 +1588,7 @@ fn render_cards(
                 }
                 let _ = writeln!(preview, "{line}: {}", lines[(line - 1) as usize]);
             }
-        }
-        if !complete {
-            for member in std::iter::once(excerpt).chain(&card.additional_anchors) {
-                if delivered.contains(&member.start) {
-                    continue;
-                }
-                let Some(node) = member.node_id.as_deref().and_then(|id| by_id.get(id)) else {
-                    continue;
-                };
-                if let Some(fragment) = single_line_card_fragment(member, node, &lines)
-                    .filter(|fragment| preview.len() + fragment.len() <= allocation)
-                {
-                    preview.push_str(&fragment);
-                }
-            }
+            preview.push_str(&fragments);
         }
         output.push_str(&frames[index].0);
         output.push_str(if preview.is_empty() {
