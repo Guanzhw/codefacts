@@ -405,6 +405,38 @@ pub struct CodeNode {
     /// A variable inside a function scope, including unnamed callbacks.
     #[serde(default)]
     pub is_local: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub rust_impl: Option<std::sync::Arc<RustImplMembership>>,
+}
+
+/// Source syntax of a Rust method's immediate impl block, not resolved types.
+/// Owner identity is the containing node's file plus this half-open range.
+/// Lines are 1-based and columns are 0-based UTF-8 byte offsets.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct RustImplMembership {
+    /// Exact spelling of the impl's receiver type, including paths and generics.
+    pub receiver: String,
+    /// Exact trait spelling; absent for an inherent impl.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub trait_name: Option<String>,
+    pub start_line: u32,
+    pub start_column: u32,
+    pub end_line: u32,
+    pub end_column: u32,
+}
+
+pub(crate) type RustImplOwnerKey = (String, u32, u32, u32, u32);
+
+impl RustImplMembership {
+    pub(crate) fn owner_key(&self, file: &str) -> RustImplOwnerKey {
+        (
+            file.to_owned(),
+            self.start_line,
+            self.start_column,
+            self.end_line,
+            self.end_column,
+        )
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -703,6 +735,7 @@ mod tests {
             documentation: None,
             exported: Some(true),
             is_local: false,
+            rust_impl: None,
         };
 
         let json = serde_json::to_string(&node).unwrap();
@@ -1140,6 +1173,7 @@ mod tests {
             documentation: None,
             exported: None,
             is_local: false,
+            rust_impl: None,
         };
 
         let json = serde_json::to_string(&node).unwrap();
@@ -1166,6 +1200,7 @@ mod tests {
             documentation: Some("/// A test method".to_string()),
             exported: Some(true),
             is_local: false,
+            rust_impl: None,
         };
 
         let json = serde_json::to_string(&node).unwrap();
@@ -1193,6 +1228,7 @@ mod tests {
             documentation: Some("Greeting method".to_string()),
             exported: Some(false),
             is_local: false,
+            rust_impl: None,
         };
 
         let json = serde_json::to_string(&node).unwrap();
