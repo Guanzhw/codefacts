@@ -1368,6 +1368,60 @@ fn rust_impl_preview_keeps_both_admitted_anchors_across_an_oversized_line() {
 }
 
 #[test]
+fn rust_impl_preview_keeps_both_admitted_fragments_after_an_oversized_prefix() {
+    let source = format!(
+        "struct Pair;\nimpl Pair {{ /*{}*/ fn firstneedle(&self) {{}} fn secondneedle(&self) {{}}\n}}\n",
+        "中".repeat(14_000)
+    );
+    let (_root, _state, facts) = fixture(&[("lib.rs", &source)]);
+    let nodes = facts.store.get_all_nodes().unwrap();
+    let members = ["firstneedle", "secondneedle"]
+        .map(|name| nodes.iter().find(|node| node.name == name).unwrap());
+    let originals = members
+        .iter()
+        .map(|node| (node_excerpt(node, "implementation".into()), false))
+        .collect::<Vec<_>>();
+    let sources = HashMap::from([(
+        "lib.rs".into(),
+        Source {
+            hash: String::new(),
+            text: source.clone(),
+        },
+    )]);
+    for budget in [2_000, 24_000, 32_000] {
+        let mut output = String::new();
+        render_cards(
+            &mut output,
+            originals.clone(),
+            &nodes,
+            &query_terms("firstneedle secondneedle"),
+            &sources,
+            budget,
+        )
+        .unwrap();
+        assert!(
+            output.contains("[preview] same-impl source context"),
+            "{output}"
+        );
+        assert!(output.contains("2 admitted candidates"), "{output}");
+        assert!(output.contains("3: }\n"), "{output}");
+        assert_eq!(output.matches("[column fragment;").count(), 2, "{output}");
+        for member in members {
+            let fragment = single_line_card_fragment(
+                &node_excerpt(member, "implementation".into()),
+                member,
+                &source.lines().collect::<Vec<_>>(),
+            )
+            .unwrap();
+            assert_eq!(output.matches(&fragment).count(), 1, "{output}");
+        }
+        assert!(!output.contains("2: impl"), "{output}");
+        assert!(!output.contains("中"), "{output}");
+        assert!(output.len() <= budget);
+    }
+}
+
+#[test]
 fn rust_impl_huge_header_and_512_members_keep_one_share_and_anchor_preview() {
     let receiver = "Huge".repeat(8192);
     let mut source = format!("struct {receiver};\nimpl {receiver} {{\n");

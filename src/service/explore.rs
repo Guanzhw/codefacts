@@ -1561,15 +1561,19 @@ fn render_cards(
                 let _ = writeln!(preview, "{line}: {}", lines[(line - 1) as usize]);
             }
         }
-        if preview.is_empty() {
-            let fragment = excerpt
-                .node_id
-                .as_deref()
-                .and_then(|id| by_id.get(id))
-                .and_then(|node| single_line_card_fragment(excerpt, node, &lines))
-                .filter(|fragment| fragment.len() <= allocation);
-            if let Some(fragment) = fragment {
-                preview = fragment;
+        if !complete {
+            for member in std::iter::once(excerpt).chain(&card.additional_anchors) {
+                if delivered.contains(&member.start) {
+                    continue;
+                }
+                let Some(node) = member.node_id.as_deref().and_then(|id| by_id.get(id)) else {
+                    continue;
+                };
+                if let Some(fragment) = single_line_card_fragment(member, node, &lines)
+                    .filter(|fragment| preview.len() + fragment.len() <= allocation)
+                {
+                    preview.push_str(&fragment);
+                }
             }
         }
         output.push_str(&frames[index].0);

@@ -316,6 +316,41 @@ fn query_keeps_both_admitted_methods_across_an_oversized_comment() {
 }
 
 #[test]
+fn query_keeps_both_admitted_method_fragments_after_an_oversized_prefix() {
+    let root = tempdir().unwrap();
+    let state = tempdir().unwrap();
+    let source = format!(
+        "struct Pair;\nimpl Pair {{ /*{}*/ fn firstneedle(&self) {{ first_marker(); }} fn secondneedle(&self) {{ second_marker(); }}\n}}\n",
+        "中".repeat(14_000)
+    );
+    fs::write(root.path().join("lib.rs"), &source).unwrap();
+    let mut mcp = Mcp::new(root.path(), &state.path().join("facts.sqlite"));
+    for budget in [2_000, 24_000, 32_000] {
+        let text = mcp.explore("firstneedle secondneedle", budget);
+        assert!(
+            text.contains("[preview] same-impl source context"),
+            "{text}"
+        );
+        assert!(text.contains("2 admitted candidates"), "{text}");
+        assert_eq!(text.matches("[column fragment;").count(), 2, "{text}");
+        for definition in [
+            "fn firstneedle(&self) { first_marker(); }",
+            "fn secondneedle(&self) { second_marker(); }",
+        ] {
+            let line = source.lines().nth(1).unwrap();
+            let start = line.find(definition).unwrap();
+            let fragment = format!(
+                "2:{start}..{} [column fragment; UTF-8 byte columns, 0-based, end-exclusive; surrounding line context omitted]: {definition}\n",
+                start + definition.len()
+            );
+            assert_eq!(text.matches(&fragment).count(), 1, "{text}");
+        }
+        assert!(!text.contains("2: impl"), "{text}");
+        assert!(!text.contains("中"), "{text}");
+    }
+}
+
+#[test]
 fn same_line_impl_cards_use_utf8_byte_columns_and_preserve_physical_lines() {
     let left = r#"impl Left { fn name(&self) -> &str { "left-marker" } }"#;
     let right = r#"impl Right { fn name(&self) -> &str { "right-marker" } }"#;
