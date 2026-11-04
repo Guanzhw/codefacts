@@ -1512,7 +1512,7 @@ fn rust_impl_groups_use_file_identity_and_query_scope() {
 }
 
 #[test]
-fn rust_impl_one_long_physical_line_has_bounded_metadata_and_no_partial_source() {
+fn rust_impl_one_long_physical_line_keeps_bounded_attributed_method_fragment() {
     let receiver = "Huge".repeat(8192);
     let source = format!("struct {receiver};\nimpl {receiver} {{ fn needle(&self) {{}} }}\n");
     let (_root, _state, facts) = fixture(&[("line.rs", &source)]);
@@ -1539,7 +1539,14 @@ fn rust_impl_one_long_physical_line_has_bounded_metadata_and_no_partial_source()
         )
         .unwrap();
         assert!(
-            output.contains("[source omitted] same-impl source context via method needle at 2:"),
+            output.contains("[preview] same-impl source context via method needle at 2:"),
+            "{output}"
+        );
+        assert!(
+            output.contains(&format!(
+                "2:{}..{} [column fragment; UTF-8 byte columns, 0-based, end-exclusive; surrounding line context omitted]: fn needle(&self) {{}}\n",
+                anchor.start_column, anchor.end_column
+            )),
             "{output}"
         );
         assert!(!output.contains("2: impl"));
