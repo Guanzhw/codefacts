@@ -14,7 +14,7 @@ use super::{path_matches_prefix, CodeFacts, Freshness};
 use crate::error::{CodeFactsError, Result};
 use crate::graph::retrieval::{query_terms, SourceMatch, MAX_QUERY_CHARS};
 use crate::graph::store::{detect_is_test_node, GraphStore};
-use crate::types::{CodeNode, EdgeKind, Language, NodeKind};
+use crate::types::{CodeNode, EdgeKind, Language, NodeKind, RustImplOwnerKey};
 
 const DEFAULT_BYTES: usize = 24_000;
 const MIN_BYTES: usize = 2_000;
@@ -52,6 +52,57 @@ struct Excerpt {
     reason: String,
     node_id: Option<String>,
     focus: u32,
+}
+
+/// A rendering range, never a graph node or a symbol selector. Only the
+/// already-admitted members contribute source shares to an impl card.
+struct SourceCard {
+    anchor: Excerpt,
+    additional_anchors: Vec<Excerpt>,
+    deferred: bool,
+    impl_range: Option<(u32, u32, u32, u32)>,
+    weight: usize,
+}
+
+fn plan_source_cards(
+    cards: Vec<(Excerpt, bool)>,
+    by_id: &HashMap<&str, &CodeNode>,
+) -> Vec<SourceCard> {
+    let mut planned = Vec::<SourceCard>::new();
+    let mut owners = HashMap::<RustImplOwnerKey, usize>::new();
+    for (anchor, deferred) in cards {
+        let owner = anchor
+            .node_id
+            .as_deref()
+            .and_then(|id| by_id.get(id))
+            .and_then(|node| node.rust_impl.as_ref().map(|owner| (node, owner)));
+        let impl_range = owner.map(|(_, owner)| {
+            (
+                owner.start_line,
+                owner.start_column,
+                owner.end_line,
+                owner.end_column,
+            )
+        });
+        if let Some((node, owner)) = owner {
+            let key = owner.owner_key(&node.file_path);
+            if let Some(&index) = owners.get(&key) {
+                planned[index].additional_anchors.push(anchor);
+                planned[index].weight += 1;
+                planned[index].deferred &= deferred;
+                continue;
+            }
+            owners.insert(key, planned.len());
+        }
+        planned.push(SourceCard {
+            anchor,
+            additional_anchors: Vec::new(),
+            deferred,
+            impl_range,
+            weight: 1,
+        });
+    }
+    planned
 }
 
 /// One exploration request's hydrated graph; complete files preserve owner checks.
@@ -299,6 +350,9 @@ impl CodeFacts {
         );
 
         let mut ranked_candidates = Vec::new();
+        // Retrieval maintenance may write. Begin one shared owner-hydration
+        // snapshot only after those writes, and retain it through rendering.
+        let _read_scope;
         let excerpts = if let Some(query) = options.query {
             let terms = query_terms(query);
             if terms.is_empty() {
@@ -306,7 +360,6 @@ impl CodeFacts {
                     "query needs at least one searchable code or behavior term".into(),
                 ));
             }
-            card_query_echo(&mut output, &terms, budget);
             let indexed = self.store.retrieval_hashes()?;
             let current: HashSet<_> = hashes.keys().chain(manifests.iter()).cloned().collect();
             for path in indexed.keys().filter(|p| !current.contains(*p)) {
@@ -335,6 +388,7 @@ impl CodeFacts {
                 }
             }
             let hits = self.store.search_retrieval(query, scope.as_deref(), 96)?;
+            _read_scope = self.store.read_scope()?;
             catalog.load_files(
                 &self.store,
                 &hits
@@ -353,6 +407,7 @@ impl CodeFacts {
                 &mut ranked_candidates,
             )?
         } else {
+            _read_scope = self.store.read_scope()?;
             catalog = NodeCatalog::from_all_nodes(self.store.get_all_nodes()?);
             self.orientation_excerpts(
                 &catalog.nodes,
@@ -381,7 +436,11 @@ impl CodeFacts {
             );
         }
         if excerpts.is_empty() {
-            output.push_str("No matching verified source excerpts. Refine the query or path scope; this does not establish absence.\n");
+            let message = "No matching verified source excerpts. Refine the query or path scope; this does not establish absence.\n";
+            if let Some(query) = options.query {
+                card_query_echo(&mut output, &query_terms(query), budget, message.len());
+            }
+            output.push_str(message);
         } else if let Some(query) = options.query {
             render_cards(
                 &mut output,
@@ -1260,6 +1319,7 @@ fn finish(mut output: String, budget: usize) -> String {
 }
 
 const CARD_FOOTER: &str = "\nLexical candidates; symbol ranges cover full owners. [complete] covers the range; [preview] omits context. [source omitted] has no fitting whole line. Use reads for full ranges.\n";
+const IMPL_CARD_FOOTER: &str = "\nLexical candidates; symbol ranges cover full owners. Rust impl source groups pool only admitted members; whole boundary lines can include adjacent context. [complete] covers the range; [preview] omits context. [source omitted] has no fitting whole line. Use reads for full ranges.\n";
 
 fn card_omission(count: usize) -> String {
     if count == 0 {
@@ -1269,12 +1329,13 @@ fn card_omission(count: usize) -> String {
     }
 }
 
-fn card_query_echo(output: &mut String, terms: &[String], budget: usize) {
+fn card_query_echo(output: &mut String, terms: &[String], budget: usize, mandatory_bytes: usize) {
     let echo = format!("Lexical candidates for: {}\n\n", terms.join(", "));
-    if output.len() + echo.len() + CARD_FOOTER.len() + card_omission(36).len() <= budget {
+    let omitted = "Lexical candidate term echo omitted by byte budget.\n";
+    if output.len() + echo.len() + mandatory_bytes <= budget {
         output.push_str(&echo);
-    } else {
-        output.push_str("Lexical candidate term echo omitted by byte budget.\n");
+    } else if output.len() + omitted.len() + mandatory_bytes <= budget {
+        output.push_str(omitted);
     }
 }
 
@@ -1328,20 +1389,43 @@ fn render_cards(
     sources: &HashMap<String, Source>,
     budget: usize,
 ) -> Result<()> {
-    if output.len() + CARD_FOOTER.len() + card_omission(cards.len()).len() > budget {
+    let by_id: HashMap<_, _> = nodes.iter().map(|n| (n.id.as_str(), n)).collect();
+    let cards = plan_source_cards(cards, &by_id);
+    let grouped = cards.iter().any(|card| card.impl_range.is_some());
+    let footer = if grouped {
+        IMPL_CARD_FOOTER
+    } else {
+        CARD_FOOTER
+    };
+    let omission = |retained: usize| {
+        if !grouped {
+            return card_omission(cards.len() - retained);
+        }
+        let omitted = &cards[retained..];
+        if omitted.is_empty() {
+            String::new()
+        } else {
+            format!(
+                "\n{} additional source cards ({} admitted candidates) omitted by metadata byte budget.\n",
+                omitted.len(),
+                omitted.iter().map(|card| card.weight).sum::<usize>()
+            )
+        }
+    };
+    let mandatory_bytes = footer.len() + omission(0).len();
+    // Query echo is optional; decide only after the actual source-card plan
+    // has established its mandatory footer and omission format.
+    card_query_echo(output, terms, budget, mandatory_bytes);
+    if output.len() + mandatory_bytes > budget {
         return Err(CodeFactsError::Mcp(
             "mandatory exploration metadata exceeds max_bytes; narrow scope or increase max_bytes"
                 .into(),
         ));
     }
-    let by_id: HashMap<_, _> = nodes.iter().map(|n| (n.id.as_str(), n)).collect();
     let mut frames = Vec::new();
-    for (excerpt, deferred) in &cards {
+    for card in &cards {
+        let excerpt = &card.anchor;
         let node = excerpt.node_id.as_deref().and_then(|id| by_id.get(id));
-        let identity = node.map_or_else(
-            || "lexical source range".to_string(),
-            |n| format!("{} {}", n.kind.as_str(), n.name),
-        );
         let derivation = if excerpt.reason.starts_with("direct static callee at ")
             || excerpt
                 .reason
@@ -1365,18 +1449,47 @@ fn render_cards(
             } else {
                 source_role(&excerpt.path)
             };
-            format!("{role}{}", if *deferred { "; deferred" } else { "" })
+            format!("{role}{}", if card.deferred { "; deferred" } else { "" })
         };
-        let prefix = format!(
-            "\n## {}:{}-{} | {identity}\n",
-            excerpt.path, excerpt.start, excerpt.end
-        );
-        let suffix = format!("] {derivation}\n");
+        let (prefix, suffix) = if let Some((start, start_column, end, end_column)) = card.impl_range
+        {
+            let node = node.expect("impl source cards retain their anchor node");
+            // Names are useful anchors, but are not an unbounded mandatory
+            // copy of the receiver, trait, signature, or impl header.
+            let name_end = node.name.floor_char_boundary(80.min(node.name.len()));
+            let name = &node.name[..name_end];
+            let ellipsis = if name_end < node.name.len() {
+                "..."
+            } else {
+                ""
+            };
+            (
+                format!(
+                    "\n## {}:{start}:{start_column}-{end}:{end_column} | Rust impl source\n",
+                    excerpt.path
+                ),
+                format!(
+                    "] same-impl source context via method {name}{ellipsis} at {}:{}-{}:{}; {derivation}; {} admitted candidates\n",
+                    node.start_line, node.start_column, node.end_line, node.end_column, card.weight
+                ),
+            )
+        } else {
+            let identity = node.map_or_else(
+                || "lexical source range".to_string(),
+                |n| format!("{} {}", n.kind.as_str(), n.name),
+            );
+            (
+                format!(
+                    "\n## {}:{}-{} | {identity}\n",
+                    excerpt.path, excerpt.start, excerpt.end
+                ),
+                format!("] {derivation}\n"),
+            )
+        };
         frames.push((prefix, suffix));
     }
-    let omission = |retained: usize| card_omission(cards.len() - retained);
     let mut retained = 0;
-    let mut metadata_bytes = output.len() + CARD_FOOTER.len();
+    let mut metadata_bytes = output.len() + footer.len();
     for (index, (prefix, suffix)) in frames.iter().enumerate() {
         let bytes = prefix.len() + "[source omitted".len() + suffix.len();
         if metadata_bytes + bytes + omission(index + 1).len() > budget {
@@ -1386,67 +1499,127 @@ fn render_cards(
         retained = index + 1;
     }
     metadata_bytes += omission(retained).len();
-    let allocation = (budget - metadata_bytes).checked_div(retained).unwrap_or(0);
-    for (index, (excerpt, _)) in cards.iter().take(retained).enumerate() {
+    let total_weight: usize = cards.iter().take(retained).map(|card| card.weight).sum();
+    let unit = (budget - metadata_bytes)
+        .checked_div(total_weight)
+        .unwrap_or(0);
+    for (index, card) in cards.iter().take(retained).enumerate() {
+        let excerpt = &card.anchor;
+        let allocation = unit * card.weight;
         let source = &sources[&excerpt.path];
         let lines: Vec<_> = source.text.split('\n').collect();
         let focus = best_line(&lines, excerpt.start, excerpt.end, terms);
-        let body = (excerpt.start..=excerpt.end)
-            .map(|line| {
-                let text = lines[(line - 1) as usize];
-                format!("{line}: {}\n", text.strip_suffix('\r').unwrap_or(text))
-            })
-            .collect::<String>();
+        let (start, end) = card
+            .impl_range
+            .map_or((excerpt.start, excerpt.end), |(start, _, end, _)| {
+                (start, end)
+            });
         let mut preview = String::new();
         let mut delivered = Vec::new();
-        let complete = body.len() <= allocation;
+        // Count until the range exceeds its share before allocating source.
+        // A huge impl/header is therefore never copied merely to reject it.
+        let complete = (start..=end)
+            .try_fold(0, |bytes, line| {
+                let bytes = bytes + numbered_line_bytes(line, &lines);
+                (bytes <= allocation).then_some(bytes)
+            })
+            .is_some();
         if complete {
-            preview = body;
+            for line in start..=end {
+                let text = lines[(line - 1) as usize];
+                let _ = writeln!(
+                    preview,
+                    "{line}: {}",
+                    text.strip_suffix('\r').unwrap_or(text)
+                );
+            }
         } else {
-            // Keep the identity and strongest lexical evidence first, then
-            // spend the remaining share on surrounding whole source lines.
-            for (index, line) in [excerpt.start, focus]
+            // Keep every admitted member's identity and strongest lexical
+            // evidence before spending its pooled share on impl context.
+            let initial = if card.impl_range.is_some() {
+                std::iter::once(excerpt)
+                    .chain(&card.additional_anchors)
+                    .flat_map(|member| {
+                        [
+                            best_line(&lines, member.start, member.end, terms),
+                            member.start,
+                        ]
+                    })
+                    .collect()
+            } else {
+                vec![excerpt.start, focus]
+            };
+            let mut initial = initial.into_iter();
+            let mut context = card
+                .impl_range
+                .map(|_| start)
                 .into_iter()
                 .chain(focus + 1..=excerpt.end)
                 .chain((excerpt.start + 1..focus).rev())
-                .enumerate()
-            {
-                if delivered.contains(&line) {
-                    continue;
-                }
-                let mut candidate_lines = delivered.clone();
-                candidate_lines.push(line);
-                candidate_lines.sort_unstable();
-                let mut candidate = String::new();
-                for (index, &line) in candidate_lines.iter().enumerate() {
-                    if index > 0 && line > candidate_lines[index - 1] + 1 {
-                        candidate.push_str("[... source lines omitted ...]\n");
+                .chain(excerpt.end + 1..=end)
+                .chain((start + 1..excerpt.start).rev());
+            let mut fragments = String::new();
+            let mut fragment_lines = HashSet::new();
+            let mut source_bytes = 0;
+            for (required, candidates) in [
+                (true, &mut initial as &mut dyn Iterator<Item = u32>),
+                (false, &mut context as &mut dyn Iterator<Item = u32>),
+            ] {
+                for line in candidates {
+                    if delivered.contains(&line) || fragment_lines.contains(&line) {
+                        continue;
                     }
-                    let text = lines[(line - 1) as usize];
-                    let _ = writeln!(
-                        candidate,
-                        "{line}: {}",
-                        text.strip_suffix('\r').unwrap_or(text)
-                    );
+                    let mut candidate_lines = delivered.clone();
+                    candidate_lines.push(line);
+                    candidate_lines.sort_unstable();
+                    let candidate_bytes = candidate_lines
+                        .iter()
+                        .map(|&line| numbered_line_bytes(line, &lines))
+                        .sum::<usize>()
+                        + candidate_lines
+                            .windows(2)
+                            .filter(|pair| pair[1] > pair[0] + 1)
+                            .count()
+                            * "[... source lines omitted ...]\n".len()
+                        + fragments.len();
+                    if candidate_bytes <= allocation {
+                        delivered = candidate_lines;
+                        source_bytes = candidate_bytes;
+                    } else if !required && line != start {
+                        break;
+                    }
                 }
-                if candidate.len() <= allocation {
-                    preview = candidate;
-                    delivered = candidate_lines;
-                } else if index >= 2 {
-                    break;
+                if required {
+                    for member in std::iter::once(excerpt).chain(&card.additional_anchors) {
+                        if delivered.contains(&member.start) {
+                            continue;
+                        }
+                        let Some(node) = member.node_id.as_deref().and_then(|id| by_id.get(id))
+                        else {
+                            continue;
+                        };
+                        if let Some(fragment) = single_line_card_fragment(member, node, &lines)
+                            .filter(|fragment| source_bytes + fragment.len() <= allocation)
+                        {
+                            source_bytes += fragment.len();
+                            fragments.push_str(&fragment);
+                            fragment_lines.insert(member.start);
+                        }
+                    }
                 }
             }
-        }
-        if preview.is_empty() {
-            let fragment = excerpt
-                .node_id
-                .as_deref()
-                .and_then(|id| by_id.get(id))
-                .and_then(|node| single_line_card_fragment(excerpt, node, &lines))
-                .filter(|fragment| fragment.len() <= allocation);
-            if let Some(fragment) = fragment {
-                preview = fragment;
+            for (index, &line) in delivered.iter().enumerate() {
+                if index > 0 && line > delivered[index - 1] + 1 {
+                    preview.push_str("[... source lines omitted ...]\n");
+                }
+                let text = lines[(line - 1) as usize];
+                let _ = writeln!(
+                    preview,
+                    "{line}: {}",
+                    text.strip_suffix('\r').unwrap_or(text)
+                );
             }
+            preview.push_str(&fragments);
         }
         output.push_str(&frames[index].0);
         output.push_str(if preview.is_empty() {
@@ -1460,12 +1633,17 @@ fn render_cards(
         output.push_str(&preview);
     }
     output.push_str(&omission(retained));
-    output.push_str(CARD_FOOTER);
+    output.push_str(footer);
     assert!(
         output.len() <= budget,
         "card metadata/source accounting exceeded budget"
     );
     Ok(())
+}
+
+fn numbered_line_bytes(line: u32, lines: &[&str]) -> usize {
+    let text = lines[(line - 1) as usize];
+    (line.ilog10() + 1) as usize + 3 + text.strip_suffix('\r').unwrap_or(text).len()
 }
 
 #[cfg(test)]
@@ -2926,7 +3104,7 @@ mod tests {
     #[test]
     fn cards_spend_removed_metadata_bytes_on_complete_source() {
         let text = (1..=4)
-            .map(|line| format!("// needle {line}: {}\n", "x".repeat(415)))
+            .map(|line| format!("// needle {line}: {}\n", "x".repeat(412)))
             .collect::<String>();
         let sources = card_source("fixture.rs", &text);
         let node = card_node("owner", "needle", "fixture.rs", 1, 4);
@@ -3050,9 +3228,6 @@ mod tests {
         let terms = query_terms(&raw);
         assert_eq!(terms, vec![raw]);
         let mut response = "Root: fixture\nFreshness: fresh | generation 1\nScope: .\n".to_string();
-        card_query_echo(&mut response, &terms, 2000);
-        assert!(response.contains("term echo omitted by byte budget"));
-        assert!(response.contains("Freshness: fresh | generation 1"));
         let sources = card_source("fixture.rs", "identity\n");
         render_cards(
             &mut response,
@@ -3063,23 +3238,34 @@ mod tests {
             2000,
         )
         .unwrap();
+        assert_eq!(
+            response.matches("term echo omitted by byte budget").count(),
+            1
+        );
+        assert!(response.contains("Freshness: fresh | generation 1"));
         assert!(response.len() <= 2000);
 
         let mut fitting_echo = String::new();
-        card_query_echo(&mut fitting_echo, &["b".repeat(1600)], 2000);
-        assert!(fitting_echo.contains("Lexical candidates for:"));
         let path = "x".repeat(200);
         render_cards(
             &mut fitting_echo,
             card_sequence(vec![card_excerpt(&path, 1, 1, None)], vec![]),
             &[],
-            &[],
+            &["b".repeat(1600)],
             &card_source(&path, "identity\n"),
             2000,
         )
         .unwrap();
+        assert_eq!(fitting_echo.matches("Lexical candidates for:").count(), 1);
         assert!(fitting_echo.contains("1 additional cards omitted"));
         assert!(!fitting_echo.contains("## "));
+    }
+
+    #[test]
+    fn optional_echo_omission_note_cannot_crowd_out_mandatory_metadata() {
+        let mut output = "p".repeat(70);
+        card_query_echo(&mut output, &["needle".into()], 2000, 1900);
+        assert_eq!(output, "p".repeat(70));
     }
 
     #[test]
