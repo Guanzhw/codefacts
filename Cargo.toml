@@ -27,6 +27,8 @@ thiserror = "2"
 
 # SQLite
 rusqlite = { version = "0.32", features = ["bundled"] }
+# Pin the portable, safe Rust codec backend explicitly (not the movable default).
+flate2 = { version = "=1.1.10", default-features = false, features = ["miniz_oxide"] }
 
 # Tree-sitter (native — no WASM, 32 languages: 15 original + 17 Phase 11)
 tree-sitter = "0.25"
