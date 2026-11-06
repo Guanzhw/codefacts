@@ -15,6 +15,7 @@
 
 use std::collections::{HashMap, HashSet};
 use std::fs;
+use std::io::Read;
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::time::Instant;
@@ -180,23 +181,13 @@ impl<'a> IndexingPipeline<'a> {
                     .to_string_lossy()
                     .replace('\\', "/");
 
-                // Check file size
-                let metadata = match fs::metadata(abs_path) {
-                    Ok(m) => m,
-                    Err(_) => {
-                        skip_counts.unreadable.fetch_add(1, Ordering::Relaxed);
+                let source_text = match read_source_text(abs_path) {
+                    Ok(s) => s,
+                    Err(SourceReadFailure::TooLarge) => {
+                        skip_counts.too_large.fetch_add(1, Ordering::Relaxed);
                         return None;
                     }
-                };
-                if metadata.len() > MAX_FILE_SIZE {
-                    skip_counts.too_large.fetch_add(1, Ordering::Relaxed);
-                    return None;
-                }
-
-                // Read source text
-                let source_text = match fs::read_to_string(abs_path) {
-                    Ok(s) => s,
-                    Err(_) => {
+                    Err(SourceReadFailure::Unreadable) => {
                         skip_counts.unreadable.fetch_add(1, Ordering::Relaxed);
                         return None;
                     }
@@ -942,8 +933,48 @@ fn build_node_index<'a>(nodes: &[&'a CodeNode]) -> HashMap<String, Vec<&'a CodeN
 }
 
 // ---------------------------------------------------------------------------
-// SHA-256 hashing
+// Source reading and SHA-256 hashing
 // ---------------------------------------------------------------------------
+
+#[derive(Debug, PartialEq, Eq)]
+enum SourceReadFailure {
+    TooLarge,
+    Unreadable,
+}
+
+fn read_source_text(path: &Path) -> std::result::Result<String, SourceReadFailure> {
+    let file = match fs::File::open(path) {
+        Ok(file) => file,
+        Err(_) => {
+            // Preserve the size-first classification when metadata is visible
+            // but opening the file for data access fails.
+            return Err(
+                if fs::metadata(path).is_ok_and(|metadata| metadata.len() > MAX_FILE_SIZE) {
+                    SourceReadFailure::TooLarge
+                } else {
+                    SourceReadFailure::Unreadable
+                },
+            );
+        }
+    };
+    let size = file
+        .metadata()
+        .map_err(|_| SourceReadFailure::Unreadable)?
+        .len();
+    if size > MAX_FILE_SIZE {
+        return Err(SourceReadFailure::TooLarge);
+    }
+
+    let mut bytes = Vec::with_capacity(size as usize);
+    file.take(MAX_FILE_SIZE + 1)
+        .read_to_end(&mut bytes)
+        .map_err(|_| SourceReadFailure::Unreadable)?;
+    // A file that grows after metadata must never be hashed as a truncated prefix.
+    if bytes.len() as u64 > MAX_FILE_SIZE {
+        return Err(SourceReadFailure::TooLarge);
+    }
+    String::from_utf8(bytes).map_err(|_| SourceReadFailure::Unreadable)
+}
 
 fn sha256_hex(content: &str) -> String {
     let mut hasher = Sha256::new();
@@ -1013,6 +1044,57 @@ class Calculator:
         let hash = sha256_hex("hello world");
         assert_eq!(hash.len(), 64); // SHA-256 = 32 bytes = 64 hex chars
         assert!(hash.chars().all(|c| c.is_ascii_hexdigit()));
+    }
+
+    #[test]
+    fn source_read_preserves_unicode_and_accepts_exact_size_limit() {
+        let tmp = tempfile::tempdir().unwrap();
+        let path = tmp.path().join("source.ts");
+        let unicode = "export const greeting = '你好 🦀';\n";
+        fs::write(&path, unicode).unwrap();
+        assert_eq!(read_source_text(&path).unwrap(), unicode);
+
+        let mut exact = unicode.to_string();
+        exact.push_str(&" ".repeat(MAX_FILE_SIZE as usize - exact.len()));
+        fs::write(&path, &exact).unwrap();
+        assert_eq!(read_source_text(&path).unwrap(), exact);
+    }
+
+    #[test]
+    fn source_read_classifies_oversized_invalid_utf8_and_deleted_files() {
+        let tmp = tempfile::tempdir().unwrap();
+        let path = tmp.path().join("source.ts");
+        fs::write(&path, vec![0xff; (MAX_FILE_SIZE + 1) as usize]).unwrap();
+        assert_eq!(read_source_text(&path), Err(SourceReadFailure::TooLarge));
+
+        fs::write(&path, [0xff]).unwrap();
+        assert_eq!(read_source_text(&path), Err(SourceReadFailure::Unreadable));
+
+        fs::remove_file(&path).unwrap();
+        assert_eq!(read_source_text(&path), Err(SourceReadFailure::Unreadable));
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn source_read_preserves_size_priority_when_data_open_is_denied() {
+        use std::os::windows::fs::OpenOptionsExt;
+
+        let tmp = tempfile::tempdir().unwrap();
+        let path = tmp.path().join("source.ts");
+        let locked = fs::OpenOptions::new()
+            .read(true)
+            .write(true)
+            .create_new(true)
+            .share_mode(0)
+            .open(&path)
+            .unwrap();
+        assert!(fs::File::open(&path).is_err());
+        assert_eq!(fs::metadata(&path).unwrap().len(), 0);
+        assert_eq!(read_source_text(&path), Err(SourceReadFailure::Unreadable));
+
+        locked.set_len(MAX_FILE_SIZE + 1).unwrap();
+        assert_eq!(fs::metadata(&path).unwrap().len(), MAX_FILE_SIZE + 1);
+        assert_eq!(read_source_text(&path), Err(SourceReadFailure::TooLarge));
     }
 
     #[test]
