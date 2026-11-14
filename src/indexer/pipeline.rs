@@ -883,6 +883,7 @@ fn call_candidates<'a>(
 const ALWAYS_SKIP_DIRS: &[&str] = &[
     "node_modules",
     ".git",
+    ".codefacts",
     "vendor",
     "third_party",
     "__pycache__",

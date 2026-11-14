@@ -34,8 +34,9 @@ The intended contract is:
   Python, an embedding API, a model download, a daemon, or an account.
 - Do not silently alter the user's repository. No default hooks, generated
   CLAUDE.md/AGENTS.md files, Git hooks, watchers, background servers, or
-  prompt injection. Index state belongs outside the repository unless the user
-  explicitly chooses otherwise.
+  prompt injection. Default index state belongs in <repository_root>/.codefacts/;
+  exclude that directory from source indexing and version control. Preserve
+  explicit --state and CODEFACTS_STATE_DIR storage overrides.
 - Windows is a first-class target, alongside macOS and Linux. Installation
   must not require users to install Rust or compile a CLI themselves.
 

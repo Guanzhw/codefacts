@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Store default indexes in `<repository_root>/.codefacts/index.sqlite` for CLI
+  and MCP queries, and always exclude `.codefacts/` from source indexing.
+  Preserve `--state` and `CODEFACTS_STATE_DIR` overrides; existing global
+  indexes are left untouched. See README storage and migration guidance. (#43)
+
 ## 0.4.0 — 2026-11-05
 
 - Rust impl methods expose optional `rust_impl.owner_ref` in symbol facts.

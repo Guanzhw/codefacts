@@ -50,7 +50,7 @@ pub struct CodeFacts {
     lsp: LspManager,
 }
 
-/// Lazily opens one independent, external fact store for each repository that
+/// Lazily opens one independent fact store for each repository that
 /// an MCP request explicitly selects. A server may still have one configured
 /// default root for backwards-compatible project-local configuration.
 ///
@@ -415,12 +415,12 @@ struct SearchFilters<'a> {
 }
 
 impl CodeFacts {
-    /// Open an external SQLite state file for `root`.
+    /// Open a SQLite state file for `root`.
     pub fn open(root: impl AsRef<Path>, database_path: impl AsRef<Path>) -> Result<Self> {
         Self::open_with_lsp(root, database_path, LspMode::Auto)
     }
 
-    /// Open an external SQLite state file and choose whether optional,
+    /// Open a SQLite state file and choose whether optional,
     /// user-installed LSP enrichment is permitted for this process.
     pub fn open_with_lsp(
         root: impl AsRef<Path>,
@@ -1732,7 +1732,7 @@ impl CodeFactsRegistry {
     ) -> Result<Self> {
         if default_root.is_none() && default_state_path.is_some() {
             return Err(CodeFactsError::Other(
-                "--state requires --root; dynamic project roots each use their own external default state path"
+                "--state requires --root; dynamic project roots each use their own default state path"
                     .into(),
             ));
         }
@@ -1753,7 +1753,7 @@ impl CodeFactsRegistry {
     }
 
     /// Return the project selected for one tool call, opening its independent
-    /// external SQLite store on first use.
+    /// SQLite store on first use.
     pub fn project(&mut self, repository_root: Option<&str>) -> Result<&CodeFacts> {
         let root = match repository_root {
             Some(repository_root) => canonical_repository_root(Path::new(repository_root))?,
@@ -1790,17 +1790,11 @@ fn canonical_repository_root(root: &Path) -> Result<PathBuf> {
 }
 
 pub fn default_database_path(root: &Path) -> PathBuf {
-    let state_dir = std::env::var_os("CODEFACTS_STATE_DIR")
-        .map(PathBuf::from)
-        .or_else(|| {
-            std::env::var_os("LOCALAPPDATA").map(|path| PathBuf::from(path).join("CodeFacts"))
-        })
-        .or_else(|| {
-            std::env::var_os("HOME").map(|path| PathBuf::from(path).join(".local/share/codefacts"))
-        })
-        .unwrap_or_else(|| std::env::temp_dir().join("codefacts"));
-    let digest = Sha256::digest(root.to_string_lossy().as_bytes());
-    state_dir.join(format!("{}.sqlite", hex::encode(&digest[..12])))
+    if let Some(state_dir) = std::env::var_os("CODEFACTS_STATE_DIR") {
+        let digest = Sha256::digest(root.to_string_lossy().as_bytes());
+        return PathBuf::from(state_dir).join(format!("{}.sqlite", hex::encode(&digest[..12])));
+    }
+    root.join(".codefacts").join("index.sqlite")
 }
 
 enum SymbolResolution {

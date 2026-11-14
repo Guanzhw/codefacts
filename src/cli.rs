@@ -9,7 +9,7 @@ use std::path::PathBuf;
 
 const USAGE: &str = "Usage:
   codefacts mcp [--tools <default|all|explore>] [--root <repository>]
-    [--state <external-sqlite-path>] [--lsp <auto|off>]
+    [--state <sqlite-path>] [--lsp <auto|off>]
   codefacts map [options]
   codefacts search <identifier-or-terms> [options]
   codefacts outline <file> [options]
@@ -24,7 +24,7 @@ const USAGE: &str = "Usage:
   codefacts impact <symbol-or-id> [--file <file>] [--max-depth <1..10>] [--limit <1..50>]
 
 Query options: --root <repository> (default current directory),
-  --state <external-sqlite-path>, --lsp <auto|off>,
+  --state <sqlite-path>, --lsp <auto|off>,
   --format <markdown|compact|full> (default markdown; explore is text-only),
   --limit <1..50>, --cursor <cursor>.
 Search: --kind <kind>, --scope <top_level|all>, --detail <facts|context>,
@@ -32,7 +32,8 @@ Search: --kind <kind>, --scope <top_level|all>, --detail <facts|context>,
 Outline: --kind <kind>, --scope <top_level|all>.
 MCP defaults to explore, expand and impact. --tools all enables all seven workflows;
 --tools explore exposes only explore. Direct queries retain every workflow.
-Index state is stored outside the repository by default.";
+Index state defaults to <repository_root>/.codefacts/index.sqlite.
+CODEFACTS_STATE_DIR overrides the default parent directory; --state selects a database.";
 
 pub fn run(arguments: impl IntoIterator<Item = OsString>) -> Result<(), String> {
     let mut args = arguments.into_iter();
@@ -121,7 +122,9 @@ pub fn run(arguments: impl IntoIterator<Item = OsString>) -> Result<(), String> 
             return Err("mcp does not accept positional arguments".into());
         }
         if root.is_none() && state.is_some() {
-            return Err("--state requires --root; dynamic project roots use independent external state files".into());
+            return Err(
+                "--state requires --root; dynamic project roots use independent state files".into(),
+            );
         }
         let mut projects = CodeFactsRegistry::open_with_lsp(root, state, lsp)
             .map_err(|error| error.to_string())?;
