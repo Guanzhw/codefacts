@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.4.1 — 2026-11-15
 
 - Store default indexes in `<repository_root>/.codefacts/index.sqlite` for CLI
   and MCP queries, and always exclude `.codefacts/` from source indexing.
