@@ -386,6 +386,15 @@ fn stdio_exploration_returns_budgeted_verified_source_and_rejects_invalid_argume
 
 #[test]
 fn stdio_server_indexes_and_queries_multiple_explicit_project_roots() {
+    check_multiple_project_roots(false);
+}
+
+#[test]
+fn stdio_server_indexes_multiple_project_roots_with_state_override() {
+    check_multiple_project_roots(true);
+}
+
+fn check_multiple_project_roots(override_state: bool) {
     let project_a = tempdir().expect("first project");
     fs::create_dir_all(project_a.path().join("src")).expect("first source directory");
     fs::write(project_a.path().join("src/lib.rs"), "pub fn alpha() {}\n")
@@ -402,9 +411,14 @@ fn stdio_server_indexes_and_queries_multiple_explicit_project_roots() {
 
     let project_a_root = project_a.path().to_str().expect("UTF-8 first project");
     let project_b_root = project_b.path().to_str().expect("UTF-8 second project");
-    let mut child = Command::new(env!("CARGO_BIN_EXE_codefacts"))
-        .args(["mcp", "--tools", "all"])
-        .env("CODEFACTS_STATE_DIR", state_dir.path())
+    let mut command = Command::new(env!("CARGO_BIN_EXE_codefacts"));
+    command.args(["mcp", "--tools", "all", "--lsp", "off"]);
+    if override_state {
+        command.env("CODEFACTS_STATE_DIR", state_dir.path());
+    } else {
+        command.env_remove("CODEFACTS_STATE_DIR");
+    }
+    let mut child = command
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
@@ -445,6 +459,20 @@ fn stdio_server_indexes_and_queries_multiple_explicit_project_roots() {
         .map(|line| serde_json::from_str::<Value>(line).expect("JSON-RPC response"))
         .collect::<Vec<_>>();
     assert_eq!(responses.len(), 14);
+    for project in [&project_a, &project_b] {
+        assert_eq!(
+            project.path().join(".codefacts/index.sqlite").is_file(),
+            !override_state
+        );
+    }
+    assert_eq!(
+        fs::read_dir(state_dir.path())
+            .unwrap()
+            .filter_map(Result::ok)
+            .filter(|entry| entry.path().extension().is_some_and(|ext| ext == "sqlite"))
+            .count(),
+        if override_state { 2 } else { 0 }
+    );
 
     let tools = responses[1]["result"]["tools"]
         .as_array()

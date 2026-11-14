@@ -64,7 +64,7 @@ Direct queries default to the current directory and readable Markdown; use
 `--format compact` or `--format full` for JSON. `explore` returns bounded text.
 `node` uses the existing `expand` workflow; `callers` and `callees` select its
 corresponding paged section. `map`, `outline`, `expand`, and `path` also work
-directly. Index state remains outside the repository by default. Exact IDs or
+directly. Index state defaults to `<repository_root>/.codefacts/index.sqlite`. Exact IDs or
 `--file` disambiguate same-name symbols; a name with multiple matches returns
 the candidates rather than choosing an implementation. Run any command with
 `--help` for its options.
@@ -95,7 +95,7 @@ calls as well as omitted from discovery.
 Every result is bounded, includes source/hash evidence, and refreshes the incremental index before answering. Symbols and relationships include source spans. Exact-fact and impact responses have a `freshness` object with the canonical `repository_root` and fact-store `generation`; exploration reports these in its text header. `freshness.status` is `partial` when a source file could not be read, parsed, extracted, or accepted because it exceeded the indexing limit; the accompanying `files_failed` and reason counters make that gap explicit. JSON modes return serialized JSON `TextContent` and an equivalent `structuredContent` object. Opt-in Markdown and exploration return one text body. A `no_static_path` result never claims that runtime execution is unreachable.
 
 All seven tools accept an optional `repository_root` project directory. It
-selects (and, on first use, indexes) that project's independent external SQLite
+selects (and, on first use, indexes) that project's independent SQLite
 fact store for the current call. A server started with `--root` uses that root
 when the field is omitted; a rootless server requires `repository_root` on
 every call and never guesses from its working directory. File paths such as
@@ -456,7 +456,7 @@ codex mcp add codefacts -- cmd /d /s /c npx --yes --prefer-online codefacts@late
 Then pass the absolute target directory in every tool call, for example
 `explore({"repository_root":"D:\\WorkSpace\\OpenSession"})` or
 `expand({"repository_root":"D:\\WorkSpace\\OpenSession","symbol":"ProviderAdapter"})`.
-The first request for a root builds or refreshes only that project's external
+The first request for a root builds or refreshes only that project's local
 index; subsequent requests reuse it for the lifetime of the MCP process.
 CodeFacts does not infer a project from the server working directory. The MCP
 result's `freshness.repository_root` remains the final evidence of scope; if it
@@ -473,7 +473,7 @@ artifact names, checksum chain, npm provenance, and release setup are in
 
 ## Run as an MCP server
 
-The server uses newline-delimited JSON-RPC over stdio. Its SQLite state is external to the indexed repository by default.
+The server uses newline-delimited JSON-RPC over stdio. Its SQLite state defaults to `<repository_root>/.codefacts/index.sqlite`.
 
 ```text
 codefacts mcp --root D:\WorkSpace\your-repository
@@ -500,7 +500,7 @@ absolute `repository_root`, such as:
 {"repository_root":"D:\\WorkSpace\\your-repository","query":"Handler"}
 ```
 
-Use `--state` to select an explicit external database location for the default
+Use `--state` to select an explicit database location for the default
 `--root` project:
 
 ```text
@@ -508,8 +508,38 @@ codefacts mcp --root D:\WorkSpace\your-repository --state D:\CodeFactsState\your
 ```
 
 `--state` intentionally requires `--root`; dynamically selected projects use
-separate default external state files, keyed by their canonical root. Set
-`CODEFACTS_STATE_DIR` to choose their parent directory.
+separate project-local state files by default.
+
+### Index storage and migration
+
+The default database is `<repository_root>/.codefacts/index.sqlite` for CLI
+commands and MCP requests, including rootless requests with `repository_root`.
+SQLite WAL and SHM sidecars stay beside the database. Each project has an
+independent index, so a project on D: stores its default index on D: rather
+than in Windows user storage.
+
+The `.codefacts/` directory is always excluded from source indexing. Add
+`.codefacts/` to your project's `.gitignore` (or `.git/info/exclude` for a
+local-only exclusion); CodeFacts does not edit these files automatically.
+
+Storage precedence is `--state <database-path>`, then `CODEFACTS_STATE_DIR`,
+then the project-local default. The environment override retains the existing
+canonical-root-hashed database filenames, allowing multiple projects to share
+one state directory. An explicit `--state` applies only to the configured root.
+
+Older versions stored indexes in `%LOCALAPPDATA%\CodeFacts` when
+`LOCALAPPDATA` was set, otherwise `$HOME/.local/share/codefacts`, or
+`<system-temp>/codefacts` as a fallback. Existing indexes are never moved or
+deleted automatically. The next query builds a new project-local index.
+To keep using the old indexes, set `CODEFACTS_STATE_DIR` to their old directory,
+or use `--state` for a particular database.
+
+Indexes are derived data and can be rebuilt from source. To reclaim old disk
+space, stop all CodeFacts processes using those indexes, then remove the
+unneeded database together with its matching `-wal` and `-shm` sidecars.
+Likewise, after stopping processes using a project, you can remove its
+`.codefacts/` directory; the next query recreates it. Never remove or copy
+individual SQLite files while a process is using them.
 
 ### Optional LSP enrichment
 
