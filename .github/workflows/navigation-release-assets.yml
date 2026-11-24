@@ -1,0 +1,18 @@
+name: Attach verified CodeFacts navigation release files
+on:
+  push:
+    branches: [release-assets/navigation-v0.1.0]
+permissions:
+  contents: write
+jobs:
+  attach:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify and upload the navigation release
+        working-directory: benchmarks/navigation/dist
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          sha256sum --check SHA256SUMS
+          gh release upload navigation-v0.1.0 codefacts-navigation-0.1.0-linux-x86_64.tar.gz RESULTS.zh-CN.md evaluation.json SHA256SUMS
