@@ -69,6 +69,21 @@ directly. Index state defaults to `<repository_root>/.codefacts/index.sqlite`. E
 the candidates rather than choosing an implementation. Run any command with
 `--help` for its options.
 
+### Select source for an observed behavior
+
+```sh
+codefacts select --root /path/to/repository --query calculate_total \
+  --symptom "Fractional quantities disappear when an order is amended."
+```
+
+`select` starts with a symbol or search term and uses the symptom to choose up to
+two source excerpts. The text output shows the search menu and numbered source
+lines within a combined budget of 4,200 UTF-8 bytes. Use `--format json` to get
+the trace, displayed byte count and evidence hash. This CLI command uses a
+temporary index. The default policy is `baseline`. Use `--policy candidate`
+for the experimental `r07-cross-2` policy. Both scored 15/28 on the held-out
+project comparison. [Evaluation report](https://github.com/Guanzhw/codefacts/releases/download/navigation-v0.1.0/RESULTS.zh-CN.md)
+
 ## MCP surface
 
 MCP defaults to three read-only workflows: `explore` for source discovery and

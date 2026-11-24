@@ -1,0 +1,61 @@
+{
+  "gate": "top-compact",
+  "then": {
+    "mode": "expanded-explore",
+    "first_weights": {
+      "implementation": 5,
+      "match": 4,
+      "declaration": 3,
+      "test": -2,
+      "example": -3,
+      "documentation": -3
+    },
+    "second_weights": {
+      "match": 6,
+      "declaration": 4,
+      "call": 4,
+      "implementation": 3,
+      "symptom": 2,
+      "focused": 1,
+      "documentation": -3
+    },
+    "second_pool": "new-first",
+    "first_offset": "default",
+    "second_offset": "default",
+    "followup": "ranked",
+    "followup_weights": {
+      "call": 8,
+      "qualified": 2,
+      "declaration": -4,
+      "symptom": 4,
+      "frequency": -1,
+      "specificity": 1
+    }
+  },
+  "otherwise": {
+    "mode": "expanded-symbol",
+    "first_weights": {
+      "implementation": 5,
+      "match": 4,
+      "declaration": 3,
+      "test": -2,
+      "example": -3,
+      "documentation": -3
+    },
+    "second_weights": {
+      "test": 7,
+      "symptom": 6,
+      "call": 5,
+      "match": 2,
+      "declaration": 2,
+      "implementation": 1,
+      "novel": 1,
+      "documentation": -4
+    },
+    "second_pool": "initial-first",
+    "first_offset": "default",
+    "second_offset": "default",
+    "followup": "off",
+    "followup_weights": {}
+  }
+}
