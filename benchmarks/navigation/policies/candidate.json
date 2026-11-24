@@ -1,0 +1,109 @@
+{
+  "gate": "top-wide",
+  "then": {
+    "first_weights": {},
+    "second_weights": {
+      "return_call": 14,
+      "body_call": 4,
+      "implementation": 7,
+      "declaration": 5,
+      "novel": 2,
+      "boilerplate": -13,
+      "source_overlap": -8
+    },
+    "second_pool": "all",
+    "first_offset": "middle",
+    "second_offset": "default",
+    "second_strategy": "constructor-context",
+    "mode": "expanded-explore",
+    "followup": "ranked",
+    "followup_weights": {
+      "call": 4,
+      "qualified": 1,
+      "symptom": 12,
+      "specificity": 5,
+      "frequency": -3,
+      "value_flow": 20
+    }
+  },
+  "otherwise": {
+    "gate": "top-compact",
+    "then": {
+      "mode": "expanded-explore",
+      "first_weights": {
+        "implementation": 6,
+        "match": 5,
+        "declaration": 3,
+        "enclosing_symptom": 10,
+        "boilerplate": -11,
+        "query_suffix": 9
+      },
+      "second_weights": {
+        "match": 13,
+        "symptom": 5,
+        "test": 4,
+        "implementation": 4,
+        "documentation": -3,
+        "callable_definition": 20,
+        "module_affinity": 6,
+        "boilerplate": -7,
+        "source_overlap": -10,
+        "value_flow": 13,
+        "body_call": 5
+      },
+      "second_pool": "new-first",
+      "first_offset": "body-end",
+      "second_offset": "default",
+      "followup": "ranked",
+      "followup_weights": {
+        "call": 4,
+        "qualified": 1,
+        "symptom": 12,
+        "specificity": 5,
+        "frequency": -3,
+        "value_flow": 20
+      },
+      "second_strategy": "constructor-context"
+    },
+    "otherwise": {
+      "mode": "expanded-explore",
+      "second_weights": {
+        "test": 7,
+        "symptom": 7,
+        "call": 5,
+        "match": 20,
+        "declaration": 2,
+        "implementation": 1,
+        "novel": 1,
+        "documentation": -4,
+        "callable_definition": 16,
+        "module_affinity": 2,
+        "value_flow": 10,
+        "body_call": 5,
+        "source_overlap": -10,
+        "search": 10
+      },
+      "second_pool": "all",
+      "second_offset": "tail-context",
+      "followup": "argument-match",
+      "followup_weights": {
+        "call": 8,
+        "qualified": 11,
+        "declaration": -4,
+        "symptom": 3,
+        "specificity": 2,
+        "value_flow": 20
+      },
+      "second_strategy": "constructor-context",
+      "first_weights": {
+        "implementation": 5,
+        "match": 4,
+        "declaration": 3,
+        "test": -2,
+        "example": -3,
+        "documentation": -3
+      },
+      "first_offset": "default"
+    }
+  }
+}

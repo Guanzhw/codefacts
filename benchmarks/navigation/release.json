@@ -1,0 +1,12 @@
+{
+  "version": "0.1.0",
+  "default": "baseline",
+  "policies_sha256": {
+    "baseline": "934ed0d1285f33a39e2fad9a82c0c1a17d9c675f24be23ac349215267cb65c7b",
+    "candidate": "7408567d91103cd521105837c7acb6d7331b8d345f8f1a151040ecd4601788d6"
+  },
+  "max_source_reads": 2,
+  "evidence_budget_bytes": 4200,
+  "native_version": "0.4.1",
+  "native_sha256": "8cdee78cbdab10501d467836c04cb1f9d7b9bbe8608fb79bb6c10eda9779bf5b"
+}

@@ -1,0 +1,366 @@
+{
+  "winner": "r07-cross-2",
+  "overall_leader": "r07-cross-2",
+  "default": "baseline",
+  "freeze_sha256": "f805ec7773bebff02aacd65554ae733d0e0394c1f0f005694200d28c0b1be0d8",
+  "rounds": [
+    {
+      "round": 0,
+      "top": "r24-local-3",
+      "correct": 23,
+      "leader": "r24-local-3"
+    },
+    {
+      "round": 1,
+      "top": "r01-cross-2",
+      "correct": 25,
+      "leader": "r01-cross-2"
+    },
+    {
+      "round": 2,
+      "top": "r02-diverse-1",
+      "correct": 25,
+      "leader": "r01-cross-2"
+    },
+    {
+      "round": 3,
+      "top": "r03-local-2",
+      "correct": 25,
+      "leader": "r01-cross-2"
+    },
+    {
+      "round": 4,
+      "top": "r04-diverse-3",
+      "correct": 25,
+      "leader": "r01-cross-2"
+    },
+    {
+      "round": 5,
+      "top": "r05-local-1",
+      "correct": 25,
+      "leader": "r01-cross-2"
+    },
+    {
+      "round": 6,
+      "top": "r06-local-2",
+      "correct": 25,
+      "leader": "r01-cross-2"
+    },
+    {
+      "round": 7,
+      "top": "r07-cross-2",
+      "correct": 25,
+      "leader": "r07-cross-2"
+    },
+    {
+      "round": 8,
+      "top": "r08-local-3",
+      "correct": 25,
+      "leader": "r07-cross-2"
+    },
+    {
+      "round": 9,
+      "top": "r09-local-3",
+      "correct": 25,
+      "leader": "r07-cross-2"
+    },
+    {
+      "round": 10,
+      "top": "r10-local-1",
+      "correct": 25,
+      "leader": "r07-cross-2"
+    }
+  ],
+  "development": {
+    "baseline": {
+      "all": {
+        "n": 29,
+        "complete": 14,
+        "A": 24,
+        "M": 22,
+        "S": 14,
+        "false_positive": 0,
+        "witness_complete": 14,
+        "witness_recovered": 24,
+        "witness_total": 53
+      },
+      "prior": {
+        "n": 17,
+        "complete": 7,
+        "A": 13,
+        "M": 11,
+        "S": 7,
+        "false_positive": 0,
+        "witness_complete": 7,
+        "witness_recovered": 14,
+        "witness_total": 37
+      },
+      "new": {
+        "n": 12,
+        "complete": 7,
+        "A": 11,
+        "M": 11,
+        "S": 7,
+        "false_positive": 0,
+        "witness_complete": 7,
+        "witness_recovered": 10,
+        "witness_total": 16
+      }
+    },
+    "r24-local-3": {
+      "all": {
+        "n": 29,
+        "complete": 23,
+        "A": 26,
+        "M": 25,
+        "S": 23,
+        "false_positive": 0,
+        "witness_complete": 21,
+        "witness_recovered": 40,
+        "witness_total": 53
+      },
+      "prior": {
+        "n": 17,
+        "complete": 17,
+        "A": 17,
+        "M": 17,
+        "S": 17,
+        "false_positive": 0,
+        "witness_complete": 16,
+        "witness_recovered": 33,
+        "witness_total": 37
+      },
+      "new": {
+        "n": 12,
+        "complete": 6,
+        "A": 9,
+        "M": 8,
+        "S": 6,
+        "false_positive": 0,
+        "witness_complete": 5,
+        "witness_recovered": 7,
+        "witness_total": 16
+      }
+    },
+    "r07-cross-2": {
+      "all": {
+        "n": 29,
+        "complete": 25,
+        "A": 29,
+        "M": 29,
+        "S": 25,
+        "false_positive": 0,
+        "witness_complete": 23,
+        "witness_recovered": 42,
+        "witness_total": 53
+      },
+      "prior": {
+        "n": 17,
+        "complete": 16,
+        "A": 17,
+        "M": 17,
+        "S": 16,
+        "false_positive": 0,
+        "witness_complete": 15,
+        "witness_recovered": 31,
+        "witness_total": 37
+      },
+      "new": {
+        "n": 12,
+        "complete": 9,
+        "A": 12,
+        "M": 12,
+        "S": 9,
+        "false_positive": 0,
+        "witness_complete": 8,
+        "witness_recovered": 11,
+        "witness_total": 16
+      }
+    }
+  },
+  "case_runs": 2610,
+  "unique_dev_streams": 269,
+  "distinct_candidate_evidence_sets": 62,
+  "results": {
+    "validation": {
+      "grader": {
+        "size": 28,
+        "scores": {
+          "baseline": 15,
+          "champion": 15
+        },
+        "paired": {
+          "gain": 4,
+          "loss": 4,
+          "tie": 20,
+          "two_sided_exact_sign_p": 1.0
+        },
+        "new_false_positives": 0,
+        "baseline_fp": 0,
+        "candidate_fp": 0,
+        "fault_gains": 3,
+        "fault_losses": 4,
+        "promote": false,
+        "navigation_median_s": {
+          "baseline": 0.197,
+          "champion": 0.264
+        },
+        "average_bytes": {
+          "baseline": 2725.2,
+          "champion": 2741.2
+        },
+        "sensitivity": {
+          "baseline": 13,
+          "champion": 12
+        }
+      },
+      "grader-independent": {
+        "size": 28,
+        "scores": {
+          "baseline": 15,
+          "champion": 15
+        },
+        "paired": {
+          "gain": 4,
+          "loss": 4,
+          "tie": 20,
+          "two_sided_exact_sign_p": 1.0
+        },
+        "new_false_positives": 0,
+        "baseline_fp": 0,
+        "candidate_fp": 0,
+        "fault_gains": 4,
+        "fault_losses": 4,
+        "promote": false,
+        "navigation_median_s": {
+          "baseline": 0.197,
+          "champion": 0.264
+        },
+        "average_bytes": {
+          "baseline": 2725.2,
+          "champion": 2741.2
+        },
+        "sensitivity": {
+          "baseline": 14,
+          "champion": 12
+        }
+      }
+    },
+    "regression-v2": {
+      "grader": {
+        "size": 6,
+        "scores": {
+          "baseline": 4,
+          "champion": 4
+        },
+        "paired": {
+          "gain": 1,
+          "loss": 1,
+          "tie": 4,
+          "two_sided_exact_sign_p": 1.0
+        },
+        "new_false_positives": 0,
+        "baseline_fp": 0,
+        "candidate_fp": 0,
+        "fault_gains": 1,
+        "fault_losses": 1,
+        "promote": false,
+        "navigation_median_s": {
+          "baseline": 0.088,
+          "champion": 0.086
+        },
+        "average_bytes": {
+          "baseline": 2298.5,
+          "champion": 2205.0
+        },
+        "sensitivity": null
+      },
+      "grader-independent": {
+        "size": 6,
+        "scores": {
+          "baseline": 5,
+          "champion": 5
+        },
+        "paired": {
+          "gain": 1,
+          "loss": 1,
+          "tie": 4,
+          "two_sided_exact_sign_p": 1.0
+        },
+        "new_false_positives": 0,
+        "baseline_fp": 0,
+        "candidate_fp": 0,
+        "fault_gains": 1,
+        "fault_losses": 1,
+        "promote": false,
+        "navigation_median_s": {
+          "baseline": 0.088,
+          "champion": 0.086
+        },
+        "average_bytes": {
+          "baseline": 2298.5,
+          "champion": 2205.0
+        },
+        "sensitivity": null
+      }
+    },
+    "regression-v1": {
+      "grader": {
+        "size": 8,
+        "scores": {
+          "baseline": 2,
+          "champion": 2
+        },
+        "paired": {
+          "gain": 0,
+          "loss": 0,
+          "tie": 8,
+          "two_sided_exact_sign_p": 1.0
+        },
+        "new_false_positives": 0,
+        "baseline_fp": 0,
+        "candidate_fp": 0,
+        "fault_gains": 0,
+        "fault_losses": 0,
+        "promote": false,
+        "navigation_median_s": {
+          "baseline": 0.338,
+          "champion": 0.412
+        },
+        "average_bytes": {
+          "baseline": 3275.1,
+          "champion": 3533.9
+        },
+        "sensitivity": null
+      },
+      "grader-independent": {
+        "size": 8,
+        "scores": {
+          "baseline": 2,
+          "champion": 2
+        },
+        "paired": {
+          "gain": 0,
+          "loss": 0,
+          "tie": 8,
+          "two_sided_exact_sign_p": 1.0
+        },
+        "new_false_positives": 0,
+        "baseline_fp": 0,
+        "candidate_fp": 0,
+        "fault_gains": 0,
+        "fault_losses": 0,
+        "promote": false,
+        "navigation_median_s": {
+          "baseline": 0.338,
+          "champion": 0.412
+        },
+        "average_bytes": {
+          "baseline": 3275.1,
+          "champion": 3533.9
+        },
+        "sensitivity": null
+      }
+    }
+  }
+}
