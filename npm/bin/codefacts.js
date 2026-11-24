@@ -14,8 +14,6 @@ Usage:
   codefacts node <symbol> [--file <file>] [--root <repository>]
   codefacts callers|callees <symbol> [--file <file>] [--root <repository>]
   codefacts explore [code-terms] [--root <repository>]
-  codefacts select --query <lookup> --symptom <observed-behavior> [--root <repository>]
-    [--policy <baseline|candidate>] [--format <text|json>]
   codefacts impact <symbol> [--max-depth <1..10>] [--root <repository>]
   codefacts map|search|outline|expand|path ... [--root <repository>]
 

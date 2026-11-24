@@ -12,7 +12,6 @@ pub mod lsp;
 pub mod mcp;
 mod presentation;
 pub mod resolution;
-mod selection;
 pub mod service;
 pub mod types;
 

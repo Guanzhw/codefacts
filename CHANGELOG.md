@@ -1,14 +1,5 @@
 # Changelog
 
-## 0.5.0 — 2026-11-24
-
-- Add the native `codefacts select` CLI command for choosing up to two source
-  excerpts from a symptom and an initial search term. Its 4,200-byte evidence
-  budget includes the menus and displayed source. Text and JSON output are available.
-- Ship the baseline as the default and expose the ten-round development winner
-  with `--policy candidate`. Both policies scored 15/28 in the paired evaluation
-  on previously held-out projects.
-
 ## 0.4.1 — 2026-11-15
 
 - Store default indexes in `<repository_root>/.codefacts/index.sqlite` for CLI
