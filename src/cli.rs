@@ -21,6 +21,8 @@ const USAGE: &str = "Usage:
   codefacts explore [code-terms] [--path-prefix <path>] [--max-bytes <2000..32000>]
   codefacts explore --file <file> [--start-line <line>] [--end-line <line>]
   codefacts explore --reads '<JSON array of file_path/start_line/end_line ranges>'
+  codefacts select --query <lookup> --symptom <observed-behavior> [--root <repository>]
+    [--policy <baseline|candidate>] [--format <text|json>]
   codefacts impact <symbol-or-id> [--file <file>] [--max-depth <1..10>] [--limit <1..50>]
 
 Query options: --root <repository> (default current directory),
@@ -48,7 +50,8 @@ pub fn run(arguments: impl IntoIterator<Item = OsString>) -> Result<(), String> 
         return Ok(());
     }
     let tool = match command {
-        "mcp" | "map" | "search" | "outline" | "expand" | "path" | "explore" | "impact" => command,
+        "mcp" | "map" | "search" | "outline" | "expand" | "path" | "explore" | "impact"
+        | "select" => command,
         "node" | "callers" | "callees" => "expand",
         _ => return Err(format!("unknown command '{command}'\n{USAGE}")),
     };
@@ -79,8 +82,8 @@ pub fn run(arguments: impl IntoIterator<Item = OsString>) -> Result<(), String> 
         })?;
         match argument {
             "--root" => root = Some(PathBuf::from(value)),
-            "--state" => state = Some(PathBuf::from(value)),
-            "--lsp" => {
+            "--state" if tool != "select" => state = Some(PathBuf::from(value)),
+            "--lsp" if tool != "select" => {
                 lsp = LspMode::parse(&value.to_string_lossy())
                     .ok_or("--lsp must be 'auto' or 'off'")?;
             }
@@ -130,7 +133,36 @@ pub fn run(arguments: impl IntoIterator<Item = OsString>) -> Result<(), String> 
             .map_err(|error| error.to_string())?;
         return mcp::serve_with_tools(&mut projects, tools).map_err(|error| error.to_string());
     }
+    let root = root
+        .map_or_else(std::env::current_dir, Ok)
+        .map_err(|error| error.to_string())?;
     match tool {
+        "select" if positionals.is_empty() => {
+            let option = |key: &str| fields.get(key).and_then(Value::as_str);
+            let query = option("query").ok_or("select requires --query")?;
+            let symptom = option("symptom").ok_or("select requires --symptom")?;
+            let format = option("format").unwrap_or("text");
+            if !matches!(format, "json" | "text") {
+                return Err("select --format must be 'text' or 'json'".into());
+            }
+            let result = crate::selection::select(
+                &root,
+                query,
+                symptom,
+                option("policy").unwrap_or("baseline"),
+            )?;
+            if format == "json" {
+                println!("{result}");
+            } else {
+                print!(
+                    "{}",
+                    result["evidence"]
+                        .as_str()
+                        .ok_or("missing selection evidence")?
+                );
+            }
+            return Ok(());
+        }
         "search" if !positionals.is_empty() => {
             fields.insert("query".into(), Value::from(positionals.join(" ")));
         }
@@ -180,9 +212,6 @@ pub fn run(arguments: impl IntoIterator<Item = OsString>) -> Result<(), String> 
             .entry("format")
             .or_insert_with(|| Value::from("markdown"));
     }
-    let root = root
-        .map_or_else(std::env::current_dir, Ok)
-        .map_err(|error| error.to_string())?;
     let mut projects = CodeFactsRegistry::open_with_lsp(Some(root), state, lsp)
         .map_err(|error| error.to_string())?;
     let result =
@@ -198,6 +227,7 @@ pub fn run(arguments: impl IntoIterator<Item = OsString>) -> Result<(), String> 
 
 fn allowed_options(tool: &str) -> &'static [&'static str] {
     match tool {
+        "select" => &["query", "symptom", "policy", "format"],
         "map" => &["format"],
         "search" => &[
             "format",

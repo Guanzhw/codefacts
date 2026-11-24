@@ -81,6 +81,7 @@ npx --yes codefacts@latest node <symbol> --file <file> --root <repository>
 npx --yes codefacts@latest callers <symbol> --root <repository>
 npx --yes codefacts@latest callees <symbol> --root <repository>
 npx --yes codefacts@latest explore <code-terms> --root <repository>
+npx --yes codefacts@latest select --query calculate_total --symptom "Fractional quantities disappear when an order is amended." --root <repository>
 npx --yes codefacts@latest impact <symbol> --max-depth 3 --root <repository>
 ```
 
@@ -112,3 +113,8 @@ README for requirements and validation.
 See the [project README](https://github.com/Guanzhw/codefacts#readme) for
 Claude Code and OpenCode configurations, trust model, and manual binary
 installation.
+
+The native `select` command prints up to two source excerpts with a combined
+4,200-byte evidence budget. `--format json` returns the trace and its SHA-256.
+The default policy is `baseline`. `--policy candidate` selects the experimental
+development winner.

@@ -9,10 +9,13 @@ import { parse } from 'jsonc-parser';
 const require = createRequire(import.meta.url);
 const installer = require('../lib/installer.js');
 
-async function temporaryHome(context) {
-  const directory = await mkdtemp(join(tmpdir(), 'codefacts-installer-'));
-  context.after(() => rm(directory, { recursive: true, force: true }));
-  return directory;
+async function temporaryInstallOptions(context) {
+  const homeDirectory = await mkdtemp(join(tmpdir(), 'codefacts-installer-'));
+  context.after(() => rm(homeDirectory, { recursive: true, force: true }));
+  return {
+    homeDirectory,
+    env: { HOME: homeDirectory, XDG_CONFIG_HOME: join(homeDirectory, '.config') },
+  };
 }
 
 test('uses a latest package spec with an immediate npm update check', () => {
@@ -69,46 +72,57 @@ test('adds an OpenCode entry without discarding JSONC comments or unrelated sett
   assert.deepEqual(parsed.mcp.codefacts, entry);
 });
 
-test('resolves agent configuration paths without trusting a malformed CODEX_HOME', async (context) => {
-  const homeDirectory = await temporaryHome(context);
+test('resolves agent configuration paths and honors an absolute CODEX_HOME', async (context) => {
+  const options = await temporaryInstallOptions(context);
+  const { homeDirectory } = options;
   const opencodeDirectory = join(homeDirectory, '.config', 'opencode');
   const expectedJsoncPath = join(opencodeDirectory, 'opencode.jsonc');
   const expectedJsonPath = join(opencodeDirectory, 'opencode.json');
+  const codexHome = join(homeDirectory, 'custom-codex-home');
 
   assert.equal(
     await installer.resolveConfigPath('codex', {
-      homeDirectory,
-      env: { CODEX_HOME: 'relative-path-is-not-a-config-home' },
+      ...options,
+      env: { ...options.env, CODEX_HOME: 'relative-path-is-not-a-config-home' },
     }),
     join(homeDirectory, '.codex', 'config.toml'),
   );
-  assert.equal(await installer.resolveConfigPath('opencode', { homeDirectory }), expectedJsoncPath);
+  assert.equal(
+    await installer.resolveConfigPath('codex', {
+      ...options,
+      env: { ...options.env, CODEX_HOME: codexHome },
+    }),
+    join(codexHome, 'config.toml'),
+  );
+  assert.equal(await installer.resolveConfigPath('opencode', options), expectedJsoncPath);
   await (await import('node:fs/promises')).mkdir(opencodeDirectory, { recursive: true });
   await writeFile(expectedJsonPath, '{}\n');
-  assert.equal(await installer.resolveConfigPath('opencode', { homeDirectory }), expectedJsonPath);
+  assert.equal(await installer.resolveConfigPath('opencode', options), expectedJsonPath);
   await writeFile(expectedJsoncPath, '{\n  // preferred when present\n}\n');
-  assert.equal(await installer.resolveConfigPath('opencode', { homeDirectory }), expectedJsoncPath);
+  assert.equal(await installer.resolveConfigPath('opencode', options), expectedJsoncPath);
   assert.equal(
-    await installer.resolveConfigPath('cursor', { homeDirectory }),
+    await installer.resolveConfigPath('cursor', options),
     join(homeDirectory, '.cursor', 'mcp.json'),
   );
   assert.equal(
-    await installer.resolveConfigPath('gemini', { homeDirectory }),
+    await installer.resolveConfigPath('gemini', options),
     join(homeDirectory, '.gemini', 'settings.json'),
   );
 });
 
 test('detects an existing agent configuration or an available agent executable', async (context) => {
-  const homeDirectory = await temporaryHome(context);
+  const options = await temporaryInstallOptions(context);
+  const { homeDirectory } = options;
   const cursorPath = join(homeDirectory, '.cursor', 'mcp.json');
   await (await import('node:fs/promises')).mkdir(dirname(cursorPath), { recursive: true });
   await writeFile(cursorPath, '{}\n');
 
   const agents = await installer.detectAgents({
-    homeDirectory,
+    ...options,
     commandAvailable: async (command) => command === 'gemini',
   });
   const byId = Object.fromEntries(agents.map((agent) => [agent.id, agent]));
+  assert.equal(byId.codex.configurationFound, false);
   assert.equal(byId.cursor.configurationFound, true);
   assert.equal(byId.cursor.available, true);
   assert.equal(byId.gemini.executableFound, true);
@@ -117,13 +131,14 @@ test('detects an existing agent configuration or an available agent executable',
 });
 
 test('plans and applies direct agent configurations with the automatic update launcher', async (context) => {
-  const homeDirectory = await temporaryHome(context);
+  const options = await temporaryInstallOptions(context);
+  const { homeDirectory } = options;
   const opencodePath = join(homeDirectory, '.config', 'opencode', 'opencode.jsonc');
   await (await import('node:fs/promises')).mkdir(dirname(opencodePath), { recursive: true });
   await writeFile(opencodePath, '{\n  // user configuration\n  "plugin": ["notice"]\n}\n');
 
   const plans = await installer.prepareInstall(['codex', 'opencode', 'cursor', 'gemini'], {
-    homeDirectory,
+    ...options,
     platform: 'linux',
   });
   assert.deepEqual(plans.map((plan) => plan.agentId), ['codex', 'opencode', 'cursor', 'gemini']);
@@ -151,9 +166,8 @@ test('plans and applies direct agent configurations with the automatic update la
 });
 
 test('uses the Claude Code CLI only after it is selected', async (context) => {
-  const homeDirectory = await temporaryHome(context);
   const plans = await installer.prepareInstall(['claude'], {
-    homeDirectory,
+    ...await temporaryInstallOptions(context),
     platform: 'win32',
     commandAvailable: async (command) => command === 'claude',
   });
@@ -180,13 +194,14 @@ test('uses the Claude Code CLI only after it is selected', async (context) => {
 });
 
 test('does not change agent configuration until the interactive confirmation', async (context) => {
-  const homeDirectory = await temporaryHome(context);
+  const options = await temporaryInstallOptions(context);
+  const { homeDirectory } = options;
   const output = { isTTY: true, write: () => undefined };
   const input = { isTTY: true };
   const replies = ['1', 'n'];
 
   const result = await installer.runInteractiveInstall({
-    homeDirectory,
+    ...options,
     input,
     output,
     ask: async () => replies.shift(),
@@ -198,13 +213,14 @@ test('does not change agent configuration until the interactive confirmation', a
 });
 
 test('applies the selected interactive installation after confirmation', async (context) => {
-  const homeDirectory = await temporaryHome(context);
+  const options = await temporaryInstallOptions(context);
+  const { homeDirectory } = options;
   const output = { isTTY: true, write: () => undefined };
   const input = { isTTY: true };
   const replies = ['1', 'yes'];
 
   const result = await installer.runInteractiveInstall({
-    homeDirectory,
+    ...options,
     input,
     output,
     ask: async () => replies.shift(),
@@ -222,14 +238,15 @@ test('applies the selected interactive installation after confirmation', async (
 });
 
 test('does not update agent configuration when installed-package verification fails', async (context) => {
-  const homeDirectory = await temporaryHome(context);
+  const options = await temporaryInstallOptions(context);
+  const { homeDirectory } = options;
   const output = { isTTY: true, write: () => undefined };
   const input = { isTTY: true };
   const replies = ['1', 'y'];
 
   await assert.rejects(
     installer.runInteractiveInstall({
-      homeDirectory,
+      ...options,
       input,
       output,
       ask: async () => replies.shift(),
