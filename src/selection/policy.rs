@@ -22,6 +22,7 @@ static BASELINE: LazyLock<Decision> =
     LazyLock::new(|| serde_json::from_str(BASELINE_JSON).expect("frozen baseline policy"));
 static CANDIDATE: LazyLock<Decision> =
     LazyLock::new(|| serde_json::from_str(CANDIDATE_JSON).expect("frozen candidate policy"));
+static QUALIFIER_SEPARATOR: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"::|[.#/]").unwrap());
 static PATH_SUFFIX: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^([a-z]{3,})(?:utils|helpers|types)$").unwrap());
 
@@ -599,7 +600,7 @@ impl<'a, 'p> Ranking<'a, 'p> {
         if let (true, Some((_, display))) = (is_declaration(row.kind()), row.label.split_once(' '))
         {
             let head = display.split(['(', '<']).next().unwrap_or_default();
-            components.extend(head.split([':', '.', '#', '/']));
+            components.extend(QUALIFIER_SEPARATOR.split(head));
             components.pop();
         }
         if let Some(path) = path {
